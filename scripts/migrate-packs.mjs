@@ -3,10 +3,10 @@
 /**
  * migrate-packs.mjs — one-shot idempotent pack data migration (M3b + M3d + M3e).
  *
- * M3b: Migrates hellforge + cow-level pack files from single
+ * M3b: Migrates hellforge + test3 pack files from single
  * `material: <int>` to `materials: [<int>]` array form, renames
- * cow-level payload key `nodes` -> `entities`, fixes hellforge Ground
- * entity Transform, and fills cow-level forge.json defaultScene GUID.
+ * test3 payload key `nodes` -> `entities`, fixes hellforge Ground
+ * entity Transform, and fills test3 forge.json defaultScene GUID.
  *
  * M3d: Moves scene packs from omnibus locations (scenes/ or game
  * root) into the canonical <slug>/assets/ directory so the Vite
@@ -14,9 +14,9 @@
  *
  * M3e: Bakes cylinder mesh geometry (createCylinderGeometry(0.5, 0.5,
  * 1, 18)) as an inline kind=mesh asset with GUID
- * c1111111-0000-5000-8000-000000000001 into cow-level
+ * c1111111-0000-5000-8000-000000000001 into test3
  * assets/scene.pack.json.  This closes the dependency-closure gap
- * left when M3c removed the cow-level self-load block that programmatically
+ * left when M3c removed the test3 self-load block that programmatically
  * cataloged the cylinder mesh at runtime.
  *
  * Idempotent — safe to run N times; already-correct files are skipped.
@@ -49,7 +49,7 @@ function saveJson(filePath, data) {
 }
 
 // ---------------------------------------------------------------------------
-// Discover cow-level directory (the one containing forge.json with id=cow-level)
+// Discover test3 directory (the one containing forge.json with id=test3)
 // ---------------------------------------------------------------------------
 
 function discoverTest3Dir() {
@@ -58,7 +58,7 @@ function discoverTest3Dir() {
     if (!existsSync(forgePath)) continue;
     try {
       const forge = JSON.parse(readFileSync(forgePath, 'utf-8'));
-      if (forge.id === 'cow-level') return name;
+      if (forge.id === 'test3') return name;
     } catch (_) {
       // skip unparseable forge.json
     }
@@ -161,7 +161,7 @@ function migrateHellforgePack(filePath) {
 }
 
 /**
- * Migrate cow-level scene.pack.json:
+ * Migrate test3 scene.pack.json:
  *   - 38x material -> materials in entity/node MeshRenderer components
  *   - payload key nodes -> entities
  */
@@ -193,26 +193,26 @@ function migrateTest3Pack(filePath) {
     const parts = [];
     if (materialChanged > 0) parts.push(`${materialChanged} material->materials`);
     if (nodesRenamed) parts.push('nodes->entities');
-    console.log(`cow-level: ${parts.join(', ')} (saved)`);
+    console.log(`test3: ${parts.join(', ')} (saved)`);
   } else {
-    console.log('cow-level: already migrated, skipped');
+    console.log('test3: already migrated, skipped');
   }
 }
 
 /**
- * Fill cow-level forge.json defaultScene GUID.
+ * Fill test3 forge.json defaultScene GUID.
  * GUID 822234d8-dd44-4a4f-9336-525e995e41a0 matches the scene asset
  * guid in scene.pack.json (research Finding 9, disk-verified).
  */
 function migrateTest3ForgeJson(filePath) {
   const data = loadJson(filePath);
   if (Object.prototype.hasOwnProperty.call(data, 'defaultScene')) {
-    console.log('cow-level forge.json: defaultScene already set, skipped');
+    console.log('test3 forge.json: defaultScene already set, skipped');
     return;
   }
   data.defaultScene = '822234d8-dd44-4a4f-9336-525e995e41a0';
   saveJson(filePath, data);
-  console.log('cow-level forge.json: defaultScene added (saved)');
+  console.log('test3 forge.json: defaultScene added (saved)');
 }
 
 // ---------------------------------------------------------------------------
@@ -235,7 +235,7 @@ console.log('=== migrate-packs (M3b) ===');
   }
 }
 
-// cow-level — try new location (assets/) first, then old (game root)
+// test3 — try new location (assets/) first, then old (game root)
 if (TEST3_DIR) {
   const newPath = resolve(GAMES_ROOT, TEST3_DIR, 'assets/scene.pack.json');
   const oldPath = resolve(GAMES_ROOT, TEST3_DIR, 'scene.pack.json');
@@ -243,11 +243,11 @@ if (TEST3_DIR) {
   if (path) {
     migrateTest3Pack(path);
   } else {
-    console.log('cow-level: pack not found, skipped');
+    console.log('test3: pack not found, skipped');
   }
   migrateTest3ForgeJson(resolve(GAMES_ROOT, TEST3_DIR, 'forge.json'));
 } else {
-  console.error('ERROR: could not discover cow-level game directory (forge.json with id=cow-level)');
+  console.error('ERROR: could not discover test3 game directory (forge.json with id=test3)');
   process.exit(2);
 }
 
@@ -289,7 +289,7 @@ function migrateM3dScenePacks() {
       dst: resolve(GAMES_ROOT, 'hellforge', 'assets', 'rogue-encampment.pack.json'),
     },
     {
-      game: 'cow-level',
+      game: 'test3',
       src: resolve(GAMES_ROOT, TEST3_DIR, 'scene.pack.json'),
       dst: resolve(GAMES_ROOT, TEST3_DIR, 'assets', 'scene.pack.json'),
     },
@@ -318,15 +318,15 @@ function migrateM3dScenePacks() {
   console.log(`M3d done: ${moved} moved, ${skipped} skipped`);
 }
 
-// M3d also verifies cow-level forge.json defaultScene is filled (M3b work).
+// M3d also verifies test3 forge.json defaultScene is filled (M3b work).
 function verifyM3dForgeJson() {
   if (!TEST3_DIR) return;
   const forgePath = resolve(GAMES_ROOT, TEST3_DIR, 'forge.json');
   const forge = loadJson(forgePath);
   if (forge.defaultScene === '822234d8-dd44-4a4f-9336-525e995e41a0') {
-    console.log('cow-level forge.json: defaultScene 822234d8 OK');
+    console.log('test3 forge.json: defaultScene 822234d8 OK');
   } else {
-    console.log('cow-level forge.json: defaultScene MISSING or MISMATCH — filling');
+    console.log('test3 forge.json: defaultScene MISSING or MISMATCH — filling');
     forge.defaultScene = '822234d8-dd44-4a4f-9336-525e995e41a0';
     saveJson(forgePath, forge);
   }
@@ -336,11 +336,11 @@ migrateM3dScenePacks();
 verifyM3dForgeJson();
 
 // ---------------------------------------------------------------------------
-// M3e — Bake cylinder mesh geometry as inline kind=mesh asset into cow-level
+// M3e — Bake cylinder mesh geometry as inline kind=mesh asset into test3
 //       assets/scene.pack.json.  GUID c1111111-0000-5000-8000-000000000001
 //       matches scene refs[2] and the old self-load CYLINDER_GUID.
 //       Geometry parameters createCylinderGeometry(0.5,0.5,1,18) are
-//       verbatim identical to the old cow-level main.ts:166 self-load
+//       verbatim identical to the old test3 main.ts:166 self-load
 //       block that M3c removed.
 //
 //       The engine-runtime geometry module is imported dynamically so the
@@ -385,7 +385,7 @@ async function bakeCylinderMeshGeo() {
 }
 
 /**
- * Bake cylinder mesh asset (kind=mesh) into cow-level assets/scene.pack.json.
+ * Bake cylinder mesh asset (kind=mesh) into test3 assets/scene.pack.json.
  *
  * Idempotent — if a mesh asset with GUID
  * c1111111-0000-5000-8000-000000000001 already exists in assets[], skip.
@@ -397,11 +397,11 @@ async function bakeCylinderMeshGeo() {
  */
 async function migrateM3eCylinderMesh() {
   if (!TEST3_DIR) return;
-  console.log('=== M3e: bake cylinder mesh asset into cow-level pack ===');
+  console.log('=== M3e: bake cylinder mesh asset into test3 pack ===');
 
   const packPath = resolve(GAMES_ROOT, TEST3_DIR, 'assets', 'scene.pack.json');
   if (!existsSync(packPath)) {
-    console.log('M3e: cow-level scene.pack.json not found, skipped');
+    console.log('M3e: test3 scene.pack.json not found, skipped');
     return;
   }
 
@@ -419,7 +419,7 @@ async function migrateM3eCylinderMesh() {
     (a) => a && a.guid === CYLINDER_GUID && a.kind === 'mesh',
   );
   if (existing) {
-    console.log('cow-level M3e: cylinder mesh already present, skipped');
+    console.log('test3 M3e: cylinder mesh already present, skipped');
     return;
   }
 
@@ -442,7 +442,7 @@ async function migrateM3eCylinderMesh() {
 
   assets.push(meshAsset);
   saveJson(packPath, data);
-  console.log(`cow-level M3e: cylinder mesh asset (guid=${CYLINDER_GUID}) added (vert=${geo.vertices.length}, idx=${geo.indices.length})`);
+  console.log(`test3 M3e: cylinder mesh asset (guid=${CYLINDER_GUID}) added (vert=${geo.vertices.length}, idx=${geo.indices.length})`);
 }
 
 await migrateM3eCylinderMesh();
