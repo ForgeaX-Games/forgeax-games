@@ -1,6 +1,6 @@
 {
-  "id": "test3",
-  "name": "test3",
+  "id": "cow-level",
+  "name": "Cow Level",
   "schemaVersion": "1.0.0",
   "entry": "main.ts",
   "physics": "3d",
