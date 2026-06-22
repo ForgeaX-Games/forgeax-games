@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "fx-effect",
+  "name": "Rune Glow",
+  "description": "Flowing band of light across obsidian rune slabs. Attached at level load by Name prefix.",
+  "shader": "cow_survivor::rune_glow",
+  "geometry": "cube",
+  "attachTo": { "namePrefixes": ["Decor_SteleRune", "AltarRune"] },
+  "params": {
+    "baseColor": [0.55, 0.35, 1.0],
+    "metallic": 0,
+    "roughness": 1.4
+  },
+  "paramSemantics": {
+    "metallic": "time-elapsed-seconds",
+    "roughness": "intensity-multiplier"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-gen3d",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-06-14T13:43:36.566Z",
+  "contentHash": "sha256:b5d24fce531743c15d3907e7f8292ae6d398105f54a88ad4adbccae592d20e56",
+  "size": 36,
+  "type": "gen3d-mesh",
+  "dependencies": [
+    {
+      "path": "stylized-low-poly-treasure-chest-with-brass-trim.png",
+      "hash": "sha256:ebf4f635a17d10d6eb46ba680b70142419aa3220f228001a036d311a22ee9d2a",
+      "kind": "preview_image"
+    }
+  ],
+  "custom": {
+    "provider": "hunyuan_workflow",
+    "providerMode": "mock",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": null,
+    "prompt": "stylized low-poly treasure chest with brass trim",
+    "sourceInputAssetPaths": [],
+    "faceCount": 40000,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "hunyuan_workflow-text-2c23359d"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "id": "shoot-opt",
+  "name": "shoot-opt",
+  "schemaVersion": "1.0.0",
+  "entry": "src/main.ts"
+}

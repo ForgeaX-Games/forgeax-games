@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 2,
+  "name": "floor_1",
+  "description": "纯地板 / 单帧 fallback;邻域不影响,永远渲染 sprite 0。立面不绘制。",
+  "ppu": 16,
+  "sprites": [
+    { "x": 0, "y": 0, "w": 16, "h": 16 }
+  ],
+  "faces": {
+    "top": {
+      "basePieces": 1,
+      "map": {
+        "*,*,*,*": 0
+      }
+    }
+  }
+}

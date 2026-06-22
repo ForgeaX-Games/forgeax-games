@@ -1,0 +1,24 @@
+{
+  "id": "hellforge",
+  "name": "ForgeaX: Hellforge",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": "3d",
+  "pointerLock": true,
+  "defaultScene": "15acc839-d847-527c-8284-bfb36d7c50de",
+  "preview": {
+    "skin": {
+      "sceneGuid": "5e3028dd-ddf6-4104-86d9-318d3e8fb5a6",
+      "clipGuids": [
+        "c530adf2-8de6-486a-afaa-9af3a6e6dfd1",
+        "f9355148-5ddc-45a4-80d4-ef80fce559b0",
+        "9bb05e7d-6156-424f-8a20-f80373507f65",
+        "7faedc58-49cd-4fc9-93b7-66eca1b79674",
+        "ca6e7f12-8e1a-4b3c-9d50-2a4f1b8c6d04"
+      ],
+      "clipDefault": "idle",
+      "scale": 1,
+      "pos": [0, 0, 0]
+    }
+  }
+}

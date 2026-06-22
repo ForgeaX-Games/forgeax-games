@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "shader",
+  "source": "lightning.wgsl",
+  "importSettings": {
+    "materialShaderIdentifier": "cow_survivor::lightning"
+  },
+  "subAssets": [
+    {
+      "guid": "019fa101-c0a5-7c4e-9f12-345678abcd02",
+      "sourceIndex": 0,
+      "kind": "material-shader"
+    }
+  ],
+  "paramSchema": [
+    { "name": "baseColor", "type": "color" },
+    { "name": "metallic", "type": "f32" },
+    { "name": "roughness", "type": "f32" }
+  ]
+}

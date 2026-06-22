@@ -1,0 +1,2562 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "822234d8-dd44-4a4f-9336-525e995e41a0",
+      "kind": "scene",
+      "payload": {
+        "kind": "scene",
+        "entities": [
+          {
+            "localId": 0,
+            "components": {
+              "Name": {
+                "value": "Ground"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": -0.08,
+                "posZ": 0,
+                "scaleX": 40,
+                "scaleY": 0.16,
+                "scaleZ": 40
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 1,
+            "components": {
+              "Name": {
+                "value": "Sun"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 8,
+                "posZ": 0
+              },
+              "DirectionalLight": {
+                "directionX": -0.35,
+                "directionY": -1,
+                "directionZ": -0.24,
+                "colorR": 1,
+                "colorG": 0.82,
+                "colorB": 0.62,
+                "intensity": 2.4
+              },
+              "DirectionalLightShadow": {
+                "mapSize": 2048,
+                "cascadeCount": 1,
+                "farPlane": 70,
+                "nearPlane": 0.1
+              }
+            }
+          },
+          {
+            "localId": 2,
+            "components": {
+              "Name": {
+                "value": "PortalBase"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 0.1,
+                "posZ": -9.5,
+                "scaleX": 3.2,
+                "scaleY": 0.2,
+                "scaleZ": 1.2
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  5
+                ]
+              }
+            }
+          },
+          {
+            "localId": 3,
+            "components": {
+              "Name": {
+                "value": "PortalLeft"
+              },
+              "Transform": {
+                "posX": -1.35,
+                "posY": 1.35,
+                "posZ": -9.5,
+                "scaleX": 0.28,
+                "scaleY": 2.7,
+                "scaleZ": 0.28
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  6
+                ]
+              }
+            }
+          },
+          {
+            "localId": 4,
+            "components": {
+              "Name": {
+                "value": "PortalRight"
+              },
+              "Transform": {
+                "posX": 1.35,
+                "posY": 1.35,
+                "posZ": -9.5,
+                "scaleX": 0.28,
+                "scaleY": 2.7,
+                "scaleZ": 0.28
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  6
+                ]
+              }
+            }
+          },
+          {
+            "localId": 5,
+            "components": {
+              "Name": {
+                "value": "PortalCore"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 1.45,
+                "posZ": -9.55,
+                "scaleX": 1.45,
+                "scaleY": 1.45,
+                "scaleZ": 0.12
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  5
+                ]
+              }
+            }
+          },
+          {
+            "localId": 6,
+            "components": {
+              "Name": {
+                "value": "FenceNorthA"
+              },
+              "Transform": {
+                "posX": -8,
+                "posY": 0.42,
+                "posZ": -13.2,
+                "scaleX": 8,
+                "scaleY": 0.35,
+                "scaleZ": 0.22
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 7,
+            "components": {
+              "Name": {
+                "value": "FenceNorthB"
+              },
+              "Transform": {
+                "posX": 8,
+                "posY": 0.42,
+                "posZ": -13.2,
+                "scaleX": 8,
+                "scaleY": 0.35,
+                "scaleZ": 0.22
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 8,
+            "components": {
+              "Name": {
+                "value": "FenceSouthA"
+              },
+              "Transform": {
+                "posX": -8,
+                "posY": 0.42,
+                "posZ": 13.2,
+                "scaleX": 8,
+                "scaleY": 0.35,
+                "scaleZ": 0.22
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 9,
+            "components": {
+              "Name": {
+                "value": "FenceSouthB"
+              },
+              "Transform": {
+                "posX": 8,
+                "posY": 0.42,
+                "posZ": 13.2,
+                "scaleX": 8,
+                "scaleY": 0.35,
+                "scaleZ": 0.22
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 10,
+            "components": {
+              "Name": {
+                "value": "FenceWestA"
+              },
+              "Transform": {
+                "posX": -13.2,
+                "posY": 0.42,
+                "posZ": -8,
+                "scaleX": 0.22,
+                "scaleY": 0.35,
+                "scaleZ": 8
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 11,
+            "components": {
+              "Name": {
+                "value": "FenceWestB"
+              },
+              "Transform": {
+                "posX": -13.2,
+                "posY": 0.42,
+                "posZ": 8,
+                "scaleX": 0.22,
+                "scaleY": 0.35,
+                "scaleZ": 8
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 12,
+            "components": {
+              "Name": {
+                "value": "FenceEastA"
+              },
+              "Transform": {
+                "posX": 13.2,
+                "posY": 0.42,
+                "posZ": -8,
+                "scaleX": 0.22,
+                "scaleY": 0.35,
+                "scaleZ": 8
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 13,
+            "components": {
+              "Name": {
+                "value": "FenceEastB"
+              },
+              "Transform": {
+                "posX": 13.2,
+                "posY": 0.42,
+                "posZ": 8,
+                "scaleX": 0.22,
+                "scaleY": 0.35,
+                "scaleZ": 8
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 14,
+            "components": {
+              "Name": {
+                "value": "StoneObeliskA"
+              },
+              "Transform": {
+                "posX": -7.2,
+                "posY": 0.9,
+                "posZ": -5.5,
+                "scaleX": 0.9,
+                "scaleY": 1.8,
+                "scaleZ": 0.9
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  6
+                ]
+              }
+            }
+          },
+          {
+            "localId": 15,
+            "components": {
+              "Name": {
+                "value": "StoneObeliskB"
+              },
+              "Transform": {
+                "posX": 7.6,
+                "posY": 0.7,
+                "posZ": 5.3,
+                "scaleX": 1,
+                "scaleY": 1.4,
+                "scaleZ": 0.8
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  6
+                ]
+              }
+            }
+          },
+          {
+            "localId": 16,
+            "components": {
+              "Name": {
+                "value": "StoneObeliskC"
+              },
+              "Transform": {
+                "posX": -8.4,
+                "posY": 0.6,
+                "posZ": 6.4,
+                "scaleX": 1.1,
+                "scaleY": 1.2,
+                "scaleZ": 0.7
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  6
+                ]
+              }
+            }
+          },
+          {
+            "localId": 17,
+            "components": {
+              "Name": {
+                "value": "BonePileA"
+              },
+              "Transform": {
+                "posX": 4.2,
+                "posY": 0.24,
+                "posZ": -4.8,
+                "scaleX": 1.1,
+                "scaleY": 0.35,
+                "scaleZ": 0.8
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  7
+                ]
+              }
+            }
+          },
+          {
+            "localId": 18,
+            "components": {
+              "Name": {
+                "value": "BonePileB"
+              },
+              "Transform": {
+                "posX": -5.4,
+                "posY": 0.24,
+                "posZ": 4.4,
+                "scaleX": 1,
+                "scaleY": 0.35,
+                "scaleZ": 0.9
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  7
+                ]
+              }
+            }
+          },
+          {
+            "localId": 19,
+            "components": {
+              "Name": {
+                "value": "BarrelA"
+              },
+              "Transform": {
+                "posX": 6.8,
+                "posY": 0.48,
+                "posZ": -1.8,
+                "scaleX": 0.7,
+                "scaleY": 0.95,
+                "scaleZ": 0.7
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  12
+                ]
+              }
+            }
+          },
+          {
+            "localId": 20,
+            "components": {
+              "Name": {
+                "value": "BarrelB"
+              },
+              "Transform": {
+                "posX": 7.45,
+                "posY": 0.48,
+                "posZ": -1.2,
+                "scaleX": 0.7,
+                "scaleY": 0.95,
+                "scaleZ": 0.7
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  12
+                ]
+              }
+            }
+          },
+          {
+            "localId": 21,
+            "components": {
+              "Name": {
+                "value": "TorchA"
+              },
+              "Transform": {
+                "posX": -3,
+                "posY": 0.9,
+                "posZ": -7.8,
+                "scaleX": 0.22,
+                "scaleY": 1.8,
+                "scaleZ": 0.22
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 22,
+            "components": {
+              "Name": {
+                "value": "TorchAFlame"
+              },
+              "Transform": {
+                "posX": -3,
+                "posY": 1.92,
+                "posZ": -7.8,
+                "scaleX": 0.38,
+                "scaleY": 0.38,
+                "scaleZ": 0.38
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 23,
+            "components": {
+              "Name": {
+                "value": "TorchB"
+              },
+              "Transform": {
+                "posX": 3,
+                "posY": 0.9,
+                "posZ": -7.8,
+                "scaleX": 0.22,
+                "scaleY": 1.8,
+                "scaleZ": 0.22
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 24,
+            "components": {
+              "Name": {
+                "value": "TorchBFlame"
+              },
+              "Transform": {
+                "posX": 3,
+                "posY": 1.92,
+                "posZ": -7.8,
+                "scaleX": 0.38,
+                "scaleY": 0.38,
+                "scaleZ": 0.38
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 25,
+            "components": {
+              "Name": {
+                "value": "Player"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 0.9,
+                "posZ": 1.8,
+                "scaleX": 0.62,
+                "scaleY": 1,
+                "scaleZ": 0.42
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 26,
+            "components": {
+              "Name": {
+                "value": "PlayerTorso"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 0.82,
+                "posZ": 1.8,
+                "scaleX": 0.52,
+                "scaleY": 0.6,
+                "scaleZ": 0.3
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 27,
+            "components": {
+              "Name": {
+                "value": "PlayerHead"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 1.36,
+                "posZ": 1.78,
+                "scaleX": 0.34,
+                "scaleY": 0.34,
+                "scaleZ": 0.34
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              }
+            }
+          },
+          {
+            "localId": 28,
+            "components": {
+              "Name": {
+                "value": "PlayerArmL"
+              },
+              "Transform": {
+                "posX": -0.36,
+                "posY": 0.82,
+                "posZ": 1.8,
+                "scaleX": 0.14,
+                "scaleY": 0.48,
+                "scaleZ": 0.14
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              }
+            }
+          },
+          {
+            "localId": 29,
+            "components": {
+              "Name": {
+                "value": "PlayerArmR"
+              },
+              "Transform": {
+                "posX": 0.36,
+                "posY": 0.82,
+                "posZ": 1.8,
+                "scaleX": 0.14,
+                "scaleY": 0.48,
+                "scaleZ": 0.14
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              }
+            }
+          },
+          {
+            "localId": 30,
+            "components": {
+              "Name": {
+                "value": "PlayerLegL"
+              },
+              "Transform": {
+                "posX": -0.13,
+                "posY": 0.3,
+                "posZ": 1.8,
+                "scaleX": 0.18,
+                "scaleY": 0.52,
+                "scaleZ": 0.18
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  10
+                ]
+              }
+            }
+          },
+          {
+            "localId": 31,
+            "components": {
+              "Name": {
+                "value": "PlayerLegR"
+              },
+              "Transform": {
+                "posX": 0.13,
+                "posY": 0.3,
+                "posZ": 1.8,
+                "scaleX": 0.18,
+                "scaleY": 0.52,
+                "scaleZ": 0.18
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  10
+                ]
+              }
+            }
+          },
+          {
+            "localId": 32,
+            "components": {
+              "Name": {
+                "value": "PlayerHair"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 1.58,
+                "posZ": 1.78,
+                "scaleX": 0.42,
+                "scaleY": 0.16,
+                "scaleZ": 0.42
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 33,
+            "components": {
+              "Name": {
+                "value": "PlayerCape"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 0.86,
+                "posZ": 2.02,
+                "scaleX": 0.64,
+                "scaleY": 0.86,
+                "scaleZ": 0.08
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  14
+                ]
+              }
+            }
+          },
+          {
+            "localId": 34,
+            "components": {
+              "Name": {
+                "value": "PlayerShoulderL"
+              },
+              "Transform": {
+                "posX": -0.36,
+                "posY": 1.12,
+                "posZ": 1.76,
+                "scaleX": 0.22,
+                "scaleY": 0.16,
+                "scaleZ": 0.28
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  15
+                ]
+              }
+            }
+          },
+          {
+            "localId": 35,
+            "components": {
+              "Name": {
+                "value": "PlayerShoulderR"
+              },
+              "Transform": {
+                "posX": 0.36,
+                "posY": 1.12,
+                "posZ": 1.76,
+                "scaleX": 0.22,
+                "scaleY": 0.16,
+                "scaleZ": 0.28
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  15
+                ]
+              }
+            }
+          },
+          {
+            "localId": 36,
+            "components": {
+              "Name": {
+                "value": "PlayerWeapon"
+              },
+              "Transform": {
+                "posX": 0.56,
+                "posY": 0.86,
+                "posZ": 1.46,
+                "scaleX": 0.08,
+                "scaleY": 0.86,
+                "scaleZ": 0.08,
+                "quatZ": -0.38,
+                "quatW": 0.925
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  15
+                ]
+              }
+            }
+          },
+          {
+            "localId": 37,
+            "components": {
+              "Name": {
+                "value": "PlayerWeaponGlow"
+              },
+              "Transform": {
+                "posX": 0.7,
+                "posY": 1.24,
+                "posZ": 1.32,
+                "scaleX": 0.18,
+                "scaleY": 0.18,
+                "scaleZ": 0.18
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  16
+                ]
+              }
+            }
+          },
+          {
+            "localId": 38,
+            "components": {
+              "Name": {
+                "value": "PlayerAura"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 0.04,
+                "posZ": 1.8,
+                "scaleX": 1.25,
+                "scaleY": 0.06,
+                "scaleZ": 1.25
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  16
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "refs": [
+        "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
+        "f2dcf63d-72fd-4550-b065-925928db86be",
+        "c1111111-0000-5000-8000-000000000001",
+        "7f2049ec-ce02-4e03-afa8-92e6217c34b7",
+        "95730fd2-9846-5f84-8658-0b3c971eb263",
+        "0e6d8b2d-0945-4de8-a9c8-9da90de449e7",
+        "18d72cba-44d8-4375-8d34-13f2c3534158",
+        "a55514d8-20cf-476e-b19f-6f43bc0e7e3c",
+        "f5bf44b2-369c-4328-85dc-1f5daa352c35",
+        "8f53d48c-c0b0-40b7-a738-c0859b6b6b3c",
+        "ecbb82d0-ffa1-4ea6-b1be-92de269815d5",
+        "0e9af79c-e14a-443a-b6e0-e1f45e7fe95a",
+        "0876fcc6-bfba-4647-8dd8-4c96985e49b2",
+        "c5f14bda-b1d1-4cbb-982a-084d1bbc8b27",
+        "d8380e07-7a2f-49fb-8a91-08c228ae33d7",
+        "ead99f85-f244-44c8-8caa-ca68fda126e1",
+        "7453fda6-395e-420f-ad5f-4a4076ff5966"
+      ]
+    },
+    {
+      "guid": "f2dcf63d-72fd-4550-b065-925928db86be",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.16,
+            0.055,
+            0.045,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.96
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "7f2049ec-ce02-4e03-afa8-92e6217c34b7",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.34,
+            0.16,
+            0.08,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.86
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "0e6d8b2d-0945-4de8-a9c8-9da90de449e7",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.64,
+            0.08,
+            0.96,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.22,
+          "emissive": [
+            0.42,
+            0.04,
+            1
+          ],
+          "emissiveIntensity": 3.5
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "18d72cba-44d8-4375-8d34-13f2c3534158",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.18,
+            0.16,
+            0.16,
+            1
+          ],
+          "metallic": 0.1,
+          "roughness": 0.72
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "a55514d8-20cf-476e-b19f-6f43bc0e7e3c",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.76,
+            0.69,
+            0.55,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.78
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "f5bf44b2-369c-4328-85dc-1f5daa352c35",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.86,
+            0.62,
+            0.42,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.82
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "8f53d48c-c0b0-40b7-a738-c0859b6b6b3c",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.82,
+            0.05,
+            0.12,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.5,
+          "emissive": [
+            0.45,
+            0.02,
+            0.05
+          ],
+          "emissiveIntensity": 1.2
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "ecbb82d0-ffa1-4ea6-b1be-92de269815d5",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.06,
+            0.05,
+            0.055,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.82
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "0e9af79c-e14a-443a-b6e0-e1f45e7fe95a",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            1,
+            0.28,
+            0.05,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.25,
+          "emissive": [
+            1,
+            0.12,
+            0.02
+          ],
+          "emissiveIntensity": 4
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "0876fcc6-bfba-4647-8dd8-4c96985e49b2",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.42,
+            0.18,
+            0.08,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.82
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "c5f14bda-b1d1-4cbb-982a-084d1bbc8b27",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.035,
+            0.025,
+            0.03,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.72
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "d8380e07-7a2f-49fb-8a91-08c228ae33d7",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.62,
+            0.03,
+            0.075,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.5,
+          "emissive": [
+            0.45,
+            0.02,
+            0.05
+          ],
+          "emissiveIntensity": 0.9
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "ead99f85-f244-44c8-8caa-ca68fda126e1",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.78,
+            0.72,
+            0.58,
+            1
+          ],
+          "metallic": 0.3,
+          "roughness": 0.42
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "7453fda6-395e-420f-ad5f-4a4076ff5966",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.1,
+            0.9,
+            1,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.18,
+          "emissive": [
+            0.05,
+            0.8,
+            1
+          ],
+          "emissiveIntensity": 3.2
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "c1111111-0000-5000-8000-000000000001",
+      "kind": "mesh",
+      "payload": {
+        "kind": "mesh",
+        "vertices": [
+          0,
+          0.5,
+          0.5,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          -1,
+          0.1710100769996643,
+          0.5,
+          0.46984630823135376,
+          0.3420201539993286,
+          0,
+          0.9396926164627075,
+          0.0555555559694767,
+          0,
+          0.9396926164627075,
+          0,
+          -0.3420201539993286,
+          -1,
+          0.32139381766319275,
+          0.5,
+          0.3830222189426422,
+          0.6427876353263855,
+          0,
+          0.7660444378852844,
+          0.1111111119389534,
+          0,
+          0.7660444378852844,
+          0,
+          -0.6427876353263855,
+          -1,
+          0.4330126941204071,
+          0.5,
+          0.25,
+          0.8660253882408142,
+          0,
+          0.5,
+          0.1666666716337204,
+          0,
+          0.5,
+          0,
+          -0.8660253882408142,
+          -1,
+          0.49240386486053467,
+          0.5,
+          0.08682408928871155,
+          0.9848077297210693,
+          0,
+          0.1736481785774231,
+          0.2222222238779068,
+          0,
+          0.1736481785774231,
+          0,
+          -0.9848077297210693,
+          -1,
+          0.49240386486053467,
+          0.5,
+          -0.08682408928871155,
+          0.9848077297210693,
+          0,
+          -0.1736481785774231,
+          0.2777777910232544,
+          0,
+          -0.1736481785774231,
+          0,
+          -0.9848077297210693,
+          -1,
+          0.4330126941204071,
+          0.5,
+          -0.25,
+          0.8660253882408142,
+          0,
+          -0.5,
+          0.3333333432674408,
+          0,
+          -0.5,
+          0,
+          -0.8660253882408142,
+          -1,
+          0.32139381766319275,
+          0.5,
+          -0.3830222189426422,
+          0.6427876353263855,
+          0,
+          -0.7660444378852844,
+          0.3888888955116272,
+          0,
+          -0.7660444378852844,
+          0,
+          -0.6427876353263855,
+          -1,
+          0.1710100769996643,
+          0.5,
+          -0.46984630823135376,
+          0.3420201539993286,
+          0,
+          -0.9396926164627075,
+          0.4444444477558136,
+          0,
+          -0.9396926164627075,
+          0,
+          -0.3420201539993286,
+          -1,
+          6.123234262925839e-17,
+          0.5,
+          -0.5,
+          1.2246468525851679e-16,
+          0,
+          -1,
+          0.5,
+          0,
+          -1,
+          0,
+          -1.2511564692051653e-16,
+          -1,
+          -0.1710100769996643,
+          0.5,
+          -0.46984630823135376,
+          -0.3420201539993286,
+          0,
+          -0.9396926164627075,
+          0.5555555820465088,
+          0,
+          -0.9396926164627075,
+          0,
+          0.3420201539993286,
+          -1,
+          -0.32139381766319275,
+          0.5,
+          -0.3830222189426422,
+          -0.6427876353263855,
+          0,
+          -0.7660444378852844,
+          0.6111111044883728,
+          0,
+          -0.7660444378852844,
+          0,
+          0.6427876353263855,
+          -1,
+          -0.4330126941204071,
+          0.5,
+          -0.25,
+          -0.8660253882408142,
+          0,
+          -0.5,
+          0.6666666865348816,
+          0,
+          -0.5,
+          0,
+          0.8660253882408142,
+          -1,
+          -0.49240386486053467,
+          0.5,
+          -0.08682408928871155,
+          -0.9848077297210693,
+          0,
+          -0.1736481785774231,
+          0.7222222089767456,
+          0,
+          -0.1736481785774231,
+          0,
+          0.9848077297210693,
+          -1,
+          -0.49240386486053467,
+          0.5,
+          0.08682408928871155,
+          -0.9848077297210693,
+          0,
+          0.1736481785774231,
+          0.7777777910232544,
+          0,
+          0.1736481785774231,
+          0,
+          0.9848077297210693,
+          -1,
+          -0.4330126941204071,
+          0.5,
+          0.25,
+          -0.8660253882408142,
+          0,
+          0.5,
+          0.8333333134651184,
+          0,
+          0.5,
+          0,
+          0.8660253882408142,
+          -1,
+          -0.32139381766319275,
+          0.5,
+          0.3830222189426422,
+          -0.6427876353263855,
+          0,
+          0.7660444378852844,
+          0.8888888955116272,
+          0,
+          0.7660444378852844,
+          0,
+          0.6427876353263855,
+          -1,
+          -0.1710100769996643,
+          0.5,
+          0.46984630823135376,
+          -0.3420201539993286,
+          0,
+          0.9396926164627075,
+          0.9444444179534912,
+          0,
+          0.9396926164627075,
+          0,
+          0.3420201539993286,
+          -1,
+          -1.2246468525851679e-16,
+          0.5,
+          0.5,
+          -2.4492937051703357e-16,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          2.5365375693419366e-16,
+          -1,
+          0,
+          -0.5,
+          0.5,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          -1,
+          0.1710100769996643,
+          -0.5,
+          0.46984630823135376,
+          0.3420201539993286,
+          0,
+          0.9396926164627075,
+          0.0555555559694767,
+          1,
+          0.9396926164627075,
+          0,
+          -0.3420201539993286,
+          -1,
+          0.32139381766319275,
+          -0.5,
+          0.3830222189426422,
+          0.6427876353263855,
+          0,
+          0.7660444378852844,
+          0.1111111119389534,
+          1,
+          0.7660444378852844,
+          0,
+          -0.6427876353263855,
+          -1,
+          0.4330126941204071,
+          -0.5,
+          0.25,
+          0.8660253882408142,
+          0,
+          0.5,
+          0.1666666716337204,
+          1,
+          0.5,
+          0,
+          -0.8660253882408142,
+          -1,
+          0.49240386486053467,
+          -0.5,
+          0.08682408928871155,
+          0.9848077297210693,
+          0,
+          0.1736481785774231,
+          0.2222222238779068,
+          1,
+          0.1736481785774231,
+          0,
+          -0.9848077297210693,
+          -1,
+          0.49240386486053467,
+          -0.5,
+          -0.08682408928871155,
+          0.9848077297210693,
+          0,
+          -0.1736481785774231,
+          0.2777777910232544,
+          1,
+          -0.1736481785774231,
+          0,
+          -0.9848077297210693,
+          -1,
+          0.4330126941204071,
+          -0.5,
+          -0.25,
+          0.8660253882408142,
+          0,
+          -0.5,
+          0.3333333432674408,
+          1,
+          -0.5,
+          0,
+          -0.8660253882408142,
+          -1,
+          0.32139381766319275,
+          -0.5,
+          -0.3830222189426422,
+          0.6427876353263855,
+          0,
+          -0.7660444378852844,
+          0.3888888955116272,
+          1,
+          -0.7660444378852844,
+          0,
+          -0.6427876353263855,
+          -1,
+          0.1710100769996643,
+          -0.5,
+          -0.46984630823135376,
+          0.3420201539993286,
+          0,
+          -0.9396926164627075,
+          0.4444444477558136,
+          1,
+          -0.9396926164627075,
+          0,
+          -0.3420201539993286,
+          -1,
+          6.123234262925839e-17,
+          -0.5,
+          -0.5,
+          1.2246468525851679e-16,
+          0,
+          -1,
+          0.5,
+          1,
+          -1,
+          0,
+          -1.2511564692051653e-16,
+          -1,
+          -0.1710100769996643,
+          -0.5,
+          -0.46984630823135376,
+          -0.3420201539993286,
+          0,
+          -0.9396926164627075,
+          0.5555555820465088,
+          1,
+          -0.9396926164627075,
+          0,
+          0.3420201539993286,
+          -1,
+          -0.32139381766319275,
+          -0.5,
+          -0.3830222189426422,
+          -0.6427876353263855,
+          0,
+          -0.7660444378852844,
+          0.6111111044883728,
+          1,
+          -0.7660444378852844,
+          0,
+          0.6427876353263855,
+          -1,
+          -0.4330126941204071,
+          -0.5,
+          -0.25,
+          -0.8660253882408142,
+          0,
+          -0.5,
+          0.6666666865348816,
+          1,
+          -0.5,
+          0,
+          0.8660253882408142,
+          -1,
+          -0.49240386486053467,
+          -0.5,
+          -0.08682408928871155,
+          -0.9848077297210693,
+          0,
+          -0.1736481785774231,
+          0.7222222089767456,
+          1,
+          -0.1736481785774231,
+          0,
+          0.9848077297210693,
+          -1,
+          -0.49240386486053467,
+          -0.5,
+          0.08682408928871155,
+          -0.9848077297210693,
+          0,
+          0.1736481785774231,
+          0.7777777910232544,
+          1,
+          0.1736481785774231,
+          0,
+          0.9848077297210693,
+          -1,
+          -0.4330126941204071,
+          -0.5,
+          0.25,
+          -0.8660253882408142,
+          0,
+          0.5,
+          0.8333333134651184,
+          1,
+          0.5,
+          0,
+          0.8660253882408142,
+          -1,
+          -0.32139381766319275,
+          -0.5,
+          0.3830222189426422,
+          -0.6427876353263855,
+          0,
+          0.7660444378852844,
+          0.8888888955116272,
+          1,
+          0.7660444378852844,
+          0,
+          0.6427876353263855,
+          -1,
+          -0.1710100769996643,
+          -0.5,
+          0.46984630823135376,
+          -0.3420201539993286,
+          0,
+          0.9396926164627075,
+          0.9444444179534912,
+          1,
+          0.9396926164627075,
+          0,
+          0.3420201539993286,
+          -1,
+          -1.2246468525851679e-16,
+          -0.5,
+          0.5,
+          -2.4492937051703357e-16,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          2.5365375693419366e-16,
+          -1,
+          0,
+          0.5,
+          0,
+          0,
+          1,
+          0,
+          0.5,
+          0.5,
+          1,
+          0,
+          -1.5981740357037702e-15,
+          -1,
+          0,
+          0.5,
+          0.5,
+          0,
+          1,
+          0,
+          0.5,
+          1,
+          1,
+          0,
+          0,
+          -1,
+          0.1710100769996643,
+          0.5,
+          0.46984630823135376,
+          0,
+          1,
+          0,
+          0.6710100769996643,
+          0.9698463082313538,
+          1,
+          0,
+          -8.188121825014605e-8,
+          -1,
+          0.32139381766319275,
+          0.5,
+          0.3830222189426422,
+          0,
+          1,
+          0,
+          0.8213937878608704,
+          0.8830222487449646,
+          1,
+          0,
+          -3.8313164196779326e-8,
+          -1,
+          0.4330126941204071,
+          0.5,
+          0.25,
+          0,
+          1,
+          0,
+          0.9330127239227295,
+          0.75,
+          1,
+          0,
+          8.713615073929759e-8,
+          -1,
+          0.49240386486053467,
+          0.5,
+          0.08682408928871155,
+          0,
+          1,
+          0,
+          0.9924038648605347,
+          0.5868240594863892,
+          1,
+          0,
+          5.869911490208324e-8,
+          -1,
+          0.49240386486053467,
+          0.5,
+          -0.08682408928871155,
+          0,
+          1,
+          0,
+          0.9924038648605347,
+          0.41317591071128845,
+          1,
+          0,
+          1.5131039532434443e-8,
+          -1,
+          0.4330126941204071,
+          0.5,
+          -0.25,
+          0,
+          1,
+          0,
+          0.9330127239227295,
+          0.25,
+          1,
+          0,
+          0,
+          -1,
+          0.32139381766319275,
+          0.5,
+          -0.3830222189426422,
+          0,
+          1,
+          0,
+          0.8213937878608704,
+          0.11697778105735779,
+          1,
+          0,
+          -4.17188683599079e-9,
+          -1,
+          0.1710100769996643,
+          0.5,
+          -0.46984630823135376,
+          0,
+          1,
+          0,
+          0.6710100769996643,
+          0.03015368990600109,
+          1,
+          0,
+          1.2741235844160315e-9,
+          -1,
+          6.123234262925839e-17,
+          0.5,
+          -0.5,
+          0,
+          1,
+          0,
+          0.5,
+          0,
+          1,
+          0,
+          -2.41851421791464e-24,
+          -1,
+          -0.1710100769996643,
+          0.5,
+          -0.46984630823135376,
+          0,
+          1,
+          0,
+          0.3289899230003357,
+          0.03015368990600109,
+          1,
+          0,
+          -1.2741239174829389e-9,
+          -1,
+          -0.32139381766319275,
+          0.5,
+          -0.3830222189426422,
+          0,
+          1,
+          0,
+          0.17860619723796844,
+          0.11697778105735779,
+          1,
+          0,
+          4.17188639190158e-9,
+          -1,
+          -0.4330126941204071,
+          0.5,
+          -0.25,
+          0,
+          1,
+          0,
+          0.0669872984290123,
+          0.25,
+          1,
+          0,
+          0,
+          -1,
+          -0.49240386486053467,
+          0.5,
+          -0.08682408928871155,
+          0,
+          1,
+          0,
+          0.007596123497933149,
+          0.41317591071128845,
+          1,
+          0,
+          -1.5131039532434443e-8,
+          -1,
+          -0.49240386486053467,
+          0.5,
+          0.08682408928871155,
+          0,
+          1,
+          0,
+          0.007596123497933149,
+          0.5868240594863892,
+          1,
+          0,
+          -5.869911490208324e-8,
+          -1,
+          -0.4330126941204071,
+          0.5,
+          0.25,
+          0,
+          1,
+          0,
+          0.0669872984290123,
+          0.75,
+          1,
+          0,
+          -8.713615784472495e-8,
+          -1,
+          -0.32139381766319275,
+          0.5,
+          0.3830222189426422,
+          0,
+          1,
+          0,
+          0.17860619723796844,
+          0.8830222487449646,
+          1,
+          0,
+          3.831314643321093e-8,
+          -1,
+          -0.1710100769996643,
+          0.5,
+          0.46984630823135376,
+          0,
+          1,
+          0,
+          0.3289899230003357,
+          0.9698463082313538,
+          1,
+          0,
+          8.188121825014605e-8,
+          -1,
+          -1.2246468525851679e-16,
+          0.5,
+          0.5,
+          0,
+          1,
+          0,
+          0.5,
+          1,
+          1,
+          0,
+          0,
+          -1,
+          0,
+          -0.5,
+          0,
+          0,
+          -1,
+          0,
+          0.5,
+          0.5,
+          1,
+          0,
+          -1.5981740357037702e-15,
+          1,
+          0,
+          -0.5,
+          0.5,
+          0,
+          -1,
+          0,
+          0.5,
+          1,
+          1,
+          0,
+          0,
+          1,
+          0.1710100769996643,
+          -0.5,
+          0.46984630823135376,
+          0,
+          -1,
+          0,
+          0.6710100769996643,
+          0.9698463082313538,
+          1,
+          0,
+          -8.188121825014605e-8,
+          1,
+          0.32139381766319275,
+          -0.5,
+          0.3830222189426422,
+          0,
+          -1,
+          0,
+          0.8213937878608704,
+          0.8830222487449646,
+          1,
+          0,
+          -3.8313164196779326e-8,
+          1,
+          0.4330126941204071,
+          -0.5,
+          0.25,
+          0,
+          -1,
+          0,
+          0.9330127239227295,
+          0.75,
+          1,
+          0,
+          8.713615073929759e-8,
+          1,
+          0.49240386486053467,
+          -0.5,
+          0.08682408928871155,
+          0,
+          -1,
+          0,
+          0.9924038648605347,
+          0.5868240594863892,
+          1,
+          0,
+          5.869911490208324e-8,
+          1,
+          0.49240386486053467,
+          -0.5,
+          -0.08682408928871155,
+          0,
+          -1,
+          0,
+          0.9924038648605347,
+          0.41317591071128845,
+          1,
+          0,
+          1.5131039532434443e-8,
+          1,
+          0.4330126941204071,
+          -0.5,
+          -0.25,
+          0,
+          -1,
+          0,
+          0.9330127239227295,
+          0.25,
+          1,
+          0,
+          0,
+          1,
+          0.32139381766319275,
+          -0.5,
+          -0.3830222189426422,
+          0,
+          -1,
+          0,
+          0.8213937878608704,
+          0.11697778105735779,
+          1,
+          0,
+          -4.17188683599079e-9,
+          1,
+          0.1710100769996643,
+          -0.5,
+          -0.46984630823135376,
+          0,
+          -1,
+          0,
+          0.6710100769996643,
+          0.03015368990600109,
+          1,
+          0,
+          1.2741235844160315e-9,
+          1,
+          6.123234262925839e-17,
+          -0.5,
+          -0.5,
+          0,
+          -1,
+          0,
+          0.5,
+          0,
+          1,
+          0,
+          -2.41851421791464e-24,
+          1,
+          -0.1710100769996643,
+          -0.5,
+          -0.46984630823135376,
+          0,
+          -1,
+          0,
+          0.3289899230003357,
+          0.03015368990600109,
+          1,
+          0,
+          -1.2741239174829389e-9,
+          1,
+          -0.32139381766319275,
+          -0.5,
+          -0.3830222189426422,
+          0,
+          -1,
+          0,
+          0.17860619723796844,
+          0.11697778105735779,
+          1,
+          0,
+          4.17188639190158e-9,
+          1,
+          -0.4330126941204071,
+          -0.5,
+          -0.25,
+          0,
+          -1,
+          0,
+          0.0669872984290123,
+          0.25,
+          1,
+          0,
+          0,
+          1,
+          -0.49240386486053467,
+          -0.5,
+          -0.08682408928871155,
+          0,
+          -1,
+          0,
+          0.007596123497933149,
+          0.41317591071128845,
+          1,
+          0,
+          -1.5131039532434443e-8,
+          1,
+          -0.49240386486053467,
+          -0.5,
+          0.08682408928871155,
+          0,
+          -1,
+          0,
+          0.007596123497933149,
+          0.5868240594863892,
+          1,
+          0,
+          -5.869911490208324e-8,
+          1,
+          -0.4330126941204071,
+          -0.5,
+          0.25,
+          0,
+          -1,
+          0,
+          0.0669872984290123,
+          0.75,
+          1,
+          0,
+          -8.713615784472495e-8,
+          1,
+          -0.32139381766319275,
+          -0.5,
+          0.3830222189426422,
+          0,
+          -1,
+          0,
+          0.17860619723796844,
+          0.8830222487449646,
+          1,
+          0,
+          3.831314643321093e-8,
+          1,
+          -0.1710100769996643,
+          -0.5,
+          0.46984630823135376,
+          0,
+          -1,
+          0,
+          0.3289899230003357,
+          0.9698463082313538,
+          1,
+          0,
+          8.188121825014605e-8,
+          1,
+          -1.2246468525851679e-16,
+          -0.5,
+          0.5,
+          0,
+          -1,
+          0,
+          0.5,
+          1,
+          1,
+          0,
+          0,
+          1
+        ],
+        "indices": [
+          0,
+          19,
+          1,
+          19,
+          20,
+          1,
+          1,
+          20,
+          2,
+          20,
+          21,
+          2,
+          2,
+          21,
+          3,
+          21,
+          22,
+          3,
+          3,
+          22,
+          4,
+          22,
+          23,
+          4,
+          4,
+          23,
+          5,
+          23,
+          24,
+          5,
+          5,
+          24,
+          6,
+          24,
+          25,
+          6,
+          6,
+          25,
+          7,
+          25,
+          26,
+          7,
+          7,
+          26,
+          8,
+          26,
+          27,
+          8,
+          8,
+          27,
+          9,
+          27,
+          28,
+          9,
+          9,
+          28,
+          10,
+          28,
+          29,
+          10,
+          10,
+          29,
+          11,
+          29,
+          30,
+          11,
+          11,
+          30,
+          12,
+          30,
+          31,
+          12,
+          12,
+          31,
+          13,
+          31,
+          32,
+          13,
+          13,
+          32,
+          14,
+          32,
+          33,
+          14,
+          14,
+          33,
+          15,
+          33,
+          34,
+          15,
+          15,
+          34,
+          16,
+          34,
+          35,
+          16,
+          16,
+          35,
+          17,
+          35,
+          36,
+          17,
+          17,
+          36,
+          18,
+          36,
+          37,
+          18,
+          38,
+          39,
+          40,
+          38,
+          40,
+          41,
+          38,
+          41,
+          42,
+          38,
+          42,
+          43,
+          38,
+          43,
+          44,
+          38,
+          44,
+          45,
+          38,
+          45,
+          46,
+          38,
+          46,
+          47,
+          38,
+          47,
+          48,
+          38,
+          48,
+          49,
+          38,
+          49,
+          50,
+          38,
+          50,
+          51,
+          38,
+          51,
+          52,
+          38,
+          52,
+          53,
+          38,
+          53,
+          54,
+          38,
+          54,
+          55,
+          38,
+          55,
+          56,
+          38,
+          56,
+          57,
+          58,
+          60,
+          59,
+          58,
+          61,
+          60,
+          58,
+          62,
+          61,
+          58,
+          63,
+          62,
+          58,
+          64,
+          63,
+          58,
+          65,
+          64,
+          58,
+          66,
+          65,
+          58,
+          67,
+          66,
+          58,
+          68,
+          67,
+          58,
+          69,
+          68,
+          58,
+          70,
+          69,
+          58,
+          71,
+          70,
+          58,
+          72,
+          71,
+          58,
+          73,
+          72,
+          58,
+          74,
+          73,
+          58,
+          75,
+          74,
+          58,
+          76,
+          75,
+          58,
+          77,
+          76
+        ]
+      },
+      "refs": []
+    }
+  ]
+}

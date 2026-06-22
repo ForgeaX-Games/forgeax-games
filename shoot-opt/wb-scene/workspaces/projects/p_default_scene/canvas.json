@@ -1,0 +1,15 @@
+{
+  "id": "p_default_scene",
+  "name": "默认场景",
+  "description": "",
+  "nodes": [],
+  "edges": [],
+  "viewport": {
+    "x": 0,
+    "y": 0,
+    "zoom": 1
+  },
+  "status": "idle",
+  "createdAt": "2026-05-29T03:11:52.204Z",
+  "updatedAt": "2026-05-29T03:11:52.204Z"
+}

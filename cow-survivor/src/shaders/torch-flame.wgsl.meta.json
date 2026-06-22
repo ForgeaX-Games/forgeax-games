@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "shader",
+  "source": "torch-flame.wgsl",
+  "importSettings": { "materialShaderIdentifier": "cow_survivor::torch_flame" },
+  "subAssets": [
+    { "guid": "019fa101-c0a5-7c4e-9f12-345678abcd04", "sourceIndex": 0, "kind": "material-shader" }
+  ],
+  "paramSchema": [
+    { "name": "baseColor", "type": "color" },
+    { "name": "metallic",  "type": "f32" },
+    { "name": "roughness", "type": "f32" }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "cow-survivor",
+  "name": "Cow-Level Survivor",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": "3d",
+  "defaultScene": "7b4d43d4-5b19-5903-8966-f89671d21565"
+}

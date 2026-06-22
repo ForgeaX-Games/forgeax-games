@@ -1,0 +1,34 @@
+{
+  "name": "@forgeax/game-hellforge",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "ForgeaX: Hellforge — Diablo II-flavoured action RPG sample. Female sorceress hero, encampment hub, switchable 2.5D ⇄ FPS view, skill-based combat, monster grinding + loot. Loaded by apps/preview via loadGame dynamic import.",
+  "scripts": {},
+  "forgeax": {
+    "assets": {
+      "roots": [
+        "assets"
+      ]
+    },
+    "metrics": {
+      "bundle-size": { "enabled": false, "reason": "sample game; size is downstream of apps/preview" },
+      "fps": { "enabled": false, "reason": "sample game; no independent smoke gate yet" },
+      "bench": { "enabled": false, "reason": "sample game; bench focus is on engine packages" },
+      "gate": { "enabled": false, "reason": "no CI gate on sample games" },
+      "spike-report": { "enabled": false, "reason": "not a spike app" }
+    }
+  },
+  "dependencies": {
+    "@forgeax/engine-app": "workspace:*",
+    "@forgeax/engine-runtime": "workspace:*",
+    "@forgeax/engine-ecs": "workspace:*",
+    "@forgeax/engine-pack": "workspace:*",
+    "@forgeax/engine-physics": "workspace:*",
+    "@forgeax/engine-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@webgpu/types": "^0.1.70"
+  }
+}

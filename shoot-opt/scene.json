@@ -1,0 +1,77 @@
+{
+  "version": "1",
+  "nextId": 5,
+  "entities": {
+    "1": {
+      "id": 1,
+      "name": "Level",
+      "parent": null,
+      "components": {}
+    },
+    "2": {
+      "id": 2,
+      "name": "Sun",
+      "parent": 1,
+      "components": {
+        "Light": {
+          "type": "directional",
+          "intensity": 1.2,
+          "color": "#fff8e0",
+          "directionX": -0.4,
+          "directionY": -1,
+          "directionZ": -0.3
+        }
+      }
+    },
+    "3": {
+      "id": 3,
+      "name": "Crate",
+      "parent": 1,
+      "components": {
+        "Transform": {
+          "x": 1,
+          "y": 0,
+          "z": 0
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#b87333",
+          "metallic": 0,
+          "roughness": 0.8
+        }
+      },
+      "source": {
+        "plugin": "lowpoly",
+        "docId": "crate-01"
+      }
+    },
+    "4": {
+      "id": 4,
+      "name": "Ball",
+      "parent": 1,
+      "components": {
+        "Transform": {
+          "x": -1,
+          "y": 0,
+          "z": -1
+        },
+        "Mesh": {
+          "kind": "sphere"
+        },
+        "Material": {
+          "albedo": "#6cc6ff",
+          "emissive": "#6cc6ff",
+          "emissiveIntensity": 0.6
+        }
+      }
+    }
+  },
+  "order": [
+    1,
+    2,
+    3,
+    4
+  ]
+}

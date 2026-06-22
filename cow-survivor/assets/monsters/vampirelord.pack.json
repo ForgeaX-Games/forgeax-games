@@ -1,0 +1,605 @@
+{
+ "schemaVersion": "1.0.0",
+ "kind": "internal-text-package",
+ "assets": [
+  {
+   "guid": "58f83839-bcfc-528a-a78d-bd1b1abab194",
+   "kind": "scene",
+   "payload": {
+    "kind": "scene",
+    "entities": [
+     {
+      "localId": 0,
+      "components": {
+       "Name": {
+        "value": "body_1"
+       },
+       "Transform": {
+        "posX": -0.3,
+        "posY": -0.9,
+        "posZ": 0,
+        "scaleX": 0.34,
+        "scaleY": 1,
+        "scaleZ": 0.4
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         1
+        ]
+       }
+      }
+     },
+     {
+      "localId": 1,
+      "components": {
+       "Name": {
+        "value": "body_2"
+       },
+       "Transform": {
+        "posX": 0.3,
+        "posY": -0.9,
+        "posZ": 0,
+        "scaleX": 0.34,
+        "scaleY": 1,
+        "scaleZ": 0.4
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         1
+        ]
+       }
+      }
+     },
+     {
+      "localId": 2,
+      "components": {
+       "Name": {
+        "value": "body_3"
+       },
+       "Transform": {
+        "posX": 0,
+        "posY": 0.1,
+        "posZ": 0,
+        "scaleX": 1.05,
+        "scaleY": 1.3,
+        "scaleZ": 0.75
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         1
+        ]
+       }
+      }
+     },
+     {
+      "localId": 3,
+      "components": {
+       "Name": {
+        "value": "spot_1"
+       },
+       "Transform": {
+        "posX": 0,
+        "posY": 0,
+        "posZ": 0.4,
+        "scaleX": 0.6,
+        "scaleY": 1.05,
+        "scaleZ": 0.06
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         2
+        ]
+       }
+      }
+     },
+     {
+      "localId": 4,
+      "components": {
+       "Name": {
+        "value": "glow"
+       },
+       "Transform": {
+        "posX": 0,
+        "posY": 0.3,
+        "posZ": 0.46,
+        "scaleX": 0.26,
+        "scaleY": 0.26,
+        "scaleZ": 0.26
+       },
+       "MeshFilter": {
+        "assetHandle": 3
+       },
+       "MeshRenderer": {
+        "materials": [
+         4
+        ]
+       }
+      }
+     },
+     {
+      "localId": 5,
+      "components": {
+       "Name": {
+        "value": "wing_1"
+       },
+       "Transform": {
+        "posX": 0,
+        "posY": 0.05,
+        "posZ": -0.5,
+        "scaleX": 1.8,
+        "scaleY": 1.6,
+        "scaleZ": 0.08
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         5
+        ]
+       }
+      }
+     },
+     {
+      "localId": 6,
+      "components": {
+       "Name": {
+        "value": "spot_2"
+       },
+       "Transform": {
+        "posX": -0.5,
+        "posY": 0.95,
+        "posZ": -0.15,
+        "scaleX": 0.1,
+        "scaleY": 0.7,
+        "scaleZ": 0.45,
+        "quatX": 0,
+        "quatY": 0.19866922982851135,
+        "quatZ": 0,
+        "quatW": 0.9800665983081691
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         2
+        ]
+       }
+      }
+     },
+     {
+      "localId": 7,
+      "components": {
+       "Name": {
+        "value": "spot_3"
+       },
+       "Transform": {
+        "posX": 0.5,
+        "posY": 0.95,
+        "posZ": -0.15,
+        "scaleX": 0.1,
+        "scaleY": 0.7,
+        "scaleZ": 0.45,
+        "quatX": 0,
+        "quatY": -0.19866922982851135,
+        "quatZ": 0,
+        "quatW": 0.9800665983081691
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         2
+        ]
+       }
+      }
+     },
+     {
+      "localId": 8,
+      "components": {
+       "Name": {
+        "value": "horn_1"
+       },
+       "Transform": {
+        "posX": 0,
+        "posY": 1.05,
+        "posZ": 0.1,
+        "scaleX": 0.55,
+        "scaleY": 0.5,
+        "scaleZ": 0.55
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         6
+        ]
+       }
+      }
+     },
+     {
+      "localId": 9,
+      "components": {
+       "Name": {
+        "value": "body_4"
+       },
+       "Transform": {
+        "posX": -0.15,
+        "posY": 1.35,
+        "posZ": 0,
+        "scaleX": 0.1,
+        "scaleY": 0.18,
+        "scaleZ": 0.1
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         1
+        ]
+       }
+      }
+     },
+     {
+      "localId": 10,
+      "components": {
+       "Name": {
+        "value": "body_5"
+       },
+       "Transform": {
+        "posX": 0.15,
+        "posY": 1.35,
+        "posZ": 0,
+        "scaleX": 0.1,
+        "scaleY": 0.18,
+        "scaleZ": 0.1
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         1
+        ]
+       }
+      }
+     },
+     {
+      "localId": 11,
+      "components": {
+       "Name": {
+        "value": "eye"
+       },
+       "Transform": {
+        "posX": 0,
+        "posY": 1.08,
+        "posZ": 0.4,
+        "scaleX": 0.36,
+        "scaleY": 0.06,
+        "scaleZ": 0.04
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         7
+        ]
+       }
+      }
+     },
+     {
+      "localId": 12,
+      "components": {
+       "Name": {
+        "value": "wing_2"
+       },
+       "Transform": {
+        "posX": -0.95,
+        "posY": 0.65,
+        "posZ": -0.3,
+        "scaleX": 0.06,
+        "scaleY": 0.9,
+        "scaleZ": 0.7,
+        "quatX": 0,
+        "quatY": 0.29552047587722863,
+        "quatZ": 0,
+        "quatW": 0.955336405847331
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         5
+        ]
+       }
+      }
+     },
+     {
+      "localId": 13,
+      "components": {
+       "Name": {
+        "value": "wing_3"
+       },
+       "Transform": {
+        "posX": 0.95,
+        "posY": 0.65,
+        "posZ": -0.3,
+        "scaleX": 0.06,
+        "scaleY": 0.9,
+        "scaleZ": 0.7,
+        "quatX": 0,
+        "quatY": -0.29552047587722863,
+        "quatZ": 0,
+        "quatW": 0.955336405847331
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         5
+        ]
+       }
+      }
+     },
+     {
+      "localId": 14,
+      "components": {
+       "Name": {
+        "value": "horn_2"
+       },
+       "Transform": {
+        "posX": -0.65,
+        "posY": -0.1,
+        "posZ": 0.25,
+        "scaleX": 0.14,
+        "scaleY": 0.45,
+        "scaleZ": 0.18
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         6
+        ]
+       }
+      }
+     },
+     {
+      "localId": 15,
+      "components": {
+       "Name": {
+        "value": "horn_3"
+       },
+       "Transform": {
+        "posX": 0.65,
+        "posY": -0.1,
+        "posZ": 0.25,
+        "scaleX": 0.14,
+        "scaleY": 0.45,
+        "scaleZ": 0.18
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         6
+        ]
+       }
+      }
+     }
+    ]
+   },
+   "refs": [
+    "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
+    "4d53d946-6b12-5903-953a-f99026d851e5",
+    "b949a527-8f84-5f5a-8879-d439e4a010c4",
+    "95730fd2-9846-5f84-8658-0b3c971eb263",
+    "2e18bb16-9f4b-5947-b12b-669c77815b55",
+    "29e448e2-bcae-5425-90a2-c42460f0ba5f",
+    "34e72adb-08cb-5460-8595-8b5d7272a0ea",
+    "704e1889-7a22-5cde-919b-c26b4224c180"
+   ]
+  },
+  {
+   "guid": "4d53d946-6b12-5903-953a-f99026d851e5",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.0784313725490196,
+      0.058823529411764705,
+      0.12156862745098039,
+      1
+     ],
+     "metallic": 0.1,
+     "roughness": 0.45
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "b949a527-8f84-5f5a-8879-d439e4a010c4",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.45098039215686275,
+      0.050980392156862744,
+      0.10196078431372549,
+      1
+     ],
+     "metallic": 0.05,
+     "roughness": 0.4
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "2e18bb16-9f4b-5947-b12b-669c77815b55",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      1,
+      0.14901960784313725,
+      0.25098039215686274,
+      1
+     ],
+     "metallic": 0.05,
+     "roughness": 0.6,
+     "emissive": [
+      1,
+      0.10196078431372549,
+      0.2
+     ],
+     "emissiveIntensity": 8
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "29e448e2-bcae-5425-90a2-c42460f0ba5f",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.2,
+      0.0784313725490196,
+      0.25098039215686274,
+      1
+     ],
+     "metallic": 0.2,
+     "roughness": 0.5
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "34e72adb-08cb-5460-8595-8b5d7272a0ea",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.7490196078431373,
+      0.7019607843137254,
+      0.6,
+      1
+     ],
+     "metallic": 0.5,
+     "roughness": 0.3
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "704e1889-7a22-5cde-919b-c26b4224c180",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.050980392156862744,
+      0.050980392156862744,
+      0.050980392156862744,
+      1
+     ],
+     "metallic": 0.05,
+     "roughness": 0.6,
+     "emissive": [
+      1,
+      0.10196078431372549,
+      0.14901960784313725
+     ],
+     "emissiveIntensity": 14
+    }
+   },
+   "refs": []
+  }
+ ]
+}

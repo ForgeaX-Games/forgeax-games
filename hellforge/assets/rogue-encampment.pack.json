@@ -1,0 +1,1066 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "15acc839-d847-527c-8284-bfb36d7c50de",
+      "kind": "scene",
+      "payload": {
+        "kind": "scene",
+        "entities": [
+          {
+            "localId": 0,
+            "components": {
+              "Name": {
+                "value": "Ground"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": -0.1,
+                "posZ": 0,
+                "scaleX": 50,
+                "scaleY": 0.2,
+                "scaleZ": 50
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 1,
+            "components": {
+              "Name": {
+                "value": "Sun"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 10,
+                "posZ": 0,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              },
+              "DirectionalLight": {
+                "directionX": 0.6,
+                "directionY": -0.55,
+                "directionZ": 0.55,
+                "colorR": 0.45,
+                "colorG": 0.55,
+                "colorB": 1,
+                "intensity": 2
+              },
+              "DirectionalLightShadow": {
+                "cascadeCount": 1,
+                "splitLambda": 0.8,
+                "cascadeBlend": 0.1,
+                "mapSize": 2048,
+                "depthBias": 0.002,
+                "normalBias": 0.025,
+                "nearPlane": 0.1,
+                "farPlane": 60,
+                "pcfKernelSize": 3
+              }
+            }
+          },
+          {
+            "localId": 2,
+            "components": {
+              "Name": {
+                "value": "Hut1_Wall_N"
+              },
+              "Transform": {
+                "posX": -6,
+                "posY": 1.2,
+                "posZ": -6,
+                "scaleX": 4,
+                "scaleY": 2.4,
+                "scaleZ": 0.3
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  2
+                ]
+              }
+            }
+          },
+          {
+            "localId": 3,
+            "components": {
+              "Name": {
+                "value": "Hut1_Wall_E"
+              },
+              "Transform": {
+                "posX": -4,
+                "posY": 1.2,
+                "posZ": -7.85,
+                "scaleX": 0.3,
+                "scaleY": 2.4,
+                "scaleZ": 4
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  2
+                ]
+              }
+            }
+          },
+          {
+            "localId": 4,
+            "components": {
+              "Name": {
+                "value": "Hut1_Roof"
+              },
+              "Transform": {
+                "posX": -6,
+                "posY": 2.5,
+                "posZ": -7.85,
+                "scaleX": 4.2,
+                "scaleY": 0.2,
+                "scaleZ": 4.2
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 5,
+            "components": {
+              "Name": {
+                "value": "Hut2_Wall_N"
+              },
+              "Transform": {
+                "posX": 6,
+                "posY": 1.2,
+                "posZ": -6,
+                "scaleX": 4,
+                "scaleY": 2.4,
+                "scaleZ": 0.3
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  2
+                ]
+              }
+            }
+          },
+          {
+            "localId": 6,
+            "components": {
+              "Name": {
+                "value": "Hut2_Wall_W"
+              },
+              "Transform": {
+                "posX": 8,
+                "posY": 1.2,
+                "posZ": -7.85,
+                "scaleX": 0.3,
+                "scaleY": 2.4,
+                "scaleZ": 4
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  2
+                ]
+              }
+            }
+          },
+          {
+            "localId": 7,
+            "components": {
+              "Name": {
+                "value": "Hut2_Roof"
+              },
+              "Transform": {
+                "posX": 6,
+                "posY": 2.5,
+                "posZ": -7.85,
+                "scaleX": 4.2,
+                "scaleY": 0.2,
+                "scaleZ": 4.2
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 8,
+            "components": {
+              "Name": {
+                "value": "Hut3_Wall_S"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 1.2,
+                "posZ": -12,
+                "scaleX": 5,
+                "scaleY": 2.4,
+                "scaleZ": 0.3
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  2
+                ]
+              }
+            }
+          },
+          {
+            "localId": 9,
+            "components": {
+              "Name": {
+                "value": "Hut3_Roof"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 2.6,
+                "posZ": -13.5,
+                "scaleX": 5.2,
+                "scaleY": 0.2,
+                "scaleZ": 3.2
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 10,
+            "components": {
+              "Name": {
+                "value": "CampfireBase"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 0.2,
+                "posZ": 0,
+                "scaleX": 1.6,
+                "scaleY": 0.4,
+                "scaleZ": 1.6
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  4
+                ]
+              }
+            }
+          },
+          {
+            "localId": 11,
+            "components": {
+              "Name": {
+                "value": "CampfireLog1"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 0.55,
+                "posZ": 0.25,
+                "scaleX": 1.2,
+                "scaleY": 0.18,
+                "scaleZ": 0.18,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0.2587929141995183,
+                "quatW": 0.9659328276645953
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  4
+                ]
+              }
+            }
+          },
+          {
+            "localId": 12,
+            "components": {
+              "Name": {
+                "value": "CampfireLog2"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 0.55,
+                "posZ": -0.25,
+                "scaleX": 1.2,
+                "scaleY": 0.18,
+                "scaleZ": 0.18,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": -0.2587929141995183,
+                "quatW": 0.9659328276645953
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  4
+                ]
+              }
+            }
+          },
+          {
+            "localId": 13,
+            "components": {
+              "Name": {
+                "value": "CampfireGlow"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 0.7,
+                "posZ": 0,
+                "scaleX": 0.5,
+                "scaleY": 0.5,
+                "scaleZ": 0.5
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  5
+                ]
+              }
+            }
+          },
+          {
+            "localId": 14,
+            "components": {
+              "Name": {
+                "value": "CampfireLight"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 1.2,
+                "posZ": 0,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              },
+              "PointLight": {
+                "colorR": 1,
+                "colorG": 0.6,
+                "colorB": 0.25098039215686274,
+                "intensity": 12,
+                "range": 16
+              }
+            }
+          },
+          {
+            "localId": 15,
+            "components": {
+              "Name": {
+                "value": "GateColumnL"
+              },
+              "Transform": {
+                "posX": -2.5,
+                "posY": 1.5,
+                "posZ": 14,
+                "scaleX": 0.6,
+                "scaleY": 3,
+                "scaleZ": 0.6
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  2
+                ]
+              }
+            }
+          },
+          {
+            "localId": 16,
+            "components": {
+              "Name": {
+                "value": "GateColumnR"
+              },
+              "Transform": {
+                "posX": 2.5,
+                "posY": 1.5,
+                "posZ": 14,
+                "scaleX": 0.6,
+                "scaleY": 3,
+                "scaleZ": 0.6
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  2
+                ]
+              }
+            }
+          },
+          {
+            "localId": 17,
+            "components": {
+              "Name": {
+                "value": "GateLintel"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 3.2,
+                "posZ": 14,
+                "scaleX": 5.6,
+                "scaleY": 0.4,
+                "scaleZ": 0.5
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 18,
+            "components": {
+              "Name": {
+                "value": "FenceW1"
+              },
+              "Transform": {
+                "posX": -11.30811251407703,
+                "posY": 0.6,
+                "posZ": 3.3144966429334097,
+                "scaleX": 0.2,
+                "scaleY": 1.2,
+                "scaleZ": 12
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 19,
+            "components": {
+              "Name": {
+                "value": "FenceE1"
+              },
+              "Transform": {
+                "posX": 8,
+                "posY": 0.6,
+                "posZ": 6,
+                "scaleX": 0.2,
+                "scaleY": 1.2,
+                "scaleZ": 12
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 20,
+            "components": {
+              "Name": {
+                "value": "FenceN"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 0.6,
+                "posZ": -14,
+                "scaleX": 16,
+                "scaleY": 1.2,
+                "scaleZ": 0.2
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 21,
+            "components": {
+              "Name": {
+                "value": "TorchGateL_Post"
+              },
+              "Transform": {
+                "posX": -2.5,
+                "posY": 0.9,
+                "posZ": 13.5,
+                "scaleX": 0.12,
+                "scaleY": 1.8,
+                "scaleZ": 0.12
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  "42a5f29d-ab90-5710-9b3a-5bc7e59585fa"
+                ]
+              }
+            }
+          },
+          {
+            "localId": 22,
+            "components": {
+              "Name": {
+                "value": "TorchGateL_Glow"
+              },
+              "Transform": {
+                "posX": -2.5,
+                "posY": 2,
+                "posZ": 13.5,
+                "scaleX": 0.28,
+                "scaleY": 0.28,
+                "scaleZ": 0.28
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  "8ef4a717-a4c4-5028-a97c-b959f9426fea"
+                ]
+              }
+            }
+          },
+          {
+            "localId": 23,
+            "components": {
+              "Name": {
+                "value": "TorchGateL_Light"
+              },
+              "Transform": {
+                "posX": -2.5,
+                "posY": 2.1,
+                "posZ": 13.5
+              },
+              "PointLight": {
+                "colorR": 1,
+                "colorG": 0.55,
+                "colorB": 0.18,
+                "intensity": 8,
+                "range": 12
+              }
+            }
+          },
+          {
+            "localId": 24,
+            "components": {
+              "Name": {
+                "value": "TorchGateR_Post"
+              },
+              "Transform": {
+                "posX": 2.5,
+                "posY": 0.9,
+                "posZ": 13.5,
+                "scaleX": 0.12,
+                "scaleY": 1.8,
+                "scaleZ": 0.12
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  "42a5f29d-ab90-5710-9b3a-5bc7e59585fa"
+                ]
+              }
+            }
+          },
+          {
+            "localId": 25,
+            "components": {
+              "Name": {
+                "value": "TorchGateR_Glow"
+              },
+              "Transform": {
+                "posX": 2.5,
+                "posY": 2,
+                "posZ": 13.5,
+                "scaleX": 0.28,
+                "scaleY": 0.28,
+                "scaleZ": 0.28
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  "8ef4a717-a4c4-5028-a97c-b959f9426fea"
+                ]
+              }
+            }
+          },
+          {
+            "localId": 26,
+            "components": {
+              "Name": {
+                "value": "TorchGateR_Light"
+              },
+              "Transform": {
+                "posX": 2.5,
+                "posY": 2.1,
+                "posZ": 13.5
+              },
+              "PointLight": {
+                "colorR": 1,
+                "colorG": 0.55,
+                "colorB": 0.18,
+                "intensity": 8,
+                "range": 12
+              }
+            }
+          },
+          {
+            "localId": 27,
+            "components": {
+              "Name": {
+                "value": "TorchHut1_Post"
+              },
+              "Transform": {
+                "posX": -5,
+                "posY": 0.9,
+                "posZ": -3.5,
+                "scaleX": 0.12,
+                "scaleY": 1.8,
+                "scaleZ": 0.12
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  "42a5f29d-ab90-5710-9b3a-5bc7e59585fa"
+                ]
+              }
+            }
+          },
+          {
+            "localId": 28,
+            "components": {
+              "Name": {
+                "value": "TorchHut1_Glow"
+              },
+              "Transform": {
+                "posX": -5,
+                "posY": 2,
+                "posZ": -3.5,
+                "scaleX": 0.28,
+                "scaleY": 0.28,
+                "scaleZ": 0.28
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  "8ef4a717-a4c4-5028-a97c-b959f9426fea"
+                ]
+              }
+            }
+          },
+          {
+            "localId": 30,
+            "components": {
+              "Name": {
+                "value": "TorchHut2_Post"
+              },
+              "Transform": {
+                "posX": 5,
+                "posY": 0.9,
+                "posZ": -3.5,
+                "scaleX": 0.12,
+                "scaleY": 1.8,
+                "scaleZ": 0.12
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  "42a5f29d-ab90-5710-9b3a-5bc7e59585fa"
+                ]
+              }
+            }
+          },
+          {
+            "localId": 31,
+            "components": {
+              "Name": {
+                "value": "TorchHut2_Glow"
+              },
+              "Transform": {
+                "posX": 5,
+                "posY": 2,
+                "posZ": -3.5,
+                "scaleX": 0.28,
+                "scaleY": 0.28,
+                "scaleZ": 0.28
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  "8ef4a717-a4c4-5028-a97c-b959f9426fea"
+                ]
+              }
+            }
+          },
+          {
+            "localId": 33,
+            "components": {
+              "Name": {
+                "value": "TorchHut3F_Post"
+              },
+              "Transform": {
+                "posX": -2.5,
+                "posY": 0.9,
+                "posZ": -9,
+                "scaleX": 0.12,
+                "scaleY": 1.8,
+                "scaleZ": 0.12
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  "42a5f29d-ab90-5710-9b3a-5bc7e59585fa"
+                ]
+              }
+            }
+          },
+          {
+            "localId": 34,
+            "components": {
+              "Name": {
+                "value": "TorchHut3F_Glow"
+              },
+              "Transform": {
+                "posX": -2.5,
+                "posY": 2,
+                "posZ": -9,
+                "scaleX": 0.28,
+                "scaleY": 0.28,
+                "scaleZ": 0.28
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  "8ef4a717-a4c4-5028-a97c-b959f9426fea"
+                ]
+              }
+            }
+          },
+          {
+            "localId": 36,
+            "components": {
+              "Name": {
+                "value": "TorchHut3R_Post"
+              },
+              "Transform": {
+                "posX": 2.5,
+                "posY": 0.9,
+                "posZ": -9,
+                "scaleX": 0.12,
+                "scaleY": 1.8,
+                "scaleZ": 0.12
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  "42a5f29d-ab90-5710-9b3a-5bc7e59585fa"
+                ]
+              }
+            }
+          },
+          {
+            "localId": 37,
+            "components": {
+              "Name": {
+                "value": "TorchHut3R_Glow"
+              },
+              "Transform": {
+                "posX": 2.5,
+                "posY": 2,
+                "posZ": -9,
+                "scaleX": 0.28,
+                "scaleY": 0.28,
+                "scaleZ": 0.28
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  "8ef4a717-a4c4-5028-a97c-b959f9426fea"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "refs": [
+        "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
+        "cb6ec8aa-e2f9-57c7-a34e-56ac76dbee19",
+        "42a5f29d-ab90-5710-9b3a-5bc7e59585fa",
+        "17a392d4-9ddd-5fa1-ae2c-586ab1f49267",
+        "1d631673-ed72-5f72-93b1-7895d025660c",
+        "8ef4a717-a4c4-5028-a97c-b959f9426fea"
+      ]
+    },
+    {
+      "guid": "cb6ec8aa-e2f9-57c7-a34e-56ac76dbee19",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.30196078431372547,
+            0.3607843137254902,
+            0.2,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.95
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "42a5f29d-ab90-5710-9b3a-5bc7e59585fa",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.4196078431372549,
+            0.4,
+            0.3607843137254902,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.85
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "17a392d4-9ddd-5fa1-ae2c-586ab1f49267",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.30196078431372547,
+            0.1803921568627451,
+            0.10196078431372549,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.78
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "1d631673-ed72-5f72-93b1-7895d025660c",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.2,
+            0.12156862745098039,
+            0.058823529411764705,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.85,
+          "emissive": [
+            0.6,
+            0.1803921568627451,
+            0.0392156862745098
+          ],
+          "emissiveIntensity": 0.6
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "8ef4a717-a4c4-5028-a97c-b959f9426fea",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            1,
+            0.5490196078431373,
+            0.2,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.3,
+          "emissive": [
+            1,
+            0.45098039215686275,
+            0.10196078431372549
+          ],
+          "emissiveIntensity": 4
+        }
+      },
+      "refs": []
+    }
+  ]
+}

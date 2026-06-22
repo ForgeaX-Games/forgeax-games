@@ -1,0 +1,51 @@
+{
+ "version": 1,
+ "nextId": 137,
+ "entities": {
+  "134": {
+   "id": 134,
+   "name": "IntelliScene_Demo",
+   "parent": null,
+   "components": {
+    "Transform": {
+     "x": -64,
+     "y": -0.537,
+     "z": 84.5,
+     "scaleX": 1,
+     "scaleY": 1,
+     "scaleZ": 1
+    },
+    "GltfRef": {
+     "path": ".forgeax/games/fps/assets/IntelliScene_Demo.glb",
+     "nodeCount": 5538,
+     "meshCount": 92
+    }
+   }
+  },
+  "135": {
+   "id": 135,
+   "name": "Sun",
+   "parent": null,
+   "components": {
+    "Transform": {
+     "x": 0,
+     "y": 30,
+     "z": 0
+    },
+    "Light": {
+     "type": "directional",
+     "color": "#fff4e0",
+     "intensity": 3.4,
+     "directionX": -0.6,
+     "directionY": -0.7,
+     "directionZ": 0.35,
+     "castShadow": true
+    }
+   }
+  }
+ },
+ "order": [
+  134,
+  135
+ ]
+}

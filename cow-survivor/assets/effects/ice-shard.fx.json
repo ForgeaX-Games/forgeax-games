@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "fx-effect",
+  "name": "Ice Shard",
+  "description": "Faceted crystalline ice bullet with internal refraction-line shimmer.",
+  "shader": "cow_survivor::ice_shard",
+  "geometry": "cube",
+  "params": { "baseColor": [0.6, 0.85, 1.0], "metallic": 0, "roughness": 1.4 },
+  "paramSemantics": {
+    "metallic": "time-elapsed-seconds",
+    "roughness": "intensity-multiplier"
+  }
+}

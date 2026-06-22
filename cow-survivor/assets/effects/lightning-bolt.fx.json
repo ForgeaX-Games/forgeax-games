@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "fx-effect",
+  "name": "Lightning Bolt",
+  "description": "Electric arc segment between two enemies. Drives chain-lightning visuals.",
+  "shader": "cow_survivor::lightning",
+  "geometry": "cube",
+  "spawn": {
+    "lifetime": 0.40,
+    "scale": [0.22, 0.22, 1.06],
+    "yawSource": "segment-direction"
+  },
+  "params": {
+    "baseColor": [0.95, 0.85, 1.0],
+    "metallic": 0,
+    "roughness": 1.4
+  },
+  "paramSemantics": {
+    "metallic": "time-elapsed-seconds",
+    "roughness": "intensity-multiplier"
+  },
+  "preview": {
+    "spawnIntervalSec": 1.6,
+    "fromTo": [[-2.0, 1.0, 0], [2.0, 1.0, 0]],
+    "cameraDist": 6,
+    "cameraPitch": -0.25
+  }
+}

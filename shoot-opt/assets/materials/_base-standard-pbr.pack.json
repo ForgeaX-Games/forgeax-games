@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "ca115fc2-c547-4f44-908c-f2e77131d9c9",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ]
+      },
+      "refs": []
+    }
+  ]
+}

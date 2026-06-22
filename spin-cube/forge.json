@@ -1,0 +1,6 @@
+{
+  "id": "spin-cube",
+  "name": "spin-cube",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts"
+}

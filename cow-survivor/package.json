@@ -1,0 +1,50 @@
+{
+  "name": "@forgeax/game-cow-survivor",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "Cow-Level Survivor — Vampire-Survivors-like 3D bullet-survival sample. Roguelike weapons, wave spawner, XP gems, kill FX, screen shake, floating combat text. Loaded by apps/preview via loadGame dynamic import.",
+  "scripts": {},
+  "forgeax": {
+    "assets": {
+      "roots": [
+        "assets"
+      ]
+    },
+    "metrics": {
+      "bundle-size": {
+        "enabled": false,
+        "reason": "sample game bundle is downstream of the host app (apps/preview)"
+      },
+      "fps": {
+        "enabled": false,
+        "reason": "sample game has no independent smoke gate"
+      },
+      "bench": {
+        "enabled": false,
+        "reason": "sample game; bench focus stays on engine packages"
+      },
+      "gate": {
+        "enabled": false,
+        "reason": "no CI gate on sample games; apps/preview hosts acceptance"
+      },
+      "spike-report": {
+        "enabled": false,
+        "reason": "not a spike app"
+      }
+    }
+  },
+  "dependencies": {
+    "@forgeax/engine-app": "workspace:*",
+    "@forgeax/engine-runtime": "workspace:*",
+    "@forgeax/engine-render-graph": "workspace:*",
+    "@forgeax/engine-ecs": "workspace:*",
+    "@forgeax/engine-pack": "workspace:*",
+    "@forgeax/engine-physics": "workspace:*",
+    "@forgeax/engine-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@webgpu/types": "^0.1.70"
+  }
+}

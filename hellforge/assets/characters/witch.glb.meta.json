@@ -1,0 +1,39 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "mixamorig:HeadTop_End", "mixamorig:Head", "mixamorig:Neck",
+        "mixamorig:LeftHandIndex4", "mixamorig:LeftHandIndex3", "mixamorig:LeftHandIndex2", "mixamorig:LeftHandIndex1",
+        "mixamorig:LeftHand", "mixamorig:LeftForeArm", "mixamorig:LeftArm", "mixamorig:LeftShoulder",
+        "mixamorig:RightHandIndex4", "mixamorig:RightHandIndex3", "mixamorig:RightHandIndex2", "mixamorig:RightHandIndex1",
+        "mixamorig:RightHand", "mixamorig:RightForeArm", "mixamorig:RightArm", "mixamorig:RightShoulder",
+        "mixamorig:Spine2", "mixamorig:Spine1", "mixamorig:Spine",
+        "mixamorig:LeftToe_End", "mixamorig:LeftToeBase", "mixamorig:LeftFoot", "mixamorig:LeftLeg", "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End", "mixamorig:RightToeBase", "mixamorig:RightFoot", "mixamorig:RightLeg", "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "CH_Witch_001",
+        "Armature"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "witch.glb",
+  "subAssets": [
+    { "guid": "26b0498a-8239-4b86-85a4-c9362f876905", "kind": "mesh",            "sourceIndex": 0 },
+    { "guid": "df7855a2-95ae-49b6-8046-42a4fe96b365", "kind": "material",        "sourceIndex": 0 },
+    { "guid": "5e3028dd-ddf6-4104-86d9-318d3e8fb5a6", "kind": "scene",           "sourceIndex": 0 },
+    { "guid": "b08197ef-4750-4ffc-8b08-e30a00cc6774", "kind": "texture",         "sourceIndex": 0 },
+    { "guid": "de01bf88-d2cd-428e-b1d9-a7e153872d02", "kind": "skeleton",        "sourceIndex": 0 },
+    { "guid": "efc87a7c-a073-4ad0-96db-47b597234b17", "kind": "skin",            "sourceIndex": 0 },
+    { "guid": "c530adf2-8de6-486a-afaa-9af3a6e6dfd1", "kind": "animation-clip",  "sourceIndex": 0 },
+    { "guid": "f9355148-5ddc-45a4-80d4-ef80fce559b0", "kind": "animation-clip",  "sourceIndex": 1 },
+    { "guid": "9bb05e7d-6156-424f-8a20-f80373507f65", "kind": "animation-clip",  "sourceIndex": 2 },
+    { "guid": "7faedc58-49cd-4fc9-93b7-66eca1b79674", "kind": "animation-clip",  "sourceIndex": 3 },
+    { "guid": "ca6e7f12-8e1a-4b3c-9d50-2a4f1b8c6d04", "kind": "animation-clip",  "sourceIndex": 4 }
+  ]
+}

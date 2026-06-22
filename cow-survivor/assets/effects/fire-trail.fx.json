@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "fx-effect",
+  "name": "Fire Trail",
+  "description": "Animated flame trail material for fire-weapon bullets.",
+  "shader": "cow_survivor::fire_trail",
+  "geometry": "cube",
+  "params": { "baseColor": [1.0, 0.10, 0.03], "metallic": 0, "roughness": 1.4 },
+  "paramSemantics": {
+    "metallic": "time-elapsed-seconds",
+    "roughness": "intensity-multiplier"
+  }
+}

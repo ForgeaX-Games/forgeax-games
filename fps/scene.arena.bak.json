@@ -1,0 +1,3064 @@
+{
+  "version": "1",
+  "nextId": 134,
+  "entities": {
+    "1": {
+      "id": 1,
+      "name": "Arena",
+      "parent": null,
+      "components": {}
+    },
+    "2": {
+      "id": 2,
+      "name": "Floor",
+      "parent": 1,
+      "components": {}
+    },
+    "3": {
+      "id": 3,
+      "name": "Floor",
+      "parent": 2,
+      "components": {
+        "Transform": {
+          "x": -0.19607689275001583,
+          "y": -0.1,
+          "z": -0.40184120896802167,
+          "scaleX": 48,
+          "scaleY": 0.2,
+          "scaleZ": 48
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#12141a",
+          "roughness": 0.95,
+          "metallic": 0,
+          "shading": "standard"
+        }
+      }
+    },
+    "4": {
+      "id": 4,
+      "name": "FloorTrim X-2",
+      "parent": 2,
+      "components": {
+        "Transform": {
+          "x": -18,
+          "y": 0.01,
+          "z": 0,
+          "scaleX": 0.25,
+          "scaleY": 0.04,
+          "scaleZ": 46
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1c1f26",
+          "roughness": 0.8,
+          "metallic": 0.2,
+          "shading": "standard"
+        }
+      }
+    },
+    "5": {
+      "id": 5,
+      "name": "FloorTrim Z-2",
+      "parent": 2,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 0.01,
+          "z": -18,
+          "scaleX": 46,
+          "scaleY": 0.04,
+          "scaleZ": 0.25
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1c1f26",
+          "roughness": 0.8,
+          "metallic": 0.2,
+          "shading": "standard"
+        }
+      }
+    },
+    "6": {
+      "id": 6,
+      "name": "FloorTrim X-1",
+      "parent": 2,
+      "components": {
+        "Transform": {
+          "x": -9,
+          "y": 0.01,
+          "z": 0,
+          "scaleX": 0.25,
+          "scaleY": 0.04,
+          "scaleZ": 46
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1c1f26",
+          "roughness": 0.8,
+          "metallic": 0.2,
+          "shading": "standard"
+        }
+      }
+    },
+    "7": {
+      "id": 7,
+      "name": "FloorTrim Z-1",
+      "parent": 2,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 0.01,
+          "z": -9,
+          "scaleX": 46,
+          "scaleY": 0.04,
+          "scaleZ": 0.25
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1c1f26",
+          "roughness": 0.8,
+          "metallic": 0.2,
+          "shading": "standard"
+        }
+      }
+    },
+    "8": {
+      "id": 8,
+      "name": "FloorTrim X0",
+      "parent": 2,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 0.01,
+          "z": 0,
+          "scaleX": 0.25,
+          "scaleY": 0.04,
+          "scaleZ": 46
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1c1f26",
+          "roughness": 0.8,
+          "metallic": 0.2,
+          "shading": "standard"
+        }
+      }
+    },
+    "9": {
+      "id": 9,
+      "name": "FloorTrim Z0",
+      "parent": 2,
+      "components": {
+        "Transform": {
+          "x": 1.591968333641752,
+          "y": 0.01,
+          "z": 2.1347053611882814,
+          "scaleX": 46,
+          "scaleY": 0.04,
+          "scaleZ": 0.25
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1c1f26",
+          "roughness": 0.8,
+          "metallic": 0.2,
+          "shading": "standard"
+        }
+      }
+    },
+    "10": {
+      "id": 10,
+      "name": "FloorTrim X1",
+      "parent": 2,
+      "components": {
+        "Transform": {
+          "x": 9,
+          "y": 0.01,
+          "z": 0,
+          "scaleX": 0.25,
+          "scaleY": 0.04,
+          "scaleZ": 46
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1c1f26",
+          "roughness": 0.8,
+          "metallic": 0.2,
+          "shading": "standard"
+        }
+      }
+    },
+    "11": {
+      "id": 11,
+      "name": "FloorTrim Z1",
+      "parent": 2,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 0.01,
+          "z": 9,
+          "scaleX": 46,
+          "scaleY": 0.04,
+          "scaleZ": 0.25
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1c1f26",
+          "roughness": 0.8,
+          "metallic": 0.2,
+          "shading": "standard"
+        }
+      }
+    },
+    "12": {
+      "id": 12,
+      "name": "FloorTrim X2",
+      "parent": 2,
+      "components": {
+        "Transform": {
+          "x": 18,
+          "y": 0.01,
+          "z": 0,
+          "scaleX": 0.25,
+          "scaleY": 0.04,
+          "scaleZ": 46
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1c1f26",
+          "roughness": 0.8,
+          "metallic": 0.2,
+          "shading": "standard"
+        }
+      }
+    },
+    "13": {
+      "id": 13,
+      "name": "FloorTrim Z2",
+      "parent": 2,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 0.01,
+          "z": 18,
+          "scaleX": 46,
+          "scaleY": 0.04,
+          "scaleZ": 0.25
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1c1f26",
+          "roughness": 0.8,
+          "metallic": 0.2,
+          "shading": "standard"
+        }
+      }
+    },
+    "14": {
+      "id": 14,
+      "name": "Neon",
+      "parent": 1,
+      "components": {}
+    },
+    "15": {
+      "id": 15,
+      "name": "Neon N",
+      "parent": 14,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 2.7,
+          "z": 23.65,
+          "scaleX": 46,
+          "scaleY": 0.12,
+          "scaleZ": 0.08
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1a66e6",
+          "roughness": 0.4,
+          "metallic": 0,
+          "shading": "standard",
+          "emissive": "#1264ff",
+          "emissiveIntensity": 1.4
+        }
+      }
+    },
+    "16": {
+      "id": 16,
+      "name": "Neon S",
+      "parent": 14,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 2.7,
+          "z": -23.65,
+          "scaleX": 46,
+          "scaleY": 0.12,
+          "scaleZ": 0.08
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1a66e6",
+          "roughness": 0.4,
+          "metallic": 0,
+          "shading": "standard",
+          "emissive": "#1264ff",
+          "emissiveIntensity": 1.4
+        }
+      }
+    },
+    "17": {
+      "id": 17,
+      "name": "Neon E",
+      "parent": 14,
+      "components": {
+        "Transform": {
+          "x": 23.65,
+          "y": 2.7,
+          "z": 0,
+          "scaleX": 0.08,
+          "scaleY": 0.12,
+          "scaleZ": 46
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#e68c1a",
+          "roughness": 0.4,
+          "metallic": 0,
+          "shading": "standard",
+          "emissive": "#ff7711",
+          "emissiveIntensity": 1.5
+        }
+      }
+    },
+    "18": {
+      "id": 18,
+      "name": "Neon W",
+      "parent": 14,
+      "components": {
+        "Transform": {
+          "x": -23.65,
+          "y": 2.7,
+          "z": 0,
+          "scaleX": 0.08,
+          "scaleY": 0.12,
+          "scaleZ": 46
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#e68c1a",
+          "roughness": 0.4,
+          "metallic": 0,
+          "shading": "standard",
+          "emissive": "#ff7711",
+          "emissiveIntensity": 1.5
+        }
+      }
+    },
+    "19": {
+      "id": 19,
+      "name": "Walls",
+      "parent": 1,
+      "components": {}
+    },
+    "20": {
+      "id": 20,
+      "name": "Wall N",
+      "parent": 19,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 1.6,
+          "z": 24,
+          "scaleX": 48,
+          "scaleY": 3.4,
+          "scaleZ": 0.6
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#24262e",
+          "roughness": 0.85,
+          "metallic": 0.1,
+          "shading": "standard"
+        }
+      }
+    },
+    "21": {
+      "id": 21,
+      "name": "Wall S",
+      "parent": 19,
+      "components": {
+        "Transform": {
+          "x": -0.1061285644302199,
+          "y": 1.6,
+          "z": -24.512807193288914,
+          "scaleX": 48,
+          "scaleY": 3.4,
+          "scaleZ": 0.6
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#24262e",
+          "roughness": 0.85,
+          "metallic": 0.1,
+          "shading": "standard"
+        }
+      }
+    },
+    "22": {
+      "id": 22,
+      "name": "Wall E",
+      "parent": 19,
+      "components": {
+        "Transform": {
+          "x": 24,
+          "y": 1.6,
+          "z": 0,
+          "scaleX": 0.6,
+          "scaleY": 3.4,
+          "scaleZ": 48
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#24262e",
+          "roughness": 0.85,
+          "metallic": 0.1,
+          "shading": "standard"
+        }
+      }
+    },
+    "23": {
+      "id": 23,
+      "name": "Wall W",
+      "parent": 19,
+      "components": {
+        "Transform": {
+          "x": -24,
+          "y": 1.6,
+          "z": 0,
+          "scaleX": 0.6,
+          "scaleY": 3.4,
+          "scaleZ": 48
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#24262e",
+          "roughness": 0.85,
+          "metallic": 0.1,
+          "shading": "standard"
+        }
+      }
+    },
+    "24": {
+      "id": 24,
+      "name": "WallTrim N",
+      "parent": 19,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 3.35,
+          "z": 24,
+          "scaleX": 48,
+          "scaleY": 0.3,
+          "scaleZ": 0.7
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#333640",
+          "roughness": 0.55,
+          "metallic": 0.4,
+          "shading": "standard"
+        }
+      }
+    },
+    "25": {
+      "id": 25,
+      "name": "WallTrim S",
+      "parent": 19,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 3.35,
+          "z": -24,
+          "scaleX": 48,
+          "scaleY": 0.3,
+          "scaleZ": 0.7
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#333640",
+          "roughness": 0.55,
+          "metallic": 0.4,
+          "shading": "standard"
+        }
+      }
+    },
+    "26": {
+      "id": 26,
+      "name": "WallTrim E",
+      "parent": 19,
+      "components": {
+        "Transform": {
+          "x": 24,
+          "y": 3.35,
+          "z": 0,
+          "scaleX": 0.7,
+          "scaleY": 0.3,
+          "scaleZ": 48
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#333640",
+          "roughness": 0.55,
+          "metallic": 0.4,
+          "shading": "standard"
+        }
+      }
+    },
+    "27": {
+      "id": 27,
+      "name": "WallTrim W",
+      "parent": 19,
+      "components": {
+        "Transform": {
+          "x": -24,
+          "y": 3.35,
+          "z": 0,
+          "scaleX": 0.7,
+          "scaleY": 0.3,
+          "scaleZ": 48
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#333640",
+          "roughness": 0.55,
+          "metallic": 0.4,
+          "shading": "standard"
+        }
+      }
+    },
+    "28": {
+      "id": 28,
+      "name": "Cover",
+      "parent": 1,
+      "components": {}
+    },
+    "29": {
+      "id": 29,
+      "name": "Crate 1",
+      "parent": 28,
+      "components": {
+        "Transform": {
+          "x": -6,
+          "y": 0.85,
+          "z": -5,
+          "scaleX": 1.7,
+          "scaleY": 1.7,
+          "scaleZ": 1.7
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#6b4d24",
+          "roughness": 0.7,
+          "metallic": 0,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 1.224
+        }
+      }
+    },
+    "30": {
+      "id": 30,
+      "name": "Crate 2",
+      "parent": 28,
+      "components": {
+        "Transform": {
+          "x": -4.4,
+          "y": 0.65,
+          "z": -6.4,
+          "scaleX": 1.3,
+          "scaleY": 1.3,
+          "scaleZ": 1.3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#6b4d24",
+          "roughness": 0.7,
+          "metallic": 0,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 0.936
+        }
+      }
+    },
+    "31": {
+      "id": 31,
+      "name": "Crate 3",
+      "parent": 28,
+      "components": {
+        "Transform": {
+          "x": 7,
+          "y": 0.85,
+          "z": 4,
+          "scaleX": 1.7,
+          "scaleY": 1.7,
+          "scaleZ": 1.7
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#6b4d24",
+          "roughness": 0.7,
+          "metallic": 0,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 1.224
+        }
+      }
+    },
+    "32": {
+      "id": 32,
+      "name": "Crate 4",
+      "parent": 28,
+      "components": {
+        "Transform": {
+          "x": 8.4,
+          "y": 0.6,
+          "z": 5.3,
+          "scaleX": 1.2,
+          "scaleY": 1.2,
+          "scaleZ": 1.2
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#6b4d24",
+          "roughness": 0.7,
+          "metallic": 0,
+          "shading": "standard",
+          "materialAsset": "eb5bf6e6-2e47-4d9a-99fd-81843228c9b3"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 0.864
+        }
+      }
+    },
+    "33": {
+      "id": 33,
+      "name": "Crate 5",
+      "parent": 28,
+      "components": {
+        "Transform": {
+          "x": -9,
+          "y": 0.85,
+          "z": 8,
+          "scaleX": 1.7,
+          "scaleY": 1.7,
+          "scaleZ": 1.7
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#6b4d24",
+          "roughness": 0.7,
+          "metallic": 0,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 1.224
+        }
+      }
+    },
+    "34": {
+      "id": 34,
+      "name": "Crate 6",
+      "parent": 28,
+      "components": {
+        "Transform": {
+          "x": 10,
+          "y": 0.85,
+          "z": -9,
+          "scaleX": 1.7,
+          "scaleY": 1.7,
+          "scaleZ": 1.7
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#6b4d24",
+          "roughness": 0.7,
+          "metallic": 0,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 1.224
+        }
+      }
+    },
+    "35": {
+      "id": 35,
+      "name": "Crate 7",
+      "parent": 28,
+      "components": {
+        "Transform": {
+          "x": 2.5,
+          "y": 0.85,
+          "z": 12,
+          "scaleX": 1.7,
+          "scaleY": 1.7,
+          "scaleZ": 1.7
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#6b4d24",
+          "roughness": 0.7,
+          "metallic": 0,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 1.224
+        }
+      }
+    },
+    "36": {
+      "id": 36,
+      "name": "Crate 8",
+      "parent": 28,
+      "components": {
+        "Transform": {
+          "x": -13,
+          "y": 1.05,
+          "z": -3,
+          "scaleX": 2.1,
+          "scaleY": 2.1,
+          "scaleZ": 2.1
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#6b4d24",
+          "roughness": 0.7,
+          "metallic": 0,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 1.512
+        }
+      }
+    },
+    "37": {
+      "id": 37,
+      "name": "Barrel 1",
+      "parent": 28,
+      "components": {}
+    },
+    "38": {
+      "id": 38,
+      "name": "body",
+      "parent": 37,
+      "components": {
+        "Transform": {
+          "x": -5.2,
+          "y": 0.6,
+          "z": -3.6,
+          "scaleX": 1,
+          "scaleY": 1.2,
+          "scaleZ": 1
+        },
+        "Mesh": {
+          "kind": "cylinder"
+        },
+        "Material": {
+          "albedo": "#4d5733",
+          "roughness": 0.5,
+          "metallic": 0.6,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 0.62
+        }
+      }
+    },
+    "39": {
+      "id": 39,
+      "name": "cap",
+      "parent": 37,
+      "components": {
+        "Transform": {
+          "x": -5.2,
+          "y": 1.18,
+          "z": -3.6,
+          "scaleX": 0.5,
+          "scaleY": 0.18,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "sphere"
+        },
+        "Material": {
+          "albedo": "#4d5733",
+          "roughness": 0.5,
+          "metallic": 0.6,
+          "shading": "standard"
+        }
+      }
+    },
+    "40": {
+      "id": 40,
+      "name": "Barrel 2",
+      "parent": 28,
+      "components": {}
+    },
+    "41": {
+      "id": 41,
+      "name": "body",
+      "parent": 40,
+      "components": {
+        "Transform": {
+          "x": 8.6,
+          "y": 0.6,
+          "z": 3,
+          "scaleX": 1,
+          "scaleY": 1.2,
+          "scaleZ": 1
+        },
+        "Mesh": {
+          "kind": "cylinder"
+        },
+        "Material": {
+          "albedo": "#4d5733",
+          "roughness": 0.5,
+          "metallic": 0.6,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 0.62
+        }
+      }
+    },
+    "42": {
+      "id": 42,
+      "name": "cap",
+      "parent": 40,
+      "components": {
+        "Transform": {
+          "x": 8.6,
+          "y": 1.18,
+          "z": 3,
+          "scaleX": 0.5,
+          "scaleY": 0.18,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "sphere"
+        },
+        "Material": {
+          "albedo": "#4d5733",
+          "roughness": 0.5,
+          "metallic": 0.6,
+          "shading": "standard"
+        }
+      }
+    },
+    "43": {
+      "id": 43,
+      "name": "Barrel 3",
+      "parent": 28,
+      "components": {}
+    },
+    "44": {
+      "id": 44,
+      "name": "body",
+      "parent": 43,
+      "components": {
+        "Transform": {
+          "x": 3,
+          "y": 0.6,
+          "z": 13.2,
+          "scaleX": 1,
+          "scaleY": 1.2,
+          "scaleZ": 1
+        },
+        "Mesh": {
+          "kind": "cylinder"
+        },
+        "Material": {
+          "albedo": "#4d5733",
+          "roughness": 0.5,
+          "metallic": 0.6,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 0.62
+        }
+      }
+    },
+    "45": {
+      "id": 45,
+      "name": "cap",
+      "parent": 43,
+      "components": {
+        "Transform": {
+          "x": 3,
+          "y": 1.18,
+          "z": 13.2,
+          "scaleX": 0.5,
+          "scaleY": 0.18,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "sphere"
+        },
+        "Material": {
+          "albedo": "#4d5733",
+          "roughness": 0.5,
+          "metallic": 0.6,
+          "shading": "standard"
+        }
+      }
+    },
+    "46": {
+      "id": 46,
+      "name": "Barrel 4",
+      "parent": 28,
+      "components": {}
+    },
+    "47": {
+      "id": 47,
+      "name": "body",
+      "parent": 46,
+      "components": {
+        "Transform": {
+          "x": -11.2,
+          "y": 0.6,
+          "z": -4.3,
+          "scaleX": 1,
+          "scaleY": 1.2,
+          "scaleZ": 1
+        },
+        "Mesh": {
+          "kind": "cylinder"
+        },
+        "Material": {
+          "albedo": "#4d5733",
+          "roughness": 0.5,
+          "metallic": 0.6,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 0.62
+        }
+      }
+    },
+    "48": {
+      "id": 48,
+      "name": "cap",
+      "parent": 46,
+      "components": {
+        "Transform": {
+          "x": -11.2,
+          "y": 1.18,
+          "z": -4.3,
+          "scaleX": 0.5,
+          "scaleY": 0.18,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "sphere"
+        },
+        "Material": {
+          "albedo": "#4d5733",
+          "roughness": 0.5,
+          "metallic": 0.6,
+          "shading": "standard"
+        }
+      }
+    },
+    "49": {
+      "id": 49,
+      "name": "Barrel 5",
+      "parent": 28,
+      "components": {}
+    },
+    "50": {
+      "id": 50,
+      "name": "body",
+      "parent": 49,
+      "components": {
+        "Transform": {
+          "x": 11.5,
+          "y": 0.6,
+          "z": -7.4,
+          "scaleX": 1,
+          "scaleY": 1.2,
+          "scaleZ": 1
+        },
+        "Mesh": {
+          "kind": "cylinder"
+        },
+        "Material": {
+          "albedo": "#4d5733",
+          "roughness": 0.5,
+          "metallic": 0.6,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 0.62
+        }
+      }
+    },
+    "51": {
+      "id": 51,
+      "name": "cap",
+      "parent": 49,
+      "components": {
+        "Transform": {
+          "x": 11.5,
+          "y": 1.18,
+          "z": -7.4,
+          "scaleX": 0.5,
+          "scaleY": 0.18,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "sphere"
+        },
+        "Material": {
+          "albedo": "#4d5733",
+          "roughness": 0.5,
+          "metallic": 0.6,
+          "shading": "standard"
+        }
+      }
+    },
+    "52": {
+      "id": 52,
+      "name": "Pillar 1",
+      "parent": 28,
+      "components": {}
+    },
+    "53": {
+      "id": 53,
+      "name": "shaft",
+      "parent": 52,
+      "components": {
+        "Transform": {
+          "x": 0.08917555903077257,
+          "y": 1.7,
+          "z": 0.1334138203806159,
+          "scaleX": 1.2,
+          "scaleY": 3.4,
+          "scaleZ": 1.2
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#2e303b",
+          "roughness": 0.55,
+          "metallic": 0.35,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 0.92
+        }
+      }
+    },
+    "54": {
+      "id": 54,
+      "name": "cap",
+      "parent": 52,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 3.45,
+          "z": 0,
+          "scaleX": 1.4,
+          "scaleY": 0.25,
+          "scaleZ": 1.4
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#333640",
+          "roughness": 0.55,
+          "metallic": 0.4,
+          "shading": "standard"
+        }
+      }
+    },
+    "55": {
+      "id": 55,
+      "name": "Pillar 2",
+      "parent": 28,
+      "components": {}
+    },
+    "56": {
+      "id": 56,
+      "name": "shaft",
+      "parent": 55,
+      "components": {
+        "Transform": {
+          "x": -14,
+          "y": 1.7,
+          "z": 13,
+          "scaleX": 1.2,
+          "scaleY": 3.4,
+          "scaleZ": 1.2
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#2e303b",
+          "roughness": 0.55,
+          "metallic": 0.35,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 0.92
+        }
+      }
+    },
+    "57": {
+      "id": 57,
+      "name": "cap",
+      "parent": 55,
+      "components": {
+        "Transform": {
+          "x": -14,
+          "y": 3.45,
+          "z": 13,
+          "scaleX": 1.4,
+          "scaleY": 0.25,
+          "scaleZ": 1.4
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#333640",
+          "roughness": 0.55,
+          "metallic": 0.4,
+          "shading": "standard"
+        }
+      }
+    },
+    "58": {
+      "id": 58,
+      "name": "Pillar 3",
+      "parent": 28,
+      "components": {}
+    },
+    "59": {
+      "id": 59,
+      "name": "shaft",
+      "parent": 58,
+      "components": {
+        "Transform": {
+          "x": 14,
+          "y": 1.7,
+          "z": -13,
+          "scaleX": 1.2,
+          "scaleY": 3.4,
+          "scaleZ": 1.2
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#2e303b",
+          "roughness": 0.55,
+          "metallic": 0.35,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 0.92
+        }
+      }
+    },
+    "60": {
+      "id": 60,
+      "name": "cap",
+      "parent": 58,
+      "components": {
+        "Transform": {
+          "x": 14,
+          "y": 3.45,
+          "z": -13,
+          "scaleX": 1.4,
+          "scaleY": 0.25,
+          "scaleZ": 1.4
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#333640",
+          "roughness": 0.55,
+          "metallic": 0.4,
+          "shading": "standard"
+        }
+      }
+    },
+    "61": {
+      "id": 61,
+      "name": "Pillar 4",
+      "parent": 28,
+      "components": {}
+    },
+    "62": {
+      "id": 62,
+      "name": "shaft",
+      "parent": 61,
+      "components": {
+        "Transform": {
+          "x": 15,
+          "y": 1.7,
+          "z": 14,
+          "scaleX": 1.2,
+          "scaleY": 3.4,
+          "scaleZ": 1.2
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#2e303b",
+          "roughness": 0.55,
+          "metallic": 0.35,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 0.92
+        }
+      }
+    },
+    "63": {
+      "id": 63,
+      "name": "cap",
+      "parent": 61,
+      "components": {
+        "Transform": {
+          "x": 15,
+          "y": 3.45,
+          "z": 14,
+          "scaleX": 1.4,
+          "scaleY": 0.25,
+          "scaleZ": 1.4
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#333640",
+          "roughness": 0.55,
+          "metallic": 0.4,
+          "shading": "standard"
+        }
+      }
+    },
+    "64": {
+      "id": 64,
+      "name": "Pillar 5",
+      "parent": 28,
+      "components": {}
+    },
+    "65": {
+      "id": 65,
+      "name": "shaft",
+      "parent": 64,
+      "components": {
+        "Transform": {
+          "x": -15,
+          "y": 1.7,
+          "z": -14,
+          "scaleX": 1.2,
+          "scaleY": 3.4,
+          "scaleZ": 1.2
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#2e303b",
+          "roughness": 0.55,
+          "metallic": 0.35,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "cylinder",
+          "radius": 0.92
+        }
+      }
+    },
+    "66": {
+      "id": 66,
+      "name": "cap",
+      "parent": 64,
+      "components": {
+        "Transform": {
+          "x": -15,
+          "y": 3.45,
+          "z": -14,
+          "scaleX": 1.4,
+          "scaleY": 0.25,
+          "scaleZ": 1.4
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#333640",
+          "roughness": 0.55,
+          "metallic": 0.4,
+          "shading": "standard"
+        }
+      }
+    },
+    "67": {
+      "id": 67,
+      "name": "Buildings",
+      "parent": 1,
+      "components": {}
+    },
+    "68": {
+      "id": 68,
+      "name": "Building 1",
+      "parent": 67,
+      "components": {}
+    },
+    "69": {
+      "id": 69,
+      "name": "wall N L",
+      "parent": 68,
+      "components": {
+        "Transform": {
+          "x": -16.85,
+          "y": 1.65,
+          "z": -8.5,
+          "scaleX": 3.3,
+          "scaleY": 3.3,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#292b33",
+          "roughness": 0.92,
+          "metallic": 0.05,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "70": {
+      "id": 70,
+      "name": "wall N R",
+      "parent": 68,
+      "components": {
+        "Transform": {
+          "x": -11.15,
+          "y": 1.65,
+          "z": -8.5,
+          "scaleX": 3.3,
+          "scaleY": 3.3,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#292b33",
+          "roughness": 0.92,
+          "metallic": 0.05,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "71": {
+      "id": 71,
+      "name": "doorTrim N",
+      "parent": 68,
+      "components": {
+        "Transform": {
+          "x": -14,
+          "y": 3.05,
+          "z": -8.5,
+          "scaleX": 2.4,
+          "scaleY": 0.3,
+          "scaleZ": 0.525
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#99731a",
+          "roughness": 0.4,
+          "metallic": 0.3,
+          "shading": "standard",
+          "emissive": "#ff9515",
+          "emissiveIntensity": 1.2
+        }
+      }
+    },
+    "72": {
+      "id": 72,
+      "name": "wall S",
+      "parent": 68,
+      "components": {
+        "Transform": {
+          "x": -14,
+          "y": 1.65,
+          "z": -15.5,
+          "scaleX": 9,
+          "scaleY": 3.3,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#292b33",
+          "roughness": 0.92,
+          "metallic": 0.05,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "73": {
+      "id": 73,
+      "name": "wall E",
+      "parent": 68,
+      "components": {
+        "Transform": {
+          "x": -9.5,
+          "y": 1.65,
+          "z": -12,
+          "scaleX": 0.5,
+          "scaleY": 3.3,
+          "scaleZ": 7
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#292b33",
+          "roughness": 0.92,
+          "metallic": 0.05,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "74": {
+      "id": 74,
+      "name": "wall W",
+      "parent": 68,
+      "components": {
+        "Transform": {
+          "x": -18.5,
+          "y": 1.65,
+          "z": -12,
+          "scaleX": 0.5,
+          "scaleY": 3.3,
+          "scaleZ": 7
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#292b33",
+          "roughness": 0.92,
+          "metallic": 0.05,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "75": {
+      "id": 75,
+      "name": "window N",
+      "parent": 68,
+      "components": {
+        "Transform": {
+          "x": -14,
+          "y": 1.98,
+          "z": -8.48,
+          "scaleX": 5.94,
+          "scaleY": 0.55,
+          "scaleZ": 0.05
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#3373b3",
+          "roughness": 0.3,
+          "metallic": 0.1,
+          "shading": "standard",
+          "emissive": "#3880ff",
+          "emissiveIntensity": 1.6
+        }
+      }
+    },
+    "76": {
+      "id": 76,
+      "name": "window S",
+      "parent": 68,
+      "components": {
+        "Transform": {
+          "x": -14,
+          "y": 1.98,
+          "z": -15.52,
+          "scaleX": 5.94,
+          "scaleY": 0.55,
+          "scaleZ": 0.05
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#3373b3",
+          "roughness": 0.3,
+          "metallic": 0.1,
+          "shading": "standard",
+          "emissive": "#3880ff",
+          "emissiveIntensity": 1.6
+        }
+      }
+    },
+    "77": {
+      "id": 77,
+      "name": "roof",
+      "parent": 68,
+      "components": {
+        "Transform": {
+          "x": -14,
+          "y": 3.42,
+          "z": -12,
+          "scaleX": 9.3,
+          "scaleY": 0.24,
+          "scaleZ": 7.3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1a1c24",
+          "roughness": 0.7,
+          "metallic": 0.3,
+          "shading": "standard"
+        }
+      }
+    },
+    "78": {
+      "id": 78,
+      "name": "parapet N",
+      "parent": 68,
+      "components": {
+        "Transform": {
+          "x": -14,
+          "y": 3.72,
+          "z": -8.5,
+          "scaleX": 9.3,
+          "scaleY": 0.4,
+          "scaleZ": 0.18
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "79": {
+      "id": 79,
+      "name": "parapet S",
+      "parent": 68,
+      "components": {
+        "Transform": {
+          "x": -14,
+          "y": 3.72,
+          "z": -15.5,
+          "scaleX": 9.3,
+          "scaleY": 0.4,
+          "scaleZ": 0.18
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "80": {
+      "id": 80,
+      "name": "parapet E",
+      "parent": 68,
+      "components": {
+        "Transform": {
+          "x": -9.5,
+          "y": 3.72,
+          "z": -12,
+          "scaleX": 0.18,
+          "scaleY": 0.4,
+          "scaleZ": 7.3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "81": {
+      "id": 81,
+      "name": "parapet W",
+      "parent": 68,
+      "components": {
+        "Transform": {
+          "x": -18.5,
+          "y": 3.72,
+          "z": -12,
+          "scaleX": 0.18,
+          "scaleY": 0.4,
+          "scaleZ": 7.3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "82": {
+      "id": 82,
+      "name": "Building 2",
+      "parent": 67,
+      "components": {}
+    },
+    "83": {
+      "id": 83,
+      "name": "wall N",
+      "parent": 82,
+      "components": {
+        "Transform": {
+          "x": 15,
+          "y": 1.7,
+          "z": 13,
+          "scaleX": 8,
+          "scaleY": 3.4,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "84": {
+      "id": 84,
+      "name": "wall S L",
+      "parent": 82,
+      "components": {
+        "Transform": {
+          "x": 12.4,
+          "y": 1.7,
+          "z": 5,
+          "scaleX": 2.8,
+          "scaleY": 3.4,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "85": {
+      "id": 85,
+      "name": "wall S R",
+      "parent": 82,
+      "components": {
+        "Transform": {
+          "x": 17.6,
+          "y": 1.7,
+          "z": 5,
+          "scaleX": 2.8,
+          "scaleY": 3.4,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "86": {
+      "id": 86,
+      "name": "doorTrim S",
+      "parent": 82,
+      "components": {
+        "Transform": {
+          "x": 15,
+          "y": 3.15,
+          "z": 5,
+          "scaleX": 2.4,
+          "scaleY": 0.3,
+          "scaleZ": 0.525
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#99731a",
+          "roughness": 0.4,
+          "metallic": 0.3,
+          "shading": "standard",
+          "emissive": "#ff9515",
+          "emissiveIntensity": 1.2
+        }
+      }
+    },
+    "87": {
+      "id": 87,
+      "name": "wall E",
+      "parent": 82,
+      "components": {
+        "Transform": {
+          "x": 19,
+          "y": 1.7,
+          "z": 9,
+          "scaleX": 0.5,
+          "scaleY": 3.4,
+          "scaleZ": 8
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "88": {
+      "id": 88,
+      "name": "wall W",
+      "parent": 82,
+      "components": {
+        "Transform": {
+          "x": 11,
+          "y": 1.7,
+          "z": 9,
+          "scaleX": 0.5,
+          "scaleY": 3.4,
+          "scaleZ": 8
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "89": {
+      "id": 89,
+      "name": "window N",
+      "parent": 82,
+      "components": {
+        "Transform": {
+          "x": 15,
+          "y": 2.04,
+          "z": 13.02,
+          "scaleX": 5.28,
+          "scaleY": 0.55,
+          "scaleZ": 0.05
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#b38033",
+          "roughness": 0.3,
+          "metallic": 0.1,
+          "shading": "standard",
+          "emissive": "#ff8f28",
+          "emissiveIntensity": 1.6
+        }
+      }
+    },
+    "90": {
+      "id": 90,
+      "name": "window S",
+      "parent": 82,
+      "components": {
+        "Transform": {
+          "x": 15,
+          "y": 2.04,
+          "z": 4.98,
+          "scaleX": 5.28,
+          "scaleY": 0.55,
+          "scaleZ": 0.05
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#b38033",
+          "roughness": 0.3,
+          "metallic": 0.1,
+          "shading": "standard",
+          "emissive": "#ff8f28",
+          "emissiveIntensity": 1.6
+        }
+      }
+    },
+    "91": {
+      "id": 91,
+      "name": "roof",
+      "parent": 82,
+      "components": {
+        "Transform": {
+          "x": 15,
+          "y": 3.52,
+          "z": 9,
+          "scaleX": 8.3,
+          "scaleY": 0.24,
+          "scaleZ": 8.3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1a1c24",
+          "roughness": 0.7,
+          "metallic": 0.3,
+          "shading": "standard"
+        }
+      }
+    },
+    "92": {
+      "id": 92,
+      "name": "parapet N",
+      "parent": 82,
+      "components": {
+        "Transform": {
+          "x": 15,
+          "y": 3.82,
+          "z": 13,
+          "scaleX": 8.3,
+          "scaleY": 0.4,
+          "scaleZ": 0.18
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "93": {
+      "id": 93,
+      "name": "parapet S",
+      "parent": 82,
+      "components": {
+        "Transform": {
+          "x": 15,
+          "y": 3.82,
+          "z": 5,
+          "scaleX": 8.3,
+          "scaleY": 0.4,
+          "scaleZ": 0.18
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "94": {
+      "id": 94,
+      "name": "parapet E",
+      "parent": 82,
+      "components": {
+        "Transform": {
+          "x": 19,
+          "y": 3.82,
+          "z": 9,
+          "scaleX": 0.18,
+          "scaleY": 0.4,
+          "scaleZ": 8.3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "95": {
+      "id": 95,
+      "name": "parapet W",
+      "parent": 82,
+      "components": {
+        "Transform": {
+          "x": 11,
+          "y": 3.82,
+          "z": 9,
+          "scaleX": 0.18,
+          "scaleY": 0.4,
+          "scaleZ": 8.3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "96": {
+      "id": 96,
+      "name": "Building 3",
+      "parent": 67,
+      "components": {}
+    },
+    "97": {
+      "id": 97,
+      "name": "wall N L",
+      "parent": 96,
+      "components": {
+        "Transform": {
+          "x": -5.35,
+          "y": 1.5,
+          "z": -13.5,
+          "scaleX": 2.3,
+          "scaleY": 3,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#292b33",
+          "roughness": 0.92,
+          "metallic": 0.05,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "98": {
+      "id": 98,
+      "name": "wall N R",
+      "parent": 96,
+      "components": {
+        "Transform": {
+          "x": -0.65,
+          "y": 1.5,
+          "z": -13.5,
+          "scaleX": 2.3,
+          "scaleY": 3,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#292b33",
+          "roughness": 0.92,
+          "metallic": 0.05,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "99": {
+      "id": 99,
+      "name": "doorTrim N",
+      "parent": 96,
+      "components": {
+        "Transform": {
+          "x": -3,
+          "y": 2.75,
+          "z": -13.5,
+          "scaleX": 2.4,
+          "scaleY": 0.3,
+          "scaleZ": 0.525
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#99731a",
+          "roughness": 0.4,
+          "metallic": 0.3,
+          "shading": "standard",
+          "emissive": "#ff9515",
+          "emissiveIntensity": 1.2
+        }
+      }
+    },
+    "100": {
+      "id": 100,
+      "name": "wall S",
+      "parent": 96,
+      "components": {
+        "Transform": {
+          "x": -3,
+          "y": 1.5,
+          "z": -18.5,
+          "scaleX": 7,
+          "scaleY": 3,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#292b33",
+          "roughness": 0.92,
+          "metallic": 0.05,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "101": {
+      "id": 101,
+      "name": "wall E",
+      "parent": 96,
+      "components": {
+        "Transform": {
+          "x": 0.5,
+          "y": 1.5,
+          "z": -16,
+          "scaleX": 0.5,
+          "scaleY": 3,
+          "scaleZ": 5
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#292b33",
+          "roughness": 0.92,
+          "metallic": 0.05,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "102": {
+      "id": 102,
+      "name": "wall W",
+      "parent": 96,
+      "components": {
+        "Transform": {
+          "x": -6.5,
+          "y": 1.5,
+          "z": -16,
+          "scaleX": 0.5,
+          "scaleY": 3,
+          "scaleZ": 5
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#292b33",
+          "roughness": 0.92,
+          "metallic": 0.05,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "103": {
+      "id": 103,
+      "name": "window N",
+      "parent": 96,
+      "components": {
+        "Transform": {
+          "x": -3,
+          "y": 1.8,
+          "z": -13.48,
+          "scaleX": 4.62,
+          "scaleY": 0.55,
+          "scaleZ": 0.05
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#3373b3",
+          "roughness": 0.3,
+          "metallic": 0.1,
+          "shading": "standard",
+          "emissive": "#3880ff",
+          "emissiveIntensity": 1.6
+        }
+      }
+    },
+    "104": {
+      "id": 104,
+      "name": "window S",
+      "parent": 96,
+      "components": {
+        "Transform": {
+          "x": -3,
+          "y": 1.8,
+          "z": -18.52,
+          "scaleX": 4.62,
+          "scaleY": 0.55,
+          "scaleZ": 0.05
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#3373b3",
+          "roughness": 0.3,
+          "metallic": 0.1,
+          "shading": "standard",
+          "emissive": "#3880ff",
+          "emissiveIntensity": 1.6
+        }
+      }
+    },
+    "105": {
+      "id": 105,
+      "name": "roof",
+      "parent": 96,
+      "components": {
+        "Transform": {
+          "x": -3,
+          "y": 3.12,
+          "z": -16,
+          "scaleX": 7.3,
+          "scaleY": 0.24,
+          "scaleZ": 5.3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1a1c24",
+          "roughness": 0.7,
+          "metallic": 0.3,
+          "shading": "standard"
+        }
+      }
+    },
+    "106": {
+      "id": 106,
+      "name": "parapet N",
+      "parent": 96,
+      "components": {
+        "Transform": {
+          "x": -3,
+          "y": 3.42,
+          "z": -13.5,
+          "scaleX": 7.3,
+          "scaleY": 0.4,
+          "scaleZ": 0.18
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "107": {
+      "id": 107,
+      "name": "parapet S",
+      "parent": 96,
+      "components": {
+        "Transform": {
+          "x": -3,
+          "y": 3.42,
+          "z": -18.5,
+          "scaleX": 7.3,
+          "scaleY": 0.4,
+          "scaleZ": 0.18
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "108": {
+      "id": 108,
+      "name": "parapet E",
+      "parent": 96,
+      "components": {
+        "Transform": {
+          "x": 0.5,
+          "y": 3.42,
+          "z": -16,
+          "scaleX": 0.18,
+          "scaleY": 0.4,
+          "scaleZ": 5.3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "109": {
+      "id": 109,
+      "name": "parapet W",
+      "parent": 96,
+      "components": {
+        "Transform": {
+          "x": -6.5,
+          "y": 3.42,
+          "z": -16,
+          "scaleX": 0.18,
+          "scaleY": 0.4,
+          "scaleZ": 5.3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "110": {
+      "id": 110,
+      "name": "Tower 1",
+      "parent": 67,
+      "components": {}
+    },
+    "111": {
+      "id": 111,
+      "name": "leg -1,-1",
+      "parent": 110,
+      "components": {
+        "Transform": {
+          "x": 16,
+          "y": 2.4,
+          "z": -5,
+          "scaleX": 0.3,
+          "scaleY": 4.8,
+          "scaleZ": 0.3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "112": {
+      "id": 112,
+      "name": "leg -1,1",
+      "parent": 110,
+      "components": {
+        "Transform": {
+          "x": 16,
+          "y": 2.4,
+          "z": -3,
+          "scaleX": 0.3,
+          "scaleY": 4.8,
+          "scaleZ": 0.3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "113": {
+      "id": 113,
+      "name": "leg 1,-1",
+      "parent": 110,
+      "components": {
+        "Transform": {
+          "x": 18,
+          "y": 2.4,
+          "z": -5,
+          "scaleX": 0.3,
+          "scaleY": 4.8,
+          "scaleZ": 0.3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "114": {
+      "id": 114,
+      "name": "leg 1,1",
+      "parent": 110,
+      "components": {
+        "Transform": {
+          "x": 18,
+          "y": 2.4,
+          "z": -3,
+          "scaleX": 0.3,
+          "scaleY": 4.8,
+          "scaleZ": 0.3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "115": {
+      "id": 115,
+      "name": "collider",
+      "parent": 110,
+      "components": {
+        "Transform": {
+          "x": 17,
+          "y": 0,
+          "z": -4,
+          "scaleX": 2.6,
+          "scaleY": 1,
+          "scaleZ": 2.6
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "116": {
+      "id": 116,
+      "name": "roof",
+      "parent": 110,
+      "components": {
+        "Transform": {
+          "x": 17,
+          "y": 4.9,
+          "z": -4,
+          "scaleX": 3,
+          "scaleY": 0.3,
+          "scaleZ": 3
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#1a1c24",
+          "roughness": 0.7,
+          "metallic": 0.3,
+          "shading": "standard"
+        }
+      }
+    },
+    "117": {
+      "id": 117,
+      "name": "rail N",
+      "parent": 110,
+      "components": {
+        "Transform": {
+          "x": 17,
+          "y": 5.45,
+          "z": -2.6,
+          "scaleX": 3,
+          "scaleY": 0.9,
+          "scaleZ": 0.14
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "118": {
+      "id": 118,
+      "name": "rail S",
+      "parent": 110,
+      "components": {
+        "Transform": {
+          "x": 17,
+          "y": 5.45,
+          "z": -5.4,
+          "scaleX": 3,
+          "scaleY": 0.9,
+          "scaleZ": 0.14
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#383d4a",
+          "roughness": 0.5,
+          "metallic": 0.55,
+          "shading": "standard"
+        }
+      }
+    },
+    "119": {
+      "id": 119,
+      "name": "beacon",
+      "parent": 110,
+      "components": {
+        "Transform": {
+          "x": 17,
+          "y": 5.95,
+          "z": -4,
+          "scaleX": 0.55,
+          "scaleY": 0.55,
+          "scaleZ": 0.55
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#b38033",
+          "roughness": 0.3,
+          "metallic": 0.1,
+          "shading": "standard",
+          "emissive": "#ff8f28",
+          "emissiveIntensity": 1.6
+        }
+      }
+    },
+    "120": {
+      "id": 120,
+      "name": "Barricade 1",
+      "parent": 67,
+      "components": {
+        "Transform": {
+          "x": -7,
+          "y": 1,
+          "z": 5,
+          "scaleX": 5.5,
+          "scaleY": 2,
+          "scaleZ": 0.5
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#292b33",
+          "roughness": 0.92,
+          "metallic": 0.05,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "121": {
+      "id": 121,
+      "name": "Barricade 2",
+      "parent": 67,
+      "components": {
+        "Transform": {
+          "x": 7,
+          "y": 1,
+          "z": -6,
+          "scaleX": 0.5,
+          "scaleY": 2,
+          "scaleZ": 5.5
+        },
+        "Mesh": {
+          "kind": "cube"
+        },
+        "Material": {
+          "albedo": "#292b33",
+          "roughness": 0.92,
+          "metallic": 0.05,
+          "shading": "standard"
+        },
+        "Collider": {
+          "shape": "box"
+        }
+      }
+    },
+    "122": {
+      "id": 122,
+      "name": "Lights",
+      "parent": 1,
+      "components": {}
+    },
+    "123": {
+      "id": 123,
+      "name": "Sun",
+      "parent": 122,
+      "components": {
+        "Light": {
+          "type": "directional",
+          "color": "#9fb8ff",
+          "intensity": 0.72,
+          "directionX": -0.4,
+          "directionY": -1,
+          "directionZ": -0.3
+        }
+      }
+    },
+    "124": {
+      "id": 124,
+      "name": "Accent NW",
+      "parent": 122,
+      "components": {
+        "Transform": {
+          "x": -14,
+          "y": 2.6,
+          "z": 13
+        },
+        "Light": {
+          "type": "point",
+          "color": "#245bff",
+          "intensity": 14,
+          "range": 13
+        }
+      }
+    },
+    "125": {
+      "id": 125,
+      "name": "Accent SE",
+      "parent": 122,
+      "components": {
+        "Transform": {
+          "x": 14,
+          "y": 2.6,
+          "z": -13
+        },
+        "Light": {
+          "type": "point",
+          "color": "#ff641b",
+          "intensity": 14,
+          "range": 13
+        }
+      }
+    },
+    "126": {
+      "id": 126,
+      "name": "Accent NE",
+      "parent": 122,
+      "components": {
+        "Transform": {
+          "x": 15,
+          "y": 2.6,
+          "z": 14
+        },
+        "Light": {
+          "type": "point",
+          "color": "#40ff95",
+          "intensity": 12,
+          "range": 13
+        }
+      }
+    },
+    "127": {
+      "id": 127,
+      "name": "Accent SW",
+      "parent": 122,
+      "components": {
+        "Transform": {
+          "x": -15,
+          "y": 2.6,
+          "z": -14
+        },
+        "Light": {
+          "type": "point",
+          "color": "#ff273b",
+          "intensity": 13,
+          "range": 13
+        }
+      }
+    },
+    "128": {
+      "id": 128,
+      "name": "Empty",
+      "parent": null,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "scaleZ": 1,
+          "rotX": 0,
+          "rotY": 0,
+          "rotZ": 0
+        }
+      }
+    },
+    "129": {
+      "id": 129,
+      "name": "Spotlight",
+      "parent": null,
+      "components": {
+        "Transform": {
+          "x": -8.341493119120727,
+          "y": 2.131336611859054,
+          "z": 2.8498655408609013,
+          "scaleX": 1,
+          "scaleY": 1,
+          "scaleZ": 1,
+          "rotX": 0,
+          "rotY": 0,
+          "rotZ": 0
+        },
+        "Light": {
+          "type": "spot",
+          "intensity": 2,
+          "color": "#ffffff",
+          "range": 0,
+          "directionX": -0.4,
+          "directionY": -1,
+          "directionZ": -0.3,
+          "castShadow": false,
+          "spotAngle": 25
+        }
+      }
+    },
+    "130": {
+      "id": 130,
+      "name": "Mover",
+      "parent": null,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "scaleZ": 1,
+          "rotX": 0,
+          "rotY": 0,
+          "rotZ": 0
+        },
+        "Velocity": {
+          "vx": 0,
+          "vy": 0,
+          "vz": 0
+        }
+      }
+    },
+    "131": {
+      "id": 131,
+      "name": "Light",
+      "parent": null,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "scaleZ": 1,
+          "rotX": 0,
+          "rotY": 0,
+          "rotZ": 0
+        },
+        "Light": {
+          "type": "point",
+          "intensity": 1,
+          "color": "#ffffff",
+          "range": 0,
+          "directionX": -0.4,
+          "directionY": -1,
+          "directionZ": -0.3,
+          "castShadow": false,
+          "spotAngle": 30
+        }
+      }
+    },
+    "132": {
+      "id": 132,
+      "name": "Entity",
+      "parent": null,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    },
+    "133": {
+      "id": 133,
+      "name": "Sun",
+      "parent": 3,
+      "components": {
+        "Transform": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "scaleX": 1,
+          "scaleY": 1,
+          "scaleZ": 1,
+          "rotX": 0,
+          "rotY": 0,
+          "rotZ": 0
+        },
+        "Light": {
+          "type": "directional",
+          "intensity": 1.5,
+          "color": "#fff8e0",
+          "range": 0,
+          "directionX": -0.4,
+          "directionY": -1,
+          "directionZ": -0.3,
+          "castShadow": false,
+          "spotAngle": 30
+        }
+      }
+    }
+  },
+  "order": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133
+  ]
+}

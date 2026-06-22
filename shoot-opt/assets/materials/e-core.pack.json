@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "44119905-bcaf-41fd-9f1d-9243554b3b30",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "parent": 0,
+        "paramValues": {
+          "baseColor": [
+            1,
+            0.25,
+            0.05,
+            1
+          ],
+          "roughness": 0.05,
+          "emissive": [
+            1,
+            0.3,
+            0
+          ],
+          "emissiveIntensity": 8
+        }
+      },
+      "refs": [
+        "ca115fc2-c547-4f44-908c-f2e77131d9c9"
+      ]
+    }
+  ]
+}

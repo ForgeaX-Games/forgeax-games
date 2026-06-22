@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "fx-effect",
+  "name": "Explosion Fireball",
+  "description": "Spherical fireball with FBM-turbulent blobs for grenade / fire-weapon AoE / boss death.",
+  "shader": "cow_survivor::explosion_fireball",
+  "geometry": "sphere",
+  "spawn": { "lifetime": 0.45, "scale": [2.4, 2.4, 2.4], "yPos": 0.6 },
+  "params": { "baseColor": [1.0, 0.45, 0.10], "metallic": 0, "roughness": 2.2 },
+  "paramSemantics": {
+    "metallic": "lifetime-progress-0-to-1",
+    "roughness": "turbulence-scale"
+  },
+  "poolSize": 8
+}

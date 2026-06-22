@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "projects": [
+    {
+      "id": "p_default_scene",
+      "type": "scene",
+      "name": "默认场景",
+      "description": "",
+      "createdAt": "2026-05-29T03:11:52.204Z",
+      "updatedAt": "2026-05-29T03:11:52.204Z"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "fx-effect",
+  "name": "Shockwave Ring",
+  "description": "Expanding ground ring at blast points — explosions / boss death / kills.",
+  "shader": "cow_survivor::shockwave",
+  "geometry": "cube-disc",
+  "spawn": {
+    "lifetime": 0.55,
+    "scale": [9.0, 0.12, 9.0],
+    "yPos": 0.06
+  },
+  "params": {
+    "baseColor": [1.0, 0.75, 0.25],
+    "metallic": 0,
+    "roughness": 4.0
+  },
+  "paramSemantics": {
+    "metallic": "lifetime-progress-0-to-1",
+    "roughness": "ring-sharpness"
+  },
+  "poolSize": 16,
+  "preview": {
+    "spawnIntervalSec": 1.2,
+    "atPosition": [0, 0, 0],
+    "cameraDist": 11,
+    "cameraPitch": -0.55
+  }
+}
