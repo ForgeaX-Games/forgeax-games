@@ -1,0 +1,8 @@
+{
+  "id": "cow-level",
+  "name": "Cow Level",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": "3d",
+  "defaultScene": "822234d8-dd44-4a4f-9336-525e995e41a0"
+}

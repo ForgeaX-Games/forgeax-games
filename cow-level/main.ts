@@ -8,21 +8,28 @@ import {
 } from '@forgeax/engine-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { Entity } from '@forgeax/engine-ecs';
+import type { Entity, EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
-import type { SceneAsset, LocalNodeId, TextureAsset } from '@forgeax/engine-types';
+import type { SceneAsset, TextureAsset } from '@forgeax/engine-types';
 import { installHud, type UpgradeChoice, type ViewMode } from './src/hud';
 
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
 
-const SKY_HDR_GUID = '81eec382-392f-5a93-8998-0ecf11ef7990';
-const CYLINDER_GUID = 'c1111111-0000-5000-8000-000000000001';
-const HANDLE_FIELD: Record<string, string> = { MeshFilter: 'assetHandle', MeshRenderer: 'material' };
-const STRIP_COMPONENTS = new Set(['Collider']);
+// M3c: the play-runtime host injects the instantiated defaultScene root +
+// loaded SceneAsset onto the GameContext before entry runs. The engine-app
+// GameEntry signature stays unchanged (engine zero-change), so the game reads
+// these host-fed fields through a structural widening of the received ctx.
+type HostFedContext = Parameters<GameEntry>[0] & {
+  readonly defaultSceneRoot?: EntityHandle;
+  readonly defaultScene?: SceneAsset;
+};
 
+const SKY_HDR_GUID = '81eec382-392f-5a93-8998-0ecf11ef7990';
+
+// Author-side scene entity shape (localId + named components). Mirrors the
+// SceneAsset.entities runtime shape the host exposes via ctx.defaultScene; the
+// consumers below read components.Name / Transform / ChildOf off it.
 interface PackNode { localId: number; components: Record<string, Record<string, unknown>> }
-interface PackAsset { guid: string; kind: string; payload: unknown; refs?: string[] }
-interface ScenePack { assets: PackAsset[] }
 
 interface EnemyType {
   id: string;
@@ -122,7 +129,7 @@ async function installHdrSky(ctx: Parameters<GameEntry>[0]): Promise<void> {
   const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
   const isChromium = /Chrome|Chromium|Edg/.test(ua);
   if (!isChromium) {
-    console.info('[暗黑奶牛关] non-Chromium WebGPU (WebKit/WKWebView): solid-color skylight only (no IBL/skybox)');
+    console.info('[cow-level] non-Chromium WebGPU (WebKit/WKWebView): solid-color skylight only (no IBL/skybox)');
     return;
   }
   const renderer = (ctx.app as unknown as { renderer?: { store?: { uploadCubemapFromEquirect?: unknown } } })?.renderer;
@@ -142,101 +149,6 @@ async function installHdrSky(ctx: Parameters<GameEntry>[0]): Promise<void> {
   // HDR drive the color).
   ctx.world.set(skylight, Skylight, { cubemap: cubemapRes.value, colorR: 1, colorG: 1, colorB: 1, intensity: 0.12 });
   ctx.world.spawn({ component: SkyboxBackground, data: { cubemap: cubemapRes.value, mode: SKYBOX_MODE_CUBEMAP } });
-}
-
-async function instantiateScenePack(
-  pack: ScenePack,
-  ctx: Parameters<GameEntry>[0],
-): Promise<{ mapping: ReadonlyMap<number, Entity>; nodes: PackNode[] } | null> {
-  const sceneEntry = pack.assets.find((a) => a.kind === 'scene');
-  if (!sceneEntry) { console.error('[cowhell] no scene asset in pack'); return null; }
-  const scenePayload = sceneEntry.payload as { kind: 'scene'; entities?: PackNode[]; nodes?: PackNode[] };
-  const packNodes = scenePayload.entities ?? scenePayload.nodes ?? [];
-  const refs = sceneEntry.refs ?? [];
-  console.info(`[cowhell] scene pack: ${packNodes.length} nodes, ${refs.length} refs, guid=${sceneEntry.guid}`);
-
-  for (const a of pack.assets) {
-    if (a.kind !== 'material') continue;
-    const g = AssetGuid.parse(a.guid);
-    if (!g.ok) { console.error(`[cowhell] material guid parse failed: ${a.guid}`, g.error); continue; }
-    const matRes = ctx.assets.catalog<MaterialAsset>(g.value, a.payload as MaterialAsset);
-    if (!matRes.ok) console.error(`[cowhell] catalog(material ${a.guid}) failed`, matRes.error);
-  }
-  const cylG = AssetGuid.parse(CYLINDER_GUID);
-  const cylGeo = createCylinderGeometry(0.5, 0.5, 1, 18);
-  if (!cylG.ok) console.error('[cowhell] cylinder guid parse failed', cylG.error);
-  if (!cylGeo.ok) console.error('[cowhell] createCylinderGeometry failed', cylGeo.error);
-  if (cylG.ok && cylGeo.ok) {
-    const cylRes = ctx.assets.catalog(cylG.value, cylGeo.value);
-    if (!cylRes.ok) console.error('[cowhell] catalog(cylinder) failed', cylRes.error);
-  }
-
-  const sceneAsset: SceneAsset = {
-    kind: 'scene',
-    entities: packNodes.map((n) => {
-      const components: Record<string, Record<string, unknown>> = {};
-      for (const [name, data] of Object.entries(n.components)) {
-        if (STRIP_COMPONENTS.has(name)) continue;
-        const hf = HANDLE_FIELD[name];
-        const resolved: Record<string, unknown> = {};
-        for (const [field, value] of Object.entries(data)) {
-          resolved[field] = (hf === field && typeof value === 'number' && Number.isInteger(value) && value >= 0 && value < refs.length)
-            ? refs[value]
-            : value;
-        }
-        if (name === 'MeshRenderer' && 'material' in resolved) {
-          const single = resolved.material;
-          delete resolved.material;
-          resolved.materials = single === undefined || single === null ? [] : [single];
-        }
-        // engine #387 (CSM) replaced DirectionalLightShadow's single-cascade
-        // `orthoHalfExtent` with cascade fields. Old packs still carry it;
-        // strip + map to `cascadeCount: 1` so the additionalProperties:false
-        // schema validator accepts the node instead of failing the whole
-        // scene instantiate (which would drop us to the lightless fallback).
-        if (name === 'DirectionalLightShadow' && 'orthoHalfExtent' in resolved) {
-          delete resolved.orthoHalfExtent;
-          if (!('cascadeCount' in resolved)) resolved.cascadeCount = 1;
-        }
-        components[name] = resolved;
-      }
-      return { localId: n.localId as LocalNodeId, components };
-    }),
-  };
-
-  const sceneGuid = AssetGuid.parse(sceneEntry.guid);
-  if (!sceneGuid.ok) { console.error('[cowhell] scene guid parse failed', sceneGuid.error); return null; }
-  // engine #330 (feat-20260608-scene-nesting-ecs-fication) removed the
-  // standalone `world.sceneInstances` container: `assets.instantiate` now
-  // auto-wires the World-level SceneAsset resolver and returns the synthetic
-  // root Entity directly. Read the localId -> Entity table off the new
-  // `SceneInstance` ECS component on that root (`mapping` is a Uint32Array
-  // indexed positionally by the authored localId).
-  const catRes = ctx.assets.catalog<SceneAsset>(sceneGuid.value, sceneAsset);
-  if (!catRes.ok) { console.error('[cowhell] catalog(scene) failed', catRes.error); return null; }
-  // loadByGuid returns the payload (D-17, recursively cataloguing refs); mint a
-  // user-tier column handle before instantiate.
-  const payloadRes = await ctx.assets.loadByGuid<SceneAsset>(sceneGuid.value);
-  if (!payloadRes.ok) { console.error('[cowhell] scene loadByGuid failed', payloadRes.error); return null; }
-  const sceneHandle = ctx.world.allocSharedRef<'SceneAsset', SceneAsset>('SceneAsset', payloadRes.value);
-  const instRes = ctx.assets.instantiate<SceneAsset>(sceneHandle, ctx.world);
-  if (!instRes.ok) { console.error('[cowhell] scene instantiate failed', instRes.error); return null; }
-  const sceneInst = ctx.world.get(instRes.value, SceneInstance);
-  if (!sceneInst.ok) { console.error('[cowhell] SceneInstance lookup on synthetic root failed', sceneInst.error); return null; }
-  // mapping is a Uint32Array sized totalSlots (= entities.length), indexed by
-  // localId: mapping[localId] = entity. The engine requires localIds to be the
-  // dense range [0, entities.length); a sparse / out-of-range localId silently
-  // overflows the typed array and drops the entity (player not found -> no
-  // update loop). scene.pack.json keeps localIds dense 0..N-1 for this reason.
-  // Project the array into the Map<localId, Entity> the callers read from,
-  // skipping unspawned slots (ENTITY_NULL_RAW = 0xffffffff) and 0.
-  const mappingArr = sceneInst.value.mapping as unknown as { length: number; [i: number]: number };
-  const mapping = new Map<number, Entity>();
-  for (let localId = 0; localId < mappingArr.length; localId++) {
-    const e = mappingArr[localId];
-    if (e !== undefined && e !== 0xffffffff && e !== 0) mapping.set(localId, e as Entity);
-  }
-  return { mapping, nodes: packNodes };
 }
 
 function spawnGroundCollider(ctx: Parameters<GameEntry>[0]): void {
@@ -317,13 +229,33 @@ const start: GameEntry = async (ctx) => {
   canvas.height = Math.max(1, Math.floor(canvas.clientHeight * dpr));
   const aspect = canvas.width / canvas.height || 1;
 
+  // M3c: the host resolves + instantiates the defaultScene before entry runs
+  // and exposes the synthetic root (ctx.defaultSceneRoot) plus the loaded
+  // SceneAsset (ctx.defaultScene). The game no longer fetches + instantiates
+  // scene.pack.json itself (no dual-load). Recover the { mapping, nodes } the
+  // Player / physics setup below read: mapping from the SceneInstance component
+  // on the host root (localId -> Entity), nodes from the author-side entity
+  // list (carries Name components for Name -> localId resolution).
   let loaded: { mapping: ReadonlyMap<number, Entity>; nodes: PackNode[] } | null = null;
-  try {
-    const res = await fetch(new URL('./scene.pack.json', import.meta.url), { cache: 'no-store' });
-    if (!res.ok) throw new Error(`scene.pack.json ${res.status}`);
-    loaded = await instantiateScenePack(await res.json() as ScenePack, ctx);
-  } catch (err) {
-    console.error('[cowhell] scene pack unavailable (threw)', err);
+  const hostCtx = ctx as HostFedContext;
+  const hostRoot = hostCtx.defaultSceneRoot;
+  if (hostRoot !== undefined && hostCtx.defaultScene !== undefined) {
+    const sceneInst = world.get(hostRoot, SceneInstance);
+    if (!sceneInst.ok) {
+      console.error('[cowhell] SceneInstance lookup on host root failed', sceneInst.error);
+    } else {
+      // mapping is a Uint32Array sized totalSlots, indexed by localId:
+      // mapping[localId] = entity. Project into the Map<localId, Entity> the
+      // callers read from, skipping unspawned slots (ENTITY_NULL_RAW
+      // = 0xffffffff) and 0.
+      const mappingArr = sceneInst.value.mapping as unknown as { length: number; [i: number]: number };
+      const mapping = new Map<number, Entity>();
+      for (let localId = 0; localId < mappingArr.length; localId++) {
+        const e = mappingArr[localId];
+        if (e !== undefined && e !== 0xffffffff && e !== 0) mapping.set(localId, e as Entity);
+      }
+      loaded = { mapping, nodes: hostCtx.defaultScene.entities as unknown as PackNode[] };
+    }
   }
   if (!loaded) {
     console.error('[cowhell] FALLBACK scene active — only ground will render (scene pack returned null or threw)');
@@ -452,7 +384,13 @@ const start: GameEntry = async (ctx) => {
   const safeRequestLock = (el: HTMLElement): void => {
     try {
       if (!document.hasFocus()) { try { window.focus(); } catch { /* ignore */ } }
-      if (!document.hasFocus()) return;
+      // Do NOT bail on !document.hasFocus(): in the Tauri desktop WKWebView an
+      // embedded iframe often doesn't report focus synchronously on the click
+      // gesture, so bailing skipped requestPointerLock entirely — no lock AND no
+      // pointerlockerror, so the native-grab fallback never fired either and the
+      // cursor stayed free to wander off-window. Always attempt the lock; the
+      // promise rejection is swallowed below and a real denial still surfaces
+      // through the pointerlockerror handler.
       const r = realRequestLock.call(el) as unknown;
       if (r && typeof (r as Promise<void>).catch === 'function') (r as Promise<void>).catch(() => {});
     } catch { /* pointerlockerror handles fallback */ }
@@ -748,7 +686,7 @@ const start: GameEntry = async (ctx) => {
   }
 
   updateHud();
-  hud.banner('暗黑奶牛关', '活下去，收割牛群');
+  hud.banner('Cow Level', 'Survive — harvest the herd');
 
   if (player !== undefined) {
     registerUpdate((rawDt: number) => {

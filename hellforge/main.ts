@@ -43,7 +43,7 @@ import {
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
-import type { AnimationClip, Asset, Handle, LocalEntityId, MeshAsset, SceneAsset, TextureAsset } from '@forgeax/engine-types';
+import type { AnimationClip, Handle, MeshAsset, SceneAsset, TextureAsset } from '@forgeax/engine-types';
 
 const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
 
@@ -137,93 +137,6 @@ async function installHdrSky(ctx: Parameters<GameEntry>[0]): Promise<EntityHandl
   return skylight;
 }
 
-// ── encampment scene-pack loader (same shape cow uses) ────────────────────
-interface PackNode { localId: number; components: Record<string, Record<string, unknown>> }
-interface PackAsset { guid: string; kind: string; payload: unknown; refs?: string[] }
-interface ScenePack { assets: PackAsset[] }
-const STRIP = new Set(['Collider']);
-const HF: Record<string, string> = { MeshFilter: 'assetHandle' };
-
-async function instantiateScenePack(pack: ScenePack, ctx: Parameters<GameEntry>[0]): Promise<EntityHandle | null> {
-  const { world, assets } = ctx;
-  const sceneEntry = pack.assets.find((a) => a.kind === 'scene');
-  if (!sceneEntry) return null;
-  const payload = sceneEntry.payload as { kind: 'scene'; entities?: PackNode[]; nodes?: PackNode[] };
-  const packNodes = payload.entities ?? payload.nodes ?? [];
-  const refs = sceneEntry.refs ?? [];
-  // engine e53f4616: `registerWithGuid` is gone → `assets.catalog(guid, payload)`
-  // returns a Result and never throws. Re-entering with the same GUID returns
-  // Err harmlessly (payload identical), so we just ignore the Result.
-  const regOnce = <T extends Asset>(g: string, payload: T) => {
-    const gid = AssetGuid.parse(g); if (!gid.ok) return;
-    assets.catalog<T>(gid.value, payload);
-  };
-  for (const a of pack.assets) if (a.kind === 'material') regOnce<MaterialAsset>(a.guid, a.payload as MaterialAsset);
-
-  const sceneAsset: SceneAsset = {
-    kind: 'scene',
-    entities: packNodes.map((n) => {
-      const comps: Record<string, Record<string, unknown>> = {};
-      for (const [name, data] of Object.entries(n.components)) {
-        if (STRIP.has(name)) continue;
-        const hf = HF[name];
-        const resolved: Record<string, unknown> = {};
-        for (const [field, value] of Object.entries(data)) {
-          // Editor still saves MeshRenderer.material (singular int) — engine
-          // #317 renamed to materials: [...]; convert in place so the engine
-          // doesn't reject with spawn-data-unknown-field.
-          if (name === 'MeshRenderer' && field === 'material' && typeof value === 'number' && Number.isInteger(value) && value >= 0 && value < refs.length) {
-            const arr = (resolved.materials as unknown[] | undefined) ?? [];
-            arr[0] = refs[value];
-            resolved.materials = arr;
-            continue;
-          }
-          if (name === 'MeshRenderer' && field === 'materials' && Array.isArray(value)) {
-            resolved[field] = value.map((v) =>
-              (typeof v === 'number' && Number.isInteger(v) && v >= 0 && v < refs.length) ? refs[v] : v);
-            continue;
-          }
-          // Editor still saves DirectionalLightShadow.orthoHalfExtent — engine
-          // #387 split it into cascadeCount/splitLambda/cascadeBlend. Drop the
-          // stale field and inject a sane CSM default if missing.
-          if (name === 'DirectionalLightShadow' && field === 'orthoHalfExtent') continue;
-          // Ground entity has a stray offset that drifted in via an editor
-          // save (-4.78, -0.1, -1.92 instead of 0, -0.1, 0). Snap Ground's
-          // Transform back to (0, -0.1, 0) so the world origin lines up with
-          // the campfire / witch spawn.
-          if (name === 'Transform' && (n.components.Name as { value?: string } | undefined)?.value === 'Ground'
-              && (field === 'posX' || field === 'posZ')) {
-            resolved[field] = 0;
-            continue;
-          }
-          resolved[field] = (hf === field && typeof value === 'number' && Number.isInteger(value) && value >= 0 && value < refs.length)
-            ? refs[value] : value;
-        }
-        // Inject CSM default fields on DirectionalLightShadow if the editor
-        // wrote only the legacy orthoHalfExtent shape.
-        if (name === 'DirectionalLightShadow' && resolved.cascadeCount === undefined) {
-          resolved.cascadeCount = 1;
-          if (resolved.nearPlane === undefined) resolved.nearPlane = 0.1;
-        }
-        comps[name] = resolved;
-      }
-      return { localId: n.localId as unknown as LocalEntityId, components: comps };
-    }),
-  };
-  const gid = AssetGuid.parse(sceneEntry.guid);
-  if (!gid.ok) return null;
-  // engine e53f4616: catalog the scene payload (Err on re-enter is harmless —
-  // payload identical). `loadByGuid` now returns the PAYLOAD; `instantiate`
-  // still wants a Handle, so mint one via `world.allocSharedRef`.
-  assets.catalog<SceneAsset>(gid.value, sceneAsset);
-  const h = await assets.loadByGuid<SceneAsset>(gid.value);
-  if (!h.ok) { console.error('[hellforge] encampment loadByGuid:', h.error); return null; }
-  const sceneHandle = world.allocSharedRef<'SceneAsset', SceneAsset>('SceneAsset', h.value);
-  const inst = assets.instantiate<SceneAsset>(sceneHandle, world);
-  if (!inst.ok) { console.error('[hellforge] encampment instantiate:', JSON.stringify(inst.error)); return null; }
-  return inst.value as EntityHandle;
-}
-
 const start: GameEntry = async (ctx) => {
   const { world, assets, registerUpdate } = ctx;
 
@@ -238,15 +151,11 @@ const start: GameEntry = async (ctx) => {
   let aspect = canvas.width / canvas.height;
 
   // ── 1. encampment scene (engine-native pack) ──────────────────────────
-  try {
-    const res = await fetch(new URL('./scenes/rogue-encampment.pack.json', import.meta.url));
-    if (res.ok) {
-      const pack = (await res.json()) as ScenePack;
-      await instantiateScenePack(pack, ctx);
-    }
-  } catch (err) {
-    console.warn('[hellforge] encampment unavailable:', (err as Error).message);
-  }
+  // M3c: the host now resolves + instantiates the defaultScene before entry
+  // runs and exposes the synthetic root via ctx.defaultSceneRoot. The game no
+  // longer fetches + instantiates the encampment pack itself (no dual-load).
+  // The encampment root is a side-effect spawn here; hellforge never reads its
+  // mapping (the witch GLB below uses its own instance root).
 
   // ── 2. HDR sky (fire-and-forget) ──────────────────────────────────────
   void installHdrSky(ctx);
@@ -454,7 +363,13 @@ const start: GameEntry = async (ctx) => {
   const safeRequestLock = (el: HTMLElement): void => {
     try {
       if (!document.hasFocus()) { try { window.focus(); } catch { /* ignore */ } }
-      if (!document.hasFocus()) return;
+      // Do NOT bail on !document.hasFocus(): in the Tauri desktop WKWebView an
+      // embedded iframe often doesn't report focus synchronously on the click
+      // gesture, so bailing skipped requestPointerLock entirely — no lock AND no
+      // pointerlockerror, so the native-grab fallback never fired either and the
+      // cursor stayed free to wander off-window. Always attempt the lock; the
+      // promise rejection is swallowed below and a real denial still surfaces
+      // through the pointerlockerror handler.
       const r = realRequestLock.call(el) as unknown;
       if (r && typeof (r as Promise<void>).catch === 'function') (r as Promise<void>).catch(() => {});
     } catch { /* pointerlockerror handles fallback */ }

@@ -473,7 +473,13 @@ const start: GameEntry = async (ctx) => {
   const safeRequestLock = (el: HTMLElement): void => {
     try {
       if (!document.hasFocus()) { try { window.focus(); } catch { /* ignore */ } }
-      if (!document.hasFocus()) return;
+      // Do NOT bail on !document.hasFocus(): in the Tauri desktop WKWebView an
+      // embedded iframe often doesn't report focus synchronously on the click
+      // gesture, so bailing skipped requestPointerLock entirely — no lock AND no
+      // pointerlockerror, so the native-grab fallback never fired either and the
+      // cursor stayed free to wander off-window. Always attempt the lock; the
+      // promise rejection is swallowed below and a real denial still surfaces
+      // through the pointerlockerror handler.
       const r = realRequestLock.call(el) as unknown;
       if (r && typeof (r as Promise<void>).catch === 'function') (r as Promise<void>).catch(() => {});
     } catch { /* pointerlockerror handler takes over */ }

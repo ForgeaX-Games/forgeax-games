@@ -6,8 +6,9 @@
 // spawner used to hardcode against global elapsed time now lives here, so
 // a stage can have a completely different bestiary and pacing.
 //
-// Scene packs live in ./scenes/<id>.pack.json (one file per level — the
-// editor edits the same files; see forge.json `scenes`).
+// Scene packs live in ./scenes/<id>.pack.json (one file per level — the editor
+// discovers + edits the same files via its scenes/ level scan, and asset-first
+// Play loads them by GUID from the per-game catalog, which scans scenes/ too).
 
 import type { EnemyKind } from './enemies';
 

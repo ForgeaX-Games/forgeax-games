@@ -15,9 +15,19 @@ import {
 } from '@forgeax/engine-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { Entity } from '@forgeax/engine-ecs';
+import type { Entity, EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
 import type { SceneAsset, LocalNodeId, TextureAsset } from '@forgeax/engine-types';
+
+// M3c: the play-runtime host injects the instantiated defaultScene root +
+// loaded SceneAsset onto the GameContext before entry runs. The engine-app
+// GameEntry signature stays unchanged (engine zero-change), so the first-level
+// branch in loadLevel reads these host-fed fields through a structural
+// widening of the received ctx.
+type HostFedContext = Parameters<GameEntry>[0] & {
+  readonly defaultSceneRoot?: EntityHandle;
+  readonly defaultScene?: SceneAsset;
+};
 
 import { installHud, type ViewMode, type WeaponIconState } from './src/hud';
 import {
@@ -395,7 +405,13 @@ const start: GameEntry = async (ctx) => {
   const safeRequestLock = (el: HTMLElement): void => {
     try {
       if (!document.hasFocus()) { try { window.focus(); } catch { /* ignore */ } }
-      if (!document.hasFocus()) return;
+      // Do NOT bail on !document.hasFocus(): in the Tauri desktop WKWebView an
+      // embedded iframe often doesn't report focus synchronously on the click
+      // gesture, so bailing skipped requestPointerLock entirely — no lock AND no
+      // pointerlockerror, so the native-grab fallback never fired either and the
+      // cursor stayed free to wander off-window. Always attempt the lock; the
+      // promise rejection is swallowed below and a real denial still surfaces
+      // through the pointerlockerror handler.
       const r = realRequestLock.call(el) as unknown;
       if (r && typeof (r as Promise<void>).catch === 'function') (r as Promise<void>).catch(() => {});
     } catch { /* error handler will retry */ }
@@ -629,16 +645,45 @@ const start: GameEntry = async (ctx) => {
   let jumpY = PLAYER_Y, vy = 0, grounded = true, prevSpace = false;
 
   // ── level loading / transition ─────────────────────────────────────────
-  const loadLevel = async (idx: number): Promise<boolean> => {
+  const loadLevel = async (idx: number, useHost = true): Promise<boolean> => {
     const cfg = LEVELS[idx]!;
     let loaded: LoadedScene | null = null;
-    try {
-      const res = await fetch(new URL(cfg.scenePack, import.meta.url), { cache: 'no-store' });
-      if (!res.ok) throw new Error(`${cfg.scenePack} ${res.status}`);
-      const pack = await res.json() as ScenePack;
-      loaded = await instantiateScenePack(pack, ctx);
-    } catch (err) {
-      console.error('[game] level scene pack unavailable:', err);
+    const hostCtx = ctx as HostFedContext;
+    // useHost: only the INITIAL boot of level 1 may reuse the host-fed
+    // defaultScene (play-runtime instantiated it pre-entry). A LIVE switch
+    // (Launcher VAG_SET_LEVEL) self-loads the pack — the host root was already
+    // consumed/despawned, so reusing it would fail.
+    if (useHost && idx === 0 && hostCtx.defaultSceneRoot !== undefined && hostCtx.defaultScene !== undefined) {
+      // M3c first level: the host already resolved + instantiated the level-1
+      // defaultScene before entry ran (no dual-load). Recover the LoadedScene
+      // the consumers below read from the host-fed root + SceneAsset instead of
+      // fetching + instantiating cfg.scenePack ourselves. synthRoot is the host
+      // root so unloadLevel can despawnScene it consistently on transition.
+      const hostRoot = hostCtx.defaultSceneRoot as unknown as Entity;
+      const sceneInst = world.get(hostRoot, SceneInstance);
+      if (!sceneInst.ok) {
+        console.error('[game] SceneInstance lookup failed on host root');
+      } else {
+        const mapping = new Map<number, Entity>();
+        const arr = sceneInst.value.mapping;
+        for (let localId = 0; localId < arr.length; localId++) {
+          const e = arr[localId] as Entity;
+          if (e !== 0) mapping.set(localId, e);
+        }
+        loaded = { mapping, nodes: hostCtx.defaultScene.entities as unknown as PackNode[], synthRoot: hostRoot };
+      }
+    } else {
+      // Level transitions (idx !== 0) and the no-host-root fallback keep the
+      // original self-load path: fetch the pack + instantiate + (later)
+      // despawnScene the synthetic root.
+      try {
+        const res = await fetch(new URL(cfg.scenePack, import.meta.url), { cache: 'no-store' });
+        if (!res.ok) throw new Error(`${cfg.scenePack} ${res.status}`);
+        const pack = await res.json() as ScenePack;
+        loaded = await instantiateScenePack(pack, ctx);
+      } catch (err) {
+        console.error('[game] level scene pack unavailable:', err);
+      }
     }
     if (!loaded) return false;
     sceneRoot = loaded.synthRoot;
@@ -749,9 +794,50 @@ const start: GameEntry = async (ctx) => {
     }
   } catch { /* no launcher config → campaign */ }
 
+  // The host (play-runtime, asset-first startup) pre-instantiates forge.json's
+  // defaultScene (= level 1) into the world BEFORE entry runs. When the launcher
+  // picked a DIFFERENT starting level, that level-1 scene is the wrong stage AND
+  // would render UNDERNEATH the one loadLevel(idx!==0) is about to fetch (two
+  // overlapping scenes → "选关了 Play 没变 / 一团乱"). Despawn the host scene so
+  // a non-default pick starts clean. (idx===0 keeps the host scene — loadLevel's
+  // idx===0 branch reuses it, no dual-load.)
+  if (levelIdx !== 0) {
+    const hostRoot0 = (ctx as HostFedContext).defaultSceneRoot;
+    if (hostRoot0 !== undefined) {
+      const dr = world.despawnScene(hostRoot0 as unknown as Entity);
+      if (!dr.ok) console.warn('[game] despawn host defaultScene before non-default level failed:', dr.error);
+    }
+  }
+
   if (!(await loadLevel(levelIdx))) {
     console.error('[game] failed to load the first level — bailing');
     return;
+  }
+
+  // Launcher "play this level" — live in-place level switch. The editor Launcher
+  // posts VAG_SET_LEVEL{level} when the user picks a level, so ▶ Play switches
+  // WITHOUT reloading the game iframe (an iframe reload re-creates the WebGPU
+  // context, which wedges WKWebView's GPU process — the desktop crash). We unload
+  // the current stage + load the picked one in place (useHost=false: the host
+  // defaultScene was already consumed at boot).
+  const setLevelLive = (id: string): void => {
+    const idx = LEVELS.findIndex((l) => l.id === id);
+    if (idx < 0 || idx === levelIdx || transitioning || gameOver) return;
+    transitioning = true;
+    void (async () => {
+      unloadLevel();
+      levelIdx = idx;
+      if (idx > endIdx) endIdx = idx;
+      const ok = await loadLevel(idx, false);
+      transitioning = false;
+      if (!ok) { gameOver = true; hud.banner('关卡加载失败…', '#ff4060', 6000); }
+    })().catch((e) => { transitioning = false; console.error('[game] live level switch failed:', e); });
+  };
+  if (typeof window !== 'undefined') {
+    window.addEventListener('message', (ev: MessageEvent) => {
+      const d = ev.data as { type?: string; level?: string } | null;
+      if (d?.type === 'VAG_SET_LEVEL' && typeof d.level === 'string') setLevelLive(d.level);
+    });
   }
 
   // ── main update ────────────────────────────────────────────────────────

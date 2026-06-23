@@ -227,6 +227,14 @@
               "LightMode": "Forward"
             },
             "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
@@ -255,6 +263,14 @@
               "LightMode": "Forward"
             },
             "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
@@ -283,6 +299,14 @@
               "LightMode": "Forward"
             },
             "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
@@ -311,6 +335,14 @@
               "LightMode": "Forward"
             },
             "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
@@ -339,6 +371,14 @@
               "LightMode": "Forward"
             },
             "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
@@ -367,6 +407,14 @@
               "LightMode": "Forward"
             },
             "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
@@ -395,6 +443,14 @@
               "LightMode": "Forward"
             },
             "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
