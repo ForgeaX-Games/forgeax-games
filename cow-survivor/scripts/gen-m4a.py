@@ -130,9 +130,12 @@ add('Ground', 0, -0.1, 0, 60, 0.2, 60, 'ground')
 ents2.append({'localId': len(ents2), 'components': {
     'Name': {'value': 'Sun'},
     'Transform': {'posX': 0, 'posY': 8, 'posZ': 0, 'scaleX': 1, 'scaleY': 1, 'scaleZ': 1},
+    # Shadow fields merged onto DirectionalLight (engine #479); castShadow gates
+    # them. orthoHalfExtent dropped (engine feat-20260613-csm auto-fits per-cascade
+    # AABB to the visible scene).
     'DirectionalLight': {'directionX': 0.25, 'directionY': -1, 'directionZ': 0.35,
-                         'colorR': 0.45, 'colorG': 0.55, 'colorB': 1.0, 'intensity': 0.55},
-    'DirectionalLightShadow': {'mapSize': 2048, 'orthoHalfExtent': 16, 'farPlane': 60},
+                         'colorR': 0.45, 'colorG': 0.55, 'colorB': 1.0, 'intensity': 0.55,
+                         'castShadow': True, 'mapSize': 2048, 'farPlane': 60},
 }})
 # player spawn marker (Transform only)
 ents2.append({'localId': len(ents2), 'components': {

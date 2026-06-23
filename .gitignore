@@ -1,3 +1,4 @@
 play-config.json
 .DS_Store
 .gen3d/
+node_modules/

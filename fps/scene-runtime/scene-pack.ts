@@ -176,8 +176,10 @@ export function docToPack(doc: SceneDocument): ScenePack {
       const [r, g, b] = hexToRgba(typeof light!.color === 'string' ? light!.color : '#ffffff');
       const intensity = num(light!.intensity, 1);
       if (light!.type === 'directional') {
-        c.DirectionalLight = { directionX: num(light!.directionX, -0.4), directionY: num(light!.directionY, -1), directionZ: num(light!.directionZ, -0.3), colorR: r, colorG: g, colorB: b, intensity };
-        if (light!.castShadow) c.DirectionalLightShadow = { mapSize: 2048, orthoHalfExtent: 16, farPlane: 60 };
+        // Shadow fields merged onto DirectionalLight (engine #479); castShadow
+        // gates them. orthoHalfExtent dropped (engine feat-20260613-csm auto-fits
+        // per-cascade AABB to the visible scene).
+        c.DirectionalLight = { directionX: num(light!.directionX, -0.4), directionY: num(light!.directionY, -1), directionZ: num(light!.directionZ, -0.3), colorR: r, colorG: g, colorB: b, intensity, castShadow: !!light!.castShadow, ...(light!.castShadow ? { mapSize: 2048, farPlane: 60 } : {}) };
       } else {
         c.PointLight = { colorR: r, colorG: g, colorB: b, intensity, range: num(light!.range, 0) };
       }
@@ -242,7 +244,7 @@ export function packToDoc(pack: ScenePack): SceneDocument {
     const dl = cc.DirectionalLight as Record<string, number> | undefined;
     const pl = cc.PointLight as Record<string, number> | undefined;
     if (dl) {
-      docComps.Light = { type: 'directional', color: rgbaToHex([dl.colorR, dl.colorG, dl.colorB]), intensity: num(dl.intensity, 1), directionX: num(dl.directionX, -0.4), directionY: num(dl.directionY, -1), directionZ: num(dl.directionZ, -0.3), ...(cc.DirectionalLightShadow ? { castShadow: true } : {}) };
+      docComps.Light = { type: 'directional', color: rgbaToHex([dl.colorR, dl.colorG, dl.colorB]), intensity: num(dl.intensity, 1), directionX: num(dl.directionX, -0.4), directionY: num(dl.directionY, -1), directionZ: num(dl.directionZ, -0.3), ...(dl.castShadow ? { castShadow: true } : {}) };
     } else if (pl) {
       docComps.Light = { type: 'point', color: rgbaToHex([pl.colorR, pl.colorG, pl.colorB]), intensity: num(pl.intensity, 1), range: num(pl.range, 0) };
     }
