@@ -40,7 +40,7 @@ const cowSurvivorPipeline: RenderPipeline = {
 
     // ── targets (mirrors urp-pipeline.ts) ────────────────────────────────
     graph.addColorTarget('depth', { format: 'depth24plus-stencil8', size: 'swapchain', sample: 1, usage: 0x10 });
-    // Shadow map size picked up from DirectionalLightShadow.mapSize on the
+    // Shadow map size picked up from DirectionalLight.mapSize on the
     // level's Sun entity (engine projects it onto data.shadowMapSize before
     // calling buildGraph — same path urp-pipeline.ts uses at line 97-98).
     // Falls back to 1024 when no caster is wired. Previously this was

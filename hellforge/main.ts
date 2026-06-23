@@ -18,7 +18,6 @@ import {
   Camera,
   ChildOf,
   DirectionalLight,
-  DirectionalLightShadow,
   Materials,
   MeshFilter,
   MeshRenderer,
