@@ -68,7 +68,7 @@ const start: GameEntry = async (ctx) => {
     name: 'spin',
     queries: [{ with: [Entity, Transform, Spin] }],
     resources: ['Time'],
-    fn: (qr) => {
+    fn: (_w, qr) => {
       const dt = world.getResource<{ dt: number }>('Time').dt;
       for (const b of qr[0]) {
         const n = b.Entity.self.length;
