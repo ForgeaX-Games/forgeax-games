@@ -6,8 +6,9 @@
 // spawner used to hardcode against global elapsed time now lives here, so
 // a stage can have a completely different bestiary and pacing.
 //
-// Scene packs live in ./assets/<id>.pack.json (one file per level — the
-// editor edits the same files; see forge.json `scenes`).
+// Scene packs live in ./scenes/<id>.pack.json (one file per level — the editor
+// discovers + edits the same files via its scenes/ level scan, and asset-first
+// Play loads them by GUID from the per-game catalog, which scans scenes/ too).
 
 import type { EnemyKind } from './enemies';
 
@@ -59,7 +60,7 @@ export const LEVELS: LevelConfig[] = [
     id: 'level1',
     name: '奶 牛 关',
     subtitle: '生存吧~',
-    scenePack: './assets/level1.pack.json',
+    scenePack: './scenes/level1.pack.json',
     duration: 180,
     skylightIntensity: 0.12,
     playerLight: { color: [1, 0.55, 0.35], intensity: 12, range: 6 },
@@ -82,7 +83,7 @@ export const LEVELS: LevelConfig[] = [
     id: 'level2',
     name: '暗 夜 墓 园',
     subtitle: '黑暗中有什么在动…',
-    scenePack: './assets/level2.pack.json',
+    scenePack: './scenes/level2.pack.json',
     duration: 240,
     skylightIntensity: 0.04,
     // Cold moonlight follows the player instead of the warm D2 torch.

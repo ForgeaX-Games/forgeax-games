@@ -129,7 +129,7 @@ async function installHdrSky(ctx: Parameters<GameEntry>[0]): Promise<void> {
   const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
   const isChromium = /Chrome|Chromium|Edg/.test(ua);
   if (!isChromium) {
-    console.info('[暗黑奶牛关] non-Chromium WebGPU (WebKit/WKWebView): solid-color skylight only (no IBL/skybox)');
+    console.info('[cow-level] non-Chromium WebGPU (WebKit/WKWebView): solid-color skylight only (no IBL/skybox)');
     return;
   }
   const renderer = (ctx.app as unknown as { renderer?: { store?: { uploadCubemapFromEquirect?: unknown } } })?.renderer;
@@ -686,7 +686,7 @@ const start: GameEntry = async (ctx) => {
   }
 
   updateHud();
-  hud.banner('暗黑奶牛关', '活下去，收割牛群');
+  hud.banner('Cow Level', 'Survive — harvest the herd');
 
   if (player !== undefined) {
     registerUpdate((rawDt: number) => {

@@ -645,11 +645,15 @@ const start: GameEntry = async (ctx) => {
   let jumpY = PLAYER_Y, vy = 0, grounded = true, prevSpace = false;
 
   // ── level loading / transition ─────────────────────────────────────────
-  const loadLevel = async (idx: number): Promise<boolean> => {
+  const loadLevel = async (idx: number, useHost = true): Promise<boolean> => {
     const cfg = LEVELS[idx]!;
     let loaded: LoadedScene | null = null;
     const hostCtx = ctx as HostFedContext;
-    if (idx === 0 && hostCtx.defaultSceneRoot !== undefined && hostCtx.defaultScene !== undefined) {
+    // useHost: only the INITIAL boot of level 1 may reuse the host-fed
+    // defaultScene (play-runtime instantiated it pre-entry). A LIVE switch
+    // (Launcher VAG_SET_LEVEL) self-loads the pack — the host root was already
+    // consumed/despawned, so reusing it would fail.
+    if (useHost && idx === 0 && hostCtx.defaultSceneRoot !== undefined && hostCtx.defaultScene !== undefined) {
       // M3c first level: the host already resolved + instantiated the level-1
       // defaultScene before entry ran (no dual-load). Recover the LoadedScene
       // the consumers below read from the host-fed root + SceneAsset instead of
@@ -790,9 +794,50 @@ const start: GameEntry = async (ctx) => {
     }
   } catch { /* no launcher config → campaign */ }
 
+  // The host (play-runtime, asset-first startup) pre-instantiates forge.json's
+  // defaultScene (= level 1) into the world BEFORE entry runs. When the launcher
+  // picked a DIFFERENT starting level, that level-1 scene is the wrong stage AND
+  // would render UNDERNEATH the one loadLevel(idx!==0) is about to fetch (two
+  // overlapping scenes → "选关了 Play 没变 / 一团乱"). Despawn the host scene so
+  // a non-default pick starts clean. (idx===0 keeps the host scene — loadLevel's
+  // idx===0 branch reuses it, no dual-load.)
+  if (levelIdx !== 0) {
+    const hostRoot0 = (ctx as HostFedContext).defaultSceneRoot;
+    if (hostRoot0 !== undefined) {
+      const dr = world.despawnScene(hostRoot0 as unknown as Entity);
+      if (!dr.ok) console.warn('[game] despawn host defaultScene before non-default level failed:', dr.error);
+    }
+  }
+
   if (!(await loadLevel(levelIdx))) {
     console.error('[game] failed to load the first level — bailing');
     return;
+  }
+
+  // Launcher "play this level" — live in-place level switch. The editor Launcher
+  // posts VAG_SET_LEVEL{level} when the user picks a level, so ▶ Play switches
+  // WITHOUT reloading the game iframe (an iframe reload re-creates the WebGPU
+  // context, which wedges WKWebView's GPU process — the desktop crash). We unload
+  // the current stage + load the picked one in place (useHost=false: the host
+  // defaultScene was already consumed at boot).
+  const setLevelLive = (id: string): void => {
+    const idx = LEVELS.findIndex((l) => l.id === id);
+    if (idx < 0 || idx === levelIdx || transitioning || gameOver) return;
+    transitioning = true;
+    void (async () => {
+      unloadLevel();
+      levelIdx = idx;
+      if (idx > endIdx) endIdx = idx;
+      const ok = await loadLevel(idx, false);
+      transitioning = false;
+      if (!ok) { gameOver = true; hud.banner('关卡加载失败…', '#ff4060', 6000); }
+    })().catch((e) => { transitioning = false; console.error('[game] live level switch failed:', e); });
+  };
+  if (typeof window !== 'undefined') {
+    window.addEventListener('message', (ev: MessageEvent) => {
+      const d = ev.data as { type?: string; level?: string } | null;
+      if (d?.type === 'VAG_SET_LEVEL' && typeof d.level === 'string') setLevelLive(d.level);
+    });
   }
 
   // ── main update ────────────────────────────────────────────────────────
