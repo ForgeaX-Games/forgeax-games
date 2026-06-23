@@ -1,3 +1,0 @@
-# Cow Level
-
-Cow Level
