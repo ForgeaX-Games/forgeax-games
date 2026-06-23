@@ -53,9 +53,8 @@
                 "colorR": 1,
                 "colorG": 0.8196078431372549,
                 "colorB": 0.6196078431372549,
-                "intensity": 2.4
-              },
-              "DirectionalLightShadow": {
+                "intensity": 2.4,
+                "castShadow": true,
                 "cascadeCount": 1,
                 "mapSize": 2048,
                 "farPlane": 60,

@@ -53,18 +53,12 @@
                 "colorR": 0.45,
                 "colorG": 0.55,
                 "colorB": 1,
-                "intensity": 2
-              },
-              "DirectionalLightShadow": {
+                "intensity": 2,
+                "castShadow": true,
                 "cascadeCount": 1,
-                "splitLambda": 0.8,
-                "cascadeBlend": 0.1,
                 "mapSize": 2048,
-                "depthBias": 0.002,
-                "normalBias": 0.025,
-                "nearPlane": 0.1,
                 "farPlane": 60,
-                "pcfKernelSize": 3
+                "nearPlane": 0.1
               }
             }
           },
