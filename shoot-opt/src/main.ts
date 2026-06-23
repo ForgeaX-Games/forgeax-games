@@ -5,7 +5,7 @@
  * // 让每一次飞行都像冒险一样精彩~ ♪
  */
 import {
-  Transform, Camera, perspective, DirectionalLight, Skylight, quat,
+  Transform, Camera, perspective, DirectionalLight, DirectionalLightShadow, Skylight, quat,
   MeshFilter, MeshRenderer,
 } from '@forgeax/engine-runtime';
 import { Entity, type EntityHandle } from '@forgeax/engine-ecs';
@@ -59,14 +59,14 @@ const start: GameEntry = async (ctx) => {
 
   // Engine first-slice cap: at most 1 DirectionalLight (todo-125 multi-light-pack
   // unlocks N>1). Fill+rim of the original 3-point rig dropped until then.
-  // Shadow config merged into DirectionalLight (engine #479 feat-20260621):
-  // castShadow defaults true, so the 9 shadow fields live on the same component.
+  // DirectionalLightShadow on the SAME entity — without it the engine warns
+  // "DirectionalLight present without DirectionalLightShadow — shadows disabled".
   world.spawn(
     { component: DirectionalLight, data: {
       directionX: 0.15, directionY: -0.85, directionZ: -0.35,
       colorR: 0.92, colorG: 0.94, colorB: 1.0, intensity: 2.2,
-      cascadeCount: 3, mapSize: 2048, farPlane: 60, nearPlane: 0.1,
     }},
+    { component: DirectionalLightShadow, data: { cascadeCount: 3, mapSize: 2048, farPlane: 60, nearPlane: 0.1 } },
   );
 
   // Ambient: the forgeax PBR shader computes ambient=0 without a Skylight, so a
@@ -235,7 +235,7 @@ const start: GameEntry = async (ctx) => {
   // ═══════════════════════════════════════════════════════════════════════
 
   // Background scrolls in +Z direction (toward player = bottom of screen)
-  world.addSystem({ name: 'star-scroll', queries: [{ with: [Entity, Transform, Star] }], fn: (_w, qr) => {
+  world.addSystem({ name: 'star-scroll', queries: [{ with: [Entity, Transform, Star] }], fn: (qr) => {
     const dt = world.getResource<{dt:number}>('Time').dt;
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
       b.Transform.posZ[i]! += b.Star.speed[i]! * dt;
@@ -246,7 +246,7 @@ const start: GameEntry = async (ctx) => {
     }
   }});
 
-  world.addSystem({ name: 'particle-tick', queries: [{ with: [Entity, Transform, Particle] }], fn: (_w, qr) => {
+  world.addSystem({ name: 'particle-tick', queries: [{ with: [Entity, Transform, Particle] }], fn: (qr) => {
     const dt = world.getResource<{dt:number}>('Time').dt;
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
       b.Transform.posX[i]! += b.Particle.velX[i]! * dt;
@@ -259,7 +259,7 @@ const start: GameEntry = async (ctx) => {
     }
   }});
 
-  world.addSystem({ name: 'thruster-pulse', queries: [{ with: [Entity, Transform, Thruster] }], fn: (_w, qr) => {
+  world.addSystem({ name: 'thruster-pulse', queries: [{ with: [Entity, Transform, Thruster] }], fn: (qr) => {
     const dt = world.getResource<{dt:number}>('Time').dt;
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
       b.Thruster.phase[i]! += dt * 14;
@@ -268,7 +268,7 @@ const start: GameEntry = async (ctx) => {
     }
   }});
 
-  world.addSystem({ name: 'trail-fade', queries: [{ with: [Entity, Transform, Trail] }], fn: (_w, qr) => {
+  world.addSystem({ name: 'trail-fade', queries: [{ with: [Entity, Transform, Trail] }], fn: (qr) => {
     const dt = world.getResource<{dt:number}>('Time').dt;
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
       b.Trail.life[i]! -= dt;
@@ -278,7 +278,7 @@ const start: GameEntry = async (ctx) => {
     }
   }});
 
-  world.addSystem({ name: 'powerup-bob', queries: [{ with: [Entity, Transform, PowerUp] }], fn: (_w, qr) => {
+  world.addSystem({ name: 'powerup-bob', queries: [{ with: [Entity, Transform, PowerUp] }], fn: (qr) => {
     const dt = world.getResource<{dt:number}>('Time').dt;
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
       b.PowerUp.bobPhase[i]! += dt * 5;

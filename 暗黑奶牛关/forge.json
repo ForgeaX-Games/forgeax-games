@@ -1,0 +1,7 @@
+{
+  "id": "test3",
+  "name": "test3",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": "3d"
+}

@@ -54,12 +54,12 @@
                 "colorR": 1,
                 "colorG": 0.9607843137254902,
                 "colorB": 0.8784313725490196,
-                "intensity": 3.2,
-                "castShadow": true,
-                "cascadeCount": 1,
+                "intensity": 3.2
+              },
+              "DirectionalLightShadow": {
                 "mapSize": 2048,
-                "farPlane": 60,
-                "nearPlane": 0.1
+                "orthoHalfExtent": 16,
+                "farPlane": 60
               }
             }
           },
