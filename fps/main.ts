@@ -33,8 +33,8 @@ import {
 } from '@forgeax/engine-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { TextureAsset } from '@forgeax/engine-types';
-import type { Entity } from '@forgeax/engine-ecs';
-import type { GameEntry } from '@forgeax/engine-app';
+import type { Entity, World } from '@forgeax/engine-ecs';
+import type { BootstrapContext } from '@forgeax/engine-app';
 import { instantiateScene, loadGltfRuntime } from './scene-runtime';
 import { buildMeshCollision, type MeshCollision, type Box } from './scene-runtime/mesh-collision';
 
@@ -59,7 +59,9 @@ const SKY_HDR_GUID = '81eec382-392f-5a93-8998-0ecf11ef7990';
 // tonemapping. perspective() carries clearR/G/B=0, so SKY_CLEAR must be spread
 // AFTER it on every Camera write (spawn + the per-frame re-apply below).
 const SKY_CLEAR = { clearR: 0.5, clearG: 0.72, clearB: 1.25 } as const;
-async function installHdrSky(ctx: Parameters<GameEntry>[0]): Promise<Entity | null> {
+/** Narrowed context for helper functions — only the subset used from the host. */
+type FpsCtx = { world: World; assets: import('@forgeax/engine-runtime').AssetRegistry; app: import('@forgeax/engine-app').App };
+async function installHdrSky(ctx: FpsCtx): Promise<Entity | null> {
   // ALWAYS spawn a solid-color Skylight first. The forgeax PBR shader computes
   // ambient=0 without a Skylight, so a lone DirectionalLight leaves every shaded
   // face black ("天光没了"). The engine binds a 1×1 white irradiance cube for a
@@ -108,8 +110,8 @@ async function installHdrSky(ctx: Parameters<GameEntry>[0]): Promise<Entity | nu
   return skylight;
 }
 
-const start: GameEntry = async (ctx) => {
-  const { world, assets, registerUpdate } = ctx;
+export async function bootstrap(world: World, ctx?: BootstrapContext) {
+  const { assets, registerUpdate, app } = ctx ?? {};
 
   // ── canvas + aspect ─────────────────────────────────────────────────────
   const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
@@ -272,7 +274,7 @@ const start: GameEntry = async (ctx) => {
     // HDR environment light + visible skybox (parallel to scene boot — fires
     // and forgets; if cubemap upload fails, scene.json's DirectionalLight is
     // still enough to light the warehouse, just without skylight tint).
-    void installHdrSky(ctx);
+    void installHdrSky({ world, assets, app });
   } catch (err) {
     console.warn('[fps] scene.json unavailable — using fallback arena:', err);
     box(matMetalWall, 0, -0.1, 0, HALF * 2, 0.2, HALF * 2);
@@ -1113,4 +1115,4 @@ function makeAudio() {
   return { resume, startAmbient, shot, hit, kill, empty, reload, swap, hurt };
 }
 
-export default start;
+// end of bootstrap

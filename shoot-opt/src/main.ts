@@ -10,7 +10,7 @@ import {
 } from '@forgeax/engine-runtime';
 import { Entity, type EntityHandle } from '@forgeax/engine-ecs';
 import type { World } from '@forgeax/engine-ecs';
-import type { GameEntry } from '@forgeax/engine-app';
+import type { BootstrapContext } from '@forgeax/engine-app';
 
 import { registerMaterials, registerGeometry, type Geo, type Mat } from './setup';
 import { Player, Thruster, spawnPlayer, type PlayerShip } from './player';
@@ -41,8 +41,8 @@ const BOSS_MAX_HP = 200;           // boss 总 HP
 
 // ─── Entry ───────────────────────────────────────────────────────────────
 
-const start: GameEntry = async (ctx) => {
-  const { world, assets } = ctx;
+export async function bootstrap(world: World, ctx?: BootstrapContext) {
+  const { assets } = ctx ?? {};
 
   // Components self-register globally via defineComponent (feat-20260602); the
   // old per-world world.registerComponent(...) API was removed. Referencing the
@@ -980,6 +980,4 @@ const start: GameEntry = async (ctx) => {
     if (hudBoss) hudBoss.style.display = 'none';
     storyUi.showEnding(gs.score);
   }
-};
-
-export default start;
+}

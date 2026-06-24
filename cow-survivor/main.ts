@@ -15,19 +15,16 @@ import {
 } from '@forgeax/engine-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { Entity, EntityHandle } from '@forgeax/engine-ecs';
-import type { GameEntry } from '@forgeax/engine-app';
+import type { Entity, EntityHandle, World } from '@forgeax/engine-ecs';
+import type { BootstrapContext } from '@forgeax/engine-app';
 import type { SceneAsset, LocalNodeId, TextureAsset } from '@forgeax/engine-types';
 
-// M3c: the play-runtime host injects the instantiated defaultScene root +
-// loaded SceneAsset onto the GameContext before entry runs. The engine-app
-// GameEntry signature stays unchanged (engine zero-change), so the first-level
-// branch in loadLevel reads these host-fed fields through a structural
-// widening of the received ctx.
-type HostFedContext = Parameters<GameEntry>[0] & {
-  readonly defaultSceneRoot?: EntityHandle;
-  readonly defaultScene?: SceneAsset;
-};
+// The host injects the instantiated defaultScene root + loaded SceneAsset
+// onto the BootstrapContext. HostFedContext is now just an alias.
+type HostFedContext = BootstrapContext;
+
+// Narrowed context for helper functions that need world + assets.
+type Sctx = { world: World; assets: import('@forgeax/engine-runtime').AssetRegistry };
 
 import { installHud, type ViewMode, type WeaponIconState } from './src/hud';
 import {
@@ -61,7 +58,7 @@ interface ScenePack { assets: PackAsset[] }
 // now 3-arg `(world, sourceHandle, sourcePod)`. `loadByGuid` returns the
 // PAYLOAD; the source handle is minted via `world.allocSharedRef('TextureAsset',
 // pod)`. Probe the store surface and gracefully skip if not exposed.
-async function installHdrSky(ctx: Parameters<GameEntry>[0]): Promise<Entity | null> {
+async function installHdrSky(ctx: Sctx): Promise<Entity | null> {
   // ALWAYS spawn a solid-color Skylight first. The forgeax PBR shader computes
   // ambient=0 without a Skylight, so a lone DirectionalLight leaves shaded faces
   // black ("天光没了"). A cubemap-less Skylight binds the engine's 1×1 white
@@ -121,7 +118,7 @@ interface LoadedScene {
 
 async function instantiateScenePack(
   pack: ScenePack,
-  ctx: Parameters<GameEntry>[0],
+  ctx: Sctx,
 ): Promise<LoadedScene | null> {
   const { world, assets } = ctx;
   const sceneEntry = pack.assets.find((a) => a.kind === 'scene');
@@ -215,7 +212,7 @@ async function instantiateScenePack(
 }
 
 // ── thick invisible ground collider (top at y=0) ─────────────────────────
-function spawnGroundCollider(ctx: Parameters<GameEntry>[0]): void {
+function spawnGroundCollider(ctx: Sctx): void {
   ctx.world.spawn(
     { component: Transform, data: { posX: 0, posY: -5, posZ: 0 } },
     { component: RigidBody, data: { type: RigidBodyTypeValue.static } },
@@ -232,7 +229,7 @@ function spawnGroundCollider(ctx: Parameters<GameEntry>[0]): void {
 // Returns both the soft-push circles AND the spawned collider entities so a
 // level transition can despawn the physics bodies along with the scene.
 function attachBlockerPhysics(
-  ctx: Parameters<GameEntry>[0],
+  ctx: Sctx,
   loaded: LoadedScene,
 ): { blockers: Array<{ cx: number; cz: number; r: number }>; colliders: Entity[] } {
   const blockers: Array<{ cx: number; cz: number; r: number }> = [];
@@ -272,7 +269,7 @@ const PLAYER_Y = 0.75;
 // (editable in the Studio editor like any monster asset). Physics goes on the
 // marker root; the visual parts hang off it via ChildOf.
 function setupPlayerRoot(
-  ctx: Parameters<GameEntry>[0],
+  ctx: Sctx,
   root: Entity,
   visual: PackVisual | null,
 ): Array<{ e: Entity; sx: number; sy: number; sz: number }> {
@@ -282,8 +279,8 @@ function setupPlayerRoot(
   return visual ? spawnPackVisual(ctx, root, visual) : [];
 }
 
-const start: GameEntry = async (ctx) => {
-  const { world, registerUpdate } = ctx;
+export async function bootstrap(world: World, ctx?: BootstrapContext) {
+  const { registerUpdate } = ctx ?? {};
 
   const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
   const dpr = window.devicePixelRatio || 1;
@@ -306,8 +303,8 @@ const start: GameEntry = async (ctx) => {
   // (vignette + chromatic aberration) — re-enable once render-pipeline.ts ports
   // the urp v18 swap-chain copy pattern (recordFxaaPass-style final write).
   void installCowSurvivorPipeline;
-  spawnGroundCollider(ctx);
-  const skylight = await installHdrSky(ctx);
+  spawnGroundCollider({ world, assets: ctx?.assets! });
+  const skylight = await installHdrSky({ world, assets: ctx?.assets! });
 
   // ── per-level state (rebound by loadLevel on every stage transition) ───
   let levelIdx = 0;
@@ -680,7 +677,7 @@ const start: GameEntry = async (ctx) => {
         const res = await fetch(new URL(cfg.scenePack, import.meta.url), { cache: 'no-store' });
         if (!res.ok) throw new Error(`${cfg.scenePack} ${res.status}`);
         const pack = await res.json() as ScenePack;
-        loaded = await instantiateScenePack(pack, ctx);
+        loaded = await instantiateScenePack(pack, { world, assets: ctx?.assets! });
       } catch (err) {
         console.error('[game] level scene pack unavailable:', err);
       }
@@ -802,7 +799,7 @@ const start: GameEntry = async (ctx) => {
   // a non-default pick starts clean. (idx===0 keeps the host scene — loadLevel's
   // idx===0 branch reuses it, no dual-load.)
   if (levelIdx !== 0) {
-    const hostRoot0 = (ctx as HostFedContext).defaultSceneRoot;
+    const hostRoot0 = ctx.defaultSceneRoot;
     if (hostRoot0 !== undefined) {
       const dr = world.despawnScene(hostRoot0 as unknown as Entity);
       if (!dr.ok) console.warn('[game] despawn host defaultScene before non-default level failed:', dr.error);
@@ -1289,6 +1286,4 @@ const start: GameEntry = async (ctx) => {
         break;
     }
   }
-};
-
-export default start;
+}

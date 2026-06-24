@@ -40,8 +40,8 @@ import {
   type MaterialAsset,
 } from '@forgeax/engine-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { EntityHandle } from '@forgeax/engine-ecs';
-import type { GameEntry } from '@forgeax/engine-app';
+import type { EntityHandle, World } from '@forgeax/engine-ecs';
+import type { BootstrapContext } from '@forgeax/engine-app';
 import type { AnimationClip, Handle, MeshAsset, SceneAsset, TextureAsset } from '@forgeax/engine-types';
 
 const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
@@ -68,7 +68,9 @@ const SKY_HDR_GUID = '81eec382-392f-5a93-8998-0ecf11ef7990';
 const SKY_CLEAR = { clearR: 0.32, clearG: 0.07, clearB: 0.035 } as const;
 
 // ── HDR sky (same path cow / fps use) ─────────────────────────────────────
-async function installHdrSky(ctx: Parameters<GameEntry>[0]): Promise<EntityHandle | null> {
+/** Narrowed context for helper functions. */
+type HellforgeCtx = { world: World; assets?: import('@forgeax/engine-runtime').AssetRegistry; app?: import('@forgeax/engine-app').App };
+async function installHdrSky(ctx: HellforgeCtx): Promise<EntityHandle | null> {
   // ALWAYS spawn a solid-color Skylight first. Without a Skylight the forgeax
   // PBR shader computes ambient=0, so a lone DirectionalLight leaves shaded
   // faces black ("天光没了"). A cubemap-less Skylight binds the engine's 1×1
@@ -136,8 +138,8 @@ async function installHdrSky(ctx: Parameters<GameEntry>[0]): Promise<EntityHandl
   return skylight;
 }
 
-const start: GameEntry = async (ctx) => {
-  const { world, assets, registerUpdate } = ctx;
+export async function bootstrap(world: World, ctx?: BootstrapContext) {
+  const { assets, registerUpdate, app } = ctx ?? {};
 
   // ── canvas ────────────────────────────────────────────────────────────
   const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
@@ -157,7 +159,7 @@ const start: GameEntry = async (ctx) => {
   // mapping (the witch GLB below uses its own instance root).
 
   // ── 2. HDR sky (fire-and-forget) ──────────────────────────────────────
-  void installHdrSky(ctx);
+  void installHdrSky({ world, assets, app });
 
   // ── 3. witch GLB — via gltfImporter sub-assets ────────────────────────
   // play-runtime's vite.config wires gltfImporter into pluginPack, so the GLB
@@ -659,6 +661,4 @@ const start: GameEntry = async (ctx) => {
       });
     }
   });
-};
-
-export default start;
+}

@@ -1,14 +1,14 @@
 import { Transform, MeshFilter, MeshRenderer, Camera, Skylight, perspective, quat, HANDLE_CUBE, type Handle, type MaterialAsset } from '@forgeax/engine-runtime';
-import { defineComponent, Entity } from '@forgeax/engine-ecs';
+import { defineComponent, Entity, type World } from '@forgeax/engine-ecs';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { GameEntry } from '@forgeax/engine-app';
+import type { BootstrapContext } from '@forgeax/engine-app';
 
 const BASE_MATERIAL_GUID = 'eb5bf6e6-2e47-4d9a-99fd-81843228c9b3';
 
 const Spin = defineComponent('Spin', { axisX: 'f32', axisY: 'f32', axisZ: 'f32', speed: 'f32' });
 
-const start: GameEntry = async (ctx) => {
-  const { world, assets } = ctx;
+export async function bootstrap(world: World, ctx?: BootstrapContext) {
+  const { assets } = ctx ?? {};
   const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
   const dpr = window.devicePixelRatio || 1;
   canvas.width = canvas.clientWidth * dpr;
@@ -81,5 +81,4 @@ const start: GameEntry = async (ctx) => {
       }
     },
   });
-};
-export default start;
+}

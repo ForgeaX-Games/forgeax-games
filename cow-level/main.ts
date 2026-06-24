@@ -8,21 +8,16 @@ import {
 } from '@forgeax/engine-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { Entity, EntityHandle } from '@forgeax/engine-ecs';
-import type { GameEntry } from '@forgeax/engine-app';
+import type { Entity, EntityHandle, World } from '@forgeax/engine-ecs';
+import type { BootstrapContext } from '@forgeax/engine-app';
 import type { SceneAsset, TextureAsset } from '@forgeax/engine-types';
 import { installHud, type UpgradeChoice, type ViewMode } from './src/hud';
 
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
 
-// M3c: the play-runtime host injects the instantiated defaultScene root +
-// loaded SceneAsset onto the GameContext before entry runs. The engine-app
-// GameEntry signature stays unchanged (engine zero-change), so the game reads
-// these host-fed fields through a structural widening of the received ctx.
-type HostFedContext = Parameters<GameEntry>[0] & {
-  readonly defaultSceneRoot?: EntityHandle;
-  readonly defaultScene?: SceneAsset;
-};
+// The host injects the instantiated defaultScene root + loaded SceneAsset
+// onto the BootstrapContext. HostFedContext is now just an alias.
+type HostFedContext = BootstrapContext;
 
 const SKY_HDR_GUID = '81eec382-392f-5a93-8998-0ecf11ef7990';
 
@@ -110,7 +105,9 @@ const ENEMY_TYPES: EnemyType[] = [
   { id: 'king', name: 'The Cow King', hp: 520, speed: 0.92, damage: 34, radius: 1.08, xp: 40, score: 450, color: [1, 0.86, 0.22, 1], scale: 1.75, boss: true },
 ];
 
-async function installHdrSky(ctx: Parameters<GameEntry>[0]): Promise<void> {
+/** Narrowed context for helper functions using only world. */
+type CtxWorld = { world: World };
+async function installHdrSky(ctx: CtxWorld): Promise<void> {
   // ALWAYS spawn a solid-color Skylight first. Without a Skylight the forgeax
   // PBR shader computes ambient=0, so a lone DirectionalLight leaves shaded
   // faces black ("天光没了"). A cubemap-less Skylight binds the engine's 1×1
@@ -151,7 +148,7 @@ async function installHdrSky(ctx: Parameters<GameEntry>[0]): Promise<void> {
   ctx.world.spawn({ component: SkyboxBackground, data: { cubemap: cubemapRes.value, mode: SKYBOX_MODE_CUBEMAP } });
 }
 
-function spawnGroundCollider(ctx: Parameters<GameEntry>[0]): void {
+function spawnGroundCollider(ctx: CtxWorld): void {
   ctx.world.spawn(
     { component: Transform, data: { posX: 0, posY: -5, posZ: 0 } },
     { component: RigidBody, data: { type: RigidBodyTypeValue.static } },
@@ -160,7 +157,7 @@ function spawnGroundCollider(ctx: Parameters<GameEntry>[0]): void {
 }
 
 function setupPlayer(
-  ctx: Parameters<GameEntry>[0],
+  ctx: CtxWorld,
   root: Entity,
   loaded: { mapping: ReadonlyMap<number, Entity>; nodes: PackNode[] },
 ): void {
@@ -193,7 +190,7 @@ function setupPlayer(
   ctx.world.addComponent(root, { component: Collider, data: { shape: ColliderShapeValue.capsule, radius: 0.35, halfHeight: 0.48, friction: 0.8 } });
 }
 
-function attachPackPhysics(ctx: Parameters<GameEntry>[0], loaded: { mapping: ReadonlyMap<number, Entity>; nodes: PackNode[] }): void {
+function attachPackPhysics(ctx: CtxWorld, loaded: { mapping: ReadonlyMap<number, Entity>; nodes: PackNode[] }): void {
   for (const node of loaded.nodes) {
     const name = (node.components.Name as { value?: string } | undefined)?.value ?? '';
     const e = loaded.mapping.get(node.localId);
@@ -212,7 +209,7 @@ function attachPackPhysics(ctx: Parameters<GameEntry>[0], loaded: { mapping: Rea
   }
 }
 
-function spawnFallbackScene(ctx: Parameters<GameEntry>[0]): void {
+function spawnFallbackScene(ctx: CtxWorld): void {
   const mat = ctx.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', Materials.standard({ baseColor: [0.18, 0.08, 0.08, 1], roughness: 0.95 }));
   ctx.world.spawn(
     { component: Transform, data: { posY: -0.08, scaleX: 36, scaleY: 0.16, scaleZ: 36 } },
@@ -221,8 +218,8 @@ function spawnFallbackScene(ctx: Parameters<GameEntry>[0]): void {
   );
 }
 
-const start: GameEntry = async (ctx) => {
-  const { world, registerUpdate } = ctx;
+export async function bootstrap(world: World, ctx?: BootstrapContext) {
+  const { registerUpdate } = ctx ?? {};
   const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
   const dpr = window.devicePixelRatio || 1;
   canvas.width = Math.max(1, Math.floor(canvas.clientWidth * dpr));
@@ -237,7 +234,7 @@ const start: GameEntry = async (ctx) => {
   // on the host root (localId -> Entity), nodes from the author-side entity
   // list (carries Name components for Name -> localId resolution).
   let loaded: { mapping: ReadonlyMap<number, Entity>; nodes: PackNode[] } | null = null;
-  const hostCtx = ctx as HostFedContext;
+  const hostCtx = ctx;
   const hostRoot = hostCtx.defaultSceneRoot;
   if (hostRoot !== undefined && hostCtx.defaultScene !== undefined) {
     const sceneInst = world.get(hostRoot, SceneInstance);
@@ -259,21 +256,21 @@ const start: GameEntry = async (ctx) => {
   }
   if (!loaded) {
     console.error('[cowhell] FALLBACK scene active — only ground will render (scene pack returned null or threw)');
-    spawnFallbackScene(ctx);
+    spawnFallbackScene({ world });
   }
-  spawnGroundCollider(ctx);
-  void installHdrSky(ctx);
+  spawnGroundCollider({ world });
+  void installHdrSky({ world });
 
   let player: Entity | undefined;
   let px = 0, pz = 0;
   if (loaded) {
-    attachPackPhysics(ctx, loaded);
+    attachPackPhysics({ world }, loaded);
     const node = loaded.nodes.find((n) => (n.components.Name as { value?: string } | undefined)?.value === 'Player');
     if (node) {
       const t = (node.components.Transform ?? {}) as Record<string, number>;
       px = t.posX ?? 0; pz = t.posZ ?? 0;
       player = loaded.mapping.get(node.localId);
-      if (player !== undefined) setupPlayer(ctx, player, loaded);
+      if (player !== undefined) setupPlayer({ world }, player, loaded);
     }
   }
   if (player === undefined) console.error('[cowhell] Player entity not resolved — game loop will not start (check scene.pack.json localIds are dense 0..N-1)');
@@ -852,6 +849,4 @@ const start: GameEntry = async (ctx) => {
       updateHud();
     });
   }
-};
-
-export default start;
+}
