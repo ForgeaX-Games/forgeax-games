@@ -1,3 +1,7 @@
 play-config.json
 .DS_Store
 .gen3d/
+# Runtime reel scenario state, auto-created by the wb-reel plugin under each
+# game's reel/ (scenarios.json + versions/) on first Studio load. Not source —
+# .forgeax/games/<slug> symlinks back here, so writes land in this submodule.
+reel/
