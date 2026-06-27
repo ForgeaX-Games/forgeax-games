@@ -3,7 +3,7 @@
   "kind": "internal-text-package",
   "assets": [
     {
-      "guid": "39e34fce-ba85-4bf6-9642-6a352f7eb3db",
+      "guid": "9c58eb2b-e361-46ff-b18a-693f8fe08937",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -20,7 +20,7 @@
         }
       },
       "refs": [
-        "ca115fc2-c547-4f44-908c-f2e77131d9c9"
+        "dd9e6e76-c926-43be-b575-bdd26661a939"
       ]
     }
   ]

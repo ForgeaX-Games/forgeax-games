@@ -3,7 +3,7 @@
   "kind": "internal-text-package",
   "assets": [
     {
-      "guid": "15acc839-d847-527c-8284-bfb36d7c50de",
+      "guid": "2748fc78-a386-4b9b-b7d5-cd771eaf6a71",
       "kind": "scene",
       "payload": {
         "kind": "scene",
@@ -15,9 +15,9 @@
                 "value": "Ground"
               },
               "Transform": {
-                "posX": 0,
-                "posY": -0.1,
-                "posZ": 0,
+                "posX": 0.16528162052676265,
+                "posY": -0.28846723454946355,
+                "posZ": 4.781178073289123,
                 "scaleX": 50,
                 "scaleY": 0.2,
                 "scaleZ": 50
@@ -50,8 +50,8 @@
                 "directionX": 0.6,
                 "directionY": -0.55,
                 "directionZ": 0.55,
-                "colorR": 0.45,
-                "colorG": 0.55,
+                "colorR": 0.45098039215686275,
+                "colorG": 0.5490196078431373,
                 "colorB": 1,
                 "intensity": 2,
                 "castShadow": true,
@@ -544,7 +544,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  "42a5f29d-ab90-5710-9b3a-5bc7e59585fa"
+                  6
                 ]
               }
             }
@@ -568,7 +568,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  "8ef4a717-a4c4-5028-a97c-b959f9426fea"
+                  6
                 ]
               }
             }
@@ -582,12 +582,15 @@
               "Transform": {
                 "posX": -2.5,
                 "posY": 2.1,
-                "posZ": 13.5
+                "posZ": 13.5,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
               },
               "PointLight": {
                 "colorR": 1,
-                "colorG": 0.55,
-                "colorB": 0.18,
+                "colorG": 0.5490196078431373,
+                "colorB": 0.1803921568627451,
                 "intensity": 8,
                 "range": 12
               }
@@ -612,7 +615,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  "42a5f29d-ab90-5710-9b3a-5bc7e59585fa"
+                  6
                 ]
               }
             }
@@ -636,7 +639,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  "8ef4a717-a4c4-5028-a97c-b959f9426fea"
+                  6
                 ]
               }
             }
@@ -650,12 +653,15 @@
               "Transform": {
                 "posX": 2.5,
                 "posY": 2.1,
-                "posZ": 13.5
+                "posZ": 13.5,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
               },
               "PointLight": {
                 "colorR": 1,
-                "colorG": 0.55,
-                "colorB": 0.18,
+                "colorG": 0.5490196078431373,
+                "colorB": 0.1803921568627451,
                 "intensity": 8,
                 "range": 12
               }
@@ -680,7 +686,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  "42a5f29d-ab90-5710-9b3a-5bc7e59585fa"
+                  6
                 ]
               }
             }
@@ -704,13 +710,13 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  "8ef4a717-a4c4-5028-a97c-b959f9426fea"
+                  6
                 ]
               }
             }
           },
           {
-            "localId": 30,
+            "localId": 29,
             "components": {
               "Name": {
                 "value": "TorchHut2_Post"
@@ -728,13 +734,13 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  "42a5f29d-ab90-5710-9b3a-5bc7e59585fa"
+                  6
                 ]
               }
             }
           },
           {
-            "localId": 31,
+            "localId": 30,
             "components": {
               "Name": {
                 "value": "TorchHut2_Glow"
@@ -752,13 +758,13 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  "8ef4a717-a4c4-5028-a97c-b959f9426fea"
+                  6
                 ]
               }
             }
           },
           {
-            "localId": 33,
+            "localId": 31,
             "components": {
               "Name": {
                 "value": "TorchHut3F_Post"
@@ -776,13 +782,13 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  "42a5f29d-ab90-5710-9b3a-5bc7e59585fa"
+                  6
                 ]
               }
             }
           },
           {
-            "localId": 34,
+            "localId": 32,
             "components": {
               "Name": {
                 "value": "TorchHut3F_Glow"
@@ -800,13 +806,13 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  "8ef4a717-a4c4-5028-a97c-b959f9426fea"
+                  6
                 ]
               }
             }
           },
           {
-            "localId": 36,
+            "localId": 33,
             "components": {
               "Name": {
                 "value": "TorchHut3R_Post"
@@ -824,13 +830,13 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  "42a5f29d-ab90-5710-9b3a-5bc7e59585fa"
+                  6
                 ]
               }
             }
           },
           {
-            "localId": 37,
+            "localId": 34,
             "components": {
               "Name": {
                 "value": "TorchHut3R_Glow"
@@ -848,7 +854,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  "8ef4a717-a4c4-5028-a97c-b959f9426fea"
+                  6
                 ]
               }
             }
@@ -856,16 +862,17 @@
         ]
       },
       "refs": [
-        "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
-        "cb6ec8aa-e2f9-57c7-a34e-56ac76dbee19",
-        "42a5f29d-ab90-5710-9b3a-5bc7e59585fa",
-        "17a392d4-9ddd-5fa1-ae2c-586ab1f49267",
-        "1d631673-ed72-5f72-93b1-7895d025660c",
-        "8ef4a717-a4c4-5028-a97c-b959f9426fea"
+        "713075de-0a3b-4d3f-a72e-f91c87e74fd4",
+        "83410560-5519-4f3d-a4fb-f142024ea759",
+        "0f05c8db-c397-486e-9b45-a35976c6c5e9",
+        "f5224c4e-af10-48a7-8ff2-2dab3db1029b",
+        "f9829c51-c168-4428-8d8a-e3d25a285ec0",
+        "29503b73-c506-4686-b5b5-6f6ed1b4ef64",
+        "4d6d9779-c110-4d95-bb34-f8f3cc065a9a"
       ]
     },
     {
-      "guid": "cb6ec8aa-e2f9-57c7-a34e-56ac76dbee19",
+      "guid": "83410560-5519-4f3d-a4fb-f142024ea759",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -884,7 +891,7 @@
             "tags": {
               "LightMode": "ShadowCaster"
             },
-            "queue": 2000
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
@@ -901,7 +908,7 @@
       "refs": []
     },
     {
-      "guid": "42a5f29d-ab90-5710-9b3a-5bc7e59585fa",
+      "guid": "0f05c8db-c397-486e-9b45-a35976c6c5e9",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -920,7 +927,7 @@
             "tags": {
               "LightMode": "ShadowCaster"
             },
-            "queue": 2000
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
@@ -937,7 +944,7 @@
       "refs": []
     },
     {
-      "guid": "17a392d4-9ddd-5fa1-ae2c-586ab1f49267",
+      "guid": "f5224c4e-af10-48a7-8ff2-2dab3db1029b",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -956,7 +963,7 @@
             "tags": {
               "LightMode": "ShadowCaster"
             },
-            "queue": 2000
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
@@ -973,7 +980,7 @@
       "refs": []
     },
     {
-      "guid": "1d631673-ed72-5f72-93b1-7895d025660c",
+      "guid": "f9829c51-c168-4428-8d8a-e3d25a285ec0",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -992,7 +999,7 @@
             "tags": {
               "LightMode": "ShadowCaster"
             },
-            "queue": 2000
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
@@ -1015,7 +1022,7 @@
       "refs": []
     },
     {
-      "guid": "8ef4a717-a4c4-5028-a97c-b959f9426fea",
+      "guid": "29503b73-c506-4686-b5b5-6f6ed1b4ef64",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -1034,7 +1041,7 @@
             "tags": {
               "LightMode": "ShadowCaster"
             },
-            "queue": 2000
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
@@ -1052,6 +1059,42 @@
             0.10196078431372549
           ],
           "emissiveIntensity": 4
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "4d6d9779-c110-4d95-bb34-f8f3cc065a9a",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.8,
+            0.8,
+            0.8,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.8
         }
       },
       "refs": []

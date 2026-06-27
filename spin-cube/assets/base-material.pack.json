@@ -3,7 +3,7 @@
   "kind": "internal-text-package",
   "assets": [
     {
-      "guid": "eb5bf6e6-2e47-4d9a-99fd-81843228c9b3",
+      "guid": "d0606ad7-78d8-47e3-9d39-9ba94e9b4e22",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -11,12 +11,19 @@
           {
             "name": "Forward",
             "shader": "forgeax::default-unlit",
-            "tags": { "LightMode": "Forward" },
+            "tags": {
+              "LightMode": "Forward"
+            },
             "queue": 2000
           }
         ],
         "paramValues": {
-          "baseColor": [0.6, 0.6, 0.6, 1]
+          "baseColor": [
+            0.6,
+            0.6,
+            0.6,
+            1
+          ]
         }
       },
       "refs": []

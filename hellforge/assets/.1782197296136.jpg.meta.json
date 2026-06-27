@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": ".1782197296136.jpg",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "2f4682e5-b8a7-5fe6-badf-aaf7e315ebd8",
+      "sourceIndex": 0,
+      "kind": "image"
+    }
+  ]
+}
