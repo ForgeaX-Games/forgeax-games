@@ -5,3 +5,4 @@ play-config.json
 # game's reel/ (scenarios.json + versions/) on first Studio load. Not source —
 # .forgeax/games/<slug> symlinks back here, so writes land in this submodule.
 reel/
+node_modules/

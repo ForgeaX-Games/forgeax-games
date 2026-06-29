@@ -3,7 +3,7 @@ import { defineComponent, Entity, type World } from '@forgeax/engine-ecs';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { BootstrapContext } from '@forgeax/engine-app';
 
-const BASE_MATERIAL_GUID = 'eb5bf6e6-2e47-4d9a-99fd-81843228c9b3';
+const BASE_MATERIAL_GUID = 'd0606ad7-78d8-47e3-9d39-9ba94e9b4e22';
 
 const Spin = defineComponent('Spin', { axisX: 'f32', axisY: 'f32', axisZ: 'f32', speed: 'f32' });
 

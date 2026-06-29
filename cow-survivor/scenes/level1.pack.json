@@ -42,7 +42,7 @@
                 "directionX": -0.6,
                 "directionY": -0.85,
                 "directionZ": -0.35,
-                "colorR": 1.0,
+                "colorR": 1,
                 "colorG": 0.94,
                 "colorB": 0.82,
                 "intensity": 2.1,
@@ -1701,7 +1701,7 @@
         ]
       },
       "refs": [
-        "06f737f7-8ca9-4763-b54b-36c7ebc69ea6",
+        "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
         "868d9be1-4797-4232-ba22-02fc9ccce56d",
         "f6679b45-b8cb-4b62-a2bf-cdd7b5ed8a45",
         "dc874ad6-0806-4c58-a0bc-66bde37b0ef9",

@@ -1,0 +1,10 @@
+{
+  "id": "luo-sai-ya",
+  "name": "洛塞娅",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": false,
+  "preview": {
+    "orientation": "landscape"
+  }
+}

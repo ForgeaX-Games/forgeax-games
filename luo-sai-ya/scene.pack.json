@@ -1,0 +1,833 @@
+{
+ "schemaVersion": "1.0.0",
+ "kind": "internal-text-package",
+ "assets": [
+  {
+   "guid": "1036f6f0-d3c2-5f31-9593-3432942d4c93",
+   "kind": "scene",
+   "payload": {
+    "kind": "scene",
+    "nodes": [
+     {
+      "localId": 0,
+      "components": {
+       "Name": {
+        "value": "Ground"
+       },
+       "Transform": {
+        "posX": 0,
+        "posY": -0.1,
+        "posZ": 0,
+        "scaleX": 24,
+        "scaleY": 0.2,
+        "scaleZ": 24
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "material": 1
+       },
+       "Collider": {
+        "shape": "box"
+       }
+      }
+     },
+     {
+      "localId": 1,
+      "components": {
+       "Name": {
+        "value": "Sun"
+       },
+       "Transform": {
+        "posX": 0,
+        "posY": 6,
+        "posZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+       },
+       "DirectionalLight": {
+        "directionX": -0.4,
+        "directionY": -1,
+        "directionZ": -0.3,
+        "colorR": 1,
+        "colorG": 0.9607843137254902,
+        "colorB": 0.8784313725490196,
+        "intensity": 3.2,
+        "castShadow": true,
+        "mapSize": 2048,
+        "farPlane": 60
+       }
+      }
+     },
+     {
+      "localId": 2,
+      "components": {
+       "Name": {
+        "value": "TreeTrunk"
+       },
+       "Transform": {
+        "posX": -4,
+        "posY": 0.9,
+        "posZ": -3,
+        "scaleX": 0.4,
+        "scaleY": 1.8,
+        "scaleZ": 0.4
+       },
+       "MeshFilter": {
+        "assetHandle": 2
+       },
+       "MeshRenderer": {
+        "material": 3
+       }
+      }
+     },
+     {
+      "localId": 3,
+      "components": {
+       "Name": {
+        "value": "TreeCanopy"
+       },
+       "Transform": {
+        "posX": -4,
+        "posY": 2.4,
+        "posZ": -3,
+        "scaleX": 1.4,
+        "scaleY": 1.4,
+        "scaleZ": 1.4
+       },
+       "MeshFilter": {
+        "assetHandle": 4
+       },
+       "MeshRenderer": {
+        "material": 5
+       }
+      }
+     },
+     {
+      "localId": 4,
+      "components": {
+       "Name": {
+        "value": "RedBox"
+       },
+       "Transform": {
+        "posX": 3,
+        "posY": 0.5,
+        "posZ": -2,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "material": 6
+       }
+      }
+     },
+     {
+      "localId": 5,
+      "components": {
+       "Name": {
+        "value": "BlueBall"
+       },
+       "Transform": {
+        "posX": 4.5,
+        "posY": 0.8,
+        "posZ": 1.5,
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
+       },
+       "MeshFilter": {
+        "assetHandle": 4
+       },
+       "MeshRenderer": {
+        "material": 7
+       }
+      }
+     },
+     {
+      "localId": 6,
+      "components": {
+       "Name": {
+        "value": "YellowPillar"
+       },
+       "Transform": {
+        "posX": 2,
+        "posY": 0.75,
+        "posZ": 3.5,
+        "scaleX": 0.6,
+        "scaleY": 1.5,
+        "scaleZ": 0.6
+       },
+       "MeshFilter": {
+        "assetHandle": 2
+       },
+       "MeshRenderer": {
+        "material": 8
+       }
+      }
+     },
+     {
+      "localId": 14,
+      "components": {
+       "Name": {
+        "value": "Crate14"
+       },
+       "Transform": {
+        "posX": 5.38,
+        "posY": 0.31,
+        "posZ": -4,
+        "scaleX": 0.62,
+        "scaleY": 0.62,
+        "scaleZ": 0.62
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "material": 13
+       }
+      }
+     },
+     {
+      "localId": 15,
+      "components": {
+       "Name": {
+        "value": "Crate15"
+       },
+       "Transform": {
+        "posX": 6.0,
+        "posY": 0.31,
+        "posZ": -4,
+        "scaleX": 0.62,
+        "scaleY": 0.62,
+        "scaleZ": 0.62
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "material": 13
+       }
+      }
+     },
+     {
+      "localId": 16,
+      "components": {
+       "Name": {
+        "value": "Crate16"
+       },
+       "Transform": {
+        "posX": 6.62,
+        "posY": 0.31,
+        "posZ": -4,
+        "scaleX": 0.62,
+        "scaleY": 0.62,
+        "scaleZ": 0.62
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "material": 13
+       }
+      }
+     },
+     {
+      "localId": 17,
+      "components": {
+       "Name": {
+        "value": "Crate17"
+       },
+       "Transform": {
+        "posX": 5.69,
+        "posY": 0.9299999999999999,
+        "posZ": -4,
+        "scaleX": 0.62,
+        "scaleY": 0.62,
+        "scaleZ": 0.62
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "material": 13
+       }
+      }
+     },
+     {
+      "localId": 18,
+      "components": {
+       "Name": {
+        "value": "Crate18"
+       },
+       "Transform": {
+        "posX": 6.31,
+        "posY": 0.9299999999999999,
+        "posZ": -4,
+        "scaleX": 0.62,
+        "scaleY": 0.62,
+        "scaleZ": 0.62
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "material": 13
+       }
+      }
+     },
+     {
+      "localId": 19,
+      "components": {
+       "Name": {
+        "value": "Crate19"
+       },
+       "Transform": {
+        "posX": 6.0,
+        "posY": 1.55,
+        "posZ": -4,
+        "scaleX": 0.62,
+        "scaleY": 0.62,
+        "scaleZ": 0.62
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "material": 13
+       }
+      }
+     },
+     {
+      "localId": 20,
+      "components": {
+       "Name": {
+        "value": "BouncyBall"
+       },
+       "Transform": {
+        "posX": -5,
+        "posY": 0.55,
+        "posZ": 4,
+        "scaleX": 0.55,
+        "scaleY": 0.55,
+        "scaleZ": 0.55
+       },
+       "MeshFilter": {
+        "assetHandle": 4
+       },
+       "MeshRenderer": {
+        "material": 14
+       }
+      }
+     },
+     {
+      "localId": 21,
+      "components": {
+       "Name": {
+        "value": "Player"
+       },
+       "Transform": {
+        "posX": 0,
+        "posY": 0.75,
+        "posZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+       }
+      }
+     },
+     {
+      "localId": 22,
+      "components": {
+       "Name": {
+        "value": "PlayerTorso"
+       },
+       "Transform": {
+        "posX": 0,
+        "posY": 0.75,
+        "posZ": 0,
+        "scaleX": 0.5,
+        "scaleY": 0.55,
+        "scaleZ": 0.28
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "material": 11
+       }
+      }
+     },
+     {
+      "localId": 23,
+      "components": {
+       "Name": {
+        "value": "PlayerHead"
+       },
+       "Transform": {
+        "posX": 0,
+        "posY": 1.25,
+        "posZ": 0.02,
+        "scaleX": 0.32,
+        "scaleY": 0.32,
+        "scaleZ": 0.32
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "material": 10
+       }
+      }
+     },
+     {
+      "localId": 24,
+      "components": {
+       "Name": {
+        "value": "PlayerArmL"
+       },
+       "Transform": {
+        "posX": -0.34,
+        "posY": 0.75,
+        "posZ": 0,
+        "scaleX": 0.14,
+        "scaleY": 0.45,
+        "scaleZ": 0.14
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "material": 10
+       }
+      }
+     },
+     {
+      "localId": 25,
+      "components": {
+       "Name": {
+        "value": "PlayerArmR"
+       },
+       "Transform": {
+        "posX": 0.34,
+        "posY": 0.75,
+        "posZ": 0,
+        "scaleX": 0.14,
+        "scaleY": 0.45,
+        "scaleZ": 0.14
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "material": 10
+       }
+      }
+     },
+     {
+      "localId": 26,
+      "components": {
+       "Name": {
+        "value": "PlayerLegL"
+       },
+       "Transform": {
+        "posX": -0.12,
+        "posY": 0.25,
+        "posZ": 0,
+        "scaleX": 0.18,
+        "scaleY": 0.5,
+        "scaleZ": 0.18
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "material": 12
+       }
+      }
+     },
+     {
+      "localId": 27,
+      "components": {
+       "Name": {
+        "value": "PlayerLegR"
+       },
+       "Transform": {
+        "posX": 0.12,
+        "posY": 0.25,
+        "posZ": 0,
+        "scaleX": 0.18,
+        "scaleY": 0.5,
+        "scaleZ": 0.18
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "material": 12
+       }
+      }
+     }
+    ]
+   },
+   "refs": [
+    "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
+    "4e3206e4-f2ac-5d05-b879-2c667168dc27",
+    "c1111111-0000-5000-8000-000000000001",
+    "423f2ea4-a8f2-504f-a1b5-323e3adf94d1",
+    "95730fd2-9846-5f84-8658-0b3c971eb263",
+    "4b077814-3cc4-51b5-8e76-e3d273dad53b",
+    "f6205ca9-71c6-54b2-946c-45b3154931a4",
+    "7d718b8e-9fac-5301-b5cb-e0bc940bae67",
+    "65a4a1d4-2abf-535b-923e-bd066a9ab475",
+    "8f991880-b608-5d27-a46c-f6de2881fc15",
+    "a1b2c3d4-0001-5000-8000-000000000001",
+    "a1b2c3d4-0002-5000-8000-000000000002",
+    "a1b2c3d4-0003-5000-8000-000000000003",
+    "c0a7e000-0001-5000-8000-0000000000c1",
+    "c0a7e000-0002-5000-8000-0000000000c2"
+   ]
+  },
+  {
+   "guid": "4e3206e4-f2ac-5d05-b879-2c667168dc27",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.47843137254901963,
+      0.6196078431372549,
+      0.35294117647058826,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.95
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "423f2ea4-a8f2-504f-a1b5-323e3adf94d1",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.5411764705882353,
+      0.35294117647058826,
+      0.16862745098039217,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.9
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "4b077814-3cc4-51b5-8e76-e3d273dad53b",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.37254901960784315,
+      0.6823529411764706,
+      0.30980392156862746,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.85
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "f6205ca9-71c6-54b2-946c-45b3154931a4",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.9058823529411765,
+      0.43529411764705883,
+      0.3176470588235294,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.7
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "7d718b8e-9fac-5301-b5cb-e0bc940bae67",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.2901960784313726,
+      0.6392156862745098,
+      0.8745098039215686,
+      1
+     ],
+     "metallic": 0.1,
+     "roughness": 0.4
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "65a4a1d4-2abf-535b-923e-bd066a9ab475",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.9568627450980393,
+      0.7725490196078432,
+      0.25882352941176473,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.6
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "8f991880-b608-5d27-a46c-f6de2881fc15",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      1,
+      0.4745098039215686,
+      0.7764705882352941,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.5
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "a1b2c3d4-0001-5000-8000-000000000001",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.93,
+      0.74,
+      0.55,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.8
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "a1b2c3d4-0002-5000-8000-000000000002",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.27,
+      0.5,
+      0.86,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.8
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "a1b2c3d4-0003-5000-8000-000000000003",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.22,
+      0.24,
+      0.3,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.8
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "c0a7e000-0001-5000-8000-0000000000c1",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.85,
+      0.55,
+      0.2,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.8
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "c0a7e000-0002-5000-8000-0000000000c2",
+   "kind": "material",
+   "payload": {
+    "kind": "material",
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.9,
+      0.2,
+      0.3,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.35
+    }
+   },
+   "refs": []
+  }
+ ]
+}

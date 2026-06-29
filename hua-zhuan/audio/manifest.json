@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "slug": "hua-zhuan",
+  "tracks": [
+    {
+      "assetId": "69b80a66e99eb7862e40944b",
+      "name": "craft_00.wav",
+      "kind": "sfx",
+      "file": "audio/craft_00.wav",
+      "version": "0.2",
+      "source": "aw",
+      "addedBy": "ai",
+      "addedAt": "2026-06-25T07:32:43.413Z"
+    },
+    {
+      "assetId": "6a267acb4027eece320c8113",
+      "name": "Pause_calm_pad(32s).wav",
+      "kind": "bgm",
+      "file": "audio/Pause_calm_pad_32s_.wav",
+      "version": "0.1",
+      "source": "aw",
+      "addedBy": "ai",
+      "addedAt": "2026-06-25T07:33:39.990Z"
+    }
+  ]
+}

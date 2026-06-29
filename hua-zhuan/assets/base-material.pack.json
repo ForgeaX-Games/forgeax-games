@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "eb5bf6e6-2e47-4d9a-99fd-81843228c9b3",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-unlit",
+            "tags": { "LightMode": "Forward" },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [0.6, 0.6, 0.6, 1]
+        }
+      },
+      "refs": []
+    }
+  ]
+}

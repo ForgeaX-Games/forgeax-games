@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "slug": "luo-sai-ya",
+  "tracks": [
+    {
+      "assetId": "69dda923582ba4bf38964f3c",
+      "name": "dice",
+      "kind": "sfx",
+      "file": "audio/throw_00.wav",
+      "version": "0.1",
+      "source": "aw",
+      "addedBy": "ai",
+      "addedAt": "2026-06-26T02:45:49.495Z"
+    },
+    {
+      "assetId": "69b80a5fe99eb7862e409441",
+      "name": "Turn-based_strategy",
+      "kind": "bgm",
+      "file": "audio/Turn-based_strategy_32s_.wav",
+      "version": "0.2",
+      "source": "aw",
+      "addedBy": "ai",
+      "addedAt": "2026-06-26T02:46:18.662Z"
+    },
+    {
+      "assetId": "69b80a6ce99eb7862e409458",
+      "name": "click",
+      "kind": "sfx",
+      "file": "audio/click_00.wav",
+      "version": "0.2",
+      "source": "aw",
+      "addedBy": "ai",
+      "addedAt": "2026-06-26T02:46:20.249Z"
+    }
+  ]
+}

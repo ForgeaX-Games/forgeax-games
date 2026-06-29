@@ -61,14 +61,14 @@ type EnemyType =
 
 /** Scene GUIDs — must match SCENE_GUIDS in scripts/gen-enemy-scenes.mjs. */
 const SCENE_GUIDS: Record<EnemyType, string> = {
-  fighter:     'da3ff11c-76ec-458e-9e6c-2f14b3308e5a',
-  bomber:      '3393696f-f137-47cf-a33b-54c6c8dea008',
-  interceptor: 'c7b11f94-8ba4-40ba-9b38-70677a415786',
-  dreadnought: '211a3899-89c5-4094-8846-4048bfa3c81b',
-  scout:       '06b55f41-5709-4985-896b-063a8e3354b5',
-  carrier:     'e90970d3-9b6b-46bf-a2bc-6a01e729b251',
-  assassin:    '5f724564-10e9-4fe1-a9bb-e8f560ffabfe',
-  spiral:      '786666d1-85cd-4e75-9707-b5095900d948',
+  fighter:     '486fc435-83a2-4f0e-9883-876fe1f8ed5f',
+  bomber:      '6a1f1efc-d875-4ccc-8017-4394cfb705bb',
+  interceptor: '18df6795-6e60-4a48-a8c4-88b6ed137158',
+  dreadnought: '1f8d3020-898b-4857-8806-1e43de834a12',
+  scout:       '93c4f85c-3651-4f4a-adcf-956703a3625c',
+  carrier:     '3292d20c-77d0-4a9c-9b77-8d09d6966501',
+  assassin:    'd065345e-33e2-4b13-b6e5-2174f0952681',
+  spiral:      'f34b97aa-7eff-4d5a-89b5-4fb64471cca1',
 };
 
 /**

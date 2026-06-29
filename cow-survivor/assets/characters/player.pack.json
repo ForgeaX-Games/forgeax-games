@@ -16,7 +16,7 @@
               },
               "Transform": {
                 "posX": 0,
-                "posY": 0.0,
+                "posY": 0,
                 "posZ": 0,
                 "scaleX": 0.5,
                 "scaleY": 0.55,
@@ -64,7 +64,7 @@
               },
               "Transform": {
                 "posX": -0.34,
-                "posY": 0.0,
+                "posY": 0,
                 "posZ": 0,
                 "scaleX": 0.14,
                 "scaleY": 0.45,
@@ -88,7 +88,7 @@
               },
               "Transform": {
                 "posX": 0.34,
-                "posY": 0.0,
+                "posY": 0,
                 "posZ": 0,
                 "scaleX": 0.14,
                 "scaleY": 0.45,
@@ -155,8 +155,8 @@
         ]
       },
       "refs": [
-        "06f737f7-8ca9-4763-b54b-36c7ebc69ea6",
-        "fced2a12-93d5-47e7-abd4-f7c5a80f3b19",
+        "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
+        "95730fd2-9846-5f84-8658-0b3c971eb263",
         "ddeb3479-aa8e-4acd-8c33-0601d9c4d151",
         "74cb1a23-3d00-492d-a4d6-88b2b34d0edd",
         "a081bea0-44d0-4f55-9b24-5f7f925b2818"

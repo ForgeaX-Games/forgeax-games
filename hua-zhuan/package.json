@@ -1,0 +1,49 @@
+{
+  "name": "@forgeax/template-game-default",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "Default GameEntry template -- a lowpoly vignette authored in scene.pack.json (engine-native scene pack) + a movable Player. Loaded by apps/preview via loadGame dynamic import.",
+  "scripts": {},
+  "forgeax": {
+    "assets": {
+      "roots": [
+        "assets"
+      ]
+    },
+    "metrics": {
+      "bundle-size": {
+        "enabled": false,
+        "reason": "template bundle is downstream of the host app (apps/preview)"
+      },
+      "fps": {
+        "enabled": false,
+        "reason": "template has no independent smoke gate"
+      },
+      "bench": {
+        "enabled": false,
+        "reason": "template scaffold; bench focus stays on engine packages"
+      },
+      "gate": {
+        "enabled": false,
+        "reason": "no CI gate on template scaffold; apps/preview hosts acceptance"
+      },
+      "spike-report": {
+        "enabled": false,
+        "reason": "not a spike app"
+      }
+    }
+  },
+  "dependencies": {
+    "@forgeax/engine-app": "workspace:*",
+    "@forgeax/engine-runtime": "workspace:*",
+    "@forgeax/engine-ecs": "workspace:*",
+    "@forgeax/engine-pack": "workspace:*",
+    "@forgeax/engine-physics": "workspace:*",
+    "@forgeax/engine-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@webgpu/types": "^0.1.70"
+  }
+}
