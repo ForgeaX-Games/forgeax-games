@@ -48,7 +48,7 @@ export interface HowToPlayApi {
   dispose(): void;
 }
 
-export function installHowToPlay(): HowToPlayApi {
+export function installHowToPlay(mount: HTMLElement): HowToPlayApi {
   document.getElementById(HOWTO_ID)?.remove();
 
   const overlay = document.createElement('div');
@@ -76,7 +76,9 @@ export function installHowToPlay(): HowToPlayApi {
   panel.appendChild(closeBtn);
 
   overlay.appendChild(panel);
-  document.body.appendChild(overlay);
+  // overlay already sets pointer-events:auto (full-screen modal). Mount into the
+  // controlled uiRoot so ■ Stop removes it with the container.
+  mount.appendChild(overlay);
 
   function show(): void {
     overlay.style.display = 'flex';

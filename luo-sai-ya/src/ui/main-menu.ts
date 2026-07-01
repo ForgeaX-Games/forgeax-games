@@ -46,7 +46,7 @@ function formatWhen(savedAt: number): string {
   });
 }
 
-export function installMainMenu(): MainMenuApi {
+export function installMainMenu(mount: HTMLElement): MainMenuApi {
   document.getElementById(MENU_ID)?.remove();
 
   const root = document.createElement('div');
@@ -108,7 +108,9 @@ export function installMainMenu(): MainMenuApi {
 
   card.append(title, subtitle, homeView, loadView);
   root.appendChild(card);
-  document.body.appendChild(root);
+  // root already sets pointer-events:auto (full-screen modal). Mount into the
+  // controlled uiRoot so ■ Stop removes it with the container.
+  mount.appendChild(root);
 
   let cb: MainMenuCallbacks | null = null;
 

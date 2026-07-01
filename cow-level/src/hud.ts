@@ -38,7 +38,10 @@ export function installHud(opts: {
   onToggle: () => void;
   onChoose: (id: string) => void;
   onRestart: () => void;
+  /** Controlled UI container. Defaults to document.body when omitted. */
+  mount?: HTMLElement;
 }): HudHandle {
+  const mount = opts.mount ?? document.body;
   document.getElementById(HUD_ID)?.remove();
   injectStyles();
 
@@ -121,7 +124,7 @@ export function installHud(opts: {
   });
 
   root.append(top, stats, weapons, button, lock, cross, hint, popups, vignette, banner, modal, over);
-  document.body.appendChild(root);
+  mount.appendChild(root);
 
   let popupCount = 0;
   let bannerTimer: ReturnType<typeof setTimeout> | undefined;

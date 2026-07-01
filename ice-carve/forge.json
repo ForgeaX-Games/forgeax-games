@@ -1,0 +1,7 @@
+{
+  "id": "ice-carve",
+  "name": "冰雕工坊",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": "3d"
+}

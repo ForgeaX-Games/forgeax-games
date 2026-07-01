@@ -140,6 +140,10 @@ async function installHdrSky(ctx: HellforgeCtx): Promise<EntityHandle | null> {
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const { assets, registerUpdate, app } = ctx ?? {};
+  // Host-controlled UI mount + cleanup sink (■ Stop teardown). UI must attach
+  // to uiMount (not document.body); non-DOM side effects register via onCleanup.
+  const uiMount: HTMLElement = ctx?.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
+  const onCleanup = ctx?.registerCleanup ?? (() => {});
 
   // ── canvas ────────────────────────────────────────────────────────────
   const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
@@ -389,7 +393,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // ── HUD ───────────────────────────────────────────────────────────────
   const hud = document.createElement('div');
   hud.style.cssText = 'position:fixed;top:14px;left:14px;color:#ddd;font:14px ui-monospace,Menlo,monospace;text-shadow:0 1px 2px #000;pointer-events:none;z-index:10';
-  document.body.appendChild(hud);
+  uiMount.appendChild(hud);
   const syncHud = () => {
     const lockHint = state.mode === 'fps' ? (state.locked ? '🎮 鼠标已锁定 · ESC 释放' : '🖱️ 点击锁定鼠标 (转视角)') : '';
     hud.innerHTML = `<div style="background:rgba(0,0,0,0.55);padding:8px 12px;border-radius:6px;line-height:1.55">
@@ -449,7 +453,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
   // ── input ─────────────────────────────────────────────────────────────
   ((window as unknown as { __hf: Record<string, unknown> }).__hf).keys = keys;
-  window.addEventListener('keydown', (e) => {
+  // Every host-page / global listener below is registered as a named handler
+  // and immediately paired with an onCleanup that removes it, so ■ Stop leaves
+  // no dangling listeners on window / document / the persistent #app canvas.
+  const onKeyDown = (e: KeyboardEvent) => {
     if (keys[e.code]) return;        // repeat → no edge action
     keys[e.code] = true;
     if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
@@ -476,38 +483,59 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       try { document.exitPointerLock?.(); } catch { /* ignore */ }
       setLocked(false);
     }
-  });
-  window.addEventListener('keyup', (e) => { keys[e.code] = false; });
+  };
+  window.addEventListener('keydown', onKeyDown);
+  onCleanup(() => window.removeEventListener('keydown', onKeyDown));
 
-  canvas.addEventListener('contextmenu', (e) => e.preventDefault());
-  canvas.addEventListener('mousedown', (e) => {
+  const onKeyUp = (e: KeyboardEvent) => { keys[e.code] = false; };
+  window.addEventListener('keyup', onKeyUp);
+  onCleanup(() => window.removeEventListener('keyup', onKeyUp));
+
+  const onContextMenu = (e: MouseEvent) => e.preventDefault();
+  canvas.addEventListener('contextmenu', onContextMenu);
+  onCleanup(() => canvas.removeEventListener('contextmenu', onContextMenu));
+
+  const onMouseDown = (e: MouseEvent) => {
     if (e.button === 0 && !state.paused) {
       playOnce('attack', ATTACK_SPEED); // one-shot; locks movement until done
     }
     if (state.mode !== 'fps' || state.locked) return;
     if (isTauri) { postCapture(true); setLocked(true); }
     else { safeRequestLock(canvas); }
-  });
-  document.addEventListener('pointerlockchange', () => {
+  };
+  canvas.addEventListener('mousedown', onMouseDown);
+  onCleanup(() => canvas.removeEventListener('mousedown', onMouseDown));
+
+  const onPointerLockChange = () => {
     setLocked(document.pointerLockElement === canvas);
-  });
-  document.addEventListener('pointerlockerror', () => {
+  };
+  document.addEventListener('pointerlockchange', onPointerLockChange);
+  onCleanup(() => document.removeEventListener('pointerlockchange', onPointerLockChange));
+
+  const onPointerLockError = () => {
     if (state.mode !== 'fps') return;
     postCapture(true);
     setLocked(true);
-  });
-  window.addEventListener('resize', () => {
+  };
+  document.addEventListener('pointerlockerror', onPointerLockError);
+  onCleanup(() => document.removeEventListener('pointerlockerror', onPointerLockError));
+
+  const onResize = () => {
     sizeCanvas();
     aspect = canvas.width / canvas.height;
     world.set(camera, Camera, { ...perspective({ fov: FOV, aspect, near: 0.05, far: 200 }), tonemap: TONEMAP_ACES_FILMIC, ...SKY_CLEAR });
-  });
+  };
+  window.addEventListener('resize', onResize);
+  onCleanup(() => window.removeEventListener('resize', onResize));
 
   // Cow-style mouse look (FPS only when pointer-locked).
-  window.addEventListener('mousemove', (e) => {
+  const onMouseMove = (e: MouseEvent) => {
     if (state.mode !== 'fps' || !state.locked) return;
     lookYaw -= e.movementX * 0.0023;
     lookPitch = clamp(lookPitch - e.movementY * 0.0023, -1.3, 1.3);
-  });
+  };
+  window.addEventListener('mousemove', onMouseMove);
+  onCleanup(() => window.removeEventListener('mousemove', onMouseMove));
 
   // ── tuning ─────────────────────────────────────────────────────────────
   const SPEED = 3.4, SPRINT = 5.4;   // m/s walk / sprint (−25% from 4.5/7.2)

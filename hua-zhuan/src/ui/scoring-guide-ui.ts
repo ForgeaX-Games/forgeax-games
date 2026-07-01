@@ -89,7 +89,12 @@ const ROOT_EXPANDED =
 
 const ROOT_COLLAPSED = ROOT_BASE + 'background:transparent;border:none;box-shadow:none;padding:0;';
 
-export function installScoringGuideUi(): ScoringGuideUiApi {
+export interface ScoringGuideUiOptions {
+  mount?: HTMLElement;
+}
+
+export function installScoringGuideUi(opts: ScoringGuideUiOptions = {}): ScoringGuideUiApi {
+  const mount = opts.mount ?? document.body;
   document.getElementById(PANEL_ID)?.remove();
 
   let expanded = false;
@@ -106,7 +111,7 @@ export function installScoringGuideUi(): ScoringGuideUiApi {
   body.style.display = 'none';
 
   root.append(toggleBtn, body);
-  document.body.appendChild(root);
+  mount.appendChild(root);
 
   function applyLayout(): void {
     if (expanded) {

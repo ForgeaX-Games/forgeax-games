@@ -9,11 +9,17 @@ import { installHud } from './src/ui/hud';
 import { installTurnHintUi } from './src/ui/turn-hint-ui';
 import { installScoringGuideUi } from './src/ui/scoring-guide-ui';
 import { installGameOverModal } from './src/ui/game-over-modal';
+import { clearTakeFlightOverlay } from './src/ui/take-flight-animation';
 import { syncTakeSelection } from './src/ui/take-interaction';
 import { createTakeSelection } from './src/ui/take-selection';
 import type { TakeSource, TileColor } from './src/core/types';
 
 export function bootstrap(world: World, ctx?: BootstrapContext) {
+
+  // UI mounts into the controlled uiRoot (removed wholesale on ■ Stop) rather
+  // than document.body; non-DOM side effects register via onCleanup.
+  const uiMount: HTMLElement = ctx?.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
+  const onCleanup = ctx?.registerCleanup ?? (() => {});
 
   const canvas = document.querySelector<HTMLCanvasElement>('#app') ?? document.querySelector('canvas');
   const aspect =
@@ -36,13 +42,19 @@ export function bootstrap(world: World, ctx?: BootstrapContext) {
 
   const state = createGameState();
   const audio = installAudio();
+  onCleanup(() => audio.dispose());
   const selection = createTakeSelection();
-  const hud = installHud();
-  const turnHint = installTurnHintUi();
-  const scoringGuide = installScoringGuideUi();
-  const gameOverModal = installGameOverModal();
+  const hud = installHud({ mount: uiMount });
+  onCleanup(() => hud.dispose());
+  const turnHint = installTurnHintUi({ mount: uiMount });
+  onCleanup(() => turnHint.dispose());
+  const scoringGuide = installScoringGuideUi({ mount: uiMount });
+  onCleanup(() => scoringGuide.dispose());
+  const gameOverModal = installGameOverModal({ mount: uiMount });
+  onCleanup(() => gameOverModal.dispose());
   const boardUi = installBoardUi({
     selection,
+    mount: uiMount,
     onSourceColorPick: (source, color) => {
       if (state.phase !== 'take_turn' || !state.players[state.currentPlayer]!.isHuman) return;
       audio.playClick();
@@ -61,6 +73,9 @@ export function bootstrap(world: World, ctx?: BootstrapContext) {
       refresh();
     },
   });
+
+  onCleanup(() => boardUi.dispose());
+  onCleanup(() => clearTakeFlightOverlay());
 
   hud.bind(state, selection, () => turnHint.isAutoAiEnabled());
 

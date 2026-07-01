@@ -282,6 +282,15 @@ function setupPlayerRoot(
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const { registerUpdate } = ctx ?? {};
 
+  // Host-controlled UI container: the host removes it wholesale on ■ Stop so
+  // every DOM overlay we mount into it disappears with the run. Fall back to
+  // <body> for standalone/legacy hosts that don't inject one.
+  const uiMount: HTMLElement = ctx?.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
+  // Non-DOM side effects (event listeners, AudioContext, timers) are NOT
+  // reclaimed by removing the uiRoot — register each here so ■ Stop flushes
+  // them (in reverse order). No-op fallback keeps standalone callers clean.
+  const onCleanup = ctx?.registerCleanup ?? (() => {});
+
   const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
   const dpr = window.devicePixelRatio || 1;
   canvas.width = Math.max(1, Math.floor(canvas.clientWidth * dpr));
@@ -360,7 +369,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const weapons = new WeaponSystem(ctx, fx);
   const gems = new GemSystem(ctx);
   const sfx = new SfxSystem();
-  const picker = installUpgradeUI();
+  onCleanup(() => sfx.dispose());
+  const picker = installUpgradeUI(uiMount);
+  onCleanup(() => picker.dispose());
 
   // Start the player with the pistol
   // E1+ — start with the four shader-driven weapons equipped so the new
@@ -444,7 +455,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       setLocked(false);
     }
   };
-  hud = installHud({ initialMode: 'topdown', onToggle: () => setMode(mode === 'fps' ? 'topdown' : 'fps') });
+  hud = installHud({ initialMode: 'topdown', onToggle: () => setMode(mode === 'fps' ? 'topdown' : 'fps'), mount: uiMount });
+  onCleanup(() => hud.dispose());
 
   // Detect Tauri once (WKWebView denies the web Pointer Lock API for embedded
   // content; we use the native cursor-grab path via parent postMessage).
@@ -519,14 +531,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   };
 
   // hotkeys 1/2/3 for upgrade picker
-  window.addEventListener('keydown', (e) => {
+  const onPickerHotkey = (e: KeyboardEvent) => {
     if (!picker.isOpen()) return;
     if (e.key === '1' || e.key === '2' || e.key === '3') {
       const idx = parseInt(e.key, 10) - 1;
       const cards = document.querySelectorAll<HTMLDivElement>('.forgeax-card');
       if (cards[idx]) cards[idx].click();
     }
-  });
+  };
+  window.addEventListener('keydown', onPickerHotkey);
+  onCleanup(() => window.removeEventListener('keydown', onPickerHotkey));
 
   const gainXp = (amt: number) => {
     xp += amt;
@@ -551,40 +565,54 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   };
 
   // ── pointer-lock event wiring (setLocked declared above) ───────────────
-  document.addEventListener('pointerlockchange', () => setLocked(document.pointerLockElement === canvas));
-  document.addEventListener('pointerlockerror', () => {
+  const onPointerLockChange = () => setLocked(document.pointerLockElement === canvas);
+  const onPointerLockError = () => {
     if (mode !== 'fps') return;
     postCapture(true);
     setLocked(true);
-  });
-  window.addEventListener('keydown', (e) => {
+  };
+  const onEscapeKey = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && locked) {
       postCapture(false);
       try { document.exitPointerLock?.(); } catch { /* ignore */ }
       setLocked(false);
     }
+  };
+  document.addEventListener('pointerlockchange', onPointerLockChange);
+  document.addEventListener('pointerlockerror', onPointerLockError);
+  window.addEventListener('keydown', onEscapeKey);
+  onCleanup(() => {
+    document.removeEventListener('pointerlockchange', onPointerLockChange);
+    document.removeEventListener('pointerlockerror', onPointerLockError);
+    window.removeEventListener('keydown', onEscapeKey);
   });
 
   // ── input ──────────────────────────────────────────────────────────────
   const keys: Record<string, boolean> = {};
-  window.addEventListener('keydown', (e) => {
+  const onMoveKeyDown = (e: KeyboardEvent) => {
     keys[e.code] = true;
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) e.preventDefault();
     if (e.code === 'KeyV') setMode(mode === 'fps' ? 'topdown' : 'fps');
+  };
+  const onMoveKeyUp = (e: KeyboardEvent) => { keys[e.code] = false; };
+  window.addEventListener('keydown', onMoveKeyDown);
+  window.addEventListener('keyup', onMoveKeyUp);
+  onCleanup(() => {
+    window.removeEventListener('keydown', onMoveKeyDown);
+    window.removeEventListener('keyup', onMoveKeyUp);
   });
-  window.addEventListener('keyup', (e) => { keys[e.code] = false; });
 
   const LOOK_SENS = 0.0022;
   let lookYaw = 0;
   let lookPitch = 0;
   let wantManualShoot = false;
   const clampPitch = (p: number) => Math.max(-1.2, Math.min(1.2, p));
-  window.addEventListener('mousemove', (e) => {
+  const onMouseMove = (e: MouseEvent) => {
     if (mode !== 'fps' || !locked) return;
     lookYaw -= e.movementX * LOOK_SENS;
     lookPitch = clampPitch(lookPitch - e.movementY * LOOK_SENS);
-  });
-  canvas.addEventListener('mousedown', () => {
+  };
+  const onCanvasMouseDown = () => {
     // First user gesture → bring the WebAudio context online (idempotent).
     // Must happen INSIDE the click handler per Chrome/Safari autoplay policy.
     sfx.start();
@@ -595,10 +623,18 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     } else {
       safeRequestLock(canvas);
     }
-  });
-  canvas.addEventListener('click', () => {
+  };
+  const onCanvasClick = () => {
     sfx.start();    // top-down click also counts as a gesture for audio init
     if (mode === 'fps' && locked) wantManualShoot = true;
+  };
+  window.addEventListener('mousemove', onMouseMove);
+  canvas.addEventListener('mousedown', onCanvasMouseDown);
+  canvas.addEventListener('click', onCanvasClick);
+  onCleanup(() => {
+    window.removeEventListener('mousemove', onMouseMove);
+    canvas.removeEventListener('mousedown', onCanvasMouseDown);
+    canvas.removeEventListener('click', onCanvasClick);
   });
 
   // ── projection helper (world -> canvas-CSS pixels) for floating text ───
@@ -831,10 +867,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     })().catch((e) => { transitioning = false; console.error('[game] live level switch failed:', e); });
   };
   if (typeof window !== 'undefined') {
-    window.addEventListener('message', (ev: MessageEvent) => {
+    const onLauncherMessage = (ev: MessageEvent) => {
       const d = ev.data as { type?: string; level?: string } | null;
       if (d?.type === 'VAG_SET_LEVEL' && typeof d.level === 'string') setLevelLive(d.level);
-    });
+    };
+    window.addEventListener('message', onLauncherMessage);
+    onCleanup(() => window.removeEventListener('message', onLauncherMessage));
   }
 
   // ── main update ────────────────────────────────────────────────────────

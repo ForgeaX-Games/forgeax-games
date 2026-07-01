@@ -113,6 +113,13 @@ async function installHdrSky(ctx: FpsCtx): Promise<Entity | null> {
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const { assets, registerUpdate, app } = ctx ?? {};
 
+  // Host-controlled UI container + non-DOM side-effect cleanup registry. When
+  // embedded in the editor, ■ Stop removes uiRoot wholesale (DOM cleanup) and
+  // flushes registered cleanups in reverse (listeners / AudioContext). Standalone
+  // (no ctx) falls back to document.body and a no-op cleanup.
+  const uiMount: HTMLElement = ctx?.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
+  const onCleanup = ctx?.registerCleanup ?? (() => {});
+
   // ── canvas + aspect ─────────────────────────────────────────────────────
   const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
   const dpr = window.devicePixelRatio || 1;
@@ -504,7 +511,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     audio.swap();
   };
 
-  window.addEventListener('keydown', (e) => {
+  const onKeyDown = (e: KeyboardEvent) => {
     keys[e.code] = true;
     if (e.code === 'KeyR') startReload();
     if (e.code === 'Digit1') switchWeapon(0);
@@ -513,11 +520,17 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     if (e.code === 'Digit4') switchWeapon(3);
     if (e.code === 'KeyQ') switchWeapon((state.weapon + 1) % WEAPONS.length);
     if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space'].includes(e.code)) e.preventDefault();
-  });
-  window.addEventListener('keyup', (e) => { keys[e.code] = false; });
+  };
+  window.addEventListener('keydown', onKeyDown);
+  onCleanup(() => window.removeEventListener('keydown', onKeyDown));
+  const onKeyUp = (e: KeyboardEvent) => { keys[e.code] = false; };
+  window.addEventListener('keyup', onKeyUp);
+  onCleanup(() => window.removeEventListener('keyup', onKeyUp));
 
-  canvas.addEventListener('contextmenu', (e) => e.preventDefault());
-  canvas.addEventListener('mousedown', (e) => {
+  const onContextMenu = (e: MouseEvent) => e.preventDefault();
+  canvas.addEventListener('contextmenu', onContextMenu);
+  onCleanup(() => canvas.removeEventListener('contextmenu', onContextMenu));
+  const onMouseDown = (e: MouseEvent) => {
     audio.resume();
     if (state.dead) { restart(); return; }
     if (!state.started) { state.started = true; audio.startAmbient(); }
@@ -535,45 +548,62 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     }
     if (e.button === 0) { fireDown = true; firePressed = true; }
     if (e.button === 2) adsDown = true;
-  });
-  window.addEventListener('mouseup', (e) => {
+  };
+  canvas.addEventListener('mousedown', onMouseDown);
+  onCleanup(() => canvas.removeEventListener('mousedown', onMouseDown));
+  const onMouseUp = (e: MouseEvent) => {
     if (e.button === 0) fireDown = false;
     if (e.button === 2) adsDown = false;
-  });
-  window.addEventListener('mousemove', (e) => {
+  };
+  window.addEventListener('mouseup', onMouseUp);
+  onCleanup(() => window.removeEventListener('mouseup', onMouseUp));
+  const onMouseMove = (e: MouseEvent) => {
     if (!locked && !fireDown && !adsDown) return;
     const sens = 0.0023 * (state.ads > 0.5 ? 0.55 : 1);
     state.yaw -= e.movementX * sens;
     state.pitch = clamp(state.pitch - e.movementY * sens, -1.45, 1.45);
-  });
-  window.addEventListener('wheel', (e) => {
+  };
+  window.addEventListener('mousemove', onMouseMove);
+  onCleanup(() => window.removeEventListener('mousemove', onMouseMove));
+  const onWheel = (e: WheelEvent) => {
     if (!state.started || state.dead) return;
     const dir = e.deltaY > 0 ? 1 : -1;
     switchWeapon((state.weapon + dir + WEAPONS.length) % WEAPONS.length);
-  }, { passive: true });
+  };
+  window.addEventListener('wheel', onWheel, { passive: true });
+  onCleanup(() => window.removeEventListener('wheel', onWheel));
   // pointerlockchange fires for web Pointer Lock API; pointerlockerror fires
   // when the API is denied (iframe / WKWebView) — treat it as the Tauri-grab
   // success path so the cursor still hides + mouse-look engages.
-  document.addEventListener('pointerlockchange', () => {
+  const onPointerLockChange = () => {
     setLocked(document.pointerLockElement === canvas);
-  });
-  document.addEventListener('pointerlockerror', () => {
+  };
+  document.addEventListener('pointerlockchange', onPointerLockChange);
+  onCleanup(() => document.removeEventListener('pointerlockchange', onPointerLockChange));
+  const onPointerLockError = () => {
     if (state.dead) return;
     postCapture(true);
     setLocked(true);
-  });
-  window.addEventListener('keydown', (e) => {
+  };
+  document.addEventListener('pointerlockerror', onPointerLockError);
+  onCleanup(() => document.removeEventListener('pointerlockerror', onPointerLockError));
+  const onEscKeyDown = (e: KeyboardEvent) => {
     // Esc releases the lock on both the Tauri (postMessage) and web paths.
     if (e.key === 'Escape' && locked) {
       postCapture(false);
       try { document.exitPointerLock?.(); } catch { /* ignore */ }
       setLocked(false);
     }
-  });
-  window.addEventListener('resize', () => { sizeCanvas(); aspect = canvas.width / canvas.height; });
+  };
+  window.addEventListener('keydown', onEscKeyDown);
+  onCleanup(() => window.removeEventListener('keydown', onEscKeyDown));
+  const onResize = () => { sizeCanvas(); aspect = canvas.width / canvas.height; };
+  window.addEventListener('resize', onResize);
+  onCleanup(() => window.removeEventListener('resize', onResize));
 
-  const hud = buildHud();
+  const hud = buildHud(uiMount);
   const audio = makeAudio();
+  onCleanup(() => audio.close());
 
   function startReload() {
     const w = WEAPONS[state.weapon]; const a = ammoState[state.weapon];
@@ -954,7 +984,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 };
 
 // ── DOM HUD ───────────────────────────────────────────────────────────────
-function buildHud() {
+function buildHud(mount: HTMLElement) {
   const wrap = document.createElement('div');
   wrap.style.cssText = 'position:fixed;inset:0;pointer-events:none;font-family:"Segoe UI",system-ui,sans-serif;color:#eaf2ff;z-index:9999;user-select:none';
   wrap.innerHTML = `
@@ -1013,7 +1043,7 @@ function buildHud() {
       <div class="ss-sub">SCORE <span id="ssFinal">0</span> · KILLS <span id="ssFinalK">0</span></div>
       <div class="ss-hint">Click to redeploy.</div>
     </div>`;
-  document.body.appendChild(wrap);
+  mount.appendChild(wrap);
   const q = (id: string) => wrap.querySelector<HTMLElement>('#' + id)!;
   const lnT = q('lnT'), lnB = q('lnB'), lnL = q('lnL'), lnR = q('lnR');
   const LEN = 9;
@@ -1112,7 +1142,15 @@ function makeAudio() {
     o1.start(); o2.start();
   };
 
-  return { resume, startAmbient, shot, hit, kill, empty, reload, swap, hurt };
+  // Tear down the AudioContext (closes the ambient drone + frees the WebAudio
+  // graph) so ■ Stop leaves no running oscillators. Guarded: close() rejects if
+  // already closed, and ctx may never have been created (ensure() never ran).
+  const close = () => {
+    if (ctx && ctx.state !== 'closed') { void ctx.close().catch(() => {}); }
+    ctx = null; master = null; noiseBuf = null; ambient = false;
+  };
+
+  return { resume, startAmbient, shot, hit, kill, empty, reload, swap, hurt, close };
 }
 
 // end of bootstrap

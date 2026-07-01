@@ -201,7 +201,7 @@ type TurnHighlight =
   | { kind: 'harvest'; sum: number }
   | { kind: 'robber' };
 
-export function installBoardUi(): BoardUiApi {
+export function installBoardUi(mount: HTMLElement): BoardUiApi {
   document.getElementById(BOARD_ID)?.remove();
 
   const root = document.createElement('div');
@@ -209,8 +209,10 @@ export function installBoardUi(): BoardUiApi {
   root.style.cssText =
     `position:fixed;left:0;top:${TOP_BAR_H}px;right:0;bottom:var(${BOTTOM_BAR_CSS_VAR},${BOTTOM_BAR_FALLBACK_H}px);overflow:auto;` +
     'background:radial-gradient(ellipse at 50% 40%,#1e3a5f 0%,#0c1220 72%);' +
-    'display:flex;align-items:center;justify-content:center;z-index:100;';
-  document.body.appendChild(root);
+    // pointer-events:auto — the controlled uiRoot defaults to none (pass-through);
+    // the board SVG tiles/edges/vertices must receive clicks.
+    'display:flex;align-items:center;justify-content:center;z-index:100;pointer-events:auto;';
+  mount.appendChild(root);
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.style.cssText = 'display:block;max-width:100%;max-height:100%;';

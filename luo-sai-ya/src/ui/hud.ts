@@ -172,7 +172,7 @@ function partnerInventoryText(p: PlayerState): string {
   return parts.length ? parts.join('、') : '（空）';
 }
 
-export function installHud(): HudApi {
+export function installHud(mount: HTMLElement): HudApi {
   document.getElementById(HUD_ID)?.remove();
 
   const style = document.createElement('style');
@@ -482,7 +482,10 @@ export function installHud(): HudApi {
   tradeRight.append(partnerSel, partnerInv, playerLine, playerConfirm, playerHint);
   tradeRow.appendChild(tradeRight);
 
-  document.body.appendChild(root);
+  // root is pointer-events:none (pass-through for camera input); interactive
+  // bars/panels re-enable pointer-events:auto individually. Mount into the
+  // controlled uiRoot so ■ Stop removes the whole HUD with the container.
+  mount.appendChild(root);
 
   let stateRef: GameState | null = null;
   let cb: HudCallbacks | null = null;

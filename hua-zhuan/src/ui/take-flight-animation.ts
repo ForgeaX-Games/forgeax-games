@@ -28,7 +28,7 @@ export function waitForPaint(frames = 2): Promise<void> {
   });
 }
 
-function ensureOverlay(): HTMLElement {
+function ensureOverlay(mount: HTMLElement): HTMLElement {
   let el = document.getElementById(OVERLAY_ID);
   if (el) return el;
   el = document.createElement('div');
@@ -36,7 +36,7 @@ function ensureOverlay(): HTMLElement {
   el.style.cssText =
     'position:fixed;inset:0;z-index:500;pointer-events:auto;overflow:hidden;' +
     'background:transparent;';
-  document.body.appendChild(el);
+  mount.appendChild(el);
   return el;
 }
 
@@ -44,11 +44,11 @@ export function clearTakeFlightOverlay(): void {
   document.getElementById(OVERLAY_ID)?.remove();
 }
 
-function animateLeg(leg: FlightLeg, delayMs: number): Promise<void> {
+function animateLeg(leg: FlightLeg, delayMs: number, mount: HTMLElement): Promise<void> {
   return new Promise((resolve) => {
     void (async () => {
       await sleep(delayMs);
-      const overlay = ensureOverlay();
+      const overlay = ensureOverlay(mount);
       const img = document.createElement('img');
       img.src =
         leg.sprite === 'first-player' ? firstPlayerImageUrl() : tileImageUrl(leg.color);
@@ -83,10 +83,10 @@ function animateLeg(leg: FlightLeg, delayMs: number): Promise<void> {
 }
 
 /** Fly tiles to destination and hold sprites until clearTakeFlightOverlay() */
-export async function runTakeFlightAnimation(plan: FlightPlan): Promise<void> {
+export async function runTakeFlightAnimation(plan: FlightPlan, mount: HTMLElement): Promise<void> {
   if (plan.legs.length === 0) return;
   clearTakeFlightOverlay();
-  ensureOverlay();
-  const jobs = plan.legs.map((leg, i) => animateLeg(leg, i * STAGGER_MS));
+  ensureOverlay(mount);
+  const jobs = plan.legs.map((leg, i) => animateLeg(leg, i * STAGGER_MS, mount));
   await Promise.all(jobs);
 }

@@ -42,7 +42,12 @@ export function turnHintMessage(state: GameState, autoAi: boolean): string {
   }
 }
 
-export function installTurnHintUi(): TurnHintUiApi {
+export interface TurnHintUiOptions {
+  mount?: HTMLElement;
+}
+
+export function installTurnHintUi(opts: TurnHintUiOptions = {}): TurnHintUiApi {
+  const mount = opts.mount ?? document.body;
   document.getElementById(BANNER_ID)?.remove();
   document.getElementById(TOGGLE_ID)?.remove();
 
@@ -59,7 +64,7 @@ export function installTurnHintUi(): TurnHintUiApi {
     'color:#f8f4ec;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;' +
     'line-height:1.45;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.35);' +
     'backdrop-filter:blur(6px);';
-  document.body.appendChild(banner);
+  mount.appendChild(banner);
 
   const toggleWrap = document.createElement('div');
   toggleWrap.id = TOGGLE_ID;
@@ -75,7 +80,7 @@ export function installTurnHintUi(): TurnHintUiApi {
     'color:#f8f4ec;transition:background 0.15s,border-color 0.15s;';
 
   toggleWrap.appendChild(toggleBtn);
-  document.body.appendChild(toggleWrap);
+  mount.appendChild(toggleWrap);
 
   function paintToggle(): void {
     if (autoAi) {

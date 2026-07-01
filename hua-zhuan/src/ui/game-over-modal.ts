@@ -56,7 +56,12 @@ function buildRankRows(state: GameState): string {
     .join('');
 }
 
-export function installGameOverModal(): GameOverModalApi {
+export interface GameOverModalOptions {
+  mount?: HTMLElement;
+}
+
+export function installGameOverModal(opts: GameOverModalOptions = {}): GameOverModalApi {
+  const mount = opts.mount ?? document.body;
   document.getElementById(MODAL_ID)?.remove();
 
   const backdrop = document.createElement('div');
@@ -90,7 +95,7 @@ export function installGameOverModal(): GameOverModalApi {
 
   card.append(title, subtitle, list, restartBtn);
   backdrop.appendChild(card);
-  document.body.appendChild(backdrop);
+  mount.appendChild(backdrop);
 
   let restartFn: (() => void) | null = null;
 

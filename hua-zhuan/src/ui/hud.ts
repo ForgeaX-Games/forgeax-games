@@ -18,7 +18,12 @@ export interface HudApi {
   dispose(): void;
 }
 
-export function installHud(): HudApi {
+export interface HudOptions {
+  mount?: HTMLElement;
+}
+
+export function installHud(opts: HudOptions = {}): HudApi {
+  const mount = opts.mount ?? document.body;
   document.getElementById(HUD_ID)?.remove();
 
   const root = document.createElement('div');
@@ -68,7 +73,7 @@ export function installHud(): HudApi {
     'font-size:13px;font-weight:700;cursor:pointer;width:100%;';
   panel.appendChild(nextBtn);
 
-  document.body.appendChild(root);
+  mount.appendChild(root);
 
   let stateRef: GameState | null = null;
   let selectionRef: TakeSelectionStore | null = null;

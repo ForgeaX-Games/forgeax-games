@@ -42,6 +42,9 @@ export class SfxSystem {
   private master: GainNode | null = null;
   private noiseBuffer: AudioBuffer | null = null;
   private ambient: AmbientNodes | null = null;
+  /** Set true by dispose() so the self-rescheduling moo loop stops instead
+   *  of queueing the next setTimeout after the context is gone. */
+  private stopped = false;
   /** Master volume (0..1). Read by master.gain on init. */
   volume = 0.55;
 
@@ -70,6 +73,25 @@ export class SfxSystem {
   setVolume(v: number): void {
     this.volume = Math.max(0, Math.min(1, v));
     if (this.master) this.master.gain.value = this.volume;
+  }
+
+  /** Tear down all audio side effects: stop the self-rescheduling moo loop,
+   *  clear its pending timer, and close the AudioContext (which stops every
+   *  live oscillator / buffer-source / ambient bed node in one call).
+   *  Idempotent — safe to call when start() was never invoked. Register with
+   *  BootstrapContext.registerCleanup so ■ Stop kills the sound. */
+  dispose(): void {
+    this.stopped = true;
+    if (this.ambient?.mooTimer !== null && this.ambient?.mooTimer !== undefined) {
+      window.clearTimeout(this.ambient.mooTimer);
+      this.ambient.mooTimer = null;
+    }
+    if (this.ctx) {
+      try { void this.ctx.close(); } catch { /* already closed */ }
+    }
+    this.ctx = null;
+    this.master = null;
+    this.ambient = null;
   }
 
   /** Periodic ambient tick — call once per game-frame with the current
@@ -126,12 +148,13 @@ export class SfxSystem {
 
   /** Schedule the next distant-moo event with a random delay. */
   private scheduleMoo(): void {
+    if (this.stopped || !this.ambient) return;
     const delay = 5000 + Math.random() * 9000;     // 5..14s
-    this.ambient!.mooTimer = window.setTimeout(() => this.distantMoo(), delay);
+    this.ambient.mooTimer = window.setTimeout(() => this.distantMoo(), delay);
   }
 
   private distantMoo(): void {
-    if (!this.ctx || !this.master) return;
+    if (this.stopped || !this.ctx || !this.master) return;
     const c = this.ctx;
     const t0 = c.currentTime;
     const dur = 0.6 + Math.random() * 0.4;

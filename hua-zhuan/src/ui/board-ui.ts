@@ -69,6 +69,7 @@ export interface BoardUiOptions {
   selection: TakeSelectionStore;
   onSourceColorPick: (source: TakeSource, color: TileColor) => void;
   onPatternRowPick: (row: number) => void;
+  mount?: HTMLElement;
 }
 
 export interface BoardUiApi {
@@ -108,6 +109,7 @@ function mountDesignScene(
 
 export function installBoardUi(options: BoardUiOptions): BoardUiApi {
   const { selection, onSourceColorPick, onPatternRowPick } = options;
+  const mount = options.mount ?? document.body;
   ensureSelectionStyles();
   document.getElementById(BOARD_ID)?.remove();
 
@@ -117,7 +119,7 @@ export function installBoardUi(options: BoardUiOptions): BoardUiApi {
     'position:fixed;left:0;top:0;right:320px;bottom:0;overflow:hidden;' +
     'pointer-events:none;z-index:100;box-sizing:border-box;' +
     `background:#1a1510 url(${tableWoodBgImageUrl()}) center/cover no-repeat;`;
-  document.body.appendChild(root);
+  mount.appendChild(root);
 
   const grid = document.createElement('div');
   grid.style.cssText =
@@ -640,7 +642,7 @@ export function installBoardUi(options: BoardUiOptions): BoardUiApi {
       onLanded();
       return;
     }
-    await runTakeFlightAnimation(plan);
+    await runTakeFlightAnimation(plan, mount);
     onLanded();
     await waitForPaint(2);
     clearTakeFlightOverlay();

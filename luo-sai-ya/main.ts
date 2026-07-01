@@ -35,6 +35,14 @@ import { installMainMenu } from './src/ui/main-menu';
 
 export function bootstrap(world: World, ctx?: BootstrapContext) {
 
+  // Controlled UI boundary: mount all DOM into ctx.uiRoot (■ Stop removes the
+  // whole container). Non-DOM side effects (audio, timers) register via
+  // onCleanup so Stop flushes them in reverse order. Fall back to document.body
+  // / no-op when the host does not provide them (web/dev, standalone export).
+  const uiMount: HTMLElement =
+    ctx?.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
+  const onCleanup = ctx?.registerCleanup ?? (() => {});
+
   const canvas = document.querySelector<HTMLCanvasElement>('#app') ?? document.querySelector('canvas');
   const aspect =
     canvas && canvas.clientWidth > 0
@@ -57,10 +65,20 @@ export function bootstrap(world: World, ctx?: BootstrapContext) {
   let state: GameState = createGameState();
   let activeSlotId: string | null = null;
   const audio = installAudio();
-  const hud = installHud();
-  const boardUi = installBoardUi();
-  const mainMenu = installMainMenu();
-  const howTo = installHowToPlay();
+  const hud = installHud(uiMount);
+  const boardUi = installBoardUi(uiMount);
+  const mainMenu = installMainMenu(uiMount);
+  const howTo = installHowToPlay(uiMount);
+
+  // Non-DOM side effects that Stop must flush (reverse order): pending
+  // auto-advance timer, then each component's own teardown (rAF loop / audio
+  // elements + window listeners / ResizeObserver / injected <style>).
+  onCleanup(() => cancelScheduledAutoAdvance());
+  onCleanup(() => audio.dispose());
+  onCleanup(() => hud.dispose());
+  onCleanup(() => boardUi.dispose());
+  onCleanup(() => mainMenu.dispose());
+  onCleanup(() => howTo.dispose());
 
   hud.bind(state);
 

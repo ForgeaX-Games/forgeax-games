@@ -35,6 +35,9 @@ export interface UpgradePicker {
   show(level: number, options: UpgradeCard[]): void;
   hide(): void;
   isOpen(): boolean;
+  /** Remove the picker DOM. Registered with registerCleanup so ■ Stop
+   *  tears it down even if it outlives the host uiRoot removal. */
+  dispose(): void;
 }
 
 /** Roll 3 upgrade options. Bias to weapon cards if we have <4 weapons. */
@@ -76,8 +79,10 @@ export function xpForLevel(level: number): number {
   return Math.round(5 + level * level * 1.5 + level * 4);
 }
 
-/** Mount the upgrade-picker modal. Returns a controller used by main.ts. */
-export function installUpgradeUI(): UpgradePicker {
+/** Mount the upgrade-picker modal. Returns a controller used by main.ts.
+ *  `mount` selects the host-controlled UI container (■ Stop removes it
+ *  wholesale); falls back to <body> for standalone/legacy callers. */
+export function installUpgradeUI(mount: HTMLElement = document.body): UpgradePicker {
   const ID = 'forgeax-upgrade-ui';
   document.getElementById(ID)?.remove();
 
@@ -88,6 +93,9 @@ export function installUpgradeUI(): UpgradePicker {
     display: 'none', alignItems: 'center', justifyContent: 'center',
     background: 'radial-gradient(circle at center, rgba(40,10,50,0.55), rgba(10,5,20,0.85))',
     backdropFilter: 'blur(6px)',
+    // The picker is a modal that must catch clicks (and swallow game input)
+    // while open. Its host uiRoot defaults to pointer-events:none for click-
+    // through; this `auto` re-enables interaction for the modal + its cards.
     pointerEvents: 'auto',
     fontFamily: 'ui-sans-serif, system-ui, sans-serif',
   } as CSSStyleDeclaration);
@@ -151,7 +159,7 @@ export function installUpgradeUI(): UpgradePicker {
   } as CSSStyleDeclaration);
 
   root.append(banner, sub, cards);
-  document.body.appendChild(root);
+  mount.appendChild(root);
 
   const controller: UpgradePicker = {
     pickedCallback: null,
@@ -179,6 +187,7 @@ export function installUpgradeUI(): UpgradePicker {
     },
     hide() { root.style.display = 'none'; },
     isOpen() { return root.style.display !== 'none'; },
+    dispose() { root.remove(); },
   };
   return controller;
 }

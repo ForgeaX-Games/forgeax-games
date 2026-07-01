@@ -4,6 +4,7 @@ export interface AudioApi {
   startBgm(): void;
   playClick(): void;
   playDice(): void;
+  dispose(): void;
 }
 
 function trackFile(kind: 'bgm' | 'sfx', namePart: string): string | null {
@@ -16,6 +17,18 @@ export function installAudio(): AudioApi {
   const clickFile = trackFile('sfx', 'click');
   const diceFile = trackFile('sfx', 'throw');
 
+  // Non-DOM side effects that outlive the ECS world: the BGM/SFX Audio elements
+  // and the window unlock listeners. Tracked so ■ Stop can silence + detach them
+  // (the controlled uiRoot removal only reaches DOM, never these).
+  let unlockHandler: (() => void) | null = null;
+
+  const removeUnlock = () => {
+    if (!unlockHandler) return;
+    window.removeEventListener('pointerdown', unlockHandler);
+    window.removeEventListener('keydown', unlockHandler);
+    unlockHandler = null;
+  };
+
   const startBgm = () => {
     const f = trackFile('bgm', 'Turn-based');
     if (!f) return;
@@ -25,9 +38,9 @@ export function installAudio(): AudioApi {
     bgm.play().catch(() => {});
     const unlock = () => {
       bgm?.play().catch(() => {});
-      window.removeEventListener('pointerdown', unlock);
-      window.removeEventListener('keydown', unlock);
+      removeUnlock();
     };
+    unlockHandler = unlock;
     window.addEventListener('pointerdown', unlock);
     window.addEventListener('keydown', unlock);
   };
@@ -43,5 +56,12 @@ export function installAudio(): AudioApi {
     startBgm,
     playClick: () => playSfx(clickFile),
     playDice: () => playSfx(diceFile),
+    dispose() {
+      removeUnlock();
+      if (bgm) {
+        bgm.pause();
+        bgm = null;
+      }
+    },
   };
 }

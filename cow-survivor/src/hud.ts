@@ -46,7 +46,10 @@ export interface HudHandle {
 
 const HUD_ID = 'forgeax-game-hud';
 
-export function installHud(opts: { initialMode: ViewMode; onToggle: () => void }): HudHandle {
+export function installHud(opts: { initialMode: ViewMode; onToggle: () => void; mount?: HTMLElement }): HudHandle {
+  // Mount into the host-controlled UI container (removed wholesale on ■ Stop)
+  // when provided; fall back to <body> for standalone/legacy callers.
+  const mount = opts.mount ?? document.body;
   document.getElementById(HUD_ID)?.remove();
 
   const root = document.createElement('div');
@@ -233,7 +236,7 @@ export function installHud(opts: { initialMode: ViewMode; onToggle: () => void }
   } as CSSStyleDeclaration);
 
   root.append(tl, tr, combo, banner, cross, lockStatus, hint, dmgFlash, popups);
-  document.body.appendChild(root);
+  mount.appendChild(root);
 
   // ── state + setters ───────────────────────────────────────────────────────
   let curMode: ViewMode = opts.initialMode;

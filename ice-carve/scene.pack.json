@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "b7e23a4c-eca3-4764-8c6f-50d8bb380ada",
+      "kind": "scene",
+      "payload": {
+        "kind": "scene",
+        "nodes": [
+          {
+            "localId": 0,
+            "components": {
+              "Name": { "value": "WorkshopFloor" },
+              "Transform": {
+                "posX": 0,
+                "posY": -0.12,
+                "posZ": 0,
+                "scaleX": 16,
+                "scaleY": 0.15,
+                "scaleZ": 14
+              },
+              "MeshFilter": { "assetHandle": 0 },
+              "MeshRenderer": { "material": 1 }
+            }
+          },
+          {
+            "localId": 1,
+            "components": {
+              "Name": { "value": "Sun" },
+              "Transform": { "posX": 0, "posY": 8, "posZ": 0 },
+              "DirectionalLight": {
+                "directionX": -0.35,
+                "directionY": -1,
+                "directionZ": -0.25,
+                "colorR": 1,
+                "colorG": 0.97,
+                "colorB": 0.92,
+                "intensity": 3.4,
+                "castShadow": false
+              }
+            }
+          },
+          {
+            "localId": 2,
+            "components": {
+              "Name": { "value": "BackWall" },
+              "Transform": {
+                "posX": 0,
+                "posY": 2.2,
+                "posZ": -6.5,
+                "scaleX": 14,
+                "scaleY": 4.5,
+                "scaleZ": 0.25
+              },
+              "MeshFilter": { "assetHandle": 0 },
+              "MeshRenderer": { "material": 2 }
+            }
+          },
+          {
+            "localId": 3,
+            "components": {
+              "Name": { "value": "SideWallL" },
+              "Transform": {
+                "posX": -7,
+                "posY": 2,
+                "posZ": 0,
+                "scaleX": 0.2,
+                "scaleY": 4,
+                "scaleZ": 12
+              },
+              "MeshFilter": { "assetHandle": 0 },
+              "MeshRenderer": { "material": 2 }
+            }
+          }
+        ]
+      },
+      "refs": [
+        "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
+        "f8691b95-f0e7-49cb-93d8-153e49625526",
+        "72465219-a6eb-413f-8a1b-fd1e9efc013e"
+      ]
+    },
+    {
+      "guid": "f8691b95-f0e7-49cb-93d8-153e49625526",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": { "LightMode": "Forward" },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [0.55, 0.58, 0.62, 1],
+          "metallic": 0,
+          "roughness": 0.92
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "72465219-a6eb-413f-8a1b-fd1e9efc013e",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": { "LightMode": "Forward" },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [0.42, 0.44, 0.48, 1],
+          "metallic": 0,
+          "roughness": 0.95
+        }
+      },
+      "refs": []
+    }
+  ]
+}

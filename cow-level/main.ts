@@ -220,6 +220,8 @@ function spawnFallbackScene(ctx: CtxWorld): void {
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const { registerUpdate } = ctx ?? {};
+  const uiMount: HTMLElement = ctx?.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
+  const onCleanup = ctx?.registerCleanup ?? (() => {});
   const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
   const dpr = window.devicePixelRatio || 1;
   canvas.width = Math.max(1, Math.floor(canvas.clientWidth * dpr));
@@ -324,7 +326,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     onToggle: () => setMode(mode === 'fps' ? 'topdown' : 'fps'),
     onChoose: (id) => chooseUpgrade(id),
     onRestart: () => window.location.reload(),
+    mount: uiMount,
   });
+  onCleanup(() => hud.dispose());
 
   let mode: ViewMode = 'topdown';
   let locked = false;
@@ -393,14 +397,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     } catch { /* pointerlockerror handles fallback */ }
   };
   const isTauri = !!(window as unknown as { __TAURI__?: unknown }).__TAURI__ || !!(window as unknown as { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__;
-  document.addEventListener('pointerlockchange', () => setLocked(document.pointerLockElement === canvas));
-  document.addEventListener('pointerlockerror', () => {
+  const onPointerLockChange = () => setLocked(document.pointerLockElement === canvas);
+  const onPointerLockError = () => {
     if (mode === 'fps') {
       try { window.parent.postMessage({ type: 'fx-pointer-capture', capture: true }, '*'); } catch { /* ignore */ }
       setLocked(true);
     }
-  });
-  canvas.addEventListener('mousedown', () => {
+  };
+  const onCanvasMouseDown = () => {
     if (mode !== 'fps' || locked) return;
     if (isTauri) {
       try { window.parent.postMessage({ type: 'fx-pointer-capture', capture: true }, '*'); } catch { /* ignore */ }
@@ -408,17 +412,31 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     } else {
       safeRequestLock(canvas);
     }
-  });
-  window.addEventListener('keydown', (e) => {
+  };
+  const onKeyDown = (e: KeyboardEvent) => {
     keys[e.code] = true;
     if (e.code === 'Escape' && locked) releasePointer();
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) e.preventDefault();
-  });
-  window.addEventListener('keyup', (e) => { keys[e.code] = false; });
-  window.addEventListener('mousemove', (e) => {
+  };
+  const onKeyUp = (e: KeyboardEvent) => { keys[e.code] = false; };
+  const onMouseMove = (e: MouseEvent) => {
     if (mode !== 'fps' || !locked || paused || gameOver) return;
     lookYaw -= e.movementX * 0.0022;
     lookPitch = Math.max(-1.15, Math.min(1.05, lookPitch - e.movementY * 0.0022));
+  };
+  document.addEventListener('pointerlockchange', onPointerLockChange);
+  document.addEventListener('pointerlockerror', onPointerLockError);
+  canvas.addEventListener('mousedown', onCanvasMouseDown);
+  window.addEventListener('keydown', onKeyDown);
+  window.addEventListener('keyup', onKeyUp);
+  window.addEventListener('mousemove', onMouseMove);
+  onCleanup(() => {
+    document.removeEventListener('pointerlockchange', onPointerLockChange);
+    document.removeEventListener('pointerlockerror', onPointerLockError);
+    canvas.removeEventListener('mousedown', onCanvasMouseDown);
+    window.removeEventListener('keydown', onKeyDown);
+    window.removeEventListener('keyup', onKeyUp);
+    window.removeEventListener('mousemove', onMouseMove);
   });
 
   function screenPopup(text: string, wx: number, wy: number, wz: number, kind: Parameters<typeof hud.popup>[3]): void {

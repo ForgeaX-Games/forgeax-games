@@ -43,6 +43,11 @@ const BOSS_MAX_HP = 200;           // boss 总 HP
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const { assets } = ctx ?? {};
+  // Play/Stop hygiene: mount UI into the host's controlled container (removed
+  // whole on ■ Stop) instead of document.body, and register non-DOM teardown
+  // (key listeners) so an embedded-editor Stop returns to a clean initial state.
+  const uiMount: HTMLElement = ctx?.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
+  const onCleanup = ctx?.registerCleanup ?? (() => {});
 
   // Components self-register globally via defineComponent (feat-20260602); the
   // old per-world world.registerComponent(...) API was removed. Referencing the
@@ -151,8 +156,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   //  HUD
   // ═══════════════════════════════════════════════════════════════════════
 
-  globalThis.addEventListener('keydown', (e) => gs.keys.add(e.code));
-  globalThis.addEventListener('keyup', (e) => gs.keys.delete(e.code));
+  const onKeyDown = (e: KeyboardEvent) => gs.keys.add(e.code);
+  const onKeyUp = (e: KeyboardEvent) => gs.keys.delete(e.code);
+  globalThis.addEventListener('keydown', onKeyDown);
+  globalThis.addEventListener('keyup', onKeyUp);
+  onCleanup(() => {
+    globalThis.removeEventListener('keydown', onKeyDown);
+    globalThis.removeEventListener('keyup', onKeyUp);
+  });
 
   let hud: HTMLDivElement | null = null;
   let hudCombo: HTMLDivElement | null = null;
@@ -162,25 +173,25 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   let hudBossFill: HTMLDivElement | null = null;
 
   // 剧情 UI（开场 / Wave 横幅 / 通关结局）
-  const storyUi = createStoryUi();
+  const storyUi = createStoryUi(uiMount);
   storyUi.showIntro();
 
   if (typeof document !== 'undefined') {
     hud = document.createElement('div');
     hud.style.cssText = 'position:fixed;top:12px;left:50%;transform:translateX(-50%);font-family:"Orbitron","Courier New",monospace;font-size:22px;color:#0ff;text-shadow:0 0 8px #0ff,0 0 20px #06f;pointer-events:none;z-index:9999;text-align:center;background:linear-gradient(180deg,rgba(0,10,30,0.6),rgba(0,5,15,0.4));padding:8px 24px;border-radius:10px;border:1px solid rgba(0,200,255,0.4);backdrop-filter:blur(4px)';
-    document.body.appendChild(hud);
+    uiMount.appendChild(hud);
 
     hudHP = document.createElement('div');
     hudHP.style.cssText = 'position:fixed;top:12px;left:16px;font-size:20px;pointer-events:none;z-index:9999;text-shadow:0 0 6px #f55';
-    document.body.appendChild(hudHP);
+    uiMount.appendChild(hudHP);
 
     hudCombo = document.createElement('div');
     hudCombo.style.cssText = 'position:fixed;top:54px;left:50%;transform:translateX(-50%);font-family:"Orbitron","Courier New",monospace;font-size:16px;color:#ff0;text-shadow:0 0 6px #ff0;pointer-events:none;z-index:9999;opacity:0;transition:opacity 0.3s';
-    document.body.appendChild(hudCombo);
+    uiMount.appendChild(hudCombo);
 
     hudPower = document.createElement('div');
     hudPower.style.cssText = 'position:fixed;top:12px;right:16px;font-size:18px;pointer-events:none;z-index:9999;text-shadow:0 0 6px #0ff';
-    document.body.appendChild(hudPower);
+    uiMount.appendChild(hudPower);
 
     // BOSS HP 条（默认隐藏）
     hudBoss = document.createElement('div');
@@ -192,7 +203,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     hudBossLabel.textContent = '黑日母舰 · BLACK SUN';
     hudBossLabel.style.cssText = 'position:absolute;top:-22px;left:50%;transform:translateX(-50%);color:#ff3388;font-size:14px;letter-spacing:6px;text-shadow:0 0 8px #ff3388;font-weight:bold;white-space:nowrap;';
     hudBoss.appendChild(hudBossLabel);
-    document.body.appendChild(hudBoss);
+    uiMount.appendChild(hudBoss);
   }
 
   function updateHud() {

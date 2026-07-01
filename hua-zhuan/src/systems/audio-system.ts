@@ -48,12 +48,18 @@ export function installAudio(): AudioApi {
     bgm.play().catch(() => { started = false; });
   };
 
+  // { once: true } auto-removes after firing, but Stop may happen before the
+  // first gesture — so dispose() must also removeEventListener explicitly.
   window.addEventListener('pointerdown', tryBgm, { once: true });
   window.addEventListener('keydown', tryBgm, { once: true });
 
   return {
     startBgm() { tryBgm(); },
     playClick() { clickSfx?.cloneNode().play().catch(() => {}); },
-    dispose() { bgm?.pause(); },
+    dispose() {
+      window.removeEventListener('pointerdown', tryBgm);
+      window.removeEventListener('keydown', tryBgm);
+      bgm?.pause();
+    },
   };
 }

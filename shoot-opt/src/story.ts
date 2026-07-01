@@ -103,7 +103,7 @@ export interface StoryUi {
   /** 通关时把游戏内 HUD 隐藏给结局让位（可选） */
 }
 
-export function createStoryUi(): StoryUi {
+export function createStoryUi(mount?: HTMLElement): StoryUi {
   // SSR / 无 DOM 环境的空实现
   if (typeof document === 'undefined') {
     return {
@@ -111,6 +111,8 @@ export function createStoryUi(): StoryUi {
       showBeat() {}, showEnding() {}, hideEnding() {}, tick() {},
     };
   }
+  // 挂到 host 提供的受控容器（■ Stop 时整体移除）；缺省回落 body。
+  const root: HTMLElement = mount ?? document.body;
 
   // 一次性注入 keyframes（避免页面里重复添加）
   if (!document.getElementById('story-anim-styles')) {
@@ -148,7 +150,7 @@ export function createStoryUi(): StoryUi {
     <div style="font-size:clamp(18px,2.2vw,24px);color:#ffd76b;text-shadow:0 0 12px #fa0,0 0 28px #f80;animation:storyPulse 1.4s ease-in-out infinite;letter-spacing:6px;">${INTRO_HINT}</div>
   `;
   intro.style.display = 'none';
-  document.body.appendChild(intro);
+  root.appendChild(intro);
 
   // ── Wave 横幅（瞬时） ──
   const beat = document.createElement('div');
@@ -159,7 +161,7 @@ export function createStoryUi(): StoryUi {
     'opacity:0', 'transition:opacity 0.5s ease-out',
     'max-width:80vw',
   ].join(';');
-  document.body.appendChild(beat);
+  root.appendChild(beat);
 
   // ── 通关结局 ──
   const ending = document.createElement('div');
@@ -173,7 +175,7 @@ export function createStoryUi(): StoryUi {
     'color:#9cffb1', 'text-align:center', 'padding:24px',
   ].join(';');
   ending.style.display = 'none';
-  document.body.appendChild(ending);
+  root.appendChild(ending);
 
   let beatTimer = 0;
 

@@ -11,9 +11,10 @@ export interface TradePanelApi {
   open(state: GameState, onClose: () => void): void;
   close(): void;
   isOpen(): boolean;
+  dispose(): void;
 }
 
-export function installTradePanel(): TradePanelApi {
+export function installTradePanel(mount: HTMLElement): TradePanelApi {
   let root: HTMLDivElement | null = null;
   let closeFn: (() => void) | null = null;
 
@@ -73,8 +74,9 @@ export function installTradePanel(): TradePanelApi {
     root.id = PANEL_ID;
     root.style.cssText =
       'position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.55);' +
-      'display:flex;align-items:center;justify-content:center;';
-    document.body.appendChild(root);
+      // pointer-events:auto — controlled uiRoot defaults to none (pass-through).
+      'display:flex;align-items:center;justify-content:center;pointer-events:auto;';
+    mount.appendChild(root);
 
     const box = document.createElement('div');
     box.style.cssText =
@@ -256,5 +258,6 @@ export function installTradePanel(): TradePanelApi {
     open,
     close,
     isOpen: () => root !== null,
+    dispose: close,
   };
 }
