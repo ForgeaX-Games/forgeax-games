@@ -6,3 +6,8 @@ play-config.json
 # .forgeax/games/<slug> symlinks back here, so writes land in this submodule.
 reel/
 node_modules/
+# node_modules as a SYMLINK (dev typecheck convenience) — the dir pattern
+# above misses symlinks, so match the bare name too.
+node_modules
+# runtime chat/session state, auto-created under each game dir by Studio
+sessions/

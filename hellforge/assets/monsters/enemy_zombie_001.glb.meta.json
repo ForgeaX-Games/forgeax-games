@@ -1,0 +1,107 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "mixamorig:HeadTop_End",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:LeftHandIndex4",
+        "mixamorig:LeftHandIndex3",
+        "mixamorig:LeftHandIndex2",
+        "mixamorig:LeftHandIndex1",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:RightHandIndex4",
+        "mixamorig:RightHandIndex3",
+        "mixamorig:RightHandIndex2",
+        "mixamorig:RightHandIndex1",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:LeftToe_End",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "SM_zombie_001",
+        "Armature"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "enemy_zombie_001.glb",
+  "subAssets": [
+    {
+      "guid": "019f23d5-2e17-71cc-ad91-7e0cb154dc4f",
+      "kind": "mesh",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2e17-71cc-ad91-7e0d551b09ff",
+      "kind": "material",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2e17-71cc-ad91-7e0ee538db18",
+      "kind": "scene",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2e17-71cc-ad91-7e0fd2a01489",
+      "kind": "texture",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2e17-71cc-ad91-7e10c4995b5c",
+      "kind": "skeleton",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2e17-71cc-ad91-7e11752a6d1b",
+      "kind": "skin",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2e17-71cc-ad91-7e1261dbc77b",
+      "kind": "animation-clip",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2e17-71cc-ad91-7e1313599737",
+      "kind": "animation-clip",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23d5-2e17-71cc-ad91-7e14a98b43f4",
+      "kind": "animation-clip",
+      "sourceIndex": 2
+    },
+    {
+      "guid": "019f23d5-2e18-79b2-b06a-9a99ee43e9c1",
+      "kind": "animation-clip",
+      "sourceIndex": 3
+    },
+    {
+      "guid": "019f23d5-2e18-79b2-b06a-9a9a7159ec9f",
+      "kind": "animation-clip",
+      "sourceIndex": 4
+    }
+  ]
+}

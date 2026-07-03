@@ -1,28 +1,19 @@
 # ForgeaX: Hellforge
 
-A Diablo II-flavoured action RPG sample built on the forgeax engine.
-
-> **MVP-state notice.** Right now the game ships only what you need to walk
-> around a tiny encampment with the witch (the hero) and see her render.
-> Skill activation, monsters, loot drops, leveling and gear are designed below
-> but **not yet implemented** — they land incrementally on top of this MVP
-> shell.
+A Diablo-like action RPG sample built on the forgeax engine, set in an
+original world: the great Hellforge's dying embers corrupt the land.
 
 ## Pitch
 
-You play a female sorceress who walks out from the **Rogue Encampment** to
-the wilderness, fights monsters with **active skills you cast on demand**
-(D2: fire, ice, lightning…), collects loot from drops, levels up, learns
-skills, and returns to the encampment to upgrade and try again. Two camera
-modes you can toggle live:
-
-- **2.5D** — top-down isometric, the classic Diablo angle, default for combat
-  / loot pickup / inventory.
-- **First-person** — eye-cam through the hero's head, for immersive
-  exploration / dialogue / dungeon traversal.
-
-Future characters slot in next to the witch — each is a separate GLB pack
-swap, gameplay/skill code stays shared.
+You play a female sorceress in an Act-1 slice: spawn in **余烬哨站
+Cinderwatch**, walk out the gate into the **灰烬荒原 Ashen Reach** wilderness
+where cinder imps / ash walkers / charred bones hunt you, cast **active
+skills** (magma, frost, arc, shadowstep), collect xp shards / gold / potions
+/ **equipment beams** from drops, level up to unlock more skills, then brave
+**熔渣深窟 Slagdeep Hollow** — a procedurally generated dungeon with a
+clear-the-hollow quest and a unique boss, 熔渣督军 the Slaglord. Two camera
+modes toggle live: 2.5D top-down (mouse ground-aim) and a GTA-style third
+person.
 
 ## Why "Hellforge"
 
@@ -30,91 +21,131 @@ In Diablo II the **Hellforge** is the prime-evil weapon foundry in Act IV.
 It's iconic, it rhymes with **forgeax**, and it tells you what the engine
 underneath is doing — forging entities + meshes + materials per frame.
 
-## Status (2026-06-15)
+## Status (2026-07-03) — Act 1 slice COMPLETE
 
-What works today:
+- [x] Witch hero: skinned GLB, 5 clips (idle/move/attack/hit/death), WASD +
+      sprint, 2.5D ⇄ third-person toggle, foot-slide-corrected move clip
+- [x] **Combat feel (打击感)** — attack swings ROOT monsters (no sliding
+      while attacking) with damage landing at the clip's contact frame, so
+      side-stepping a wind-up makes it whiff; hits knock monsters back along
+      the bolt's flight path (bosses resist 75%); flinches interrupt wind-ups;
+      12% crits (×1.65, bigger numbers, extra shove); impact flash pops +
+      screen shake (hit/kill/boss-slam graded); the player is shoved by
+      monster hits; synthesized WebAudio SFX (`src/sfx.ts` — casts, hits,
+      crits, kills, pickups, level-ups, portals — no audio assets).
+- [x] **Skills (active cast, no auto-attack)** — `src/skills.ts`
+      1 熔火弹 Magma Bolt (L1, AoE splash) · 2 霜牙 Frost Fang (L2, pierce+slow)
+      · 3 电弧涌 Arc Surge (L3, 3 erratic bolts) · 4 影踏 Shadowstep (L4,
+      walkability-checked blink). Mana costs + regen + per-skill cooldowns.
+- [x] **Monsters** — `src/monsters.ts`: 炉渣小鬼 imp / 灰烬行尸 ashwalker /
+      焦骨武士 charred / 火纹术士 flamecaller (ranged fire bolts, keeps
+      distance) / boss 熔渣督军 slaglord (a 3.5 m lava troll, enrages below
+      40% hp). **Skinned GLB rigs** (`assets/monsters/*.glb`, goblin / zombie
+      / skeleton / lich / lava-troll) with full idle/move/attack/hit/death
+      clip state machines — death plays out on a corpse before despawn;
+      lowpoly PartSpec assemblies remain as the load-failure fallback.
+- [x] **Loot + progression** — `src/loot.ts` + `src/state.ts`: xp shards,
+      gold, heal/mana potions, magnet pickup, gentle exponential xp curve,
+      level-up = full heal + skill unlocks.
+- [x] **Itemization (打宝核心)** — `src/items.ts` + `src/inventory-ui.ts`:
+      6-slot paper doll (武器/头盔/胸甲/靴子/戒指/项链), 4 rarities
+      (普通/魔法/稀有/传奇 — legendaries are named uniques with curated
+      affix sets + flavor text), 16 affix stats in D2-style prefix/suffix
+      pools (damage%, per-element damage, crit chance/damage, hp/mana,
+      regens, movespeed, cdr, 金币获取, **掉宝率 MF**, 经验%, 击杀回血).
+      Item level rides the killing monster's level (den +1); affix values
+      scale ×(1+0.12·(ilvl−1)); equipping requires player level ≥ ilvl−1.
+      24-slot bag + B-key panel: click to equip/swap, right-click melts to
+      gold, hover tooltips with equipped-item comparison. Drops go to the
+      bag (auto-equip only fills empty slots); bag full → beams stay on the
+      ground (equipment never expires). Magic find shifts rarity weights on
+      every kill roll; the boss loot-explodes 3-5 items (no commons, 22%
+      legendary weight); legendary drops get a banner + fanfare + fat beam.
+- [x] **PCG dungeon** — `src/dungeon.ts`: seeded rooms + Prim-connected
+      L-corridors on a 44×44 grid, merged-slab geometry (~120 entities),
+      torches, boss room with braziers, per-room monster packs scaled by
+      depth. Walkability grid doubles as movement collision.
+- [x] **Quest**: 清剿熔渣深窟 (clear the den) → banner + xp/gold reward.
+- [x] **ARPG HUD** — `src/hud.ts`: HP/mana orbs, 4 skill slots with
+      cooldown veils + mana costs + unlock levels, XP strip, quest tracker,
+      boss HP bar, area-name fades, floating damage numbers, death screen.
+- [x] **Custom WGSL shaders** — `src/shaders/`: `fire-bolt.wgsl` (living
+      flame projectile body), `portal-vortex.wgsl` (swirling portal discs).
+      Premultiplied-alpha, ACES-safe amplitudes. Plus a pooled particle
+      system (`src/fx.ts`): hit bursts, death gibs, campfire embers, portal
+      motes.
+- [x] Death → R to respawn at camp (small xp toll).
 
-- [x] Witch hero spawns from `assets/characters/witch.glb` via the vendored
-      per-node GLB loader (same shape as fps's IntelliScene path)
-- [x] Single-scene encampment authored as a forgeax native `scene.pack.json`
-      (ground slab + a few stone huts + a campfire altar)
-- [x] **WASD** moves the hero around the encampment
-- [x] **V** key toggles between 2.5D top-down and first-person view
-- [x] Mouse-look in first-person (with pointer-lock, web + Tauri)
-- [x] HUD shows view-mode + control hints
+Not yet (post-slice): inventory grid (equipment is auto-equip for now),
+skill tree allocator, town portal scroll, audio, more acts/characters.
 
-What's stubbed / not yet wired:
-
-- [ ] AnimationPlayer (idle/move/attack/hit/death) — `witch.glb` already
-      ships all 5 clips; play-runtime's vite.config still needs
-      `gltfImporter` so the engine sees `animation-clip` sub-assets. Until
-      then the witch is rendered in T-pose.
-- [ ] Active skills (1/2/3/4 keys) — design in §Skills below
-- [ ] Monsters + spawner — placeholder cubes for now
-- [ ] Loot drops + inventory
-- [ ] Leveling + skill tree
-- [ ] Town vs wilderness scenes
-
-## Controls (current MVP)
+## Controls
 
 | input | action |
 |---|---|
-| WASD | move on the ground plane |
-| Shift | sprint |
-| V | toggle 2.5D ⇄ first-person view |
-| Mouse (FPS mode) | look |
+| WASD | move · Shift sprint |
+| Mouse | aim — 2.5D: ground cursor · 3rd person: look |
+| Left-click | cast selected skill |
+| 1 / 2 / 3 / 4 | select + cast 熔火弹 / 霜牙 / 电弧涌 / 影踏 |
+| V | toggle 2.5D ⇄ third-person |
+| R | respawn after death |
 | Esc | release pointer lock |
+
+## World layout (ONE engine world, no scene switches)
+
+```
+(0, 0) …………………… Cinderwatch (scene pack, safe zone — no aggro)
+   └ gate at z=14 → Ashen Reach wilderness (ring spawner, imp/ashwalker/charred)
+        └ cave mouth at (14, 24) — orange portal disc
+              ⇅ player teleport (same world!)
+(300, 300) …………… Slagdeep Hollow — PCG rooms/corridors, quest + boss,
+                   blue return portal at the entry room
+```
+
+The dungeon sits past the camera's far plane (200 m), so neither area ever
+renders while you're in the other. Teleporting the player avoids the
+engine's scene-switch full-rebuild renderer bug entirely.
 
 ## File layout
 
 ```
 hellforge/
   forge.json              — game manifest (id, scenes, default scene)
-  package.json            — @forgeax/game-hellforge workspace package
-  main.ts                 — boot, ECS spawn, per-frame loop, view-mode toggle
-  assets/
-    characters/
-      witch.glb           — 33-joint skinned sorceress + 5 clips (idle/move/attack/hit/death)
-  scenes/
-    rogue-encampment.pack.json   — native engine scene pack (ground + huts + altar)
-  src/                    — game systems (skills, enemies, fx)
-  docs/                   — design + handover notes
-  AGENTS.md               — game-charter for AI agents touching this game
-  PLAY_EXPERIENCE.md      — combat / loot / progression design notes
-  README.md               — this file
+  main.ts                 — boot, witch rig, camera, input, area/portal/quest glue
+  src/
+    state.ts              — hp/mana/xp/level/gold + curves
+    items.ts              — equipment slots / rarities / affixes / drop rolls
+    skills.ts             — SKILLS table + projectile system
+    monsters.ts           — MONSTERS bestiary + AI manager
+    loot.ts               — drops + magnet pickup
+    dungeon.ts            — seeded PCG generator + walkability
+    hud.ts                — ARPG DOM overlay (orbs / slots / quest / boss bar)
+    fx.ts                 — shader registration + particle pools
+    shaders/*.wgsl(.meta.json) — fire-bolt / portal-vortex
+  assets/characters/witch.glb   — 33-joint skinned sorceress + 5 clips
+  assets/monsters/*.glb(.meta.json) — skinned monster rigs (imported via
+                            engine cli-gltf; meta.json carries the GUIDs)
+  scenes/rogue-encampment.pack.json — native scene pack (Edit renders this)
+  tsconfig.check.json     — dev typecheck (needs games/node_modules symlink
+                            → editor/packages/play-runtime/node_modules)
 ```
 
 ## Scene authoring
 
-The static scene lives in `scenes/rogue-encampment.pack.json` — the engine's
-**native** scene pack format. Edit + Play render the same source, so the
-editor (✎ Edit on `forge.json#defaultScene`) is the WYSIWYG authoring tool.
-Hero / monsters / loot are **dynamic** and live in `main.ts` (spawned at
-boot or runtime); only persistent visible terrain belongs in the pack.
+The static camp lives in `scenes/rogue-encampment.pack.json` — the engine's
+native scene pack format; ✎ Edit is the WYSIWYG tool for it. Everything
+dynamic (hero, monsters, projectiles, loot, the whole PCG dungeon) is
+runtime-spawned from `main.ts` + `src/` and never appears in Edit.
 
-## Skills (planned)
+## Verify
 
-| key | school | early skill | mid-tier |
-|---|---|---|---|
-| 1 | Fire   | Fire Bolt        | Fire Ball  |
-| 2 | Cold   | Ice Bolt         | Glacial Spike |
-| 3 | Light  | Charged Bolt     | Lightning Strike |
-| 4 | Util   | Teleport (short) | Town Portal |
+Play `:15173/preview/?game=hellforge`, Edit `:15280/editor/?game=hellforge`
+— wait ~7 s, console must show only the favicon 404. Gameplay probes hang
+off `window.__hf` (state / player / monsters / skills / loot / dungeon).
 
-Each skill: cooldown + mana cost + cast animation slot on the witch. Damage
-projectiles are transient particle entities; impacts spawn FX assets.
+## Roadmap (next)
 
-## Roadmap
-
-1. **MVP shell (this commit)** — witch renders, walks, view toggles, single
-   encampment scene.
-2. **Animations** — wire gltfImporter into play-runtime, spawn AnimationPlayer
-   on the witch, swap clip on idle vs move vs attack (mirror hello-skin).
-3. **Skill cast loop** — 1/2/3/4 → spawn projectile + play attack clip + UI
-   cooldown.
-4. **Enemy spawner** — a small wilderness scene with a few monsters; HP +
-   damage + death.
-5. **Loot + XP + level** — drop tables, pickup, level curve, skill points.
-6. **Skill tree UI** — D2-style talent allocator.
-7. **More characters** — paladin / barbarian / necromancer drop in as
-   sibling GLB packs (`assets/characters/<name>.glb`).
+1. Inventory grid (compare/stash instead of auto-equip)
+2. Skill tree allocator (4-school)
+3. SFX (WebAudio, cow-survivor's sfx.ts pattern)
+4. More characters — paladin / barbarian / necromancer as sibling GLB packs

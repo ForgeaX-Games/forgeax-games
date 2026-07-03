@@ -1,0 +1,8 @@
+{
+  "id": "marscraft",
+  "name": "MarsCraft",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": "3d",
+  "defaultScene": "a1b2c3d4-0001-4a10-8a10-aa0000000001"
+}

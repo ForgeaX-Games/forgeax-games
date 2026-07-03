@@ -1,0 +1,616 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "a1b2c3d4-0002-4a10-8a10-aa0000000002",
+      "kind": "scene",
+      "refs": [],
+      "payload": {
+        "kind": "scene",
+        "entities": [
+          {
+            "localId": 0,
+            "components": {
+              "Name": {
+                "value": "MapRoot:nebula-plateau"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 0,
+                "posZ": 0,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 1,
+            "components": {
+              "Name": {
+                "value": "Start:P0"
+              },
+              "Transform": {
+                "posX": -33.6974761255116,
+                "posY": 0,
+                "posZ": -32.58765347885402,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1,
+                "quatX": 0,
+                "quatY": 0.3826834323650898,
+                "quatZ": 0,
+                "quatW": 0.9238795325112867
+              }
+            }
+          },
+          {
+            "localId": 2,
+            "components": {
+              "Name": {
+                "value": "Start:P1"
+              },
+              "Transform": {
+                "posX": 33.6974761255116,
+                "posY": 0,
+                "posZ": 32.58765347885402,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1,
+                "quatX": 0,
+                "quatY": -0.9238795325112867,
+                "quatZ": 0,
+                "quatW": 0.38268343236508984
+              }
+            }
+          },
+          {
+            "localId": 3,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": -25.983642214375045,
+                "posY": 0,
+                "posZ": -22.73887169468618,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 4,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": -24.858524250642983,
+                "posY": 0,
+                "posZ": -23.038109845128538,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 5,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": -23.833109395597678,
+                "posY": 0,
+                "posZ": -23.589433958554725,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 6,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": -22.962992931605566,
+                "posY": 0,
+                "posZ": -24.362952699169725,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 7,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": -22.295350272860528,
+                "posY": 0,
+                "posZ": -25.31672792594835,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 8,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": -21.866379239152458,
+                "posY": 0,
+                "posZ": -26.399048467762178,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 9,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": -21.699337505780946,
+                "posY": 0,
+                "posZ": -27.55123376636002,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 10,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": -21.803281633891046,
+                "posY": 0,
+                "posZ": -28.710815381091898,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 11,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": 25.98364221437505,
+                "posY": 0,
+                "posZ": 22.73887169468618,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 12,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": 24.858524250642983,
+                "posY": 0,
+                "posZ": 23.038109845128538,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 13,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": 23.833109395597678,
+                "posY": 0,
+                "posZ": 23.589433958554725,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 14,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": 22.962992931605566,
+                "posY": 0,
+                "posZ": 24.362952699169725,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 15,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": 22.295350272860528,
+                "posY": 0,
+                "posZ": 25.31672792594835,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 16,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": 21.866379239152458,
+                "posY": 0,
+                "posZ": 26.399048467762178,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 17,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": 21.699337505780946,
+                "posY": 0,
+                "posZ": 27.55123376636002,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 18,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": 21.803281633891046,
+                "posY": 0,
+                "posZ": 28.710815381091898,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 19,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": -12.11226620442409,
+                "posY": 0,
+                "posZ": -30.479364085774343,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 20,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": -10.871852711537981,
+                "posY": 0,
+                "posZ": -30.8720835872436,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 21,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": -9.82310000937617,
+                "posY": 0,
+                "posZ": -31.64213034548396,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 22,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": -9.07696968911006,
+                "posY": 0,
+                "posZ": -32.70803080300698,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 23,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": -8.712404868013433,
+                "posY": 0,
+                "posZ": -33.957009077992964,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 24,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": -8.76797774003689,
+                "posY": 0,
+                "posZ": -35.256919034898914,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 25,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": 12.112266204424088,
+                "posY": 0,
+                "posZ": 30.479364085774343,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 26,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": 10.87185271153798,
+                "posY": 0,
+                "posZ": 30.872083587243605,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 27,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": 9.823100009376168,
+                "posY": 0,
+                "posZ": 31.64213034548396,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 28,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": 9.076969689110058,
+                "posY": 0,
+                "posZ": 32.70803080300698,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 29,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": 8.712404868013433,
+                "posY": 0,
+                "posZ": 33.957009077992964,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 30,
+            "components": {
+              "Name": {
+                "value": "Mineral:1500"
+              },
+              "Transform": {
+                "posX": 8.76797774003689,
+                "posY": 0,
+                "posZ": 35.25691903489892,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 31,
+            "components": {
+              "Name": {
+                "value": "Geyser:2500"
+              },
+              "Transform": {
+                "posX": -25.936489677992462,
+                "posY": 0,
+                "posZ": -30.646754367250253,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 32,
+            "components": {
+              "Name": {
+                "value": "Geyser:2500"
+              },
+              "Transform": {
+                "posX": -31.497850838583542,
+                "posY": 0,
+                "posZ": -24.895992501073824,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 33,
+            "components": {
+              "Name": {
+                "value": "Geyser:2500"
+              },
+              "Transform": {
+                "posX": 25.936489677992462,
+                "posY": 0,
+                "posZ": 30.646754367250253,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 34,
+            "components": {
+              "Name": {
+                "value": "Geyser:2500"
+              },
+              "Transform": {
+                "posX": 31.497850838583542,
+                "posY": 0,
+                "posZ": 24.89599250107382,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 35,
+            "components": {
+              "Name": {
+                "value": "Geyser:2500"
+              },
+              "Transform": {
+                "posX": -12.066235426133737,
+                "posY": 0,
+                "posZ": -34.142389592453064,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          },
+          {
+            "localId": 36,
+            "components": {
+              "Name": {
+                "value": "Geyser:2500"
+              },
+              "Transform": {
+                "posX": 12.066235426133737,
+                "posY": 0,
+                "posZ": 34.142389592453064,
+                "scaleX": 1,
+                "scaleY": 1,
+                "scaleZ": 1
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "mixamorig:HeadTop_End",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:LeftHandIndex4",
+        "mixamorig:LeftHandIndex3",
+        "mixamorig:LeftHandIndex2",
+        "mixamorig:LeftHandIndex1",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:RightHandIndex4",
+        "mixamorig:RightHandIndex3",
+        "mixamorig:RightHandIndex2",
+        "mixamorig:RightHandIndex1",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:LeftToe_End",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "SM_CH_LavaTroll_001",
+        "SM_Wea_LavaTroll_001",
+        "Armature"
+      ],
+      "unsupportedExtensions": [
+        "KHR_materials_specular"
+      ]
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "boss_lava_troll.glb",
+  "subAssets": [
+    {
+      "guid": "019f23d5-2da1-7a73-a9ed-c7a7b08ba06c",
+      "kind": "mesh",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2da2-7b81-b122-d1e3db46c3bc",
+      "kind": "mesh",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23d5-2da2-7b81-b122-d1e47cb8f194",
+      "kind": "material",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2da2-7b81-b122-d1e5cfed53f4",
+      "kind": "material",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23d5-2da2-7b81-b122-d1e6d51f2e05",
+      "kind": "scene",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2da2-7b81-b122-d1e740cdeb40",
+      "kind": "texture",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2da2-7b81-b122-d1e844a5bada",
+      "kind": "texture",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23d5-2da2-7b81-b122-d1e911846361",
+      "kind": "skeleton",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2da2-7b81-b122-d1ea1178df00",
+      "kind": "skin",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2da2-7b81-b122-d1eb55e4ebdb",
+      "kind": "animation-clip",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2da2-7b81-b122-d1ec17c72bc6",
+      "kind": "animation-clip",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23d5-2da2-7b81-b122-d1ed9565ece0",
+      "kind": "animation-clip",
+      "sourceIndex": 2
+    },
+    {
+      "guid": "019f23d5-2da2-7b81-b122-d1ee03e2493e",
+      "kind": "animation-clip",
+      "sourceIndex": 3
+    },
+    {
+      "guid": "019f23d5-2da2-7b81-b122-d1ef14f5fc3a",
+      "kind": "animation-clip",
+      "sourceIndex": 4
+    }
+  ]
+}

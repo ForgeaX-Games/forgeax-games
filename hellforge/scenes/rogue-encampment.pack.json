@@ -858,6 +858,930 @@
                 ]
               }
             }
+          },
+          {
+            "localId": 35,
+            "components": {
+              "Name": {
+                "value": "Boulder_1"
+              },
+              "Transform": {
+                "posX": -14,
+                "posY": 0.48,
+                "posZ": 18,
+                "scaleX": 1.5,
+                "scaleY": 1.0499999999999998,
+                "scaleZ": 1.275,
+                "quatX": 0,
+                "quatY": 0.19866933079506122,
+                "quatZ": 0,
+                "quatW": 0.9800665778412416
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              }
+            }
+          },
+          {
+            "localId": 36,
+            "components": {
+              "Name": {
+                "value": "Boulder_2"
+              },
+              "Transform": {
+                "posX": -19,
+                "posY": 0.32,
+                "posZ": 8,
+                "scaleX": 1.0,
+                "scaleY": 0.7,
+                "scaleZ": 0.85,
+                "quatX": 0,
+                "quatY": 0.5646424733950354,
+                "quatZ": 0,
+                "quatW": 0.8253356149096783
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              }
+            }
+          },
+          {
+            "localId": 37,
+            "components": {
+              "Name": {
+                "value": "Boulder_3"
+              },
+              "Transform": {
+                "posX": 20,
+                "posY": 0.5760000000000001,
+                "posZ": 12,
+                "scaleX": 1.8,
+                "scaleY": 1.26,
+                "scaleZ": 1.53,
+                "quatX": 0,
+                "quatY": 0.34289780745545134,
+                "quatZ": 0,
+                "quatW": 0.9393727128473789
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              }
+            }
+          },
+          {
+            "localId": 38,
+            "components": {
+              "Name": {
+                "value": "Boulder_4"
+              },
+              "Transform": {
+                "posX": 18,
+                "posY": 0.28800000000000003,
+                "posZ": 2,
+                "scaleX": 0.9,
+                "scaleY": 0.63,
+                "scaleZ": 0.765,
+                "quatX": 0,
+                "quatY": 0.867423225594017,
+                "quatZ": 0,
+                "quatW": 0.49757104789172696
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              }
+            }
+          },
+          {
+            "localId": 39,
+            "components": {
+              "Name": {
+                "value": "Boulder_5"
+              },
+              "Transform": {
+                "posX": -16,
+                "posY": 0.384,
+                "posZ": 25,
+                "scaleX": 1.2,
+                "scaleY": 0.84,
+                "scaleZ": 1.02,
+                "quatX": 0,
+                "quatY": 0.09983341664682815,
+                "quatZ": 0,
+                "quatW": 0.9950041652780258
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              }
+            }
+          },
+          {
+            "localId": 40,
+            "components": {
+              "Name": {
+                "value": "Boulder_6"
+              },
+              "Transform": {
+                "posX": 22,
+                "posY": 0.256,
+                "posZ": 22,
+                "scaleX": 0.8,
+                "scaleY": 0.5599999999999999,
+                "scaleZ": 0.68,
+                "quatX": 0,
+                "quatY": 0.7173560908995228,
+                "quatZ": 0,
+                "quatW": 0.6967067093471654
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              }
+            }
+          },
+          {
+            "localId": 41,
+            "components": {
+              "Name": {
+                "value": "Boulder_7"
+              },
+              "Transform": {
+                "posX": -21,
+                "posY": 0.35200000000000004,
+                "posZ": -6,
+                "scaleX": 1.1,
+                "scaleY": 0.77,
+                "scaleZ": 0.935,
+                "quatX": 0,
+                "quatY": 0.43496553411123023,
+                "quatZ": 0,
+                "quatW": 0.9004471023526769
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              }
+            }
+          },
+          {
+            "localId": 42,
+            "components": {
+              "Name": {
+                "value": "Boulder_8"
+              },
+              "Transform": {
+                "posX": 9,
+                "posY": 0.22399999999999998,
+                "posZ": 26.5,
+                "scaleX": 0.7,
+                "scaleY": 0.48999999999999994,
+                "scaleZ": 0.595,
+                "quatX": 0,
+                "quatY": 0.24740395925452294,
+                "quatZ": 0,
+                "quatW": 0.9689124217106447
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              }
+            }
+          },
+          {
+            "localId": 43,
+            "components": {
+              "Name": {
+                "value": "DeadTree1_Trunk"
+              },
+              "Transform": {
+                "posX": -8,
+                "posY": 1.15,
+                "posZ": 20,
+                "scaleX": 0.28,
+                "scaleY": 2.3,
+                "scaleZ": 0.28,
+                "quatX": 0,
+                "quatY": 0.14943813247359922,
+                "quatZ": 0,
+                "quatW": 0.9887710779360422
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 44,
+            "components": {
+              "Name": {
+                "value": "DeadTree1_Branch1"
+              },
+              "Transform": {
+                "posX": -7.45,
+                "posY": 2.05,
+                "posZ": 20,
+                "scaleX": 1.15,
+                "scaleY": 0.11,
+                "scaleZ": 0.11,
+                "quatX": 0,
+                "quatY": 0.36627252908604757,
+                "quatZ": 0,
+                "quatW": 0.9305076219123143
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 45,
+            "components": {
+              "Name": {
+                "value": "DeadTree1_Branch2"
+              },
+              "Transform": {
+                "posX": -8.45,
+                "posY": 1.65,
+                "posZ": 20.1,
+                "scaleX": 0.9,
+                "scaleY": 0.1,
+                "scaleZ": 0.1,
+                "quatX": 0,
+                "quatY": -0.14943813247359922,
+                "quatZ": 0,
+                "quatW": 0.9887710779360422
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 46,
+            "components": {
+              "Name": {
+                "value": "DeadTree2_Trunk"
+              },
+              "Transform": {
+                "posX": 8.5,
+                "posY": 1.15,
+                "posZ": 26,
+                "scaleX": 0.28,
+                "scaleY": 2.3,
+                "scaleZ": 0.28,
+                "quatX": 0,
+                "quatY": 0.5226872289306592,
+                "quatZ": 0,
+                "quatW": 0.8525245220595057
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 47,
+            "components": {
+              "Name": {
+                "value": "DeadTree2_Branch1"
+              },
+              "Transform": {
+                "posX": 9.05,
+                "posY": 2.05,
+                "posZ": 26,
+                "scaleX": 1.15,
+                "scaleY": 0.11,
+                "scaleZ": 0.11,
+                "quatX": 0,
+                "quatY": 0.6997160753466035,
+                "quatZ": 0,
+                "quatW": 0.7144210340559314
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 48,
+            "components": {
+              "Name": {
+                "value": "DeadTree2_Branch2"
+              },
+              "Transform": {
+                "posX": 8.05,
+                "posY": 1.65,
+                "posZ": 26.1,
+                "scaleX": 0.9,
+                "scaleY": 0.1,
+                "scaleZ": 0.1,
+                "quatX": 0,
+                "quatY": 0.247403959254523,
+                "quatZ": 0,
+                "quatW": 0.9689124217106447
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 49,
+            "components": {
+              "Name": {
+                "value": "DeadTree3_Trunk"
+              },
+              "Transform": {
+                "posX": 19,
+                "posY": 1.15,
+                "posZ": 17,
+                "scaleX": 0.28,
+                "scaleY": 2.3,
+                "scaleZ": 0.28,
+                "quatX": 0,
+                "quatY": 0.8414709848078965,
+                "quatZ": 0,
+                "quatW": 0.5403023058681398
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 50,
+            "components": {
+              "Name": {
+                "value": "DeadTree3_Branch1"
+              },
+              "Transform": {
+                "posX": 19.55,
+                "posY": 2.05,
+                "posZ": 17,
+                "scaleX": 1.15,
+                "scaleY": 0.11,
+                "scaleZ": 0.11,
+                "quatX": 0,
+                "quatY": 0.9408058391738721,
+                "quatZ": 0,
+                "quatW": 0.3389459735361172
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 51,
+            "components": {
+              "Name": {
+                "value": "DeadTree3_Branch2"
+              },
+              "Transform": {
+                "posX": 18.55,
+                "posY": 1.65,
+                "posZ": 17.1,
+                "scaleX": 0.9,
+                "scaleY": 0.1,
+                "scaleZ": 0.1,
+                "quatX": 0,
+                "quatY": 0.644217687237691,
+                "quatZ": 0,
+                "quatW": 0.7648421872844885
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 52,
+            "components": {
+              "Name": {
+                "value": "DeadTree4_Trunk"
+              },
+              "Transform": {
+                "posX": -18,
+                "posY": 1.15,
+                "posZ": 14,
+                "scaleX": 0.28,
+                "scaleY": 2.3,
+                "scaleZ": 0.28,
+                "quatX": 0,
+                "quatY": 0.34289780745545134,
+                "quatZ": 0,
+                "quatW": 0.9393727128473789
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 53,
+            "components": {
+              "Name": {
+                "value": "DeadTree4_Branch1"
+              },
+              "Transform": {
+                "posX": -17.45,
+                "posY": 2.05,
+                "posZ": 14,
+                "scaleX": 1.15,
+                "scaleY": 0.11,
+                "scaleZ": 0.11,
+                "quatX": 0,
+                "quatY": 0.5438347906836426,
+                "quatZ": 0,
+                "quatW": 0.8391923024206541
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 54,
+            "components": {
+              "Name": {
+                "value": "DeadTree4_Branch2"
+              },
+              "Transform": {
+                "posX": -18.45,
+                "posY": 1.65,
+                "posZ": 14.1,
+                "scaleX": 0.9,
+                "scaleY": 0.1,
+                "scaleZ": 0.1,
+                "quatX": 0,
+                "quatY": 0.04997916927067832,
+                "quatZ": 0,
+                "quatW": 0.9987502603949663
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 55,
+            "components": {
+              "Name": {
+                "value": "Crate_1"
+              },
+              "Transform": {
+                "posX": -4.2,
+                "posY": 0.35,
+                "posZ": -5.0,
+                "scaleX": 0.7,
+                "scaleY": 0.7,
+                "scaleZ": 0.7,
+                "quatX": 0,
+                "quatY": 0.09983341664682815,
+                "quatZ": 0,
+                "quatW": 0.9950041652780258
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 56,
+            "components": {
+              "Name": {
+                "value": "Crate_2"
+              },
+              "Transform": {
+                "posX": -3.4,
+                "posY": 0.275,
+                "posZ": -5.7,
+                "scaleX": 0.55,
+                "scaleY": 0.55,
+                "scaleZ": 0.55,
+                "quatX": 0,
+                "quatY": 0.29552020666133955,
+                "quatZ": 0,
+                "quatW": 0.955336489125606
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              }
+            }
+          },
+          {
+            "localId": 57,
+            "components": {
+              "Name": {
+                "value": "Crate_3"
+              },
+              "Transform": {
+                "posX": 6.5,
+                "posY": 0.35,
+                "posZ": -4.6,
+                "scaleX": 0.7,
+                "scaleY": 0.7,
+                "scaleZ": 0.7,
+                "quatX": 0,
+                "quatY": 0.17410813759359595,
+                "quatZ": 0,
+                "quatW": 0.9847265389049334
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 58,
+            "components": {
+              "Name": {
+                "value": "Path_1"
+              },
+              "Transform": {
+                "posX": 0.8,
+                "posY": 0.012,
+                "posZ": 16.1,
+                "scaleX": 2.1,
+                "scaleY": 0.03,
+                "scaleZ": 3.620294101747088,
+                "quatX": 0,
+                "quatY": 0.3092441718907663,
+                "quatZ": 0,
+                "quatW": 0.9509826718461247
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  7
+                ]
+              }
+            }
+          },
+          {
+            "localId": 59,
+            "components": {
+              "Name": {
+                "value": "Path_2"
+              },
+              "Transform": {
+                "posX": 2.6,
+                "posY": 0.012,
+                "posZ": 18.1,
+                "scaleX": 2.1,
+                "scaleY": 0.03,
+                "scaleZ": 3.590724809414742,
+                "quatX": 0,
+                "quatY": 0.4068385849311433,
+                "quatZ": 0,
+                "quatW": 0.9135000633887361
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  7
+                ]
+              }
+            }
+          },
+          {
+            "localId": 60,
+            "components": {
+              "Name": {
+                "value": "Path_3"
+              },
+              "Transform": {
+                "posX": 4.8,
+                "posY": 0.012,
+                "posZ": 19.8,
+                "scaleX": 2.1,
+                "scaleY": 0.03,
+                "scaleZ": 3.7844410203711925,
+                "quatX": 0,
+                "quatY": 0.47185792553202416,
+                "quatZ": 0,
+                "quatW": 0.8816745987679439
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  7
+                ]
+              }
+            }
+          },
+          {
+            "localId": 61,
+            "components": {
+              "Name": {
+                "value": "Path_4"
+              },
+              "Transform": {
+                "posX": 7.35,
+                "posY": 0.012,
+                "posZ": 21.25,
+                "scaleX": 2.1,
+                "scaleY": 0.03,
+                "scaleZ": 3.896664812754337,
+                "quatX": 0,
+                "quatY": 0.5320640850626458,
+                "quatZ": 0,
+                "quatW": 0.8467040860811111
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  7
+                ]
+              }
+            }
+          },
+          {
+            "localId": 62,
+            "components": {
+              "Name": {
+                "value": "Path_5"
+              },
+              "Transform": {
+                "posX": 10.05,
+                "posY": 0.012,
+                "posZ": 22.45,
+                "scaleX": 2.1,
+                "scaleY": 0.03,
+                "scaleZ": 3.8154759474226516,
+                "quatX": 0,
+                "quatY": 0.5579888496585216,
+                "quatZ": 0,
+                "quatW": 0.8298484461977138
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  7
+                ]
+              }
+            }
+          },
+          {
+            "localId": 63,
+            "components": {
+              "Name": {
+                "value": "Path_6"
+              },
+              "Transform": {
+                "posX": 12.5,
+                "posY": 0.012,
+                "posZ": 23.4,
+                "scaleX": 2.1,
+                "scaleY": 0.03,
+                "scaleZ": 3.240939982143925,
+                "quatX": 0,
+                "quatY": 0.5736971923032634,
+                "quatZ": 0,
+                "quatW": 0.819067476795015
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  7
+                ]
+              }
+            }
+          },
+          {
+            "localId": 64,
+            "components": {
+              "Name": {
+                "value": "EmberCrack_1"
+              },
+              "Transform": {
+                "posX": 5.5,
+                "posY": 0.012,
+                "posZ": 22.8,
+                "scaleX": 1.2,
+                "scaleY": 0.03,
+                "scaleZ": 0.5,
+                "quatX": 0,
+                "quatY": 0.24740395925452294,
+                "quatZ": 0,
+                "quatW": 0.9689124217106447
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  10
+                ]
+              }
+            }
+          },
+          {
+            "localId": 65,
+            "components": {
+              "Name": {
+                "value": "EmberCrack_2"
+              },
+              "Transform": {
+                "posX": -12,
+                "posY": 0.012,
+                "posZ": 24,
+                "scaleX": 1.4,
+                "scaleY": 0.03,
+                "scaleZ": 0.55,
+                "quatX": 0,
+                "quatY": -0.14943813247359922,
+                "quatZ": 0,
+                "quatW": 0.9887710779360422
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  10
+                ]
+              }
+            }
+          },
+          {
+            "localId": 66,
+            "components": {
+              "Name": {
+                "value": "EmberCrack_3"
+              },
+              "Transform": {
+                "posX": 17,
+                "posY": 0.012,
+                "posZ": 7.5,
+                "scaleX": 1.1,
+                "scaleY": 0.03,
+                "scaleZ": 0.45,
+                "quatX": 0,
+                "quatY": 0.479425538604203,
+                "quatZ": 0,
+                "quatW": 0.8775825618903728
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  10
+                ]
+              }
+            }
+          },
+          {
+            "localId": 67,
+            "components": {
+              "Name": {
+                "value": "EmberCrack_4"
+              },
+              "Transform": {
+                "posX": -6,
+                "posY": 0.012,
+                "posZ": 17,
+                "scaleX": 0.9,
+                "scaleY": 0.03,
+                "scaleZ": 0.4,
+                "quatX": 0,
+                "quatY": 0.04997916927067833,
+                "quatZ": 0,
+                "quatW": 0.9987502603949663
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  10
+                ]
+              }
+            }
           }
         ]
       },
@@ -868,7 +1792,11 @@
         "f5224c4e-af10-48a7-8ff2-2dab3db1029b",
         "f9829c51-c168-4428-8d8a-e3d25a285ec0",
         "29503b73-c506-4686-b5b5-6f6ed1b4ef64",
-        "4d6d9779-c110-4d95-bb34-f8f3cc065a9a"
+        "4d6d9779-c110-4d95-bb34-f8f3cc065a9a",
+        "f6945c72-1137-4f27-8e8b-936120ef5788",
+        "a2057f75-55c2-495f-aa42-38ff3ad4dc61",
+        "33957bec-ee68-471c-8292-05aaaaca1b06",
+        "1a9dede1-d821-4de7-8a91-2622e21f160f"
       ]
     },
     {
@@ -1095,6 +2023,124 @@
           ],
           "metallic": 0,
           "roughness": 0.8
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "f6945c72-1137-4f27-8e8b-936120ef5788",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.23,
+            0.13,
+            0.07,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.98
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "a2057f75-55c2-495f-aa42-38ff3ad4dc61",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.24,
+            0.21,
+            0.18,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.97
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "33957bec-ee68-471c-8292-05aaaaca1b06",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.16,
+            0.12,
+            0.09,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.9
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "1a9dede1-d821-4de7-8a91-2622e21f160f",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.3,
+            0.06,
+            0.02,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.6,
+          "emissive": [
+            1,
+            0.15,
+            0.03
+          ],
+          "emissiveIntensity": 1.5
         }
       },
       "refs": []

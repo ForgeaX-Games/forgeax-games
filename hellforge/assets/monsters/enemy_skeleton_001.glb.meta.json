@@ -1,0 +1,168 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "mixamorig:HeadTop_End",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:LeftHandThumb4",
+        "mixamorig:LeftHandThumb3",
+        "mixamorig:LeftHandThumb2",
+        "mixamorig:LeftHandThumb1",
+        "mixamorig:LeftHandIndex4",
+        "mixamorig:LeftHandIndex3",
+        "mixamorig:LeftHandIndex2",
+        "mixamorig:LeftHandIndex1",
+        "mixamorig:LeftHandMiddle4",
+        "mixamorig:LeftHandMiddle3",
+        "mixamorig:LeftHandMiddle2",
+        "mixamorig:LeftHandMiddle1",
+        "mixamorig:LeftHandRing4",
+        "mixamorig:LeftHandRing3",
+        "mixamorig:LeftHandRing2",
+        "mixamorig:LeftHandRing1",
+        "mixamorig:LeftHandPinky4",
+        "mixamorig:LeftHandPinky3",
+        "mixamorig:LeftHandPinky2",
+        "mixamorig:LeftHandPinky1",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:RightHandThumb4",
+        "mixamorig:RightHandThumb3",
+        "mixamorig:RightHandThumb2",
+        "mixamorig:RightHandThumb1",
+        "mixamorig:RightHandIndex4",
+        "mixamorig:RightHandIndex3",
+        "mixamorig:RightHandIndex2",
+        "mixamorig:RightHandIndex1",
+        "mixamorig:RightHandMiddle4",
+        "mixamorig:RightHandMiddle3",
+        "mixamorig:RightHandMiddle2",
+        "mixamorig:RightHandMiddle1",
+        "mixamorig:RightHandRing4",
+        "mixamorig:RightHandRing3",
+        "mixamorig:RightHandRing2",
+        "mixamorig:RightHandRing1",
+        "mixamorig:RightHandPinky4",
+        "mixamorig:RightHandPinky3",
+        "mixamorig:RightHandPinky2",
+        "mixamorig:RightHandPinky1",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:LeftToe_End",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "SM_skeleton_001",
+        "SM_wea_skeleton001B",
+        "SM_wea_skeleton_001",
+        "Armature"
+      ],
+      "unsupportedExtensions": [
+        "KHR_materials_specular"
+      ]
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "enemy_skeleton_001.glb",
+  "subAssets": [
+    {
+      "guid": "019f23d5-2def-7031-9f05-5c59635280fd",
+      "kind": "mesh",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-51219ff83117",
+      "kind": "mesh",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-5122a2a9c182",
+      "kind": "mesh",
+      "sourceIndex": 2
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-51235e5e94d0",
+      "kind": "material",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-51246903990c",
+      "kind": "material",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-512526deef3e",
+      "kind": "material",
+      "sourceIndex": 2
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-512679f0b5d5",
+      "kind": "scene",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-5127da1eaa4c",
+      "kind": "texture",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-51284be0a8dc",
+      "kind": "texture",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-51297ef3414a",
+      "kind": "skeleton",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-512a3a2fdc01",
+      "kind": "skin",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-512b774f1af4",
+      "kind": "animation-clip",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-512cdc628173",
+      "kind": "animation-clip",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-512de86b7782",
+      "kind": "animation-clip",
+      "sourceIndex": 2
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-512e96c663fc",
+      "kind": "animation-clip",
+      "sourceIndex": 3
+    },
+    {
+      "guid": "019f23d5-2df0-7a46-bee0-512fa2239ae4",
+      "kind": "animation-clip",
+      "sourceIndex": 4
+    }
+  ]
+}

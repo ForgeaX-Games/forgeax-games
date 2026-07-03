@@ -4,7 +4,7 @@
   "schemaVersion": "1.0.0",
   "entry": "main.ts",
   "physics": "3d",
-  "pointerLock": true,
+  "pointerLock": false,
   "defaultScene": "2748fc78-a386-4b9b-b7d5-cd771eaf6a71",
   "preview": {
     "skin": {

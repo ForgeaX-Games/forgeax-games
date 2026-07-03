@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "shader",
+  "source": "fire-bolt.wgsl",
+  "importSettings": { "materialShaderIdentifier": "hellforge::fire_bolt" },
+  "subAssets": [
+    { "guid": "452ffff0-8519-414b-93c8-b2e001d6ff53", "sourceIndex": 0, "kind": "material-shader" }
+  ],
+  "paramSchema": [
+    { "name": "baseColor", "type": "color" },
+    { "name": "metallic",  "type": "f32" },
+    { "name": "roughness", "type": "f32" }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "mixamorig:HeadTop_End",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:LeftHandIndex4",
+        "mixamorig:LeftHandIndex3",
+        "mixamorig:LeftHandIndex2",
+        "mixamorig:LeftHandIndex1",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:RightHandIndex4",
+        "mixamorig:RightHandIndex3",
+        "mixamorig:RightHandIndex2",
+        "mixamorig:RightHandIndex1",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:LeftToe_End",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "SM_lich_001",
+        "SM_wea_lich_001",
+        "Armature"
+      ],
+      "unsupportedExtensions": [
+        "KHR_materials_specular"
+      ]
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "enemy_boss_lich_001.glb",
+  "subAssets": [
+    {
+      "guid": "019f23de-5d33-7acd-a98b-440b2a2ec985",
+      "kind": "mesh",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23de-5d35-7098-aa80-3a52d6721ef9",
+      "kind": "mesh",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23de-5d35-7098-aa80-3a5310191b54",
+      "kind": "material",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23de-5d35-7098-aa80-3a544943c2fb",
+      "kind": "material",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23de-5d35-7098-aa80-3a5547e52c7b",
+      "kind": "scene",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23de-5d35-7098-aa80-3a5609686dcc",
+      "kind": "texture",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23de-5d35-7098-aa80-3a57b491e15a",
+      "kind": "texture",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23de-5d35-7098-aa80-3a58af14fd96",
+      "kind": "skeleton",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23de-5d35-7098-aa80-3a591361a0fc",
+      "kind": "skin",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23de-5d35-7098-aa80-3a5a6c9f5441",
+      "kind": "animation-clip",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23de-5d35-7098-aa80-3a5b18b27cf5",
+      "kind": "animation-clip",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23de-5d35-7098-aa80-3a5c1c140e16",
+      "kind": "animation-clip",
+      "sourceIndex": 2
+    },
+    {
+      "guid": "019f23de-5d35-7098-aa80-3a5d99262426",
+      "kind": "animation-clip",
+      "sourceIndex": 3
+    },
+    {
+      "guid": "019f23de-5d35-7098-aa80-3a5e73f0f527",
+      "kind": "animation-clip",
+      "sourceIndex": 4
+    }
+  ]
+}

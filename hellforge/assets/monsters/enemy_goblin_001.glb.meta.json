@@ -1,0 +1,133 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "mixamorig:HeadTop_End",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:LeftHandThumb4",
+        "mixamorig:LeftHandThumb3",
+        "mixamorig:LeftHandThumb2",
+        "mixamorig:LeftHandThumb1",
+        "mixamorig:LeftHandIndex4",
+        "mixamorig:LeftHandIndex3",
+        "mixamorig:LeftHandIndex2",
+        "mixamorig:LeftHandIndex1",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:RightHandThumb4",
+        "mixamorig:RightHandThumb3",
+        "mixamorig:RightHandThumb2",
+        "mixamorig:RightHandThumb1",
+        "mixamorig:RightHandIndex4",
+        "mixamorig:RightHandIndex3",
+        "mixamorig:RightHandIndex2",
+        "mixamorig:RightHandIndex1",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:LeftToe_End",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToe_End",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:Hips",
+        "SM_Gebulin_001",
+        "SM_wea_goblin_001",
+        "Armature"
+      ],
+      "unsupportedExtensions": [
+        "KHR_materials_specular"
+      ]
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "enemy_goblin_001.glb",
+  "subAssets": [
+    {
+      "guid": "019f23d5-2dc8-7884-915f-af6ecc169a47",
+      "kind": "mesh",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2dc8-7884-915f-af6f5aece4ad",
+      "kind": "mesh",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23d5-2dc8-7884-915f-af702c1bbd72",
+      "kind": "material",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2dc8-7884-915f-af71b656ab43",
+      "kind": "material",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23d5-2dc8-7884-915f-af72d70bf346",
+      "kind": "scene",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2dc8-7884-915f-af7366922111",
+      "kind": "texture",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2dc8-7884-915f-af74bb064ef7",
+      "kind": "texture",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23d5-2dc8-7884-915f-af75ade15c7d",
+      "kind": "skeleton",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2dc8-7884-915f-af76eac8e7d8",
+      "kind": "skin",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2dc8-7884-915f-af770ada4df4",
+      "kind": "animation-clip",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f23d5-2dc8-7884-915f-af781cd2b4fe",
+      "kind": "animation-clip",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f23d5-2dc8-7884-915f-af79a6454a16",
+      "kind": "animation-clip",
+      "sourceIndex": 2
+    },
+    {
+      "guid": "019f23d5-2dc8-7884-915f-af7a1a85e5fa",
+      "kind": "animation-clip",
+      "sourceIndex": 3
+    },
+    {
+      "guid": "019f23d5-2dc8-7884-915f-af7bd5f4f2e4",
+      "kind": "animation-clip",
+      "sourceIndex": 4
+    }
+  ]
+}

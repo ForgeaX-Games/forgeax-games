@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "shader",
+  "source": "portal-vortex.wgsl",
+  "importSettings": { "materialShaderIdentifier": "hellforge::portal_vortex" },
+  "subAssets": [
+    { "guid": "a625b4bd-5797-4763-9a92-8ea3d1421e68", "sourceIndex": 0, "kind": "material-shader" }
+  ],
+  "paramSchema": [
+    { "name": "baseColor", "type": "color" },
+    { "name": "metallic",  "type": "f32" },
+    { "name": "roughness", "type": "f32" }
+  ]
+}
