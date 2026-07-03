@@ -61,10 +61,17 @@ underneath is doing — forging entities + meshes + materials per frame.
       ground (equipment never expires). Magic find shifts rarity weights on
       every kill roll; the boss loot-explodes 3-5 items (no commons, 22%
       legendary weight); legendary drops get a banner + fanfare + fat beam.
-- [x] **PCG dungeon** — `src/dungeon.ts`: seeded rooms + Prim-connected
-      L-corridors on a 44×44 grid, merged-slab geometry (~120 entities),
-      torches, boss room with braziers, per-room monster packs scaled by
-      depth. Walkability grid doubles as movement collision.
+- [x] **PCG dungeon as an EDITABLE SCENE** — `src/dungeon-layout.ts` is a
+      pure seeded generator (rooms + Prim-connected L-corridors on a 44×44
+      grid, torches, decor, boss braziers, per-room monster packs scaled by
+      depth). `bun scripts/bake-dungeon.ts` bakes its geometry into
+      `scenes/slagdeep-hollow.pack.json` — the editor lists it next to
+      rogue-encampment (click to edit; Launcher "Only slagdeep-hollow"
+      starts the run inside the den). Runtime re-runs the SAME fixed seed
+      for the walkability grid + spawns (always matches the baked pack) and
+      instantiates the pack under a root at (300, 300); if the pack is
+      missing it falls back to spawning from the layout. Re-run the bake
+      after ANY dungeon-layout.ts change.
 - [x] **Quest**: 清剿熔渣深窟 (clear the den) → banner + xp/gold reward.
 - [x] **ARPG HUD** — `src/hud.ts`: HP/mana orbs, 4 skill slots with
       cooldown veils + mana costs + unlock levels, XP strip, quest tracker,
@@ -118,14 +125,17 @@ hellforge/
     skills.ts             — SKILLS table + projectile system
     monsters.ts           — MONSTERS bestiary + AI manager
     loot.ts               — drops + magnet pickup
-    dungeon.ts            — seeded PCG generator + walkability
+    dungeon-layout.ts     — PURE seeded dungeon generator (bake + runtime share it)
+    dungeon.ts            — runtime: baked-pack instantiate + walkability
     hud.ts                — ARPG DOM overlay (orbs / slots / quest / boss bar)
     fx.ts                 — shader registration + particle pools
     shaders/*.wgsl(.meta.json) — fire-bolt / portal-vortex
   assets/characters/witch.glb   — 33-joint skinned sorceress + 5 clips
   assets/monsters/*.glb(.meta.json) — skinned monster rigs (imported via
                             engine cli-gltf; meta.json carries the GUIDs)
-  scenes/rogue-encampment.pack.json — native scene pack (Edit renders this)
+  scenes/rogue-encampment.pack.json — camp scene pack (editable)
+  scenes/slagdeep-hollow.pack.json  — BAKED dungeon scene (editable; regenerate
+                            via `bun scripts/bake-dungeon.ts`)
   tsconfig.check.json     — dev typecheck (needs games/node_modules symlink
                             → editor/packages/play-runtime/node_modules)
 ```

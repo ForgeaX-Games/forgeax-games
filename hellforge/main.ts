@@ -311,7 +311,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     x > CAMP_RECT.x0 && x < CAMP_RECT.x1 && z > CAMP_RECT.z0 && z < CAMP_RECT.z1;
 
   // ── PCG dungeon (熔渣深窟) ─────────────────────────────────────────────
-  const dungeon = new Dungeon(world, (Math.random() * 0x7fffffff) | 0);
+  // Layout (walkability/spawns) regenerates from the fixed seed; the static
+  // geometry comes from the EDITABLE baked scene pack (see src/dungeon.ts).
+  const dungeon = new Dungeon(world);
+  await dungeon.installGeometry(assets);
   console.log(`[hellforge] den generated — ${dungeon.roomCount} rooms, ${dungeon.monsterSpawns.length} monsters`);
 
   // Combined walkability: dungeon grid inside the den, open bounds outside.
@@ -845,7 +848,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   refreshSkillBar();
   refreshQuest();
   applyEquipment();          // paints the (empty) equip slots + baseline mods
-  hud.showArea('余烬哨站', 'Cinderwatch · 第一幕');
 
   const enterArea = (next: Area): void => {
     if (next === area) return;
@@ -855,6 +857,26 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     else hud.showArea('余烬哨站', 'Cinderwatch');
     refreshQuest();
   };
+
+  // ── launcher config (editor Launcher 面板写入 play-config.json) ────────
+  // { "mode": "level", "level": "slagdeep-hollow" } → start INSIDE the den
+  // (the scene the user picked in the editor). Anything else / missing file
+  // = normal campaign start at the camp.
+  let startedInDen = false;
+  try {
+    const r = await fetch(new URL('./play-config.json', import.meta.url), { cache: 'no-store' });
+    if (r.ok) {
+      const cfg = await r.json() as { mode?: string; level?: string };
+      if (cfg.mode === 'level' && cfg.level === 'slagdeep-hollow') {
+        state.px = dungeon.entry.x;
+        state.pz = dungeon.entry.z;
+        focusX = state.px; focusZ = state.pz;
+        startedInDen = true;
+      }
+    }
+  } catch { /* no launcher config → campaign */ }
+  if (startedInDen) enterArea('den');
+  else hud.showArea('余烬哨站', 'Cinderwatch · 第一幕');
 
   // ── input ─────────────────────────────────────────────────────────────
   ((window as unknown as { __hf: Record<string, unknown> }).__hf).keys = keys;

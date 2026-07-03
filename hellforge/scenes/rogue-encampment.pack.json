@@ -873,16 +873,16 @@
                 "scaleY": 1.0499999999999998,
                 "scaleZ": 1.275,
                 "quatX": 0,
-                "quatY": 0.19866933079506122,
+                "quatY": 0.19866922982851135,
                 "quatZ": 0,
-                "quatW": 0.9800665778412416
+                "quatW": 0.9800665983081691
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
@@ -897,20 +897,20 @@
                 "posX": -19,
                 "posY": 0.32,
                 "posZ": 8,
-                "scaleX": 1.0,
+                "scaleX": 1,
                 "scaleY": 0.7,
                 "scaleZ": 0.85,
                 "quatX": 0,
-                "quatY": 0.5646424733950354,
+                "quatY": 0.564642218316556,
                 "quatZ": 0,
-                "quatW": 0.8253356149096783
+                "quatW": 0.8253357894181972
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
@@ -929,16 +929,16 @@
                 "scaleY": 1.26,
                 "scaleZ": 1.53,
                 "quatX": 0,
-                "quatY": 0.34289780745545134,
+                "quatY": 0.3428974331611294,
                 "quatZ": 0,
-                "quatW": 0.9393727128473789
+                "quatW": 0.9393728494753874
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
@@ -956,17 +956,17 @@
                 "scaleX": 0.9,
                 "scaleY": 0.63,
                 "scaleZ": 0.765,
-                "quatX": 0,
-                "quatY": 0.867423225594017,
-                "quatZ": 0,
-                "quatW": 0.49757104789172696
+                "quatX": 8.35818007018523e-17,
+                "quatY": -0.867423065033106,
+                "quatZ": 8.35818007018523e-17,
+                "quatW": -0.4975713277999166
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
@@ -985,16 +985,16 @@
                 "scaleY": 0.84,
                 "scaleZ": 1.02,
                 "quatX": 0,
-                "quatY": 0.09983341664682815,
+                "quatY": 0.09983379954657942,
                 "quatZ": 0,
-                "quatW": 0.9950041652780258
+                "quatW": 0.9950041268598304
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
@@ -1012,17 +1012,17 @@
                 "scaleX": 0.8,
                 "scaleY": 0.5599999999999999,
                 "scaleZ": 0.68,
-                "quatX": 0,
-                "quatY": 0.7173560908995228,
-                "quatZ": 0,
-                "quatW": 0.6967067093471654
+                "quatX": 8.658637462680365e-17,
+                "quatY": -0.7173558038003053,
+                "quatZ": 8.658637462680365e-17,
+                "quatW": -0.6967070049554676
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
@@ -1041,16 +1041,16 @@
                 "scaleY": 0.77,
                 "scaleZ": 0.935,
                 "quatX": 0,
-                "quatY": 0.43496553411123023,
+                "quatY": 0.4349655218389916,
                 "quatZ": 0,
-                "quatW": 0.9004471023526769
+                "quatW": 0.9004471082808438
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
@@ -1069,16 +1069,16 @@
                 "scaleY": 0.48999999999999994,
                 "scaleZ": 0.595,
                 "quatX": 0,
-                "quatY": 0.24740395925452294,
+                "quatY": 0.24740404586661272,
                 "quatZ": 0,
-                "quatW": 0.9689124217106447
+                "quatW": 0.9689123995949432
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
@@ -1097,16 +1097,16 @@
                 "scaleY": 2.3,
                 "scaleZ": 0.28,
                 "quatX": 0,
-                "quatY": 0.14943813247359922,
+                "quatY": 0.14943784035974159,
                 "quatZ": 0,
-                "quatW": 0.9887710779360422
+                "quatW": 0.9887711220846898
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  9
+                  8
                 ]
               }
             }
@@ -1125,16 +1125,16 @@
                 "scaleY": 0.11,
                 "scaleZ": 0.11,
                 "quatX": 0,
-                "quatY": 0.36627252908604757,
+                "quatY": 0.3662722478440565,
                 "quatZ": 0,
-                "quatW": 0.9305076219123143
+                "quatW": 0.9305077326165871
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  9
+                  8
                 ]
               }
             }
@@ -1153,16 +1153,16 @@
                 "scaleY": 0.1,
                 "scaleZ": 0.1,
                 "quatX": 0,
-                "quatY": -0.14943813247359922,
+                "quatY": -0.14943784035974159,
                 "quatZ": 0,
-                "quatW": 0.9887710779360422
+                "quatW": 0.9887711220846898
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  9
+                  8
                 ]
               }
             }
@@ -1181,16 +1181,16 @@
                 "scaleY": 2.3,
                 "scaleZ": 0.28,
                 "quatX": 0,
-                "quatY": 0.5226872289306592,
+                "quatY": 0.5226875453819432,
                 "quatZ": 0,
-                "quatW": 0.8525245220595057
+                "quatW": 0.8525243280414929
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  9
+                  8
                 ]
               }
             }
@@ -1209,16 +1209,16 @@
                 "scaleY": 0.11,
                 "scaleZ": 0.11,
                 "quatX": 0,
-                "quatY": 0.6997160753466035,
+                "quatY": 0.699716335666359,
                 "quatZ": 0,
-                "quatW": 0.7144210340559314
+                "quatW": 0.7144207790942556
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  9
+                  8
                 ]
               }
             }
@@ -1237,16 +1237,16 @@
                 "scaleY": 0.1,
                 "scaleZ": 0.1,
                 "quatX": 0,
-                "quatY": 0.247403959254523,
+                "quatY": 0.24740404586661272,
                 "quatZ": 0,
-                "quatW": 0.9689124217106447
+                "quatW": 0.9689123995949432
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  9
+                  8
                 ]
               }
             }
@@ -1264,17 +1264,17 @@
                 "scaleX": 0.28,
                 "scaleY": 2.3,
                 "scaleZ": 0.28,
-                "quatX": 0,
-                "quatY": 0.8414709848078965,
-                "quatZ": 0,
-                "quatW": 0.5403023058681398
+                "quatX": 8.460920528474541e-17,
+                "quatY": -0.8414711780005867,
+                "quatZ": 8.460920528474541e-17,
+                "quatW": -0.5403020049882333
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  9
+                  8
                 ]
               }
             }
@@ -1292,17 +1292,17 @@
                 "scaleX": 1.15,
                 "scaleY": 0.11,
                 "scaleZ": 0.11,
-                "quatX": 0,
-                "quatY": 0.9408058391738721,
-                "quatZ": 0,
-                "quatW": 0.3389459735361172
+                "quatX": 7.836218513063323e-17,
+                "quatY": -0.9408059580589931,
+                "quatZ": 7.836218513063323e-17,
+                "quatW": -0.33894564354878515
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  9
+                  8
                 ]
               }
             }
@@ -1321,16 +1321,16 @@
                 "scaleY": 0.1,
                 "scaleZ": 0.1,
                 "quatX": 0,
-                "quatY": 0.644217687237691,
+                "quatY": 0.6442177451836567,
                 "quatZ": 0,
-                "quatW": 0.7648421872844885
+                "quatW": 0.7648421384772711
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  9
+                  8
                 ]
               }
             }
@@ -1349,16 +1349,16 @@
                 "scaleY": 2.3,
                 "scaleZ": 0.28,
                 "quatX": 0,
-                "quatY": 0.34289780745545134,
+                "quatY": 0.3428974331611294,
                 "quatZ": 0,
-                "quatW": 0.9393727128473789
+                "quatW": 0.9393728494753874
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  9
+                  8
                 ]
               }
             }
@@ -1377,16 +1377,16 @@
                 "scaleY": 0.11,
                 "scaleZ": 0.11,
                 "quatX": 0,
-                "quatY": 0.5438347906836426,
+                "quatY": 0.5438344505876228,
                 "quatZ": 0,
-                "quatW": 0.8391923024206541
+                "quatW": 0.8391925228182496
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  9
+                  8
                 ]
               }
             }
@@ -1405,16 +1405,16 @@
                 "scaleY": 0.1,
                 "scaleZ": 0.1,
                 "quatX": 0,
-                "quatY": 0.04997916927067832,
+                "quatY": 0.04997936144134714,
                 "quatZ": 0,
-                "quatW": 0.9987502603949663
+                "quatW": 0.9987502507783992
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  9
+                  8
                 ]
               }
             }
@@ -1428,21 +1428,21 @@
               "Transform": {
                 "posX": -4.2,
                 "posY": 0.35,
-                "posZ": -5.0,
+                "posZ": -5,
                 "scaleX": 0.7,
                 "scaleY": 0.7,
                 "scaleZ": 0.7,
                 "quatX": 0,
-                "quatY": 0.09983341664682815,
+                "quatY": 0.09983379954657942,
                 "quatZ": 0,
-                "quatW": 0.9950041652780258
+                "quatW": 0.9950041268598304
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  9
+                  8
                 ]
               }
             }
@@ -1461,16 +1461,16 @@
                 "scaleY": 0.55,
                 "scaleZ": 0.55,
                 "quatX": 0,
-                "quatY": 0.29552020666133955,
+                "quatY": 0.29552047587722863,
                 "quatZ": 0,
-                "quatW": 0.955336489125606
+                "quatW": 0.955336405847331
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
@@ -1489,16 +1489,16 @@
                 "scaleY": 0.7,
                 "scaleZ": 0.7,
                 "quatX": 0,
-                "quatY": 0.17410813759359595,
+                "quatY": 0.17410794141079927,
                 "quatZ": 0,
-                "quatW": 0.9847265389049334
+                "quatW": 0.9847265735917223
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  9
+                  8
                 ]
               }
             }
@@ -1517,16 +1517,16 @@
                 "scaleY": 0.03,
                 "scaleZ": 3.620294101747088,
                 "quatX": 0,
-                "quatY": 0.3092441718907663,
+                "quatY": 0.3092443927648388,
                 "quatZ": 0,
-                "quatW": 0.9509826718461247
+                "quatW": 0.9509826000214232
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  7
+                  9
                 ]
               }
             }
@@ -1545,16 +1545,16 @@
                 "scaleY": 0.03,
                 "scaleZ": 3.590724809414742,
                 "quatX": 0,
-                "quatY": 0.4068385849311433,
+                "quatY": 0.4068386845451911,
                 "quatZ": 0,
-                "quatW": 0.9135000633887361
+                "quatW": 0.9135000190243777
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  7
+                  9
                 ]
               }
             }
@@ -1573,16 +1573,16 @@
                 "scaleY": 0.03,
                 "scaleZ": 3.7844410203711925,
                 "quatX": 0,
-                "quatY": 0.47185792553202416,
+                "quatY": 0.47185767567486947,
                 "quatZ": 0,
-                "quatW": 0.8816745987679439
+                "quatW": 0.8816747324873894
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  7
+                  9
                 ]
               }
             }
@@ -1601,16 +1601,16 @@
                 "scaleY": 0.03,
                 "scaleZ": 3.896664812754337,
                 "quatX": 0,
-                "quatY": 0.5320640850626458,
+                "quatY": 0.5320637435542374,
                 "quatZ": 0,
-                "quatW": 0.8467040860811111
+                "quatW": 0.846704300682978
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  7
+                  9
                 ]
               }
             }
@@ -1629,16 +1629,16 @@
                 "scaleY": 0.03,
                 "scaleZ": 3.8154759474226516,
                 "quatX": 0,
-                "quatY": 0.5579888496585216,
+                "quatY": 0.5579891814925514,
                 "quatZ": 0,
-                "quatW": 0.8298484461977138
+                "quatW": 0.8298482230729138
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  7
+                  9
                 ]
               }
             }
@@ -1657,16 +1657,16 @@
                 "scaleY": 0.03,
                 "scaleZ": 3.240939982143925,
                 "quatX": 0,
-                "quatY": 0.5736971923032634,
+                "quatY": 0.5736972389199263,
                 "quatZ": 0,
-                "quatW": 0.819067476795015
+                "quatW": 0.8190674441434314
               },
               "MeshFilter": {
                 "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  7
+                  9
                 ]
               }
             }
@@ -1685,9 +1685,9 @@
                 "scaleY": 0.03,
                 "scaleZ": 0.5,
                 "quatX": 0,
-                "quatY": 0.24740395925452294,
+                "quatY": 0.24740404586661272,
                 "quatZ": 0,
-                "quatW": 0.9689124217106447
+                "quatW": 0.9689123995949432
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1713,9 +1713,9 @@
                 "scaleY": 0.03,
                 "scaleZ": 0.55,
                 "quatX": 0,
-                "quatY": -0.14943813247359922,
+                "quatY": -0.14943784035974159,
                 "quatZ": 0,
-                "quatW": 0.9887710779360422
+                "quatW": 0.9887711220846898
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1741,9 +1741,9 @@
                 "scaleY": 0.03,
                 "scaleZ": 0.45,
                 "quatX": 0,
-                "quatY": 0.479425538604203,
+                "quatY": 0.4794256955002343,
                 "quatZ": 0,
-                "quatW": 0.8775825618903728
+                "quatW": 0.8775824761776619
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1769,9 +1769,9 @@
                 "scaleY": 0.03,
                 "scaleZ": 0.4,
                 "quatX": 0,
-                "quatY": 0.04997916927067833,
+                "quatY": 0.04997936144134714,
                 "quatZ": 0,
-                "quatW": 0.9987502603949663
+                "quatW": 0.9987502507783992
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1787,20 +1787,20 @@
       },
       "refs": [
         "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
-        "83410560-5519-4f3d-a4fb-f142024ea759",
-        "0f05c8db-c397-486e-9b45-a35976c6c5e9",
-        "f5224c4e-af10-48a7-8ff2-2dab3db1029b",
-        "f9829c51-c168-4428-8d8a-e3d25a285ec0",
-        "29503b73-c506-4686-b5b5-6f6ed1b4ef64",
-        "4d6d9779-c110-4d95-bb34-f8f3cc065a9a",
-        "f6945c72-1137-4f27-8e8b-936120ef5788",
-        "a2057f75-55c2-495f-aa42-38ff3ad4dc61",
-        "33957bec-ee68-471c-8292-05aaaaca1b06",
-        "1a9dede1-d821-4de7-8a91-2622e21f160f"
+        "e78f98e1-9618-55d6-aec3-9c6b9ea9f170",
+        "458ae402-85e7-5291-9466-565c5769c9d3",
+        "babf66af-96c1-53c0-985b-9ca5117b6e0e",
+        "6dd84a04-0d1e-57cf-8831-129611d97da9",
+        "5844fc02-52b8-5deb-8ce1-5954940f22b5",
+        "04567fb1-fc99-5f90-91b4-75ab7b2e2872",
+        "9e6bd210-da75-5863-9f49-dad276d4195d",
+        "f435d756-a8af-5cab-856a-74349d54d749",
+        "4a7328b1-ccac-5e52-b44f-1447d54531a0",
+        "631b97b5-6364-5bcc-87a4-b273b15b1922"
       ]
     },
     {
-      "guid": "83410560-5519-4f3d-a4fb-f142024ea759",
+      "guid": "e78f98e1-9618-55d6-aec3-9c6b9ea9f170",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -1836,7 +1836,7 @@
       "refs": []
     },
     {
-      "guid": "0f05c8db-c397-486e-9b45-a35976c6c5e9",
+      "guid": "458ae402-85e7-5291-9466-565c5769c9d3",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -1872,7 +1872,7 @@
       "refs": []
     },
     {
-      "guid": "f5224c4e-af10-48a7-8ff2-2dab3db1029b",
+      "guid": "babf66af-96c1-53c0-985b-9ca5117b6e0e",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -1908,7 +1908,7 @@
       "refs": []
     },
     {
-      "guid": "f9829c51-c168-4428-8d8a-e3d25a285ec0",
+      "guid": "6dd84a04-0d1e-57cf-8831-129611d97da9",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -1950,7 +1950,7 @@
       "refs": []
     },
     {
-      "guid": "29503b73-c506-4686-b5b5-6f6ed1b4ef64",
+      "guid": "5844fc02-52b8-5deb-8ce1-5954940f22b5",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -1992,7 +1992,7 @@
       "refs": []
     },
     {
-      "guid": "4d6d9779-c110-4d95-bb34-f8f3cc065a9a",
+      "guid": "04567fb1-fc99-5f90-91b4-75ab7b2e2872",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -2028,7 +2028,7 @@
       "refs": []
     },
     {
-      "guid": "f6945c72-1137-4f27-8e8b-936120ef5788",
+      "guid": "9e6bd210-da75-5863-9f49-dad276d4195d",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -2040,41 +2040,21 @@
               "LightMode": "Forward"
             },
             "queue": 2000
-          }
-        ],
-        "paramValues": {
-          "baseColor": [
-            0.23,
-            0.13,
-            0.07,
-            1
-          ],
-          "metallic": 0,
-          "roughness": 0.98
-        }
-      },
-      "refs": []
-    },
-    {
-      "guid": "a2057f75-55c2-495f-aa42-38ff3ad4dc61",
-      "kind": "material",
-      "payload": {
-        "kind": "material",
-        "passes": [
+          },
           {
-            "name": "Forward",
-            "shader": "forgeax::default-standard-pbr",
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
             "tags": {
-              "LightMode": "Forward"
+              "LightMode": "ShadowCaster"
             },
-            "queue": 2000
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
           "baseColor": [
-            0.24,
-            0.21,
-            0.18,
+            0.23921568627450981,
+            0.21176470588235294,
+            0.1803921568627451,
             1
           ],
           "metallic": 0,
@@ -2084,7 +2064,7 @@
       "refs": []
     },
     {
-      "guid": "33957bec-ee68-471c-8292-05aaaaca1b06",
+      "guid": "f435d756-a8af-5cab-856a-74349d54d749",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -2096,13 +2076,21 @@
               "LightMode": "Forward"
             },
             "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
           "baseColor": [
-            0.16,
-            0.12,
-            0.09,
+            0.1607843137254902,
+            0.12156862745098039,
+            0.09019607843137255,
             1
           ],
           "metallic": 0,
@@ -2112,7 +2100,7 @@
       "refs": []
     },
     {
-      "guid": "1a9dede1-d821-4de7-8a91-2622e21f160f",
+      "guid": "4a7328b1-ccac-5e52-b44f-1447d54531a0",
       "kind": "material",
       "payload": {
         "kind": "material",
@@ -2124,21 +2112,65 @@
               "LightMode": "Forward"
             },
             "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
           "baseColor": [
-            0.3,
-            0.06,
-            0.02,
+            0.23137254901960785,
+            0.12941176470588237,
+            0.07058823529411765,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.98
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "631b97b5-6364-5bcc-87a4-b273b15b1922",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.30196078431372547,
+            0.058823529411764705,
+            0.0196078431372549,
             1
           ],
           "metallic": 0,
           "roughness": 0.6,
           "emissive": [
             1,
-            0.15,
-            0.03
+            0.14901960784313725,
+            0.03137254901960784
           ],
           "emissiveIntensity": 1.5
         }
