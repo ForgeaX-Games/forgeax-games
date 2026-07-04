@@ -23,11 +23,11 @@
                 "scaleZ": 50
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 30
               },
               "MeshRenderer": {
                 "materials": [
-                  1
+                  31
                 ]
               }
             }
