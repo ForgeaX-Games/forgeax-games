@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-den-slag.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "3e6bb883-cb54-4f12-ccfa-ebad769aa7bc",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "31bd7990-9af5-7b87-5d71-cb5a6bea3ad4",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "c6a5228a-02d9-2298-9deb-aba5bf5b676c",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "c43fb5d2-eaf3-2602-2892-c9fc5e9b03fa",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "8f0063c9-18d0-a7da-4ee8-1f274e0eee61",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "f3fe4d08-6323-ba30-2b50-933eb911214d",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "b6bad926-5424-010f-b483-1aa8657ec544",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

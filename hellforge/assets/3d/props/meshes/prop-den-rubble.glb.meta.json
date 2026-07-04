@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-den-rubble.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "dbac8f2a-9d6d-2038-05cc-0e6d4aec6c80",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "5022f423-bff2-08df-1744-574acebb7035",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "258ce906-c42e-4ea1-e8bf-58afcd5430ed",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "244d3a39-428f-6f0c-b7ba-c253fc8627f7",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "5d01384a-d488-4297-41ce-768aba3c17fa",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "df6bb0b6-5058-fd66-3ccb-65471c1623d6",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "95fe8002-ac7d-e5d2-19ea-8d78d70fcfb8",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

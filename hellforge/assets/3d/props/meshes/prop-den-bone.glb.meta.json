@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-den-bone.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "f06139fe-79a4-7284-24fc-d533fb2d5038",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "f324df8f-fc78-df6e-1176-8f0cb7a6a400",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "b1c859a5-0f92-1c17-5e93-e78eb415fa85",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "7d2adf26-9526-8a8e-6a9c-4a77939213d1",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "3dc1bcef-ff54-a6a6-81d4-30b21ff614f2",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "1c37187f-f2c4-178e-fb1c-1180d32ff253",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "988e6daa-91c7-77e3-9b88-3e1abdd49f5b",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

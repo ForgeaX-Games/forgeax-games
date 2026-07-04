@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-campfire-log.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "c7c1600e-d970-bb1c-5cbc-96e442ca9793",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "2d6bf6c2-6d4f-3394-a74c-d2f323c59a7a",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "7b6ed6ca-ef6e-34a2-626c-be20c084fc26",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "92416ea9-63b3-ba23-0f9d-8cd7f36b378e",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "a10e754f-5744-1a8f-4813-98398ec29eeb",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "6a290f69-567c-a50b-b5c4-d11b5b51ee22",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "c33c7f25-043f-4cd2-1d39-1796a8268a52",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-den-floor-b.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "ad822e67-fb7f-4787-d754-2b1cd0704754",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "1891529a-ca02-d23d-d03d-193eade880c3",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "bac8d643-6db2-6ea6-cb7a-1a7e6f5da5b4",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "fdd2ab77-d7af-384d-94a1-37d5ffc53d25",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "a0b92853-c9e9-6ba9-0830-ef42546c241a",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "63a5ef50-aa37-19e5-6efa-4c1fa1ab93e6",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "1dd15daf-b698-011d-2f7f-5a15cd77b010",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

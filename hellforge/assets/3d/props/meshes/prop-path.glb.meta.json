@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-path.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "4ed0b190-8fe2-c792-c077-0a246851fb88",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "e93b43b3-76cb-07cd-3440-37a5318c92b8",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "a5c5fa8c-b5ad-ae9e-46fc-c097ae9e65c8",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "39d3c501-98e5-1a0b-a943-c0f91f2b910c",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "a40e0d9f-19da-e5a3-b0ac-2a824553c1c9",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "34e33901-e6ba-d08c-d570-42bb263e7d6c",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "571c4f4d-330f-0020-1121-e1eba95e0928",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

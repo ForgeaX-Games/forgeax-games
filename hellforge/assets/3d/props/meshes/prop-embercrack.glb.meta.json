@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-embercrack.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "3fba5fe8-4ca6-0261-3f3d-cbab48c083fb",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "d2b7dccf-94f3-3374-6ec0-892ad2d6ff8b",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "ff1fc056-a886-bafb-e2a9-91827cb71bd9",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "018062f0-6fee-b30f-3cf5-8fa2dbfeb4b7",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "f180c505-b427-9a33-315d-c03e87b62058",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "4c65d6b1-4cf4-66e1-d2a4-c99e87f313b8",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "697d36fa-1cee-83b6-dc30-26f86e20888c",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

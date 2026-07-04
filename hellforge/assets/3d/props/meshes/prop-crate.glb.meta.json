@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-crate.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "1222d52e-dd6b-1df0-50f4-cedc88aece59",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "85c4fd1e-d729-cab0-a6e1-61b5a0669637",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "10db28c3-d2b8-9dc3-4947-fc8d7b4ce956",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "3d8feb7f-b176-8786-cb82-3b785d295028",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "43865bbe-465f-54f7-49a3-c676def2cc92",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "42692c45-bd40-a295-a12a-2132e17d7114",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "a5523d87-085e-2e5c-9bd6-b52cffd82b8e",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

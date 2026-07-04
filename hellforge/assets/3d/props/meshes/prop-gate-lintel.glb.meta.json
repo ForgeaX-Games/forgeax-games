@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-gate-lintel.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "20b5893c-9192-122f-784d-cf5cda04236d",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "3889dd23-72ba-4ed6-92c9-dcfb70f7a339",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "41c5dbb9-9428-fc60-f200-57b93e27cced",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "1597edef-5f99-7e2a-ff7e-ebbbb20d3684",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "4631aff1-7301-3572-1e6b-01ebc7449925",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "d1154074-f2f1-66fd-83f4-ca3940da88a2",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "804b7ec3-c0d8-7b93-4e69-50819532480e",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

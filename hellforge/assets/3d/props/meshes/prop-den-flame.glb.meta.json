@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-den-flame.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "6bf342ae-12ed-4c13-6886-6b7941d10a20",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "e0c5bdf2-3ff6-60db-12a5-38bfc628134c",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "a3ec8ca2-e8aa-d13d-f25e-66ac4f622ff3",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "8e7a4a30-d15e-70f7-ee00-b2c988b005b6",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "0dc19cea-e305-d854-1d1d-d9c3335a08c1",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "91fde357-7bf6-493f-af63-b9878cc8e109",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "5ef2c368-2a66-59a5-a62b-9caa838a879f",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

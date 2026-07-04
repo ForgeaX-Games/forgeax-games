@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-torch-glow.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "8fcf4ee0-201c-7a7c-9684-246b39a1d4f5",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "9b4876f3-6809-05e3-2fb5-d35dd9288629",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "ec185175-e555-e2c2-dd40-51627d4a5aa6",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "d6cec569-186d-7c5f-6a23-912b201d7149",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "0db88a64-dabe-1908-ddf4-fc8a0ea5aba0",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "74b1891b-1b65-300c-0b67-67a094a42764",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "635754ce-d2f9-8108-80c3-f2f09dbfb6ae",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

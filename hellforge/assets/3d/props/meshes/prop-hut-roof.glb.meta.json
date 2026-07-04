@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-hut-roof.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "b4b971a0-58b3-da6e-bbdc-42d5e1fe7aa2",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "279a0951-1e45-95e6-11f5-a056c1902a09",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "84d0105a-5283-0abf-fa40-63c371c1c7c5",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "953fe253-cba0-8e85-c065-19b9e7533290",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "971f2134-dc68-5e84-e5cc-664a53cfbfe4",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "749507fa-9af1-8ca9-21a0-15e743880514",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "b1b878f2-cf24-dfed-7d51-b6c031d154ca",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

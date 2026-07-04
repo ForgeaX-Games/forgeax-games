@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-den-brazier.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "b0d5b543-3fa1-8587-daaf-258d57ab5bb7",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "c4d3f170-2b55-827e-6a82-d3a6f582bddc",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "827815b6-7b73-8bce-0d18-e347c96cf6f2",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "4ac02478-dbd1-fc60-f004-0a75e6c555d2",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "68db3b1d-5f53-6309-c044-f788a871ea72",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "bb4aa998-3124-edb8-dde9-34e28e59d042",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "149f0e2b-e93f-dc49-d8a5-740dff335486",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

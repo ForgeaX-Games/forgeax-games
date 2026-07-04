@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-den-torch-post.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "8fd189f8-2530-2ce3-3622-72ce7656a878",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "c31f3f58-3239-ff17-f84b-4857a65b9702",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "ada2f7da-f05f-a0ae-c07d-1d07f94ccb4b",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "1d2729a9-637c-b4a2-e3b8-4e2efee3835a",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "e3f67b90-2a78-a51e-0533-d71b30bd4296",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "e7126bcb-a73b-0c11-afd2-6f52d4e992d1",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "efb991ce-237d-6d0c-8d6a-e2ec7a94879a",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

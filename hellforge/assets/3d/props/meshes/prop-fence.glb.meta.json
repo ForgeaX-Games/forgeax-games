@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-fence.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "305476ce-0274-607c-2375-03d297f2f1f4",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "5a4a7873-5e5b-fd74-91cc-f91dd190031c",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "e52c7f15-c65a-c76b-3113-0b352a94e543",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "f9ee4b43-f8d6-4d24-0f3f-1274135fbcc9",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "643d19f9-aac5-8a89-0033-65907423e287",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "fd583b37-4d66-01bb-3afe-77a33ea35074",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "e0d9833b-734f-6ef3-4dcb-ab80a64a0f05",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

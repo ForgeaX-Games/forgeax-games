@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-hut-wall.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "cbc8c98c-0d8a-831e-dffb-86cd12f116c7",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "324cf068-fe0c-6837-5da9-de423168fafb",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "7fc097e5-8646-5878-5d24-8a538a56cadd",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "56605e30-709e-cecc-4a10-0d61bb8c130b",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "5dc07ff0-7f55-4740-bbb3-7574000a74ba",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "9a6f8076-524d-bdd7-6d83-236cae675f58",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "b82013c5-0509-bba7-20ce-be99fc79a265",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }

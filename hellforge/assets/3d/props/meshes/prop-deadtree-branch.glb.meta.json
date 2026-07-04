@@ -4,14 +4,43 @@
   "importer": "gltf",
   "source": "prop-deadtree-branch.glb",
   "importSettings": {
-    "colorSpace": "srgb",
-    "mipmap": "auto"
+    "defaultSceneIndex": 0
   },
   "subAssets": [
     {
       "guid": "18d5c820-1f74-5a9e-6182-f08be2c5bfe2",
       "sourceIndex": 0,
       "kind": "mesh"
+    },
+    {
+      "guid": "589e51f6-0738-0391-4abb-2666050e036a",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "e50f1638-ee96-513b-b5f4-d018a117756b",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "77946a92-ba83-1ca7-7553-57fe07bd8799",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "8354c895-a258-d48a-1d74-0bf98100a50d",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "f4ee34df-c1b6-14ba-bb7d-7ee94416cc69",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "89428abc-8809-1e9c-a7db-78c981b23d8a",
+      "sourceIndex": 3,
+      "kind": "texture"
     }
   ]
 }
