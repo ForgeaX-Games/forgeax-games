@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-den-torch-post.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "8fd189f8-2530-2ce3-3622-72ce7656a878",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

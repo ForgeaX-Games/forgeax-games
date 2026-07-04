@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T03:19:45.495Z",
+  "contentHash": "sha256:9b0b55250bfd7b5f611a684c6a77f456f9c54d3755fab1ea42a821ca84ca1970",
+  "size": 8674672,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "crate-verify.png",
+      "hash": "sha256:cf73f05170111f0cfc7f88f64cbaa920e4cc5a3ab6e5f1ef6a3b8c0b5814207b",
+      "kind": "preview_image"
+    },
+    {
+      "path": "crate-verify.base_color.png",
+      "hash": "sha256:84618d5be248dab46c623215eba3e6188b4b650494d594bab1b137de01f07edb",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "crate-verify.metallic.png",
+      "hash": "sha256:d67836634f399f2a246ac38cb1004da8db0e6c87b1ac3a94a576ab1a045a5df2",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "crate-verify.roughness.png",
+      "hash": "sha256:08825f377077c171e3c09128e97e795c02373f2914189723e1c116ef6c136473",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "crate-verify.normal.png",
+      "hash": "sha256:f82f7361ea9ade32188f4797bc15795ebd31d496ef1dc7b940c4ae418b80acf4",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "crate-verify.emission.png",
+      "hash": "sha256:70ea0934db52acdd65ecc059a9b3b643fe61cadffefcdd87dff005535388d36b",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjIyLTM1MmUtN2E4MC1hMjA2LWI4MDRhZTliMTY3Yw==",
+    "prompt": "wooden crate, game prop, dark fantasy, low poly",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-afa10a43",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1420, components=1, boundaryEdges=25, nonManifoldEdges=23, reasons: 23 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T03:19:45.682Z"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-campfire-base.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "ede76c1f-2f99-b5a7-66c2-5bc6e59728ef",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

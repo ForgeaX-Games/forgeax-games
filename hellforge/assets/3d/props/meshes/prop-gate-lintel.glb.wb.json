@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:34:31.724Z",
+  "contentHash": "sha256:a286ec30e32e0a46b15e139683bf89f7f1a0c1284caf8ea2fd567909b0ba60c2",
+  "size": 8354660,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-gate-lintel.png",
+      "hash": "sha256:e0a8888c219b08d1ef8f8069cda74769559fddb10bb592ec7a0b79f2d5d3f471",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-gate-lintel.base_color.png",
+      "hash": "sha256:a99e85e566845a3d6bcb89bbc0710574325f43268b15671a66699fbd64e55fd2",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-gate-lintel.metallic.png",
+      "hash": "sha256:86cee55b1aa235f5a31f2ca984084b012af93754d1def75a0f3dc1bc0f39874f",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-gate-lintel.roughness.png",
+      "hash": "sha256:0ab8121ac1776410d9a9f434da787521680687a679f94e8e1752b90876a6c4f3",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-gate-lintel.normal.png",
+      "hash": "sha256:0459c6b9276a076415de6b3bbc2275789ad5cbec432bb53f713bb849fac76418",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-gate-lintel.emission.png",
+      "hash": "sha256:f57ca1fb2a21ab3c7da1b0ac1ed3859b816a4ed6eb7b09700419e86f0b0e1c8e",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjY2LWVkMDctNzQ2My05ZTFhLTUwYWI4YTc1N2IyZg==",
+    "prompt": "low-poly dark fantasy stone gate lintel, weathered rough stone beam across gate, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-38b153cd",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1505, components=1, boundaryEdges=10, nonManifoldEdges=6, reasons: 6 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:34:31.845Z"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-fence.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "305476ce-0274-607c-2375-03d297f2f1f4",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

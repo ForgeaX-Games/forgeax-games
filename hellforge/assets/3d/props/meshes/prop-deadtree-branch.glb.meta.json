@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-deadtree-branch.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "18d5c820-1f74-5a9e-6182-f08be2c5bfe2",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "_comment": "hellforge 场景资产生成清单 — 25 原型,precise-lowpoly pipeline,Diablo 暗黑奇幻风",
+  "_pipeline": "precise-lowpoly",
+  "_targetPolycount": 1500,
+  "_enablePbr": true,
+  "_assetSlot": "meshes",
+  "rogue-encampment": [
+    { "name": "prop-boulder", "prompt": "low-poly dark fantasy boulder, jagged mossy stone rock, weathered grey, game prop, single object, no background, Diablo style" },
+    { "name": "prop-campfire-base", "prompt": "low-poly dark fantasy campfire base, ring of blackened stones around ash pit, burnt wood, game prop, single object, no background, Diablo style" },
+    { "name": "prop-campfire-log", "prompt": "low-poly dark fantasy burnt log, charred wooden log for campfire, blackened bark, game prop, single object, no background, Diablo style" },
+    { "name": "prop-crate", "prompt": "low-poly dark fantasy wooden crate, weathered planks with iron bands, rusty nails, game prop, single object, no background, Diablo style" },
+    { "name": "prop-deadtree-trunk", "prompt": "low-poly dark fantasy dead tree trunk, bare twisted bark, no leaves, weathered grey-brown, game prop, single object, no background, Diablo style" },
+    { "name": "prop-deadtree-branch", "prompt": "low-poly dark fantasy dead tree branch, broken twisted bare branch, weathered bark, game prop, single object, no background, Diablo style" },
+    { "name": "prop-embercrack", "prompt": "low-poly dark fantasy glowing ember crack in ground, molten lava fissure, emissive orange glow, game prop, single object, no background, Diablo style" },
+    { "name": "prop-fence", "prompt": "low-poly dark fantasy wooden fence post section, rough-hewn timber with rope binding, weathered, game prop, single object, no background, Diablo style" },
+    { "name": "prop-gate-column", "prompt": "low-poly dark fantasy stone gate column, weathered rough stone pillar, game prop, single object, no background, Diablo style" },
+    { "name": "prop-gate-lintel", "prompt": "low-poly dark fantasy stone gate lintel, weathered rough stone beam across gate, game prop, single object, no background, Diablo style" },
+    { "name": "prop-hut-roof", "prompt": "low-poly dark fantasy hut roof, weathered thatched wooden roof section, dark shingles, game prop, single object, no background, Diablo style" },
+    { "name": "prop-hut-wall", "prompt": "low-poly dark fantasy hut wall section, weathered stone and timber wall, rough plaster, game prop, single object, no background, Diablo style" },
+    { "name": "prop-path", "prompt": "low-poly dark fantasy dirt path section, trodden earth with small stones, game prop, single object, no background, Diablo style" },
+    { "name": "prop-torch-glow", "prompt": "low-poly dark fantasy torch flame, glowing fire flame, emissive orange-yellow, game prop, single object, no background, Diablo style" },
+    { "name": "prop-torch-post", "prompt": "low-poly dark fantasy torch post, iron torch holder on wooden stake, weathered metal, game prop, single object, no background, Diablo style" },
+    { "name": "prop-campfire-glow", "prompt": "low-poly dark fantasy campfire glow, glowing ember bed, emissive orange-red coals, game prop, single object, no background, Diablo style" }
+  ],
+  "slagdeep-hollow": [
+    { "name": "prop-den-bone", "prompt": "low-poly dark fantasy dungeon bone, human-like bone remains on floor, weathered skull and bones, game prop, single object, no background, Diablo style" },
+    { "name": "prop-den-brazier", "prompt": "low-poly dark fantasy dungeon brazier, iron fire basket on stand, glowing coals, game prop, single object, no background, Diablo style" },
+    { "name": "prop-den-flame", "prompt": "low-poly dark fantasy dungeon flame, torch flame on wall, emissive orange glow, game prop, single object, no background, Diablo style" },
+    { "name": "prop-den-floor-a", "prompt": "low-poly dark fantasy dungeon floor tile, weathered stone floor slab, cracked grey, game prop, single object, no background, Diablo style" },
+    { "name": "prop-den-floor-b", "prompt": "low-poly dark fantasy dungeon floor tile variant, weathered dark stone floor slab, cracked, game prop, single object, no background, Diablo style" },
+    { "name": "prop-den-rubble", "prompt": "low-poly dark fantasy dungeon rubble, pile of broken stone debris, grey rocks, game prop, single object, no background, Diablo style" },
+    { "name": "prop-den-slag", "prompt": "low-poly dark fantasy dungeon slag, glowing molten slag pile, emissive orange-red lava rock, game prop, single object, no background, Diablo style" },
+    { "name": "prop-den-torch-post", "prompt": "low-poly dark fantasy dungeon torch post, iron wall torch holder, weathered metal, game prop, single object, no background, Diablo style" },
+    { "name": "prop-den-wall", "prompt": "low-poly dark fantasy dungeon wall section, weathered rough cave stone wall, cracked grey, game prop, single object, no background, Diablo style" }
+  ]
+}

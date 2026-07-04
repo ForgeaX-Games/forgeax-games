@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-boulder.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "6b7d4106-61a6-310b-d930-9a30239a13f7",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

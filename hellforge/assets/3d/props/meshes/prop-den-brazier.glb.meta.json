@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-den-brazier.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "b0d5b543-3fa1-8587-daaf-258d57ab5bb7",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

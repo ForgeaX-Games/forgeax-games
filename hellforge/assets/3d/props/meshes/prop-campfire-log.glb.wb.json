@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:26:15.954Z",
+  "contentHash": "sha256:003d471705bda1d703ec95b823da0c9e17f9a8c5be63a2f070a3817803803799",
+  "size": 9321688,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-campfire-log.png",
+      "hash": "sha256:901f3113fa4a527c4cbde66ddeafc92c85c87f9a735de08db0b6520aa5d55d87",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-campfire-log.base_color.png",
+      "hash": "sha256:8c42eeab471f10ba2a4203fbcc127b9ee04ed6e33943d1a93d984de9edee1665",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-campfire-log.metallic.png",
+      "hash": "sha256:cf5de07f9889033fe12215a39f15fdef6afa991bfd9b1783c5a6062dd6ba9c2c",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-campfire-log.roughness.png",
+      "hash": "sha256:ab7c6a6814b163ca0e9dedc518619521124966d4563db24213c3b765343be77e",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-campfire-log.normal.png",
+      "hash": "sha256:5eb445c2a52bbd9329e8198447414bd68c4111a80f8f89c85e0b31796237cd9f",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-campfire-log.emission.png",
+      "hash": "sha256:691375c22fd175d13e136d920d0b221621e020a6ba882a09da88ee4c03e46ebf",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjVmLTBiZTQtNzJkZi1hNWVmLTcxNTc1M2UwN2YyZA==",
+    "prompt": "low-poly dark fantasy burnt log, charred wooden log for campfire, blackened bark, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-a1661e8e",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1540, components=1, boundaryEdges=14, nonManifoldEdges=11, reasons: 11 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:26:16.057Z"
+    }
+  }
+}

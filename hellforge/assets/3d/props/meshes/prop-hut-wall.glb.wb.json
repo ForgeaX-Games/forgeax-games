@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:48:42.038Z",
+  "contentHash": "sha256:cd27da0920a29557485d74856fe3b3a41655b0ba24ad113964c3163e52ae678e",
+  "size": 9794196,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-hut-wall.png",
+      "hash": "sha256:50334c5e389f3bc12838fa6d6c0d31bb04a49b078c6b279cfc4472f8ae98fc5a",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-hut-wall.base_color.png",
+      "hash": "sha256:a86ece6d91d1aa30a8338def22c7d2fc2f0effd73b7dcdafb9a668465cc16342",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-hut-wall.metallic.png",
+      "hash": "sha256:770d2d0af24c06bb7c57b38a9991cfffc17f92628a99397374ef37a448e4be09",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-hut-wall.roughness.png",
+      "hash": "sha256:bad23a109a25e1195fca8c6f56d2bbb235e0bbd1dfdff6f1f6d268d72cc3d4d9",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-hut-wall.normal.png",
+      "hash": "sha256:a53d3612025636454de1708e25d37ab741efdf846d5225dced994a09fec53a71",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-hut-wall.emission.png",
+      "hash": "sha256:f57ca1fb2a21ab3c7da1b0ac1ed3859b816a4ed6eb7b09700419e86f0b0e1c8e",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjczLTQ1OTgtNzVkMi1iYWQ3LTMyN2YyZTA4NmQ2OA==",
+    "prompt": "low-poly dark fantasy hut wall section, weathered stone and timber wall, rough plaster, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-afcd19b3",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1543, components=1, boundaryEdges=12, nonManifoldEdges=10, reasons: 10 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:48:42.113Z"
+    }
+  }
+}

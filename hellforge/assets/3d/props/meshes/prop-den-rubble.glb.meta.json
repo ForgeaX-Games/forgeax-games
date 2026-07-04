@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-den-rubble.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "dbac8f2a-9d6d-2038-05cc-0e6d4aec6c80",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

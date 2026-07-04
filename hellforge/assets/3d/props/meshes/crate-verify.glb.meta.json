@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "crate-verify.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "787297d4-9f72-4d50-e51b-56cb566f745a",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

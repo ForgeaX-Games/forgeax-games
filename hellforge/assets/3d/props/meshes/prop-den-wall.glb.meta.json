@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-den-wall.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "d86fb0f3-c38b-8ff8-df5e-a3888bd7cac7",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

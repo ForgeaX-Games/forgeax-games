@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:35:57.162Z",
+  "contentHash": "sha256:429215628fbf3ff1566ee38241125eb9d42af58ff2adf5dc2e6523b79ca06ebf",
+  "size": 8417712,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-embercrack.png",
+      "hash": "sha256:7b4ba2a1bb46e25abf0f4a4b4e80a5fa9de14578f45e7e31ff8582a97e3714c0",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-embercrack.base_color.png",
+      "hash": "sha256:b0a7e54ab63fcb4aec9082ca321c62235dbd95362b56d4ddd6b7af5d7dfc8adf",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-embercrack.metallic.png",
+      "hash": "sha256:f972b8037fb29962fca532cea2ff71a44651d65d0b48448a83d3fe30791e423d",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-embercrack.roughness.png",
+      "hash": "sha256:e33c380a7ce7a7e26a7d113d29f1f3ebf16de5e2065e4c9f2de71565ad0f06e6",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-embercrack.normal.png",
+      "hash": "sha256:1604368af3fccea61df52bf716fb9a8afa44c6c5863240d6e5a115abba0785a4",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-embercrack.emission.png",
+      "hash": "sha256:a5030685759a9d348fd0c3aa9fc4326dd8903bf403e88f47e0db832c77170f2d",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjY4LTI5OTgtNzQ5ZC05NDE1LTc0NmViM2U4ZDlkOQ==",
+    "prompt": "low-poly dark fantasy glowing ember crack in ground, molten lava fissure, emissive orange glow, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-71df4119",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1555, components=1, boundaryEdges=16, nonManifoldEdges=11, reasons: 11 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:35:57.401Z"
+    }
+  }
+}

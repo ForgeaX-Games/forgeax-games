@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:55:19.574Z",
+  "contentHash": "sha256:4ef3192f8b08b4b2031767772fc64afde40127e0a764222f1c241796e14df98b",
+  "size": 9488036,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-den-bone.png",
+      "hash": "sha256:5e54eb4b536f629065f750350101d24567d21c7b1bf60b027968b4251024fd9b",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-den-bone.base_color.png",
+      "hash": "sha256:050446c7cc0bc984f2bf4a9f0a2129e1328fd0cc9fcdc5b231b3f248dc7e8f3c",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-den-bone.metallic.png",
+      "hash": "sha256:59b3d32863c1c28969f487f8be2721359bd2399b185855bf8c05b1a48e2f9c9b",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-den-bone.roughness.png",
+      "hash": "sha256:eccbd08d95d5b2e7b0cc5bfa45319dfcdcbf8e7f6a8856d4724c40f7eaf43380",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-den-bone.normal.png",
+      "hash": "sha256:b5d8d0dadc5ee57536c64feb9e08b041deeddd584bf823d8f0e272c38ffcd5c4",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-den-bone.emission.png",
+      "hash": "sha256:68301662c600ececf845f473ea258e66f54c223365817edfb1d6bb65881b0dca",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjc5LWI4MDQtN2Q5OC04YTcwLWJjZTA3ZGRiMTMyOQ==",
+    "prompt": "low-poly dark fantasy dungeon bone, human-like bone remains on floor, weathered skull and bones, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-d588285e",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1541, components=4, boundaryEdges=12, nonManifoldEdges=24, reasons: 24 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:55:19.751Z"
+    }
+  }
+}

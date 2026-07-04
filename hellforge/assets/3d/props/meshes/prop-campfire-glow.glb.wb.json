@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:49:43.210Z",
+  "contentHash": "sha256:9f78ce3958e00cdec7161402bcccf989682563a8fdc9b0ea35df29a8e20599fb",
+  "size": 10088640,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-campfire-glow.png",
+      "hash": "sha256:a435ed5d748d35d6a0f807179105bc9b2801188d4b2c107c91028b2a03502e5e",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-campfire-glow.base_color.png",
+      "hash": "sha256:916041bbdbd62b1460fff4db95597e267f383506d8ef7c774aa331e43ba52667",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-campfire-glow.metallic.png",
+      "hash": "sha256:2a48e720544e16c4e5fc6daeeaafad53ed290b0ed647b3a022e3c47c42e479a8",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-campfire-glow.roughness.png",
+      "hash": "sha256:c5429feb6217e7a92058bb7cba864f1a39ac0130b752951b5499fccca039afec",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-campfire-glow.normal.png",
+      "hash": "sha256:0419438f4dcf4f49fee7ccd8fd94945342faf42281da07b647ea8667ed9b9ae7",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-campfire-glow.emission.png",
+      "hash": "sha256:2f53fa07ab44d138ad8d8ad8a9391dec1e7608842001146918d9a67d97b53d1b",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjc0LTk0YjQtNzZhZS1hYjk4LTY2ODViNTliMmNkMg==",
+    "prompt": "low-poly dark fantasy campfire glow, glowing ember bed, emissive orange-red coals, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-11cc22ab",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1541, components=1, boundaryEdges=45, nonManifoldEdges=38, reasons: 38 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:49:43.363Z"
+    }
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T05:02:33.359Z",
+  "contentHash": "sha256:f15e9cf6cfd7ee82854db2d4cdfb2443f4f6337a3483ef710ea68ed71628e0f3",
+  "size": 8748556,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-den-slag.png",
+      "hash": "sha256:7c7fc7f634edcf2801e7f3f55e7e7a5f4cac30c9ef2cfbda12a15f4e53db3165",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-den-slag.base_color.png",
+      "hash": "sha256:15d769ec2fc1d2357206a24da7d0a2d3cf0d34db1522b62e742404e63b1f7aaa",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-den-slag.metallic.png",
+      "hash": "sha256:e13315ff286bebc1b04e4d0683ff182582f4827a5834cf667051ea425e0427c2",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-den-slag.roughness.png",
+      "hash": "sha256:2f4a7b6b0c187642bedf3e653054e6cf16dc994ffc107d25855edbc930dcb69b",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-den-slag.normal.png",
+      "hash": "sha256:23848c821474534d16aa9759568c2f38cd5b8cc8194ac428be1465352dc56e75",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-den-slag.emission.png",
+      "hash": "sha256:c5a8b3ee901f83a962db9259f55d920835a06319cfc9a98505fab60340e5bae8",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjgwLTZlMjQtNzc4NC1hMDM0LTAzOGJlZjE1N2ZmNQ==",
+    "prompt": "low-poly dark fantasy dungeon slag, glowing molten slag pile, emissive orange-red lava rock, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-c4a7c3c5",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1540, components=1, boundaryEdges=19, nonManifoldEdges=28, reasons: 28 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T05:02:33.471Z"
+    }
+  }
+}

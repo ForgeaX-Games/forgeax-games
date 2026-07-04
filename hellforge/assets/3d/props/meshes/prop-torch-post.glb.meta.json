@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-torch-post.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "9b2b6171-1e86-b4f2-fb07-d093afe3de8e",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

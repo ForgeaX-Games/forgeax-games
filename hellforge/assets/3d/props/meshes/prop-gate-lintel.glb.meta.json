@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-gate-lintel.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "20b5893c-9192-122f-784d-cf5cda04236d",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

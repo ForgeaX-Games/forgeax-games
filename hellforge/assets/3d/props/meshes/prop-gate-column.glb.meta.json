@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-gate-column.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "01a96efc-af0d-c3bd-3279-4cdf1171e13f",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

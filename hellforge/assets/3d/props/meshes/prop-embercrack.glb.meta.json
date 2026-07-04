@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-embercrack.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "3fba5fe8-4ca6-0261-3f3d-cbab48c083fb",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:21:27.564Z",
+  "contentHash": "sha256:5b61237c0565d1aef86e39ad1e7cb2b83b5a9077d9eb9052f014ed1b286d4b4a",
+  "size": 9503328,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-boulder.png",
+      "hash": "sha256:791481c4f25968ea1f0607e5e0e4e5f6f5964aa9ea1a78d1279eca448d6a5932",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-boulder.base_color.png",
+      "hash": "sha256:e75bdf4a193955d12681c67214fdacbcae255237d82c56ff76265f9eca923ecd",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-boulder.metallic.png",
+      "hash": "sha256:52effbac61c94aa99dcd9a3d636f14f98aeb2227def78dede8465912e95961ba",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-boulder.roughness.png",
+      "hash": "sha256:9c7c9e5a5a21942261495b19b182c6c5b2a4e56fe0cbad2ee3742fe325d9a17f",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-boulder.normal.png",
+      "hash": "sha256:c216f69759dcb5f4df858911e03c1b5eb8572369d19736c701992552385d9475",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-boulder.emission.png",
+      "hash": "sha256:4a7af373d78c1c67eda5378f887041d586aefc1ae3707e97e6203c08e25536ea",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjVhLTY3MjEtNzljYy1hZGE1LThmOWEyM2Q5NTU3ZQ==",
+    "prompt": "low-poly dark fantasy boulder, jagged mossy stone rock, weathered grey, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-1508c89d",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1545, components=1, boundaryEdges=14, nonManifoldEdges=7, reasons: 7 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:21:27.707Z"
+    }
+  }
+}

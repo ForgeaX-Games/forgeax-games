@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:41:11.236Z",
+  "contentHash": "sha256:10b1fbb59604fe32e6674cd48c56ca49af80916b6a75885d23d5c14c2eac59e8",
+  "size": 11003700,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-torch-glow.png",
+      "hash": "sha256:af036d0b9f46125b4d088afa8b2544dd73940120daf7d61f1824093a8a3e86d1",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-torch-glow.base_color.png",
+      "hash": "sha256:3e64261afe19e565b68701c13570f333fee1e5493a485a25a669ee76539be053",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-torch-glow.metallic.png",
+      "hash": "sha256:76c2daf874f5b4282e203571eb73a870ab75b53df9d18bc164ef690658bae888",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-torch-glow.roughness.png",
+      "hash": "sha256:542a782846e59c4a9730c1c2b63149e240a0654f0fe9979b40d2645f035f2361",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-torch-glow.normal.png",
+      "hash": "sha256:7486d490893edb48cf9bedcc594a42f0544d81a93938a299c1a3b68311e882b2",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-torch-glow.emission.png",
+      "hash": "sha256:d40a4495fdb5d69bad4925945b617d42a3921e03b5be7d2f1d4732cec81b800f",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjZkLTA0ZTgtNzUxOS1hNGYxLTYzMGVhZDVhMjgyMg==",
+    "prompt": "low-poly dark fantasy torch flame, glowing fire flame, emissive orange-yellow, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-dc1d78fe",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1563, components=2, boundaryEdges=10, nonManifoldEdges=7, reasons: 7 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:41:11.418Z"
+    }
+  }
+}

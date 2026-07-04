@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:53:45.420Z",
+  "contentHash": "sha256:81643096d7ea4f49c41d5ceb37763a3ed1800fb9a0685bd976d53f172147735a",
+  "size": 8431816,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-den-floor-a.png",
+      "hash": "sha256:7223d3cc162cfc3fe75dc8f6e0d32644754d3eb032e8dd687b3ed01b23fed99c",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-den-floor-a.base_color.png",
+      "hash": "sha256:3b70d2e15dcc3620f8d766ab8bccbfefaa78a956da73f9e5825d31888644932a",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-den-floor-a.metallic.png",
+      "hash": "sha256:186c64527e5a8a3cc4ea51d5cf728f1f493bbe670729ee4652222b17b76e7f95",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-den-floor-a.roughness.png",
+      "hash": "sha256:1b26ce90c03c7613cca228ebd17dfeac48c2045718a60dcd89caaafab6b4f469",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-den-floor-a.normal.png",
+      "hash": "sha256:a31b45673cbbc4337db6c09e804317c72a3e5546280bd4794be89d07afa48dae",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-den-floor-a.emission.png",
+      "hash": "sha256:d480826df152bdc04e54ac251ef5c89b1d6a5940f65d7685d703b09d43979b2f",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjc4LTQ5OTYtN2Q0Ny04MTNkLTg4MjkwYzI5ZjY1Ng==",
+    "prompt": "low-poly dark fantasy dungeon floor tile, weathered stone floor slab, cracked grey, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-f0c617e1",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1462, components=1, boundaryEdges=29, nonManifoldEdges=33, reasons: 33 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:53:45.551Z"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-den-bone.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "f06139fe-79a4-7284-24fc-d533fb2d5038",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

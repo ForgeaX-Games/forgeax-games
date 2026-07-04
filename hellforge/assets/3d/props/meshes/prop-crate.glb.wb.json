@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:31:48.549Z",
+  "contentHash": "sha256:17a26a8e7e76b9534395e0d041ab58090eba71a7471d2207b4eed52e3f4e19ff",
+  "size": 8936476,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-crate.png",
+      "hash": "sha256:f9d735fd364e0b64bcdce3ba21f7fb5a2aa46a1837ba8cba1357e89ddc2e4e40",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-crate.base_color.png",
+      "hash": "sha256:ff3b978abdb4c688eb092f7cad3a5e92623fd4759b323d28952721980dd26d85",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-crate.metallic.png",
+      "hash": "sha256:fdec687b9e1ce7f16ae4319558b7d45234cce931037701568e22138520f4407c",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-crate.roughness.png",
+      "hash": "sha256:653a364d4358f67e55a17f5b5d7c1b28c2ccb186447c85ac3400814960376fc8",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-crate.normal.png",
+      "hash": "sha256:a455037311ae1cf6c095155a4186ccec3f5916d8b82fe5ce6f153bb21d569ae7",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-crate.emission.png",
+      "hash": "sha256:8effed585a50be6d3bcff06de9ce3456b0c23dc8f2baeb8737207aea6db23be9",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjY0LTBlMmQtNzNlMC1iMmY4LWVmNmQ0MWZmYWVhNA==",
+    "prompt": "low-poly dark fantasy wooden crate, weathered planks with iron bands, rusty nails, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-4c6b4d18",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1298, components=1, boundaryEdges=44, nonManifoldEdges=65, reasons: 65 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:31:48.676Z"
+    }
+  }
+}

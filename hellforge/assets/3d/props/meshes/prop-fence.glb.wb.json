@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:35:24.934Z",
+  "contentHash": "sha256:305de92f3db35fb5537023da196dbcb28fcc390d840f33218ef3529b1e7c3d94",
+  "size": 8906464,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-fence.png",
+      "hash": "sha256:12f8df9ab90bda2c4716b0a2cea778380a50056428d1be133badec0d5d403933",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-fence.base_color.png",
+      "hash": "sha256:58b9a701421446ab601fefd2f02edf3e8fc4b86dd96c2c2eb68ee9da92918262",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-fence.metallic.png",
+      "hash": "sha256:291bd91851cb8550fdfd4eaa73a31004d8a5b971170170435b7750a26de665fa",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-fence.roughness.png",
+      "hash": "sha256:defd79b7f0954f3420e3a5971eff189af167992a3f526d391f9a3320cd71cdcf",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-fence.normal.png",
+      "hash": "sha256:181d3827a3e7746670327c2bfcdf0d2f3f80c89fec35d99ac411d5dfa8c7d773",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-fence.emission.png",
+      "hash": "sha256:7aedb3595a76dbd81aea95a25094b6af93b8ef95177016a9a70073d31b9d971c",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjY3LWE2Y2EtNzQ5My1hMGRhLWQyNzFhYTMzNDY2MQ==",
+    "prompt": "low-poly dark fantasy wooden fence post section, rough-hewn timber with rope binding, weathered, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-740a977e",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1511, components=1, boundaryEdges=33, nonManifoldEdges=16, reasons: 16 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:35:25.084Z"
+    }
+  }
+}

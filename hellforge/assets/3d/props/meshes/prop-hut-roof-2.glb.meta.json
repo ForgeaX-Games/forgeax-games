@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-hut-roof-2.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "4dbc20ce-c6d0-20c3-5ac4-d429e3eafc05",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

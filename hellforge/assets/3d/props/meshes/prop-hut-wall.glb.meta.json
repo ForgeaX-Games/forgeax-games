@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-hut-wall.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "cbc8c98c-0d8a-831e-dffb-86cd12f116c7",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:27:46.504Z",
+  "contentHash": "sha256:67e221dcf05d938d50e170461b00ea5af564bc3d4e24c03372f67af2daecc5e8",
+  "size": 9450836,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-deadtree-trunk.png",
+      "hash": "sha256:82b4cdcb78798900bacde171908ad3f6c8115c33aacb813e27f95955dcfc40d5",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-deadtree-trunk.base_color.png",
+      "hash": "sha256:8b9e1d6c0dde5f9c051c09555c85d225576fe6c94521c2c05d0fc218cbc51c9c",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-deadtree-trunk.metallic.png",
+      "hash": "sha256:f8f622efd4b584f6db83c41518fcef8d42c9423b01e0ebb7ed7bc89f30fa2be3",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-deadtree-trunk.roughness.png",
+      "hash": "sha256:638fb386343973bde65c4e073353079c11c3b3790ced388acf5be929818283e9",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-deadtree-trunk.normal.png",
+      "hash": "sha256:50ec4d83b5b8cdf723c4309fce41247c5cbb2373d85fb16ed6b25b7f936968b2",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-deadtree-trunk.emission.png",
+      "hash": "sha256:3ce813cd46d11fcd767da0bcbe6b998a7ba0e44fe8a1cf2328cc2754bea5fee1",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjYwLTkwNjYtNzMzOC1hNTlhLTE0YjZkZjVlYmVmMw==",
+    "prompt": "low-poly dark fantasy dead tree trunk, bare twisted bark, no leaves, weathered grey-brown, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-a218bd91",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1522, components=3, boundaryEdges=54, nonManifoldEdges=36, reasons: 36 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:27:46.710Z"
+    }
+  }
+}

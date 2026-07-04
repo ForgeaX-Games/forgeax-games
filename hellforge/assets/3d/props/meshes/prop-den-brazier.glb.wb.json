@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:57:18.558Z",
+  "contentHash": "sha256:174c7533e40ddd9df74d4217f9d8fef64a3b63ff2b0cd5ea437b3f7be8847d5a",
+  "size": 11765672,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-den-brazier.png",
+      "hash": "sha256:5a0a0846a907f337b67ee748a494511489f085813c359d2d6899ff2eff6ee036",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-den-brazier.base_color.png",
+      "hash": "sha256:8841120c9f6cd0219bd736a970b0ace62074825203b2d13c4f4ea346f3be37c4",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-den-brazier.metallic.png",
+      "hash": "sha256:3d7c3f11105f08ad73b305f5bac9a6371b33aa355d67c7808f419f5702e6c018",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-den-brazier.roughness.png",
+      "hash": "sha256:be64449932a9311355cebe544dae0e5abdafb5e1ca0b029e367237f5273cf8ab",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-den-brazier.normal.png",
+      "hash": "sha256:ae1d772990ccb27602e3574f6063e03e6cb406a5e7248903545ee08298ebb3fc",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-den-brazier.emission.png",
+      "hash": "sha256:8bc8c8ca8ac30c0d10817974d9b4ec9d05fef8f49e4106ece60aa0a151036f6a",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjdiLTQ5YmEtNzY4OC1hZmViLTVmYjIyMjJkZDQ4Zg==",
+    "prompt": "low-poly dark fantasy dungeon brazier, iron fire basket on stand, glowing coals, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-7ffb8810",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1402, components=1, boundaryEdges=86, nonManifoldEdges=168, reasons: 168 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:57:18.709Z"
+    }
+  }
+}

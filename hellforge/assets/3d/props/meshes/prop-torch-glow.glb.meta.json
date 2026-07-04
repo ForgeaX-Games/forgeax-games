@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-torch-glow.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "8fcf4ee0-201c-7a7c-9684-246b39a1d4f5",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

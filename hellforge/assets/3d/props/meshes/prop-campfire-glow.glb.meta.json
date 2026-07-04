@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-campfire-glow.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "88c334b0-ac01-1eb1-7850-e0137161d0d2",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

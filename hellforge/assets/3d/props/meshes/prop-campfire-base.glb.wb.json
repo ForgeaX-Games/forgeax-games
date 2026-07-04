@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:30:06.810Z",
+  "contentHash": "sha256:eb0cd7c59f8a889f390608d8d64d26a0752bef78f3c3cbd92aa92a587f3083a4",
+  "size": 8614812,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-campfire-base.png",
+      "hash": "sha256:265d885f808f9f68d94a5f006d8805025ee76fa7b56132dba8ed09a8726a4c40",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-campfire-base.base_color.png",
+      "hash": "sha256:7ff2da688a7a3e9859d9ffb89a966c398dd21df7b4602878f9547e3121614058",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-campfire-base.metallic.png",
+      "hash": "sha256:1116a8770ec49cb56e43667640e6753ca1182ab0d00916b9d17e91ea08c45fbd",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-campfire-base.roughness.png",
+      "hash": "sha256:8022e1083f6defa340aa96b7a109cac232ce55a11d7ea29a730ad56259714bc4",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-campfire-base.normal.png",
+      "hash": "sha256:d86ddc12d3d37bd4a9b2868c54cd50254bab972fd5c7a2a4c6647581a302d725",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-campfire-base.emission.png",
+      "hash": "sha256:a58c573a4a8ac5277c5c6acbcbb0ea7d1e258983303aedf7bc4ff3da56ad0ebf",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjYyLTg0MmQtNzM5MC04ODJmLWJkZTMxMTEwNWQ4Mw==",
+    "prompt": "low-poly dark fantasy campfire base, ring of blackened stones around ash pit, burnt wood, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-258a9a87",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1521, components=1, boundaryEdges=42, nonManifoldEdges=25, reasons: 25 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:30:06.991Z"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-den-slag.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "3e6bb883-cb54-4f12-ccfa-ebad769aa7bc",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

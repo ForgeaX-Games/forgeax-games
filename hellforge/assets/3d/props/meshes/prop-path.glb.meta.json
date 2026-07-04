@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-path.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "4ed0b190-8fe2-c792-c077-0a246851fb88",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

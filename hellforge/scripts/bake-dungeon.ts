@@ -11,7 +11,7 @@
 // Re-run after ANY change to dungeon-layout.ts (seed, generator, decor).
 // All GUIDs below are fixed constants so re-baking doesn't churn identity.
 
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -41,10 +41,47 @@ const MATS: Record<GeoKind, {
 
 const layout = generateLayout(DUNGEON_SEED);
 
-// refs[0] = cube mesh; refs[1..] = materials in GeoKind order below.
+// GeoKind → generated prop GLB stem (wb-ai-asset precise-lowpoly, stage 1).
+// Each prop's mesh GUID is read at bake time from its `<stem>.glb.meta.json`
+// sidecar (subAssets[0].guid, deterministic sha256(contentHash:sourceIndex)),
+// so re-baking after a prop regen tracks the new GUID automatically. Falls back
+// to CUBE_GUID (with a warning) when a sidecar is missing — the entity still
+// renders as a cube, game never breaks.
+const PROP_FOR_KIND: Record<GeoKind, string> = {
+  floorA: 'prop-den-floor-a',
+  floorB: 'prop-den-floor-b',
+  wall: 'prop-den-wall',
+  torchPost: 'prop-den-torch-post',
+  flame: 'prop-den-flame',
+  brazier: 'prop-den-brazier',
+  rubble: 'prop-den-rubble',
+  bone: 'prop-den-bone',
+  slag: 'prop-den-slag',
+};
+
+function readPropMeshGuid(stem: string): string {
+  const sidecarPath = join(gameRoot, 'assets', '3d', 'props', 'meshes', `${stem}.glb.meta.json`);
+  try {
+    const sidecar = JSON.parse(readFileSync(sidecarPath, 'utf8')) as { subAssets?: Array<{ guid: string }> };
+    const guid = sidecar.subAssets?.[0]?.guid;
+    if (!guid) {
+      console.warn(`  ⚠ ${stem}: sidecar has no subAssets[0].guid — falling back to CUBE`);
+      return CUBE_GUID;
+    }
+    return guid;
+  } catch (e) {
+    console.warn(`  ⚠ ${stem}: cannot read sidecar (${(e as Error).message}) — falling back to CUBE`);
+    return CUBE_GUID;
+  }
+}
+
+// refs[0..8] = prop mesh GUIDs in GeoKind order; refs[9..] = materials.
+// entity MeshFilter.assetHandle → propIdx(kind); MeshRenderer.materials → matIdx(kind).
 const kinds = Object.keys(MATS) as GeoKind[];
-const refs = [CUBE_GUID, ...kinds.map((k) => MATS[k].guid)];
-const matIdx = (k: GeoKind): number => 1 + kinds.indexOf(k);
+const propGuids = kinds.map((k) => readPropMeshGuid(PROP_FOR_KIND[k]));
+const refs = [...propGuids, ...kinds.map((k) => MATS[k].guid)];
+const propIdx = (k: GeoKind): number => kinds.indexOf(k);
+const matIdx = (k: GeoKind): number => kinds.length + kinds.indexOf(k);
 
 const counters: Partial<Record<GeoKind, number>> = {};
 const entities = layout.geometry.map((g, i) => {
@@ -62,7 +99,7 @@ const entities = layout.geometry.map((g, i) => {
     components: {
       Name: { value: `Den_${g.kind}_${n}` },
       Transform: t,
-      MeshFilter: { assetHandle: 0 },
+      MeshFilter: { assetHandle: propIdx(g.kind) },
       MeshRenderer: { materials: [matIdx(g.kind)] },
     },
   };

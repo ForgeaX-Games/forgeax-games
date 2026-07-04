@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-den-floor-a.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "2f83ed60-49e8-6d83-5704-af5a37aa4af1",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

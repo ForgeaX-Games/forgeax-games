@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-den-flame.glb",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto"
+  },
+  "subAssets": [
+    {
+      "guid": "6bf342ae-12ed-4c13-6886-6b7941d10a20",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    }
+  ]
+}

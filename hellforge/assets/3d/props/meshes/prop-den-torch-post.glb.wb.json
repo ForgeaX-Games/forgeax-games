@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T05:00:13.462Z",
+  "contentHash": "sha256:cc8ef77cf9350cb940136d3127e5ded3edabdba4605e18c8b3e37fb85db60b56",
+  "size": 9430940,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-den-torch-post.png",
+      "hash": "sha256:e01c6e3c570e0e564c094aadd7c609ce6d5756bb067023ab028e2bc894431e21",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-den-torch-post.base_color.png",
+      "hash": "sha256:5bc68728ba144270618cc936cc31c4619fd38a02eb1b844c48fa138c772e7b6d",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-den-torch-post.metallic.png",
+      "hash": "sha256:21483741d9a9620d0e62ea7016733810c385f4221c0b95dd310d76fa21a1e5fa",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-den-torch-post.roughness.png",
+      "hash": "sha256:660155c0a96b3ba80573976a12741a9ea34ac82b8e98552651d78c9d2943fcad",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-den-torch-post.normal.png",
+      "hash": "sha256:58ae400fdd0fd0ac96d5078ffbaee6c1e51c25f691b32723143240325ce42b11",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-den-torch-post.emission.png",
+      "hash": "sha256:14eb50355be08284857d308af6fb3ccc8f0afa467955ea817b7554628154246a",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjdlLTY1MDAtNzdlMy05NmQ5LWVlMDg2YzhjNTZhMg==",
+    "prompt": "low-poly dark fantasy dungeon torch post, iron wall torch holder, weathered metal, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-92da267b",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1521, components=1, boundaryEdges=18, nonManifoldEdges=11, reasons: 11 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T05:00:13.580Z"
+    }
+  }
+}

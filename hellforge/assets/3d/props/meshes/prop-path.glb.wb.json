@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-04T04:46:28.111Z",
+  "contentHash": "sha256:1a04b64835a8d7fa332b79d963e112e4bc03f11c5c5ea36874f660bae8ab109f",
+  "size": 8436556,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-path.png",
+      "hash": "sha256:77207fa7f06d8cea551ee731d75b266ed094c05dfed1454520e3fca83b67cb2e",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-path.base_color.png",
+      "hash": "sha256:2e44ffdad04da84c8a35447628b4b4d3eff7595624cea373f81a4df747e7e2c1",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-path.metallic.png",
+      "hash": "sha256:0a2183042cbad76b054fde4ebb2ef3ab03f5476cef67fb672288b25abdfa6ba2",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-path.roughness.png",
+      "hash": "sha256:bcbe582ec4ce7de902f7224e53263fc1f002f80913cf2972e78f3c02bf04ef55",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-path.normal.png",
+      "hash": "sha256:76a9b6c32be9575d66748ae6cdc4da08cb1b2d3a71f0cd2fe229aa6ea224a4d3",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-path.emission.png",
+      "hash": "sha256:46186c6f48057fe81a067d23df90feda6e5a778943cabc4f7a33bb6f7a9df5de",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYyYjcxLTczNzQtNzU4Ny1hMWUwLTQ1YTg2MTNkZTZlYQ==",
+    "prompt": "low-poly dark fantasy dirt path section, trodden earth with small stones, game prop, single object, no background, Diablo style",
+    "sourceInputAssetPaths": [],
+    "faceCount": 1500,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-17650583",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=1492, components=1, boundaryEdges=107, nonManifoldEdges=53, reasons: 53 non-manifold edge(s)",
+      "scoredAt": "2026-07-04T04:46:28.294Z"
+    }
+  }
+}
