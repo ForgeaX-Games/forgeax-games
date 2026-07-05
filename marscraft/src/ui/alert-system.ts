@@ -19,6 +19,7 @@ import { Faction } from '../components';
 import { eventBus } from '../core/event-bus';
 import { getUnitDef } from '../data/units';
 import { getUpgradeDef } from '../data/upgrades';
+import { resolveUiHost } from './ui-host';
 
 type AlertType = 'under_attack' | 'unit_died' | 'build_complete' | 'train_complete' | 'upgrade_complete'
   | 'not_enough_minerals' | 'not_enough_gas' | 'supply_blocked';
@@ -80,7 +81,8 @@ export function installAlerts(deps: AlertDeps): AlertHandle {
 .mc-alert-jump { cursor:pointer; }`;
       document.head.appendChild(s);
     }
-    const host = document.getElementById('app') ?? document.body;
+    // Mount into the disposable #game-ui-root so it's not stranded on Stop.
+    const host = resolveUiHost();
     container = document.createElement('div');
     container.className = 'mc-alert-box';
     host.appendChild(container);

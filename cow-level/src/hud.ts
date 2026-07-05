@@ -27,6 +27,7 @@ export interface HudHandle {
   showLevelUp(choices: UpgradeChoice[]): void;
   hideLevelUp(): void;
   showGameOver(s: GameOverStats): void;
+  hideGameOver(): void;
   flashHurt(): void;
   dispose(): void;
 }
@@ -45,8 +46,15 @@ export function installHud(opts: {
   document.getElementById(HUD_ID)?.remove();
   injectStyles();
 
+  // `fixed` pins to the window → in single-realm Play the HUD spills onto the
+  // History/CLI/Inspector panels. Mounted into ctx.uiRoot (viewport-scoped
+  // disposable, absolute;inset:0;overflow:hidden) use `absolute` to fill+clip
+  // the viewport. Body fallback keeps `fixed` (window == viewport there).
+  const rootAbsolute = mount !== document.body;
+
   const root = div({
-    position: 'fixed', inset: '0', zIndex: '50', pointerEvents: 'none',
+    position: rootAbsolute ? 'absolute' : 'fixed', inset: '0', zIndex: '50', pointerEvents: 'none',
+    overflow: 'hidden',
     color: '#fff', font: '600 14px ui-sans-serif, system-ui, sans-serif', userSelect: 'none',
   });
   root.id = HUD_ID;
@@ -296,6 +304,7 @@ export function installHud(opts: {
     showLevelUp,
     hideLevelUp: () => { modal.style.display = 'none'; },
     showGameOver,
+    hideGameOver: () => { over.style.display = 'none'; },
     flashHurt,
     dispose: () => root.remove(),
   };

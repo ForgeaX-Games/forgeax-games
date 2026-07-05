@@ -177,25 +177,32 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   storyUi.showIntro();
 
   if (typeof document !== 'undefined') {
+    // Each HUD element pins to a viewport corner/center. `position:fixed` pins to
+    // the whole window → in single-realm Play they spill onto the History/CLI/
+    // Inspector panels. They're appended to uiMount (ctx.uiRoot, which is
+    // absolute;inset:0;overflow:hidden and fills the viewport), so `absolute`
+    // anchors them to the viewport instead. Body fallback keeps `fixed`.
+    const pos = uiMount !== document.body ? 'absolute' : 'fixed';
+
     hud = document.createElement('div');
-    hud.style.cssText = 'position:fixed;top:12px;left:50%;transform:translateX(-50%);font-family:"Orbitron","Courier New",monospace;font-size:22px;color:#0ff;text-shadow:0 0 8px #0ff,0 0 20px #06f;pointer-events:none;z-index:9999;text-align:center;background:linear-gradient(180deg,rgba(0,10,30,0.6),rgba(0,5,15,0.4));padding:8px 24px;border-radius:10px;border:1px solid rgba(0,200,255,0.4);backdrop-filter:blur(4px)';
+    hud.style.cssText = `position:${pos};top:12px;left:50%;transform:translateX(-50%);font-family:"Orbitron","Courier New",monospace;font-size:22px;color:#0ff;text-shadow:0 0 8px #0ff,0 0 20px #06f;pointer-events:none;z-index:9999;text-align:center;background:linear-gradient(180deg,rgba(0,10,30,0.6),rgba(0,5,15,0.4));padding:8px 24px;border-radius:10px;border:1px solid rgba(0,200,255,0.4);backdrop-filter:blur(4px)`;
     uiMount.appendChild(hud);
 
     hudHP = document.createElement('div');
-    hudHP.style.cssText = 'position:fixed;top:12px;left:16px;font-size:20px;pointer-events:none;z-index:9999;text-shadow:0 0 6px #f55';
+    hudHP.style.cssText = `position:${pos};top:12px;left:16px;font-size:20px;pointer-events:none;z-index:9999;text-shadow:0 0 6px #f55`;
     uiMount.appendChild(hudHP);
 
     hudCombo = document.createElement('div');
-    hudCombo.style.cssText = 'position:fixed;top:54px;left:50%;transform:translateX(-50%);font-family:"Orbitron","Courier New",monospace;font-size:16px;color:#ff0;text-shadow:0 0 6px #ff0;pointer-events:none;z-index:9999;opacity:0;transition:opacity 0.3s';
+    hudCombo.style.cssText = `position:${pos};top:54px;left:50%;transform:translateX(-50%);font-family:"Orbitron","Courier New",monospace;font-size:16px;color:#ff0;text-shadow:0 0 6px #ff0;pointer-events:none;z-index:9999;opacity:0;transition:opacity 0.3s`;
     uiMount.appendChild(hudCombo);
 
     hudPower = document.createElement('div');
-    hudPower.style.cssText = 'position:fixed;top:12px;right:16px;font-size:18px;pointer-events:none;z-index:9999;text-shadow:0 0 6px #0ff';
+    hudPower.style.cssText = `position:${pos};top:12px;right:16px;font-size:18px;pointer-events:none;z-index:9999;text-shadow:0 0 6px #0ff`;
     uiMount.appendChild(hudPower);
 
     // BOSS HP 条（默认隐藏）
     hudBoss = document.createElement('div');
-    hudBoss.style.cssText = 'position:fixed;top:88px;left:50%;transform:translateX(-50%);width:min(560px,80vw);height:18px;background:rgba(0,0,15,0.7);border:2px solid #c46bff;border-radius:9px;box-shadow:0 0 16px #c46bff,inset 0 0 8px #320a4a;pointer-events:none;z-index:9999;display:none;overflow:hidden;font-family:"Orbitron","Courier New",monospace;';
+    hudBoss.style.cssText = `position:${pos};top:88px;left:50%;transform:translateX(-50%);width:min(560px,80vw);height:18px;background:rgba(0,0,15,0.7);border:2px solid #c46bff;border-radius:9px;box-shadow:0 0 16px #c46bff,inset 0 0 8px #320a4a;pointer-events:none;z-index:9999;display:none;overflow:hidden;font-family:"Orbitron","Courier New",monospace;`;
     hudBossFill = document.createElement('div');
     hudBossFill.style.cssText = 'position:absolute;top:0;left:0;height:100%;width:100%;background:linear-gradient(90deg,#ff3388,#c46bff,#9cffb1);box-shadow:0 0 12px currentColor;transition:width 0.18s ease-out;';
     hudBoss.appendChild(hudBossFill);

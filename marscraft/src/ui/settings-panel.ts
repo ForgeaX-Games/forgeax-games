@@ -10,6 +10,8 @@
  * a game doesn't own the render pipeline, so they'd be no-op stubs.
  */
 
+import { resolveUiHost } from './ui-host';
+
 export interface GameSettings {
   masterVolume: number; // 0..1
   bgmVolume: number;    // 0..1
@@ -79,7 +81,8 @@ export function installSettingsPanel(deps: SettingsPanelDeps): SettingsPanelHand
   if (!document.getElementById(STYLE_ID)) {
     const s = document.createElement('style'); s.id = STYLE_ID; s.textContent = CSS; document.head.appendChild(s);
   }
-  const host = document.getElementById('app') ?? document.body;
+  // Mount into the disposable #game-ui-root so it's not stranded on Stop.
+  const host = resolveUiHost();
 
   // FPS overlay (toggled by showFPS).
   const fpsEl = document.createElement('div'); fpsEl.className = 'mc-fps'; host.appendChild(fpsEl);

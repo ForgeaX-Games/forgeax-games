@@ -34,6 +34,7 @@ import { Faction, Garrisoned, Building, PLAYER_ID } from '../components';
 import type { MapConfig } from '../mapgen/types';
 import type { VisionHandle } from '../systems/vision-system';
 import type { DetectionHandle } from '../systems/detection-system';
+import { resolveUiHost } from '../ui/ui-host';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Batch = any;
@@ -87,9 +88,8 @@ export function installMinimap(world: World, deps: MinimapDeps): MinimapHandle {
     return { dispose() {}, active() { return false; } };
   }
 
-  // Anchor over the same parent as the #app canvas (so it overlays the viewport).
-  const appCanvas = document.querySelector<HTMLCanvasElement>('#app');
-  const parent = appCanvas?.parentElement ?? document.body;
+  // Mount into the disposable #game-ui-root so it's not stranded on Stop.
+  const parent = resolveUiHost();
 
   const canvas = document.createElement('canvas');
   canvas.width = size;
@@ -106,9 +106,6 @@ export function installMinimap(world: World, deps: MinimapDeps): MinimapHandle {
   canvas.style.border = '2px solid rgba(255,102,51,0.4)';
   canvas.style.borderRadius = '4px';
   canvas.style.pointerEvents = 'auto';
-  if (getComputedStyle(parent).position === 'static' && parent !== document.body) {
-    parent.style.position = 'relative';
-  }
   parent.appendChild(canvas);
 
   const ctx = canvas.getContext('2d');

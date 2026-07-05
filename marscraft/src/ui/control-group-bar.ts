@@ -11,6 +11,7 @@
 import type { EntityHandle } from '@forgeax/engine-ecs';
 import { unitTypeId } from '../components';
 import type { ControlGroupHandle } from '../systems/control-groups';
+import { resolveUiHost } from './ui-host';
 
 /** Unit-type → emoji icon (port of the source TYPE_ICONS, trimmed to shipped units). */
 const TYPE_ICONS: Record<string, string> = {
@@ -46,7 +47,8 @@ export function installControlGroupBar(deps: ControlGroupBarDeps): ControlGroupB
   if (!document.getElementById(STYLE_ID)) {
     const s = document.createElement('style'); s.id = STYLE_ID; s.textContent = CSS; document.head.appendChild(s);
   }
-  const host = document.getElementById('app') ?? document.body;
+  // Mount into the disposable #game-ui-root so it's not stranded on Stop.
+  const host = resolveUiHost();
   const bar = document.createElement('div');
   bar.className = 'mc-cg-bar';
   host.appendChild(bar);

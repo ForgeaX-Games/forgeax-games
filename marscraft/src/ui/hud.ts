@@ -47,6 +47,7 @@ import { getUpgradeDef } from '../data/upgrades';
 import { t } from '../i18n';
 import { CursorManager, type CursorState } from './cursor-manager';
 import { installTooltip, type TooltipHandle } from './tooltip';
+import { resolveUiHost } from './ui-host';
 
 // =============================================================================
 // Deps + handle
@@ -273,11 +274,10 @@ export function installHud(deps: HudDeps): HudHandle {
     document.head.appendChild(style);
   }
 
-  const appCanvas = document.querySelector<HTMLCanvasElement>('#app');
-  const parent = appCanvas?.parentElement ?? document.body;
-  if (parent !== document.body && getComputedStyle(parent).position === 'static') {
-    parent.style.position = 'relative';
-  }
+  // Mount into the host's disposable `#game-ui-root` (removed whole on ■ Stop) so
+  // the HUD is never stranded; falls back to the canvas parent / body. Mounting
+  // to `appCanvas.parentElement` (ep-viewport-root) left the HUD behind on Stop.
+  const parent = resolveUiHost();
 
   // Remove a stale root from a prior bootstrap (HMR).
   document.getElementById('marscraft-hud')?.remove();

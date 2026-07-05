@@ -6,6 +6,8 @@
  * counting mousedown + keydown). DOM-guarded (no-ops headless; `probe()` reports).
  */
 
+import { resolveUiHost } from './ui-host';
+
 export interface GameTimeApmHandle {
   active(): boolean;
   probe(): { time: string; apm: number };
@@ -48,7 +50,8 @@ export function installGameTimeApm(): GameTimeApmHandle {
   if (!document.getElementById(STYLE_ID)) {
     const s = document.createElement('style'); s.id = STYLE_ID; s.textContent = CSS; document.head.appendChild(s);
   }
-  const host = document.getElementById('app') ?? document.body;
+  // Mount into the disposable #game-ui-root so it's not stranded on Stop.
+  const host = resolveUiHost();
   const el = document.createElement('div');
   el.className = 'mc-gta';
   const timeEl = document.createElement('span'); timeEl.className = 'mc-gta-val';

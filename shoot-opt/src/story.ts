@@ -113,6 +113,10 @@ export function createStoryUi(mount?: HTMLElement): StoryUi {
   }
   // 挂到 host 提供的受控容器（■ Stop 时整体移除）；缺省回落 body。
   const root: HTMLElement = mount ?? document.body;
+  // `position:fixed` 钉整窗 → 单 realm Play 会溢出到 History/CLI/Inspector 面板。
+  // root 是 ctx.uiRoot（absolute;inset:0;overflow:hidden，填满 viewport 面板），
+  // 用 `absolute` 让全屏遮罩/横幅贴合 viewport；仅 body 回落保留 `fixed`。
+  const pos = root !== document.body ? 'absolute' : 'fixed';
 
   // 一次性注入 keyframes（避免页面里重复添加）
   if (!document.getElementById('story-anim-styles')) {
@@ -129,7 +133,7 @@ export function createStoryUi(mount?: HTMLElement): StoryUi {
   // ── 开场全屏 ──
   const intro = document.createElement('div');
   intro.style.cssText = [
-    'position:fixed', 'inset:0',
+    `position:${pos}`, 'inset:0',
     'display:flex', 'flex-direction:column', 'align-items:center', 'justify-content:center',
     'background:radial-gradient(ellipse at center,rgba(5,15,40,0.88),rgba(0,0,10,0.96))',
     'backdrop-filter:blur(6px)',
@@ -155,7 +159,7 @@ export function createStoryUi(mount?: HTMLElement): StoryUi {
   // ── Wave 横幅（瞬时） ──
   const beat = document.createElement('div');
   beat.style.cssText = [
-    'position:fixed', 'top:22%', 'left:50%', 'transform:translateX(-50%)',
+    `position:${pos}`, 'top:22%', 'left:50%', 'transform:translateX(-50%)',
     'font-family:"Orbitron","Courier New",monospace',
     'text-align:center', 'z-index:99998', 'pointer-events:none',
     'opacity:0', 'transition:opacity 0.5s ease-out',
@@ -166,7 +170,7 @@ export function createStoryUi(mount?: HTMLElement): StoryUi {
   // ── 通关结局 ──
   const ending = document.createElement('div');
   ending.style.cssText = [
-    'position:fixed', 'inset:0',
+    `position:${pos}`, 'inset:0',
     'display:flex', 'flex-direction:column', 'align-items:center', 'justify-content:center',
     'background:radial-gradient(ellipse at center,rgba(40,60,80,0.88),rgba(5,5,20,0.96))',
     'backdrop-filter:blur(8px)',

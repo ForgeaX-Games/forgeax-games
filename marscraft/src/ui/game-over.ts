@@ -8,6 +8,8 @@
  * `victory-system` still resolves + `gameOverState()` still reports for verify).
  */
 
+import { resolveUiHost } from './ui-host';
+
 export interface PlayerGameStats {
   name: string;
   unitsKilled: number;
@@ -64,7 +66,9 @@ export function installGameOver(onReturnToMenu?: () => void): GameOverHandle {
   if (!document.getElementById(STYLE_ID)) {
     const s = document.createElement('style'); s.id = STYLE_ID; s.textContent = CSS; document.head.appendChild(s);
   }
-  const host = document.getElementById('app') ?? document.body;
+  // Mount into the host's disposable `#game-ui-root` (removed on ■ Stop) — not the
+  // `#app` canvas (invalid DOM child + stranded after Stop). See ui-host.ts.
+  const host = resolveUiHost();
   const overlay = document.createElement('div');
   overlay.className = 'mc-go-overlay';
   host.appendChild(overlay);

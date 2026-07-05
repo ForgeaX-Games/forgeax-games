@@ -38,6 +38,7 @@
 import { MAP_REGISTRY } from '../mapgen/map-registry';
 import type { RaceType } from '../data/units';
 import { t } from '../i18n';
+import { resolveUiHost } from './ui-host';
 
 export type MenuRace = RaceType | 'random';
 export type MenuDifficulty = 'easy' | 'normal' | 'hard';
@@ -202,11 +203,8 @@ export function showMainMenu(onStart: (opts: MenuStartOptions) => void): MainMen
   // Remove a stale overlay from a prior bootstrap (HMR).
   document.getElementById('marscraft-mainmenu')?.remove();
 
-  const appCanvas = document.querySelector<HTMLCanvasElement>('#app');
-  const parent = appCanvas?.parentElement ?? document.body;
-  if (parent !== document.body && getComputedStyle(parent).position === 'static') {
-    parent.style.position = 'relative';
-  }
+  // Mount into the disposable #game-ui-root so it's not stranded on Stop.
+  const parent = resolveUiHost();
 
   const root = document.createElement('div');
   root.id = 'marscraft-mainmenu';

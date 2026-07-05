@@ -86,10 +86,14 @@ export function installUpgradeUI(mount: HTMLElement = document.body): UpgradePic
   const ID = 'forgeax-upgrade-ui';
   document.getElementById(ID)?.remove();
 
+  // `fixed` pins to the window (spills past the viewport panel in single-realm);
+  // `absolute` fills+clips to the uiRoot when mounted there. Body fallback keeps fixed.
+  const rootAbsolute = mount !== document.body;
+
   const root = document.createElement('div');
   root.id = ID;
   Object.assign(root.style, {
-    position: 'fixed', inset: '0', zIndex: '200',
+    position: rootAbsolute ? 'absolute' : 'fixed', inset: '0', zIndex: '200',
     display: 'none', alignItems: 'center', justifyContent: 'center',
     background: 'radial-gradient(circle at center, rgba(40,10,50,0.55), rgba(10,5,20,0.85))',
     backdropFilter: 'blur(6px)',

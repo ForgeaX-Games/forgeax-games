@@ -52,12 +52,20 @@ export function installHud(opts: { initialMode: ViewMode; onToggle: () => void; 
   const mount = opts.mount ?? document.body;
   document.getElementById(HUD_ID)?.remove();
 
+  // `position:fixed` pins to the whole window → in single-realm Play the HUD spills
+  // onto the History/CLI/Inspector panels. When mounted into ctx.uiRoot (the
+  // viewport-scoped disposable container, position:absolute;inset:0;overflow:hidden)
+  // use `absolute` so the HUD fills+clips to the viewport. Only the document.body
+  // fallback keeps `fixed` (there window == viewport).
+  const rootAbsolute = mount !== document.body;
+
   const root = document.createElement('div');
   root.id = HUD_ID;
   Object.assign(root.style, {
-    position: 'fixed', inset: '0', zIndex: '50', pointerEvents: 'none',
+    position: rootAbsolute ? 'absolute' : 'fixed', inset: '0', zIndex: '50', pointerEvents: 'none',
     font: "600 14px ui-sans-serif, system-ui, sans-serif", color: '#fff',
     userSelect: 'none',
+    overflow: 'hidden',
   } as CSSStyleDeclaration);
 
   // ── single-shot CSS keyframes (idempotent across HMR) ─────────────────────

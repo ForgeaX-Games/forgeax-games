@@ -38,6 +38,7 @@ import { getUpgradeDef } from '../data/upgrades';
 import { getAbilityDef } from '../data/abilities';
 import { getWeaponDef } from '../data/weapons';
 import { t } from '../i18n';
+import { resolveUiHost } from './ui-host';
 
 // =============================================================================
 // Handle
@@ -134,8 +135,8 @@ export function installTooltip(): TooltipHandle {
 
   const el = document.createElement('div');
   el.id = 'marscraft-tooltip';
-  const appCanvas = document.querySelector<HTMLCanvasElement>('#app');
-  const parent = appCanvas?.parentElement ?? document.body;
+  // Mount into the disposable #game-ui-root so it's not stranded on Stop.
+  const parent = resolveUiHost();
   parent.appendChild(el);
 
   let visible = false;

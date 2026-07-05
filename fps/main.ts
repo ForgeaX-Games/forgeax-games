@@ -986,7 +986,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 // ── DOM HUD ───────────────────────────────────────────────────────────────
 function buildHud(mount: HTMLElement) {
   const wrap = document.createElement('div');
-  wrap.style.cssText = 'position:fixed;inset:0;pointer-events:none;font-family:"Segoe UI",system-ui,sans-serif;color:#eaf2ff;z-index:9999;user-select:none';
+  // `position:fixed` pins to the whole window → in single-realm Play the HUD spills
+  // onto the History/CLI/Inspector panels. When mounted into ctx.uiRoot (the
+  // viewport-scoped disposable container, absolute;inset:0;overflow:hidden) use
+  // `absolute` to fill+clip the viewport. Body fallback keeps `fixed`.
+  const pos = mount !== document.body ? 'absolute' : 'fixed';
+  wrap.style.cssText = `position:${pos};inset:0;overflow:hidden;pointer-events:none;font-family:"Segoe UI",system-ui,sans-serif;color:#eaf2ff;z-index:9999;user-select:none`;
   wrap.innerHTML = `
     <style>
       .ss-ln{position:absolute;background:#9effa0;box-shadow:0 0 4px #000;transition:background .1s}

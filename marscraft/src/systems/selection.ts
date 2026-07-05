@@ -53,6 +53,7 @@ import {
 } from '../components';
 import type { TintFn } from '../world/unit-models';
 import type { InputState } from '../input';
+import { resolveUiHost } from '../ui/ui-host';
 
 // =============================================================================
 // Options + public handle
@@ -220,7 +221,8 @@ function makeOverlay(): Overlay {
   if (typeof document === 'undefined') {
     return { show() {}, hide() {}, dispose() {} };
   }
-  const host = document.querySelector<HTMLElement>('#app')?.parentElement ?? document.body;
+  // Mount into the disposable #game-ui-root so it's not stranded on Stop.
+  const host = resolveUiHost();
   const div = document.createElement('div');
   div.style.cssText = [
     'position:absolute',

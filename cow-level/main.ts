@@ -277,6 +277,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   }
   if (player === undefined) console.error('[cowhell] Player entity not resolved — game loop will not start (check scene.pack.json localIds are dense 0..N-1)');
 
+  // Player spawn point — the "再来一次" restart returns the character here without
+  // reloading the page (single-realm Play: window.location.reload() would blow away
+  // the whole studio shell, not just the game).
+  const initPx = px, initPz = pz;
+
   const topPitch = -Math.atan2(15, 10);
   const topQ = quat.create();
   quat.fromAxisAngle(topQ, [1, 0, 0], topPitch);
@@ -325,7 +330,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     initialMode: 'topdown',
     onToggle: () => setMode(mode === 'fps' ? 'topdown' : 'fps'),
     onChoose: (id) => chooseUpgrade(id),
-    onRestart: () => window.location.reload(),
+    // In-game restart (single-realm safe): reset state + world entities, NOT
+    // window.location.reload() which would reload the entire studio shell.
+    onRestart: () => resetGame(),
     mount: uiMount,
   });
   onCleanup(() => hud.dispose());
@@ -597,6 +604,32 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     if (id === 'boots') { playerStats.speed *= 1.09; playerStats.magnet += 0.7; }
     if (id === 'fang') { playerStats.might *= 1.14; playerStats.regen += 0.35; }
     paused = false;
+    hud.hideLevelUp();
+    updateHud();
+  }
+
+  // In-game restart (single-realm safe). Despawns every runtime-spawned entity
+  // (enemies + their parts, bullets, sparks, pickups) and resets the whole mutable
+  // run state back to its opening values — no page reload. The authored scene, the
+  // player entity, camera and lights persist (spawned once at boot).
+  function resetGame(): void {
+    for (const en of enemies) { for (const p of en.parts) world.despawn(p); world.despawn(en.e); }
+    for (const b of bullets) world.despawn(b.e);
+    for (const sp of sparks) world.despawn(sp.e);
+    for (const p of pickups) world.despawn(p.e);
+    enemies.length = 0; bullets.length = 0; sparks.length = 0; pickups.length = 0;
+    px = initPx; pz = initPz; playerY = 0.82; faceX = 0; faceZ = -1;
+    invuln = 0; time = 0; kills = 0; score = 0; level = 1; xp = 0; nextXp = 12;
+    paused = false; gameOver = false; bossSpawned = false; shake = 0; spawnTimer = 0;
+    playerStats.hp = 115; playerStats.maxHp = 115; playerStats.speed = 5.8;
+    playerStats.magnet = 4.2; playerStats.regen = 0.45; playerStats.might = 1;
+    playerStats.fireRate = 1; playerStats.armor = 0;
+    weapons.stake = { level: 1, cd: 0, interval: 0.34 };
+    weapons.bones = { level: 1, cd: 0, interval: 1.1 };
+    weapons.orbit = { level: 1, t: 0, hitCd: new Map<Entity, number>() };
+    weapons.fire = { level: 0, cd: 0, interval: 1.9 };
+    weapons.frost = { level: 0, cd: 0, interval: 2.6 };
+    hud.hideGameOver();
     hud.hideLevelUp();
     updateHud();
   }

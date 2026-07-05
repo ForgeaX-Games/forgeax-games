@@ -9,6 +9,7 @@
  */
 
 import { ALL_UPGRADES, getUpgradeDef } from '../data/upgrades';
+import { resolveUiHost } from './ui-host';
 
 /** Upgrade-id → emoji (weapon/armor/shield tiers). Fallback ⬆. */
 const UPGRADE_ICONS: Record<string, string> = {
@@ -52,7 +53,8 @@ export function installUpgradeMarkers(deps: UpgradeMarkersDeps): UpgradeMarkersH
   if (!document.getElementById(STYLE_ID)) {
     const s = document.createElement('style'); s.id = STYLE_ID; s.textContent = CSS; document.head.appendChild(s);
   }
-  const host = document.getElementById('app') ?? document.body;
+  // Mount into the disposable #game-ui-root so it's not stranded on Stop.
+  const host = resolveUiHost();
   const box = document.createElement('div'); box.className = 'mc-um'; host.appendChild(box);
 
   let lastSig = '';

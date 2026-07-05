@@ -17,6 +17,7 @@ import {
 } from '../components';
 import { getBuildingDef } from '../data/buildings';
 import type { SelectionHandle } from '../systems/selection';
+import { resolveUiHost } from './ui-host';
 
 export interface IdleTrackerDeps {
   world: World;
@@ -94,7 +95,8 @@ export function installIdleTracker(deps: IdleTrackerDeps): IdleTrackerHandle {
   if (!document.getElementById(STYLE_ID)) {
     const s = document.createElement('style'); s.id = STYLE_ID; s.textContent = CSS; document.head.appendChild(s);
   }
-  const host = document.getElementById('app') ?? document.body;
+  // Mount into the disposable #game-ui-root so it's not stranded on Stop.
+  const host = resolveUiHost();
   const box = document.createElement('div'); box.className = 'mc-idle';
   const workerBtn = document.createElement('div'); workerBtn.className = 'mc-idle-btn';
   const prodBtn = document.createElement('div'); prodBtn.className = 'mc-idle-btn';
