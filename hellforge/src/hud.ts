@@ -55,7 +55,14 @@ export function installHud(mount: HTMLElement = document.body): HudHandle {
   document.getElementById(HUD_ID)?.remove();
   const root = document.createElement('div');
   root.id = HUD_ID;
-  root.style.cssText = 'position:fixed;inset:0;z-index:50;pointer-events:none;user-select:none;' +
+  // The HUD fills + clips to `mount`. When the host threads in a scoped container
+  // (the in-process editor's viewport panel — position:relative + overflow:hidden),
+  // use position:absolute so the overlay stays INSIDE the viewport rect and its
+  // children's coords are mount-local (matching floatText's canvas-local pixels).
+  // Only when mounted straight on document.body (headless / older host, where
+  // window == canvas) does position:fixed still mean "fill the play surface".
+  const rootAbsolute = mount !== document.body;
+  root.style.cssText = `position:${rootAbsolute ? 'absolute' : 'fixed'};inset:0;z-index:50;overflow:hidden;pointer-events:none;user-select:none;` +
     "font:600 14px ui-sans-serif,system-ui,sans-serif;color:#e8dcc8;";
 
   if (!document.getElementById('hellforge-hud-style')) {

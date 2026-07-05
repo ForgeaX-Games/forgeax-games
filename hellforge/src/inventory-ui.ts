@@ -35,9 +35,14 @@ const PANEL_ID = 'hellforge-inventory';
 
 export function installInventory(cb: InventoryCallbacks, mount: HTMLElement = document.body): InventoryHandle {
   document.getElementById(PANEL_ID)?.remove();
+  // Position within `mount` when the host scopes a viewport container (in-process
+  // editor), absolute so the panel + tooltip stay inside the viewport rect; keep
+  // fixed only for a bare document.body host (window == play surface).
+  const scoped = mount !== document.body;
+  const posKind = scoped ? 'absolute' : 'fixed';
   const root = document.createElement('div');
   root.id = PANEL_ID;
-  root.style.cssText = 'position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:60;display:none;' +
+  root.style.cssText = `position:${posKind};right:18px;top:50%;transform:translateY(-50%);z-index:60;display:none;` +
     "font:600 13px ui-sans-serif,system-ui,sans-serif;color:#e8dcc8;user-select:none;pointer-events:auto;";
 
   const panel = document.createElement('div');
@@ -76,7 +81,7 @@ export function installInventory(cb: InventoryCallbacks, mount: HTMLElement = do
 
   // tooltip (shared, follows the hovered element)
   const tip = document.createElement('div');
-  tip.style.cssText = 'position:fixed;z-index:61;display:none;max-width:460px;pointer-events:none;' +
+  tip.style.cssText = `position:${posKind};z-index:61;display:none;max-width:460px;pointer-events:none;` +
     'padding:10px 12px;border-radius:8px;background:rgba(10,7,5,0.96);border:1px solid rgba(200,150,80,0.55);' +
     'font:600 12px ui-sans-serif,system-ui;line-height:1.65;box-shadow:0 6px 24px rgba(0,0,0,0.7);' +
     'display:none;gap:16px;';
@@ -92,9 +97,14 @@ export function installInventory(cb: InventoryCallbacks, mount: HTMLElement = do
     tip.style.display = 'flex';
     const pad = 14;
     const w = tip.offsetWidth, h = tip.offsetHeight;
-    let x = e.clientX - w - pad;             // panel is on the right → tip left
-    if (x < 8) x = e.clientX + pad;
-    let y = Math.min(e.clientY, window.innerHeight - h - 8);
+    // clientX/Y are window coords; when the tip is position:absolute inside a
+    // scoped mount, offset by the mount rect so it lands mount-local (and clamps
+    // to the mount's height, not the whole window).
+    const m = scoped ? mount.getBoundingClientRect() : { left: 0, top: 0, height: window.innerHeight };
+    const localX = e.clientX - m.left, localY = e.clientY - m.top;
+    let x = localX - w - pad;                // panel is on the right → tip left
+    if (x < 8) x = localX + pad;
+    const y = Math.min(localY, m.height - h - 8);
     tip.style.left = `${x}px`;
     tip.style.top = `${y}px`;
   };
