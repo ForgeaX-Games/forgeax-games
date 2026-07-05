@@ -55,10 +55,10 @@ function save(s: GameSettings): void {
 
 const STYLE_ID = 'mc-set-style';
 const CSS = `
-.mc-set-ov { position:absolute; inset:0; display:none; align-items:center; justify-content:center;
-  background:rgba(6,4,10,0.6); z-index:70; font-family:'Segoe UI',system-ui,sans-serif; }
+.mc-set-ov { position:absolute; inset:0; display:none; align-items:safe center; justify-content:center;
+  overflow:auto; background:rgba(6,4,10,0.6); z-index:70; font-family:'Segoe UI',system-ui,sans-serif; }
 .mc-set { background:linear-gradient(160deg,#1a1220,#0d0912); border:1px solid #4a3a5a; border-radius:12px;
-  padding:22px 28px; min-width:420px; color:#d8c8e8; box-shadow:0 12px 48px rgba(0,0,0,0.6); }
+  padding:22px 28px; min-width:420px; max-height:100%; overflow-y:auto; color:#d8c8e8; box-shadow:0 12px 48px rgba(0,0,0,0.6); }
 .mc-set h2 { margin:0 0 14px; font-size:22px; color:#ffd24a; }
 .mc-set-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:6px 0; font-size:14px; }
 .mc-set-row input[type=range] { width:180px; }

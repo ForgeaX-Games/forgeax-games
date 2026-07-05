@@ -134,7 +134,13 @@ export function createStoryUi(mount?: HTMLElement): StoryUi {
   const intro = document.createElement('div');
   intro.style.cssText = [
     `position:${pos}`, 'inset:0',
-    'display:flex', 'flex-direction:column', 'align-items:center', 'justify-content:center',
+    // `safe center` + `overflow-y:auto`: the single-realm viewport panel can be
+    // shorter than this full-screen prologue (all the story text). Plain
+    // `justify-content:center` would then clip BOTH ends — the title and the
+    // "press space to fly" hint become unreachable. `safe center` degrades to
+    // top-align when content overflows, and overflow-y makes the rest scroll.
+    'display:flex', 'flex-direction:column', 'align-items:center', 'justify-content:safe center',
+    'overflow-y:auto',
     'background:radial-gradient(ellipse at center,rgba(5,15,40,0.88),rgba(0,0,10,0.96))',
     'backdrop-filter:blur(6px)',
     'z-index:99999',
@@ -171,7 +177,10 @@ export function createStoryUi(mount?: HTMLElement): StoryUi {
   const ending = document.createElement('div');
   ending.style.cssText = [
     `position:${pos}`, 'inset:0',
-    'display:flex', 'flex-direction:column', 'align-items:center', 'justify-content:center',
+    // Same clip-guard as the intro: `safe center` + scroll so a viewport panel
+    // shorter than the ending screen shows the title + score instead of clipping.
+    'display:flex', 'flex-direction:column', 'align-items:center', 'justify-content:safe center',
+    'overflow-y:auto',
     'background:radial-gradient(ellipse at center,rgba(40,60,80,0.88),rgba(5,5,20,0.96))',
     'backdrop-filter:blur(8px)',
     'z-index:99999',

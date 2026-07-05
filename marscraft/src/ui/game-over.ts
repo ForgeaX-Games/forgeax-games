@@ -34,10 +34,10 @@ export interface GameOverHandle {
 
 const STYLE_ID = 'mc-gameover-style';
 const CSS = `
-.mc-go-overlay { position:absolute; inset:0; display:none; align-items:center; justify-content:center;
-  background:rgba(6,4,10,0.72); z-index:60; font-family:'Segoe UI',system-ui,sans-serif; }
+.mc-go-overlay { position:absolute; inset:0; display:none; align-items:safe center; justify-content:center;
+  overflow:auto; background:rgba(6,4,10,0.72); z-index:60; font-family:'Segoe UI',system-ui,sans-serif; }
 .mc-go-panel { background:linear-gradient(160deg,#1a1220,#0d0912); border:1px solid #4a3a5a;
-  border-radius:14px; padding:28px 36px; min-width:520px; box-shadow:0 12px 48px rgba(0,0,0,0.6); text-align:center; }
+  border-radius:14px; padding:28px 36px; min-width:520px; max-height:100%; overflow-y:auto; box-shadow:0 12px 48px rgba(0,0,0,0.6); text-align:center; }
 .mc-go-title { font-size:52px; font-weight:800; letter-spacing:2px; margin:0 0 6px;
   transition:all .6s cubic-bezier(0.34,1.56,0.64,1); }
 .mc-go-victory { color:#ffd24a; text-shadow:0 0 24px rgba(255,200,60,0.6); }

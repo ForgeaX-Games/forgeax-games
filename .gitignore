@@ -11,3 +11,6 @@ node_modules/
 node_modules
 # runtime chat/session state, auto-created under each game dir by Studio
 sessions/
+
+# Playwright CLI test artifacts (console/snapshot logs), not source
+.playwright-cli/

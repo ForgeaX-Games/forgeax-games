@@ -86,7 +86,7 @@ const MM_STYLE_ID = 'marscraft-mainmenu-style';
 const MM_CSS = `
 #marscraft-mainmenu, #marscraft-mainmenu * { box-sizing: border-box; }
 #marscraft-mainmenu { position: absolute; inset: 0; z-index: 200; display: none;
-  align-items: center; justify-content: center; overflow: auto;
+  align-items: safe center; justify-content: center; overflow: auto;
   font-family: -apple-system, "Segoe UI", system-ui, sans-serif; color: #e8e8ec;
   background:
     radial-gradient(ellipse 120% 40% at 50% 108%, rgba(140,50,15,0.55) 0%, transparent 70%),
@@ -94,7 +94,7 @@ const MM_CSS = `
     linear-gradient(to bottom, #08030 2 0%, #150808 55%, #3a1810 100%);
   user-select: none; }
 #marscraft-mainmenu.mm-show { display: flex; }
-.mm-panel { position: relative; width: min(920px, 94vw); max-height: 94vh; overflow-y: auto;
+.mm-panel { position: relative; width: min(920px, 94vw); max-height: 100%; overflow-y: auto;
   padding: 22px 26px 26px; background: rgba(16,10,8,0.82); border: 1px solid rgba(255,102,51,0.28);
   border-radius: 14px; box-shadow: 0 12px 48px rgba(0,0,0,0.6); }
 .mm-hero { text-align: center; margin-bottom: 18px; }
