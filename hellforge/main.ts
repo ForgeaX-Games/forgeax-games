@@ -40,11 +40,11 @@ import {
   Transform,
   HANDLE_CUBE,
   HANDLE_QUAD,
-  createCylinderGeometry,
   perspective,
   quat,
   type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import { createCylinderGeometry } from '@forgeax/engine-geometry';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
