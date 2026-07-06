@@ -44,9 +44,10 @@
 
 import {
   Transform, Camera, MeshFilter, MeshRenderer, ChildOf,
-  createTorusGeometry, quat,
+  quat,
   type Handle, type MeshAsset,
 } from '@forgeax/engine-runtime';
+import { createTorusGeometry } from '@forgeax/engine-geometry';
 import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Selectable, Faction, UnitType, PLAYER_ID, UNIT_CATEGORY,

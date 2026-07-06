@@ -1,11 +1,12 @@
 import {
   Transform, Camera, perspective, quat, Materials, MeshFilter, MeshRenderer,
-  HANDLE_CUBE, HANDLE_SPHERE, createCylinderGeometry, createSphereGeometry, ChildOf,
+  HANDLE_CUBE, HANDLE_SPHERE, ChildOf,
   SceneInstance,
   Skylight, SkyboxBackground, SKYBOX_MODE_CUBEMAP, TONEMAP_ACES_FILMIC,
   BLOOM_DISABLED, ANTIALIAS_MSAA, PointLight,
   type MaterialAsset, type Handle,
 } from '@forgeax/engine-runtime';
+import { createCylinderGeometry, createSphereGeometry } from '@forgeax/engine-geometry';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { Entity, EntityHandle, World } from '@forgeax/engine-ecs';

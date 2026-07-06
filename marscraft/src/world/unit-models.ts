@@ -42,11 +42,13 @@
 
 import {
   Transform, MeshFilter, MeshRenderer,
-  createBoxGeometry, createSphereGeometry, createConeGeometry, createCylinderGeometry,
   ChildOf,
   quat,
   type Handle, type MeshAsset, type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import {
+  createBoxGeometry, createSphereGeometry, createConeGeometry, createCylinderGeometry,
+} from '@forgeax/engine-geometry';
 import { type EntityHandle, type World } from '@forgeax/engine-ecs';
 import type { UnitDef } from '../data/units';
 

@@ -17,7 +17,7 @@ import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@fo
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { Entity, EntityHandle, World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
-import type { SceneAsset, LocalNodeId, TextureAsset } from '@forgeax/engine-types';
+import type { SceneAsset, LocalEntityId, TextureAsset } from '@forgeax/engine-types';
 
 // The host injects the instantiated defaultScene root + loaded SceneAsset
 // onto the BootstrapContext. HostFedContext is now just an alias.
@@ -141,7 +141,7 @@ async function instantiateScenePack(
     registerOnce<MaterialAsset>(a.guid, a.payload as MaterialAsset);
   }
   {
-    const { createCylinderGeometry } = await import('@forgeax/engine-runtime');
+    const { createCylinderGeometry } = await import('@forgeax/engine-geometry');
     const cylGeo = createCylinderGeometry(0.5, 0.5, 1, 18);
     if (cylGeo.ok) registerOnce(CYLINDER_GUID, cylGeo.value);
   }
@@ -176,7 +176,7 @@ async function instantiateScenePack(
         }
         components[name] = resolved;
       }
-      return { localId: n.localId as LocalNodeId, components };
+      return { localId: n.localId as LocalEntityId, components };
     }),
   };
   const sceneGuid = AssetGuid.parse(sceneEntry.guid);

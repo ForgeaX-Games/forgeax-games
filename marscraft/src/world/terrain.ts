@@ -25,13 +25,12 @@ import {
   Transform,
   MeshFilter,
   MeshRenderer,
-  createBoxGeometry,
-  meshFromInterleaved,
   quat,
   type Handle,
   type MaterialAsset,
   type MeshAsset,
 } from '@forgeax/engine-runtime';
+import { createBoxGeometry, meshFromInterleaved } from '@forgeax/engine-geometry';
 import type { World } from '@forgeax/engine-ecs';
 import type { AssetGuid } from '@forgeax/engine-pack/guid';
 import { TerrainType, type MapConfig } from '../mapgen/types';

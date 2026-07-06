@@ -29,13 +29,15 @@ import {
   Transform,
   MeshFilter,
   MeshRenderer,
-  createBoxGeometry,
-  createSphereGeometry,
-  createConeGeometry,
   quat,
   type Handle,
   type MeshAsset,
 } from '@forgeax/engine-runtime';
+import {
+  createBoxGeometry,
+  createSphereGeometry,
+  createConeGeometry,
+} from '@forgeax/engine-geometry';
 import type { World } from '@forgeax/engine-ecs';
 import type { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { MapConfig } from '../mapgen/types';

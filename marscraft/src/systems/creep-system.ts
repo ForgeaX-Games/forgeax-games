@@ -20,9 +20,9 @@
 import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer, ChildOf,
-  meshFromInterleaved,
   type Handle, type MeshAsset,
 } from '@forgeax/engine-runtime';
+import { meshFromInterleaved } from '@forgeax/engine-geometry';
 import {
   Building, CreepTumor, Faction, Movement, UnitType,
   BUILDING_STATE, MOVE_TYPE, RACE, CREEP_TUMOR_MAX_RADIUS,

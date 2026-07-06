@@ -30,9 +30,10 @@
 import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer, ChildOf,
-  createPlaneGeometry, quat,
+  quat,
   type Handle, type MeshAsset, type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import { createPlaneGeometry } from '@forgeax/engine-geometry';
 import { Health, Selectable, Renderable } from '../components';
 import type { TintFn } from '../world/unit-models';
 

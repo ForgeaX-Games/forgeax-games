@@ -14,7 +14,8 @@
  */
 
 import type { World } from '@forgeax/engine-ecs';
-import { meshFromInterleaved, type Handle, type MeshAsset } from '@forgeax/engine-runtime';
+import { type Handle, type MeshAsset } from '@forgeax/engine-runtime';
+import { meshFromInterleaved } from '@forgeax/engine-geometry';
 
 export class FlatMeshCache {
   private readonly _world: World;

@@ -42,9 +42,9 @@
 import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer,
-  meshFromInterleaved,
   type Handle, type MeshAsset,
 } from '@forgeax/engine-runtime';
+import { meshFromInterleaved } from '@forgeax/engine-geometry';
 import { Faction, PLAYER_ID } from '../components';
 import type { UnitPrimitives, TintFn } from '../world/unit-models';
 import type { VisionHandle } from './vision-system';
