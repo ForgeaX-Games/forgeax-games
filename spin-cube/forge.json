@@ -2,5 +2,6 @@
   "id": "spin-cube",
   "name": "spin-cube",
   "schemaVersion": "1.0.0",
-  "entry": "main.ts"
+  "entry": "main.ts",
+  "defaultScene": "2067f95a-2b62-4c57-b7ba-9e72ae15ee15"
 }

@@ -1,0 +1,46 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "tmpParent",
+        "bed"
+      ],
+      "unsupportedExtensions": [
+        "KHR_materials_unlit"
+      ]
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "bed.glb",
+  "subAssets": [
+    {
+      "guid": "019f3596-7dce-75c7-ac0f-6532ee445c71",
+      "kind": "mesh",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f3596-7dce-75c7-ac0f-6533b50b9db0",
+      "kind": "material",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f3596-7dce-75c7-ac0f-653469d12b48",
+      "kind": "material",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f3596-7dce-75c7-ac0f-653558be7bf1",
+      "kind": "material",
+      "sourceIndex": 2
+    },
+    {
+      "guid": "019f3596-7dce-75c7-ac0f-65365715cea6",
+      "kind": "scene",
+      "sourceIndex": 0
+    }
+  ]
+}

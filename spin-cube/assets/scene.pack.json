@@ -26,7 +26,9 @@
                 "assetHandle": 0
               },
               "MeshRenderer": {
-                "material": 1
+                "materials": [
+                  1
+                ]
               },
               "Collider": {
                 "shape": "box"
@@ -81,7 +83,9 @@
                 "assetHandle": 2
               },
               "MeshRenderer": {
-                "material": 3
+                "materials": [
+                  3
+                ]
               }
             }
           },
@@ -103,7 +107,9 @@
                 "assetHandle": 4
               },
               "MeshRenderer": {
-                "material": 5
+                "materials": [
+                  5
+                ]
               }
             }
           },
@@ -125,7 +131,9 @@
                 "assetHandle": 0
               },
               "MeshRenderer": {
-                "material": 6
+                "materials": [
+                  6
+                ]
               }
             }
           },
@@ -147,7 +155,9 @@
                 "assetHandle": 4
               },
               "MeshRenderer": {
-                "material": 7
+                "materials": [
+                  7
+                ]
               }
             }
           },
@@ -169,7 +179,9 @@
                 "assetHandle": 2
               },
               "MeshRenderer": {
-                "material": 8
+                "materials": [
+                  8
+                ]
               }
             }
           },
@@ -191,7 +203,9 @@
                 "assetHandle": 2
               },
               "MeshRenderer": {
-                "material": 9
+                "materials": [
+                  9
+                ]
               },
               "Collider": {
                 "shape": "cylinder",
@@ -202,11 +216,11 @@
         ]
       },
       "refs": [
-        "8cbd55b6-f04b-41a2-82e9-05303b51d74a",
+        "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
         "8008adc6-ff5e-44bb-b90e-5756e64c1424",
-        "8260d339-6850-4905-a69d-f3be4cff5e1e",
+        "ab20af21-0764-55be-a7f2-b80ab3d46a0a",
         "19f07c35-851d-4355-aaa1-8cad31b002f8",
-        "e5aa4c4b-1020-4860-8eba-0d093756f7a8",
+        "95730fd2-9846-5f84-8658-0b3c971eb263",
         "ea4bbc4b-f733-488a-92d1-ff016648564b",
         "09dfe64a-52b8-4d3b-b995-63de08f79284",
         "485318f0-f480-4b85-9697-702c8c62d38e",

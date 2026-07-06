@@ -48,7 +48,7 @@ import {
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
-import type { AnimationClip, Handle, MeshAsset, SceneAsset, TextureAsset } from '@forgeax/engine-types';
+import type { AnimationClip, EquirectAsset, Handle, MeshAsset, SceneAsset } from '@forgeax/engine-types';
 
 import { createPlayer, damagePlayer, grantXp, respawnPlayer, tickPlayer } from './src/state';
 import { FxSystem } from './src/fx';
@@ -102,7 +102,7 @@ async function installHdrSky(ctx: HellforgeCtx): Promise<EntityHandle | null> {
     { component: Skylight, data: { colorR: 1.0, colorG: 0.5, colorB: 0.32, intensity: 0.2 } },
   ).unwrap();
 
-  // WebKit/WKWebView guard — calling uploadCubemapFromEquirect there (the HDR
+  // WebKit/WKWebView guard — the lazy equirect→cubemap projection (the HDR
   // path uses colorFormats:['rgba16float']) produces a device error that poisons
   // the WebGPU device → the first frame never renders → Play sticks on
   // "Loading game" forever. Keep the solid ambient above and stop here. The
@@ -114,48 +114,28 @@ async function installHdrSky(ctx: HellforgeCtx): Promise<EntityHandle | null> {
     console.info('[hellforge] non-Chromium WebGPU (WebKit/WKWebView): solid-color skylight only (no IBL/skybox)');
     return skylight;
   }
-  // engine e53f4616: `uploadCubemapFromEquirect` is now 3-arg
-  // `(world, sourceHandle: Handle<'TextureAsset','shared'>, sourcePod)` and
-  // returns `Handle<'CubeTextureAsset','shared'>`. `loadByGuid` returns the
-  // PAYLOAD; the source handle is minted via `world.allocSharedRef`. Probe
-  // both the (older) assets-side and the store-side surface; gracefully skip
-  // if neither is exposed.
-  const assetsAny = ctx.assets as unknown as {
-    uploadCubemapFromEquirect?: (
-      w: typeof ctx.world,
-      h: Handle<'TextureAsset', 'shared'>,
-      p: TextureAsset,
-    ) => Promise<{ ok: boolean; value?: Handle<'CubeTextureAsset', 'shared'>; error?: { code: string } }>;
-  };
-  const renderer = (ctx.app as unknown as {
-    renderer?: {
-      store?: {
-        uploadCubemapFromEquirect?: (
-          w: typeof ctx.world,
-          h: Handle<'TextureAsset', 'shared'>,
-          p: TextureAsset,
-        ) => Promise<{ ok: boolean; value?: Handle<'CubeTextureAsset', 'shared'>; error?: { code: string } }>;
-      };
-    };
-  })?.renderer;
-  const store = renderer?.store;
-  const uploadOnAssets = typeof assetsAny.uploadCubemapFromEquirect === 'function' ? assetsAny.uploadCubemapFromEquirect.bind(assetsAny) : null;
-  const uploadOnStore = (store && typeof store.uploadCubemapFromEquirect === 'function')
-    ? store.uploadCubemapFromEquirect.bind(store)
-    : null;
-  const upload = uploadOnAssets ?? uploadOnStore;
-  if (!upload) return skylight;
+  // feat-20260630: the HDR sky is fully declarative now. loadByGuid<EquirectAsset>
+  // returns the decoded rgba16float equirect PAYLOAD; mint a shared handle via
+  // world.allocSharedRef('EquirectAsset', …) and hand the SAME handle to both
+  // Skylight (image-based ambient) and SkyboxBackground (the visible sky). The
+  // equirect→cubemap projection + IBL prefilter run lazily inside the
+  // render-system record arm — there is NO uploadCubemapFromEquirect call any
+  // more. On caps that lack rgba16float render targets the projection degrades
+  // to the solid ambient spawned above (no device error), so the Chromium guard
+  // is belt-and-suspenders.
+  if (ctx.assets === undefined) return skylight;
   const guidRes = AssetGuid.parse(SKY_HDR_GUID);
   if (!guidRes.ok) return skylight;
-  const podRes = await ctx.assets.loadByGuid<TextureAsset>(guidRes.value);
-  if (!podRes.ok) return skylight;
-  const srcHandle = ctx.world.allocSharedRef<'TextureAsset', TextureAsset>('TextureAsset', podRes.value);
-  const cubemapRes = await upload(ctx.world, srcHandle, podRes.value);
-  if (!cubemapRes.ok || cubemapRes.value === undefined) return skylight;
+  const podRes = await ctx.assets.loadByGuid<EquirectAsset>(guidRes.value);
+  if (!podRes.ok) {
+    console.warn('[hellforge] sky.hdr loadByGuid failed:', (podRes.error as { code?: string }).code ?? '?');
+    return skylight;
+  }
+  const equirect = ctx.world.allocSharedRef<'EquirectAsset', EquirectAsset>('EquirectAsset', podRes.value);
   // Upgrade the existing Skylight to image-based lighting — very low intensity
   // (the HDR is bright) so the hellish mood holds. Neutral tint lets HDR drive.
-  ctx.world.set(skylight, Skylight, { cubemap: cubemapRes.value, colorR: 1, colorG: 1, colorB: 1, intensity: 0.04 });
-  ctx.world.spawn({ component: SkyboxBackground, data: { cubemap: cubemapRes.value, mode: SKYBOX_MODE_CUBEMAP } });
+  ctx.world.set(skylight, Skylight, { equirect, colorR: 1, colorG: 1, colorB: 1, intensity: 0.04 });
+  ctx.world.spawn({ component: SkyboxBackground, data: { equirect, mode: SKYBOX_MODE_CUBEMAP } });
   return skylight;
 }
 
