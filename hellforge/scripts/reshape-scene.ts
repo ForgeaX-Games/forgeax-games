@@ -393,6 +393,117 @@ function cmdJitter(packPath: string): void {
   remindReload(packPath);
 }
 
+// ── scatter (seeded decor placement) ────────────────────────────────────────
+//
+//   bun scripts/reshape-scene.ts scatter <pack>   # place decor from <pack>.scatter.json
+//
+// scatter.json schema:
+//   {
+//     "seed": 20260708,
+//     "groups": [
+//       { "name": "DeadBranchL", "pool": ["prop-deadtree-branch"], "count": 3,
+//         "area": { "kind": "rect", "x": [-20, -4], "z": [15, 26] },
+//         "scale": [0.5, 0.85], "minGap": 3 },
+//       { "name": "Firewood", "pool": ["prop-campfire-log"], "count": 3,
+//         "area": { "kind": "ring", "center": [0, 0], "rMin": 1.1, "rMax": 1.9 },
+//         "scale": [0.35, 0.5], "minGap": 0.8 }
+//     ]
+//   }
+//
+// Each member: pool pick, seeded position inside the area, full-random Y spin,
+// uniform scale in [min,max], grounded on the GLB bbox, prop material wired.
+// minGap rejection-samples against the group's placed members (24 tries, then
+// place anyway). Idempotent: entities are named Scatter_<group>_<i> and every
+// existing Scatter_* is wiped before re-placing — same seed → same layout.
+
+interface ScatterArea {
+  kind: 'rect' | 'ring';
+  x?: [number, number]; z?: [number, number];            // rect
+  center?: [number, number]; rMin?: number; rMax?: number; // ring
+}
+interface ScatterGroup {
+  name: string;
+  pool: string[];
+  count: number;
+  area: ScatterArea;
+  scale: [number, number];
+  minGap?: number;
+}
+
+function scatterPath(packPath: string): string {
+  return packPath.replace(/\.pack\.json$/, '.scatter.json');
+}
+
+function cmdScatter(packPath: string): void {
+  const sPath = scatterPath(packPath);
+  const cfg = JSON.parse(readFileSync(sPath, 'utf8')) as { seed: number; groups: ScatterGroup[] };
+  const pack = readPack(packPath);
+  const scene = findSceneAsset(pack);
+  const rnd = mulberry32(cfg.seed);
+
+  // wipe previous scatter output (idempotent re-place)
+  const before = scene.payload.entities.length;
+  scene.payload.entities = scene.payload.entities.filter((e) => {
+    const n = (e.components.Name?.value as string) ?? '';
+    return !n.startsWith('Scatter_');
+  });
+  const wiped = before - scene.payload.entities.length;
+
+  let nextId = scene.payload.entities.reduce((m, e) => Math.max(m, e.localId), -1);
+  let placed = 0, missing = 0;
+  for (const g of cfg.groups) {
+    const pts: Array<[number, number]> = [];
+    for (let i = 0; i < g.count; i++) {
+      const stem = g.pool[Math.floor(rnd() * g.pool.length)]!;
+      const { bbox, meshGuid, materialGuid } = readPropAssets(propsDir, stem);
+      if (!meshGuid) {
+        missing++;
+        console.warn(`  ⚠ ${g.name}[${i}]: "${stem}" has no mesh sidecar — skipping`);
+        continue;
+      }
+      // seeded position: rejection-sample against the group's own minGap
+      let px = 0, pz = 0;
+      for (let t = 0; t < 24; t++) {
+        if (g.area.kind === 'ring') {
+          const [cx, cz] = g.area.center ?? [0, 0];
+          const r0 = g.area.rMin ?? 0, r1 = g.area.rMax ?? 1;
+          const r = Math.sqrt(r0 * r0 + rnd() * (r1 * r1 - r0 * r0)); // area-uniform
+          const th = rnd() * Math.PI * 2;
+          px = cx + Math.cos(th) * r; pz = cz + Math.sin(th) * r;
+        } else {
+          const [x0, x1] = g.area.x ?? [0, 0];
+          const [z0, z1] = g.area.z ?? [0, 0];
+          px = x0 + rnd() * (x1 - x0); pz = z0 + rnd() * (z1 - z0);
+        }
+        const gap = g.minGap ?? 0;
+        if (!gap || pts.every(([qx, qz]) => (qx - px) ** 2 + (qz - pz) ** 2 >= gap * gap)) break;
+      }
+      pts.push([px, pz]);
+      const us = g.scale[0] + rnd() * (g.scale[1] - g.scale[0]);
+      const q = quatFromRotYDeg(rnd() * 360);
+      const meshIdx = ensureRefGuid(scene, meshGuid);
+      const matIdx = materialGuid ? ensureRefGuid(scene, materialGuid) : ensureBoxMat(pack, scene);
+      scene.payload.entities.push({
+        localId: ++nextId,
+        components: {
+          Name: { value: `Scatter_${g.name}_${i}` },
+          Transform: {
+            posX: +px.toFixed(4), posY: +(-bbox.min[1] * us).toFixed(4), posZ: +pz.toFixed(4),
+            quatX: +q[0].toFixed(6), quatY: +q[1].toFixed(6), quatZ: +q[2].toFixed(6), quatW: +q[3].toFixed(6),
+            scaleX: +us.toFixed(4), scaleY: +us.toFixed(4), scaleZ: +us.toFixed(4),
+          },
+          MeshFilter: { assetHandle: meshIdx },
+          MeshRenderer: { materials: [matIdx] },
+        },
+      });
+      placed++;
+    }
+  }
+  writePack(packPath, pack);
+  console.log(`scatter → ${packPath}: wiped ${wiped} old, placed ${placed} (${missing} missing) from ${sPath}`);
+  remindReload(packPath);
+}
+
 // ── CLI ───────────────────────────────────────────────────────────────────
 const [cmd, packArg, ovArg] = process.argv.slice(2) as [string | undefined, string | undefined, string | undefined];
 const packPath = packArg ?? join(gameRoot, 'assets', 'scenes', 'rogue-encampment.pack.json');
@@ -403,9 +514,10 @@ else if (cmd === 'tile-init') cmdTileInit(packPath);
 else if (cmd === 'tile-apply') cmdTileApply(packPath);
 else if (cmd === 'sync-overrides') cmdSyncOverrides(packPath);
 else if (cmd === 'jitter') cmdJitter(packPath);
+else if (cmd === 'scatter') cmdScatter(packPath);
 else if (cmd === 'dump') cmdDump(packPath);
 else {
-  console.error('usage: bun scripts/reshape-scene.ts <init|apply|tile-init|tile-apply|sync-overrides|jitter|dump> [pack] [overrides]');
+  console.error('usage: bun scripts/reshape-scene.ts <init|apply|tile-init|tile-apply|sync-overrides|jitter|scatter|dump> [pack] [overrides]');
   console.error('  default pack: assets/scenes/rogue-encampment.pack.json');
   process.exit(1);
 }

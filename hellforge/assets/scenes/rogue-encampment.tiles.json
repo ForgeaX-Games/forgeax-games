@@ -1,81 +1,301 @@
 {
   "Hut1_Wall_N": {
-    "panel": "prop-wall-panel",
-    "panels": ["prop-wall-panel", "prop-hut-wall"],
+    "panel": "prop-hut-wall",
+    "panels": [
+      "prop-hut-wall"
+    ],
     "mode": "linear",
     "slot": {
-      "pos": [-6, 1.2, -6],
-      "size": [4, 2.4, 0.25],
+      "pos": [
+        -6,
+        1.2,
+        -9.9
+      ],
+      "size": [
+        4.1,
+        2.4,
+        0.45
+      ],
+      "rotYDeg": 0
+    }
+  },
+  "Hut1_Wall_S": {
+    "panel": "prop-hut-wall",
+    "panels": [
+      "prop-hut-wall"
+    ],
+    "mode": "linear",
+    "slot": {
+      "pos": [
+        -6,
+        1.2,
+        -5.8
+      ],
+      "size": [
+        4.1,
+        2.4,
+        0.45
+      ],
+      "rotYDeg": 0
+    }
+  },
+  "Hut1_Wall_W": {
+    "panel": "prop-hut-wall",
+    "panels": [
+      "prop-hut-wall"
+    ],
+    "mode": "linear",
+    "slot": {
+      "pos": [
+        -8.05,
+        1.2,
+        -7.85
+      ],
+      "size": [
+        0.45,
+        2.4,
+        4.1
+      ],
       "rotYDeg": 0
     }
   },
   "Hut1_Wall_E": {
-    "panel": "prop-wall-panel",
-    "panels": ["prop-wall-panel", "prop-hut-wall"],
+    "panel": "prop-hut-wall",
+    "panels": [
+      "prop-hut-wall"
+    ],
     "mode": "linear",
     "slot": {
-      "pos": [-4, 1.2, -7.85],
-      "size": [0.25, 2.4, 4],
+      "pos": [
+        -3.95,
+        1.2,
+        -7.85
+      ],
+      "size": [
+        0.45,
+        2.4,
+        4.1
+      ],
       "rotYDeg": 0
     }
   },
   "Hut1_Roof": {
     "panel": "prop-hut-roof",
-    "panels": ["prop-hut-roof", "prop-hut-roof-2"],
+    "panels": [
+      "prop-hut-roof"
+    ],
     "mode": "grid",
     "slot": {
-      "pos": [-6, 2.42, -7.85],
-      "size": [4.1, 0.15, 4.1],
+      "pos": [
+        -6,
+        2.42,
+        -7.85
+      ],
+      "size": [
+        4.5,
+        0.15,
+        4.5
+      ],
       "rotYDeg": 0
     }
   },
   "Hut2_Wall_N": {
-    "panel": "prop-wall-panel",
-    "panels": ["prop-wall-panel", "prop-hut-wall"],
+    "panel": "prop-hut-wall",
+    "panels": [
+      "prop-hut-wall"
+    ],
     "mode": "linear",
     "slot": {
-      "pos": [6, 1.2, -6],
-      "size": [4, 2.4, 0.25],
+      "pos": [
+        6,
+        1.2,
+        -9.9
+      ],
+      "size": [
+        4.1,
+        2.4,
+        0.45
+      ],
+      "rotYDeg": 0
+    }
+  },
+  "Hut2_Wall_S": {
+    "panel": "prop-hut-wall",
+    "panels": [
+      "prop-hut-wall"
+    ],
+    "mode": "linear",
+    "slot": {
+      "pos": [
+        6,
+        1.2,
+        -5.8
+      ],
+      "size": [
+        4.1,
+        2.4,
+        0.45
+      ],
       "rotYDeg": 0
     }
   },
   "Hut2_Wall_W": {
-    "panel": "prop-wall-panel",
-    "panels": ["prop-wall-panel", "prop-hut-wall"],
+    "panel": "prop-hut-wall",
+    "panels": [
+      "prop-hut-wall"
+    ],
     "mode": "linear",
     "slot": {
-      "pos": [8, 1.2, -7.85],
-      "size": [0.25, 2.4, 4],
+      "pos": [
+        3.95,
+        1.2,
+        -7.85
+      ],
+      "size": [
+        0.45,
+        2.4,
+        4.1
+      ],
+      "rotYDeg": 0
+    }
+  },
+  "Hut2_Wall_E": {
+    "panel": "prop-hut-wall",
+    "panels": [
+      "prop-hut-wall"
+    ],
+    "mode": "linear",
+    "slot": {
+      "pos": [
+        8.05,
+        1.2,
+        -7.85
+      ],
+      "size": [
+        0.45,
+        2.4,
+        4.1
+      ],
       "rotYDeg": 0
     }
   },
   "Hut2_Roof": {
-    "panel": "prop-hut-roof",
-    "panels": ["prop-hut-roof", "prop-hut-roof-2"],
+    "panel": "prop-hut-roof-2",
+    "panels": [
+      "prop-hut-roof-2"
+    ],
     "mode": "grid",
     "slot": {
-      "pos": [6, 2.42, -7.85],
-      "size": [4.1, 0.15, 4.1],
+      "pos": [
+        6,
+        2.42,
+        -7.85
+      ],
+      "size": [
+        4.5,
+        0.15,
+        4.5
+      ],
+      "rotYDeg": 0
+    }
+  },
+  "Hut3_Wall_N": {
+    "panel": "prop-hut-wall",
+    "panels": [
+      "prop-hut-wall"
+    ],
+    "mode": "linear",
+    "slot": {
+      "pos": [
+        0,
+        1.2,
+        -14.45
+      ],
+      "size": [
+        5,
+        2.4,
+        0.45
+      ],
       "rotYDeg": 0
     }
   },
   "Hut3_Wall_S": {
-    "panel": "prop-wall-panel",
-    "panels": ["prop-wall-panel", "prop-hut-wall"],
+    "panel": "prop-hut-wall",
+    "panels": [
+      "prop-hut-wall"
+    ],
     "mode": "linear",
     "slot": {
-      "pos": [0, 1.2, -12],
-      "size": [5, 2.4, 0.25],
+      "pos": [
+        0,
+        1.2,
+        -11.25
+      ],
+      "size": [
+        5,
+        2.4,
+        0.45
+      ],
+      "rotYDeg": 0
+    }
+  },
+  "Hut3_Wall_W": {
+    "panel": "prop-hut-wall",
+    "panels": [
+      "prop-hut-wall"
+    ],
+    "mode": "linear",
+    "slot": {
+      "pos": [
+        -2.5,
+        1.2,
+        -12.85
+      ],
+      "size": [
+        0.45,
+        2.4,
+        3.2
+      ],
+      "rotYDeg": 0
+    }
+  },
+  "Hut3_Wall_E": {
+    "panel": "prop-hut-wall",
+    "panels": [
+      "prop-hut-wall"
+    ],
+    "mode": "linear",
+    "slot": {
+      "pos": [
+        2.5,
+        1.2,
+        -12.85
+      ],
+      "size": [
+        0.45,
+        2.4,
+        3.2
+      ],
       "rotYDeg": 0
     }
   },
   "Hut3_Roof": {
     "panel": "prop-hut-roof",
-    "panels": ["prop-hut-roof", "prop-hut-roof-2"],
+    "panels": [
+      "prop-hut-roof"
+    ],
     "mode": "grid",
     "slot": {
-      "pos": [0, 2.42, -12.85],
-      "size": [5, 0.15, 3.2],
+      "pos": [
+        0,
+        2.42,
+        -12.85
+      ],
+      "size": [
+        5.4,
+        0.15,
+        3.6
+      ],
       "rotYDeg": 0
     }
   },
@@ -83,8 +303,16 @@
     "panel": "prop-fence",
     "mode": "linear",
     "slot": {
-      "pos": [-11.3081, 0.6, 3.3145],
-      "size": [0.15, 1.2, 12],
+      "pos": [
+        -11.3081,
+        0.6,
+        3.3145
+      ],
+      "size": [
+        0.15,
+        1.2,
+        12
+      ],
       "rotYDeg": 0
     }
   },
@@ -92,8 +320,16 @@
     "panel": "prop-fence",
     "mode": "linear",
     "slot": {
-      "pos": [8, 0.6, 6],
-      "size": [0.15, 1.2, 12],
+      "pos": [
+        8,
+        0.6,
+        6
+      ],
+      "size": [
+        0.15,
+        1.2,
+        12
+      ],
       "rotYDeg": 0
     }
   },
@@ -101,8 +337,33 @@
     "panel": "prop-fence",
     "mode": "linear",
     "slot": {
-      "pos": [0, 0.6, -14],
-      "size": [16, 1.2, 0.15],
+      "pos": [
+        0,
+        0.6,
+        -14
+      ],
+      "size": [
+        16,
+        1.2,
+        0.15
+      ],
+      "rotYDeg": 0
+    }
+  },
+  "GateLintel": {
+    "panel": "prop-gate-lintel",
+    "mode": "linear",
+    "slot": {
+      "pos": [
+        0,
+        3.2,
+        14
+      ],
+      "size": [
+        5.6,
+        0.66,
+        0.5
+      ],
       "rotYDeg": 0
     }
   }

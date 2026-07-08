@@ -20,32 +20,26 @@
     ]
   },
   "CampfireLog1": {
-    "mesh": "cube",
+    "mesh": "prop-campfire-log",
     "pos": [
+      0.62,
       0,
-      0.55,
-      0.25
+      0.45
     ],
-    "scale": [
-      1.2,
-      0.18,
-      0.18
-    ],
-    "ground": false
+    "scale": 0.6,
+    "rotYDeg": 25,
+    "ground": true
   },
   "CampfireLog2": {
-    "mesh": "cube",
+    "mesh": "prop-campfire-log",
     "pos": [
+      -0.58,
       0,
-      0.55,
-      -0.25
+      -0.42
     ],
-    "scale": [
-      1.2,
-      0.18,
-      0.18
-    ],
-    "ground": false
+    "scale": 0.6,
+    "rotYDeg": -48,
+    "ground": true
   },
   "CampfireGlow": {
     "mesh": "keep",
@@ -58,60 +52,34 @@
     ]
   },
   "GateColumnL": {
-    "mesh": "cube",
+    "mesh": "prop-gate-column",
     "pos": [
       -2.5,
-      1.5,
+      0,
       14
     ],
-    "scale": [
-      0.6,
-      3,
-      0.6
-    ],
-    "ground": false
+    "scale": 1.5,
+    "ground": true
   },
   "GateColumnR": {
-    "mesh": "cube",
+    "mesh": "prop-gate-column",
     "pos": [
       2.5,
-      1.5,
-      14
-    ],
-    "scale": [
-      0.6,
-      3,
-      0.6
-    ],
-    "ground": false
-  },
-  "GateLintel": {
-    "mesh": "cube",
-    "pos": [
       0,
-      3.2,
       14
     ],
-    "scale": [
-      5.6,
-      0.4,
-      0.5
-    ],
-    "ground": false
+    "scale": 1.5,
+    "ground": true
   },
   "TorchGateL_Post": {
-    "mesh": "cube",
+    "mesh": "prop-torch-post",
     "pos": [
       -2.5,
-      0.9,
+      0,
       13.5
     ],
-    "scale": [
-      0.12,
-      1.8,
-      0.12
-    ],
-    "ground": false
+    "scale": 0.9,
+    "ground": true
   },
   "TorchGateL_Glow": {
     "mesh": "keep",
@@ -124,18 +92,14 @@
     ]
   },
   "TorchGateR_Post": {
-    "mesh": "cube",
+    "mesh": "prop-torch-post",
     "pos": [
       2.5,
-      0.9,
+      0,
       13.5
     ],
-    "scale": [
-      0.12,
-      1.8,
-      0.12
-    ],
-    "ground": false
+    "scale": 0.9,
+    "ground": true
   },
   "TorchGateR_Glow": {
     "mesh": "keep",
@@ -148,18 +112,14 @@
     ]
   },
   "TorchHut1_Post": {
-    "mesh": "cube",
+    "mesh": "prop-torch-post",
     "pos": [
       -5,
-      0.9,
+      0,
       -3.5
     ],
-    "scale": [
-      0.12,
-      1.8,
-      0.12
-    ],
-    "ground": false
+    "scale": 0.9,
+    "ground": true
   },
   "TorchHut1_Glow": {
     "mesh": "keep",
@@ -172,18 +132,14 @@
     ]
   },
   "TorchHut2_Post": {
-    "mesh": "cube",
+    "mesh": "prop-torch-post",
     "pos": [
       5,
-      0.9,
+      0,
       -3.5
     ],
-    "scale": [
-      0.12,
-      1.8,
-      0.12
-    ],
-    "ground": false
+    "scale": 0.9,
+    "ground": true
   },
   "TorchHut2_Glow": {
     "mesh": "keep",
@@ -196,18 +152,14 @@
     ]
   },
   "TorchHut3F_Post": {
-    "mesh": "cube",
+    "mesh": "prop-torch-post",
     "pos": [
       -2.5,
-      0.9,
+      0,
       -9
     ],
-    "scale": [
-      0.12,
-      1.8,
-      0.12
-    ],
-    "ground": false
+    "scale": 0.9,
+    "ground": true
   },
   "TorchHut3F_Glow": {
     "mesh": "keep",
@@ -220,18 +172,14 @@
     ]
   },
   "TorchHut3R_Post": {
-    "mesh": "cube",
+    "mesh": "prop-torch-post",
     "pos": [
       2.5,
-      0.9,
+      0,
       -9
     ],
-    "scale": [
-      0.12,
-      1.8,
-      0.12
-    ],
-    "ground": false
+    "scale": 0.9,
+    "ground": true
   },
   "TorchHut3R_Glow": {
     "mesh": "keep",
@@ -332,64 +280,48 @@
     "rotYDeg": 28.648
   },
   "DeadTree1_Trunk": {
-    "mesh": "cube",
+    "mesh": "prop-deadtree-trunk",
     "pos": [
       -8,
-      1.15,
+      0,
       20
     ],
-    "scale": [
-      0.28,
-      2.3,
-      0.28
-    ],
+    "scale": 1.15,
     "rotYDeg": 17.189,
-    "ground": false
+    "ground": true
   },
   "DeadTree2_Trunk": {
-    "mesh": "cube",
+    "mesh": "prop-deadtree-trunk",
     "pos": [
       8.5,
-      1.15,
+      0,
       26
     ],
-    "scale": [
-      0.28,
-      2.3,
-      0.28
-    ],
+    "scale": 1.15,
     "rotYDeg": 63.025,
-    "ground": false
+    "ground": true
   },
   "DeadTree3_Trunk": {
-    "mesh": "cube",
+    "mesh": "prop-deadtree-trunk",
     "pos": [
       19,
-      1.15,
+      0,
       17
     ],
-    "scale": [
-      0.28,
-      2.3,
-      0.28
-    ],
+    "scale": 1.15,
     "rotYDeg": -245.408,
-    "ground": false
+    "ground": true
   },
   "DeadTree4_Trunk": {
-    "mesh": "cube",
+    "mesh": "prop-deadtree-trunk",
     "pos": [
       -18,
-      1.15,
+      0,
       14
     ],
-    "scale": [
-      0.28,
-      2.3,
-      0.28
-    ],
+    "scale": 1.15,
     "rotYDeg": 40.107,
-    "ground": false
+    "ground": true
   },
   "Crate_1": {
     "mesh": "keep",
@@ -425,64 +357,48 @@
     "rotYDeg": 20.053
   },
   "EmberCrack_1": {
-    "mesh": "cube",
+    "mesh": "prop-embercrack",
     "pos": [
       5.5,
-      0.012,
+      0,
       22.8
     ],
-    "scale": [
-      1.2,
-      0.03,
-      0.5
-    ],
+    "scale": 0.6,
     "rotYDeg": 28.648,
-    "ground": false
+    "ground": true
   },
   "EmberCrack_2": {
-    "mesh": "cube",
+    "mesh": "prop-embercrack",
     "pos": [
       -12,
-      0.012,
+      0,
       24
     ],
-    "scale": [
-      1.4,
-      0.03,
-      0.55
-    ],
+    "scale": 0.7,
     "rotYDeg": -17.189,
-    "ground": false
+    "ground": true
   },
   "EmberCrack_3": {
-    "mesh": "cube",
+    "mesh": "prop-embercrack",
     "pos": [
       17,
-      0.012,
+      0,
       7.5
     ],
-    "scale": [
-      1.1,
-      0.03,
-      0.45
-    ],
+    "scale": 0.55,
     "rotYDeg": 57.296,
-    "ground": false
+    "ground": true
   },
   "EmberCrack_4": {
-    "mesh": "cube",
+    "mesh": "prop-embercrack",
     "pos": [
       -6,
-      0.012,
+      0,
       17
     ],
-    "scale": [
-      0.9,
-      0.03,
-      0.4
-    ],
+    "scale": 0.45,
     "rotYDeg": 5.73,
-    "ground": false
+    "ground": true
   },
   "Path_1__t0": {
     "mesh": "keep"
@@ -571,12 +487,6 @@
   "Hut1_Wall_E__t1": {
     "mesh": "keep"
   },
-  "Hut1_Wall_E__t2": {
-    "mesh": "keep"
-  },
-  "Hut1_Wall_E__t3": {
-    "mesh": "keep"
-  },
   "Hut1_Roof__t0": {
     "mesh": "keep"
   },
@@ -593,12 +503,6 @@
     "mesh": "keep"
   },
   "Hut2_Wall_N__t1": {
-    "mesh": "keep"
-  },
-  "Hut2_Wall_N__t2": {
-    "mesh": "keep"
-  },
-  "Hut2_Wall_N__t3": {
     "mesh": "keep"
   },
   "Hut2_Wall_W__t0": {
@@ -623,15 +527,6 @@
     "mesh": "keep"
   },
   "Hut3_Wall_S__t1": {
-    "mesh": "keep"
-  },
-  "Hut3_Wall_S__t2": {
-    "mesh": "keep"
-  },
-  "Hut3_Wall_S__t3": {
-    "mesh": "keep"
-  },
-  "Hut3_Wall_S__t4": {
     "mesh": "keep"
   },
   "Hut3_Roof__t0": {
@@ -710,6 +605,57 @@
     "mesh": "keep"
   },
   "FenceN__t7": {
+    "mesh": "keep"
+  },
+  "Hut1_Wall_S__t0": {
+    "mesh": "keep"
+  },
+  "Hut1_Wall_S__t1": {
+    "mesh": "keep"
+  },
+  "Hut1_Wall_W__t0": {
+    "mesh": "keep"
+  },
+  "Hut1_Wall_W__t1": {
+    "mesh": "keep"
+  },
+  "Hut2_Wall_S__t0": {
+    "mesh": "keep"
+  },
+  "Hut2_Wall_S__t1": {
+    "mesh": "keep"
+  },
+  "Hut2_Wall_E__t0": {
+    "mesh": "keep"
+  },
+  "Hut2_Wall_E__t1": {
+    "mesh": "keep"
+  },
+  "Hut2_Roof__t4": {
+    "mesh": "keep"
+  },
+  "Hut2_Roof__t5": {
+    "mesh": "keep"
+  },
+  "Hut3_Wall_N__t0": {
+    "mesh": "keep"
+  },
+  "Hut3_Wall_N__t1": {
+    "mesh": "keep"
+  },
+  "Hut3_Wall_W__t0": {
+    "mesh": "keep"
+  },
+  "Hut3_Wall_E__t0": {
+    "mesh": "keep"
+  },
+  "GateLintel__t0": {
+    "mesh": "keep"
+  },
+  "GateLintel__t1": {
+    "mesh": "keep"
+  },
+  "GateLintel__t2": {
     "mesh": "keep"
   }
 }

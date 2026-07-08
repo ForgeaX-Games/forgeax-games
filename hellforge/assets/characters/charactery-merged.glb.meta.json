@@ -31,51 +31,68 @@
         "char1",
         "Armature"
       ],
-      "unsupportedExtensions": [
-        "KHR_materials_specular",
-        "KHR_materials_ior"
-      ]
+      "unsupportedExtensions": []
     }
   },
   "importer": "gltf",
   "kind": "external-asset-package",
   "schemaVersion": 1,
-  "source": "characterw.rigged_model.glb",
+  "source": "charactery-merged.glb",
   "subAssets": [
     {
-      "guid": "019f41e0-f2ae-7433-b291-efef7290794c",
+      "guid": "019f439f-a25e-7fd4-a8b4-5955a28c325e",
       "kind": "mesh",
       "sourceIndex": 0
     },
     {
-      "guid": "019f41e0-f2af-76d2-9272-f3838e581427",
+      "guid": "019f439f-a25e-7fd4-a8b4-59566d0905c9",
       "kind": "material",
       "sourceIndex": 0
     },
     {
-      "guid": "019f41e0-f2af-76d2-9272-f38468b88122",
+      "guid": "019f439f-a25e-7fd4-a8b4-595783b0359f",
       "kind": "scene",
       "sourceIndex": 0
     },
     {
-      "guid": "019f41e0-f2af-76d2-9272-f3851cebcb5a",
+      "guid": "019f439f-a25e-7fd4-a8b4-5958ea2dd63e",
       "kind": "texture",
       "sourceIndex": 0
     },
     {
-      "guid": "019f41e0-f2af-76d2-9272-f386044d33ed",
+      "guid": "019f439f-a25e-7fd4-a8b4-5959fc660909",
       "kind": "skeleton",
       "sourceIndex": 0
     },
     {
-      "guid": "019f41e0-f2af-76d2-9272-f387cee9d691",
+      "guid": "019f439f-a25e-7fd4-a8b4-595a681d17a4",
       "kind": "skin",
       "sourceIndex": 0
     },
     {
-      "guid": "019f41e0-f2af-76d2-9272-f3886bac2c37",
+      "guid": "019f439f-a25e-7fd4-a8b4-595b8b491fe9",
       "kind": "animation-clip",
       "sourceIndex": 0
+    },
+    {
+      "guid": "019f439f-a25e-7fd4-a8b4-595c34224d6c",
+      "kind": "animation-clip",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f439f-a25e-7fd4-a8b4-595d1fd0ce06",
+      "kind": "animation-clip",
+      "sourceIndex": 2
+    },
+    {
+      "guid": "019f439f-a25e-7fd4-a8b4-595ef92b9f86",
+      "kind": "animation-clip",
+      "sourceIndex": 3
+    },
+    {
+      "guid": "019f439f-a25e-7fd4-a8b4-595f1eb96020",
+      "kind": "animation-clip",
+      "sourceIndex": 4
     }
   ]
 }

@@ -193,43 +193,99 @@ export function generateLayout(seed: number): DungeonLayout {
       }
     }
   }
-  // torches — 2 per room, some skipped so rooms feel darker
+  // ── 4b. decor — SEPARATE seeded stream ──
+  // Every visual-decor roll (torches, room clutter, wall-hug pieces, corridor
+  // scatter, braziers) draws from dRnd, not the main `rnd` stream, so tuning
+  // decor density/rules re-dresses the SAME dungeon: rooms, corridors and §5
+  // monster packs stay put. Decor never touches `walk` — it is visual only.
+  const dRnd = mulberry32(seed ^ 0xdec0de);
+
+  // torches — big rooms light all four corners, small rooms two; some skipped
+  // so rooms still feel unevenly lit
   for (const r of rooms) {
-    const spots = [cellToLocal(r.cx + 1, r.cy + 1), cellToLocal(r.cx + r.w - 2, r.cy + r.h - 2)];
-    for (const s of spots) {
-      if (rnd() < 0.2) continue;
+    const corners = [
+      cellToLocal(r.cx + 1, r.cy + 1),
+      cellToLocal(r.cx + r.w - 2, r.cy + r.h - 2),
+      cellToLocal(r.cx + r.w - 2, r.cy + 1),
+      cellToLocal(r.cx + 1, r.cy + r.h - 2),
+    ];
+    const nSpots = r.w >= 5 && r.h >= 5 ? 4 : 2;
+    for (const s of corners.slice(0, nSpots)) {
+      if (dRnd() < 0.2) continue;
       geometry.push({ kind: 'torchPost', x: s.x, y: 0.9, z: s.z, sx: 0.14, sy: 1.8, sz: 0.14 });
       geometry.push({ kind: 'flame', x: s.x, y: 1.95, z: s.z, sx: 0.26, sy: 0.34, sz: 0.26 });
     }
   }
-  // room decor — rubble / bone piles / glowing slag pools
+  // room decor — density scales with room area; the weighted table gives every
+  // decor kind a real share (braziers are no longer boss-room-exclusive)
   for (const r of rooms) {
-    const decorN = 1 + Math.floor(rnd() * 3);
+    const decorN = Math.min(6, Math.max(2, Math.round(r.w * r.h * 0.1)));
     for (let k = 0; k < decorN; k++) {
-      const cx = r.cx + 1 + Math.floor(rnd() * Math.max(1, r.w - 2));
-      const cy = r.cy + 1 + Math.floor(rnd() * Math.max(1, r.h - 2));
+      const cx = r.cx + 1 + Math.floor(dRnd() * Math.max(1, r.w - 2));
+      const cy = r.cy + 1 + Math.floor(dRnd() * Math.max(1, r.h - 2));
       const s = cellToLocal(cx, cy);
-      const jx = s.x + (rnd() - 0.5) * CELL * 0.6;
-      const jz = s.z + (rnd() - 0.5) * CELL * 0.6;
-      const roll = rnd();
-      if (roll < 0.35) {
+      const jx = s.x + (dRnd() - 0.5) * CELL * 0.6;
+      const jz = s.z + (dRnd() - 0.5) * CELL * 0.6;
+      const roll = dRnd();
+      if (roll < 0.28) {
         geometry.push({ kind: 'rubble', x: jx, y: 0.16, z: jz, sx: 0.55, sy: 0.32, sz: 0.45 });
         geometry.push({ kind: 'rubble', x: jx + 0.35, y: 0.1, z: jz + 0.2, sx: 0.3, sy: 0.2, sz: 0.3, rotY: 0.63 });
-      } else if (roll < 0.6) {
+      } else if (roll < 0.5) {
         geometry.push({ kind: 'bone', x: jx, y: 0.07, z: jz, sx: 0.5, sy: 0.12, sz: 0.14, rotY: 0.4 });
         geometry.push({ kind: 'bone', x: jx + 0.1, y: 0.07, z: jz + 0.15, sx: 0.4, sy: 0.1, sz: 0.12, rotY: -0.87 });
-      } else if (roll < 0.8) {
-        const ry = (rnd() - 0.5) * 1.4;
-        geometry.push({ kind: 'slag', x: jx, y: -0.01, z: jz, sx: 1.0 + rnd() * 0.9, sy: 0.03, sz: 0.7 + rnd() * 0.6, rotY: ry });
+      } else if (roll < 0.68) {
+        const ry = (dRnd() - 0.5) * 1.4;
+        geometry.push({ kind: 'slag', x: jx, y: -0.01, z: jz, sx: 1.0 + dRnd() * 0.9, sy: 0.03, sz: 0.7 + dRnd() * 0.6, rotY: ry });
+      } else if (roll < 0.85) {
+        // crate stash — 1-2 supply crates (second one nudged + spun)
+        geometry.push({ kind: 'crate', x: jx, y: 0.2, z: jz, sx: 0.7, sy: 0.7, sz: 0.6, rotY: (dRnd() - 0.5) * 0.6 });
+        if (dRnd() < 0.6) {
+          geometry.push({ kind: 'crate', x: jx + 0.6, y: 0.18, z: jz + 0.2, sx: 0.55, sy: 0.55, sz: 0.5, rotY: (dRnd() - 0.5) * 1.2 });
+        }
       } else {
-        // crate — wooden supply / loot crate (uses the otherwise-idle prop-crate).
-        geometry.push({ kind: 'crate', x: jx, y: 0.2, z: jz, sx: 0.7, sy: 0.7, sz: 0.6, rotY: (rnd() - 0.5) * 0.6 });
+        // lone brazier — a warm anchor in ordinary rooms
+        geometry.push({ kind: 'brazier', x: jx, y: 0.35, z: jz, sx: 0.7, sy: 0.7, sz: 0.7 });
+      }
+    }
+    // wall-hug clutter — small bones / rubble against the room's inner edge
+    // (classic dungeon set dressing: debris collects at the walls)
+    const hugN = Math.round((r.w + r.h) * 0.2);
+    for (let k = 0; k < hugN; k++) {
+      const side = Math.floor(dRnd() * 4);              // 0 N / 1 S / 2 W / 3 E
+      const along = 1 + Math.floor(dRnd() * Math.max(1, (side < 2 ? r.w : r.h) - 2));
+      const cx = side < 2 ? r.cx + along : side === 2 ? r.cx : r.cx + r.w - 1;
+      const cy = side < 2 ? (side === 0 ? r.cy : r.cy + r.h - 1) : r.cy + along;
+      const s = cellToLocal(cx, cy);
+      const push = CELL * 0.32;                          // nudge toward the wall
+      const jx = s.x + (side === 2 ? -push : side === 3 ? push : (dRnd() - 0.5) * 0.5);
+      const jz = s.z + (side === 0 ? -push : side === 1 ? push : (dRnd() - 0.5) * 0.5);
+      const alongWall = side < 2 ? 0 : Math.PI / 2;      // lay pieces parallel to the wall
+      if (dRnd() < 0.5) {
+        geometry.push({ kind: 'bone', x: jx, y: 0.06, z: jz, sx: 0.42, sy: 0.1, sz: 0.12, rotY: alongWall + (dRnd() - 0.5) * 0.5 });
+      } else {
+        geometry.push({ kind: 'rubble', x: jx, y: 0.11, z: jz, sx: 0.4, sy: 0.22, sz: 0.34, rotY: alongWall + (dRnd() - 0.5) * 0.8 });
       }
     }
   }
-  // boss-room braziers
-  geometry.push({ kind: 'brazier', x: bossAt.x - 3, y: 0.35, z: bossAt.z - 3, sx: 0.7, sy: 0.7, sz: 0.7 });
-  geometry.push({ kind: 'brazier', x: bossAt.x + 3, y: 0.35, z: bossAt.z + 3, sx: 0.7, sy: 0.7, sz: 0.7 });
+  // corridor scatter — sparse slag / rubble so corridors aren't bare planks
+  for (let cy = 0; cy < CELLS; cy++) {
+    for (let cx = 0; cx < CELLS; cx++) {
+      if (!walk[cy * CELLS + cx] || inRoom(cx, cy)) continue;
+      if (dRnd() >= 0.05) continue;
+      const s = cellToLocal(cx, cy);
+      const jx = s.x + (dRnd() - 0.5) * CELL * 0.4;
+      const jz = s.z + (dRnd() - 0.5) * CELL * 0.4;
+      if (dRnd() < 0.5) {
+        geometry.push({ kind: 'slag', x: jx, y: -0.01, z: jz, sx: 0.6 + dRnd() * 0.5, sy: 0.03, sz: 0.5 + dRnd() * 0.4, rotY: (dRnd() - 0.5) * 1.4 });
+      } else {
+        geometry.push({ kind: 'rubble', x: jx, y: 0.1, z: jz, sx: 0.35, sy: 0.2, sz: 0.3, rotY: dRnd() * Math.PI });
+      }
+    }
+  }
+  // boss-room braziers — all four corners frame the arena
+  for (const [ox, oz] of [[-3, -3], [3, 3], [-3, 3], [3, -3]] as const) {
+    geometry.push({ kind: 'brazier', x: bossAt.x + ox, y: 0.35, z: bossAt.z + oz, sx: 0.7, sy: 0.7, sz: 0.7 });
+  }
 
   // ── 5. monster packs ──
   const monsterSpawns: DungeonLayout['monsterSpawns'] = [];

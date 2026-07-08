@@ -26,11 +26,13 @@ import {
   AnimationPlayer,
   Camera,
   ChildOf,
+  DirectionalLight,
   Materials,
   MeshFilter,
   MeshRenderer,
   Name,
   PointLight,
+  PointLightShadow,
   SceneInstance,
   Skin,
   Skylight,
@@ -68,24 +70,25 @@ import { installInventory } from './src/inventory-ui';
 
 const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
 
-// ── asset GUIDs (mirror assets/characters/characterw-merged.glb.meta.json
-//    subAssets[]). characterw = wb-gen3d meshy humanoid (24-joint rig); the
-//    per-motion GLBs were merged by scripts/merge-gen3d-motions.ts. Var kept
-//    as WITCH to avoid churning every reference; the hero is now characterw. ─
+// ── asset GUIDs (mirror assets/characters/charactery-merged.glb.meta.json
+//    subAssets[]). charactery = wb-gen3d meshy humanoid; per-motion GLBs merged
+//    by scripts/merge-gen3d-motions.ts (move = Handbag_Walk_inplace, user pick
+//    2026-07-09). Var kept as WITCH to avoid churning every reference. ─
 const WITCH = {
-  scene:  '019f41e5-1d62-78b4-81b6-8effb359372c',
+  scene:  '019f439f-a25e-7fd4-a8b4-595783b0359f',
   clips: [
-    { name: 'idle',   guid: '019f41e5-1d62-78b4-81b6-8f039bda8de4' },
-    { name: 'move',   guid: '019f41e5-1d62-78b4-81b6-8f04bb5542cd' },
-    { name: 'attack', guid: '019f41e5-1d62-78b4-81b6-8f058d93bc4f' },
-    { name: 'hit',    guid: '019f41e5-1d62-78b4-81b6-8f066f46b331' },
-    { name: 'death',  guid: '019f41e5-1d62-78b4-81b6-8f077d27f1a5' },
+    { name: 'idle',   guid: '019f439f-a25e-7fd4-a8b4-595b8b491fe9' },
+    { name: 'move',   guid: '019f439f-a25e-7fd4-a8b4-595c34224d6c' },
+    { name: 'attack', guid: '019f439f-a25e-7fd4-a8b4-595d1fd0ce06' },
+    { name: 'hit',    guid: '019f439f-a25e-7fd4-a8b4-595ef92b9f86' },
+    { name: 'death',  guid: '019f439f-a25e-7fd4-a8b4-595f1eb96020' },
   ] as const,
   } as const;
-// characterw (meshy humanoid) renders smaller + slighter than witch; a uniform
-// rig scale ups the whole skinned mesh. The skinning fix below pins the mesh
-// node to identity, so rig scale reaches vertices exactly once via the palette
-// — no double-transform. Tune by eye against the scene tiles.
+// charactery bbox = 1.70 m tall — same meshy-standard height as characterw, so
+// the scale that matched characterw to the scene tiles carries over unchanged.
+// A uniform rig scale ups the whole skinned mesh: the skinning fix below pins
+// the mesh node to identity, so rig scale reaches vertices exactly once via the
+// palette — no double-transform. Tune by eye against the scene tiles.
 const PLAYER_SCALE = 1.3;
 // Fallback background clear. The visible sky is the emissive dome (installSkyDome,
 // a plain textured mesh → works on every platform incl. WebKit), but it loads
@@ -114,17 +117,24 @@ type SkyCtx = {
   app?: import('@forgeax/engine-app').App;
 };
 
-async function installHdrSky(ctx: SkyCtx): Promise<void> {
+// The lighting director (applyAreaLighting) retunes the skylight per area, so
+// installHdrSky reports which entity it owns + whether the IBL upgrade landed.
+type SkyLight = { ent: EntityHandle; ibl: boolean };
+
+async function installHdrSky(ctx: SkyCtx): Promise<SkyLight> {
   // Dim warm fill suits the forge; the HDR cubemap overrides it on Chromium.
+  // Slightly less saturated + a touch brighter than the original 0.95/0.6/0.45
+  // @0.28 so character faces keep readable detail in the shade.
   const skylight = ctx.world.spawn(
-    { component: Skylight, data: { colorR: 0.95, colorG: 0.6, colorB: 0.45, intensity: 0.28 } },
+    { component: Skylight, data: { colorR: 0.95, colorG: 0.68, colorB: 0.55, intensity: 0.34 } },
   ).unwrap() as EntityHandle;
+  const solid: SkyLight = { ent: skylight, ibl: false };
 
   // WebKit/WKWebView (desktop app) can't project → keep the solid ambient.
   const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
   if (!/Chrome|Chromium|Edg/.test(ua)) {
     console.info('[hellforge] non-Chromium WebGPU: solid-color skylight only (no IBL/skybox)');
-    return;
+    return solid;
   }
   const store = (ctx.app as unknown as { renderer?: { store?: Record<string, unknown> } })?.renderer?.store;
   // The projector was renamed to the private `_uploadCubemapFromEquirect` in
@@ -132,20 +142,21 @@ async function installHdrSky(ctx: SkyCtx): Promise<void> {
   const uploadFn = store?.uploadCubemapFromEquirect ?? store?._uploadCubemapFromEquirect;
   if (!ctx.assets || typeof uploadFn !== 'function') {
     console.info('[hellforge] no equirect→cubemap projector on the render store — solid ambient + SKY_CLEAR sky');
-    return;
+    return solid;
   }
   const guidRes = AssetGuid.parse(SKY_HDR_GUID);
-  if (!guidRes.ok) return;
+  if (!guidRes.ok) return solid;
   const podRes = await ctx.assets.loadByGuid<TextureAsset>(guidRes.value);
-  if (!podRes.ok) { console.warn('[hellforge] sky.hdr loadByGuid failed:', (podRes.error as { code?: string }).code); return; }
+  if (!podRes.ok) { console.warn('[hellforge] sky.hdr loadByGuid failed:', (podRes.error as { code?: string }).code); return solid; }
   const srcHandle = ctx.world.allocSharedRef<'TextureAsset', TextureAsset>('TextureAsset', podRes.value);
   const upload = uploadFn as (w: unknown, h: unknown, p: unknown) => Promise<{ ok: boolean; value?: unknown }>;
   const cubemapRes = await upload.call(store, ctx.world, srcHandle, podRes.value);
-  if (!cubemapRes.ok || cubemapRes.value === undefined) { console.warn('[hellforge] equirect→cubemap projection failed'); return; }
+  if (!cubemapRes.ok || cubemapRes.value === undefined) { console.warn('[hellforge] equirect→cubemap projection failed'); return solid; }
   // Upgrade to image-based lighting (neutral tint lets the HDR drive color).
-  ctx.world.set(skylight, Skylight, { cubemap: cubemapRes.value, colorR: 1, colorG: 1, colorB: 1, intensity: 0.14 });
+  ctx.world.set(skylight, Skylight, { cubemap: cubemapRes.value, colorR: 1, colorG: 1, colorB: 1, intensity: 0.18 });
   ctx.world.spawn({ component: SkyboxBackground, data: { cubemap: cubemapRes.value, mode: SKYBOX_MODE_CUBEMAP } });
   console.log('[hellforge] HDR sky installed (cubemap skybox + IBL)');
+  return { ent: skylight, ibl: true };
 }
 
 // ── visible sky dome ──────────────────────────────────────────────────────
@@ -199,7 +210,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
   // ── 2. HDR sky (code-side; see installHdrSky above). Fire-and-forget: the
   //       sky pops in when the projection completes; the game never blocks. ──
-  void installHdrSky({ world, assets, app });
+  // `skyLightDirty` defers the area re-tint to the update loop — the promise
+  // may resolve before or after the lighting director below is initialised.
+  let sky: SkyLight | null = null;
+  let skyLightDirty = false;
+  void installHdrSky({ world, assets, app }).then((s) => { sky = s; skyLightDirty = true; });
 
   // ── 2b. Visible sky dome (emissive equirect sphere; see installSkyDome). The
   //        engine won't render SkyboxBackground, so this is what you actually
@@ -573,20 +588,46 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     }
   }
   flatQuad(DEN_EXIT.x, DEN_EXIT.z, 3.0, portalMatBack);
-  // Cave-mouth framing: two crooked stones so the portal reads from afar.
-  const stoneMat = world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', Materials.standard({
-    baseColor: [0.25, 0.20, 0.18, 1], roughness: 0.95, metallic: 0.02,
-  }));
-  world.spawn(
-    { component: Transform, data: { posX: CAVE_MOUTH.x - 2.2, posY: 1.2, posZ: CAVE_MOUTH.z, quatX: 0, quatY: 0.13, quatZ: 0.09, quatW: 0.987, scaleX: 0.9, scaleY: 2.4, scaleZ: 0.9 } },
-    { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
-    { component: MeshRenderer, data: { materials: [stoneMat] } },
-  );
-  world.spawn(
-    { component: Transform, data: { posX: CAVE_MOUTH.x + 2.2, posY: 1.0, posZ: CAVE_MOUTH.z, quatX: 0, quatY: -0.16, quatZ: -0.08, quatW: 0.984, scaleX: 0.8, scaleY: 2.0, scaleZ: 0.8 } },
-    { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
-    { component: MeshRenderer, data: { materials: [stoneMat] } },
-  );
+  // Cave-mouth framing: a weathered stone archway (reused camp gate props —
+  // two columns + a lintel) so the portal reads as a real gateway from afar.
+  // GUIDs are prop-gate-column / prop-gate-lintel mesh+material sub-assets
+  // (already catalogued by the encampment scene, so loadByGuid resolves them).
+  if (assets) {
+    const loadProp = async (meshG: string, matG: string) => {
+      const mp = AssetGuid.parse(meshG);
+      const tp = AssetGuid.parse(matG);
+      if (!mp.ok || !tp.ok) return null;
+      const [mr, tr] = await Promise.all([
+        assets.loadByGuid<MeshAsset>(mp.value),
+        assets.loadByGuid<MaterialAsset>(tp.value),
+      ]);
+      if (!mr.ok || !tr.ok) return null;
+      return {
+        mesh: world.allocSharedRef<'MeshAsset', MeshAsset>('MeshAsset', mr.value),
+        mat: world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', tr.value),
+      };
+    };
+    const col = await loadProp('01a96efc-af0d-c3bd-3279-4cdf1171e13f', '05bb83e3-79dd-2235-eb12-5fb62a10f90b');
+    const lintel = await loadProp('20b5893c-9192-122f-784d-cf5cda04236d', '3889dd23-72ba-4ed6-92c9-dcfb70f7a339');
+    if (col) {
+      for (const dx of [-2.5, 2.5]) {
+        world.spawn(
+          { component: Transform, data: { posX: CAVE_MOUTH.x + dx, posY: 1.5, posZ: CAVE_MOUTH.z, scaleX: 1.5, scaleY: 1.5, scaleZ: 1.5 } },
+          { component: MeshFilter, data: { assetHandle: col.mesh } },
+          { component: MeshRenderer, data: { materials: [col.mat] } },
+        );
+      }
+    } else {
+      console.warn('[hellforge] portal arch: gate columns failed to load');
+    }
+    if (lintel) {
+      world.spawn(
+        { component: Transform, data: { posX: CAVE_MOUTH.x, posY: 3.2, posZ: CAVE_MOUTH.z, scaleX: 2.8, scaleY: 1, scaleZ: 0.8 } },
+        { component: MeshFilter, data: { assetHandle: lintel.mesh } },
+        { component: MeshRenderer, data: { materials: [lintel.mat] } },
+      );
+    }
+  }
   let portalArmed = true;
   let portalMoteTimer = 0;
 
@@ -616,10 +657,15 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   };
 
   // ── player state ──────────────────────────────────────────────────────
-  // Player-following warm torch light (cow-survivor level2 night pattern).
+  // Player-following key light. Sits camera-side of the head (the top-down rig
+  // looks from +z) so the FACE catches light instead of just hair + shoulders,
+  // in a near-white warm tone — the old straight-overhead deep-orange torch
+  // (1.0/0.55/0.35 @ y3.0) drowned facial detail in red and lit the ground
+  // right where the Sun's shadow falls, washing the shadow out. Tighter range
+  // keeps the ground-shadow contrast.
   const playerLight = world.spawn(
-    { component: Transform, data: { posX: 0, posY: 3.0, posZ: 5 } },
-    { component: PointLight, data: { colorR: 1.0, colorG: 0.55, colorB: 0.35, intensity: 10, range: 7 } },
+    { component: Transform, data: { posX: 0, posY: 2.4, posZ: 6.6 } },
+    { component: PointLight, data: { colorR: 1.0, colorG: 0.78, colorB: 0.62, intensity: 13, range: 5 } },
   ).unwrap();
 
   // Witch shadow proxy: humanoid-sized vertical box at her position.
@@ -654,6 +700,86 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // ends. `oneShotUntil` is the performance.now() ms at which it ends.
     oneShotUntil: 0,
   };
+
+  // ── lighting director ─────────────────────────────────────────────────
+  // ONE world, TWO looks. The URP forward path renders at most 4 point lights
+  // (LIGHT_ARRAY_MAX_SLOTS) and a directional light is global, so per-scene
+  // lights can't work — instead the game owns ONE sun + the whole point-light
+  // budget and RETUNES them on area change (only one area is ever on screen;
+  // the den sits 300 m out, past the camera far plane). The camp pack carries
+  // no light entities for the same reason — lights live here, geometry there.
+  //
+  // Sun: cool moonlight outdoors, warm shaft-glow in the den. shadowDistance
+  // 42 (not the 200 default) packs the 2048² CSM into the actually-visible
+  // frustum → ~5× denser shadow texels, so the witch proxy reads as a crisp
+  // silhouette instead of a blur. The direction's horizontal component points
+  // AWAY from the camera-side fill light so her shadow lands on unlit floor.
+  const SUN_LOOK = {
+    camp: { directionX: -0.45, directionY: -0.7, directionZ: -0.5, colorR: 0.45, colorG: 0.55, colorB: 1, intensity: 2.6 },
+    den:  { directionX: -0.3, directionY: -0.85, directionZ: -0.35, colorR: 1, colorG: 0.58, colorB: 0.32, intensity: 1.9 },
+  } as const;
+  const sun = world.spawn(
+    { component: DirectionalLight, data: { ...SUN_LOOK.camp, castShadow: true, cascadeCount: 1, mapSize: 2048, shadowDistance: 42 } },
+  ).unwrap();
+  // Point pool: campfire (fixed; casts REAL point shadows — logs, props and
+  // the witch proxy throw radial flickering shadows around the fire) + two
+  // roaming torch slots + the player fill light = exactly 4. In camp the
+  // roaming slots sit on the gate torches; in the den they re-seat onto the
+  // two nearest fire fixtures. Seats sit ABOVE the emissive flame meshes —
+  // a shadow-casting light inside its own fixture would be occluded by it.
+  const GATE_L = { x: -2.5, y: 2.25, z: 13.5 } as const;
+  const GATE_R = { x: 2.5, y: 2.25, z: 13.5 } as const;
+  const campfireLight = world.spawn(
+    { component: Transform, data: { posX: 0, posY: 1.2, posZ: 0 } },
+    { component: PointLight, data: { colorR: 1, colorG: 0.6, colorB: 0.25, intensity: 12, range: 16 } },
+    { component: PointLightShadow, data: { mapSize: 512, farPlane: 18 } },
+  ).unwrap();
+  const torchA = world.spawn(
+    { component: Transform, data: { posX: GATE_L.x, posY: GATE_L.y, posZ: GATE_L.z } },
+    { component: PointLight, data: { colorR: 1, colorG: 0.55, colorB: 0.18, intensity: 8, range: 12 } },
+    { component: PointLightShadow, data: { mapSize: 512, farPlane: 14 } },
+  ).unwrap();
+  const torchB = world.spawn(
+    { component: Transform, data: { posX: GATE_R.x, posY: GATE_R.y, posZ: GATE_R.z } },
+    { component: PointLight, data: { colorR: 1, colorG: 0.55, colorB: 0.18, intensity: 8, range: 12 } },
+  ).unwrap();
+  let torchBaseA = 8, torchBaseB = 8;   // flicker centre per slot
+  let torchSeatTimer = 0;
+  let flickT = 0;
+  const seatDenTorches = (): void => {
+    // Two nearest fire fixtures within 26 m; an unused slot parks below the
+    // floor (range 12 ≪ 60 m of rock → contributes nothing).
+    const near = dungeon.firePoints
+      .map((p) => ({ p, d: Math.hypot(p.x - state.px, p.z - state.pz) }))
+      .filter((e) => e.d < 26)
+      .sort((a, b) => a.d - b.d);
+    const slots = [torchA, torchB] as const;
+    for (let i = 0; i < slots.length; i++) {
+      const seat = near[i]?.p;
+      world.set(slots[i]!, Transform, seat
+        ? { posX: seat.x, posY: seat.y, posZ: seat.z }
+        : { posX: 0, posY: -60, posZ: 0 });
+    }
+    torchBaseA = 9; torchBaseB = 9;
+  };
+  const applyAreaLighting = (a: Area): void => {
+    world.set(sun, DirectionalLight, SUN_LOOK[a === 'den' ? 'den' : 'camp']);
+    if (sky) {
+      // Den ambient: dimmer + ember-tinted so torch pools and the sun shaft
+      // carry the read; outdoors: neutral IBL (Chromium) / warm solid fallback.
+      world.set(sky.ent, Skylight, a === 'den'
+        ? (sky.ibl ? { colorR: 1, colorG: 0.72, colorB: 0.5, intensity: 0.11 } : { colorR: 0.9, colorG: 0.55, colorB: 0.4, intensity: 0.24 })
+        : (sky.ibl ? { colorR: 1, colorG: 1, colorB: 1, intensity: 0.18 } : { colorR: 0.95, colorG: 0.68, colorB: 0.55, intensity: 0.34 }));
+    }
+    if (a === 'den') {
+      seatDenTorches();
+    } else {
+      world.set(torchA, Transform, { posX: GATE_L.x, posY: GATE_L.y, posZ: GATE_L.z });
+      world.set(torchB, Transform, { posX: GATE_R.x, posY: GATE_R.y, posZ: GATE_R.z });
+      torchBaseA = 8; torchBaseB = 8;
+    }
+  };
+
   // lookYaw/lookPitch: third-person orbit angles; faceX/faceZ: witch facing.
   let lookYaw = 0, lookPitch = -0.25;
   let faceX = 0, faceZ = -1;
@@ -698,11 +824,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const TP_DIST = 3.2;
   const TP_TARGET_Y = 1.35;
   const FACING_SIGN = 1;
-  // characterw move clip = 0.667 s vs witch 1.233 s (≈1.85× shorter loop). The
-  // stride is the ground distance covered at base rate 1; scaling it by the
-  // loop-duration ratio keeps leg cadence matched to ground speed (base ≈ 1.6
-  // at 3.4 m/s → ~2.4 cycles/s, same as witch). Idle/attack/hit/death keep base 1.
-  const ANIM_STRIDE = 1.15 * (1.233 / 0.667); // ≈ 2.13
+  // ANIM_STRIDE = the ground speed (m/s) the move clip matches at playback
+  // rate 1 — an animator-authored walk reads naturally at a human ~1.5 m/s.
+  // (The old "scale by loop-duration ratio" formula assumed one stride per
+  // loop; Handbag_Walk_inplace is a multi-step 3.733 s loop, so that produced
+  // rate ≈ 9 at run speed — comically fast feet.) SPEED 3.4 → rate ≈ 2.3,
+  // SPRINT 5.4 → ≈ 3.6, both inside the 4.8 cap. Idle/attack/hit/death keep 1.
+  const ANIM_STRIDE = 1.5;
   const ANIM_SPEED_MIN = 0.5, ANIM_SPEED_MAX = 4.8;
   const topPitch = -Math.atan2(TOP_DY, TOP_DZ);
   const topQ = quat.create();
@@ -798,7 +926,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   canvas.style.cursor = GAME_CURSOR;
 
   // ── clip helpers ──────────────────────────────────────────────────────
-  const ATTACK_SPEED = 1.9;
+  // mage_soell_cast_6 has a long wind-up + follow-through; 2.6× keeps the whole
+  // cast at ~0.9 s so the wind-up reads as responsive instead of laggy.
+  const ATTACK_SPEED = 2.6;
   const HIT_SPEED = 1.7;
   // fps compensation: the engine's advanceAnimationPlayer steps clips a
   // FIXED 1/60 s per rendered frame (measured rate == fps/60), so below
@@ -818,13 +948,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       clips: [h], times: new Float32Array([0]), weights: new Float32Array([1]), speeds: new Float32Array([animRate]), looping: true, paused: state.paused,
     });
   };
-  const playOnce = (name: string, speed = 1) => {
+  const playOnce = (name: string, speed = 1, lockScale = 1) => {
     if (witchSkinEnt === null) return;
     if (performance.now() < state.oneShotUntil && name !== 'death') return;
     const h = clipHandles.get(name);
     if (h === undefined) return;
     state.currentClip = name;
-    state.oneShotUntil = performance.now() + ((clipDur.get(name) ?? 1) / speed) * 1000;
+    // lockScale < 1 releases control before the clip's tail (recovery frames)
+    // finishes — the state machine then swaps to move/idle, i.e. the follow-
+    // through is cancellable, ARPG-style.
+    state.oneShotUntil = performance.now() + ((clipDur.get(name) ?? 1) / speed) * 1000 * lockScale;
     witchAnimBase = speed;
     world.set(witchSkinEnt, AnimationPlayer, {
       clips: [h], times: new Float32Array([0]), weights: new Float32Array([1]), speeds: new Float32Array([speed * animRate]), looping: false, paused: state.paused,
@@ -840,7 +973,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       selectedSkill = idx;
       faceX = aim.x; faceZ = aim.z;      // snap facing to the cast direction
       const id = SKILLS[idx]!.id;
-      if (id !== 'blink') playOnce('attack', ATTACK_SPEED);
+      if (id !== 'blink') playOnce('attack', ATTACK_SPEED, 0.7); // release at 70% — recovery is cancellable
       sfx.play(id === 'magma' ? 'cast-magma' : id === 'frost' ? 'cast-frost' : id === 'arc' ? 'cast-arc' : 'blink');
       refreshSkillBar();
     } else if (res === 'mana') {
@@ -880,6 +1013,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const enterArea = (next: Area): void => {
     if (next === area) return;
     area = next;
+    applyAreaLighting(next);
     if (next === 'den') hud.showArea('熔渣深窟', 'Slagdeep Hollow');
     else if (next === 'wild') hud.showArea('灰烬荒原', 'Ashen Reach');
     else hud.showArea('余烬哨站', 'Cinderwatch');
@@ -1086,11 +1220,25 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         scaleX: PLAYER_SCALE, scaleY: PLAYER_SCALE, scaleZ: PLAYER_SCALE,
       });
     }
-    world.set(playerLight, Transform, { posX: state.px, posY: 3.0, posZ: state.pz });
+    world.set(playerLight, Transform, { posX: state.px, posY: 2.4, posZ: state.pz + 1.6 });
     world.set(shadowDisc, Transform, {
       posX: state.px, posY: 0.85, posZ: state.pz,
       scaleX: 0.6 * PLAYER_SCALE, scaleY: 1.7 * PLAYER_SCALE, scaleZ: 0.45 * PLAYER_SCALE,
     });
+    // ── lighting director tick ──
+    // Sky upgrade resolved after boot → re-tint once for the current area.
+    if (skyLightDirty) { skyLightDirty = false; applyAreaLighting(area); }
+    // Roaming torch slots follow the player through the den.
+    if (area === 'den') {
+      torchSeatTimer -= dt;
+      if (torchSeatTimer <= 0) { torchSeatTimer = 0.4; seatDenTorches(); }
+    }
+    // Ember flicker: two incommensurate sines ≈ organic wobble, no RNG churn.
+    flickT += dt;
+    const flick = (ph: number): number => 0.86 + 0.14 * Math.sin(flickT * 9.7 + ph) * Math.sin(flickT * 5.3 + ph * 1.7);
+    world.set(campfireLight, PointLight, { intensity: 12 * flick(0) });
+    world.set(torchA, PointLight, { intensity: torchBaseA * flick(2.1) });
+    world.set(torchB, PointLight, { intensity: torchBaseB * flick(4.4) });
     // Keep the sky dome centred on the player so it reads as an infinite sky.
     if (skyDome !== null) {
       world.set(skyDome, Transform, {

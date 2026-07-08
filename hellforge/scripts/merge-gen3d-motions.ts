@@ -30,7 +30,9 @@ import { mergeDocuments, unpartition, prune } from '@gltf-transform/functions';
 // are listed at the end so you can refine. Missing slots are warned.
 const MOTION_MAP: Record<string, RegExp[]> = {
   idle:   [/idle|stand|breath|待机|呼吸/i],
-  move:   [/run|跑|dash|冲刺/i, /walk|走|move/i],          // prefer run, then walk
+  // charactery (2026-07-09): user picked Handbag_Walk_inplace as the move clip;
+  // run/walk keywords stay as fallbacks for the next character delivery.
+  move:   [/handbag/i, /run|跑|dash|冲刺/i, /walk|走|move/i],
   attack: [/punch|kick|shot|combo|attack|slash|cast|挥|踢|打|施法/i],
   hit:    [/hit|hurt|damage|stagger|受击|被打|后仰/i],
   death:  [/dead|death|die|死亡|倒地|倒下/i],

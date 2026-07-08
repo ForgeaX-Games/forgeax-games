@@ -27,42 +27,12 @@
                 "scaleZ": 1
               },
               "MeshFilter": {
-                "assetHandle": 20
+                "assetHandle": 16
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  17
                 ]
-              }
-            }
-          },
-          {
-            "localId": 1,
-            "components": {
-              "Name": {
-                "value": "Sun"
-              },
-              "Transform": {
-                "posX": 0,
-                "posY": 10,
-                "posZ": 0,
-                "scaleX": 1,
-                "scaleY": 1,
-                "scaleZ": 1
-              },
-              "DirectionalLight": {
-                "directionX": 0.6,
-                "directionY": -0.55,
-                "directionZ": 0.55,
-                "colorR": 0.45098039215686275,
-                "colorG": 0.5490196078431373,
-                "colorB": 1,
-                "intensity": 2,
-                "castShadow": true,
-                "cascadeCount": 1,
-                "mapSize": 2048,
-                "farPlane": 60,
-                "nearPlane": 0.1
               }
             }
           },
@@ -85,11 +55,11 @@
                 "scaleZ": 0.8
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 2
               },
               "MeshRenderer": {
                 "materials": [
-                  4
+                  3
                 ]
               }
             }
@@ -101,23 +71,23 @@
                 "value": "CampfireLog1"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 0.55,
-                "posZ": 0.25,
+                "posX": 0.62,
+                "posY": 0.19698899388313293,
+                "posZ": 0.45,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.21643961393810288,
                 "quatZ": 0,
-                "quatW": 1,
-                "scaleX": 1.2,
-                "scaleY": 0.18,
-                "scaleZ": 0.18
+                "quatW": 0.9762960071199334,
+                "scaleX": 0.6,
+                "scaleY": 0.6,
+                "scaleZ": 0.6
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 22
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  23
                 ]
               }
             }
@@ -129,23 +99,23 @@
                 "value": "CampfireLog2"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 0.55,
-                "posZ": -0.25,
+                "posX": -0.58,
+                "posY": 0.19698899388313293,
+                "posZ": -0.42,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": -0.40673664307580015,
                 "quatZ": 0,
-                "quatW": 1,
-                "scaleX": 1.2,
-                "scaleY": 0.18,
-                "scaleZ": 0.18
+                "quatW": 0.9135454576426009,
+                "scaleX": 0.6,
+                "scaleY": 0.6,
+                "scaleZ": 0.6
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 22
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  23
                 ]
               }
             }
@@ -169,35 +139,12 @@
                 "scaleZ": 0.25
               },
               "MeshFilter": {
-                "assetHandle": 5
+                "assetHandle": 4
               },
               "MeshRenderer": {
                 "materials": [
-                  6
+                  5
                 ]
-              }
-            }
-          },
-          {
-            "localId": 6,
-            "components": {
-              "Name": {
-                "value": "CampfireLight"
-              },
-              "Transform": {
-                "posX": 0,
-                "posY": 1.2,
-                "posZ": 0,
-                "scaleX": 1,
-                "scaleY": 1,
-                "scaleZ": 1
-              },
-              "PointLight": {
-                "colorR": 1,
-                "colorG": 0.6,
-                "colorB": 0.25098039215686274,
-                "intensity": 12,
-                "range": 16
               }
             }
           },
@@ -215,16 +162,16 @@
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1,
-                "scaleX": 0.6,
-                "scaleY": 3,
-                "scaleZ": 0.6
+                "scaleX": 1.5,
+                "scaleY": 1.5,
+                "scaleZ": 1.5
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 24
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  25
                 ]
               }
             }
@@ -243,50 +190,22 @@
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1,
-                "scaleX": 0.6,
-                "scaleY": 3,
-                "scaleZ": 0.6
+                "scaleX": 1.5,
+                "scaleY": 1.5,
+                "scaleZ": 1.5
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 24
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  25
                 ]
               }
             }
           },
           {
             "localId": 9,
-            "components": {
-              "Name": {
-                "value": "GateLintel"
-              },
-              "Transform": {
-                "posX": 0,
-                "posY": 3.2,
-                "posZ": 14,
-                "quatX": 0,
-                "quatY": 0,
-                "quatZ": 0,
-                "quatW": 1,
-                "scaleX": 5.6,
-                "scaleY": 0.4,
-                "scaleZ": 0.5
-              },
-              "MeshFilter": {
-                "assetHandle": 0
-              },
-              "MeshRenderer": {
-                "materials": [
-                  17
-                ]
-              }
-            }
-          },
-          {
-            "localId": 10,
             "components": {
               "Name": {
                 "value": "TorchGateL_Post"
@@ -299,22 +218,22 @@
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1,
-                "scaleX": 0.12,
-                "scaleY": 1.8,
-                "scaleZ": 0.12
+                "scaleX": 0.9,
+                "scaleY": 0.9,
+                "scaleZ": 0.9
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 26
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  27
                 ]
               }
             }
           },
           {
-            "localId": 11,
+            "localId": 10,
             "components": {
               "Name": {
                 "value": "TorchGateL_Glow"
@@ -332,40 +251,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 9
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  10
+                  9
                 ]
               }
             }
           },
           {
             "localId": 12,
-            "components": {
-              "Name": {
-                "value": "TorchGateL_Light"
-              },
-              "Transform": {
-                "posX": -2.5,
-                "posY": 2.1,
-                "posZ": 13.5,
-                "scaleX": 1,
-                "scaleY": 1,
-                "scaleZ": 1
-              },
-              "PointLight": {
-                "colorR": 1,
-                "colorG": 0.5490196078431373,
-                "colorB": 0.1803921568627451,
-                "intensity": 8,
-                "range": 12
-              }
-            }
-          },
-          {
-            "localId": 13,
             "components": {
               "Name": {
                 "value": "TorchGateR_Post"
@@ -378,22 +274,22 @@
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1,
-                "scaleX": 0.12,
-                "scaleY": 1.8,
-                "scaleZ": 0.12
+                "scaleX": 0.9,
+                "scaleY": 0.9,
+                "scaleZ": 0.9
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 26
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  27
                 ]
               }
             }
           },
           {
-            "localId": 14,
+            "localId": 13,
             "components": {
               "Name": {
                 "value": "TorchGateR_Glow"
@@ -411,40 +307,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 9
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  10
+                  9
                 ]
               }
             }
           },
           {
             "localId": 15,
-            "components": {
-              "Name": {
-                "value": "TorchGateR_Light"
-              },
-              "Transform": {
-                "posX": 2.5,
-                "posY": 2.1,
-                "posZ": 13.5,
-                "scaleX": 1,
-                "scaleY": 1,
-                "scaleZ": 1
-              },
-              "PointLight": {
-                "colorR": 1,
-                "colorG": 0.5490196078431373,
-                "colorB": 0.1803921568627451,
-                "intensity": 8,
-                "range": 12
-              }
-            }
-          },
-          {
-            "localId": 16,
             "components": {
               "Name": {
                 "value": "TorchHut1_Post"
@@ -457,22 +330,22 @@
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1,
-                "scaleX": 0.12,
-                "scaleY": 1.8,
-                "scaleZ": 0.12
+                "scaleX": 0.9,
+                "scaleY": 0.9,
+                "scaleZ": 0.9
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 26
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  27
                 ]
               }
             }
           },
           {
-            "localId": 17,
+            "localId": 16,
             "components": {
               "Name": {
                 "value": "TorchHut1_Glow"
@@ -490,17 +363,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 9
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  10
+                  9
                 ]
               }
             }
           },
           {
-            "localId": 18,
+            "localId": 17,
             "components": {
               "Name": {
                 "value": "TorchHut2_Post"
@@ -513,22 +386,22 @@
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1,
-                "scaleX": 0.12,
-                "scaleY": 1.8,
-                "scaleZ": 0.12
+                "scaleX": 0.9,
+                "scaleY": 0.9,
+                "scaleZ": 0.9
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 26
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  27
                 ]
               }
             }
           },
           {
-            "localId": 19,
+            "localId": 18,
             "components": {
               "Name": {
                 "value": "TorchHut2_Glow"
@@ -546,17 +419,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 9
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  10
+                  9
                 ]
               }
             }
           },
           {
-            "localId": 20,
+            "localId": 19,
             "components": {
               "Name": {
                 "value": "TorchHut3F_Post"
@@ -569,22 +442,22 @@
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1,
-                "scaleX": 0.12,
-                "scaleY": 1.8,
-                "scaleZ": 0.12
+                "scaleX": 0.9,
+                "scaleY": 0.9,
+                "scaleZ": 0.9
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 26
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  27
                 ]
               }
             }
           },
           {
-            "localId": 21,
+            "localId": 20,
             "components": {
               "Name": {
                 "value": "TorchHut3F_Glow"
@@ -602,17 +475,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 9
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  10
+                  9
                 ]
               }
             }
           },
           {
-            "localId": 22,
+            "localId": 21,
             "components": {
               "Name": {
                 "value": "TorchHut3R_Post"
@@ -625,22 +498,22 @@
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1,
-                "scaleX": 0.12,
-                "scaleY": 1.8,
-                "scaleZ": 0.12
+                "scaleX": 0.9,
+                "scaleY": 0.9,
+                "scaleZ": 0.9
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 26
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  27
                 ]
               }
             }
           },
           {
-            "localId": 23,
+            "localId": 22,
             "components": {
               "Name": {
                 "value": "TorchHut3R_Glow"
@@ -658,17 +531,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 9
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  10
+                  9
                 ]
               }
             }
           },
           {
-            "localId": 24,
+            "localId": 23,
             "components": {
               "Name": {
                 "value": "Boulder_1"
@@ -686,17 +559,17 @@
                 "scaleZ": 0.75
               },
               "MeshFilter": {
-                "assetHandle": 11
+                "assetHandle": 10
               },
               "MeshRenderer": {
                 "materials": [
-                  12
+                  11
                 ]
               }
             }
           },
           {
-            "localId": 25,
+            "localId": 24,
             "components": {
               "Name": {
                 "value": "Boulder_2"
@@ -714,17 +587,17 @@
                 "scaleZ": 0.5
               },
               "MeshFilter": {
-                "assetHandle": 11
+                "assetHandle": 10
               },
               "MeshRenderer": {
                 "materials": [
-                  12
+                  11
                 ]
               }
             }
           },
           {
-            "localId": 26,
+            "localId": 25,
             "components": {
               "Name": {
                 "value": "Boulder_3"
@@ -742,17 +615,17 @@
                 "scaleZ": 0.9
               },
               "MeshFilter": {
-                "assetHandle": 11
+                "assetHandle": 10
               },
               "MeshRenderer": {
                 "materials": [
-                  12
+                  11
                 ]
               }
             }
           },
           {
-            "localId": 27,
+            "localId": 26,
             "components": {
               "Name": {
                 "value": "Boulder_4"
@@ -770,17 +643,17 @@
                 "scaleZ": 0.45
               },
               "MeshFilter": {
-                "assetHandle": 11
+                "assetHandle": 10
               },
               "MeshRenderer": {
                 "materials": [
-                  12
+                  11
                 ]
               }
             }
           },
           {
-            "localId": 28,
+            "localId": 27,
             "components": {
               "Name": {
                 "value": "Boulder_5"
@@ -798,17 +671,17 @@
                 "scaleZ": 0.6
               },
               "MeshFilter": {
-                "assetHandle": 11
+                "assetHandle": 10
               },
               "MeshRenderer": {
                 "materials": [
-                  12
+                  11
                 ]
               }
             }
           },
           {
-            "localId": 29,
+            "localId": 28,
             "components": {
               "Name": {
                 "value": "Boulder_6"
@@ -826,17 +699,17 @@
                 "scaleZ": 0.4
               },
               "MeshFilter": {
-                "assetHandle": 11
+                "assetHandle": 10
               },
               "MeshRenderer": {
                 "materials": [
-                  12
+                  11
                 ]
               }
             }
           },
           {
-            "localId": 30,
+            "localId": 29,
             "components": {
               "Name": {
                 "value": "Boulder_7"
@@ -854,17 +727,17 @@
                 "scaleZ": 0.55
               },
               "MeshFilter": {
-                "assetHandle": 11
+                "assetHandle": 10
               },
               "MeshRenderer": {
                 "materials": [
-                  12
+                  11
                 ]
               }
             }
           },
           {
-            "localId": 31,
+            "localId": 30,
             "components": {
               "Name": {
                 "value": "Boulder_8"
@@ -882,17 +755,17 @@
                 "scaleZ": 0.35
               },
               "MeshFilter": {
-                "assetHandle": 11
+                "assetHandle": 10
               },
               "MeshRenderer": {
                 "materials": [
-                  12
+                  11
                 ]
               }
             }
           },
           {
-            "localId": 32,
+            "localId": 31,
             "components": {
               "Name": {
                 "value": "DeadTree1_Trunk"
@@ -905,22 +778,22 @@
                 "quatY": 0.1494404289559738,
                 "quatZ": 0,
                 "quatW": 0.9887707308539501,
-                "scaleX": 0.28,
-                "scaleY": 2.3,
-                "scaleZ": 0.28
+                "scaleX": 1.15,
+                "scaleY": 1.15,
+                "scaleZ": 1.15
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 28
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  29
                 ]
               }
             }
           },
           {
-            "localId": 33,
+            "localId": 32,
             "components": {
               "Name": {
                 "value": "DeadTree2_Trunk"
@@ -933,22 +806,22 @@
                 "quatY": 0.5226845695074632,
                 "quatZ": 0,
                 "quatW": 0.8525261525600243,
-                "scaleX": 0.28,
-                "scaleY": 2.3,
-                "scaleZ": 0.28
+                "scaleX": 1.15,
+                "scaleY": 1.15,
+                "scaleZ": 1.15
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 28
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  29
                 ]
               }
             }
           },
           {
-            "localId": 34,
+            "localId": 33,
             "components": {
               "Name": {
                 "value": "DeadTree3_Trunk"
@@ -961,22 +834,22 @@
                 "quatY": -0.8414730640052487,
                 "quatZ": 0,
                 "quatW": -0.5402990676964181,
-                "scaleX": 0.28,
-                "scaleY": 2.3,
-                "scaleZ": 0.28
+                "scaleX": 1.15,
+                "scaleY": 1.15,
+                "scaleZ": 1.15
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 28
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  29
                 ]
               }
             }
           },
           {
-            "localId": 35,
+            "localId": 34,
             "components": {
               "Name": {
                 "value": "DeadTree4_Trunk"
@@ -989,22 +862,22 @@
                 "quatY": 0.3428974331611294,
                 "quatZ": 0,
                 "quatW": 0.9393728494753874,
-                "scaleX": 0.28,
-                "scaleY": 2.3,
-                "scaleZ": 0.28
+                "scaleX": 1.15,
+                "scaleY": 1.15,
+                "scaleZ": 1.15
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 28
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  29
                 ]
               }
             }
           },
           {
-            "localId": 36,
+            "localId": 35,
             "components": {
               "Name": {
                 "value": "Crate_1"
@@ -1022,17 +895,17 @@
                 "scaleZ": 0.35
               },
               "MeshFilter": {
-                "assetHandle": 13
+                "assetHandle": 12
               },
               "MeshRenderer": {
                 "materials": [
-                  14
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 37,
+            "localId": 36,
             "components": {
               "Name": {
                 "value": "Crate_2"
@@ -1050,17 +923,17 @@
                 "scaleZ": 0.275
               },
               "MeshFilter": {
-                "assetHandle": 13
+                "assetHandle": 12
               },
               "MeshRenderer": {
                 "materials": [
-                  14
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 38,
+            "localId": 37,
             "components": {
               "Name": {
                 "value": "Crate_3"
@@ -1078,11 +951,39 @@
                 "scaleZ": 0.35
               },
               "MeshFilter": {
-                "assetHandle": 13
+                "assetHandle": 12
               },
               "MeshRenderer": {
                 "materials": [
-                  14
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 38,
+            "components": {
+              "Name": {
+                "value": "EmberCrack_1"
+              },
+              "Transform": {
+                "posX": 5.5,
+                "posY": 0.07334520220756531,
+                "posZ": 22.8,
+                "quatX": 0,
+                "quatY": 0.2474048914020953,
+                "quatZ": 0,
+                "quatW": 0.9689121836938152,
+                "scaleX": 0.6,
+                "scaleY": 0.6,
+                "scaleZ": 0.6
+              },
+              "MeshFilter": {
+                "assetHandle": 30
+              },
+              "MeshRenderer": {
+                "materials": [
+                  31
                 ]
               }
             }
@@ -1091,26 +992,26 @@
             "localId": 39,
             "components": {
               "Name": {
-                "value": "EmberCrack_1"
+                "value": "EmberCrack_2"
               },
               "Transform": {
-                "posX": 5.5,
-                "posY": 0.012,
-                "posZ": 22.8,
+                "posX": -12,
+                "posY": 0.08556940257549285,
+                "posZ": 24,
                 "quatX": 0,
-                "quatY": 0.2474048914020953,
+                "quatY": -0.1494404289559738,
                 "quatZ": 0,
-                "quatW": 0.9689121836938152,
-                "scaleX": 1.2,
-                "scaleY": 0.03,
-                "scaleZ": 0.5
+                "quatW": 0.9887707308539501,
+                "scaleX": 0.7,
+                "scaleY": 0.7,
+                "scaleZ": 0.7
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 30
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  31
                 ]
               }
             }
@@ -1119,26 +1020,26 @@
             "localId": 40,
             "components": {
               "Name": {
-                "value": "EmberCrack_2"
+                "value": "EmberCrack_3"
               },
               "Transform": {
-                "posX": -12,
-                "posY": 0.012,
-                "posZ": 24,
+                "posX": 17,
+                "posY": 0.06723310202360154,
+                "posZ": 7.5,
                 "quatX": 0,
-                "quatY": -0.1494404289559738,
+                "quatY": 0.4794272271698707,
                 "quatZ": 0,
-                "quatW": 0.9887707308539501,
-                "scaleX": 1.4,
-                "scaleY": 0.03,
+                "quatW": 0.8775816394206348,
+                "scaleX": 0.55,
+                "scaleY": 0.55,
                 "scaleZ": 0.55
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 30
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  31
                 ]
               }
             }
@@ -1147,60 +1048,32 @@
             "localId": 41,
             "components": {
               "Name": {
-                "value": "EmberCrack_3"
+                "value": "EmberCrack_4"
               },
               "Transform": {
-                "posX": 17,
-                "posY": 0.012,
-                "posZ": 7.5,
+                "posX": -6,
+                "posY": 0.05500890165567398,
+                "posZ": 17,
                 "quatX": 0,
-                "quatY": 0.4794272271698707,
+                "quatY": 0.049982847737098886,
                 "quatZ": 0,
-                "quatW": 0.8775816394206348,
-                "scaleX": 1.1,
-                "scaleY": 0.03,
+                "quatW": 0.9987500763114314,
+                "scaleX": 0.45,
+                "scaleY": 0.45,
                 "scaleZ": 0.45
               },
               "MeshFilter": {
-                "assetHandle": 0
+                "assetHandle": 30
               },
               "MeshRenderer": {
                 "materials": [
-                  17
+                  31
                 ]
               }
             }
           },
           {
             "localId": 42,
-            "components": {
-              "Name": {
-                "value": "EmberCrack_4"
-              },
-              "Transform": {
-                "posX": -6,
-                "posY": 0.012,
-                "posZ": 17,
-                "quatX": 0,
-                "quatY": 0.049982847737098886,
-                "quatZ": 0,
-                "quatW": 0.9987500763114314,
-                "scaleX": 0.9,
-                "scaleY": 0.03,
-                "scaleZ": 0.4
-              },
-              "MeshFilter": {
-                "assetHandle": 0
-              },
-              "MeshRenderer": {
-                "materials": [
-                  17
-                ]
-              }
-            }
-          },
-          {
-            "localId": 43,
             "components": {
               "Name": {
                 "value": "Path_1__t0"
@@ -1218,17 +1091,17 @@
                 "scaleZ": 1.1064
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 44,
+            "localId": 43,
             "components": {
               "Name": {
                 "value": "Path_1__t1"
@@ -1246,17 +1119,17 @@
                 "scaleZ": 1.06
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 45,
+            "localId": 44,
             "components": {
               "Name": {
                 "value": "Path_1__t2"
@@ -1274,17 +1147,17 @@
                 "scaleZ": 0.9594
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 46,
+            "localId": 45,
             "components": {
               "Name": {
                 "value": "Path_1__t3"
@@ -1296,23 +1169,23 @@
                 "quatX": 0,
                 "quatY": 1,
                 "quatZ": 0,
-                "quatW": 0,
+                "quatW": 6.123233995736766e-17,
                 "scaleX": 1.0955,
                 "scaleY": 0.0316,
                 "scaleZ": 1.0955
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 47,
+            "localId": 46,
             "components": {
               "Name": {
                 "value": "Path_2__t0"
@@ -1324,23 +1197,23 @@
                 "quatX": 0,
                 "quatY": 1,
                 "quatZ": 0,
-                "quatW": 0,
+                "quatW": 6.123233995736766e-17,
                 "scaleX": 0.9891,
                 "scaleY": 0.0285,
                 "scaleZ": 0.9891
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 48,
+            "localId": 47,
             "components": {
               "Name": {
                 "value": "Path_2__t1"
@@ -1358,17 +1231,17 @@
                 "scaleZ": 0.9578
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 49,
+            "localId": 48,
             "components": {
               "Name": {
                 "value": "Path_2__t2"
@@ -1386,17 +1259,17 @@
                 "scaleZ": 1.0434
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 50,
+            "localId": 49,
             "components": {
               "Name": {
                 "value": "Path_2__t3"
@@ -1408,23 +1281,23 @@
                 "quatX": 0,
                 "quatY": 1,
                 "quatZ": 0,
-                "quatW": 0,
+                "quatW": 6.123233995736766e-17,
                 "scaleX": 1.1024,
                 "scaleY": 0.0318,
                 "scaleZ": 1.1024
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 51,
+            "localId": 50,
             "components": {
               "Name": {
                 "value": "Path_3__t0"
@@ -1436,23 +1309,23 @@
                 "quatX": 0,
                 "quatY": 1,
                 "quatZ": 0,
-                "quatW": 0,
+                "quatW": 6.123233995736766e-17,
                 "scaleX": 1.1274,
                 "scaleY": 0.0312,
                 "scaleZ": 1.1274
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 52,
+            "localId": 51,
             "components": {
               "Name": {
                 "value": "Path_3__t1"
@@ -1464,23 +1337,23 @@
                 "quatX": 0,
                 "quatY": 1,
                 "quatZ": 0,
-                "quatW": 0,
+                "quatW": 6.123233995736766e-17,
                 "scaleX": 1.1206,
                 "scaleY": 0.0311,
                 "scaleZ": 1.1206
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 53,
+            "localId": 52,
             "components": {
               "Name": {
                 "value": "Path_3__t2"
@@ -1498,17 +1371,17 @@
                 "scaleZ": 1.0157
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 54,
+            "localId": 53,
             "components": {
               "Name": {
                 "value": "Path_3__t3"
@@ -1526,17 +1399,17 @@
                 "scaleZ": 1.0366
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 55,
+            "localId": 54,
             "components": {
               "Name": {
                 "value": "Path_4__t0"
@@ -1554,17 +1427,17 @@
                 "scaleZ": 0.9702
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 56,
+            "localId": 55,
             "components": {
               "Name": {
                 "value": "Path_4__t1"
@@ -1576,23 +1449,23 @@
                 "quatX": 0,
                 "quatY": 1,
                 "quatZ": 0,
-                "quatW": 0,
+                "quatW": 6.123233995736766e-17,
                 "scaleX": 1.1161,
                 "scaleY": 0.0322,
                 "scaleZ": 1.1161
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 57,
+            "localId": 56,
             "components": {
               "Name": {
                 "value": "Path_4__t2"
@@ -1610,17 +1483,17 @@
                 "scaleZ": 1.0204
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 58,
+            "localId": 57,
             "components": {
               "Name": {
                 "value": "Path_4__t3"
@@ -1638,17 +1511,17 @@
                 "scaleZ": 1.0434
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 59,
+            "localId": 58,
             "components": {
               "Name": {
                 "value": "Path_4__t4"
@@ -1660,23 +1533,23 @@
                 "quatX": 0,
                 "quatY": 1,
                 "quatZ": 0,
-                "quatW": 0,
+                "quatW": 6.123233995736766e-17,
                 "scaleX": 0.9503,
                 "scaleY": 0.0274,
                 "scaleZ": 0.9503
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 60,
+            "localId": 59,
             "components": {
               "Name": {
                 "value": "Path_5__t0"
@@ -1694,17 +1567,17 @@
                 "scaleZ": 1.0542
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 61,
+            "localId": 60,
             "components": {
               "Name": {
                 "value": "Path_5__t1"
@@ -1716,23 +1589,23 @@
                 "quatX": 0,
                 "quatY": 1,
                 "quatZ": 0,
-                "quatW": 0,
+                "quatW": 6.123233995736766e-17,
                 "scaleX": 1.1062,
                 "scaleY": 0.0304,
                 "scaleZ": 1.1062
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 62,
+            "localId": 61,
             "components": {
               "Name": {
                 "value": "Path_5__t2"
@@ -1750,17 +1623,17 @@
                 "scaleZ": 1.0784
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 63,
+            "localId": 62,
             "components": {
               "Name": {
                 "value": "Path_5__t3"
@@ -1772,23 +1645,23 @@
                 "quatX": 0,
                 "quatY": 1,
                 "quatZ": 0,
-                "quatW": 0,
+                "quatW": 6.123233995736766e-17,
                 "scaleX": 1.1496,
                 "scaleY": 0.0316,
                 "scaleZ": 1.1496
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 64,
+            "localId": 63,
             "components": {
               "Name": {
                 "value": "Path_6__t0"
@@ -1806,17 +1679,17 @@
                 "scaleZ": 1.1372
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 65,
+            "localId": 64,
             "components": {
               "Name": {
                 "value": "Path_6__t1"
@@ -1828,23 +1701,23 @@
                 "quatX": 0,
                 "quatY": 1,
                 "quatZ": 0,
-                "quatW": 0,
+                "quatW": 6.123233995736766e-17,
                 "scaleX": 0.9651,
                 "scaleY": 0.0279,
                 "scaleZ": 0.9651
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 66,
+            "localId": 65,
             "components": {
               "Name": {
                 "value": "Path_6__t2"
@@ -1862,17 +1735,17 @@
                 "scaleZ": 1.0372
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
                 ]
               }
             }
           },
           {
-            "localId": 67,
+            "localId": 66,
             "components": {
               "Name": {
                 "value": "Path_6__t3"
@@ -1890,11 +1763,39 @@
                 "scaleZ": 1.1184
               },
               "MeshFilter": {
-                "assetHandle": 15
+                "assetHandle": 14
               },
               "MeshRenderer": {
                 "materials": [
-                  16
+                  15
+                ]
+              }
+            }
+          },
+          {
+            "localId": 67,
+            "components": {
+              "Name": {
+                "value": "Scatter_DeadBranchL_0"
+              },
+              "Transform": {
+                "posX": -7.7012,
+                "posY": 0.4508,
+                "posZ": 20.4994,
+                "quatX": 0,
+                "quatY": 0.267168,
+                "quatZ": 0,
+                "quatW": 0.96365,
+                "scaleX": 0.6917,
+                "scaleY": 0.6917,
+                "scaleZ": 0.6917
+              },
+              "MeshFilter": {
+                "assetHandle": 34
+              },
+              "MeshRenderer": {
+                "materials": [
+                  35
                 ]
               }
             }
@@ -1903,26 +1804,26 @@
             "localId": 68,
             "components": {
               "Name": {
-                "value": "Hut1_Wall_N__t0"
+                "value": "Scatter_DeadBranchL_1"
               },
               "Transform": {
-                "posX": -6.2771,
-                "posY": 1.2,
-                "posZ": -6,
-                "scaleX": 1.7229,
-                "scaleY": 1.7229,
-                "scaleZ": 0.1668,
+                "posX": -10.174,
+                "posY": 0.4844,
+                "posZ": 22.8823,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.613414,
                 "quatZ": 0,
-                "quatW": 1
+                "quatW": 0.789761,
+                "scaleX": 0.7432,
+                "scaleY": 0.7432,
+                "scaleZ": 0.7432
               },
               "MeshFilter": {
-                "assetHandle": 22
+                "assetHandle": 34
               },
               "MeshRenderer": {
                 "materials": [
-                  23
+                  35
                 ]
               }
             }
@@ -1931,26 +1832,26 @@
             "localId": 69,
             "components": {
               "Name": {
-                "value": "Hut1_Wall_N__t1"
+                "value": "Scatter_DeadBranchL_2"
               },
               "Transform": {
-                "posX": -5.7229,
-                "posY": 1.2,
-                "posZ": -5.998,
-                "scaleX": 1.7229,
-                "scaleY": 1.7229,
-                "scaleZ": 0.1668,
+                "posX": -19.0215,
+                "posY": 0.4328,
+                "posZ": 17.6802,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.988715,
                 "quatZ": 0,
-                "quatW": 1
+                "quatW": -0.149809,
+                "scaleX": 0.6641,
+                "scaleY": 0.6641,
+                "scaleZ": 0.6641
               },
               "MeshFilter": {
-                "assetHandle": 22
+                "assetHandle": 34
               },
               "MeshRenderer": {
                 "materials": [
-                  23
+                  35
                 ]
               }
             }
@@ -1959,26 +1860,26 @@
             "localId": 70,
             "components": {
               "Name": {
-                "value": "Hut1_Wall_E__t0"
+                "value": "Scatter_DeadBranchR_0"
               },
               "Transform": {
-                "posX": -4,
-                "posY": 1.2,
-                "posZ": -9.2301,
-                "scaleX": 1.2,
-                "scaleY": 1.2,
-                "scaleZ": 0.2426,
+                "posX": 18.0795,
+                "posY": 0.5209,
+                "posZ": 22.2078,
                 "quatX": 0,
-                "quatY": 0.707107,
+                "quatY": 0.924795,
                 "quatZ": 0,
-                "quatW": 0.707107
+                "quatW": -0.380466,
+                "scaleX": 0.7992,
+                "scaleY": 0.7992,
+                "scaleZ": 0.7992
               },
               "MeshFilter": {
-                "assetHandle": 18
+                "assetHandle": 34
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  35
                 ]
               }
             }
@@ -1987,26 +1888,26 @@
             "localId": 71,
             "components": {
               "Name": {
-                "value": "Hut1_Wall_E__t1"
+                "value": "Scatter_DeadBranchR_1"
               },
               "Transform": {
-                "posX": -3.998,
-                "posY": 1.2,
-                "posZ": -8.31,
-                "scaleX": 1.2,
-                "scaleY": 1.2,
-                "scaleZ": 0.2426,
+                "posX": 6.3127,
+                "posY": 0.3807,
+                "posZ": 19.9216,
                 "quatX": 0,
-                "quatY": 0.707107,
+                "quatY": 0.946796,
                 "quatZ": 0,
-                "quatW": 0.707107
+                "quatW": 0.321835,
+                "scaleX": 0.5841,
+                "scaleY": 0.5841,
+                "scaleZ": 0.5841
               },
               "MeshFilter": {
-                "assetHandle": 18
+                "assetHandle": 34
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  35
                 ]
               }
             }
@@ -2015,26 +1916,26 @@
             "localId": 72,
             "components": {
               "Name": {
-                "value": "Hut1_Wall_E__t2"
+                "value": "Scatter_DeadBranchR_2"
               },
               "Transform": {
-                "posX": -3.996,
-                "posY": 1.2,
-                "posZ": -7.39,
-                "scaleX": 1.2,
-                "scaleY": 1.2,
-                "scaleZ": 0.2426,
+                "posX": 12.8271,
+                "posY": 0.4211,
+                "posZ": 23.9645,
                 "quatX": 0,
-                "quatY": 0.707107,
+                "quatY": 0.903665,
                 "quatZ": 0,
-                "quatW": 0.707107
+                "quatW": 0.42824,
+                "scaleX": 0.6461,
+                "scaleY": 0.6461,
+                "scaleZ": 0.6461
               },
               "MeshFilter": {
-                "assetHandle": 18
+                "assetHandle": 34
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  35
                 ]
               }
             }
@@ -2043,26 +1944,26 @@
             "localId": 73,
             "components": {
               "Name": {
-                "value": "Hut1_Wall_E__t3"
+                "value": "Scatter_WildBoulderL_0"
               },
               "Transform": {
-                "posX": -3.994,
-                "posY": 1.2,
-                "posZ": -6.4699,
-                "scaleX": 1.2,
-                "scaleY": 1.2,
-                "scaleZ": 0.2426,
+                "posX": -13.5055,
+                "posY": 0.225,
+                "posZ": 24.807,
                 "quatX": 0,
-                "quatY": 0.707107,
+                "quatY": 0.231573,
                 "quatZ": 0,
-                "quatW": 0.707107
+                "quatW": 0.972818,
+                "scaleX": 0.2551,
+                "scaleY": 0.2551,
+                "scaleZ": 0.2551
               },
               "MeshFilter": {
-                "assetHandle": 18
+                "assetHandle": 10
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  11
                 ]
               }
             }
@@ -2071,26 +1972,26 @@
             "localId": 74,
             "components": {
               "Name": {
-                "value": "Hut1_Roof__t0"
+                "value": "Scatter_WildBoulderL_1"
               },
               "Transform": {
-                "posX": -7.025,
-                "posY": 2.495,
-                "posZ": -8.8016,
-                "scaleX": 1.0984,
-                "scaleY": 0.0834,
-                "scaleZ": 1.0984,
+                "posX": -7.6842,
+                "posY": 0.2781,
+                "posZ": 20.6561,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.942087,
                 "quatZ": 0,
-                "quatW": 1
+                "quatW": 0.335368,
+                "scaleX": 0.3152,
+                "scaleY": 0.3152,
+                "scaleZ": 0.3152
               },
               "MeshFilter": {
-                "assetHandle": 1
+                "assetHandle": 10
               },
               "MeshRenderer": {
                 "materials": [
-                  2
+                  11
                 ]
               }
             }
@@ -2099,26 +2000,26 @@
             "localId": 75,
             "components": {
               "Name": {
-                "value": "Hut1_Roof__t1"
+                "value": "Scatter_WildBoulderR_0"
               },
               "Transform": {
-                "posX": -7.025,
-                "posY": 2.497,
-                "posZ": -6.8984,
-                "scaleX": 1.0984,
-                "scaleY": 0.0834,
-                "scaleZ": 1.0984,
+                "posX": 16.4244,
+                "posY": 0.382,
+                "posZ": 19.3341,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.894377,
                 "quatZ": 0,
-                "quatW": 1
+                "quatW": -0.447314,
+                "scaleX": 0.4331,
+                "scaleY": 0.4331,
+                "scaleZ": 0.4331
               },
               "MeshFilter": {
-                "assetHandle": 1
+                "assetHandle": 10
               },
               "MeshRenderer": {
                 "materials": [
-                  2
+                  11
                 ]
               }
             }
@@ -2127,26 +2028,26 @@
             "localId": 76,
             "components": {
               "Name": {
-                "value": "Hut1_Roof__t2"
+                "value": "Scatter_WildBoulderR_1"
               },
               "Transform": {
-                "posX": -4.975,
-                "posY": 2.499,
-                "posZ": -8.8016,
-                "scaleX": 1.0984,
-                "scaleY": 0.0834,
-                "scaleZ": 1.0984,
+                "posX": 7.3002,
+                "posY": 0.2913,
+                "posZ": 19.9519,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.520199,
                 "quatZ": 0,
-                "quatW": 1
+                "quatW": -0.854045,
+                "scaleX": 0.3302,
+                "scaleY": 0.3302,
+                "scaleZ": 0.3302
               },
               "MeshFilter": {
-                "assetHandle": 1
+                "assetHandle": 10
               },
               "MeshRenderer": {
                 "materials": [
-                  2
+                  11
                 ]
               }
             }
@@ -2155,26 +2056,26 @@
             "localId": 77,
             "components": {
               "Name": {
-                "value": "Hut1_Roof__t3"
+                "value": "Scatter_CrateStash_0"
               },
               "Transform": {
-                "posX": -4.975,
-                "posY": 2.501,
-                "posZ": -6.8984,
-                "scaleX": 1.0984,
-                "scaleY": 0.0834,
-                "scaleZ": 1.0984,
+                "posX": 3.068,
+                "posY": 0.1669,
+                "posZ": -7.2255,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.999801,
                 "quatZ": 0,
-                "quatW": 1
+                "quatW": 0.019941,
+                "scaleX": 0.3209,
+                "scaleY": 0.3209,
+                "scaleZ": 0.3209
               },
               "MeshFilter": {
-                "assetHandle": 1
+                "assetHandle": 12
               },
               "MeshRenderer": {
                 "materials": [
-                  2
+                  13
                 ]
               }
             }
@@ -2183,26 +2084,26 @@
             "localId": 78,
             "components": {
               "Name": {
-                "value": "Hut2_Wall_N__t0"
+                "value": "Scatter_CrateStash_1"
               },
               "Transform": {
-                "posX": 4.6199,
-                "posY": 1.2,
-                "posZ": -6,
-                "scaleX": 1.2,
-                "scaleY": 1.2,
-                "scaleZ": 0.2426,
+                "posX": 3.2843,
+                "posY": 0.1723,
+                "posZ": -6.313,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.71301,
                 "quatZ": 0,
-                "quatW": 1
+                "quatW": 0.701154,
+                "scaleX": 0.3315,
+                "scaleY": 0.3315,
+                "scaleZ": 0.3315
               },
               "MeshFilter": {
-                "assetHandle": 18
+                "assetHandle": 12
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  13
                 ]
               }
             }
@@ -2211,26 +2112,26 @@
             "localId": 79,
             "components": {
               "Name": {
-                "value": "Hut2_Wall_N__t1"
+                "value": "Scatter_Firewood_0"
               },
               "Transform": {
-                "posX": 5.54,
-                "posY": 1.2,
-                "posZ": -5.998,
-                "scaleX": 1.2,
-                "scaleY": 1.2,
-                "scaleZ": 0.2426,
+                "posX": -1.5895,
+                "posY": 0.1596,
+                "posZ": 0.6234,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.991311,
                 "quatZ": 0,
-                "quatW": 1
+                "quatW": -0.13154,
+                "scaleX": 0.4861,
+                "scaleY": 0.4861,
+                "scaleZ": 0.4861
               },
               "MeshFilter": {
-                "assetHandle": 18
+                "assetHandle": 22
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  23
                 ]
               }
             }
@@ -2239,26 +2140,26 @@
             "localId": 80,
             "components": {
               "Name": {
-                "value": "Hut2_Wall_N__t2"
+                "value": "Scatter_Firewood_1"
               },
               "Transform": {
-                "posX": 6.46,
-                "posY": 1.2,
-                "posZ": -5.996,
-                "scaleX": 1.2,
-                "scaleY": 1.2,
-                "scaleZ": 0.2426,
+                "posX": -0.4575,
+                "posY": 0.1304,
+                "posZ": 1.7037,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.286741,
                 "quatZ": 0,
-                "quatW": 1
+                "quatW": -0.958008,
+                "scaleX": 0.3972,
+                "scaleY": 0.3972,
+                "scaleZ": 0.3972
               },
               "MeshFilter": {
-                "assetHandle": 18
+                "assetHandle": 22
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  23
                 ]
               }
             }
@@ -2267,15 +2168,43 @@
             "localId": 81,
             "components": {
               "Name": {
-                "value": "Hut2_Wall_N__t3"
+                "value": "Scatter_Firewood_2"
               },
               "Transform": {
-                "posX": 7.3801,
+                "posX": 1.5135,
+                "posY": 0.1317,
+                "posZ": 0.124,
+                "quatX": 0,
+                "quatY": 0.172694,
+                "quatZ": 0,
+                "quatW": -0.984975,
+                "scaleX": 0.4013,
+                "scaleY": 0.4013,
+                "scaleZ": 0.4013
+              },
+              "MeshFilter": {
+                "assetHandle": 22
+              },
+              "MeshRenderer": {
+                "materials": [
+                  23
+                ]
+              }
+            }
+          },
+          {
+            "localId": 82,
+            "components": {
+              "Name": {
+                "value": "Hut1_Wall_N__t0"
+              },
+              "Transform": {
+                "posX": -6.3271,
                 "posY": 1.2,
-                "posZ": -5.994,
-                "scaleX": 1.2,
-                "scaleY": 1.2,
-                "scaleZ": 0.2426,
+                "posZ": -9.9,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
                 "quatX": 0,
                 "quatY": 0,
                 "quatZ": 0,
@@ -2292,57 +2221,29 @@
             }
           },
           {
-            "localId": 82,
-            "components": {
-              "Name": {
-                "value": "Hut2_Wall_W__t0"
-              },
-              "Transform": {
-                "posX": 8,
-                "posY": 1.2,
-                "posZ": -8.1271,
-                "scaleX": 1.7229,
-                "scaleY": 1.7229,
-                "scaleZ": 0.1668,
-                "quatX": 0,
-                "quatY": 0.707107,
-                "quatZ": 0,
-                "quatW": 0.707107
-              },
-              "MeshFilter": {
-                "assetHandle": 22
-              },
-              "MeshRenderer": {
-                "materials": [
-                  23
-                ]
-              }
-            }
-          },
-          {
             "localId": 83,
             "components": {
               "Name": {
-                "value": "Hut2_Wall_W__t1"
+                "value": "Hut1_Wall_N__t1"
               },
               "Transform": {
-                "posX": 8.002,
+                "posX": -5.6729,
                 "posY": 1.2,
-                "posZ": -7.5729,
+                "posZ": -9.898,
                 "scaleX": 1.7229,
                 "scaleY": 1.7229,
-                "scaleZ": 0.1668,
+                "scaleZ": 0.3003,
                 "quatX": 0,
-                "quatY": 0.707107,
+                "quatY": 0,
                 "quatZ": 0,
-                "quatW": 0.707107
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 22
+                "assetHandle": 18
               },
               "MeshRenderer": {
                 "materials": [
-                  23
+                  19
                 ]
               }
             }
@@ -2351,26 +2252,26 @@
             "localId": 84,
             "components": {
               "Name": {
-                "value": "Hut2_Roof__t0"
+                "value": "Hut1_Wall_S__t0"
               },
               "Transform": {
-                "posX": 5.1799,
-                "posY": 2.495,
-                "posZ": -8.875,
-                "scaleX": 1.2299,
-                "scaleY": 0.1093,
-                "scaleZ": 1.2299,
+                "posX": -6.3271,
+                "posY": 1.2,
+                "posZ": -5.8,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
                 "quatX": 0,
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 24
+                "assetHandle": 18
               },
               "MeshRenderer": {
                 "materials": [
-                  25
+                  19
                 ]
               }
             }
@@ -2379,26 +2280,26 @@
             "localId": 85,
             "components": {
               "Name": {
-                "value": "Hut2_Roof__t1"
+                "value": "Hut1_Wall_S__t1"
               },
               "Transform": {
-                "posX": 5.1799,
-                "posY": 2.497,
-                "posZ": -6.825,
-                "scaleX": 1.2299,
-                "scaleY": 0.1093,
-                "scaleZ": 1.2299,
+                "posX": -5.6729,
+                "posY": 1.2,
+                "posZ": -5.798,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
                 "quatX": 0,
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 24
+                "assetHandle": 18
               },
               "MeshRenderer": {
                 "materials": [
-                  25
+                  19
                 ]
               }
             }
@@ -2407,26 +2308,26 @@
             "localId": 86,
             "components": {
               "Name": {
-                "value": "Hut2_Roof__t2"
+                "value": "Hut1_Wall_W__t0"
               },
               "Transform": {
-                "posX": 6.8201,
-                "posY": 2.499,
-                "posZ": -8.875,
-                "scaleX": 1.2299,
-                "scaleY": 0.1093,
-                "scaleZ": 1.2299,
+                "posX": -8.05,
+                "posY": 1.2,
+                "posZ": -8.1771,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.707107,
                 "quatZ": 0,
-                "quatW": 1
+                "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 24
+                "assetHandle": 18
               },
               "MeshRenderer": {
                 "materials": [
-                  25
+                  19
                 ]
               }
             }
@@ -2435,26 +2336,26 @@
             "localId": 87,
             "components": {
               "Name": {
-                "value": "Hut2_Roof__t3"
+                "value": "Hut1_Wall_W__t1"
               },
               "Transform": {
-                "posX": 6.8201,
-                "posY": 2.501,
-                "posZ": -6.825,
-                "scaleX": 1.2299,
-                "scaleY": 0.1093,
-                "scaleZ": 1.2299,
+                "posX": -8.048,
+                "posY": 1.2,
+                "posZ": -7.5229,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.707107,
                 "quatZ": 0,
-                "quatW": 1
+                "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 24
+                "assetHandle": 18
               },
               "MeshRenderer": {
                 "materials": [
-                  25
+                  19
                 ]
               }
             }
@@ -2463,19 +2364,19 @@
             "localId": 88,
             "components": {
               "Name": {
-                "value": "Hut3_Wall_S__t0"
+                "value": "Hut1_Wall_E__t0"
               },
               "Transform": {
-                "posX": -1.8801,
+                "posX": -3.95,
                 "posY": 1.2,
-                "posZ": -12,
-                "scaleX": 1.2,
-                "scaleY": 1.2,
-                "scaleZ": 0.2426,
+                "posZ": -8.1771,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.707107,
                 "quatZ": 0,
-                "quatW": 1
+                "quatW": 0.707107
               },
               "MeshFilter": {
                 "assetHandle": 18
@@ -2491,19 +2392,19 @@
             "localId": 89,
             "components": {
               "Name": {
-                "value": "Hut3_Wall_S__t1"
+                "value": "Hut1_Wall_E__t1"
               },
               "Transform": {
-                "posX": -0.94,
+                "posX": -3.948,
                 "posY": 1.2,
-                "posZ": -11.998,
-                "scaleX": 1.2,
-                "scaleY": 1.2,
-                "scaleZ": 0.2426,
+                "posZ": -7.5229,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.707107,
                 "quatZ": 0,
-                "quatW": 1
+                "quatW": 0.707107
               },
               "MeshFilter": {
                 "assetHandle": 18
@@ -2519,26 +2420,26 @@
             "localId": 90,
             "components": {
               "Name": {
-                "value": "Hut3_Wall_S__t2"
+                "value": "Hut1_Roof__t0"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 1.2,
-                "posZ": -11.996,
-                "scaleX": 1.2,
-                "scaleY": 1.2,
-                "scaleZ": 0.2426,
+                "posX": -7.125,
+                "posY": 2.495,
+                "posZ": -8.8945,
+                "scaleX": 1.2055,
+                "scaleY": 0.0834,
+                "scaleZ": 1.2055,
                 "quatX": 0,
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 18
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  1
                 ]
               }
             }
@@ -2547,26 +2448,26 @@
             "localId": 91,
             "components": {
               "Name": {
-                "value": "Hut3_Wall_S__t3"
+                "value": "Hut1_Roof__t1"
               },
               "Transform": {
-                "posX": 0.94,
-                "posY": 1.2,
-                "posZ": -11.994,
-                "scaleX": 1.2,
-                "scaleY": 1.2,
-                "scaleZ": 0.2426,
+                "posX": -7.125,
+                "posY": 2.497,
+                "posZ": -6.8055,
+                "scaleX": 1.2055,
+                "scaleY": 0.0834,
+                "scaleZ": 1.2055,
                 "quatX": 0,
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 18
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  1
                 ]
               }
             }
@@ -2575,15 +2476,71 @@
             "localId": 92,
             "components": {
               "Name": {
-                "value": "Hut3_Wall_S__t4"
+                "value": "Hut1_Roof__t2"
               },
               "Transform": {
-                "posX": 1.8801,
+                "posX": -4.875,
+                "posY": 2.499,
+                "posZ": -8.8945,
+                "scaleX": 1.2055,
+                "scaleY": 0.0834,
+                "scaleZ": 1.2055,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 93,
+            "components": {
+              "Name": {
+                "value": "Hut1_Roof__t3"
+              },
+              "Transform": {
+                "posX": -4.875,
+                "posY": 2.501,
+                "posZ": -6.8055,
+                "scaleX": 1.2055,
+                "scaleY": 0.0834,
+                "scaleZ": 1.2055,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 94,
+            "components": {
+              "Name": {
+                "value": "Hut2_Wall_N__t0"
+              },
+              "Transform": {
+                "posX": 5.6729,
                 "posY": 1.2,
-                "posZ": -11.992,
-                "scaleX": 1.2,
-                "scaleY": 1.2,
-                "scaleZ": 0.2426,
+                "posZ": -9.9,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
                 "quatX": 0,
                 "quatY": 0,
                 "quatZ": 0,
@@ -2600,85 +2557,29 @@
             }
           },
           {
-            "localId": 93,
-            "components": {
-              "Name": {
-                "value": "Hut3_Roof__t0"
-              },
-              "Transform": {
-                "posX": -1.6667,
-                "posY": 2.495,
-                "posZ": -13.557,
-                "scaleX": 0.893,
-                "scaleY": 0.0834,
-                "scaleZ": 0.893,
-                "quatX": 0,
-                "quatY": 0,
-                "quatZ": 0,
-                "quatW": 1
-              },
-              "MeshFilter": {
-                "assetHandle": 1
-              },
-              "MeshRenderer": {
-                "materials": [
-                  2
-                ]
-              }
-            }
-          },
-          {
-            "localId": 94,
-            "components": {
-              "Name": {
-                "value": "Hut3_Roof__t1"
-              },
-              "Transform": {
-                "posX": -1.6667,
-                "posY": 2.497,
-                "posZ": -12.143,
-                "scaleX": 0.893,
-                "scaleY": 0.0834,
-                "scaleZ": 0.893,
-                "quatX": 0,
-                "quatY": 0,
-                "quatZ": 0,
-                "quatW": 1
-              },
-              "MeshFilter": {
-                "assetHandle": 1
-              },
-              "MeshRenderer": {
-                "materials": [
-                  2
-                ]
-              }
-            }
-          },
-          {
             "localId": 95,
             "components": {
               "Name": {
-                "value": "Hut3_Roof__t2"
+                "value": "Hut2_Wall_N__t1"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 2.499,
-                "posZ": -13.557,
-                "scaleX": 0.893,
-                "scaleY": 0.0834,
-                "scaleZ": 0.893,
+                "posX": 6.3271,
+                "posY": 1.2,
+                "posZ": -9.898,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
                 "quatX": 0,
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 1
+                "assetHandle": 18
               },
               "MeshRenderer": {
                 "materials": [
-                  2
+                  19
                 ]
               }
             }
@@ -2687,26 +2588,26 @@
             "localId": 96,
             "components": {
               "Name": {
-                "value": "Hut3_Roof__t3"
+                "value": "Hut2_Wall_S__t0"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 2.501,
-                "posZ": -12.143,
-                "scaleX": 0.893,
-                "scaleY": 0.0834,
-                "scaleZ": 0.893,
+                "posX": 5.6729,
+                "posY": 1.2,
+                "posZ": -5.8,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
                 "quatX": 0,
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 1
+                "assetHandle": 18
               },
               "MeshRenderer": {
                 "materials": [
-                  2
+                  19
                 ]
               }
             }
@@ -2715,26 +2616,26 @@
             "localId": 97,
             "components": {
               "Name": {
-                "value": "Hut3_Roof__t4"
+                "value": "Hut2_Wall_S__t1"
               },
               "Transform": {
-                "posX": 1.6667,
-                "posY": 2.503,
-                "posZ": -13.557,
-                "scaleX": 0.893,
-                "scaleY": 0.0834,
-                "scaleZ": 0.893,
+                "posX": 6.3271,
+                "posY": 1.2,
+                "posZ": -5.798,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
                 "quatX": 0,
                 "quatY": 0,
                 "quatZ": 0,
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 1
+                "assetHandle": 18
               },
               "MeshRenderer": {
                 "materials": [
-                  2
+                  19
                 ]
               }
             }
@@ -2743,32 +2644,620 @@
             "localId": 98,
             "components": {
               "Name": {
-                "value": "Hut3_Roof__t5"
+                "value": "Hut2_Wall_W__t0"
               },
               "Transform": {
-                "posX": 1.6667,
-                "posY": 2.505,
-                "posZ": -12.143,
-                "scaleX": 0.893,
-                "scaleY": 0.0834,
-                "scaleZ": 0.893,
+                "posX": 3.95,
+                "posY": 1.2,
+                "posZ": -8.1771,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
                 "quatX": 0,
-                "quatY": 0,
+                "quatY": 0.707107,
                 "quatZ": 0,
-                "quatW": 1
+                "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 1
+                "assetHandle": 18
               },
               "MeshRenderer": {
                 "materials": [
-                  2
+                  19
                 ]
               }
             }
           },
           {
             "localId": 99,
+            "components": {
+              "Name": {
+                "value": "Hut2_Wall_W__t1"
+              },
+              "Transform": {
+                "posX": 3.952,
+                "posY": 1.2,
+                "posZ": -7.5229,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
+                "quatX": 0,
+                "quatY": 0.707107,
+                "quatZ": 0,
+                "quatW": 0.707107
+              },
+              "MeshFilter": {
+                "assetHandle": 18
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 100,
+            "components": {
+              "Name": {
+                "value": "Hut2_Wall_E__t0"
+              },
+              "Transform": {
+                "posX": 8.05,
+                "posY": 1.2,
+                "posZ": -8.1771,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
+                "quatX": 0,
+                "quatY": 0.707107,
+                "quatZ": 0,
+                "quatW": 0.707107
+              },
+              "MeshFilter": {
+                "assetHandle": 18
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 101,
+            "components": {
+              "Name": {
+                "value": "Hut2_Wall_E__t1"
+              },
+              "Transform": {
+                "posX": 8.052,
+                "posY": 1.2,
+                "posZ": -7.5229,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
+                "quatX": 0,
+                "quatY": 0.707107,
+                "quatZ": 0,
+                "quatW": 0.707107
+              },
+              "MeshFilter": {
+                "assetHandle": 18
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 102,
+            "components": {
+              "Name": {
+                "value": "Hut2_Roof__t0"
+              },
+              "Transform": {
+                "posX": 4.875,
+                "posY": 2.495,
+                "posZ": -9.1624,
+                "scaleX": 1.125,
+                "scaleY": 0.1093,
+                "scaleZ": 1.125,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 20
+              },
+              "MeshRenderer": {
+                "materials": [
+                  21
+                ]
+              }
+            }
+          },
+          {
+            "localId": 103,
+            "components": {
+              "Name": {
+                "value": "Hut2_Roof__t1"
+              },
+              "Transform": {
+                "posX": 4.875,
+                "posY": 2.497,
+                "posZ": -7.85,
+                "scaleX": 1.125,
+                "scaleY": 0.1093,
+                "scaleZ": 1.125,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 20
+              },
+              "MeshRenderer": {
+                "materials": [
+                  21
+                ]
+              }
+            }
+          },
+          {
+            "localId": 104,
+            "components": {
+              "Name": {
+                "value": "Hut2_Roof__t2"
+              },
+              "Transform": {
+                "posX": 4.875,
+                "posY": 2.499,
+                "posZ": -6.5376,
+                "scaleX": 1.125,
+                "scaleY": 0.1093,
+                "scaleZ": 1.125,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 20
+              },
+              "MeshRenderer": {
+                "materials": [
+                  21
+                ]
+              }
+            }
+          },
+          {
+            "localId": 105,
+            "components": {
+              "Name": {
+                "value": "Hut2_Roof__t3"
+              },
+              "Transform": {
+                "posX": 7.125,
+                "posY": 2.501,
+                "posZ": -9.1624,
+                "scaleX": 1.125,
+                "scaleY": 0.1093,
+                "scaleZ": 1.125,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 20
+              },
+              "MeshRenderer": {
+                "materials": [
+                  21
+                ]
+              }
+            }
+          },
+          {
+            "localId": 106,
+            "components": {
+              "Name": {
+                "value": "Hut2_Roof__t4"
+              },
+              "Transform": {
+                "posX": 7.125,
+                "posY": 2.503,
+                "posZ": -7.85,
+                "scaleX": 1.125,
+                "scaleY": 0.1093,
+                "scaleZ": 1.125,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 20
+              },
+              "MeshRenderer": {
+                "materials": [
+                  21
+                ]
+              }
+            }
+          },
+          {
+            "localId": 107,
+            "components": {
+              "Name": {
+                "value": "Hut2_Roof__t5"
+              },
+              "Transform": {
+                "posX": 7.125,
+                "posY": 2.505,
+                "posZ": -6.5376,
+                "scaleX": 1.125,
+                "scaleY": 0.1093,
+                "scaleZ": 1.125,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 20
+              },
+              "MeshRenderer": {
+                "materials": [
+                  21
+                ]
+              }
+            }
+          },
+          {
+            "localId": 108,
+            "components": {
+              "Name": {
+                "value": "Hut3_Wall_N__t0"
+              },
+              "Transform": {
+                "posX": -0.7771,
+                "posY": 1.2,
+                "posZ": -14.45,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 18
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 109,
+            "components": {
+              "Name": {
+                "value": "Hut3_Wall_N__t1"
+              },
+              "Transform": {
+                "posX": 0.7771,
+                "posY": 1.2,
+                "posZ": -14.448,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 18
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 110,
+            "components": {
+              "Name": {
+                "value": "Hut3_Wall_S__t0"
+              },
+              "Transform": {
+                "posX": -0.7771,
+                "posY": 1.2,
+                "posZ": -11.25,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 18
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 111,
+            "components": {
+              "Name": {
+                "value": "Hut3_Wall_S__t1"
+              },
+              "Transform": {
+                "posX": 0.7771,
+                "posY": 1.2,
+                "posZ": -11.248,
+                "scaleX": 1.7229,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 18
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 112,
+            "components": {
+              "Name": {
+                "value": "Hut3_Wall_W__t0"
+              },
+              "Transform": {
+                "posX": -2.5,
+                "posY": 1.2,
+                "posZ": -12.85,
+                "scaleX": 1.6,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
+                "quatX": 0,
+                "quatY": 0.707107,
+                "quatZ": 0,
+                "quatW": 0.707107
+              },
+              "MeshFilter": {
+                "assetHandle": 18
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 113,
+            "components": {
+              "Name": {
+                "value": "Hut3_Wall_E__t0"
+              },
+              "Transform": {
+                "posX": 2.5,
+                "posY": 1.2,
+                "posZ": -12.85,
+                "scaleX": 1.6,
+                "scaleY": 1.7229,
+                "scaleZ": 0.3003,
+                "quatX": 0,
+                "quatY": 0.707107,
+                "quatZ": 0,
+                "quatW": 0.707107
+              },
+              "MeshFilter": {
+                "assetHandle": 18
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 114,
+            "components": {
+              "Name": {
+                "value": "Hut3_Roof__t0"
+              },
+              "Transform": {
+                "posX": -1.8,
+                "posY": 2.495,
+                "posZ": -13.6856,
+                "scaleX": 0.9644,
+                "scaleY": 0.0834,
+                "scaleZ": 0.9644,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 115,
+            "components": {
+              "Name": {
+                "value": "Hut3_Roof__t1"
+              },
+              "Transform": {
+                "posX": -1.8,
+                "posY": 2.497,
+                "posZ": -12.0144,
+                "scaleX": 0.9644,
+                "scaleY": 0.0834,
+                "scaleZ": 0.9644,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 116,
+            "components": {
+              "Name": {
+                "value": "Hut3_Roof__t2"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 2.499,
+                "posZ": -13.6856,
+                "scaleX": 0.9644,
+                "scaleY": 0.0834,
+                "scaleZ": 0.9644,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 117,
+            "components": {
+              "Name": {
+                "value": "Hut3_Roof__t3"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 2.501,
+                "posZ": -12.0144,
+                "scaleX": 0.9644,
+                "scaleY": 0.0834,
+                "scaleZ": 0.9644,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 118,
+            "components": {
+              "Name": {
+                "value": "Hut3_Roof__t4"
+              },
+              "Transform": {
+                "posX": 1.8,
+                "posY": 2.503,
+                "posZ": -13.6856,
+                "scaleX": 0.9644,
+                "scaleY": 0.0834,
+                "scaleZ": 0.9644,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 119,
+            "components": {
+              "Name": {
+                "value": "Hut3_Roof__t5"
+              },
+              "Transform": {
+                "posX": 1.8,
+                "posY": 2.505,
+                "posZ": -12.0144,
+                "scaleX": 0.9644,
+                "scaleY": 0.0834,
+                "scaleZ": 0.9644,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 120,
             "components": {
               "Name": {
                 "value": "FenceW1__t0"
@@ -2786,17 +3275,17 @@
                 "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 100,
+            "localId": 121,
             "components": {
               "Name": {
                 "value": "FenceW1__t1"
@@ -2814,17 +3303,17 @@
                 "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 101,
+            "localId": 122,
             "components": {
               "Name": {
                 "value": "FenceW1__t2"
@@ -2842,17 +3331,17 @@
                 "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 102,
+            "localId": 123,
             "components": {
               "Name": {
                 "value": "FenceW1__t3"
@@ -2870,17 +3359,17 @@
                 "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 103,
+            "localId": 124,
             "components": {
               "Name": {
                 "value": "FenceW1__t4"
@@ -2898,17 +3387,17 @@
                 "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 104,
+            "localId": 125,
             "components": {
               "Name": {
                 "value": "FenceW1__t5"
@@ -2926,17 +3415,17 @@
                 "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 105,
+            "localId": 126,
             "components": {
               "Name": {
                 "value": "FenceE1__t0"
@@ -2954,17 +3443,17 @@
                 "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 106,
+            "localId": 127,
             "components": {
               "Name": {
                 "value": "FenceE1__t1"
@@ -2982,17 +3471,17 @@
                 "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 107,
+            "localId": 128,
             "components": {
               "Name": {
                 "value": "FenceE1__t2"
@@ -3010,17 +3499,17 @@
                 "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 108,
+            "localId": 129,
             "components": {
               "Name": {
                 "value": "FenceE1__t3"
@@ -3038,17 +3527,17 @@
                 "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 109,
+            "localId": 130,
             "components": {
               "Name": {
                 "value": "FenceE1__t4"
@@ -3066,17 +3555,17 @@
                 "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 110,
+            "localId": 131,
             "components": {
               "Name": {
                 "value": "FenceE1__t5"
@@ -3094,17 +3583,17 @@
                 "quatW": 0.707107
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 111,
+            "localId": 132,
             "components": {
               "Name": {
                 "value": "FenceN__t0"
@@ -3122,17 +3611,17 @@
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 112,
+            "localId": 133,
             "components": {
               "Name": {
                 "value": "FenceN__t1"
@@ -3150,17 +3639,17 @@
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 113,
+            "localId": 134,
             "components": {
               "Name": {
                 "value": "FenceN__t2"
@@ -3178,17 +3667,17 @@
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 114,
+            "localId": 135,
             "components": {
               "Name": {
                 "value": "FenceN__t3"
@@ -3206,17 +3695,17 @@
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 115,
+            "localId": 136,
             "components": {
               "Name": {
                 "value": "FenceN__t4"
@@ -3234,17 +3723,17 @@
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 116,
+            "localId": 137,
             "components": {
               "Name": {
                 "value": "FenceN__t5"
@@ -3262,17 +3751,17 @@
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 117,
+            "localId": 138,
             "components": {
               "Name": {
                 "value": "FenceN__t6"
@@ -3290,17 +3779,17 @@
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
                 ]
               }
             }
           },
           {
-            "localId": 118,
+            "localId": 139,
             "components": {
               "Name": {
                 "value": "FenceN__t7"
@@ -3318,11 +3807,95 @@
                 "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  8
+                  7
+                ]
+              }
+            }
+          },
+          {
+            "localId": 140,
+            "components": {
+              "Name": {
+                "value": "GateLintel__t0"
+              },
+              "Transform": {
+                "posX": -1.7944,
+                "posY": 3.2,
+                "posZ": 14,
+                "scaleX": 1.0056,
+                "scaleY": 1.0056,
+                "scaleZ": 0.8019,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 32
+              },
+              "MeshRenderer": {
+                "materials": [
+                  33
+                ]
+              }
+            }
+          },
+          {
+            "localId": 141,
+            "components": {
+              "Name": {
+                "value": "GateLintel__t1"
+              },
+              "Transform": {
+                "posX": 0,
+                "posY": 3.2,
+                "posZ": 14.002,
+                "scaleX": 1.0056,
+                "scaleY": 1.0056,
+                "scaleZ": 0.8019,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 32
+              },
+              "MeshRenderer": {
+                "materials": [
+                  33
+                ]
+              }
+            }
+          },
+          {
+            "localId": 142,
+            "components": {
+              "Name": {
+                "value": "GateLintel__t2"
+              },
+              "Transform": {
+                "posX": 1.7944,
+                "posY": 3.2,
+                "posZ": 14.004,
+                "scaleX": 1.0056,
+                "scaleY": 1.0056,
+                "scaleZ": 0.8019,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 32
+              },
+              "MeshRenderer": {
+                "materials": [
+                  33
                 ]
               }
             }
@@ -3330,7 +3903,6 @@
         ]
       },
       "refs": [
-        "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
         "b4b971a0-58b3-da6e-bbdc-42d5e1fe7aa2",
         "279a0951-1e45-95e6-11f5-a056c1902a09",
         "ede76c1f-2f99-b5a7-66c2-5bc6e59728ef",
@@ -3347,15 +3919,26 @@
         "85c4fd1e-d729-cab0-a6e1-61b5a0669637",
         "4ed0b190-8fe2-c792-c077-0a246851fb88",
         "e93b43b3-76cb-07cd-3440-37a5318c92b8",
-        "a5102010-0000-4000-8000-000000000001",
-        "1cb416b4-74de-0caa-66ed-a2cbf291f940",
-        "444aaa53-c397-9ce1-1b13-0678e7b1dcf5",
         "c97feb74-7f9b-9043-3053-534cad5bbb49",
         "5d787fc4-258b-9b06-2678-39907dd3531b",
         "cbc8c98c-0d8a-831e-dffb-86cd12f116c7",
         "324cf068-fe0c-6837-5da9-de423168fafb",
         "4dbc20ce-c6d0-20c3-5ac4-d429e3eafc05",
-        "20096fe9-f8c5-0f0d-1ccf-b0505a678074"
+        "20096fe9-f8c5-0f0d-1ccf-b0505a678074",
+        "c7c1600e-d970-bb1c-5cbc-96e442ca9793",
+        "2d6bf6c2-6d4f-3394-a74c-d2f323c59a7a",
+        "01a96efc-af0d-c3bd-3279-4cdf1171e13f",
+        "05bb83e3-79dd-2235-eb12-5fb62a10f90b",
+        "9b2b6171-1e86-b4f2-fb07-d093afe3de8e",
+        "80198b73-8a45-a04b-8abc-f40ed21941a8",
+        "727672ac-4176-5b70-0c36-4a6935a40315",
+        "47a953c8-1fbb-b8dc-f7d0-6950a7ff9d29",
+        "3fba5fe8-4ca6-0261-3f3d-cbab48c083fb",
+        "d2b7dccf-94f3-3374-6ec0-892ad2d6ff8b",
+        "20b5893c-9192-122f-784d-cf5cda04236d",
+        "3889dd23-72ba-4ed6-92c9-dcfb70f7a339",
+        "18d5c820-1f74-5a9e-6182-f08be2c5bfe2",
+        "589e51f6-0738-0391-4abb-2666050e036a"
       ]
     },
     {

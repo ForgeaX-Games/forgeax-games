@@ -11,7 +11,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-  CUBE_GUID, readPropBBox, remindReload, tileGrid, tileLinear, writePack,
+  CUBE_GUID, readPropBBox, remindReload, tileGrid, writePack,
 } from './lib/scene-authoring';
 import { DUNGEON_SCENE_GUID, DUNGEON_SEED, generateLayout, mulberry32, quatY, type GeoKind } from '../src/dungeon-layout';
 
@@ -36,15 +36,15 @@ const MATS: Record<GeoKind, {
   crate:     { guid: '9a1c3b5e-2d4f-4e8a-9c01-7b3f6d8e0a12', name: 'DenCrate', base: [0.45, 0.30, 0.18, 1], rough: 0.85 },
 };
 
-type Policy = 'cube' | 'ground' | 'keep' | 'tile' | 'floorGrid';
+type Policy = 'cube' | 'ground' | 'keep' | 'tile' | 'floorGrid' | 'post';
 
 // Per-kind de-stretch policy.
 const POLICY: Record<GeoKind, Policy> = {
   floorA: 'floorGrid',
   floorB: 'floorGrid',
   wall: 'tile',
-  torchPost: 'cube',
-  slag: 'cube',
+  torchPost: 'post',
+  slag: 'ground',
   flame: 'keep',
   brazier: 'ground',
   rubble: 'ground',
@@ -52,21 +52,24 @@ const POLICY: Record<GeoKind, Policy> = {
   crate: 'ground',
 };
 
-// Per-kind asset POOL (variant selection breaks mesh repetition). floor-a is
-// wall-shaped (2×1.49×0.29) so it CANNOT go in floorGrid (would re-introduce the
-// "barcode" 8-strip bug); instead it joins the WALL pool as a thin panel variant.
-// slag stays 'cube' policy (flat flush slab) so its pool is unused — prop-embercrack
-// would need a flat-slab prop policy to fit and is left out for now.
+// Per-kind asset POOL (variant selection breaks mesh repetition). Walls use only
+// prop-den-wall: it's a real wall mesh (2×1.49×1.14). prop-den-floor-a is a
+// UPRIGHT slab (2×1.49×0.29) — wrong as a wall fill (depth stretch, see f203f24)
+// and wrong flat-tiled as a floor (it would shatter into ~0.3 m strips), so it
+// serves as COLLAPSED DEBRIS instead: pooled with rubble, uniform-scaled small
+// and randomly spun by the 'ground' policy it reads as a fallen wall/floor shard.
+// slag now alternates with prop-embercrack (both are low emissive ground pieces);
+// torch posts render their real GLB via the 'post' policy (was: plain cube).
 const PROP_POOL: Record<GeoKind, string[]> = {
   floorA: ['prop-den-floor-b'],
   floorB: ['prop-den-floor-b'],
-  wall: ['prop-den-wall', 'prop-den-floor-a'],
+  wall: ['prop-den-wall'],
   torchPost: ['prop-den-torch-post'],
   flame: ['prop-den-flame'],
   brazier: ['prop-den-brazier'],
-  rubble: ['prop-den-rubble'],
+  rubble: ['prop-den-rubble', 'prop-den-floor-a'],
   bone: ['prop-den-bone'],
-  slag: ['prop-den-slag'],
+  slag: ['prop-den-slag', 'prop-embercrack'],
   crate: ['prop-crate'],
 };
 
@@ -174,35 +177,74 @@ const entities = layout.geometry.flatMap((g) => {
   }
 
   if (policy === 'tile') {
-    // Walls: per-SLOT mesh variant (pool varies the front-face mesh only) +
-    // per-SEGMENT height jitter (±20%, bottom-grounded) → height is the VISIBLE
-    // random dimension. Per-segment (not per-run) so the variation shows inside a
-    // single corridor view, not just at run boundaries. Thickness is equalised at
-    // the cell (2.4 m) via tileLinear's `fillThin` — both pool members fill the
-    // cell (a solid block, not a thin facade); side-face stretch from inflating
-    // thin panels stays hidden inside the run.
+    // Walls: tile the wall mesh as a GRID of near-native-size blocks so the FRONT
+    // texels stay ~square (NO vertical stretch). The old approach scaled a 1.5 m
+    // mesh to fill a 3.2 m wall, stretching the face ~2×; here each column instead
+    // STACKS full-height crisp rows (scaleY≈1) + a per-column partial top CAP, so
+    // HEIGHT varies (jagged tops = the visible random dimension) while faces stay
+    // undistorted. Columns span the run length at ~cell width. Depth fills the
+    // cell (side faces hidden between contiguous segments). Alternating 180° Y
+    // flips break the tile-repetition pattern without needing a second mesh.
     const pool = PROP_POOL[g.kind];
     const vi = Math.floor(vrand() * pool.length);
-    const bbV = poolBBox(g.kind, vi);
-    const segs = tileLinear(slot, bbV, true);
-    const bottom = g.y - g.sy / 2;
-    return segs.map((s, j) => {
-      const sJit = 0.8 + vrand() * 0.4;       // ±20% per segment
-      const newScaleY = s.scale[1] * sJit;
-      const newPosY = bottom - bbV.min[1] * newScaleY;   // bottom-grounded (base stays at slot bottom)
-      // s.rotYDeg is in DEGREES; quatY takes radians → convert. (Horizontal-only
-      // wall runs are 0° so the mismatch is latent; kept for correctness.)
-      const q = quatY((s.rotYDeg * Math.PI) / 180);
-      return makeEntity(`__t${j}`, {
-        posX: s.pos[0], posY: +newPosY.toFixed(4), posZ: s.pos[2],
-        scaleX: s.scale[0], scaleY: +newScaleY.toFixed(4), scaleZ: s.scale[2],
-        quatX: +q[0].toFixed(6), quatY: +q[1].toFixed(6), quatZ: +q[2].toFixed(6), quatW: +q[3].toFixed(6),
-      }, propIdx(g.kind, vi));
-    });
+    const bb = poolBBox(g.kind, vi);
+    const [nx, ny, nz] = bb.size;                  // native block size (~2×1.5×1.14)
+    const isH = g.sx >= g.sz;                       // run long axis: H→X, V→Z
+    const runLen = isH ? g.sx : g.sz;
+    const depth = isH ? g.sz : g.sx;               // thin axis = CELL (2.4 m)
+    const cols = Math.max(1, Math.round(runLen / nx));
+    const colW = runLen / cols;
+    const scaleX = colW / nx;                       // block length fit (~1.0–1.2)
+    const scaleZ = depth / nz;                      // fill cell depth (hidden sides)
+    const bottom = g.y - g.sy / 2;                 // ground plane (walls sit on floor)
+    const baseRotY = isH ? 0 : Math.PI / 2;        // V-run: rotate block length onto Z
+    const out: ReturnType<typeof makeEntity>[] = [];
+    let idx = 0;
+    for (let c = 0; c < cols; c++) {
+      const off = -runLen / 2 + colW * (c + 0.5);
+      const cxp = g.x + (isH ? off : 0);
+      const czp = g.z + (isH ? 0 : off);
+      // per-column height = N crisp full rows + a partial top cap (→ jagged top)
+      const targetH = g.sy * (0.9 + vrand() * 0.45);      // ~2.9–4.3 m (g.sy = WALL_H)
+      const rowsFull = Math.max(1, Math.floor(targetH / ny));
+      let capScale = (targetH - rowsFull * ny) / ny;      // 0..1 top-cap fraction
+      if (capScale < 0.5) capScale = 0;                    // <½ block → drop (no squished slivers; cap reads as a half-broken top stone)
+      const rows = rowsFull + (capScale > 0 ? 1 : 0);
+      for (let r = 0; r < rows; r++) {
+        const isCap = capScale > 0 && r === rows - 1;
+        const sy = isCap ? capScale : 1;
+        const posY = bottom + r * ny - bb.min[1] * sy;     // stack, bottom-align each row
+        const flip = (r + c) % 2 === 1;                     // alternate flip breaks repetition
+        const q = quatY(baseRotY + (flip ? Math.PI : 0));
+        out.push(makeEntity(`__t${idx++}`, {
+          posX: +cxp.toFixed(4), posY: +posY.toFixed(4), posZ: +czp.toFixed(4),
+          scaleX: +scaleX.toFixed(4), scaleY: +sy.toFixed(4), scaleZ: +scaleZ.toFixed(4),
+          quatX: +q[0].toFixed(6), quatY: +q[1].toFixed(6), quatZ: +q[2].toFixed(6), quatW: +q[3].toFixed(6),
+        }, propIdx(g.kind, vi)));
+      }
+    }
+    return out;
   }
 
   if (policy === 'cube') {
     return [makeEntity('', boxTransform(g), cubeIdx)];
+  }
+
+  if (policy === 'post') {
+    // Upright fixture (torch post): uniform-scale the GLB to the item's HEIGHT
+    // (g.sy), stand it on the floor, random Y spin. The old 'cube' policy drew a
+    // plain box here, so prop-den-torch-post never actually appeared in the pack.
+    const pool = PROP_POOL[g.kind];
+    const vi = Math.floor(vrand() * pool.length);
+    const bb = poolBBox(g.kind, vi);
+    const us = bb.size[1] > 0 ? g.sy / bb.size[1] : 1;
+    const us4 = +us.toFixed(4);
+    const q = quatY(vrand() * Math.PI * 2);
+    return [makeEntity('', {
+      posX: +g.x.toFixed(4), posY: +(-bb.min[1] * us).toFixed(4), posZ: +g.z.toFixed(4),
+      scaleX: us4, scaleY: us4, scaleZ: us4,
+      quatX: +q[0].toFixed(6), quatY: +q[1].toFixed(6), quatZ: +q[2].toFixed(6), quatW: +q[3].toFixed(6),
+    }, propIdx(g.kind, vi))];
   }
 
   if (policy === 'ground') {

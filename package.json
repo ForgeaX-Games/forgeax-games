@@ -7,5 +7,9 @@
   "description": "ForgeaX sample games — data-only repo, no engine or editor code.",
   "scripts": {
     "migrate-packs": "bun run scripts/migrate-packs.mjs"
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "^4.4.1",
+    "@gltf-transform/functions": "^4.4.1"
   }
 }

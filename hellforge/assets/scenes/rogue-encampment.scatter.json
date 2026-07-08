@@ -1,0 +1,53 @@
+{
+  "seed": 20260708,
+  "groups": [
+    {
+      "name": "DeadBranchL",
+      "pool": ["prop-deadtree-branch"],
+      "count": 3,
+      "area": { "kind": "rect", "x": [-20, -4], "z": [15, 26] },
+      "scale": [0.5, 0.85],
+      "minGap": 3
+    },
+    {
+      "name": "DeadBranchR",
+      "pool": ["prop-deadtree-branch"],
+      "count": 3,
+      "area": { "kind": "rect", "x": [4, 20], "z": [15, 26] },
+      "scale": [0.5, 0.85],
+      "minGap": 3
+    },
+    {
+      "name": "WildBoulderL",
+      "pool": ["prop-boulder"],
+      "count": 2,
+      "area": { "kind": "rect", "x": [-21, -5], "z": [16, 25] },
+      "scale": [0.25, 0.45],
+      "minGap": 3.5
+    },
+    {
+      "name": "WildBoulderR",
+      "pool": ["prop-boulder"],
+      "count": 2,
+      "area": { "kind": "rect", "x": [5, 21], "z": [16, 25] },
+      "scale": [0.25, 0.45],
+      "minGap": 3.5
+    },
+    {
+      "name": "CrateStash",
+      "pool": ["prop-crate"],
+      "count": 2,
+      "area": { "kind": "rect", "x": [1.8, 3.4], "z": [-7.6, -6.2] },
+      "scale": [0.28, 0.38],
+      "minGap": 0.9
+    },
+    {
+      "name": "Firewood",
+      "pool": ["prop-campfire-log"],
+      "count": 3,
+      "area": { "kind": "ring", "center": [0, 0], "rMin": 1.15, "rMax": 1.9 },
+      "scale": [0.35, 0.5],
+      "minGap": 0.8
+    }
+  ]
+}

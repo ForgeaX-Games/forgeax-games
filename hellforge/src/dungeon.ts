@@ -42,6 +42,8 @@ export class Dungeon {
   bossAt = { x: 0, z: 0 };
   monsterSpawns: MonsterSpawn[] = [];
   roomCount = 0;
+  /** World-space fire fixtures (torch flames / braziers) — light-pool seats. */
+  firePoints: Array<{ x: number; y: number; z: number }> = [];
 
   constructor(private world: World) {
     this.layout = generateLayout(DUNGEON_SEED);
@@ -53,6 +55,16 @@ export class Dungeon {
       x: s.x + DUNGEON_ORIGIN.x,
       z: s.z + DUNGEON_ORIGIN.z,
     }));
+    // Seat point above the emissive mesh (flame tip +0.45, brazier bowl +0.75)
+    // so a light parked there sits OUTSIDE the mesh — a shadow-casting light
+    // inside its own fixture geometry would be fully occluded by it.
+    this.firePoints = this.layout.geometry
+      .filter((g) => g.kind === 'flame' || g.kind === 'brazier')
+      .map((g) => ({
+        x: g.x + DUNGEON_ORIGIN.x,
+        y: g.kind === 'flame' ? g.y + 0.45 : g.y + 0.75,
+        z: g.z + DUNGEON_ORIGIN.z,
+      }));
   }
 
   /**
