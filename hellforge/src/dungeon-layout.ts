@@ -3,7 +3,7 @@
 // One deterministic function of a seed. Both consumers run it with
 // DUNGEON_SEED and therefore agree exactly:
 //   • scripts/bake-dungeon.ts  — turns layout.geometry into the editable
-//     scene pack `scenes/slagdeep-hollow.pack.json` (LOCAL coordinates,
+//     scene pack `assets/scenes/slagdeep-hollow.pack.json` (LOCAL coordinates,
 //     centred near the origin so the editor is pleasant to work in)
 //   • src/dungeon.ts (runtime) — uses walls/entry/boss/monsterSpawns for
 //     walkability + gameplay, and instantiates the baked pack under a root
@@ -18,7 +18,7 @@ export const CELLS = 44;
 export const CELL = 2.4;               // metres per grid cell
 export const WALL_H = 3.2;
 
-/** Scene-asset GUID of the baked pack (scenes/slagdeep-hollow.pack.json).
+/** Scene-asset GUID of the baked pack (assets/scenes/slagdeep-hollow.pack.json).
  *  Fixed so re-baking never churns identity — bake script + runtime share it. */
 export const DUNGEON_SCENE_GUID = '7d1f4b02-5c8e-4b3a-9f6d-2e8a1c0b4d97';
 
@@ -46,7 +46,7 @@ export type DenMonsterKind = 'imp' | 'ashwalker' | 'charred' | 'flamecaller' | '
 export type GeoKind =
   | 'floorA' | 'floorB' | 'wall'
   | 'torchPost' | 'flame' | 'brazier'
-  | 'rubble' | 'bone' | 'slag';
+  | 'rubble' | 'bone' | 'slag' | 'crate';
 
 export interface GeoItem {
   kind: GeoKind;
@@ -139,8 +139,11 @@ export function generateLayout(seed: number): DungeonLayout {
 
   // ── 4. geometry (all randomness stays in this pass) ──
   const geometry: GeoItem[] = [];
-  const slab = (kind: GeoKind, x: number, z: number, w: number, d: number, y = -0.1, h = 0.2): void => {
-    geometry.push({ kind, x, y, z, sx: w, sy: h, sz: d });
+  // Floors: top at y=0 (walk plane). Walls pass explicit centre-y + height.
+  const slab = (kind: GeoKind, x: number, z: number, w: number, d: number, yOrH?: number, h?: number): void => {
+    const sy = h ?? yOrH ?? 0.28;
+    const py = h !== undefined ? (yOrH ?? 0) : -(sy / 2);
+    geometry.push({ kind, x, y: py, z, sx: w, sy, sz: d });
   };
   const inRoom = (cx: number, cy: number) => rooms.some((r) => cx >= r.cx && cx < r.cx + r.w && cy >= r.cy && cy < r.cy + r.h);
 
@@ -209,15 +212,18 @@ export function generateLayout(seed: number): DungeonLayout {
       const jx = s.x + (rnd() - 0.5) * CELL * 0.6;
       const jz = s.z + (rnd() - 0.5) * CELL * 0.6;
       const roll = rnd();
-      if (roll < 0.4) {
+      if (roll < 0.35) {
         geometry.push({ kind: 'rubble', x: jx, y: 0.16, z: jz, sx: 0.55, sy: 0.32, sz: 0.45 });
         geometry.push({ kind: 'rubble', x: jx + 0.35, y: 0.1, z: jz + 0.2, sx: 0.3, sy: 0.2, sz: 0.3, rotY: 0.63 });
-      } else if (roll < 0.7) {
+      } else if (roll < 0.6) {
         geometry.push({ kind: 'bone', x: jx, y: 0.07, z: jz, sx: 0.5, sy: 0.12, sz: 0.14, rotY: 0.4 });
         geometry.push({ kind: 'bone', x: jx + 0.1, y: 0.07, z: jz + 0.15, sx: 0.4, sy: 0.1, sz: 0.12, rotY: -0.87 });
-      } else {
+      } else if (roll < 0.8) {
         const ry = (rnd() - 0.5) * 1.4;
-        geometry.push({ kind: 'slag', x: jx, y: 0.02, z: jz, sx: 1.0 + rnd() * 0.9, sy: 0.04, sz: 0.7 + rnd() * 0.6, rotY: ry });
+        geometry.push({ kind: 'slag', x: jx, y: -0.01, z: jz, sx: 1.0 + rnd() * 0.9, sy: 0.03, sz: 0.7 + rnd() * 0.6, rotY: ry });
+      } else {
+        // crate — wooden supply / loot crate (uses the otherwise-idle prop-crate).
+        geometry.push({ kind: 'crate', x: jx, y: 0.2, z: jz, sx: 0.7, sy: 0.7, sz: 0.6, rotY: (rnd() - 0.5) * 0.6 });
       }
     }
   }

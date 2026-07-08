@@ -25,16 +25,17 @@
 // "cube" (boxes have no UV stretch); volumetric decor → "keep" uniform +
 // grounded. Lights are skipped. Edit the seeded file, then `apply`.
 
-import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
   CUBE_GUID, ensureRefGuid, readPack, writePack, findSceneAsset, readPropBBox,
   readPropAssets, proposeOverride, applyOverride, getTransform,
-  quatFromRotYDeg, tileLinear, tileGrid,
+  quatFromRotYDeg, remindReload, tileLinear, tileGrid,
   type Override, type TileSlot,
 } from './lib/scene-authoring';
+import { mulberry32 } from '../src/dungeon-layout';
 
 const gameRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const propsDir = join(gameRoot, 'assets', '3d', 'props', 'meshes');
@@ -146,6 +147,7 @@ function cmdApply(packPath: string, overridesFile?: string): void {
   }
   writePack(packPath, pack);
   console.log(`apply → ${packPath}: ${applied} entities updated, ${missing} unmatched (from ${ovPath})`);
+  remindReload(packPath);
 }
 
 function cmdDump(packPath: string): void {
@@ -201,12 +203,22 @@ const fmt = (n: number): string => +n.toFixed(2).toString();
 
 interface TileSpec {
   panel: string;
+  /** Optional panel pool — tile-apply picks one member per slot (seeded by slot
+   *  name) so sibling huts/walls get different textures. Falls back to `panel`. */
+  panels?: string[];
   mode: 'linear' | 'grid';
   slot: TileSlot;
 }
 
 function tilesPath(packPath: string): string {
   return packPath.replace(/\.pack\.json$/, '.tiles.json');
+}
+
+/** FNV-1a string hash → uint32 (deterministic per-slot pool pick, no RNG needed). */
+function hashStr(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h >>> 0;
 }
 
 function cmdTileInit(packPath: string): void {
@@ -270,10 +282,14 @@ function cmdTileApply(packPath: string): void {
   let applied = 0, missing = 0, segCount = 0;
 
   for (const [name, spec] of Object.entries(tiles)) {
-    const { bbox, meshGuid, materialGuid } = readPropAssets(propsDir, spec.panel);
+    // Per-SLOT variant: pick one pool member (seeded by slot name) for the whole
+    // slot — walls/roofs stay coherent within a slot, vary across sibling huts.
+    const pool = spec.panels ?? [spec.panel];
+    const stem = pool[hashStr(name) % pool.length]!;
+    const { bbox, meshGuid, materialGuid } = readPropAssets(propsDir, stem);
     if (!meshGuid) {
       missing++;
-      console.warn(`  ⚠ ${name}: panel "${spec.panel}" has no mesh sidecar — skipping (generate it first)`);
+      console.warn(`  ⚠ ${name}: panel "${stem}" has no mesh sidecar — skipping (generate it first)`);
       continue;
     }
     for (const e of ents) {
@@ -307,6 +323,74 @@ function cmdTileApply(packPath: string): void {
   scene.payload.entities = ents.filter((e) => !remove.has(e)).concat(newEnts);
   writePack(packPath, pack);
   console.log(`tile-apply → ${packPath}: ${applied} slots tiled (${segCount} segments), ${missing} missing panels (from ${tPath})`);
+  remindReload(packPath);
+}
+
+/** Drop overrides for tiled parent slots; seed {mesh:"keep"} for every __t* segment. */
+function cmdSyncOverrides(packPath: string): void {
+  const pack = readPack(packPath);
+  const scene = findSceneAsset(pack);
+  const tPath = tilesPath(packPath);
+  const ovPath = overridesPath(packPath);
+  const tiledParents = new Set<string>();
+  if (existsSync(tPath)) {
+    const tiles = JSON.parse(readFileSync(tPath, 'utf8')) as Record<string, unknown>;
+    for (const name of Object.keys(tiles)) tiledParents.add(name);
+  }
+  const entityNames = new Set<string>();
+  for (const e of scene.payload.entities) {
+    const name = (e.components.Name?.value as string) ?? `__localId_${e.localId}`;
+    entityNames.add(name);
+  }
+  const old: Record<string, Override> = existsSync(ovPath)
+    ? JSON.parse(readFileSync(ovPath, 'utf8')) as Record<string, Override>
+    : {};
+  const next: Record<string, Override> = {};
+  let kept = 0;
+  let dropped = 0;
+  let seeded = 0;
+  for (const [name, ov] of Object.entries(old)) {
+    if (tiledParents.has(name) || !entityNames.has(name)) { dropped++; continue; }
+    next[name] = ov;
+    kept++;
+  }
+  for (const name of entityNames) {
+    if (!name.includes('__t') || next[name]) continue;
+    next[name] = { mesh: 'keep' };
+    seeded++;
+  }
+  writeFileSync(ovPath, `${JSON.stringify(next, null, 2)}\n`, 'utf8');
+  console.log(`sync-overrides → ${ovPath}: kept ${kept}, dropped ${dropped} stale, seeded ${seeded} tile segments`);
+}
+
+/** Apply seeded size + rotation jitter to Path tile segments (the only camp tiled
+ *  strips that are currently uniform AND safe to jitter). prop-path is rectangular
+ *  (2×0.865) so only 180° flips preserve the footprint; 90° would swap axes and
+ *  misalign the grid. Camp decor (boulder/crate/deadtree) is already hand-authored
+ *  in overrides.json; fences + hut wall/roof segments stay aligned (structural /
+ *  per-slot clean). Idempotent via a fixed seed. Run AFTER apply/tile-apply. */
+function cmdJitter(packPath: string): void {
+  const pack = readPack(packPath);
+  const scene = findSceneAsset(pack);
+  const rnd = mulberry32(20260708);
+  let jittered = 0, skipped = 0;
+  for (const e of scene.payload.entities) {
+    const name = (e.components.Name?.value as string) ?? `__localId_${e.localId}`;
+    if (!/^Path_\d+__t\d+$/.test(name)) { skipped++; continue; }
+    const t = e.components.Transform;
+    if (!t) continue;
+    const rotRad = Math.floor(rnd() * 2) === 1 ? Math.PI : 0;   // 0° or 180° flip
+    t.quatX = 0; t.quatY = +Math.sin(rotRad / 2).toFixed(6);
+    t.quatZ = 0; t.quatW = +Math.cos(rotRad / 2).toFixed(6);
+    const sMod = 0.9 + rnd() * 0.2;                             // ±10% uniform scale
+    t.scaleX = +(t.scaleX * sMod).toFixed(4);
+    t.scaleY = +(t.scaleY * sMod).toFixed(4);
+    t.scaleZ = +(t.scaleZ * sMod).toFixed(4);
+    jittered++;
+  }
+  writePack(packPath, pack);
+  console.log(`jitter → ${packPath}: ${jittered} Path segments jittered (180° flip + ±10% scale), ${skipped} skipped`);
+  remindReload(packPath);
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────
@@ -317,9 +401,11 @@ if (cmd === 'init') cmdInit(packPath);
 else if (cmd === 'apply') cmdApply(packPath, ovArg);
 else if (cmd === 'tile-init') cmdTileInit(packPath);
 else if (cmd === 'tile-apply') cmdTileApply(packPath);
+else if (cmd === 'sync-overrides') cmdSyncOverrides(packPath);
+else if (cmd === 'jitter') cmdJitter(packPath);
 else if (cmd === 'dump') cmdDump(packPath);
 else {
-  console.error('usage: bun scripts/reshape-scene.ts <init|apply|tile-init|tile-apply|dump> [pack] [overrides]');
+  console.error('usage: bun scripts/reshape-scene.ts <init|apply|tile-init|tile-apply|sync-overrides|jitter|dump> [pack] [overrides]');
   console.error('  default pack: assets/scenes/rogue-encampment.pack.json');
   process.exit(1);
 }

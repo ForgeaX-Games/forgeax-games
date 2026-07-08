@@ -15,9 +15,11 @@
 //
 //   bun scripts/fix-prop-materials.ts <scene-pack.json>
 
-import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { findSceneAsset, readPack, writePack } from './lib/scene-authoring';
 
 const gameRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const propsDir = join(gameRoot, 'assets', '3d', 'props', 'meshes');
@@ -35,15 +37,8 @@ for (const file of readdirSync(propsDir)) {
 }
 
 const packPath = process.argv[2] ?? join(gameRoot, 'assets', 'scenes', 'slagdeep-hollow.pack.json');
-const pack = JSON.parse(readFileSync(packPath, 'utf8')) as {
-  assets: Array<{
-    kind: string;
-    refs: string[];
-    payload: { entities: Array<{ components: Record<string, Record<string, unknown>> }> };
-  }>;
-};
-const scene = pack.assets.find((a) => a.kind === 'scene');
-if (!scene) throw new Error(`${packPath}: no scene asset`);
+const pack = readPack(packPath);
+const scene = findSceneAsset(pack);
 
 const refs = scene.refs;
 const entities = scene.payload.entities;
@@ -81,7 +76,7 @@ for (const e of entities) {
   relinked += 1;
 }
 
-writeFileSync(packPath, `${JSON.stringify(pack, null, 2)}\n`, 'utf8');
+writePack(packPath, pack);
 console.log(
   `${packPath.split('/').pop()}: relinked ${relinked} prop entities' materials, skipped ${skipped} (CUBE/no-mesh), appended ${appended.length} material GUIDs → refs now ${refs.length}`,
 );

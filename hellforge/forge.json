@@ -8,13 +8,13 @@
   "defaultScene": "2748fc78-a386-4b9b-b7d5-cd771eaf6a71",
   "preview": {
     "skin": {
-      "sceneGuid": "5e3028dd-ddf6-4104-86d9-318d3e8fb5a6",
+      "sceneGuid": "019f41e5-1d62-78b4-81b6-8effb359372c",
       "clipGuids": [
-        "c530adf2-8de6-486a-afaa-9af3a6e6dfd1",
-        "f9355148-5ddc-45a4-80d4-ef80fce559b0",
-        "9bb05e7d-6156-424f-8a20-f80373507f65",
-        "7faedc58-49cd-4fc9-93b7-66eca1b79674",
-        "ca6e7f12-8e1a-4b3c-9d50-2a4f1b8c6d04"
+        "019f41e5-1d62-78b4-81b6-8f039bda8de4",
+        "019f41e5-1d62-78b4-81b6-8f04bb5542cd",
+        "019f41e5-1d62-78b4-81b6-8f058d93bc4f",
+        "019f41e5-1d62-78b4-81b6-8f066f46b331",
+        "019f41e5-1d62-78b4-81b6-8f077d27f1a5"
       ],
       "clipDefault": "idle",
       "scale": 1,

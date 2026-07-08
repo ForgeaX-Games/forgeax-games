@@ -21,8 +21,8 @@
 
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { NodeIO } from '@gltf-transform/core';
-import { mergeDocuments } from '@gltf-transform/functions';
+import { NodeIO, VertexLayout } from '@gltf-transform/core';
+import { mergeDocuments, unpartition, prune } from '@gltf-transform/functions';
 
 // ── Motion label → contract slot mapping (EDIT THIS) ───────────────────────
 // For each slot, an ordered list of keyword regexes. The first motion whose
@@ -107,8 +107,23 @@ async function main(): Promise<void> {
     console.warn(`\n⚠ missing slots: ${missing.join(', ')} — generate those motions and re-run.`);
   }
 
+  // Write with SEPARATE vertex layout — the engine's glTF loader rejects
+  // interleaved accessors (multiple attributes sharing one bufferView with a
+  // byteStride). gltf-transform's default writer interleaves for compactness.
   const io = new NodeIO();
-  const base = io.read(baseGlb);
+  io.setVertexLayout(VertexLayout.SEPARATE);
+  const base = await io.read(baseGlb);
+
+  // Snapshot the base skeleton's original joints BEFORE merging — mergeDocuments
+  // appends a copy of each motion's skeleton, and we need to remap clip channel
+  // targets back to these original joints (mergeDocuments does not do this).
+  const baseOriginalNodes = new Set<unknown>();
+  const baseNodesByName = new Map<string, unknown>();
+  for (const n of base.getRoot().listNodes() as unknown[]) {
+    baseOriginalNodes.add(n);
+    const name = (n as { getName?: () => string }).getName?.();
+    if (name) baseNodesByName.set(name, n);
+  }
 
   // Drop the rigged base's bind-pose/rest clip (useless T-pose, not a real motion).
   for (const anim of base.getRoot().listAnimations()) anim.dispose();
@@ -117,7 +132,7 @@ async function main(): Promise<void> {
   for (const slot of SLOTS) {
     const c = chosen[slot];
     if (!c) continue;
-    const motion = io.read(c.path);
+    const motion = await io.read(c.path);
     const clips = motion.getRoot().listAnimations();
     if (clips.length === 0) {
       console.warn(`  ⚠ ${slot}: ${c.label} has no animation clip — skipped`);
@@ -132,7 +147,39 @@ async function main(): Promise<void> {
     console.log(`  ✓ merged ${slot} ← ${c.label}`);
   }
 
-  io.write(outArg, base);
+  // mergeDocuments does NOT remap animation channel targets: each motion clip's
+  // channels still point at the motion's own copy of the skeleton joints, not
+  // the base skeleton. Remap them to the base's original joints (matched by
+  // name) so the clips actually drive the base skin.
+  let remapped = 0;
+  for (const anim of base.getRoot().listAnimations()) {
+    for (const ch of anim.listChannels() as unknown[]) {
+      const ch_ = ch as { getTargetNode?: () => unknown; setTargetNode?: (n: unknown) => void };
+      const t = ch_.getTargetNode?.();
+      if (t && !baseOriginalNodes.has(t)) {
+        const name = (t as { getName?: () => string }).getName?.();
+        const rep = name ? baseNodesByName.get(name) : undefined;
+        if (rep) { ch_.setTargetNode?.(rep); remapped++; }
+      }
+    }
+  }
+  console.log(`  remapped ${remapped} animation channels to base skeleton`);
+
+  // Drop extra scenes (one per motion source) and the now-redundant motion copy
+  // nodes; with clip targets remapped, disposing them is safe.
+  const scenes = base.getRoot().listScenes();
+  for (let i = 1; i < scenes.length; i++) scenes[i].dispose();
+  for (const n of base.getRoot().listNodes() as unknown[]) {
+    if (!baseOriginalNodes.has(n)) (n as { dispose: () => void }).dispose();
+  }
+
+  // Drop now-unreferenced motion meshes / skins / materials / accessors / buffers.
+  await base.transform(prune());
+
+  // Consolidate all remaining buffers into one (GLB requires 0–1 buffers).
+  await base.transform(unpartition());
+
+  await io.write(outArg, base);
   console.log(`\nwritten: ${outArg}  (${SLOTS.filter((s) => chosen[s]).length} clips)`);
 
   console.log('\nnext:');

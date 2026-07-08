@@ -74,7 +74,7 @@ bun -e 'import {readPropBBox} from "./scripts/lib/scene-authoring.ts"; for(const
 3 个面板资产落到 `assets/3d/props/meshes/` 后,告诉我(或直接说「面板好了」),
 我跑:
 ```bash
-bun scripts/reshape-scene.ts tile-apply scenes/rogue-encampment.pack.json   # 营地墙/屋顶/围栏平铺
-bun scripts/bake-dungeon.ts && bun scripts/fix-prop-materials.ts scenes/slagdeep-hollow.pack.json  # 地牢墙平铺
+bun scripts/reshape-scene.ts tile-apply assets/scenes/rogue-encampment.pack.json   # 营地墙/屋顶/围栏平铺
+bun scripts/bake-dungeon.ts && bun scripts/fix-prop-materials.ts assets/scenes/slagdeep-hollow.pack.json  # 地牢墙平铺
 ```
 然后你硬刷新看效果。平铺是幂等的(重跑会先拆旧 tile 再铺新的)。

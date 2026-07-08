@@ -65,7 +65,7 @@ underneath is doing — forging entities + meshes + materials per frame.
       pure seeded generator (rooms + Prim-connected L-corridors on a 44×44
       grid, torches, decor, boss braziers, per-room monster packs scaled by
       depth). `bun scripts/bake-dungeon.ts` bakes its geometry into
-      `scenes/slagdeep-hollow.pack.json` — the editor lists it next to
+      `assets/scenes/slagdeep-hollow.pack.json` — the editor lists it next to
       rogue-encampment (click to edit; Launcher "Only slagdeep-hollow"
       starts the run inside the den). Runtime re-runs the SAME fixed seed
       for the walkability grid + spawns (always matches the baked pack) and
@@ -133,17 +133,22 @@ hellforge/
   assets/characters/witch.glb   — 33-joint skinned sorceress + 5 clips
   assets/monsters/*.glb(.meta.json) — skinned monster rigs (imported via
                             engine cli-gltf; meta.json carries the GUIDs)
-  scenes/rogue-encampment.pack.json — camp scene pack (editable)
-  scenes/slagdeep-hollow.pack.json  — BAKED dungeon scene (editable; regenerate
+  assets/scenes/rogue-encampment.pack.json — camp scene pack (editable)
+  assets/scenes/slagdeep-hollow.pack.json  — BAKED dungeon scene (editable; regenerate
                             via `bun scripts/bake-dungeon.ts`)
+  assets/sky.hdr + assets/3d/sky/sky-dome.glb — hellish HDR (IBL) + visible lava-cloud dome
+  scripts/bake-sky.ts       — regenerate sky.hdr + sky-dome.glb + src/sky-dome.gen.ts
   tsconfig.check.json     — dev typecheck (needs games/node_modules symlink
                             → editor/packages/play-runtime/node_modules)
 ```
 
 ## Scene authoring
 
-The static camp lives in `scenes/rogue-encampment.pack.json` — the engine's
-native scene pack format; ✎ Edit is the WYSIWYG tool for it. Everything
+The static camp lives in `assets/scenes/rogue-encampment.pack.json` — the engine's
+native scene pack format; ✎ Edit is the WYSIWYG tool for it. External authoring when
+Edit can't save: see `SCENE-AUTHORING.md`. The visible hellish sky is an emissive
+dome (`installSkyDome` in `main.ts`), not the engine SkyboxBackground (broken in
+this build). Regenerate via `bun scripts/bake-sky.ts`. Everything
 dynamic (hero, monsters, projectiles, loot, the whole PCG dungeon) is
 runtime-spawned from `main.ts` + `src/` and never appears in Edit.
 

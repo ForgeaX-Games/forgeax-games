@@ -1,0 +1,98 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "LeftToeBase",
+        "LeftFoot",
+        "LeftLeg",
+        "LeftUpLeg",
+        "RightToeBase",
+        "RightFoot",
+        "RightLeg",
+        "RightUpLeg",
+        "LeftHand",
+        "LeftForeArm",
+        "LeftArm",
+        "LeftShoulder",
+        "RightHand",
+        "RightForeArm",
+        "RightArm",
+        "RightShoulder",
+        "head_end",
+        "headfront",
+        "Head",
+        "neck",
+        "Spine",
+        "Spine01",
+        "Spine02",
+        "Hips",
+        "char1",
+        "Armature"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "characterw-merged.glb",
+  "subAssets": [
+    {
+      "guid": "019f41e5-1d62-78b4-81b6-8efdfd3d47f2",
+      "kind": "mesh",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f41e5-1d62-78b4-81b6-8efe11dd69cd",
+      "kind": "material",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f41e5-1d62-78b4-81b6-8effb359372c",
+      "kind": "scene",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f41e5-1d62-78b4-81b6-8f004d1a88f1",
+      "kind": "texture",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f41e5-1d62-78b4-81b6-8f0172187d0f",
+      "kind": "skeleton",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f41e5-1d62-78b4-81b6-8f02aa2600a9",
+      "kind": "skin",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f41e5-1d62-78b4-81b6-8f039bda8de4",
+      "kind": "animation-clip",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f41e5-1d62-78b4-81b6-8f04bb5542cd",
+      "kind": "animation-clip",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f41e5-1d62-78b4-81b6-8f058d93bc4f",
+      "kind": "animation-clip",
+      "sourceIndex": 2
+    },
+    {
+      "guid": "019f41e5-1d62-78b4-81b6-8f066f46b331",
+      "kind": "animation-clip",
+      "sourceIndex": 3
+    },
+    {
+      "guid": "019f41e5-1d62-78b4-81b6-8f077d27f1a5",
+      "kind": "animation-clip",
+      "sourceIndex": 4
+    }
+  ]
+}

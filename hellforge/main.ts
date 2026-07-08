@@ -68,17 +68,25 @@ import { installInventory } from './src/inventory-ui';
 
 const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
 
-// ── asset GUIDs (mirror assets/characters/witch.glb.meta.json subAssets[]) ─
+// ── asset GUIDs (mirror assets/characters/characterw-merged.glb.meta.json
+//    subAssets[]). characterw = wb-gen3d meshy humanoid (24-joint rig); the
+//    per-motion GLBs were merged by scripts/merge-gen3d-motions.ts. Var kept
+//    as WITCH to avoid churning every reference; the hero is now characterw. ─
 const WITCH = {
-  scene:  '5e3028dd-ddf6-4104-86d9-318d3e8fb5a6',
+  scene:  '019f41e5-1d62-78b4-81b6-8effb359372c',
   clips: [
-    { name: 'idle',   guid: 'c530adf2-8de6-486a-afaa-9af3a6e6dfd1' },
-    { name: 'move',   guid: 'f9355148-5ddc-45a4-80d4-ef80fce559b0' },
-    { name: 'attack', guid: '9bb05e7d-6156-424f-8a20-f80373507f65' },
-    { name: 'hit',    guid: '7faedc58-49cd-4fc9-93b7-66eca1b79674' },
-    { name: 'death',  guid: 'ca6e7f12-8e1a-4b3c-9d50-2a4f1b8c6d04' },
+    { name: 'idle',   guid: '019f41e5-1d62-78b4-81b6-8f039bda8de4' },
+    { name: 'move',   guid: '019f41e5-1d62-78b4-81b6-8f04bb5542cd' },
+    { name: 'attack', guid: '019f41e5-1d62-78b4-81b6-8f058d93bc4f' },
+    { name: 'hit',    guid: '019f41e5-1d62-78b4-81b6-8f066f46b331' },
+    { name: 'death',  guid: '019f41e5-1d62-78b4-81b6-8f077d27f1a5' },
   ] as const,
-} as const;
+  } as const;
+// characterw (meshy humanoid) renders smaller + slighter than witch; a uniform
+// rig scale ups the whole skinned mesh. The skinning fix below pins the mesh
+// node to identity, so rig scale reaches vertices exactly once via the palette
+// — no double-transform. Tune by eye against the scene tiles.
+const PLAYER_SCALE = 1.3;
 // Fallback background clear. The visible sky is the emissive dome (installSkyDome,
 // a plain textured mesh → works on every platform incl. WebKit), but it loads
 // async; this dark hellish red-orange fills the frame until it pops in and shows
@@ -210,7 +218,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // carries her whole body + skeleton via the engine's ChildOf → Transform
   // propagation. Spawn it BEFORE instantiate so we can pass it as parent.
   const playerRig = world.spawn(
-    { component: Transform, data: { posX: 0, posY: 0, posZ: 5 } },
+    { component: Transform, data: { posX: 0, posY: 0, posZ: 5, scaleX: PLAYER_SCALE, scaleY: PLAYER_SCALE, scaleZ: PLAYER_SCALE } },
   ).unwrap() as EntityHandle;
 
   let witchRoot: EntityHandle | null = null;
@@ -632,7 +640,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     paramValues: {},
   });
   const shadowDisc = world.spawn(
-    { component: Transform, data: { posX: 0, posY: 0.85, posZ: 5, scaleX: 0.6, scaleY: 1.7, scaleZ: 0.45 } },
+    { component: Transform, data: { posX: 0, posY: 0.85, posZ: 5, scaleX: 0.6 * PLAYER_SCALE, scaleY: 1.7 * PLAYER_SCALE, scaleZ: 0.45 * PLAYER_SCALE } },
     { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
     { component: MeshRenderer, data: { materials: [shadowProxyMat] } },
   ).unwrap();
@@ -690,7 +698,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const TP_DIST = 3.2;
   const TP_TARGET_Y = 1.35;
   const FACING_SIGN = 1;
-  const ANIM_STRIDE = 1.15;
+  // characterw move clip = 0.667 s vs witch 1.233 s (≈1.85× shorter loop). The
+  // stride is the ground distance covered at base rate 1; scaling it by the
+  // loop-duration ratio keeps leg cadence matched to ground speed (base ≈ 1.6
+  // at 3.4 m/s → ~2.4 cycles/s, same as witch). Idle/attack/hit/death keep base 1.
+  const ANIM_STRIDE = 1.15 * (1.233 / 0.667); // ≈ 2.13
   const ANIM_SPEED_MIN = 0.5, ANIM_SPEED_MAX = 4.8;
   const topPitch = -Math.atan2(TOP_DY, TOP_DZ);
   const topQ = quat.create();
@@ -1071,12 +1083,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       world.set(playerRig, Transform, {
         posX: state.px, posY: 0, posZ: state.pz,
         quatX: qy[0]!, quatY: qy[1]!, quatZ: qy[2]!, quatW: qy[3]!,
+        scaleX: PLAYER_SCALE, scaleY: PLAYER_SCALE, scaleZ: PLAYER_SCALE,
       });
     }
     world.set(playerLight, Transform, { posX: state.px, posY: 3.0, posZ: state.pz });
     world.set(shadowDisc, Transform, {
       posX: state.px, posY: 0.85, posZ: state.pz,
-      scaleX: 0.6, scaleY: 1.7, scaleZ: 0.45,
+      scaleX: 0.6 * PLAYER_SCALE, scaleY: 1.7 * PLAYER_SCALE, scaleZ: 0.45 * PLAYER_SCALE,
     });
     // Keep the sky dome centred on the player so it reads as an infinite sky.
     if (skyDome !== null) {

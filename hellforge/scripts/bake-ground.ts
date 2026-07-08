@@ -123,25 +123,10 @@ function buildGroundGlb(outPath: string): Buffer {
   return out;
 }
 
-function writeWbSidecar(glbBytes: Buffer, glbPath: string): string {
-  const contentHash = `sha256:${createHash('sha256').update(glbBytes).digest('hex')}`;
-  const wb = {
-    schemaVersion: 1,
-    producer: { plugin: 'hellforge-bake-ground', pluginVersion: '1.0.0' },
-    createdAt: new Date().toISOString(),
-    contentHash,
-    size: glbBytes.length,
-    type: 'procedural-mesh',
-    dependencies: [
-      { path: 'prop-path.base_color.png', kind: 'texture', textureKind: 'base_color' },
-      { path: 'prop-path.normal.png', kind: 'texture', textureKind: 'normal' },
-      { path: 'prop-path.roughness.png', kind: 'texture', textureKind: 'roughness' },
-    ],
-    custom: { purpose: 'camp-ground-tiled', groundSize: GROUND_SIZE, tileSize: TILE_SIZE, uvRepeat: UV_REPEAT },
-  };
-  writeFileSync(`${glbPath}.wb.json`, `${JSON.stringify(wb, null, 2)}\n`, 'utf8');
-  return contentHash;
-}
+// No .glb.wb.json sidecar: prop-ground is a procedural mesh, not a wb-ai-asset
+// product. A non-conformant sidecar (deps missing `hash`) crashes the plugin's
+// listAssets — which has no per-asset isolation — and nukes the whole library.
+// The engine and readPropAssets both ingest prop-ground via .glb.meta.json alone.
 
 function patchGroundEntity(packPath: string): void {
   const { bbox, meshGuid, materialGuid } = readPropAssets(meshesDir, 'prop-ground');
@@ -183,7 +168,7 @@ console.log(`bake-ground: ${GROUND_SIZE}m plane, UV 0–${UV_REPEAT} (≈${TILE_
 const glbBytes = buildGroundGlb(glbPath);
 console.log(`  wrote ${glbPath} (${(glbBytes.length / 1e6).toFixed(1)} MB)`);
 
-const contentHash = writeWbSidecar(glbBytes, glbPath);
+const contentHash = `sha256:${createHash('sha256').update(glbBytes).digest('hex')}`;
 const meta = await cookExternalAssetFields(new Uint8Array(glbBytes), contentHash, 'prop-ground.glb');
 if (!meta) throw new Error('cookExternalAssetFields returned null');
 writeFileSync(`${glbPath}.meta.json`, `${JSON.stringify(meta, null, 2)}\n`, 'utf8');

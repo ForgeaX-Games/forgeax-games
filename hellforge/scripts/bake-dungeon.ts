@@ -1,38 +1,19 @@
 // Bake the Slagdeep Hollow dungeon into an editable scene pack.
 //
 //   bun scripts/bake-dungeon.ts
-//
-// Runs src/dungeon-layout.ts at the fixed DUNGEON_SEED and writes
-// scenes/slagdeep-hollow.pack.json — the scene the editor lists next to
-// rogue-encampment. The runtime (src/dungeon.ts) re-runs the SAME layout
-// for walkability/monster spawns and instantiates this pack at
-// DUNGEON_ORIGIN, so geometry and gameplay grids can never drift apart.
+//   bun scripts/fix-prop-materials.ts assets/scenes/slagdeep-hollow.pack.json
 //
 // Re-run after ANY change to dungeon-layout.ts (seed, generator, decor).
-// All GUIDs below are fixed constants so re-baking doesn't churn identity.
-//
-// De-stretch policy (per GeoKind): the layout emits box-fit non-uniform
-// scales (walls `run × 3.2 × 2.4`, floors `w × 0.2 × d`, slag pools flat).
-// Those scales look right on a builtin CUBE (parametric, no UV) but stretch
-// a generated GLB. So:
-//   • structural kinds (floor/wall/slag/torchPost) → builtin CUBE, keep the
-//     layout's box transform. Collision is driven by the runtime grid, not
-//     these transforms, so the thin slabs are gameplay-safe.
-//   • decor kinds (brazier/rubble/bone) → generated GLB, uniform-scaled to
-//     the layout's intended footprint (max(scale) / max(bbox)) and grounded.
-//   • flame → generated GLB, layout transform kept (emissive tongue already
-//     sits atop its torch post; X/Z are symmetric so it isn't stretched).
-// Run `bun scripts/fix-prop-materials.ts scenes/slagdeep-hollow.pack.json`
-// after this to relink GLB entities' materials to the prop sub-asset GUIDs.
+// writePack() prunes orphan refs[] entries on save.
 
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-  CUBE_GUID, readPropBBox, tileLinear,
+  CUBE_GUID, readPropBBox, remindReload, tileGrid, tileLinear, writePack,
 } from './lib/scene-authoring';
-import { DUNGEON_SCENE_GUID, DUNGEON_SEED, generateLayout, quatY, type GeoKind } from '../src/dungeon-layout';
+import { DUNGEON_SCENE_GUID, DUNGEON_SEED, generateLayout, mulberry32, quatY, type GeoKind } from '../src/dungeon-layout';
 
 const gameRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const propsDir = join(gameRoot, 'assets', '3d', 'props', 'meshes');
@@ -51,20 +32,16 @@ const MATS: Record<GeoKind, {
   brazier:   { guid: '29f4b8a6-6c07-4f83-b1d5-5e9c2a7f38c6', name: 'DenBrazier', base: [0.45, 0.08, 0.03, 1], rough: 0.9, emissive: [1, 0.12, 0.03], ei: 1.2 },
   rubble:    { guid: 'e83a1d59-9f62-4a14-87c3-2b0e6d8f41d7', name: 'DenRubble', base: [0.30, 0.26, 0.25, 1], rough: 0.9 },
   bone:      { guid: '60d7f2c4-3a85-4c96-9e07-8c4b1e5a72e8', name: 'DenBone', base: [0.62, 0.56, 0.44, 1], rough: 0.7 },
-  slag:      { guid: 'b52e8a07-4d93-4e60-a3f9-1a6d0c9b53f9', name: 'DenSlag', base: [0.40, 0.06, 0.02, 1], rough: 0.5, emissive: [1, 0.10, 0.02], ei: 1.0 },
+  slag:      { guid: 'b52e8a07-4d93-4e60-a3f9-1a6d0c9b53f9', name: 'DenSlag', base: [0.40, 0.06, 0.02, 1], rough: 0.5, emissive: [0.55, 0.06, 0.01], ei: 0.35 },
+  crate:     { guid: '9a1c3b5e-2d4f-4e8a-9c01-7b3f6d8e0a12', name: 'DenCrate', base: [0.45, 0.30, 0.18, 1], rough: 0.85 },
 };
 
+type Policy = 'cube' | 'ground' | 'keep' | 'tile' | 'floorGrid';
+
 // Per-kind de-stretch policy.
-//   "cube"   → builtin CUBE mesh, keep the layout's (box) transform.
-//   "ground" → prop GLB, uniform scale = max(scale)/max(bbox), grounded posY.
-//   "keep"   → prop GLB, keep the layout transform (already well-shaped).
-//   "tile"   → prop GLB, uniform-scaled to the slot's HEIGHT and tiled along its
-//              length so a long wall reads as repeated detailed segments instead
-//              of one stretched GLB. A single-cell slot whose one segment would
-//              overflow falls back to a box (no poke into adjacent cells).
-const POLICY: Record<GeoKind, 'cube' | 'ground' | 'keep' | 'tile'> = {
-  floorA: 'cube',
-  floorB: 'cube',
+const POLICY: Record<GeoKind, Policy> = {
+  floorA: 'floorGrid',
+  floorB: 'floorGrid',
   wall: 'tile',
   torchPost: 'cube',
   slag: 'cube',
@@ -72,58 +49,85 @@ const POLICY: Record<GeoKind, 'cube' | 'ground' | 'keep' | 'tile'> = {
   brazier: 'ground',
   rubble: 'ground',
   bone: 'ground',
+  crate: 'ground',
 };
 
-// GeoKind → generated prop GLB stem (wb-ai-asset precise-lowpoly, stage 1).
-// Each prop's mesh GUID is read at bake time from its `<stem>.glb.meta.json`
-// sidecar (subAssets[0].guid, deterministic sha256(contentHash:sourceIndex)),
-// so re-baking after a prop regen tracks the new GUID automatically. Falls back
-// to CUBE_GUID (with a warning) when a sidecar is missing — the entity still
-// renders as a cube, game never breaks.
-const PROP_FOR_KIND: Record<GeoKind, string> = {
-  floorA: 'prop-den-floor-a',
-  floorB: 'prop-den-floor-b',
-  wall: 'prop-den-wall',
-  torchPost: 'prop-den-torch-post',
-  flame: 'prop-den-flame',
-  brazier: 'prop-den-brazier',
-  rubble: 'prop-den-rubble',
-  bone: 'prop-den-bone',
-  slag: 'prop-den-slag',
+// Per-kind asset POOL (variant selection breaks mesh repetition). floor-a is
+// wall-shaped (2×1.49×0.29) so it CANNOT go in floorGrid (would re-introduce the
+// "barcode" 8-strip bug); instead it joins the WALL pool as a thin panel variant.
+// slag stays 'cube' policy (flat flush slab) so its pool is unused — prop-embercrack
+// would need a flat-slab prop policy to fit and is left out for now.
+const PROP_POOL: Record<GeoKind, string[]> = {
+  floorA: ['prop-den-floor-b'],
+  floorB: ['prop-den-floor-b'],
+  wall: ['prop-den-wall', 'prop-den-floor-a'],
+  torchPost: ['prop-den-torch-post'],
+  flame: ['prop-den-flame'],
+  brazier: ['prop-den-brazier'],
+  rubble: ['prop-den-rubble'],
+  bone: ['prop-den-bone'],
+  slag: ['prop-den-slag'],
+  crate: ['prop-crate'],
 };
-
-function readPropMeshGuid(stem: string): string {
-  const sidecarPath = join(propsDir, `${stem}.glb.meta.json`);
-  try {
-    const sidecar = JSON.parse(readFileSync(sidecarPath, 'utf8')) as { subAssets?: Array<{ guid: string; kind: string }> };
-    const mesh = sidecar.subAssets?.find((s) => s.kind === 'mesh');
-    const guid = mesh?.guid;
-    if (!guid) {
-      console.warn(`  ⚠ ${stem}: sidecar has no mesh sub-asset — falling back to CUBE`);
-      return CUBE_GUID;
-    }
-    return guid;
-  } catch (e) {
-    console.warn(`  ⚠ ${stem}: cannot read sidecar (${(e as Error).message}) — falling back to CUBE`);
-    return CUBE_GUID;
-  }
-}
 
 const layout = generateLayout(DUNGEON_SEED);
 const kinds = Object.keys(MATS) as GeoKind[];
-const propMeshGuid = kinds.map((k) => readPropMeshGuid(PROP_FOR_KIND[k]));
-const propBBox = kinds.map((k) => readPropBBox(propsDir, PROP_FOR_KIND[k]));
-const matGuid = kinds.map((k) => MATS[k].guid);
 
-// refs layout: [CUBE_GUID, ...propMeshGuids, ...materialGuids].
-// propIdx(kind) → prop mesh ref; cubeIdx → CUBE; matIdx(kind) → material.
-const refs: string[] = [CUBE_GUID, ...propMeshGuid, ...matGuid];
+// Load mesh GUID + bbox for every (kind, variant) in the pools. refs[] is the
+// flat list [CUBE, ...all pool mesh GUIDs, ...mats]; writePack prunes orphans.
+interface PoolEntry { guid: string; bbox: ReturnType<typeof readPropBBox>; }
+const poolEntries: Record<GeoKind, PoolEntry[]> = {} as Record<GeoKind, PoolEntry[]>;
+for (const k of kinds) {
+  poolEntries[k] = PROP_POOL[k].map((stem) => {
+    const bbox = readPropBBox(propsDir, stem);
+    let guid = CUBE_GUID;
+    try {
+      const sidecar = JSON.parse(
+        readFileSync(join(propsDir, `${stem}.glb.meta.json`), 'utf8'),
+      ) as { subAssets?: Array<{ guid: string; kind: string }> };
+      const mesh = sidecar.subAssets?.find((s) => s.kind === 'mesh');
+      if (!mesh?.guid) {
+        console.warn(`  ⚠ ${stem}: no mesh — falling back to CUBE`);
+      } else {
+        guid = mesh.guid;
+      }
+    } catch (e) {
+      console.warn(`  ⚠ ${stem}: sidecar missing (${(e as Error).message}) — CUBE`);
+    }
+    return { guid, bbox };
+  });
+}
+
+const poolCount = kinds.reduce((n, k) => n + poolEntries[k].length, 0);
+// ref index for (kind, variant): 1 + offset of kind within the flat pool list.
+const propIdx = (k: GeoKind, vi: number): number => {
+  let off = 1;
+  for (const kk of kinds) {
+    if (kk === k) return off + vi;
+    off += poolEntries[kk].length;
+  }
+  throw new Error(`unknown kind ${k}`);
+};
+const poolBBox = (k: GeoKind, vi: number) => poolEntries[k][vi]!.bbox;
+const matIdx = (k: GeoKind): number => 1 + poolCount + kinds.indexOf(k);
+
+const refs: string[] = [
+  CUBE_GUID,
+  ...kinds.flatMap((k) => poolEntries[k].map((e) => e.guid)),
+  ...kinds.map((k) => MATS[k].guid),
+];
 const cubeIdx = 0;
-const propIdx = (k: GeoKind): number => 1 + kinds.indexOf(k);
-const matIdx = (k: GeoKind): number => 1 + kinds.length + kinds.indexOf(k);
+
+// Seeded RNG for visual variant + jitter. Separate stream from layout's `rnd`
+// (XOR a salt) but still a pure function of DUNGEON_SEED → re-bake is identical.
+// Visual-only: never moves an entity off the grid, so runtime walkability is
+// unaffected (the dungeon-layout.ts "all randomness lives HERE" invariant holds
+// for the GRID; prop choice + decor jitter are non-grid visual detail).
+const vrand = mulberry32(DUNGEON_SEED ^ 0x5a5a5a5a);
 
 const counters: Partial<Record<GeoKind, number>> = {};
 let nextLocalId = 0;
+
 const boxTransform = (g: { x: number; y: number; z: number; sx: number; sy: number; sz: number; rotY?: number }): Record<string, number> => {
   const t: Record<string, number> = {
     posX: +g.x.toFixed(4), posY: +g.y.toFixed(4), posZ: +g.z.toFixed(4),
@@ -139,36 +143,61 @@ const boxTransform = (g: { x: number; y: number; z: number; sx: number; sy: numb
 const entities = layout.geometry.flatMap((g) => {
   const policy = POLICY[g.kind];
   const n = (counters[g.kind] = (counters[g.kind] ?? 0) + 1);
-  const makeEntity = (suffix: string, t: Record<string, number>, meshIdx: number) => ({
+  const makeEntity = (suffix: string, t: Record<string, number>, meshIdx: number, mat?: number) => ({
     localId: nextLocalId++,
     components: {
       Name: { value: `Den_${g.kind}_${n}${suffix}` },
       Transform: t,
       MeshFilter: { assetHandle: meshIdx },
-      MeshRenderer: { materials: [matIdx(g.kind)] },
+      MeshRenderer: { materials: [mat ?? matIdx(g.kind)] },
     },
   });
 
-  if (policy === 'tile') {
-    const bb = propBBox[kinds.indexOf(g.kind)];
-    const us = g.sy > 0 && bb.size[1] > 0 ? g.sy / bb.size[1] : 1; // fit height
-    const segLen = bb.size[0] * us;                                // panel length
-    const slotLong = Math.max(g.sx, g.sz);
-    if (segLen > slotLong) {
-      // A single segment would overflow a 1-cell slot → box (no poke).
-      return [makeEntity('', boxTransform(g), cubeIdx)];
-    }
-    const segs = tileLinear(
-      { pos: [g.x, g.y, g.z], size: [g.sx, g.sy, g.sz], rotYDeg: g.rotY ?? 0 },
-      bb,
-    );
+  const slot = { pos: [g.x, g.y, g.z] as [number, number, number], size: [g.sx, g.sy, g.sz] as [number, number, number], rotYDeg: g.rotY ?? 0 };
+  const bb0 = poolBBox(g.kind, 0);  // primary-variant bbox (floorGrid uses variant 0 only)
+
+  if (policy === 'floorGrid') {
+    const segs = tileGrid(slot, bb0);
     return segs.map((s, j) => {
-      const q = quatY(s.rotYDeg);
+      // Per-segment 90° rotation: floor-b is a 2×2 square tile, so 90° steps
+      // preserve the footprint and only rotate the mesh — breaks the grid look
+      // if the tile geometry is even slightly asymmetric. s.rotYDeg is 0 for
+      // floors, so this adds a clean 0/90/180/270° spin per tile.
+      const rot90 = Math.floor(vrand() * 4) * 90;
+      const q = quatY(s.rotYDeg + (rot90 * Math.PI) / 180);
       return makeEntity(`__t${j}`, {
         posX: s.pos[0], posY: s.pos[1], posZ: s.pos[2],
         scaleX: s.scale[0], scaleY: s.scale[1], scaleZ: s.scale[2],
         quatX: +q[0].toFixed(6), quatY: +q[1].toFixed(6), quatZ: +q[2].toFixed(6), quatW: +q[3].toFixed(6),
-      }, propIdx(g.kind));
+      }, propIdx(g.kind, 0));
+    });
+  }
+
+  if (policy === 'tile') {
+    // Walls: per-SLOT mesh variant (pool varies the front-face mesh only) +
+    // per-SEGMENT height jitter (±20%, bottom-grounded) → height is the VISIBLE
+    // random dimension. Per-segment (not per-run) so the variation shows inside a
+    // single corridor view, not just at run boundaries. Thickness is equalised at
+    // the cell (2.4 m) via tileLinear's `fillThin` — both pool members fill the
+    // cell (a solid block, not a thin facade); side-face stretch from inflating
+    // thin panels stays hidden inside the run.
+    const pool = PROP_POOL[g.kind];
+    const vi = Math.floor(vrand() * pool.length);
+    const bbV = poolBBox(g.kind, vi);
+    const segs = tileLinear(slot, bbV, true);
+    const bottom = g.y - g.sy / 2;
+    return segs.map((s, j) => {
+      const sJit = 0.8 + vrand() * 0.4;       // ±20% per segment
+      const newScaleY = s.scale[1] * sJit;
+      const newPosY = bottom - bbV.min[1] * newScaleY;   // bottom-grounded (base stays at slot bottom)
+      // s.rotYDeg is in DEGREES; quatY takes radians → convert. (Horizontal-only
+      // wall runs are 0° so the mismatch is latent; kept for correctness.)
+      const q = quatY((s.rotYDeg * Math.PI) / 180);
+      return makeEntity(`__t${j}`, {
+        posX: s.pos[0], posY: +newPosY.toFixed(4), posZ: s.pos[2],
+        scaleX: s.scale[0], scaleY: +newScaleY.toFixed(4), scaleZ: s.scale[2],
+        quatX: +q[0].toFixed(6), quatY: +q[1].toFixed(6), quatZ: +q[2].toFixed(6), quatW: +q[3].toFixed(6),
+      }, propIdx(g.kind, vi));
     });
   }
 
@@ -177,24 +206,31 @@ const entities = layout.geometry.flatMap((g) => {
   }
 
   if (policy === 'ground') {
-    const bb = propBBox[kinds.indexOf(g.kind)];
-    const bMax = Math.max(bb.size[0], bb.size[1], bb.size[2]);
+    // Per-entity variant (slag pool → slag/embercrack) + noticeable jitter for
+    // scatter decor (rubble/bone/slag/crate): ±20% uniform scale + full-random
+    // Y rotation. Braziers stay aligned (symmetric, flanking the boss room).
+    const pool = PROP_POOL[g.kind];
+    const vi = Math.floor(vrand() * pool.length);
+    const bbV = poolBBox(g.kind, vi);
+    const bMax = Math.max(bbV.size[0], bbV.size[1], bbV.size[2]);
     const sMax = Math.max(g.sx, g.sy, g.sz);
-    const us = bMax > 0 ? sMax / bMax : 1;
+    const jitterable = g.kind !== 'brazier';
+    let us = bMax > 0 ? sMax / bMax : 1;
+    if (jitterable) us *= 0.8 + vrand() * 0.4;   // ±20% size
     const us4 = +us.toFixed(4);
     const t: Record<string, number> = {
-      posX: +g.x.toFixed(4), posY: +(-bb.min[1] * us).toFixed(4), posZ: +g.z.toFixed(4),
+      posX: +g.x.toFixed(4), posY: +(-bbV.min[1] * us).toFixed(4), posZ: +g.z.toFixed(4),
       scaleX: us4, scaleY: us4, scaleZ: us4,
     };
-    if (g.rotY !== undefined) {
-      const q = quatY(g.rotY);
+    const rotY = jitterable ? vrand() * Math.PI * 2 : g.rotY;
+    if (rotY !== undefined) {
+      const q = quatY(rotY);
       t.quatX = +q[0].toFixed(6); t.quatY = +q[1].toFixed(6); t.quatZ = +q[2].toFixed(6); t.quatW = +q[3].toFixed(6);
     }
-    return [makeEntity('', t, propIdx(g.kind))];
+    return [makeEntity('', t, propIdx(g.kind, vi))];
   }
 
-  // "keep" — layout transform is already well-shaped (e.g. flame tongue).
-  return [makeEntity('', boxTransform(g), propIdx(g.kind))];
+  return [makeEntity('', boxTransform(g), propIdx(g.kind, 0))];
 });
 
 const pack = {
@@ -227,23 +263,10 @@ const pack = {
 
 const out = join(gameRoot, 'assets', 'scenes', 'slagdeep-hollow.pack.json');
 mkdirSync(dirname(out), { recursive: true });
-writeFileSync(out, JSON.stringify(pack, null, 2) + '\n');
+writePack(out, pack);
 
-// Summary by policy so a re-bake shows what got de-stretched.
-const byPolicy: Record<string, number> = { cube: 0, ground: 0, keep: 0, tile: 0 };
+const byPolicy: Record<string, number> = {};
 for (const g of layout.geometry) byPolicy[POLICY[g.kind]] = (byPolicy[POLICY[g.kind]] ?? 0) + 1;
-let tileSegs = 0, tileBox = 0;
-for (const g of layout.geometry) {
-  if (POLICY[g.kind] !== 'tile') continue;
-  const bb = propBBox[kinds.indexOf(g.kind)];
-  const us = g.sy / bb.size[1];
-  const segLen = bb.size[0] * us;
-  if (segLen > Math.max(g.sx, g.sz)) tileBox++;
-  else tileSegs++;
-}
-console.log(
-  `baked ${entities.length} entities (${layout.roomCount} rooms, seed ${DUNGEON_SEED}) → ${out}`,
-);
-console.log(
-  `  cube=${byPolicy.cube}  ground(decor)=${byPolicy.ground}  keep=${byPolicy.keep}  tile(wall GLB)=${byPolicy.tile} [${tileSegs} long→segmented, ${tileBox} 1-cell→box]`,
-);
+console.log(`baked ${entities.length} entities (${layout.roomCount} rooms, seed ${DUNGEON_SEED}) → ${out}`);
+console.log(`  policies: ${JSON.stringify(byPolicy)}`);
+remindReload(out);

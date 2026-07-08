@@ -1,0 +1,81 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "LeftToeBase",
+        "LeftFoot",
+        "LeftLeg",
+        "LeftUpLeg",
+        "RightToeBase",
+        "RightFoot",
+        "RightLeg",
+        "RightUpLeg",
+        "LeftHand",
+        "LeftForeArm",
+        "LeftArm",
+        "LeftShoulder",
+        "RightHand",
+        "RightForeArm",
+        "RightArm",
+        "RightShoulder",
+        "head_end",
+        "headfront",
+        "Head",
+        "neck",
+        "Spine",
+        "Spine01",
+        "Spine02",
+        "Hips",
+        "char1",
+        "Armature"
+      ],
+      "unsupportedExtensions": [
+        "KHR_materials_specular",
+        "KHR_materials_ior"
+      ]
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "characterw.rigged_model.glb",
+  "subAssets": [
+    {
+      "guid": "019f41e0-f2ae-7433-b291-efef7290794c",
+      "kind": "mesh",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f41e0-f2af-76d2-9272-f3838e581427",
+      "kind": "material",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f41e0-f2af-76d2-9272-f38468b88122",
+      "kind": "scene",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f41e0-f2af-76d2-9272-f3851cebcb5a",
+      "kind": "texture",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f41e0-f2af-76d2-9272-f386044d33ed",
+      "kind": "skeleton",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f41e0-f2af-76d2-9272-f387cee9d691",
+      "kind": "skin",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f41e0-f2af-76d2-9272-f3886bac2c37",
+      "kind": "animation-clip",
+      "sourceIndex": 0
+    }
+  ]
+}

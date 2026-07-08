@@ -1,13 +1,13 @@
 # Hellforge 场景外部编辑工作流
 
-> 编辑器不能可靠保存时,用脚本直改 `scenes/*.pack.json`。git-diffable、确定性、
+> 编辑器不能可靠保存时,用脚本直改 `assets/scenes/*.pack.json`。git-diffable、确定性、
 > 幂等。这是 hellforge 场景资产的实际编辑入口(营地 + 地牢)。
 
 ## 两条路径
 
 | 场景 | SSOT | 怎么改 | 怎么生效 |
 |---|---|---|---|
-| 营地 `rogue-encampment` | pack.json + overrides.json | 改 `scenes/rogue-encampment.overrides.json` → `apply` | 营地是 `defaultScene`,刷新游戏即见 |
+| 营地 `rogue-encampment` | pack.json + overrides.json | 改 `assets/scenes/rogue-encampment.overrides.json` → `apply` | 营地是 `defaultScene`,刷新游戏即见 |
 | 地牢 `slagdeep-hollow` | `src/dungeon-layout.ts` + bake 策略 | 改布局/策略 → `bake-dungeon.ts` | re-bake 后刷新游戏即见 |
 
 碰撞/可行走与视觉变换**解耦**:地牢走 `src/dungeon.ts` 的 layout 网格,营地走
@@ -19,18 +19,18 @@
 
 ```bash
 # 1. 一次性种子(从当前 pack 推出去拉伸默认值)
-bun scripts/reshape-scene.ts init  scenes/rogue-encampment.pack.json
-#   → 生成 scenes/rogue-encampment.overrides.json
+bun scripts/reshape-scene.ts init  assets/scenes/rogue-encampment.pack.json
+#   → 生成 assets/scenes/rogue-encampment.overrides.json
 
 # 2. 手改 overrides.json 里某个实体的 pos / scale / rotYDeg / mesh
 
 # 3. 回写 pack
-bun scripts/reshape-scene.ts apply scenes/rogue-encampment.pack.json
+bun scripts/reshape-scene.ts apply assets/scenes/rogue-encampment.pack.json
 
 # 4. 浏览器硬刷新(Cmd+Shift+R)看效果;不满意回到第 2 步
 
 # 查看当前 pack 的 Name → transform
-bun scripts/reshape-scene.ts dump  scenes/rogue-encampment.pack.json
+bun scripts/reshape-scene.ts dump  assets/scenes/rogue-encampment.pack.json
 ```
 
 ### overrides.json schema(keyed by entity Name)
@@ -81,7 +81,7 @@ bun scripts/reshape-scene.ts dump  scenes/rogue-encampment.pack.json
 ```bash
 # 改 src/dungeon-layout.ts(布局/种子/装饰) 或 scripts/bake-dungeon.ts 的 POLICY
 bun scripts/bake-dungeon.ts
-bun scripts/fix-prop-materials.ts scenes/slagdeep-hollow.pack.json
+bun scripts/fix-prop-materials.ts assets/scenes/slagdeep-hollow.pack.json
 # 浏览器硬刷新
 ```
 
@@ -95,6 +95,24 @@ bun scripts/fix-prop-materials.ts scenes/slagdeep-hollow.pack.json
 
 改策略:编辑 `scripts/bake-dungeon.ts` 的 `POLICY` 表(把某 kind 从 `cube` 改成
 `ground` 即可让它用 GLB 等比落地),re-bake。
+
+---
+
+## 天空:bake-sky 闭环
+
+可见熔岩红云 + IBL 共用 `scripts/bake-sky.ts` 的程序化 equirect:
+
+```bash
+cd packages/games/hellforge
+bun scripts/bake-sky.ts
+# → assets/sky.hdr (IBL)
+# → assets/3d/sky/sky-dome.glb + meta (可见 emissive 穹顶)
+# → src/sky-dome.gen.ts (穹顶 mesh/material GUID,勿手改)
+```
+
+运行时 `main.ts` 的 `installSkyDome()` 加载穹顶并每帧跟随相机。**不要**在 pack
+里声明 `Skylight`/`SkyboxBackground` 的 `equirect`——当前引擎 build 不渲染 cubemap
+天空盒,pack 里写会出彩虹 garbage。
 
 ---
 

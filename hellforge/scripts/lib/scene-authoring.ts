@@ -51,9 +51,29 @@ export function readPack(packPath: string): Pack {
 
 export function writePack(packPath: string, pack: Pack): void {
   for (const a of pack.assets) {
-    if (a.kind === 'scene') pruneUnusedRefs(a as SceneAsset);
+    if (a.kind === 'scene') {
+      const scene = a as SceneAsset;
+      renumberLocalIds(scene.payload.entities);
+      pruneUnusedRefs(scene);
+    }
   }
   writeFileSync(packPath, `${JSON.stringify(pack, null, 2)}\n`, 'utf8');
+}
+
+/** Print the post-write reminder: a pack edit only reaches Studio after the
+ *  packages/games submodule pin is bumped AND `bun fx restart` reloads the
+ *  server/engine. Without restart, Studio keeps rendering the old pack and the
+ *  author thinks the change "didn't take" (the worktree-vs-loaded-pack trap). */
+export function remindReload(packPath: string): void {
+  console.log(
+    `\n  ⚠ 已写盘 ${packPath} → 记得 bump packages/games pin + \`bun fx restart\`，否则 Studio 渲染旧 pack（worktree 改 pack 不重启 = 看不到）\n`,
+  );
+}
+
+/** Engine indexes entities by localId into a fixed array — gaps silently drop nodes. */
+export function renumberLocalIds(entities: Entity[]): void {
+  entities.sort((a, b) => a.localId - b.localId);
+  for (let i = 0; i < entities.length; i++) entities[i]!.localId = i;
 }
 
 /** Compact `scene.refs` to only the GUIDs an entity actually references
@@ -336,12 +356,16 @@ export function applyOverride(
   if (ov.mesh === 'cube') {
     setMeshHandle(scene, e, CUBE_GUID);
   } else if (ov.mesh !== 'keep') {
-    // "<stem>" → read prop mesh GUID from sidecar
-    const sidecar = JSON.parse(readFileSync(join(propsDir, `${ov.mesh}.glb.meta.json`), 'utf8')) as {
-      subAssets?: Array<{ kind: string; guid: string }>;
-    };
-    const mesh = sidecar.subAssets?.find((s) => s.kind === 'mesh');
-    if (mesh) setMeshHandle(scene, e, mesh.guid);
+    // "<stem>" → read prop mesh + material GUIDs from sidecar. Wiring the
+    // material too is required: a stem swap that only sets MeshFilter leaves
+    // MeshRenderer on the prior material (e.g. StructBox grey), so the prop's
+    // texture never shows — the entity renders as a flat-coloured box.
+    const { meshGuid, materialGuid } = readPropAssets(propsDir, ov.mesh);
+    if (meshGuid) setMeshHandle(scene, e, meshGuid);
+    if (materialGuid) {
+      const matIdx = ensureRefGuid(scene, materialGuid);
+      e.components.MeshRenderer = { materials: [matIdx] };
+    }
   }
 
   const cur = getTransform(e);
@@ -427,7 +451,7 @@ const ROT_Y = (deg: number): [number, number] => {
  * Tile along the slot's longer horizontal axis; rotate 90° when that axis is Z.
  * Segments are bottom-aligned to the slot's bottom (walls sit on the ground).
  */
-export function tileLinear(slot: TileSlot, panel: BBox): TileSegment[] {
+export function tileLinear(slot: TileSlot, panel: BBox, fillThin?: boolean): TileSegment[] {
   const [sx, sy, sz] = slot.size;
   const longIsZ = sz > sx;
   const slotLong = longIsZ ? sz : sx;
@@ -436,9 +460,21 @@ export function tileLinear(slot: TileSlot, panel: BBox): TileSegment[] {
   // Adaptive depth: if the panel is already thin enough (uniform depth ≤ slot),
   // keep it uniform (pristine — zero distortion). Only squash if the panel is
   // chunkier than the slot (avoids overflow / bunker-thick walls).
-  const depthScale = panel.size[2] > 0 ? Math.min(us, thinH / panel.size[2]) : us;
+  // fillThin: force the world depth to exactly `thinH` (cell-filling solid block),
+  // INFLATING thin panels beyond `us` instead of leaving them pristine. Used for
+  // dungeon walls so every variant fills its cell (equalized thickness) — the side
+  // faces that stretch from inflating are hidden inside the run.
+  const depthScale = panel.size[2] > 0
+    ? (fillThin ? thinH / panel.size[2] : Math.min(us, thinH / panel.size[2]))
+    : us;
   const segLen = panel.size[0] * us;                                 // panel length (visible, unstretched)
   const N = Math.max(1, Math.ceil(slotLong / segLen));               // cover (overlap ok)
+  // When a single panel is longer than the slot (tall-narrow wall), squash its
+  // length to fit instead of overhanging or reverting to a textureless CUBE.
+  // Texture stretches along length but the wall stays textured and right-sized.
+  const lengthScale = N === 1 && segLen > slotLong && panel.size[0] > 0
+    ? slotLong / panel.size[0]
+    : us;
   const slotBottomY = slot.pos[1] - sy / 2;
   const posY = slotBottomY - panel.min[1] * us;                      // bottom-align
   const panelRotY = slot.rotYDeg + (longIsZ ? 90 : 0);              // panel length → slot long axis
@@ -458,7 +494,7 @@ export function tileLinear(slot: TileSlot, panel: BBox): TileSegment[] {
     const wz = lx * ss + lz * cs;
     out.push({
       pos: [+(slot.pos[0] + wx).toFixed(4), +posY.toFixed(4), +(slot.pos[2] + wz).toFixed(4)],
-      scale: [+us.toFixed(4), +us.toFixed(4), +depthScale.toFixed(4)],
+      scale: [+lengthScale.toFixed(4), +us.toFixed(4), +depthScale.toFixed(4)],
       rotYDeg: +panelRotY.toFixed(3),
     });
   }

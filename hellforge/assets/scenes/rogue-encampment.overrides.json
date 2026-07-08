@@ -1,128 +1,12 @@
 {
   "Ground": {
-    "mesh": "cube",
+    "mesh": "prop-ground",
     "pos": [
       0.1653,
-      -0.2885,
+      -0.01,
       4.7812
     ],
-    "scale": [
-      50,
-      0.2,
-      50
-    ],
-    "ground": false
-  },
-  "Hut1_Wall_N": {
-    "mesh": "cube",
-    "pos": [
-      -6,
-      1.2,
-      -6
-    ],
-    "scale": [
-      4,
-      2.4,
-      0.3
-    ],
-    "ground": false
-  },
-  "Hut1_Wall_E": {
-    "mesh": "cube",
-    "pos": [
-      -4,
-      1.2,
-      -7.85
-    ],
-    "scale": [
-      0.3,
-      2.4,
-      4
-    ],
-    "ground": false
-  },
-  "Hut1_Roof": {
-    "mesh": "cube",
-    "pos": [
-      -6,
-      2.5,
-      -7.85
-    ],
-    "scale": [
-      4.2,
-      0.2,
-      4.2
-    ],
-    "ground": false
-  },
-  "Hut2_Wall_N": {
-    "mesh": "cube",
-    "pos": [
-      6,
-      1.2,
-      -6
-    ],
-    "scale": [
-      4,
-      2.4,
-      0.3
-    ],
-    "ground": false
-  },
-  "Hut2_Wall_W": {
-    "mesh": "cube",
-    "pos": [
-      8,
-      1.2,
-      -7.85
-    ],
-    "scale": [
-      0.3,
-      2.4,
-      4
-    ],
-    "ground": false
-  },
-  "Hut2_Roof": {
-    "mesh": "cube",
-    "pos": [
-      6,
-      2.5,
-      -7.85
-    ],
-    "scale": [
-      4.2,
-      0.2,
-      4.2
-    ],
-    "ground": false
-  },
-  "Hut3_Wall_S": {
-    "mesh": "cube",
-    "pos": [
-      0,
-      1.2,
-      -12
-    ],
-    "scale": [
-      5,
-      2.4,
-      0.3
-    ],
-    "ground": false
-  },
-  "Hut3_Roof": {
-    "mesh": "cube",
-    "pos": [
-      0,
-      2.6,
-      -13.5
-    ],
-    "scale": [
-      5.2,
-      0.2,
-      3.2
-    ],
+    "scale": 1,
     "ground": false
   },
   "CampfireBase": {
@@ -212,48 +96,6 @@
       5.6,
       0.4,
       0.5
-    ],
-    "ground": false
-  },
-  "FenceW1": {
-    "mesh": "cube",
-    "pos": [
-      -11.3081,
-      0.6,
-      3.3145
-    ],
-    "scale": [
-      0.2,
-      1.2,
-      12
-    ],
-    "ground": false
-  },
-  "FenceE1": {
-    "mesh": "cube",
-    "pos": [
-      8,
-      0.6,
-      6
-    ],
-    "scale": [
-      0.2,
-      1.2,
-      12
-    ],
-    "ground": false
-  },
-  "FenceN": {
-    "mesh": "cube",
-    "pos": [
-      0,
-      0.6,
-      -14
-    ],
-    "scale": [
-      16,
-      1.2,
-      0.2
     ],
     "ground": false
   },
@@ -504,36 +346,6 @@
     "rotYDeg": 17.189,
     "ground": false
   },
-  "DeadTree1_Branch1": {
-    "mesh": "cube",
-    "pos": [
-      -7.45,
-      2.05,
-      20
-    ],
-    "scale": [
-      1.15,
-      0.11,
-      0.11
-    ],
-    "rotYDeg": 42.972,
-    "ground": false
-  },
-  "DeadTree1_Branch2": {
-    "mesh": "cube",
-    "pos": [
-      -8.45,
-      1.65,
-      20.1
-    ],
-    "scale": [
-      0.9,
-      0.1,
-      0.1
-    ],
-    "rotYDeg": -17.189,
-    "ground": false
-  },
   "DeadTree2_Trunk": {
     "mesh": "cube",
     "pos": [
@@ -547,36 +359,6 @@
       0.28
     ],
     "rotYDeg": 63.025,
-    "ground": false
-  },
-  "DeadTree2_Branch1": {
-    "mesh": "cube",
-    "pos": [
-      9.05,
-      2.05,
-      26
-    ],
-    "scale": [
-      1.15,
-      0.11,
-      0.11
-    ],
-    "rotYDeg": 88.808,
-    "ground": false
-  },
-  "DeadTree2_Branch2": {
-    "mesh": "cube",
-    "pos": [
-      8.05,
-      1.65,
-      26.1
-    ],
-    "scale": [
-      0.9,
-      0.1,
-      0.1
-    ],
-    "rotYDeg": 28.648,
     "ground": false
   },
   "DeadTree3_Trunk": {
@@ -594,36 +376,6 @@
     "rotYDeg": -245.408,
     "ground": false
   },
-  "DeadTree3_Branch1": {
-    "mesh": "cube",
-    "pos": [
-      19.55,
-      2.05,
-      17
-    ],
-    "scale": [
-      1.15,
-      0.11,
-      0.11
-    ],
-    "rotYDeg": -219.625,
-    "ground": false
-  },
-  "DeadTree3_Branch2": {
-    "mesh": "cube",
-    "pos": [
-      18.55,
-      1.65,
-      17.1
-    ],
-    "scale": [
-      0.9,
-      0.1,
-      0.1
-    ],
-    "rotYDeg": 80.214,
-    "ground": false
-  },
   "DeadTree4_Trunk": {
     "mesh": "cube",
     "pos": [
@@ -637,36 +389,6 @@
       0.28
     ],
     "rotYDeg": 40.107,
-    "ground": false
-  },
-  "DeadTree4_Branch1": {
-    "mesh": "cube",
-    "pos": [
-      -17.45,
-      2.05,
-      14
-    ],
-    "scale": [
-      1.15,
-      0.11,
-      0.11
-    ],
-    "rotYDeg": 65.89,
-    "ground": false
-  },
-  "DeadTree4_Branch2": {
-    "mesh": "cube",
-    "pos": [
-      -18.45,
-      1.65,
-      14.1
-    ],
-    "scale": [
-      0.9,
-      0.1,
-      0.1
-    ],
-    "rotYDeg": 5.73,
     "ground": false
   },
   "Crate_1": {
@@ -701,96 +423,6 @@
       -4.6
     ],
     "rotYDeg": 20.053
-  },
-  "Path_1": {
-    "mesh": "cube",
-    "pos": [
-      0.8,
-      0.012,
-      16.1
-    ],
-    "scale": [
-      2.1,
-      0.03,
-      3.6203
-    ],
-    "rotYDeg": 36.027,
-    "ground": false
-  },
-  "Path_2": {
-    "mesh": "cube",
-    "pos": [
-      2.6,
-      0.012,
-      18.1
-    ],
-    "scale": [
-      2.1,
-      0.03,
-      3.5907
-    ],
-    "rotYDeg": 48.013,
-    "ground": false
-  },
-  "Path_3": {
-    "mesh": "cube",
-    "pos": [
-      4.8,
-      0.012,
-      19.8
-    ],
-    "scale": [
-      2.1,
-      0.03,
-      3.7844
-    ],
-    "rotYDeg": 56.31,
-    "ground": false
-  },
-  "Path_4": {
-    "mesh": "cube",
-    "pos": [
-      7.35,
-      0.012,
-      21.25
-    ],
-    "scale": [
-      2.1,
-      0.03,
-      3.8967
-    ],
-    "rotYDeg": 64.29,
-    "ground": false
-  },
-  "Path_5": {
-    "mesh": "cube",
-    "pos": [
-      10.05,
-      0.012,
-      22.45
-    ],
-    "scale": [
-      2.1,
-      0.03,
-      3.8155
-    ],
-    "rotYDeg": 67.834,
-    "ground": false
-  },
-  "Path_6": {
-    "mesh": "cube",
-    "pos": [
-      12.5,
-      0.012,
-      23.4
-    ],
-    "scale": [
-      2.1,
-      0.03,
-      3.2409
-    ],
-    "rotYDeg": 70.017,
-    "ground": false
   },
   "EmberCrack_1": {
     "mesh": "cube",
@@ -851,5 +483,233 @@
     ],
     "rotYDeg": 5.73,
     "ground": false
+  },
+  "Path_1__t0": {
+    "mesh": "keep"
+  },
+  "Path_1__t1": {
+    "mesh": "keep"
+  },
+  "Path_1__t2": {
+    "mesh": "keep"
+  },
+  "Path_1__t3": {
+    "mesh": "keep"
+  },
+  "Path_2__t0": {
+    "mesh": "keep"
+  },
+  "Path_2__t1": {
+    "mesh": "keep"
+  },
+  "Path_2__t2": {
+    "mesh": "keep"
+  },
+  "Path_2__t3": {
+    "mesh": "keep"
+  },
+  "Path_3__t0": {
+    "mesh": "keep"
+  },
+  "Path_3__t1": {
+    "mesh": "keep"
+  },
+  "Path_3__t2": {
+    "mesh": "keep"
+  },
+  "Path_3__t3": {
+    "mesh": "keep"
+  },
+  "Path_4__t0": {
+    "mesh": "keep"
+  },
+  "Path_4__t1": {
+    "mesh": "keep"
+  },
+  "Path_4__t2": {
+    "mesh": "keep"
+  },
+  "Path_4__t3": {
+    "mesh": "keep"
+  },
+  "Path_4__t4": {
+    "mesh": "keep"
+  },
+  "Path_5__t0": {
+    "mesh": "keep"
+  },
+  "Path_5__t1": {
+    "mesh": "keep"
+  },
+  "Path_5__t2": {
+    "mesh": "keep"
+  },
+  "Path_5__t3": {
+    "mesh": "keep"
+  },
+  "Path_6__t0": {
+    "mesh": "keep"
+  },
+  "Path_6__t1": {
+    "mesh": "keep"
+  },
+  "Path_6__t2": {
+    "mesh": "keep"
+  },
+  "Path_6__t3": {
+    "mesh": "keep"
+  },
+  "Hut1_Wall_N__t0": {
+    "mesh": "keep"
+  },
+  "Hut1_Wall_N__t1": {
+    "mesh": "keep"
+  },
+  "Hut1_Wall_E__t0": {
+    "mesh": "keep"
+  },
+  "Hut1_Wall_E__t1": {
+    "mesh": "keep"
+  },
+  "Hut1_Wall_E__t2": {
+    "mesh": "keep"
+  },
+  "Hut1_Wall_E__t3": {
+    "mesh": "keep"
+  },
+  "Hut1_Roof__t0": {
+    "mesh": "keep"
+  },
+  "Hut1_Roof__t1": {
+    "mesh": "keep"
+  },
+  "Hut1_Roof__t2": {
+    "mesh": "keep"
+  },
+  "Hut1_Roof__t3": {
+    "mesh": "keep"
+  },
+  "Hut2_Wall_N__t0": {
+    "mesh": "keep"
+  },
+  "Hut2_Wall_N__t1": {
+    "mesh": "keep"
+  },
+  "Hut2_Wall_N__t2": {
+    "mesh": "keep"
+  },
+  "Hut2_Wall_N__t3": {
+    "mesh": "keep"
+  },
+  "Hut2_Wall_W__t0": {
+    "mesh": "keep"
+  },
+  "Hut2_Wall_W__t1": {
+    "mesh": "keep"
+  },
+  "Hut2_Roof__t0": {
+    "mesh": "keep"
+  },
+  "Hut2_Roof__t1": {
+    "mesh": "keep"
+  },
+  "Hut2_Roof__t2": {
+    "mesh": "keep"
+  },
+  "Hut2_Roof__t3": {
+    "mesh": "keep"
+  },
+  "Hut3_Wall_S__t0": {
+    "mesh": "keep"
+  },
+  "Hut3_Wall_S__t1": {
+    "mesh": "keep"
+  },
+  "Hut3_Wall_S__t2": {
+    "mesh": "keep"
+  },
+  "Hut3_Wall_S__t3": {
+    "mesh": "keep"
+  },
+  "Hut3_Wall_S__t4": {
+    "mesh": "keep"
+  },
+  "Hut3_Roof__t0": {
+    "mesh": "keep"
+  },
+  "Hut3_Roof__t1": {
+    "mesh": "keep"
+  },
+  "Hut3_Roof__t2": {
+    "mesh": "keep"
+  },
+  "Hut3_Roof__t3": {
+    "mesh": "keep"
+  },
+  "Hut3_Roof__t4": {
+    "mesh": "keep"
+  },
+  "Hut3_Roof__t5": {
+    "mesh": "keep"
+  },
+  "FenceW1__t0": {
+    "mesh": "keep"
+  },
+  "FenceW1__t1": {
+    "mesh": "keep"
+  },
+  "FenceW1__t2": {
+    "mesh": "keep"
+  },
+  "FenceW1__t3": {
+    "mesh": "keep"
+  },
+  "FenceW1__t4": {
+    "mesh": "keep"
+  },
+  "FenceW1__t5": {
+    "mesh": "keep"
+  },
+  "FenceE1__t0": {
+    "mesh": "keep"
+  },
+  "FenceE1__t1": {
+    "mesh": "keep"
+  },
+  "FenceE1__t2": {
+    "mesh": "keep"
+  },
+  "FenceE1__t3": {
+    "mesh": "keep"
+  },
+  "FenceE1__t4": {
+    "mesh": "keep"
+  },
+  "FenceE1__t5": {
+    "mesh": "keep"
+  },
+  "FenceN__t0": {
+    "mesh": "keep"
+  },
+  "FenceN__t1": {
+    "mesh": "keep"
+  },
+  "FenceN__t2": {
+    "mesh": "keep"
+  },
+  "FenceN__t3": {
+    "mesh": "keep"
+  },
+  "FenceN__t4": {
+    "mesh": "keep"
+  },
+  "FenceN__t5": {
+    "mesh": "keep"
+  },
+  "FenceN__t6": {
+    "mesh": "keep"
+  },
+  "FenceN__t7": {
+    "mesh": "keep"
   }
 }

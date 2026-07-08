@@ -1,7 +1,7 @@
 // Hellforge dungeon — 熔渣深窟 Slagdeep Hollow, the Act 1 dungeon.
 //
 // The dungeon is now an EDITABLE SCENE: its static geometry lives in
-// `scenes/slagdeep-hollow.pack.json` (click it in the editor), baked by
+// `assets/scenes/slagdeep-hollow.pack.json` (click it in the editor), baked by
 // `bun scripts/bake-dungeon.ts` from src/dungeon-layout.ts at the fixed
 // DUNGEON_SEED. At runtime this class re-runs the same layout for the
 // walkability grid + monster spawns (deterministic — always matches the
@@ -126,6 +126,7 @@ export class Dungeon {
       rubble:    mkMat([0.30, 0.26, 0.25, 1]),
       bone:      mkMat([0.62, 0.56, 0.44, 1], { rough: 0.7 }),
       slag:      mkMat([0.40, 0.06, 0.02, 1], { rough: 0.5, emissive: [1, 0.10, 0.02], ei: 1.0 }),
+      crate:     mkMat([0.45, 0.30, 0.18, 1], { rough: 0.85 }),
     };
     for (const g of this.layout.geometry) {
       const t: Record<string, number> = {
