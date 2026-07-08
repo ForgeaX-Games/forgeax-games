@@ -34,7 +34,7 @@ for (const file of readdirSync(propsDir)) {
   if (mesh && material) meshToMaterial.set(mesh.guid, material.guid);
 }
 
-const packPath = process.argv[2] ?? join(gameRoot, 'scenes', 'slagdeep-hollow.pack.json');
+const packPath = process.argv[2] ?? join(gameRoot, 'assets', 'scenes', 'slagdeep-hollow.pack.json');
 const pack = JSON.parse(readFileSync(packPath, 'utf8')) as {
   assets: Array<{
     kind: string;

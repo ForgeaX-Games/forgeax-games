@@ -1,0 +1,855 @@
+{
+  "Ground": {
+    "mesh": "cube",
+    "pos": [
+      0.1653,
+      -0.2885,
+      4.7812
+    ],
+    "scale": [
+      50,
+      0.2,
+      50
+    ],
+    "ground": false
+  },
+  "Hut1_Wall_N": {
+    "mesh": "cube",
+    "pos": [
+      -6,
+      1.2,
+      -6
+    ],
+    "scale": [
+      4,
+      2.4,
+      0.3
+    ],
+    "ground": false
+  },
+  "Hut1_Wall_E": {
+    "mesh": "cube",
+    "pos": [
+      -4,
+      1.2,
+      -7.85
+    ],
+    "scale": [
+      0.3,
+      2.4,
+      4
+    ],
+    "ground": false
+  },
+  "Hut1_Roof": {
+    "mesh": "cube",
+    "pos": [
+      -6,
+      2.5,
+      -7.85
+    ],
+    "scale": [
+      4.2,
+      0.2,
+      4.2
+    ],
+    "ground": false
+  },
+  "Hut2_Wall_N": {
+    "mesh": "cube",
+    "pos": [
+      6,
+      1.2,
+      -6
+    ],
+    "scale": [
+      4,
+      2.4,
+      0.3
+    ],
+    "ground": false
+  },
+  "Hut2_Wall_W": {
+    "mesh": "cube",
+    "pos": [
+      8,
+      1.2,
+      -7.85
+    ],
+    "scale": [
+      0.3,
+      2.4,
+      4
+    ],
+    "ground": false
+  },
+  "Hut2_Roof": {
+    "mesh": "cube",
+    "pos": [
+      6,
+      2.5,
+      -7.85
+    ],
+    "scale": [
+      4.2,
+      0.2,
+      4.2
+    ],
+    "ground": false
+  },
+  "Hut3_Wall_S": {
+    "mesh": "cube",
+    "pos": [
+      0,
+      1.2,
+      -12
+    ],
+    "scale": [
+      5,
+      2.4,
+      0.3
+    ],
+    "ground": false
+  },
+  "Hut3_Roof": {
+    "mesh": "cube",
+    "pos": [
+      0,
+      2.6,
+      -13.5
+    ],
+    "scale": [
+      5.2,
+      0.2,
+      3.2
+    ],
+    "ground": false
+  },
+  "CampfireBase": {
+    "mesh": "keep",
+    "scale": 0.8,
+    "ground": true,
+    "pos": [
+      0,
+      0,
+      0
+    ]
+  },
+  "CampfireLog1": {
+    "mesh": "cube",
+    "pos": [
+      0,
+      0.55,
+      0.25
+    ],
+    "scale": [
+      1.2,
+      0.18,
+      0.18
+    ],
+    "ground": false
+  },
+  "CampfireLog2": {
+    "mesh": "cube",
+    "pos": [
+      0,
+      0.55,
+      -0.25
+    ],
+    "scale": [
+      1.2,
+      0.18,
+      0.18
+    ],
+    "ground": false
+  },
+  "CampfireGlow": {
+    "mesh": "keep",
+    "scale": 0.25,
+    "ground": false,
+    "pos": [
+      0,
+      0.7,
+      0
+    ]
+  },
+  "GateColumnL": {
+    "mesh": "cube",
+    "pos": [
+      -2.5,
+      1.5,
+      14
+    ],
+    "scale": [
+      0.6,
+      3,
+      0.6
+    ],
+    "ground": false
+  },
+  "GateColumnR": {
+    "mesh": "cube",
+    "pos": [
+      2.5,
+      1.5,
+      14
+    ],
+    "scale": [
+      0.6,
+      3,
+      0.6
+    ],
+    "ground": false
+  },
+  "GateLintel": {
+    "mesh": "cube",
+    "pos": [
+      0,
+      3.2,
+      14
+    ],
+    "scale": [
+      5.6,
+      0.4,
+      0.5
+    ],
+    "ground": false
+  },
+  "FenceW1": {
+    "mesh": "cube",
+    "pos": [
+      -11.3081,
+      0.6,
+      3.3145
+    ],
+    "scale": [
+      0.2,
+      1.2,
+      12
+    ],
+    "ground": false
+  },
+  "FenceE1": {
+    "mesh": "cube",
+    "pos": [
+      8,
+      0.6,
+      6
+    ],
+    "scale": [
+      0.2,
+      1.2,
+      12
+    ],
+    "ground": false
+  },
+  "FenceN": {
+    "mesh": "cube",
+    "pos": [
+      0,
+      0.6,
+      -14
+    ],
+    "scale": [
+      16,
+      1.2,
+      0.2
+    ],
+    "ground": false
+  },
+  "TorchGateL_Post": {
+    "mesh": "cube",
+    "pos": [
+      -2.5,
+      0.9,
+      13.5
+    ],
+    "scale": [
+      0.12,
+      1.8,
+      0.12
+    ],
+    "ground": false
+  },
+  "TorchGateL_Glow": {
+    "mesh": "keep",
+    "scale": 0.14,
+    "ground": false,
+    "pos": [
+      -2.5,
+      2,
+      13.5
+    ]
+  },
+  "TorchGateR_Post": {
+    "mesh": "cube",
+    "pos": [
+      2.5,
+      0.9,
+      13.5
+    ],
+    "scale": [
+      0.12,
+      1.8,
+      0.12
+    ],
+    "ground": false
+  },
+  "TorchGateR_Glow": {
+    "mesh": "keep",
+    "scale": 0.14,
+    "ground": false,
+    "pos": [
+      2.5,
+      2,
+      13.5
+    ]
+  },
+  "TorchHut1_Post": {
+    "mesh": "cube",
+    "pos": [
+      -5,
+      0.9,
+      -3.5
+    ],
+    "scale": [
+      0.12,
+      1.8,
+      0.12
+    ],
+    "ground": false
+  },
+  "TorchHut1_Glow": {
+    "mesh": "keep",
+    "scale": 0.14,
+    "ground": false,
+    "pos": [
+      -5,
+      2,
+      -3.5
+    ]
+  },
+  "TorchHut2_Post": {
+    "mesh": "cube",
+    "pos": [
+      5,
+      0.9,
+      -3.5
+    ],
+    "scale": [
+      0.12,
+      1.8,
+      0.12
+    ],
+    "ground": false
+  },
+  "TorchHut2_Glow": {
+    "mesh": "keep",
+    "scale": 0.14,
+    "ground": false,
+    "pos": [
+      5,
+      2,
+      -3.5
+    ]
+  },
+  "TorchHut3F_Post": {
+    "mesh": "cube",
+    "pos": [
+      -2.5,
+      0.9,
+      -9
+    ],
+    "scale": [
+      0.12,
+      1.8,
+      0.12
+    ],
+    "ground": false
+  },
+  "TorchHut3F_Glow": {
+    "mesh": "keep",
+    "scale": 0.14,
+    "ground": false,
+    "pos": [
+      -2.5,
+      2,
+      -9
+    ]
+  },
+  "TorchHut3R_Post": {
+    "mesh": "cube",
+    "pos": [
+      2.5,
+      0.9,
+      -9
+    ],
+    "scale": [
+      0.12,
+      1.8,
+      0.12
+    ],
+    "ground": false
+  },
+  "TorchHut3R_Glow": {
+    "mesh": "keep",
+    "scale": 0.14,
+    "ground": false,
+    "pos": [
+      2.5,
+      2,
+      -9
+    ]
+  },
+  "Boulder_1": {
+    "mesh": "keep",
+    "scale": 0.75,
+    "ground": true,
+    "pos": [
+      -14,
+      0,
+      18
+    ],
+    "rotYDeg": 22.918
+  },
+  "Boulder_2": {
+    "mesh": "keep",
+    "scale": 0.5,
+    "ground": true,
+    "pos": [
+      -19,
+      0,
+      8
+    ],
+    "rotYDeg": 68.755
+  },
+  "Boulder_3": {
+    "mesh": "keep",
+    "scale": 0.9,
+    "ground": true,
+    "pos": [
+      20,
+      0,
+      12
+    ],
+    "rotYDeg": 40.107
+  },
+  "Boulder_4": {
+    "mesh": "keep",
+    "scale": 0.45,
+    "ground": true,
+    "pos": [
+      18,
+      0,
+      2
+    ],
+    "rotYDeg": -239.679
+  },
+  "Boulder_5": {
+    "mesh": "keep",
+    "scale": 0.6,
+    "ground": true,
+    "pos": [
+      -16,
+      0,
+      25
+    ],
+    "rotYDeg": 11.459
+  },
+  "Boulder_6": {
+    "mesh": "keep",
+    "scale": 0.4,
+    "ground": true,
+    "pos": [
+      22,
+      0,
+      22
+    ],
+    "rotYDeg": -268.327
+  },
+  "Boulder_7": {
+    "mesh": "keep",
+    "scale": 0.55,
+    "ground": true,
+    "pos": [
+      -21,
+      0,
+      -6
+    ],
+    "rotYDeg": 51.566
+  },
+  "Boulder_8": {
+    "mesh": "keep",
+    "scale": 0.35,
+    "ground": true,
+    "pos": [
+      9,
+      0,
+      26.5
+    ],
+    "rotYDeg": 28.648
+  },
+  "DeadTree1_Trunk": {
+    "mesh": "cube",
+    "pos": [
+      -8,
+      1.15,
+      20
+    ],
+    "scale": [
+      0.28,
+      2.3,
+      0.28
+    ],
+    "rotYDeg": 17.189,
+    "ground": false
+  },
+  "DeadTree1_Branch1": {
+    "mesh": "cube",
+    "pos": [
+      -7.45,
+      2.05,
+      20
+    ],
+    "scale": [
+      1.15,
+      0.11,
+      0.11
+    ],
+    "rotYDeg": 42.972,
+    "ground": false
+  },
+  "DeadTree1_Branch2": {
+    "mesh": "cube",
+    "pos": [
+      -8.45,
+      1.65,
+      20.1
+    ],
+    "scale": [
+      0.9,
+      0.1,
+      0.1
+    ],
+    "rotYDeg": -17.189,
+    "ground": false
+  },
+  "DeadTree2_Trunk": {
+    "mesh": "cube",
+    "pos": [
+      8.5,
+      1.15,
+      26
+    ],
+    "scale": [
+      0.28,
+      2.3,
+      0.28
+    ],
+    "rotYDeg": 63.025,
+    "ground": false
+  },
+  "DeadTree2_Branch1": {
+    "mesh": "cube",
+    "pos": [
+      9.05,
+      2.05,
+      26
+    ],
+    "scale": [
+      1.15,
+      0.11,
+      0.11
+    ],
+    "rotYDeg": 88.808,
+    "ground": false
+  },
+  "DeadTree2_Branch2": {
+    "mesh": "cube",
+    "pos": [
+      8.05,
+      1.65,
+      26.1
+    ],
+    "scale": [
+      0.9,
+      0.1,
+      0.1
+    ],
+    "rotYDeg": 28.648,
+    "ground": false
+  },
+  "DeadTree3_Trunk": {
+    "mesh": "cube",
+    "pos": [
+      19,
+      1.15,
+      17
+    ],
+    "scale": [
+      0.28,
+      2.3,
+      0.28
+    ],
+    "rotYDeg": -245.408,
+    "ground": false
+  },
+  "DeadTree3_Branch1": {
+    "mesh": "cube",
+    "pos": [
+      19.55,
+      2.05,
+      17
+    ],
+    "scale": [
+      1.15,
+      0.11,
+      0.11
+    ],
+    "rotYDeg": -219.625,
+    "ground": false
+  },
+  "DeadTree3_Branch2": {
+    "mesh": "cube",
+    "pos": [
+      18.55,
+      1.65,
+      17.1
+    ],
+    "scale": [
+      0.9,
+      0.1,
+      0.1
+    ],
+    "rotYDeg": 80.214,
+    "ground": false
+  },
+  "DeadTree4_Trunk": {
+    "mesh": "cube",
+    "pos": [
+      -18,
+      1.15,
+      14
+    ],
+    "scale": [
+      0.28,
+      2.3,
+      0.28
+    ],
+    "rotYDeg": 40.107,
+    "ground": false
+  },
+  "DeadTree4_Branch1": {
+    "mesh": "cube",
+    "pos": [
+      -17.45,
+      2.05,
+      14
+    ],
+    "scale": [
+      1.15,
+      0.11,
+      0.11
+    ],
+    "rotYDeg": 65.89,
+    "ground": false
+  },
+  "DeadTree4_Branch2": {
+    "mesh": "cube",
+    "pos": [
+      -18.45,
+      1.65,
+      14.1
+    ],
+    "scale": [
+      0.9,
+      0.1,
+      0.1
+    ],
+    "rotYDeg": 5.73,
+    "ground": false
+  },
+  "Crate_1": {
+    "mesh": "keep",
+    "scale": 0.35,
+    "ground": true,
+    "pos": [
+      -4.2,
+      0,
+      -5
+    ],
+    "rotYDeg": 11.459
+  },
+  "Crate_2": {
+    "mesh": "keep",
+    "scale": 0.275,
+    "ground": true,
+    "pos": [
+      -3.4,
+      0,
+      -5.7
+    ],
+    "rotYDeg": 34.377
+  },
+  "Crate_3": {
+    "mesh": "keep",
+    "scale": 0.35,
+    "ground": true,
+    "pos": [
+      6.5,
+      0,
+      -4.6
+    ],
+    "rotYDeg": 20.053
+  },
+  "Path_1": {
+    "mesh": "cube",
+    "pos": [
+      0.8,
+      0.012,
+      16.1
+    ],
+    "scale": [
+      2.1,
+      0.03,
+      3.6203
+    ],
+    "rotYDeg": 36.027,
+    "ground": false
+  },
+  "Path_2": {
+    "mesh": "cube",
+    "pos": [
+      2.6,
+      0.012,
+      18.1
+    ],
+    "scale": [
+      2.1,
+      0.03,
+      3.5907
+    ],
+    "rotYDeg": 48.013,
+    "ground": false
+  },
+  "Path_3": {
+    "mesh": "cube",
+    "pos": [
+      4.8,
+      0.012,
+      19.8
+    ],
+    "scale": [
+      2.1,
+      0.03,
+      3.7844
+    ],
+    "rotYDeg": 56.31,
+    "ground": false
+  },
+  "Path_4": {
+    "mesh": "cube",
+    "pos": [
+      7.35,
+      0.012,
+      21.25
+    ],
+    "scale": [
+      2.1,
+      0.03,
+      3.8967
+    ],
+    "rotYDeg": 64.29,
+    "ground": false
+  },
+  "Path_5": {
+    "mesh": "cube",
+    "pos": [
+      10.05,
+      0.012,
+      22.45
+    ],
+    "scale": [
+      2.1,
+      0.03,
+      3.8155
+    ],
+    "rotYDeg": 67.834,
+    "ground": false
+  },
+  "Path_6": {
+    "mesh": "cube",
+    "pos": [
+      12.5,
+      0.012,
+      23.4
+    ],
+    "scale": [
+      2.1,
+      0.03,
+      3.2409
+    ],
+    "rotYDeg": 70.017,
+    "ground": false
+  },
+  "EmberCrack_1": {
+    "mesh": "cube",
+    "pos": [
+      5.5,
+      0.012,
+      22.8
+    ],
+    "scale": [
+      1.2,
+      0.03,
+      0.5
+    ],
+    "rotYDeg": 28.648,
+    "ground": false
+  },
+  "EmberCrack_2": {
+    "mesh": "cube",
+    "pos": [
+      -12,
+      0.012,
+      24
+    ],
+    "scale": [
+      1.4,
+      0.03,
+      0.55
+    ],
+    "rotYDeg": -17.189,
+    "ground": false
+  },
+  "EmberCrack_3": {
+    "mesh": "cube",
+    "pos": [
+      17,
+      0.012,
+      7.5
+    ],
+    "scale": [
+      1.1,
+      0.03,
+      0.45
+    ],
+    "rotYDeg": 57.296,
+    "ground": false
+  },
+  "EmberCrack_4": {
+    "mesh": "cube",
+    "pos": [
+      -6,
+      0.012,
+      17
+    ],
+    "scale": [
+      0.9,
+      0.03,
+      0.4
+    ],
+    "rotYDeg": 5.73,
+    "ground": false
+  }
+}

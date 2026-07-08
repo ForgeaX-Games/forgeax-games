@@ -1,0 +1,226 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "id": "narr-open",
+      "kind": "video",
+      "filename": "blobs/narr-open.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 37997624,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-open",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-door",
+      "kind": "video",
+      "filename": "blobs/narr-door.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 40808145,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-door",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-soul",
+      "kind": "video",
+      "filename": "blobs/narr-soul.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 15407738,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-soul",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-river",
+      "kind": "video",
+      "filename": "blobs/narr-river.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 40002028,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-river",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-child",
+      "kind": "video",
+      "filename": "blobs/narr-child.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 32900050,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-child",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-land",
+      "kind": "video",
+      "filename": "blobs/narr-land.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 42432772,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-land",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-mask",
+      "kind": "video",
+      "filename": "blobs/narr-mask.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 10135268,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-mask",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-mengpo",
+      "kind": "video",
+      "filename": "blobs/narr-mengpo.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 31121879,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-mengpo",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-tea",
+      "kind": "video",
+      "filename": "blobs/narr-tea.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 11264079,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-tea",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-drink",
+      "kind": "video",
+      "filename": "blobs/narr-drink.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 36006022,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-drink",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-nodrink",
+      "kind": "video",
+      "filename": "blobs/narr-nodrink.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 12844333,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-nodrink",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-follow",
+      "kind": "video",
+      "filename": "blobs/narr-follow.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 15085460,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-follow",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-getlight",
+      "kind": "video",
+      "filename": "blobs/narr-getlight.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 22285587,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-getlight",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-nolight",
+      "kind": "video",
+      "filename": "blobs/narr-nolight.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 18025706,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-nolight",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-nofollow",
+      "kind": "video",
+      "filename": "blobs/narr-nofollow.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 17418972,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-nofollow",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-lotus",
+      "kind": "video",
+      "filename": "blobs/narr-lotus.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 11723891,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-lotus",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    },
+    {
+      "id": "narr-nolotus",
+      "kind": "video",
+      "filename": "blobs/narr-nolotus.mp4",
+      "mimeType": "video/mp4",
+      "bytes": 37439549,
+      "createdAt": 1751500000000,
+      "meta": {
+        "mediaId": "m-narr-nolotus",
+        "scenarioId": "nodia-main",
+        "source": "local-import"
+      }
+    }
+  ]
+}

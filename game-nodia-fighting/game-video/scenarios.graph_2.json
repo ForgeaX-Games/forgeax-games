@@ -1,0 +1,652 @@
+{
+  "version": 1,
+  "activeId": "nodia-graph",
+  "items": [
+    {
+      "id": "nodia-graph",
+      "title": "战斗蓝图(graph)",
+      "scenario": {
+        "schemaVersion": "wb-game-video.graph.v1",
+        "variables": {
+          "qi": {
+            "id": "qi",
+            "name": "气力",
+            "kind": "number",
+            "initial": 0,
+            "min": 0,
+            "max": 5
+          },
+          "lizhi": {
+            "id": "lizhi",
+            "name": "理智",
+            "kind": "number",
+            "initial": 5,
+            "min": 0,
+            "max": 12
+          }
+        },
+        "entities": {
+          "ent-player": {
+            "id": "ent-player",
+            "name": "空藏",
+            "kind": "player",
+            "attrs": {
+              "attack": 80,
+              "defense": 40,
+              "speed": 30,
+              "hp": 300
+            },
+            "attrMeta": {
+              "hp": {
+                "min": 0,
+                "max": 300,
+                "initial": 300,
+                "label": "生命"
+              }
+            }
+          },
+          "ent-boss": {
+            "id": "ent-boss",
+            "name": "小怪",
+            "kind": "boss",
+            "attrs": {
+              "attack": 75,
+              "defense": 50,
+              "speed": 25,
+              "hp": 700
+            },
+            "attrMeta": {
+              "hp": {
+                "min": 0,
+                "max": 700,
+                "initial": 700,
+                "label": "生命"
+              }
+            }
+          }
+        },
+        "ui": {
+          "hud": [
+            {
+              "element": "playerHp",
+              "show": "always"
+            },
+            {
+              "element": "bossHp",
+              "show": "always"
+            },
+            {
+              "element": "score",
+              "show": "always"
+            }
+          ]
+        },
+        "rng": {
+          "seed": 7
+        },
+        "graph": {
+          "nodes": [
+            {
+              "id": "enter",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "进战待机",
+                "timeline": [],
+                "durationMs": 4000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-open"
+                }
+              }
+            },
+            {
+              "id": "a_my",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "我方回合",
+                "timeline": [
+                  {
+                    "id": "a-skill",
+                    "role": "interaction",
+                    "kind": "skill",
+                    "trigger": {
+                      "when": "enter"
+                    },
+                    "params": {
+                      "prompt": "选择技能",
+                      "options": [
+                        {
+                          "key": "light",
+                          "label": "轻击",
+                          "effects": [
+                            {
+                              "id": "dmg-boss-2",
+                              "kind": "attr",
+                              "entityId": "ent-boss",
+                              "attr": "hp",
+                              "op": "add",
+                              "value": {
+                                "expr": "-(entity.ent-player.attr.attack * 2 - entity.ent-boss.attr.defense)"
+                              }
+                            },
+                            {
+                              "id": "qi-2",
+                              "kind": "var",
+                              "varId": "qi",
+                              "op": "add",
+                              "value": 2
+                            }
+                          ]
+                        },
+                        {
+                          "key": "heavy",
+                          "label": "重击",
+                          "effects": [
+                            {
+                              "id": "dmg-boss-3",
+                              "kind": "attr",
+                              "entityId": "ent-boss",
+                              "attr": "hp",
+                              "op": "add",
+                              "value": {
+                                "expr": "-(entity.ent-player.attr.attack * 3 - entity.ent-boss.attr.defense)"
+                              }
+                            },
+                            {
+                              "id": "qi--2",
+                              "kind": "var",
+                              "varId": "qi",
+                              "op": "add",
+                              "value": -2
+                            }
+                          ]
+                        },
+                        {
+                          "key": "ult",
+                          "label": "必杀",
+                          "effects": [
+                            {
+                              "id": "dmg-boss-5",
+                              "kind": "attr",
+                              "entityId": "ent-boss",
+                              "attr": "hp",
+                              "op": "add",
+                              "value": {
+                                "expr": "-(entity.ent-player.attr.attack * 5 - entity.ent-boss.attr.defense)"
+                              }
+                            },
+                            {
+                              "id": "qi-0",
+                              "kind": "var",
+                              "varId": "qi",
+                              "op": "set",
+                              "value": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-soul"
+                }
+              }
+            },
+            {
+              "id": "b_ai",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "敌方回合",
+                "timeline": [
+                  {
+                    "id": "b-qte",
+                    "role": "interaction",
+                    "kind": "qte",
+                    "trigger": {
+                      "when": "enter"
+                    },
+                    "params": {
+                      "qteKind": "parry",
+                      "windowMs": 160
+                    }
+                  }
+                ],
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-mask"
+                }
+              }
+            },
+            {
+              "id": "s_pass",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "完美防反",
+                "timeline": [
+                  {
+                    "id": "s_pass-settle",
+                    "role": "logic",
+                    "kind": "settle",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "effects": [
+                        {
+                          "id": "dmg-boss-1",
+                          "kind": "attr",
+                          "entityId": "ent-boss",
+                          "attr": "hp",
+                          "op": "add",
+                          "value": {
+                            "expr": "-(entity.ent-player.attr.attack * 1 - entity.ent-boss.attr.defense)"
+                          }
+                        },
+                        {
+                          "id": "qi--1",
+                          "kind": "var",
+                          "varId": "qi",
+                          "op": "add",
+                          "value": -1
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "s_pass-fx",
+                    "role": "presentation",
+                    "kind": "floatText",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "expr": "-(entity.ent-player.attr.attack * 1 - entity.ent-boss.attr.defense)",
+                      "x": 0.5,
+                      "y": 0.45,
+                      "color": "#ffd54a"
+                    }
+                  }
+                ],
+                "durationMs": 2500,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-tea"
+                }
+              }
+            },
+            {
+              "id": "s_good",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "普通防反",
+                "timeline": [
+                  {
+                    "id": "s_good-settle",
+                    "role": "logic",
+                    "kind": "settle",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "effects": [
+                        {
+                          "id": "dmg-boss-1",
+                          "kind": "attr",
+                          "entityId": "ent-boss",
+                          "attr": "hp",
+                          "op": "add",
+                          "value": {
+                            "expr": "-(entity.ent-player.attr.attack * 1 - entity.ent-boss.attr.defense)"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "s_good-fx",
+                    "role": "presentation",
+                    "kind": "floatText",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "expr": "-(entity.ent-player.attr.attack * 1 - entity.ent-boss.attr.defense)",
+                      "x": 0.5,
+                      "y": 0.45,
+                      "color": "#ffd54a"
+                    }
+                  }
+                ],
+                "durationMs": 2500,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-river"
+                }
+              }
+            },
+            {
+              "id": "s_fail",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "受击",
+                "timeline": [
+                  {
+                    "id": "s_fail-settle",
+                    "role": "logic",
+                    "kind": "settle",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "effects": [
+                        {
+                          "id": "dmg-player-2",
+                          "kind": "attr",
+                          "entityId": "ent-player",
+                          "attr": "hp",
+                          "op": "add",
+                          "value": {
+                            "expr": "-(entity.ent-boss.attr.attack * 2 - entity.ent-player.attr.defense)"
+                          }
+                        },
+                        {
+                          "id": "qi-1",
+                          "kind": "var",
+                          "varId": "qi",
+                          "op": "add",
+                          "value": 1
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "s_fail-fx",
+                    "role": "presentation",
+                    "kind": "floatText",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "expr": "-(entity.ent-boss.attr.attack * 2 - entity.ent-player.attr.defense)",
+                      "x": 0.5,
+                      "y": 0.45,
+                      "color": "#ff5a5a"
+                    }
+                  }
+                ],
+                "durationMs": 2500,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-child"
+                }
+              }
+            },
+            {
+              "id": "win",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "胜利",
+                "timeline": [],
+                "end": "victory"
+              }
+            },
+            {
+              "id": "lose",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "失败",
+                "timeline": [],
+                "end": "defeat"
+              }
+            }
+          ],
+          "edges": [
+            {
+              "id": "e-init-me",
+              "source": "enter",
+              "target": "a_my",
+              "sourceHandle": "cond:0",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrCompare",
+                      "left": "ent-player",
+                      "attr": "speed",
+                      "op": "gte",
+                      "right": "ent-boss"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-init-foe",
+              "source": "enter",
+              "target": "b_ai",
+              "sourceHandle": "else"
+            },
+            {
+              "id": "e-light-win",
+              "source": "a_my",
+              "target": "win",
+              "sourceHandle": "opt:light",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "lte",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-light-foe",
+              "source": "a_my",
+              "target": "b_ai",
+              "sourceHandle": "opt:light"
+            },
+            {
+              "id": "e-heavy-win",
+              "source": "a_my",
+              "target": "win",
+              "sourceHandle": "opt:heavy",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "lte",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-heavy-foe",
+              "source": "a_my",
+              "target": "b_ai",
+              "sourceHandle": "opt:heavy"
+            },
+            {
+              "id": "e-ult-win",
+              "source": "a_my",
+              "target": "win",
+              "sourceHandle": "opt:ult",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "lte",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-ult-foe",
+              "source": "a_my",
+              "target": "b_ai",
+              "sourceHandle": "opt:ult"
+            },
+            {
+              "id": "e-qte-pass",
+              "source": "b_ai",
+              "target": "s_pass",
+              "sourceHandle": "pass"
+            },
+            {
+              "id": "e-qte-good",
+              "source": "b_ai",
+              "target": "s_good",
+              "sourceHandle": "good"
+            },
+            {
+              "id": "e-qte-fail",
+              "source": "b_ai",
+              "target": "s_fail",
+              "sourceHandle": "fail"
+            },
+            {
+              "id": "e-pass-lose",
+              "source": "s_pass",
+              "target": "lose",
+              "sourceHandle": "cond:0",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-player",
+                      "attr": "hp",
+                      "op": "lte",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-pass-next",
+              "source": "s_pass",
+              "target": "enter",
+              "sourceHandle": "else"
+            },
+            {
+              "id": "e-good-lose",
+              "source": "s_good",
+              "target": "lose",
+              "sourceHandle": "cond:0",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-player",
+                      "attr": "hp",
+                      "op": "lte",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-good-next",
+              "source": "s_good",
+              "target": "enter",
+              "sourceHandle": "else"
+            },
+            {
+              "id": "e-fail-lose",
+              "source": "s_fail",
+              "target": "lose",
+              "sourceHandle": "cond:0",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-player",
+                      "attr": "hp",
+                      "op": "lte",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-fail-next",
+              "source": "s_fail",
+              "target": "enter",
+              "sourceHandle": "else"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

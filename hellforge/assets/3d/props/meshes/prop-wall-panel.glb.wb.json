@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-ai-asset",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-08T02:46:40.406Z",
+  "contentHash": "sha256:f2c292ea239f380c587ddb41e64eecb55406ddde346f134a8873be36dc590515",
+  "size": 9870556,
+  "type": "aiasset-mesh",
+  "dependencies": [
+    {
+      "path": "prop-wall-panel.png",
+      "hash": "sha256:2d1f5b55f540389ea329452b1a9badf8e8921f746323235a07b1af61caaf89a4",
+      "kind": "preview_image"
+    },
+    {
+      "path": "prop-wall-panel.base_color.png",
+      "hash": "sha256:23d074a1bb55f1352faff24327f515acdcb213a3957464c2d23c9a15e4bf55c4",
+      "kind": "texture",
+      "textureKind": "base_color"
+    },
+    {
+      "path": "prop-wall-panel.metallic.png",
+      "hash": "sha256:784a89ffef0536dda138e44aa1649d1783f02e9efdf1ced14bcfbeb26ac1646b",
+      "kind": "texture",
+      "textureKind": "metallic"
+    },
+    {
+      "path": "prop-wall-panel.roughness.png",
+      "hash": "sha256:f6faefbdf670523c3261e1af4ff4789c6791b404a5c0f4601d9faa67ad8bf087",
+      "kind": "texture",
+      "textureKind": "roughness"
+    },
+    {
+      "path": "prop-wall-panel.normal.png",
+      "hash": "sha256:e45cc6dc773ba2bfffefb27e5cd9af1dcfeb517abd5b9a8ab411208c2c8e7190",
+      "kind": "texture",
+      "textureKind": "normal"
+    },
+    {
+      "path": "prop-wall-panel.emission.png",
+      "hash": "sha256:626de7b13aa846075182ea46117665d1f4dfc35036c92b444dde3db76d92df09",
+      "kind": "texture",
+      "textureKind": "emission"
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "text",
+    "assetSlot": "meshes",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLXJldGV4dHVyZTt0YXNrX2lkOjAxOWYzZjliLWU2NTItN2FkMy1iMzk5LTY0ZGYyNTc1YzE2MQ==",
+    "prompt": "thin flat rectangular stone wall panel, weathered grey stone blocks with dark mortar lines, completely flat slab 2m wide 2.4m tall 0.1m thick, flat featureless back, no base no frame no posts, low-poly game prop, facade texture on front only",
+    "sourceInputAssetPaths": [],
+    "faceCount": 8000,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": false,
+      "animated": false
+    },
+    "cacheKey": "meshy-text-20b0ea37",
+    "quality": {
+      "geometry": {
+        "value": null,
+        "source": "auto"
+      },
+      "topology": {
+        "value": 0,
+        "source": "auto"
+      },
+      "texture": {
+        "value": null,
+        "source": "auto"
+      },
+      "pbr": {
+        "value": null,
+        "source": "auto"
+      },
+      "prompt_fidelity": {
+        "value": null,
+        "source": "auto"
+      },
+      "total": null,
+      "method": "auto",
+      "rater": "geometry-check",
+      "notes": "topology=degraded, faces=8125, components=1, boundaryEdges=155, nonManifoldEdges=87, reasons: face count 8125 exceeds budget 2000; 87 non-manifold edge(s)",
+      "scoredAt": "2026-07-08T02:46:40.503Z"
+    }
+  }
+}

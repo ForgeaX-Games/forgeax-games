@@ -48,7 +48,8 @@ import { createCylinderGeometry } from '@forgeax/engine-geometry';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
-import type { AnimationClip, EquirectAsset, Handle, MeshAsset, SceneAsset } from '@forgeax/engine-types';
+import type { AnimationClip, Handle, MeshAsset, SceneAsset, TextureAsset } from '@forgeax/engine-types';
+import { SKY_DOME_MESH_GUID, SKY_DOME_MATERIAL_GUID } from './src/sky-dome.gen';
 
 import { createPlayer, damagePlayer, grantXp, respawnPlayer, tickPlayer } from './src/state';
 import { FxSystem } from './src/fx';
@@ -78,65 +79,93 @@ const WITCH = {
     { name: 'death',  guid: 'ca6e7f12-8e1a-4b3c-9d50-2a4f1b8c6d04' },
   ] as const,
 } as const;
-const SKY_HDR_GUID = '81eec382-392f-5a93-8998-0ecf11ef7990';
-
-// Visible sky background for WebKit/WKWebView (the desktop app), which can't
-// render the cubemap SkyboxBackground (needs rgba16float render targets it
-// lacks) — without this the background clears to black ("没天空背景"). The
-// Camera clear color needs no GPU feature; a dark hellish red-orange suits the
-// forge. Linear/pre-tonemap (ACES). perspective() carries clearR/G/B=0, so
+// Fallback background clear. The visible sky is the emissive dome (installSkyDome,
+// a plain textured mesh → works on every platform incl. WebKit), but it loads
+// async; this dark hellish red-orange fills the frame until it pops in and shows
+// through if the dome ever fails to load, instead of clearing to black. Needs no
+// GPU feature. Linear/pre-tonemap (ACES). perspective() carries clearR/G/B=0, so
 // spread SKY_CLEAR AFTER it on every Camera write (spawn + resize re-apply).
 const SKY_CLEAR = { clearR: 0.32, clearG: 0.07, clearB: 0.035 } as const;
 
-// ── HDR sky (same path cow / fps use) ─────────────────────────────────────
-/** Narrowed context for helper functions. */
-type HellforgeCtx = { world: World; assets?: import('@forgeax/engine-runtime').AssetRegistry; app?: import('@forgeax/engine-app').App };
-async function installHdrSky(ctx: HellforgeCtx): Promise<EntityHandle | null> {
-  // ALWAYS spawn a solid-color Skylight first. Without a Skylight the forgeax
-  // PBR shader computes ambient=0, so a lone DirectionalLight leaves shaded
-  // faces black ("天光没了"). A cubemap-less Skylight binds the engine's 1×1
-  // white irradiance cube — ambient is live on the first frame with no async GPU
-  // work, and it works on WebKit/WKWebView (desktop app) whose WebGPU lacks the
-  // rgba16float render-attachment the IBL precompute needs. Warm hellish fill.
-  const skylight = ctx.world.spawn(
-    { component: Skylight, data: { colorR: 1.0, colorG: 0.5, colorB: 0.32, intensity: 0.2 } },
-  ).unwrap();
+// ── HDR sky (code-side — the cow-level / fps pattern) ─────────────────────
+// `SkyboxBackground` and the IBL `Skylight` ONLY accept a runtime `cubemap`
+// handle, produced by `uploadCubemapFromEquirect` — a path that exists solely
+// in the game runtime on Chromium (it needs rgba16float render targets the
+// editor and WebKit/WKWebView lack). So the sky MUST be installed here in code,
+// never declaratively in the pack: a declarative SkyboxBackground has no cubemap
+// to bind and samples uninitialised GPU memory → rainbow static (what broke the
+// editor). We always spawn a solid-color Skylight first (binds the engine's 1×1
+// white irradiance cube → ambient on frame 1, works everywhere), then upgrade
+// to the projected HDR cubemap + a visible skybox only where the projection is
+// available. Everywhere else the Camera's SKY_CLEAR red-orange is the sky.
+const SKY_HDR_GUID = 'c4061caa-8127-42a8-a1bb-54ef1a83d6d2';
 
-  // WebKit/WKWebView guard — the lazy equirect→cubemap projection (the HDR
-  // path uses colorFormats:['rgba16float']) produces a device error that poisons
-  // the WebGPU device → the first frame never renders → Play sticks on
-  // "Loading game" forever. Keep the solid ambient above and stop here. The
-  // negative allowlist (NOT Chrome/Chromium/Edg) is more robust than \bChrome\b
-  // whose word boundary misses Playwright's "HeadlessChrome" UA.
+type SkyCtx = {
+  world: World;
+  assets?: import('@forgeax/engine-runtime').AssetRegistry;
+  app?: import('@forgeax/engine-app').App;
+};
+
+async function installHdrSky(ctx: SkyCtx): Promise<void> {
+  // Dim warm fill suits the forge; the HDR cubemap overrides it on Chromium.
+  const skylight = ctx.world.spawn(
+    { component: Skylight, data: { colorR: 0.95, colorG: 0.6, colorB: 0.45, intensity: 0.28 } },
+  ).unwrap() as EntityHandle;
+
+  // WebKit/WKWebView (desktop app) can't project → keep the solid ambient.
   const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
-  const isChromium = /Chrome|Chromium|Edg/.test(ua);
-  if (!isChromium) {
-    console.info('[hellforge] non-Chromium WebGPU (WebKit/WKWebView): solid-color skylight only (no IBL/skybox)');
-    return skylight;
+  if (!/Chrome|Chromium|Edg/.test(ua)) {
+    console.info('[hellforge] non-Chromium WebGPU: solid-color skylight only (no IBL/skybox)');
+    return;
   }
-  // feat-20260630: the HDR sky is fully declarative now. loadByGuid<EquirectAsset>
-  // returns the decoded rgba16float equirect PAYLOAD; mint a shared handle via
-  // world.allocSharedRef('EquirectAsset', …) and hand the SAME handle to both
-  // Skylight (image-based ambient) and SkyboxBackground (the visible sky). The
-  // equirect→cubemap projection + IBL prefilter run lazily inside the
-  // render-system record arm — there is NO uploadCubemapFromEquirect call any
-  // more. On caps that lack rgba16float render targets the projection degrades
-  // to the solid ambient spawned above (no device error), so the Chromium guard
-  // is belt-and-suspenders.
-  if (ctx.assets === undefined) return skylight;
+  const store = (ctx.app as unknown as { renderer?: { store?: Record<string, unknown> } })?.renderer?.store;
+  // The projector was renamed to the private `_uploadCubemapFromEquirect` in
+  // this engine build; the old public name is gone. Accept either.
+  const uploadFn = store?.uploadCubemapFromEquirect ?? store?._uploadCubemapFromEquirect;
+  if (!ctx.assets || typeof uploadFn !== 'function') {
+    console.info('[hellforge] no equirect→cubemap projector on the render store — solid ambient + SKY_CLEAR sky');
+    return;
+  }
   const guidRes = AssetGuid.parse(SKY_HDR_GUID);
-  if (!guidRes.ok) return skylight;
-  const podRes = await ctx.assets.loadByGuid<EquirectAsset>(guidRes.value);
-  if (!podRes.ok) {
-    console.warn('[hellforge] sky.hdr loadByGuid failed:', (podRes.error as { code?: string }).code ?? '?');
-    return skylight;
-  }
-  const equirect = ctx.world.allocSharedRef<'EquirectAsset', EquirectAsset>('EquirectAsset', podRes.value);
-  // Upgrade the existing Skylight to image-based lighting — very low intensity
-  // (the HDR is bright) so the hellish mood holds. Neutral tint lets HDR drive.
-  ctx.world.set(skylight, Skylight, { equirect, colorR: 1, colorG: 1, colorB: 1, intensity: 0.04 });
-  ctx.world.spawn({ component: SkyboxBackground, data: { equirect, mode: SKYBOX_MODE_CUBEMAP } });
-  return skylight;
+  if (!guidRes.ok) return;
+  const podRes = await ctx.assets.loadByGuid<TextureAsset>(guidRes.value);
+  if (!podRes.ok) { console.warn('[hellforge] sky.hdr loadByGuid failed:', (podRes.error as { code?: string }).code); return; }
+  const srcHandle = ctx.world.allocSharedRef<'TextureAsset', TextureAsset>('TextureAsset', podRes.value);
+  const upload = uploadFn as (w: unknown, h: unknown, p: unknown) => Promise<{ ok: boolean; value?: unknown }>;
+  const cubemapRes = await upload.call(store, ctx.world, srcHandle, podRes.value);
+  if (!cubemapRes.ok || cubemapRes.value === undefined) { console.warn('[hellforge] equirect→cubemap projection failed'); return; }
+  // Upgrade to image-based lighting (neutral tint lets the HDR drive color).
+  ctx.world.set(skylight, Skylight, { cubemap: cubemapRes.value, colorR: 1, colorG: 1, colorB: 1, intensity: 0.14 });
+  ctx.world.spawn({ component: SkyboxBackground, data: { cubemap: cubemapRes.value, mode: SKYBOX_MODE_CUBEMAP } });
+  console.log('[hellforge] HDR sky installed (cubemap skybox + IBL)');
+}
+
+// ── visible sky dome ──────────────────────────────────────────────────────
+// This engine build doesn't render SkyboxBackground, so the HDR only ever
+// LIGHTS the scene (IBL). To actually SEE the hellish sky we draw a giant
+// inverted sphere with an emissive equirect texture (baked by scripts/bake-sky.ts,
+// GUIDs in src/sky-dome.gen.ts). Emissive → unaffected by scene lighting; radius
+// < camera far (200); recentred on the player each frame so it reads as infinite.
+const SKY_DOME_RADIUS = 160;
+
+async function installSkyDome(ctx: SkyCtx): Promise<EntityHandle | null> {
+  if (!ctx.assets) return null;
+  const meshGuid = AssetGuid.parse(SKY_DOME_MESH_GUID);
+  const matGuid = AssetGuid.parse(SKY_DOME_MATERIAL_GUID);
+  if (!meshGuid.ok || !matGuid.ok) { console.warn('[hellforge] sky-dome GUID parse failed'); return null; }
+  const meshRes = await ctx.assets.loadByGuid<MeshAsset>(meshGuid.value);
+  if (!meshRes.ok) { console.warn('[hellforge] sky-dome mesh load failed:', (meshRes.error as { code?: string }).code); return null; }
+  const matRes = await ctx.assets.loadByGuid<MaterialAsset>(matGuid.value);
+  if (!matRes.ok) { console.warn('[hellforge] sky-dome material load failed:', (matRes.error as { code?: string }).code); return null; }
+  const meshH = ctx.world.allocSharedRef<'MeshAsset', MeshAsset>('MeshAsset', meshRes.value);
+  const matH = ctx.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', matRes.value);
+  const dome = ctx.world.spawn(
+    { component: Transform, data: { posX: 0, posY: 0, posZ: 0, scaleX: SKY_DOME_RADIUS, scaleY: SKY_DOME_RADIUS, scaleZ: SKY_DOME_RADIUS } },
+    { component: MeshFilter, data: { assetHandle: meshH } },
+    { component: MeshRenderer, data: { materials: [matH] } },
+  ).unwrap() as EntityHandle;
+  console.log('[hellforge] sky dome installed (emissive equirect dome)');
+  return dome;
 }
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
@@ -160,8 +189,15 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // The host resolves + instantiates the defaultScene before entry runs; the
   // encampment root is a side-effect spawn (hellforge never reads its mapping).
 
-  // ── 2. HDR sky (fire-and-forget) ──────────────────────────────────────
+  // ── 2. HDR sky (code-side; see installHdrSky above). Fire-and-forget: the
+  //       sky pops in when the projection completes; the game never blocks. ──
   void installHdrSky({ world, assets, app });
+
+  // ── 2b. Visible sky dome (emissive equirect sphere; see installSkyDome). The
+  //        engine won't render SkyboxBackground, so this is what you actually
+  //        see. Fire-and-forget; followed by the update loop once loaded. ──
+  let skyDome: EntityHandle | null = null;
+  void installSkyDome({ world, assets }).then((e) => { skyDome = e; });
 
   // ── 3. witch GLB — via gltfImporter sub-assets ────────────────────────
   type ClipHandle = Handle<'AnimationClip', 'shared'>;
@@ -1042,6 +1078,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       posX: state.px, posY: 0.85, posZ: state.pz,
       scaleX: 0.6, scaleY: 1.7, scaleZ: 0.45,
     });
+    // Keep the sky dome centred on the player so it reads as an infinite sky.
+    if (skyDome !== null) {
+      world.set(skyDome, Transform, {
+        posX: state.px, posY: 0, posZ: state.pz,
+        scaleX: SKY_DOME_RADIUS, scaleY: SKY_DOME_RADIUS, scaleZ: SKY_DOME_RADIUS,
+      });
+    }
 
     // ── game systems ──
     tickPlayer(player, dt);

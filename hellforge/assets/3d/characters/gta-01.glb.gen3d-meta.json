@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-gen3d",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-07T07:22:03.793Z",
+  "contentHash": "sha256:c75206279f5ebb4447c7bf70b95f99fb9975f511a24203bc423f9a0126c94c5b",
+  "size": 12331904,
+  "type": "gen3d-character",
+  "dependencies": [
+    {
+      "path": "gta-01.png",
+      "hash": "sha256:0ba10b630f0760e7f9985a243ca8c13b2ef7f93562acc4e834587f195ef71d38",
+      "kind": "preview_image"
+    },
+    {
+      "path": "gta-01.texture.png",
+      "hash": "sha256:10a6612327e4dc9c3e1f04c0b47a4cf581b3b3c61e10776d288aa334708541f4",
+      "kind": "texture"
+    },
+    {
+      "path": "gta-01.rigged_model.glb",
+      "hash": "sha256:897c8a6126114448ef7130cbb135f16584c87af7227dcc2c283e34dd6a086b31",
+      "kind": "rigged_model",
+      "hasSkeleton": true,
+      "skeletonProfile": "humanoid",
+      "animationInputReady": true
+    },
+    {
+      "path": "gta-01.rigged_model.fbx",
+      "hash": "sha256:b018fbeab8bb2f63c05dcb1781a68e05eed66b8486a71c12071e4ffa09231d7d",
+      "kind": "rigged_model",
+      "hasSkeleton": true,
+      "skeletonProfile": "humanoid",
+      "animationInputReady": true
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-free-walk.glb",
+      "hash": "sha256:19940bce0bc1ece1bfd28cd8841a6a56109fffa1651606bd8eb2b2ed653504f7",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": -1,
+        "label": "走路（免费）"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-free-walk.fbx",
+      "hash": "sha256:917be4053d6acd109e83d0893c7898f09c01546cf474bf5647c395b0498021d4",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": -1,
+        "label": "走路（免费）"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-free-run.glb",
+      "hash": "sha256:496221d946d5e51988d9228bb280cba695a37a956c8135258a3535bc2fc25f2b",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": -2,
+        "label": "跑步（免费）"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-free-run.fbx",
+      "hash": "sha256:422c220b5d73e8a2237503036317b726fc6b55792f8f0ab67b53ea9e9a288bb2",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": -2,
+        "label": "跑步（免费）"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-467.glb",
+      "hash": "sha256:b333bcaf0eba9d9ef98f51e0977c4e74e5a2457a422eb2caeda27321edb36038",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 467,
+        "label": "Jump_Over_Obstacle_2"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-467.fbx",
+      "hash": "sha256:d2f4be1d49c3b217fde536b48790bf2bdf2ba002e90df2110aae3d3c5d6f6b87",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 467,
+        "label": "Jump_Over_Obstacle_2"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-466.glb",
+      "hash": "sha256:8ab58f3356f773d2c57c643e64c7c3a619c2df29089068c1d3d8f8f2c12ccd9d",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 466,
+        "label": "Regular_Jump"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-466.fbx",
+      "hash": "sha256:10b3f8ef0be81227c77db9a358e4a3d43dca0018d29493d0ae42eb9618b119d6",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 466,
+        "label": "Regular_Jump"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-104.glb",
+      "hash": "sha256:1d5b4c9a7078f0822d55418800839f3fc8a7be33735622ee78ae326d423c7abc",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 104,
+        "label": "Side_Shot"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-104.fbx",
+      "hash": "sha256:21dc92e330af3bba50ff2ee195be9ba87823bc2d1755fd0d9cee4e5610d5e1b4",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 104,
+        "label": "Side_Shot"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-198.glb",
+      "hash": "sha256:61372c3481f69f70d99412fa776df3039a79d3cc72787b4dc42c300963bb9df4",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 198,
+        "label": "Punch_Combo"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-198.fbx",
+      "hash": "sha256:35235d7a1868b7bb348c51583aeac5fdc0347bf3857af24ddb348c772e7678f4",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 198,
+        "label": "Punch_Combo"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-206.glb",
+      "hash": "sha256:7386cfc70341646c06a080e78a66d8c32aecff15acdc4ced6b41bd08cd56c0e0",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 206,
+        "label": "Spartan_Kick"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-206.fbx",
+      "hash": "sha256:9b5e13c0b08f91def2b5527837a75e354cf4935ef92f05ab9ede076118755971",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 206,
+        "label": "Spartan_Kick"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-16.glb",
+      "hash": "sha256:4e22689f50c3939e1f9ac68d60a2e5e75c3bce4388abb14b62621999f9b00d2c",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 16,
+        "label": "RunFast"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-16.fbx",
+      "hash": "sha256:6ec72f8af02ccdaf845d1000bf9458f91278f3da3732c95090b88561606b6894",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 16,
+        "label": "RunFast"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-8.glb",
+      "hash": "sha256:a838cd54f0c103301bdcff8296bf59bb5c3883c2e29292e55cea2c8e3b4ae15e",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 8,
+        "label": "Dead"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-8.fbx",
+      "hash": "sha256:1b0bf541870428b52d0b15f315805235e28338539fb653c389e6728fbcba1064",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 8,
+        "label": "Dead"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-165.glb",
+      "hash": "sha256:4c7566b750d89adeb68825d81a7fea586507640ebb9f97a30865423fdec0464f",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 165,
+        "label": "Kneeling_Reload"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-165.fbx",
+      "hash": "sha256:c3de77224bd992b44db588368139d0a0a814aa0d1ce76142beb1bdf83c317e79",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 165,
+        "label": "Kneeling_Reload"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-284.glb",
+      "hash": "sha256:a29b50884e9b5feeef036ab792cd1328e1094156a0549de40ea97fa3e91714cf",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 284,
+        "label": "Collect_Object"
+      }
+    },
+    {
+      "path": "gta-01.animated_model.motion-meshy-284.fbx",
+      "hash": "sha256:2a532e5d6fd74a043ea455feedac881755a83a1587bce551500d3eb334b99600",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 284,
+        "label": "Collect_Object"
+      }
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "views",
+    "assetSlot": "characters",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLW11bHRpLWltYWdlLXRvLTNkO3Rhc2tfaWQ6MDE5ZjNiNzItMDAwMy03ODlhLWIyOTktZTVmZWY0Y2RiODhk",
+    "prompt": null,
+    "sourceInputAssetPaths": [],
+    "faceCount": 8000,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": true,
+      "animated": true
+    },
+    "cacheKey": "meshy-views-6944c793",
+    "rig": {
+      "rigProvider": "meshy",
+      "rigTaskId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLWF1dG8tcmlnZ2luZzt0YXNrX2lkOjAxOWYzYjc2LTIyNjMtNzk1NC05OTM3LWU0NWYxNTQ5YWQyZA==",
+      "rigType": null,
+      "rigExpiresAt": null
+    }
+  }
+}

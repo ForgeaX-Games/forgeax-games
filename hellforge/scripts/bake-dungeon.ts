@@ -10,17 +10,32 @@
 //
 // Re-run after ANY change to dungeon-layout.ts (seed, generator, decor).
 // All GUIDs below are fixed constants so re-baking doesn't churn identity.
+//
+// De-stretch policy (per GeoKind): the layout emits box-fit non-uniform
+// scales (walls `run × 3.2 × 2.4`, floors `w × 0.2 × d`, slag pools flat).
+// Those scales look right on a builtin CUBE (parametric, no UV) but stretch
+// a generated GLB. So:
+//   • structural kinds (floor/wall/slag/torchPost) → builtin CUBE, keep the
+//     layout's box transform. Collision is driven by the runtime grid, not
+//     these transforms, so the thin slabs are gameplay-safe.
+//   • decor kinds (brazier/rubble/bone) → generated GLB, uniform-scaled to
+//     the layout's intended footprint (max(scale) / max(bbox)) and grounded.
+//   • flame → generated GLB, layout transform kept (emissive tongue already
+//     sits atop its torch post; X/Z are symmetric so it isn't stretched).
+// Run `bun scripts/fix-prop-materials.ts scenes/slagdeep-hollow.pack.json`
+// after this to relink GLB entities' materials to the prop sub-asset GUIDs.
 
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import {
+  CUBE_GUID, readPropBBox, tileLinear,
+} from './lib/scene-authoring';
 import { DUNGEON_SCENE_GUID, DUNGEON_SEED, generateLayout, quatY, type GeoKind } from '../src/dungeon-layout';
 
 const gameRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
-
-// Engine builtin cube mesh (same GUID every pack uses — see AGENTS.md).
-const CUBE_GUID = 'cbe42beb-8975-5096-b3a1-3dda4cb4c077';
+const propsDir = join(gameRoot, 'assets', '3d', 'props', 'meshes');
 
 // Fixed material GUIDs (generated once; NEVER regenerate).
 const MATS: Record<GeoKind, {
@@ -39,7 +54,25 @@ const MATS: Record<GeoKind, {
   slag:      { guid: 'b52e8a07-4d93-4e60-a3f9-1a6d0c9b53f9', name: 'DenSlag', base: [0.40, 0.06, 0.02, 1], rough: 0.5, emissive: [1, 0.10, 0.02], ei: 1.0 },
 };
 
-const layout = generateLayout(DUNGEON_SEED);
+// Per-kind de-stretch policy.
+//   "cube"   → builtin CUBE mesh, keep the layout's (box) transform.
+//   "ground" → prop GLB, uniform scale = max(scale)/max(bbox), grounded posY.
+//   "keep"   → prop GLB, keep the layout transform (already well-shaped).
+//   "tile"   → prop GLB, uniform-scaled to the slot's HEIGHT and tiled along its
+//              length so a long wall reads as repeated detailed segments instead
+//              of one stretched GLB. A single-cell slot whose one segment would
+//              overflow falls back to a box (no poke into adjacent cells).
+const POLICY: Record<GeoKind, 'cube' | 'ground' | 'keep' | 'tile'> = {
+  floorA: 'cube',
+  floorB: 'cube',
+  wall: 'tile',
+  torchPost: 'cube',
+  slag: 'cube',
+  flame: 'keep',
+  brazier: 'ground',
+  rubble: 'ground',
+  bone: 'ground',
+};
 
 // GeoKind → generated prop GLB stem (wb-ai-asset precise-lowpoly, stage 1).
 // Each prop's mesh GUID is read at bake time from its `<stem>.glb.meta.json`
@@ -60,12 +93,13 @@ const PROP_FOR_KIND: Record<GeoKind, string> = {
 };
 
 function readPropMeshGuid(stem: string): string {
-  const sidecarPath = join(gameRoot, 'assets', '3d', 'props', 'meshes', `${stem}.glb.meta.json`);
+  const sidecarPath = join(propsDir, `${stem}.glb.meta.json`);
   try {
-    const sidecar = JSON.parse(readFileSync(sidecarPath, 'utf8')) as { subAssets?: Array<{ guid: string }> };
-    const guid = sidecar.subAssets?.[0]?.guid;
+    const sidecar = JSON.parse(readFileSync(sidecarPath, 'utf8')) as { subAssets?: Array<{ guid: string; kind: string }> };
+    const mesh = sidecar.subAssets?.find((s) => s.kind === 'mesh');
+    const guid = mesh?.guid;
     if (!guid) {
-      console.warn(`  ⚠ ${stem}: sidecar has no subAssets[0].guid — falling back to CUBE`);
+      console.warn(`  ⚠ ${stem}: sidecar has no mesh sub-asset — falling back to CUBE`);
       return CUBE_GUID;
     }
     return guid;
@@ -75,17 +109,22 @@ function readPropMeshGuid(stem: string): string {
   }
 }
 
-// refs[0..8] = prop mesh GUIDs in GeoKind order; refs[9..] = materials.
-// entity MeshFilter.assetHandle → propIdx(kind); MeshRenderer.materials → matIdx(kind).
+const layout = generateLayout(DUNGEON_SEED);
 const kinds = Object.keys(MATS) as GeoKind[];
-const propGuids = kinds.map((k) => readPropMeshGuid(PROP_FOR_KIND[k]));
-const refs = [...propGuids, ...kinds.map((k) => MATS[k].guid)];
-const propIdx = (k: GeoKind): number => kinds.indexOf(k);
-const matIdx = (k: GeoKind): number => kinds.length + kinds.indexOf(k);
+const propMeshGuid = kinds.map((k) => readPropMeshGuid(PROP_FOR_KIND[k]));
+const propBBox = kinds.map((k) => readPropBBox(propsDir, PROP_FOR_KIND[k]));
+const matGuid = kinds.map((k) => MATS[k].guid);
+
+// refs layout: [CUBE_GUID, ...propMeshGuids, ...materialGuids].
+// propIdx(kind) → prop mesh ref; cubeIdx → CUBE; matIdx(kind) → material.
+const refs: string[] = [CUBE_GUID, ...propMeshGuid, ...matGuid];
+const cubeIdx = 0;
+const propIdx = (k: GeoKind): number => 1 + kinds.indexOf(k);
+const matIdx = (k: GeoKind): number => 1 + kinds.length + kinds.indexOf(k);
 
 const counters: Partial<Record<GeoKind, number>> = {};
-const entities = layout.geometry.map((g, i) => {
-  const n = (counters[g.kind] = (counters[g.kind] ?? 0) + 1);
+let nextLocalId = 0;
+const boxTransform = (g: { x: number; y: number; z: number; sx: number; sy: number; sz: number; rotY?: number }): Record<string, number> => {
   const t: Record<string, number> = {
     posX: +g.x.toFixed(4), posY: +g.y.toFixed(4), posZ: +g.z.toFixed(4),
     scaleX: +g.sx.toFixed(4), scaleY: +g.sy.toFixed(4), scaleZ: +g.sz.toFixed(4),
@@ -94,15 +133,68 @@ const entities = layout.geometry.map((g, i) => {
     const q = quatY(g.rotY);
     t.quatX = +q[0].toFixed(6); t.quatY = +q[1].toFixed(6); t.quatZ = +q[2].toFixed(6); t.quatW = +q[3].toFixed(6);
   }
-  return {
-    localId: i,
+  return t;
+};
+
+const entities = layout.geometry.flatMap((g) => {
+  const policy = POLICY[g.kind];
+  const n = (counters[g.kind] = (counters[g.kind] ?? 0) + 1);
+  const makeEntity = (suffix: string, t: Record<string, number>, meshIdx: number) => ({
+    localId: nextLocalId++,
     components: {
-      Name: { value: `Den_${g.kind}_${n}` },
+      Name: { value: `Den_${g.kind}_${n}${suffix}` },
       Transform: t,
-      MeshFilter: { assetHandle: propIdx(g.kind) },
+      MeshFilter: { assetHandle: meshIdx },
       MeshRenderer: { materials: [matIdx(g.kind)] },
     },
-  };
+  });
+
+  if (policy === 'tile') {
+    const bb = propBBox[kinds.indexOf(g.kind)];
+    const us = g.sy > 0 && bb.size[1] > 0 ? g.sy / bb.size[1] : 1; // fit height
+    const segLen = bb.size[0] * us;                                // panel length
+    const slotLong = Math.max(g.sx, g.sz);
+    if (segLen > slotLong) {
+      // A single segment would overflow a 1-cell slot → box (no poke).
+      return [makeEntity('', boxTransform(g), cubeIdx)];
+    }
+    const segs = tileLinear(
+      { pos: [g.x, g.y, g.z], size: [g.sx, g.sy, g.sz], rotYDeg: g.rotY ?? 0 },
+      bb,
+    );
+    return segs.map((s, j) => {
+      const q = quatY(s.rotYDeg);
+      return makeEntity(`__t${j}`, {
+        posX: s.pos[0], posY: s.pos[1], posZ: s.pos[2],
+        scaleX: s.scale[0], scaleY: s.scale[1], scaleZ: s.scale[2],
+        quatX: +q[0].toFixed(6), quatY: +q[1].toFixed(6), quatZ: +q[2].toFixed(6), quatW: +q[3].toFixed(6),
+      }, propIdx(g.kind));
+    });
+  }
+
+  if (policy === 'cube') {
+    return [makeEntity('', boxTransform(g), cubeIdx)];
+  }
+
+  if (policy === 'ground') {
+    const bb = propBBox[kinds.indexOf(g.kind)];
+    const bMax = Math.max(bb.size[0], bb.size[1], bb.size[2]);
+    const sMax = Math.max(g.sx, g.sy, g.sz);
+    const us = bMax > 0 ? sMax / bMax : 1;
+    const us4 = +us.toFixed(4);
+    const t: Record<string, number> = {
+      posX: +g.x.toFixed(4), posY: +(-bb.min[1] * us).toFixed(4), posZ: +g.z.toFixed(4),
+      scaleX: us4, scaleY: us4, scaleZ: us4,
+    };
+    if (g.rotY !== undefined) {
+      const q = quatY(g.rotY);
+      t.quatX = +q[0].toFixed(6); t.quatY = +q[1].toFixed(6); t.quatZ = +q[2].toFixed(6); t.quatW = +q[3].toFixed(6);
+    }
+    return [makeEntity('', t, propIdx(g.kind))];
+  }
+
+  // "keep" — layout transform is already well-shaped (e.g. flame tongue).
+  return [makeEntity('', boxTransform(g), propIdx(g.kind))];
 });
 
 const pack = {
@@ -133,7 +225,25 @@ const pack = {
   ],
 };
 
-const out = join(gameRoot, 'scenes', 'slagdeep-hollow.pack.json');
+const out = join(gameRoot, 'assets', 'scenes', 'slagdeep-hollow.pack.json');
 mkdirSync(dirname(out), { recursive: true });
 writeFileSync(out, JSON.stringify(pack, null, 2) + '\n');
-console.log(`baked ${entities.length} entities (${layout.roomCount} rooms, seed ${DUNGEON_SEED}) → ${out}`);
+
+// Summary by policy so a re-bake shows what got de-stretched.
+const byPolicy: Record<string, number> = { cube: 0, ground: 0, keep: 0, tile: 0 };
+for (const g of layout.geometry) byPolicy[POLICY[g.kind]] = (byPolicy[POLICY[g.kind]] ?? 0) + 1;
+let tileSegs = 0, tileBox = 0;
+for (const g of layout.geometry) {
+  if (POLICY[g.kind] !== 'tile') continue;
+  const bb = propBBox[kinds.indexOf(g.kind)];
+  const us = g.sy / bb.size[1];
+  const segLen = bb.size[0] * us;
+  if (segLen > Math.max(g.sx, g.sz)) tileBox++;
+  else tileSegs++;
+}
+console.log(
+  `baked ${entities.length} entities (${layout.roomCount} rooms, seed ${DUNGEON_SEED}) → ${out}`,
+);
+console.log(
+  `  cube=${byPolicy.cube}  ground(decor)=${byPolicy.ground}  keep=${byPolicy.keep}  tile(wall GLB)=${byPolicy.tile} [${tileSegs} long→segmented, ${tileBox} 1-cell→box]`,
+);

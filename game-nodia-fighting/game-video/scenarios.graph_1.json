@@ -1,0 +1,2079 @@
+{
+  "version": 1,
+  "activeId": "nodia-graph",
+  "items": [
+    {
+      "id": "nodia-graph",
+      "title": "战斗蓝图(graph)",
+      "scenario": {
+        "schemaVersion": "wb-game-video.graph.v1",
+        "variables": {
+          "qi": {
+            "id": "qi",
+            "name": "气力",
+            "kind": "number",
+            "initial": 0,
+            "min": 0,
+            "max": 5
+          },
+          "lizhi": {
+            "id": "lizhi",
+            "name": "理智",
+            "kind": "number",
+            "initial": 5,
+            "min": 0,
+            "max": 12
+          },
+          "foxing": {
+            "id": "foxing",
+            "name": "佛性",
+            "kind": "number",
+            "initial": 10,
+            "min": 0,
+            "max": 12
+          },
+          "yezhang": {
+            "id": "yezhang",
+            "name": "业障",
+            "kind": "number",
+            "initial": 1,
+            "min": 0,
+            "max": 12
+          },
+          "chi": {
+            "id": "chi",
+            "name": "痴",
+            "kind": "number",
+            "initial": 1,
+            "min": 0,
+            "max": 12
+          },
+          "guihuo": {
+            "id": "guihuo",
+            "name": "鬼火种",
+            "kind": "number",
+            "initial": 0,
+            "min": 0
+          },
+          "lotusClue": {
+            "id": "lotusClue",
+            "name": "莲花妖线索",
+            "kind": "flag",
+            "initial": 0
+          }
+        },
+        "entities": {
+          "ent-player": {
+            "id": "ent-player",
+            "name": "空藏",
+            "kind": "player",
+            "attrs": {
+              "attack": 80,
+              "defense": 40,
+              "speed": 30,
+              "hp": 300
+            },
+            "attrMeta": {
+              "hp": {
+                "min": 0,
+                "max": 300,
+                "initial": 300,
+                "label": "生命"
+              }
+            }
+          },
+          "ent-boss": {
+            "id": "ent-boss",
+            "name": "小怪",
+            "kind": "boss",
+            "attrs": {
+              "attack": 75,
+              "defense": 50,
+              "speed": 25,
+              "hp": 700
+            },
+            "attrMeta": {
+              "hp": {
+                "min": 0,
+                "max": 700,
+                "initial": 700,
+                "label": "生命"
+              }
+            }
+          }
+        },
+        "ui": {
+          "hud": [
+            {
+              "element": "ent-player",
+              "show": "always"
+            },
+            {
+              "element": "ent-boss",
+              "show": "always"
+            },
+            {
+              "element": "score",
+              "show": "always"
+            }
+          ]
+        },
+        "rng": {
+          "seed": 7
+        },
+        "graph": {
+          "nodes": [
+            {
+              "id": "n_open",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "序章",
+                "timeline": [],
+                "durationMs": 15975,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-open"
+                },
+                "hud": {
+                  "preset": "hidden"
+                }
+              }
+            },
+            {
+              "id": "n_door",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "慈悲狱门口",
+                "timeline": [
+                  {
+                    "id": "kou",
+                    "role": "interaction",
+                    "kind": "qte",
+                    "trigger": {
+                      "when": "enter"
+                    },
+                    "params": {
+                      "qteKind": "parry",
+                      "windowMs": 200,
+                      "outcomeLabels": {
+                        "pass": "叩中",
+                        "fail": "错过"
+                      }
+                    }
+                  }
+                ],
+                "durationMs": 15100,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-door"
+                },
+                "hud": {
+                  "preset": "hidden"
+                }
+              }
+            },
+            {
+              "id": "n_soul",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "小魂对话",
+                "timeline": [],
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-soul"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "n_river",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "划船渡河",
+                "timeline": [
+                  {
+                    "id": "n_river-c",
+                    "role": "interaction",
+                    "kind": "choice",
+                    "trigger": {
+                      "when": "enter"
+                    },
+                    "params": {
+                      "prompt": "應 / 默",
+                      "timeoutMs": 8000,
+                      "defaultKey": "mo",
+                      "options": [
+                        {
+                          "key": "ying",
+                          "label": "應"
+                        },
+                        {
+                          "key": "mo",
+                          "label": "默"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "durationMs": 15069,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-river"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "n_child",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "小孩对话",
+                "timeline": [],
+                "durationMs": 12887,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-child"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "n_land",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "上岸",
+                "timeline": [
+                  {
+                    "id": "n_land-c",
+                    "role": "interaction",
+                    "kind": "choice",
+                    "trigger": {
+                      "when": "enter"
+                    },
+                    "params": {
+                      "prompt": "應 / 默",
+                      "timeoutMs": 8000,
+                      "defaultKey": "mo",
+                      "options": [
+                        {
+                          "key": "ying",
+                          "label": "應"
+                        },
+                        {
+                          "key": "mo",
+                          "label": "默"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "durationMs": 16200,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-land"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "n_mask",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "灯笼对话",
+                "timeline": [],
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-mask"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "n_mengpo",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "过桥见孟婆",
+                "timeline": [],
+                "durationMs": 17136,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-mengpo"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "n_tea",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "喝孟婆汤",
+                "timeline": [
+                  {
+                    "id": "n_tea-c",
+                    "role": "interaction",
+                    "kind": "choice",
+                    "trigger": {
+                      "when": "enter"
+                    },
+                    "params": {
+                      "prompt": "應 / 默",
+                      "timeoutMs": 8000,
+                      "defaultKey": "mo",
+                      "options": [
+                        {
+                          "key": "ying",
+                          "label": "應"
+                        },
+                        {
+                          "key": "mo",
+                          "label": "默"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-tea"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "n_drink",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "饮汤应答",
+                "timeline": [],
+                "durationMs": 14489,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-drink"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "n_nodrink",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "不喝",
+                "timeline": [
+                  {
+                    "id": "n_nodrink-c",
+                    "role": "interaction",
+                    "kind": "choice",
+                    "trigger": {
+                      "when": "enter"
+                    },
+                    "params": {
+                      "prompt": "應 / 默",
+                      "timeoutMs": 8000,
+                      "defaultKey": "mo",
+                      "options": [
+                        {
+                          "key": "ying",
+                          "label": "應"
+                        },
+                        {
+                          "key": "mo",
+                          "label": "默"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-nodrink"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "n_follow",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "跟随引魂",
+                "timeline": [
+                  {
+                    "id": "n_follow-c",
+                    "role": "interaction",
+                    "kind": "choice",
+                    "trigger": {
+                      "when": "enter"
+                    },
+                    "params": {
+                      "prompt": "應 / 默",
+                      "timeoutMs": 8000,
+                      "defaultKey": "mo",
+                      "options": [
+                        {
+                          "key": "ying",
+                          "label": "應"
+                        },
+                        {
+                          "key": "mo",
+                          "label": "默"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-follow"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "n_getlight",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "获取道具",
+                "timeline": [],
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-getlight"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "n_nolight",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "没能道具",
+                "timeline": [],
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-nolight"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "n_nofollow",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "不跟随",
+                "timeline": [
+                  {
+                    "id": "n_nofollow-c",
+                    "role": "interaction",
+                    "kind": "choice",
+                    "trigger": {
+                      "when": "enter"
+                    },
+                    "params": {
+                      "prompt": "應 / 默",
+                      "timeoutMs": 8000,
+                      "defaultKey": "mo",
+                      "options": [
+                        {
+                          "key": "ying",
+                          "label": "應"
+                        },
+                        {
+                          "key": "mo",
+                          "label": "默"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-nofollow"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "n_lotus",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "接过莲藕",
+                "timeline": [],
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-lotus"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "n_nolotus",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "不要莲藕",
+                "timeline": [],
+                "durationMs": 15069,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "narr-nolotus"
+                },
+                "hud": {
+                  "preset": "narrative"
+                }
+              }
+            },
+            {
+              "id": "enter",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "进战待机",
+                "timeline": [],
+                "durationMs": 8080,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "vd-wcc-idle"
+                },
+                "mediaPlayMode": "loop",
+                "hud": {
+                  "preset": "battle"
+                }
+              }
+            },
+            {
+              "id": "init",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "出手判断",
+                "timeline": []
+              }
+            },
+            {
+              "id": "a_my",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "我方回合(先手)",
+                "timeline": [],
+                "subFlowRef": "wait"
+              }
+            },
+            {
+              "id": "b_ai",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "敌方回合(先手)",
+                "timeline": [],
+                "subFlowRef": "bt"
+              }
+            },
+            {
+              "id": "a_chk",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "血量判定(我方先手后)",
+                "timeline": []
+              }
+            },
+            {
+              "id": "b_chk",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "血量判定(敌方先手后)",
+                "timeline": []
+              }
+            },
+            {
+              "id": "a_ai",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "敌方回合(后手)",
+                "timeline": [],
+                "subFlowRef": "bt"
+              }
+            },
+            {
+              "id": "b_my",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "我方回合(后手)",
+                "timeline": [],
+                "subFlowRef": "wait"
+              }
+            },
+            {
+              "id": "round",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "回合结束判定",
+                "timeline": []
+              }
+            },
+            {
+              "id": "settle",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "胜负判定",
+                "timeline": []
+              }
+            },
+            {
+              "id": "win",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "战斗胜利",
+                "timeline": [],
+                "durationMs": 10000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "vd-wcc-shengli"
+                },
+                "hud": {
+                  "preset": "hidden"
+                },
+                "end": "victory"
+              }
+            },
+            {
+              "id": "lose",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "战斗失败",
+                "timeline": [],
+                "durationMs": 6000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "vd-wcc-shibai"
+                },
+                "hud": {
+                  "preset": "hidden"
+                },
+                "end": "defeat"
+              }
+            },
+            {
+              "id": "wait",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "战斗待机",
+                "timeline": [
+                  {
+                    "id": "skill",
+                    "role": "interaction",
+                    "kind": "skill",
+                    "trigger": {
+                      "when": "enter"
+                    },
+                    "params": {
+                      "prompt": "选择技能",
+                      "options": [
+                        {
+                          "key": "light",
+                          "label": "轻攻击",
+                          "effects": [
+                            {
+                              "id": "sk-light-qi",
+                              "kind": "var",
+                              "varId": "qi",
+                              "op": "add",
+                              "value": 2
+                            }
+                          ]
+                        },
+                        {
+                          "key": "heavy",
+                          "label": "重攻击",
+                          "effects": [
+                            {
+                              "id": "sk-heavy-qi",
+                              "kind": "var",
+                              "varId": "qi",
+                              "op": "add",
+                              "value": -2
+                            }
+                          ]
+                        },
+                        {
+                          "key": "medit",
+                          "label": "冥想"
+                        },
+                        {
+                          "key": "ult",
+                          "label": "灭世",
+                          "effects": [
+                            {
+                              "id": "sk-ult-qi",
+                              "kind": "var",
+                              "varId": "qi",
+                              "op": "set",
+                              "value": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "durationMs": 8000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "vd-wcc-idle"
+                },
+                "mediaPlayMode": "loop",
+                "hud": {
+                  "preset": "battle"
+                }
+              }
+            },
+            {
+              "id": "pjudge",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "变招判定(轻)",
+                "timeline": []
+              }
+            },
+            {
+              "id": "pu",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "轻攻击",
+                "timeline": [
+                  {
+                    "id": "pu-settle",
+                    "role": "logic",
+                    "kind": "settle",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "effects": [
+                        {
+                          "id": "pu-dmg",
+                          "kind": "attr",
+                          "entityId": "ent-boss",
+                          "attr": "hp",
+                          "op": "add",
+                          "value": -80
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "pu-fx",
+                    "role": "presentation",
+                    "kind": "floatText",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "text": "-80",
+                      "x": 0.5,
+                      "y": 0.42,
+                      "color": "#ffd54a"
+                    }
+                  }
+                ],
+                "durationMs": 5000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "vd-wcc-pugong"
+                },
+                "hud": {
+                  "preset": "battle"
+                }
+              }
+            },
+            {
+              "id": "pu2",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "轻攻击·变招",
+                "timeline": [
+                  {
+                    "id": "pu2-settle",
+                    "role": "logic",
+                    "kind": "settle",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "effects": [
+                        {
+                          "id": "pu2-dmg",
+                          "kind": "attr",
+                          "entityId": "ent-boss",
+                          "attr": "hp",
+                          "op": "add",
+                          "value": -104
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "pu2-fx",
+                    "role": "presentation",
+                    "kind": "floatText",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "text": "-104",
+                      "x": 0.5,
+                      "y": 0.42,
+                      "color": "#ffd54a"
+                    }
+                  }
+                ],
+                "durationMs": 5000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "vd-wcc-pugong2"
+                },
+                "hud": {
+                  "preset": "battle"
+                }
+              }
+            },
+            {
+              "id": "zjudge",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "变招判定(重)",
+                "timeline": []
+              }
+            },
+            {
+              "id": "zhong",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "重攻击",
+                "timeline": [
+                  {
+                    "id": "zhong-settle",
+                    "role": "logic",
+                    "kind": "settle",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "effects": [
+                        {
+                          "id": "zhong-dmg",
+                          "kind": "attr",
+                          "entityId": "ent-boss",
+                          "attr": "hp",
+                          "op": "add",
+                          "value": -144
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "zhong-fx",
+                    "role": "presentation",
+                    "kind": "floatText",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "text": "-144",
+                      "x": 0.5,
+                      "y": 0.42,
+                      "color": "#ffd54a"
+                    }
+                  }
+                ],
+                "durationMs": 6000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "vd-wcc-zhong"
+                },
+                "hud": {
+                  "preset": "battle"
+                }
+              }
+            },
+            {
+              "id": "z2",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "重攻击·变招",
+                "timeline": [
+                  {
+                    "id": "z2-settle",
+                    "role": "logic",
+                    "kind": "settle",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "effects": [
+                        {
+                          "id": "z2-dmg",
+                          "kind": "attr",
+                          "entityId": "ent-boss",
+                          "attr": "hp",
+                          "op": "add",
+                          "value": -192
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "z2-fx",
+                    "role": "presentation",
+                    "kind": "floatText",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "text": "-192",
+                      "x": 0.5,
+                      "y": 0.42,
+                      "color": "#ffd54a"
+                    }
+                  }
+                ],
+                "durationMs": 6000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "vd-wcc-zhong2"
+                },
+                "hud": {
+                  "preset": "battle"
+                }
+              }
+            },
+            {
+              "id": "fuzhu",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "冥想",
+                "timeline": [
+                  {
+                    "id": "fuzhu-settle",
+                    "role": "logic",
+                    "kind": "settle",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "effects": [
+                        {
+                          "id": "fuzhu-heal",
+                          "kind": "attr",
+                          "entityId": "ent-player",
+                          "attr": "hp",
+                          "op": "add",
+                          "value": 30
+                        },
+                        {
+                          "id": "fuzhu-qi",
+                          "kind": "var",
+                          "varId": "qi",
+                          "op": "add",
+                          "value": 2
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "fuzhu-fx",
+                    "role": "presentation",
+                    "kind": "floatText",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "text": "+30",
+                      "x": 0.5,
+                      "y": 0.42,
+                      "color": "#5fbf7f"
+                    }
+                  }
+                ],
+                "durationMs": 5000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "vd-wcc-huiqi"
+                },
+                "hud": {
+                  "preset": "battle"
+                }
+              }
+            },
+            {
+              "id": "ult",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "灭世",
+                "timeline": [
+                  {
+                    "id": "ult-settle",
+                    "role": "logic",
+                    "kind": "settle",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "effects": [
+                        {
+                          "id": "ult-dmg",
+                          "kind": "attr",
+                          "entityId": "ent-boss",
+                          "attr": "hp",
+                          "op": "add",
+                          "value": -240
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "ult-fx",
+                    "role": "presentation",
+                    "kind": "floatText",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "text": "-240",
+                      "x": 0.5,
+                      "y": 0.42,
+                      "color": "#ffd54a"
+                    }
+                  }
+                ],
+                "durationMs": 12000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "vd-wcc-dazhao"
+                },
+                "hud": {
+                  "preset": "battle"
+                }
+              }
+            },
+            {
+              "id": "my-done",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "行动完毕(我)",
+                "timeline": [],
+                "returnsToCaller": true
+              }
+            },
+            {
+              "id": "bt",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "行为树决策",
+                "timeline": []
+              }
+            },
+            {
+              "id": "tele",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "攻击前摇·防反QTE",
+                "timeline": [
+                  {
+                    "id": "parry",
+                    "role": "interaction",
+                    "kind": "qte",
+                    "trigger": {
+                      "when": "enter"
+                    },
+                    "params": {
+                      "qteKind": "parry",
+                      "windowMs": 160,
+                      "outcomeLabels": {
+                        "pass": "受击防反",
+                        "good": "受击闪避",
+                        "fail": "受击"
+                      }
+                    }
+                  }
+                ],
+                "durationMs": 4000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "vd-wcc-qianyao"
+                },
+                "hud": {
+                  "preset": "battle"
+                }
+              }
+            },
+            {
+              "id": "block",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "受击防反",
+                "timeline": [
+                  {
+                    "id": "block-settle",
+                    "role": "logic",
+                    "kind": "settle",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "effects": [
+                        {
+                          "id": "block-dmg",
+                          "kind": "attr",
+                          "entityId": "ent-boss",
+                          "attr": "hp",
+                          "op": "add",
+                          "value": -96
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "block-fx",
+                    "role": "presentation",
+                    "kind": "floatText",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "text": "-96",
+                      "x": 0.5,
+                      "y": 0.42,
+                      "color": "#ffd54a"
+                    }
+                  }
+                ],
+                "durationMs": 4000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "vd-wcc-fangfan"
+                },
+                "hud": {
+                  "preset": "battle"
+                }
+              }
+            },
+            {
+              "id": "dodgeP",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "受击闪避",
+                "timeline": [
+                  {
+                    "id": "dodgeP-settle",
+                    "role": "logic",
+                    "kind": "settle",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "effects": [
+                        {
+                          "id": "dodge-dmg",
+                          "kind": "attr",
+                          "entityId": "ent-boss",
+                          "attr": "hp",
+                          "op": "add",
+                          "value": -64
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "dodgeP-fx",
+                    "role": "presentation",
+                    "kind": "floatText",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "text": "-64",
+                      "x": 0.5,
+                      "y": 0.42,
+                      "color": "#ffd54a"
+                    }
+                  }
+                ],
+                "durationMs": 4000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "vd-wcc-shanbi"
+                },
+                "hud": {
+                  "preset": "battle"
+                }
+              }
+            },
+            {
+              "id": "hurt",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "受击",
+                "timeline": [
+                  {
+                    "id": "hurt-settle",
+                    "role": "logic",
+                    "kind": "settle",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "effects": [
+                        {
+                          "id": "hurt-dmg",
+                          "kind": "attr",
+                          "entityId": "ent-player",
+                          "attr": "hp",
+                          "op": "add",
+                          "value": -120
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "hurt-fx",
+                    "role": "presentation",
+                    "kind": "floatText",
+                    "trigger": {
+                      "when": "performanceEnd"
+                    },
+                    "params": {
+                      "text": "-120",
+                      "x": 0.5,
+                      "y": 0.42,
+                      "color": "#ff5a5a"
+                    }
+                  }
+                ],
+                "durationMs": 4000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "vd-wcc-shouji"
+                },
+                "hud": {
+                  "preset": "battle"
+                }
+              }
+            },
+            {
+              "id": "ai-done",
+              "type": "perf",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "行动完毕(敌)",
+                "timeline": [],
+                "returnsToCaller": true
+              }
+            }
+          ],
+          "edges": [
+            {
+              "id": "e-open",
+              "source": "n_open",
+              "target": "n_door",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-door-pass",
+              "source": "n_door",
+              "target": "n_soul",
+              "sourceHandle": "pass"
+            },
+            {
+              "id": "e-door-good",
+              "source": "n_door",
+              "target": "n_soul",
+              "sourceHandle": "good"
+            },
+            {
+              "id": "e-door-fail",
+              "source": "n_door",
+              "target": "n_river",
+              "sourceHandle": "fail"
+            },
+            {
+              "id": "e-soul",
+              "source": "n_soul",
+              "target": "n_river",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-river-ying",
+              "source": "n_river",
+              "target": "n_child",
+              "sourceHandle": "opt:ying"
+            },
+            {
+              "id": "e-river-mo",
+              "source": "n_river",
+              "target": "n_land",
+              "sourceHandle": "opt:mo"
+            },
+            {
+              "id": "e-child",
+              "source": "n_child",
+              "target": "n_land",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-land-ying",
+              "source": "n_land",
+              "target": "n_mask",
+              "sourceHandle": "opt:ying"
+            },
+            {
+              "id": "e-land-mo",
+              "source": "n_land",
+              "target": "n_mengpo",
+              "sourceHandle": "opt:mo"
+            },
+            {
+              "id": "e-mask",
+              "source": "n_mask",
+              "target": "n_mengpo",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-mengpo",
+              "source": "n_mengpo",
+              "target": "n_tea",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-tea-ying",
+              "source": "n_tea",
+              "target": "n_drink",
+              "sourceHandle": "opt:ying"
+            },
+            {
+              "id": "e-tea-mo",
+              "source": "n_tea",
+              "target": "n_nodrink",
+              "sourceHandle": "opt:mo"
+            },
+            {
+              "id": "e-drink",
+              "source": "n_drink",
+              "target": "n_follow",
+              "sourceHandle": "out",
+              "data": {
+                "effects": [
+                  {
+                    "id": "drink-lizhi",
+                    "kind": "var",
+                    "varId": "lizhi",
+                    "op": "add",
+                    "value": -1
+                  },
+                  {
+                    "id": "drink-yezhang",
+                    "kind": "var",
+                    "varId": "yezhang",
+                    "op": "add",
+                    "value": 1
+                  }
+                ]
+              }
+            },
+            {
+              "id": "e-nodrink-ying",
+              "source": "n_nodrink",
+              "target": "n_follow",
+              "sourceHandle": "opt:ying"
+            },
+            {
+              "id": "e-nodrink-mo",
+              "source": "n_nodrink",
+              "target": "n_nofollow",
+              "sourceHandle": "opt:mo"
+            },
+            {
+              "id": "e-follow-ying",
+              "source": "n_follow",
+              "target": "n_getlight",
+              "sourceHandle": "opt:ying"
+            },
+            {
+              "id": "e-follow-mo",
+              "source": "n_follow",
+              "target": "n_nolight",
+              "sourceHandle": "opt:mo"
+            },
+            {
+              "id": "e-getlight",
+              "source": "n_getlight",
+              "target": "enter",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-nolight",
+              "source": "n_nolight",
+              "target": "enter",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-nofollow-ying",
+              "source": "n_nofollow",
+              "target": "n_lotus",
+              "sourceHandle": "opt:ying"
+            },
+            {
+              "id": "e-nofollow-mo",
+              "source": "n_nofollow",
+              "target": "n_nolotus",
+              "sourceHandle": "opt:mo"
+            },
+            {
+              "id": "e-lotus",
+              "source": "n_lotus",
+              "target": "enter",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-nolotus",
+              "source": "n_nolotus",
+              "target": "enter",
+              "sourceHandle": "out",
+              "data": {
+                "effects": [
+                  {
+                    "id": "nolotus-flag",
+                    "kind": "flag",
+                    "varId": "lotusClue",
+                    "value": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": "e-enter",
+              "source": "enter",
+              "target": "init",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-init-me",
+              "source": "init",
+              "target": "a_my",
+              "sourceHandle": "cond:0",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrCompare",
+                      "left": "ent-player",
+                      "right": "ent-boss",
+                      "attr": "speed",
+                      "op": "gte"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-init-foe",
+              "source": "init",
+              "target": "b_ai",
+              "sourceHandle": "else"
+            },
+            {
+              "id": "e-amy",
+              "source": "a_my",
+              "target": "a_chk",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-bai",
+              "source": "b_ai",
+              "target": "b_chk",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-achk-ai",
+              "source": "a_chk",
+              "target": "a_ai",
+              "sourceHandle": "cond:0",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "gt",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-achk-over",
+              "source": "a_chk",
+              "target": "settle",
+              "sourceHandle": "else"
+            },
+            {
+              "id": "e-bchk-my",
+              "source": "b_chk",
+              "target": "b_my",
+              "sourceHandle": "cond:0",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-player",
+                      "attr": "hp",
+                      "op": "gt",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-bchk-over",
+              "source": "b_chk",
+              "target": "settle",
+              "sourceHandle": "else"
+            },
+            {
+              "id": "e-aai",
+              "source": "a_ai",
+              "target": "round",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-bmy",
+              "source": "b_my",
+              "target": "round",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-round-next",
+              "source": "round",
+              "target": "init",
+              "sourceHandle": "cond:0",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-player",
+                      "attr": "hp",
+                      "op": "gt",
+                      "value": 0
+                    },
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "gt",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-round-over",
+              "source": "round",
+              "target": "settle",
+              "sourceHandle": "else"
+            },
+            {
+              "id": "e-settle-win",
+              "source": "settle",
+              "target": "win",
+              "sourceHandle": "cond:0",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "lte",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-settle-lose",
+              "source": "settle",
+              "target": "lose",
+              "sourceHandle": "else"
+            },
+            {
+              "id": "e-sk-light",
+              "source": "wait",
+              "target": "pjudge",
+              "sourceHandle": "opt:light"
+            },
+            {
+              "id": "e-sk-heavy",
+              "source": "wait",
+              "target": "zjudge",
+              "sourceHandle": "opt:heavy"
+            },
+            {
+              "id": "e-sk-medit",
+              "source": "wait",
+              "target": "fuzhu",
+              "sourceHandle": "opt:medit"
+            },
+            {
+              "id": "e-sk-ult",
+              "source": "wait",
+              "target": "ult",
+              "sourceHandle": "opt:ult"
+            },
+            {
+              "id": "e-pj-pu",
+              "source": "pjudge",
+              "target": "pu",
+              "sourceHandle": "out",
+              "data": {
+                "weight": 1
+              }
+            },
+            {
+              "id": "e-pj-pu2",
+              "source": "pjudge",
+              "target": "pu2",
+              "sourceHandle": "out",
+              "data": {
+                "weight": 1
+              }
+            },
+            {
+              "id": "e-pu",
+              "source": "pu",
+              "target": "my-done",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-pu2",
+              "source": "pu2",
+              "target": "my-done",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-zj-zhong",
+              "source": "zjudge",
+              "target": "zhong",
+              "sourceHandle": "out",
+              "data": {
+                "weight": 1
+              }
+            },
+            {
+              "id": "e-zj-z2",
+              "source": "zjudge",
+              "target": "z2",
+              "sourceHandle": "out",
+              "data": {
+                "weight": 1
+              }
+            },
+            {
+              "id": "e-zhong",
+              "source": "zhong",
+              "target": "my-done",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-z2",
+              "source": "z2",
+              "target": "my-done",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-fuzhu",
+              "source": "fuzhu",
+              "target": "my-done",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-ult",
+              "source": "ult",
+              "target": "my-done",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-bt",
+              "source": "bt",
+              "target": "tele",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-tele-pass",
+              "source": "tele",
+              "target": "block",
+              "sourceHandle": "pass"
+            },
+            {
+              "id": "e-tele-good",
+              "source": "tele",
+              "target": "dodgeP",
+              "sourceHandle": "good",
+              "data": {
+                "effects": [
+                  {
+                    "id": "dodge-qi",
+                    "kind": "var",
+                    "varId": "qi",
+                    "op": "add",
+                    "value": -1
+                  }
+                ]
+              }
+            },
+            {
+              "id": "e-tele-fail",
+              "source": "tele",
+              "target": "hurt",
+              "sourceHandle": "fail",
+              "data": {
+                "effects": [
+                  {
+                    "id": "hurt-qi",
+                    "kind": "var",
+                    "varId": "qi",
+                    "op": "add",
+                    "value": 1
+                  }
+                ]
+              }
+            },
+            {
+              "id": "e-block",
+              "source": "block",
+              "target": "ai-done",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-dodgeP",
+              "source": "dodgeP",
+              "target": "ai-done",
+              "sourceHandle": "out"
+            },
+            {
+              "id": "e-hurt",
+              "source": "hurt",
+              "target": "ai-done",
+              "sourceHandle": "out"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

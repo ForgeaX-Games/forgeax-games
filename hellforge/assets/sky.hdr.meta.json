@@ -1,0 +1,21 @@
+{
+  "kind": "external-asset-package",
+  "importer": "image",
+  "schemaVersion": "1.0.0",
+  "source": "sky.hdr",
+  "importSettings": {
+    "colorSpace": "linear",
+    "mipmap": "auto",
+    "addressMode": "clamp-to-edge",
+    "filterMode": "linear",
+    "cubeFaceSize": 512,
+    "specularMipLevels": 5
+  },
+  "subAssets": [
+    {
+      "guid": "c4061caa-8127-42a8-a1bb-54ef1a83d6d2",
+      "sourceIndex": 0,
+      "kind": "equirect"
+    }
+  ]
+}

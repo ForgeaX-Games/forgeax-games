@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "producer": {
+    "plugin": "wb-gen3d",
+    "pluginVersion": "0.1.0"
+  },
+  "createdAt": "2026-07-06T13:23:20.580Z",
+  "contentHash": "sha256:e2ee1d6ac55c771ff49f3ddbe35bb7f55316810db65578dc51264a54b89d7552",
+  "size": 14516912,
+  "type": "gen3d-character",
+  "dependencies": [
+    {
+      "path": "pipelinetest.png",
+      "hash": "sha256:fab514247b5077a18aa35b778e1480629eedc3981e8100642919bddc29422125",
+      "kind": "preview_image"
+    },
+    {
+      "path": "pipelinetest.texture.png",
+      "hash": "sha256:4f2cc7f99b5d749a8d930be0302c10473e2ba721e71faeab7895fa7eddeae4a5",
+      "kind": "texture"
+    },
+    {
+      "path": "pipelinetest.rigged_model.glb",
+      "hash": "sha256:8567b58bce314c6ca294d99b63e00b8b685614295b2cd5581105fe9083d17710",
+      "kind": "rigged_model",
+      "hasSkeleton": true,
+      "skeletonProfile": "humanoid",
+      "animationInputReady": true
+    },
+    {
+      "path": "pipelinetest.rigged_model.fbx",
+      "hash": "sha256:8e8c23e1b0927003a7761be90d02d0dade5e4eea783d9e8e90d7fb9bde81eb21",
+      "kind": "rigged_model",
+      "hasSkeleton": true,
+      "skeletonProfile": "humanoid",
+      "animationInputReady": true
+    },
+    {
+      "path": "pipelinetest.animated_model.motion-meshy-free-walk.glb",
+      "hash": "sha256:29498ceb6024fe17956648370bab625a844f51891e166de0b89b5b8448b904f2",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": -1,
+        "label": "走路（免费）"
+      }
+    },
+    {
+      "path": "pipelinetest.animated_model.motion-meshy-free-walk.fbx",
+      "hash": "sha256:42e4b7b6d7abb37860ce2e916b8f06c43783ccb46f25f1d703f82fe6cd1646e9",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": -1,
+        "label": "走路（免费）"
+      }
+    },
+    {
+      "path": "pipelinetest.animated_model.motion-meshy-free-run.glb",
+      "hash": "sha256:b1369afe7245c5585fbab39b5cff8c079431b8abeb0338007a70d92da26eec47",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": -2,
+        "label": "跑步（免费）"
+      }
+    },
+    {
+      "path": "pipelinetest.animated_model.motion-meshy-free-run.fbx",
+      "hash": "sha256:36c63fa2b7c95cfd5cd168d89902b5b624d3630c963ff64100a0d7400a59ab46",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": -2,
+        "label": "跑步（免费）"
+      }
+    },
+    {
+      "path": "pipelinetest.animated_model.motion-meshy-10.glb",
+      "hash": "sha256:e143f0e78dfc8b6c5e5b99c50c31d02c97a4fdc9e5de1e8eb8eab9be33af61d9",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 10,
+        "label": "ForwardRight_Run_Fight"
+      }
+    },
+    {
+      "path": "pipelinetest.animated_model.motion-meshy-10.fbx",
+      "hash": "sha256:2cbf87cf9b4d59045a5a0149b49ae10bd1c0f664865612786bd4f8c446ef8ba2",
+      "kind": "animated_model",
+      "motionRef": {
+        "system": "meshy",
+        "id": 10,
+        "label": "ForwardRight_Run_Fight"
+      }
+    }
+  ],
+  "custom": {
+    "provider": "meshy",
+    "providerMode": "real",
+    "mode": "views",
+    "assetSlot": "characters",
+    "sourceJobId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLW11bHRpLWltYWdlLXRvLTNkO3Rhc2tfaWQ6MDE5ZjM3OTMtMjhiZS03OTk3LTkzYWUtYzM1NTA3MzZmYjJi",
+    "prompt": null,
+    "sourceInputAssetPaths": [],
+    "faceCount": 8000,
+    "readiness": {
+      "hasSourceMesh": true,
+      "rigged": true,
+      "animated": true
+    },
+    "cacheKey": "meshy-views-c7df359f",
+    "rig": {
+      "rigProvider": "meshy",
+      "rigTaskId": "three_d_task_bGl0ZWxsbTpjdXN0b21fbGxtX3Byb3ZpZGVyOm1lc2h5XzNkO21vZGVsX2lkOm1lc2h5LTNkLWF1dG8tcmlnZ2luZzt0YXNrX2lkOjAxOWYzNzk5LTZjM2UtNzI0Zi05Yjk0LTAyMjgwOWExOTRiYQ==",
+      "rigType": null,
+      "rigExpiresAt": null
+    }
+  }
+}

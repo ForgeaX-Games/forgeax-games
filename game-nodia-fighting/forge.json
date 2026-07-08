@@ -1,0 +1,9 @@
+{
+  "id": "game-nodia-fighting",
+  "name": "game_nodia_fighting",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": "3d",
+  "defaultScene": "1373372f-03e1-4abf-bd16-63ebf4d79523",
+  "projectType": "game-video"
+}

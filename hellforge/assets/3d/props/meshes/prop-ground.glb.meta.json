@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-ground.glb",
+  "importSettings": {
+    "defaultSceneIndex": 0
+  },
+  "subAssets": [
+    {
+      "guid": "c97feb74-7f9b-9043-3053-534cad5bbb49",
+      "sourceIndex": 0,
+      "kind": "mesh",
+      "name": "ground"
+    },
+    {
+      "guid": "5d787fc4-258b-9b06-2678-39907dd3531b",
+      "sourceIndex": 0,
+      "kind": "material",
+      "name": "ground"
+    },
+    {
+      "guid": "09f8fd8f-99bd-16c1-12bd-27e57ec4bc05",
+      "sourceIndex": 0,
+      "kind": "scene",
+      "name": "scene"
+    },
+    {
+      "guid": "107dea06-73e3-d77e-4037-552a3e8c46a4",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "sky-dome.glb",
+  "importSettings": {
+    "defaultSceneIndex": 0
+  },
+  "subAssets": [
+    {
+      "guid": "0abdd602-9429-aedb-ad55-8caa3e21a49a",
+      "sourceIndex": 0,
+      "kind": "mesh",
+      "name": "sky-dome"
+    },
+    {
+      "guid": "e16e3b74-c7d9-2d0e-2e83-4040d6676b3e",
+      "sourceIndex": 0,
+      "kind": "material",
+      "name": "sky-dome"
+    },
+    {
+      "guid": "a55505d3-b6d7-b4cf-6809-c3088b7000b9",
+      "sourceIndex": 0,
+      "kind": "scene",
+      "name": "scene"
+    },
+    {
+      "guid": "0e0d19d5-f63b-50b6-887c-53d9e1608b21",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

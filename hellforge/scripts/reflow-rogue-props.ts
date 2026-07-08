@@ -65,7 +65,7 @@ function propStemForName(name: string): string | null {
   return null;
 }
 
-const packPath = join(gameRoot, 'scenes', 'rogue-encampment.pack.json');
+const packPath = join(gameRoot, 'assets', 'scenes', 'rogue-encampment.pack.json');
 const pack = JSON.parse(readFileSync(packPath, 'utf8')) as {
   assets: Array<{ kind: string; refs: string[]; payload: { entities: Array<{ components: Record<string, Record<string, unknown>> }> } }>;
 };

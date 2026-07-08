@@ -23,11 +23,11 @@
                 "scaleZ": 16.8
               },
               "MeshFilter": {
-                "assetHandle": 1
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  18
+                  11
                 ]
               }
             }
@@ -51,7 +51,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -71,11 +71,11 @@
                 "scaleZ": 12
               },
               "MeshFilter": {
-                "assetHandle": 1
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  18
+                  11
                 ]
               }
             }
@@ -99,7 +99,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -119,11 +119,11 @@
                 "scaleZ": 9.6
               },
               "MeshFilter": {
-                "assetHandle": 1
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  18
+                  11
                 ]
               }
             }
@@ -147,7 +147,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -167,11 +167,11 @@
                 "scaleZ": 14.4
               },
               "MeshFilter": {
-                "assetHandle": 1
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  18
+                  11
                 ]
               }
             }
@@ -195,7 +195,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -215,11 +215,11 @@
                 "scaleZ": 12
               },
               "MeshFilter": {
-                "assetHandle": 1
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  18
+                  11
                 ]
               }
             }
@@ -243,7 +243,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -267,7 +267,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -291,7 +291,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -315,7 +315,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -339,7 +339,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -363,7 +363,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -387,7 +387,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -411,7 +411,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -435,7 +435,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -459,7 +459,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -483,7 +483,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -507,7 +507,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -531,7 +531,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -555,7 +555,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -579,7 +579,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -603,7 +603,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -627,7 +627,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -651,7 +651,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -675,7 +675,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -699,7 +699,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -723,7 +723,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -747,7 +747,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -771,7 +771,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -795,7 +795,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -819,7 +819,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -843,7 +843,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -867,7 +867,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -891,7 +891,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -915,7 +915,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -939,7 +939,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -963,7 +963,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -987,7 +987,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -1011,7 +1011,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -1035,7 +1035,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -1059,7 +1059,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -1083,7 +1083,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -1107,7 +1107,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -1131,7 +1131,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -1155,7 +1155,7 @@
               },
               "MeshRenderer": {
                 "materials": [
-                  19
+                  10
                 ]
               }
             }
@@ -1164,22 +1164,26 @@
             "localId": 48,
             "components": {
               "Name": {
-                "value": "Den_wall_1"
+                "value": "Den_wall_1__t0"
               },
               "Transform": {
-                "posX": -22.8,
+                "posX": -30.2607,
                 "posY": 1.5,
                 "posZ": -48,
-                "scaleX": 19.2,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
@@ -1188,28 +1192,256 @@
             "localId": 49,
             "components": {
               "Name": {
-                "value": "Den_wall_2"
+                "value": "Den_wall_1__t1"
               },
               "Transform": {
-                "posX": 30,
+                "posX": -26.5304,
                 "posY": 1.5,
                 "posZ": -48,
-                "scaleX": 19.2,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
             "localId": 50,
+            "components": {
+              "Name": {
+                "value": "Den_wall_1__t2"
+              },
+              "Transform": {
+                "posX": -22.8,
+                "posY": 1.5,
+                "posZ": -48,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 51,
+            "components": {
+              "Name": {
+                "value": "Den_wall_1__t3"
+              },
+              "Transform": {
+                "posX": -19.0696,
+                "posY": 1.5,
+                "posZ": -48,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 52,
+            "components": {
+              "Name": {
+                "value": "Den_wall_1__t4"
+              },
+              "Transform": {
+                "posX": -15.3393,
+                "posY": 1.5,
+                "posZ": -48,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 53,
+            "components": {
+              "Name": {
+                "value": "Den_wall_2__t0"
+              },
+              "Transform": {
+                "posX": 22.5393,
+                "posY": 1.5,
+                "posZ": -48,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 54,
+            "components": {
+              "Name": {
+                "value": "Den_wall_2__t1"
+              },
+              "Transform": {
+                "posX": 26.2696,
+                "posY": 1.5,
+                "posZ": -48,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 55,
+            "components": {
+              "Name": {
+                "value": "Den_wall_2__t2"
+              },
+              "Transform": {
+                "posX": 30,
+                "posY": 1.5,
+                "posZ": -48,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 56,
+            "components": {
+              "Name": {
+                "value": "Den_wall_2__t3"
+              },
+              "Transform": {
+                "posX": 33.7304,
+                "posY": 1.5,
+                "posZ": -48,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 57,
+            "components": {
+              "Name": {
+                "value": "Den_wall_2__t4"
+              },
+              "Transform": {
+                "posX": 37.4607,
+                "posY": 1.5,
+                "posZ": -48,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 58,
             "components": {
               "Name": {
                 "value": "Den_wall_3"
@@ -1223,17 +1455,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 51,
+            "localId": 59,
             "components": {
               "Name": {
                 "value": "Den_wall_4"
@@ -1247,17 +1479,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 52,
+            "localId": 60,
             "components": {
               "Name": {
                 "value": "Den_wall_5"
@@ -1271,17 +1503,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 53,
+            "localId": 61,
             "components": {
               "Name": {
                 "value": "Den_wall_6"
@@ -1295,17 +1527,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 54,
+            "localId": 62,
             "components": {
               "Name": {
                 "value": "Den_wall_7"
@@ -1319,17 +1551,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 55,
+            "localId": 63,
             "components": {
               "Name": {
                 "value": "Den_wall_8"
@@ -1343,41 +1575,73 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 56,
+            "localId": 64,
             "components": {
               "Name": {
-                "value": "Den_wall_9"
+                "value": "Den_wall_9__t0"
               },
               "Transform": {
-                "posX": 19.2,
+                "posX": 17.7393,
                 "posY": 1.5,
                 "posZ": -43.2,
-                "scaleX": 7.2,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 57,
+            "localId": 65,
+            "components": {
+              "Name": {
+                "value": "Den_wall_9__t1"
+              },
+              "Transform": {
+                "posX": 20.6607,
+                "posY": 1.5,
+                "posZ": -43.2,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 66,
             "components": {
               "Name": {
                 "value": "Den_wall_10"
@@ -1391,17 +1655,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 58,
+            "localId": 67,
             "components": {
               "Name": {
                 "value": "Den_wall_11"
@@ -1415,17 +1679,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 59,
+            "localId": 68,
             "components": {
               "Name": {
                 "value": "Den_wall_12"
@@ -1439,17 +1703,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 60,
+            "localId": 69,
             "components": {
               "Name": {
                 "value": "Den_wall_13"
@@ -1463,17 +1727,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 61,
+            "localId": 70,
             "components": {
               "Name": {
                 "value": "Den_wall_14"
@@ -1487,17 +1751,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 62,
+            "localId": 71,
             "components": {
               "Name": {
                 "value": "Den_wall_15"
@@ -1511,17 +1775,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 63,
+            "localId": 72,
             "components": {
               "Name": {
                 "value": "Den_wall_16"
@@ -1535,17 +1799,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 64,
+            "localId": 73,
             "components": {
               "Name": {
                 "value": "Den_wall_17"
@@ -1559,17 +1823,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 65,
+            "localId": 74,
             "components": {
               "Name": {
                 "value": "Den_wall_18"
@@ -1583,17 +1847,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 66,
+            "localId": 75,
             "components": {
               "Name": {
                 "value": "Den_wall_19"
@@ -1607,17 +1871,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 67,
+            "localId": 76,
             "components": {
               "Name": {
                 "value": "Den_wall_20"
@@ -1631,17 +1895,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 68,
+            "localId": 77,
             "components": {
               "Name": {
                 "value": "Den_wall_21"
@@ -1655,17 +1919,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 69,
+            "localId": 78,
             "components": {
               "Name": {
                 "value": "Den_wall_22"
@@ -1679,65 +1943,157 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 70,
+            "localId": 79,
             "components": {
               "Name": {
-                "value": "Den_wall_23"
+                "value": "Den_wall_23__t0"
+              },
+              "Transform": {
+                "posX": -30.2607,
+                "posY": 1.5,
+                "posZ": -33.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 80,
+            "components": {
+              "Name": {
+                "value": "Den_wall_23__t1"
               },
               "Transform": {
                 "posX": -27.6,
                 "posY": 1.5,
                 "posZ": -33.6,
-                "scaleX": 9.6,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 71,
+            "localId": 81,
             "components": {
               "Name": {
-                "value": "Den_wall_24"
+                "value": "Den_wall_23__t2"
               },
               "Transform": {
-                "posX": -15.6,
+                "posX": -24.9393,
                 "posY": 1.5,
                 "posZ": -33.6,
-                "scaleX": 4.8,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 72,
+            "localId": 82,
+            "components": {
+              "Name": {
+                "value": "Den_wall_24__t0"
+              },
+              "Transform": {
+                "posX": -15.8607,
+                "posY": 1.5,
+                "posZ": -33.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 83,
+            "components": {
+              "Name": {
+                "value": "Den_wall_24__t1"
+              },
+              "Transform": {
+                "posX": -15.3393,
+                "posY": 1.5,
+                "posZ": -33.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 84,
             "components": {
               "Name": {
                 "value": "Den_wall_25"
@@ -1751,41 +2107,129 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 73,
+            "localId": 85,
             "components": {
               "Name": {
-                "value": "Den_wall_26"
+                "value": "Den_wall_26__t0"
               },
               "Transform": {
-                "posX": 31.2,
+                "posX": 24.9393,
                 "posY": 1.5,
                 "posZ": -33.6,
-                "scaleX": 16.8,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 74,
+            "localId": 86,
+            "components": {
+              "Name": {
+                "value": "Den_wall_26__t1"
+              },
+              "Transform": {
+                "posX": 29.1131,
+                "posY": 1.5,
+                "posZ": -33.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 87,
+            "components": {
+              "Name": {
+                "value": "Den_wall_26__t2"
+              },
+              "Transform": {
+                "posX": 33.2869,
+                "posY": 1.5,
+                "posZ": -33.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 88,
+            "components": {
+              "Name": {
+                "value": "Den_wall_26__t3"
+              },
+              "Transform": {
+                "posX": 37.4607,
+                "posY": 1.5,
+                "posZ": -33.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 89,
             "components": {
               "Name": {
                 "value": "Den_wall_27"
@@ -1799,17 +2243,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 75,
+            "localId": 90,
             "components": {
               "Name": {
                 "value": "Den_wall_28"
@@ -1823,17 +2267,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 76,
+            "localId": 91,
             "components": {
               "Name": {
                 "value": "Den_wall_29"
@@ -1847,17 +2291,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 77,
+            "localId": 92,
             "components": {
               "Name": {
                 "value": "Den_wall_30"
@@ -1871,17 +2315,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 78,
+            "localId": 93,
             "components": {
               "Name": {
                 "value": "Den_wall_31"
@@ -1895,17 +2339,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 79,
+            "localId": 94,
             "components": {
               "Name": {
                 "value": "Den_wall_32"
@@ -1919,89 +2363,269 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 80,
+            "localId": 95,
             "components": {
               "Name": {
-                "value": "Den_wall_33"
+                "value": "Den_wall_33__t0"
+              },
+              "Transform": {
+                "posX": 10.5393,
+                "posY": 1.5,
+                "posZ": -28.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 96,
+            "components": {
+              "Name": {
+                "value": "Den_wall_33__t1"
               },
               "Transform": {
                 "posX": 13.2,
                 "posY": 1.5,
                 "posZ": -28.8,
-                "scaleX": 9.6,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 81,
+            "localId": 97,
             "components": {
               "Name": {
-                "value": "Den_wall_34"
+                "value": "Den_wall_33__t2"
               },
               "Transform": {
-                "posX": 25.2,
+                "posX": 15.8607,
                 "posY": 1.5,
                 "posZ": -28.8,
-                "scaleX": 4.8,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 82,
+            "localId": 98,
             "components": {
               "Name": {
-                "value": "Den_wall_35"
+                "value": "Den_wall_34__t0"
               },
               "Transform": {
-                "posX": -40.8,
+                "posX": 24.9393,
                 "posY": 1.5,
-                "posZ": -26.4,
-                "scaleX": 16.8,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "posZ": -28.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 83,
+            "localId": 99,
+            "components": {
+              "Name": {
+                "value": "Den_wall_34__t1"
+              },
+              "Transform": {
+                "posX": 25.4607,
+                "posY": 1.5,
+                "posZ": -28.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 100,
+            "components": {
+              "Name": {
+                "value": "Den_wall_35__t0"
+              },
+              "Transform": {
+                "posX": -47.0607,
+                "posY": 1.5,
+                "posZ": -26.4,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 101,
+            "components": {
+              "Name": {
+                "value": "Den_wall_35__t1"
+              },
+              "Transform": {
+                "posX": -42.8869,
+                "posY": 1.5,
+                "posZ": -26.4,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 102,
+            "components": {
+              "Name": {
+                "value": "Den_wall_35__t2"
+              },
+              "Transform": {
+                "posX": -38.7131,
+                "posY": 1.5,
+                "posZ": -26.4,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 103,
+            "components": {
+              "Name": {
+                "value": "Den_wall_35__t3"
+              },
+              "Transform": {
+                "posX": -34.5393,
+                "posY": 1.5,
+                "posZ": -26.4,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 104,
             "components": {
               "Name": {
                 "value": "Den_wall_36"
@@ -2015,17 +2639,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 84,
+            "localId": 105,
             "components": {
               "Name": {
                 "value": "Den_wall_37"
@@ -2039,17 +2663,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 85,
+            "localId": 106,
             "components": {
               "Name": {
                 "value": "Den_wall_38"
@@ -2063,17 +2687,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 86,
+            "localId": 107,
             "components": {
               "Name": {
                 "value": "Den_wall_39"
@@ -2087,17 +2711,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 87,
+            "localId": 108,
             "components": {
               "Name": {
                 "value": "Den_wall_40"
@@ -2111,17 +2735,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 88,
+            "localId": 109,
             "components": {
               "Name": {
                 "value": "Den_wall_41"
@@ -2135,17 +2759,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 89,
+            "localId": 110,
             "components": {
               "Name": {
                 "value": "Den_wall_42"
@@ -2159,41 +2783,101 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 90,
+            "localId": 111,
             "components": {
               "Name": {
-                "value": "Den_wall_43"
+                "value": "Den_wall_43__t0"
+              },
+              "Transform": {
+                "posX": -15.8607,
+                "posY": 1.5,
+                "posZ": -24,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 112,
+            "components": {
+              "Name": {
+                "value": "Den_wall_43__t1"
               },
               "Transform": {
                 "posX": -12,
                 "posY": 1.5,
                 "posZ": -24,
-                "scaleX": 12,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 91,
+            "localId": 113,
+            "components": {
+              "Name": {
+                "value": "Den_wall_43__t2"
+              },
+              "Transform": {
+                "posX": -8.1393,
+                "posY": 1.5,
+                "posZ": -24,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 114,
             "components": {
               "Name": {
                 "value": "Den_wall_44"
@@ -2207,17 +2891,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 92,
+            "localId": 115,
             "components": {
               "Name": {
                 "value": "Den_wall_45"
@@ -2231,17 +2915,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 93,
+            "localId": 116,
             "components": {
               "Name": {
                 "value": "Den_wall_46"
@@ -2255,17 +2939,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 94,
+            "localId": 117,
             "components": {
               "Name": {
                 "value": "Den_wall_47"
@@ -2279,17 +2963,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 95,
+            "localId": 118,
             "components": {
               "Name": {
                 "value": "Den_wall_48"
@@ -2303,41 +2987,157 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 96,
+            "localId": 119,
             "components": {
               "Name": {
-                "value": "Den_wall_49"
+                "value": "Den_wall_49__t0"
+              },
+              "Transform": {
+                "posX": -6.2607,
+                "posY": 1.5,
+                "posZ": -21.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 120,
+            "components": {
+              "Name": {
+                "value": "Den_wall_49__t1"
+              },
+              "Transform": {
+                "posX": -2.5304,
+                "posY": 1.5,
+                "posZ": -21.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 121,
+            "components": {
+              "Name": {
+                "value": "Den_wall_49__t2"
               },
               "Transform": {
                 "posX": 1.2,
                 "posY": 1.5,
                 "posZ": -21.6,
-                "scaleX": 19.2,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 97,
+            "localId": 122,
+            "components": {
+              "Name": {
+                "value": "Den_wall_49__t3"
+              },
+              "Transform": {
+                "posX": 4.9304,
+                "posY": 1.5,
+                "posZ": -21.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 123,
+            "components": {
+              "Name": {
+                "value": "Den_wall_49__t4"
+              },
+              "Transform": {
+                "posX": 8.6607,
+                "posY": 1.5,
+                "posZ": -21.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 124,
             "components": {
               "Name": {
                 "value": "Den_wall_50"
@@ -2351,17 +3151,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 98,
+            "localId": 125,
             "components": {
               "Name": {
                 "value": "Den_wall_51"
@@ -2375,41 +3175,101 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 99,
+            "localId": 126,
             "components": {
               "Name": {
-                "value": "Den_wall_52"
+                "value": "Den_wall_52__t0"
+              },
+              "Transform": {
+                "posX": -32.6607,
+                "posY": 1.5,
+                "posZ": -19.2,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 127,
+            "components": {
+              "Name": {
+                "value": "Den_wall_52__t1"
               },
               "Transform": {
                 "posX": -28.8,
                 "posY": 1.5,
                 "posZ": -19.2,
-                "scaleX": 12,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 100,
+            "localId": 128,
+            "components": {
+              "Name": {
+                "value": "Den_wall_52__t2"
+              },
+              "Transform": {
+                "posX": -24.9393,
+                "posY": 1.5,
+                "posZ": -19.2,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 129,
             "components": {
               "Name": {
                 "value": "Den_wall_53"
@@ -2423,17 +3283,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 101,
+            "localId": 130,
             "components": {
               "Name": {
                 "value": "Den_wall_54"
@@ -2447,17 +3307,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 102,
+            "localId": 131,
             "components": {
               "Name": {
                 "value": "Den_wall_55"
@@ -2471,17 +3331,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 103,
+            "localId": 132,
             "components": {
               "Name": {
                 "value": "Den_wall_56"
@@ -2495,41 +3355,157 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 104,
+            "localId": 133,
             "components": {
               "Name": {
-                "value": "Den_wall_57"
+                "value": "Den_wall_57__t0"
+              },
+              "Transform": {
+                "posX": -6.2607,
+                "posY": 1.5,
+                "posZ": -14.4,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 134,
+            "components": {
+              "Name": {
+                "value": "Den_wall_57__t1"
+              },
+              "Transform": {
+                "posX": -2.5304,
+                "posY": 1.5,
+                "posZ": -14.4,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 135,
+            "components": {
+              "Name": {
+                "value": "Den_wall_57__t2"
               },
               "Transform": {
                 "posX": 1.2,
                 "posY": 1.5,
                 "posZ": -14.4,
-                "scaleX": 19.2,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 105,
+            "localId": 136,
+            "components": {
+              "Name": {
+                "value": "Den_wall_57__t3"
+              },
+              "Transform": {
+                "posX": 4.9304,
+                "posY": 1.5,
+                "posZ": -14.4,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 137,
+            "components": {
+              "Name": {
+                "value": "Den_wall_57__t4"
+              },
+              "Transform": {
+                "posX": 8.6607,
+                "posY": 1.5,
+                "posZ": -14.4,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 138,
             "components": {
               "Name": {
                 "value": "Den_wall_58"
@@ -2543,65 +3519,297 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 106,
+            "localId": 139,
             "components": {
               "Name": {
-                "value": "Den_wall_59"
+                "value": "Den_wall_59__t0"
               },
               "Transform": {
-                "posX": -45.6,
+                "posX": -47.0607,
                 "posY": 1.5,
                 "posZ": -12,
-                "scaleX": 7.2,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 107,
+            "localId": 140,
             "components": {
               "Name": {
-                "value": "Den_wall_60"
+                "value": "Den_wall_59__t1"
               },
               "Transform": {
-                "posX": -21.6,
+                "posX": -44.1393,
                 "posY": 1.5,
                 "posZ": -12,
-                "scaleX": 31.2,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 108,
+            "localId": 141,
+            "components": {
+              "Name": {
+                "value": "Den_wall_60__t0"
+              },
+              "Transform": {
+                "posX": -35.0607,
+                "posY": 1.5,
+                "posZ": -12,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 142,
+            "components": {
+              "Name": {
+                "value": "Den_wall_60__t1"
+              },
+              "Transform": {
+                "posX": -31.2148,
+                "posY": 1.5,
+                "posZ": -12,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 143,
+            "components": {
+              "Name": {
+                "value": "Den_wall_60__t2"
+              },
+              "Transform": {
+                "posX": -27.3689,
+                "posY": 1.5,
+                "posZ": -12,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 144,
+            "components": {
+              "Name": {
+                "value": "Den_wall_60__t3"
+              },
+              "Transform": {
+                "posX": -23.523,
+                "posY": 1.5,
+                "posZ": -12,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 145,
+            "components": {
+              "Name": {
+                "value": "Den_wall_60__t4"
+              },
+              "Transform": {
+                "posX": -19.677,
+                "posY": 1.5,
+                "posZ": -12,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 146,
+            "components": {
+              "Name": {
+                "value": "Den_wall_60__t5"
+              },
+              "Transform": {
+                "posX": -15.8311,
+                "posY": 1.5,
+                "posZ": -12,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 147,
+            "components": {
+              "Name": {
+                "value": "Den_wall_60__t6"
+              },
+              "Transform": {
+                "posX": -11.9852,
+                "posY": 1.5,
+                "posZ": -12,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 148,
+            "components": {
+              "Name": {
+                "value": "Den_wall_60__t7"
+              },
+              "Transform": {
+                "posX": -8.1393,
+                "posY": 1.5,
+                "posZ": -12,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 149,
             "components": {
               "Name": {
                 "value": "Den_wall_61"
@@ -2615,17 +3823,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 109,
+            "localId": 150,
             "components": {
               "Name": {
                 "value": "Den_wall_62"
@@ -2639,17 +3847,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 110,
+            "localId": 151,
             "components": {
               "Name": {
                 "value": "Den_wall_63"
@@ -2663,17 +3871,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 111,
+            "localId": 152,
             "components": {
               "Name": {
                 "value": "Den_wall_64"
@@ -2687,65 +3895,157 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 112,
+            "localId": 153,
             "components": {
               "Name": {
-                "value": "Den_wall_65"
+                "value": "Den_wall_65__t0"
+              },
+              "Transform": {
+                "posX": 10.5393,
+                "posY": 1.5,
+                "posZ": -9.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 154,
+            "components": {
+              "Name": {
+                "value": "Den_wall_65__t1"
               },
               "Transform": {
                 "posX": 13.2,
                 "posY": 1.5,
                 "posZ": -9.6,
-                "scaleX": 9.6,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 113,
+            "localId": 155,
             "components": {
               "Name": {
-                "value": "Den_wall_66"
+                "value": "Den_wall_65__t2"
               },
               "Transform": {
-                "posX": 25.2,
+                "posX": 15.8607,
                 "posY": 1.5,
                 "posZ": -9.6,
-                "scaleX": 4.8,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 114,
+            "localId": 156,
+            "components": {
+              "Name": {
+                "value": "Den_wall_66__t0"
+              },
+              "Transform": {
+                "posX": 24.9393,
+                "posY": 1.5,
+                "posZ": -9.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 157,
+            "components": {
+              "Name": {
+                "value": "Den_wall_66__t1"
+              },
+              "Transform": {
+                "posX": 25.4607,
+                "posY": 1.5,
+                "posZ": -9.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 158,
             "components": {
               "Name": {
                 "value": "Den_wall_67"
@@ -2759,17 +4059,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 115,
+            "localId": 159,
             "components": {
               "Name": {
                 "value": "Den_wall_68"
@@ -2783,17 +4083,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 116,
+            "localId": 160,
             "components": {
               "Name": {
                 "value": "Den_wall_69"
@@ -2807,17 +4107,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 117,
+            "localId": 161,
             "components": {
               "Name": {
                 "value": "Den_wall_70"
@@ -2831,17 +4131,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 118,
+            "localId": 162,
             "components": {
               "Name": {
                 "value": "Den_wall_71"
@@ -2855,17 +4155,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 119,
+            "localId": 163,
             "components": {
               "Name": {
                 "value": "Den_wall_72"
@@ -2879,17 +4179,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 120,
+            "localId": 164,
             "components": {
               "Name": {
                 "value": "Den_wall_73"
@@ -2903,17 +4203,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 121,
+            "localId": 165,
             "components": {
               "Name": {
                 "value": "Den_wall_74"
@@ -2927,17 +4227,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 122,
+            "localId": 166,
             "components": {
               "Name": {
                 "value": "Den_wall_75"
@@ -2951,17 +4251,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 123,
+            "localId": 167,
             "components": {
               "Name": {
                 "value": "Den_wall_76"
@@ -2975,41 +4275,129 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 124,
+            "localId": 168,
             "components": {
               "Name": {
-                "value": "Den_wall_77"
+                "value": "Den_wall_77__t0"
               },
               "Transform": {
-                "posX": 10.8,
+                "posX": 5.7393,
                 "posY": 1.5,
                 "posZ": -2.4,
-                "scaleX": 14.4,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 125,
+            "localId": 169,
+            "components": {
+              "Name": {
+                "value": "Den_wall_77__t1"
+              },
+              "Transform": {
+                "posX": 9.1131,
+                "posY": 1.5,
+                "posZ": -2.4,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 170,
+            "components": {
+              "Name": {
+                "value": "Den_wall_77__t2"
+              },
+              "Transform": {
+                "posX": 12.4869,
+                "posY": 1.5,
+                "posZ": -2.4,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 171,
+            "components": {
+              "Name": {
+                "value": "Den_wall_77__t3"
+              },
+              "Transform": {
+                "posX": 15.8607,
+                "posY": 1.5,
+                "posZ": -2.4,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 172,
             "components": {
               "Name": {
                 "value": "Den_wall_78"
@@ -3023,17 +4411,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 126,
+            "localId": 173,
             "components": {
               "Name": {
                 "value": "Den_wall_79"
@@ -3047,17 +4435,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 127,
+            "localId": 174,
             "components": {
               "Name": {
                 "value": "Den_wall_80"
@@ -3071,17 +4459,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 128,
+            "localId": 175,
             "components": {
               "Name": {
                 "value": "Den_wall_81"
@@ -3095,17 +4483,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 129,
+            "localId": 176,
             "components": {
               "Name": {
                 "value": "Den_wall_82"
@@ -3119,17 +4507,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 130,
+            "localId": 177,
             "components": {
               "Name": {
                 "value": "Den_wall_83"
@@ -3143,17 +4531,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 131,
+            "localId": 178,
             "components": {
               "Name": {
                 "value": "Den_wall_84"
@@ -3167,17 +4555,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 132,
+            "localId": 179,
             "components": {
               "Name": {
                 "value": "Den_wall_85"
@@ -3191,17 +4579,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 133,
+            "localId": 180,
             "components": {
               "Name": {
                 "value": "Den_wall_86"
@@ -3215,17 +4603,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 134,
+            "localId": 181,
             "components": {
               "Name": {
                 "value": "Den_wall_87"
@@ -3239,41 +4627,129 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 135,
+            "localId": 182,
             "components": {
               "Name": {
-                "value": "Den_wall_88"
+                "value": "Den_wall_88__t0"
               },
               "Transform": {
-                "posX": -28.8,
+                "posX": -35.0607,
                 "posY": 1.5,
                 "posZ": 4.8,
-                "scaleX": 16.8,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 136,
+            "localId": 183,
+            "components": {
+              "Name": {
+                "value": "Den_wall_88__t1"
+              },
+              "Transform": {
+                "posX": -30.8869,
+                "posY": 1.5,
+                "posZ": 4.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 184,
+            "components": {
+              "Name": {
+                "value": "Den_wall_88__t2"
+              },
+              "Transform": {
+                "posX": -26.7131,
+                "posY": 1.5,
+                "posZ": 4.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 185,
+            "components": {
+              "Name": {
+                "value": "Den_wall_88__t3"
+              },
+              "Transform": {
+                "posX": -22.5393,
+                "posY": 1.5,
+                "posZ": 4.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 186,
             "components": {
               "Name": {
                 "value": "Den_wall_89"
@@ -3287,17 +4763,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 137,
+            "localId": 187,
             "components": {
               "Name": {
                 "value": "Den_wall_90"
@@ -3311,17 +4787,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 138,
+            "localId": 188,
             "components": {
               "Name": {
                 "value": "Den_wall_91"
@@ -3335,17 +4811,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 139,
+            "localId": 189,
             "components": {
               "Name": {
                 "value": "Den_wall_92"
@@ -3359,17 +4835,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 140,
+            "localId": 190,
             "components": {
               "Name": {
                 "value": "Den_wall_93"
@@ -3383,17 +4859,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 141,
+            "localId": 191,
             "components": {
               "Name": {
                 "value": "Den_wall_94"
@@ -3407,17 +4883,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 142,
+            "localId": 192,
             "components": {
               "Name": {
                 "value": "Den_wall_95"
@@ -3431,17 +4907,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 143,
+            "localId": 193,
             "components": {
               "Name": {
                 "value": "Den_wall_96"
@@ -3455,65 +4931,157 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 144,
+            "localId": 194,
             "components": {
               "Name": {
-                "value": "Den_wall_97"
+                "value": "Den_wall_97__t0"
+              },
+              "Transform": {
+                "posX": 5.7393,
+                "posY": 1.5,
+                "posZ": 9.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 195,
+            "components": {
+              "Name": {
+                "value": "Den_wall_97__t1"
               },
               "Transform": {
                 "posX": 8.4,
                 "posY": 1.5,
                 "posZ": 9.6,
-                "scaleX": 9.6,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 145,
+            "localId": 196,
             "components": {
               "Name": {
-                "value": "Den_wall_98"
+                "value": "Den_wall_97__t2"
               },
               "Transform": {
-                "posX": 21.6,
+                "posX": 11.0607,
                 "posY": 1.5,
                 "posZ": 9.6,
-                "scaleX": 7.2,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 146,
+            "localId": 197,
+            "components": {
+              "Name": {
+                "value": "Den_wall_98__t0"
+              },
+              "Transform": {
+                "posX": 20.1393,
+                "posY": 1.5,
+                "posZ": 9.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 198,
+            "components": {
+              "Name": {
+                "value": "Den_wall_98__t1"
+              },
+              "Transform": {
+                "posX": 23.0607,
+                "posY": 1.5,
+                "posZ": 9.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 199,
             "components": {
               "Name": {
                 "value": "Den_wall_99"
@@ -3527,17 +5095,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 147,
+            "localId": 200,
             "components": {
               "Name": {
                 "value": "Den_wall_100"
@@ -3551,17 +5119,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 148,
+            "localId": 201,
             "components": {
               "Name": {
                 "value": "Den_wall_101"
@@ -3575,17 +5143,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 149,
+            "localId": 202,
             "components": {
               "Name": {
                 "value": "Den_wall_102"
@@ -3599,17 +5167,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 150,
+            "localId": 203,
             "components": {
               "Name": {
                 "value": "Den_wall_103"
@@ -3623,17 +5191,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 151,
+            "localId": 204,
             "components": {
               "Name": {
                 "value": "Den_wall_104"
@@ -3647,17 +5215,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 152,
+            "localId": 205,
             "components": {
               "Name": {
                 "value": "Den_wall_105"
@@ -3671,17 +5239,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 153,
+            "localId": 206,
             "components": {
               "Name": {
                 "value": "Den_wall_106"
@@ -3695,41 +5263,185 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 154,
+            "localId": 207,
             "components": {
               "Name": {
-                "value": "Den_wall_107"
+                "value": "Den_wall_107__t0"
               },
               "Transform": {
-                "posX": -32.4,
+                "posX": -42.2607,
                 "posY": 1.5,
                 "posZ": 16.8,
-                "scaleX": 24,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 155,
+            "localId": 208,
+            "components": {
+              "Name": {
+                "value": "Den_wall_107__t1"
+              },
+              "Transform": {
+                "posX": -38.3164,
+                "posY": 1.5,
+                "posZ": 16.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 209,
+            "components": {
+              "Name": {
+                "value": "Den_wall_107__t2"
+              },
+              "Transform": {
+                "posX": -34.3721,
+                "posY": 1.5,
+                "posZ": 16.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 210,
+            "components": {
+              "Name": {
+                "value": "Den_wall_107__t3"
+              },
+              "Transform": {
+                "posX": -30.4279,
+                "posY": 1.5,
+                "posZ": 16.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 211,
+            "components": {
+              "Name": {
+                "value": "Den_wall_107__t4"
+              },
+              "Transform": {
+                "posX": -26.4836,
+                "posY": 1.5,
+                "posZ": 16.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 212,
+            "components": {
+              "Name": {
+                "value": "Den_wall_107__t5"
+              },
+              "Transform": {
+                "posX": -22.5393,
+                "posY": 1.5,
+                "posZ": 16.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 213,
             "components": {
               "Name": {
                 "value": "Den_wall_108"
@@ -3743,17 +5455,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 156,
+            "localId": 214,
             "components": {
               "Name": {
                 "value": "Den_wall_109"
@@ -3767,41 +5479,157 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 157,
+            "localId": 215,
             "components": {
               "Name": {
-                "value": "Den_wall_110"
+                "value": "Den_wall_110__t0"
+              },
+              "Transform": {
+                "posX": 27.3393,
+                "posY": 1.5,
+                "posZ": 16.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 216,
+            "components": {
+              "Name": {
+                "value": "Den_wall_110__t1"
+              },
+              "Transform": {
+                "posX": 31.0696,
+                "posY": 1.5,
+                "posZ": 16.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 217,
+            "components": {
+              "Name": {
+                "value": "Den_wall_110__t2"
               },
               "Transform": {
                 "posX": 34.8,
                 "posY": 1.5,
                 "posZ": 16.8,
-                "scaleX": 19.2,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 158,
+            "localId": 218,
+            "components": {
+              "Name": {
+                "value": "Den_wall_110__t3"
+              },
+              "Transform": {
+                "posX": 38.5304,
+                "posY": 1.5,
+                "posZ": 16.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 219,
+            "components": {
+              "Name": {
+                "value": "Den_wall_110__t4"
+              },
+              "Transform": {
+                "posX": 42.2607,
+                "posY": 1.5,
+                "posZ": 16.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 220,
             "components": {
               "Name": {
                 "value": "Den_wall_111"
@@ -3815,17 +5643,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 159,
+            "localId": 221,
             "components": {
               "Name": {
                 "value": "Den_wall_112"
@@ -3839,17 +5667,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 160,
+            "localId": 222,
             "components": {
               "Name": {
                 "value": "Den_wall_113"
@@ -3863,17 +5691,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 161,
+            "localId": 223,
             "components": {
               "Name": {
                 "value": "Den_wall_114"
@@ -3887,65 +5715,157 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 162,
+            "localId": 224,
             "components": {
               "Name": {
-                "value": "Den_wall_115"
+                "value": "Den_wall_115__t0"
               },
               "Transform": {
-                "posX": 9.6,
+                "posX": 8.1393,
                 "posY": 1.5,
                 "posZ": 21.6,
-                "scaleX": 7.2,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 163,
+            "localId": 225,
             "components": {
               "Name": {
-                "value": "Den_wall_116"
+                "value": "Den_wall_115__t1"
+              },
+              "Transform": {
+                "posX": 11.0607,
+                "posY": 1.5,
+                "posZ": 21.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 226,
+            "components": {
+              "Name": {
+                "value": "Den_wall_116__t0"
+              },
+              "Transform": {
+                "posX": 20.1393,
+                "posY": 1.5,
+                "posZ": 21.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 227,
+            "components": {
+              "Name": {
+                "value": "Den_wall_116__t1"
               },
               "Transform": {
                 "posX": 22.8,
                 "posY": 1.5,
                 "posZ": 21.6,
-                "scaleX": 9.6,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 164,
+            "localId": 228,
+            "components": {
+              "Name": {
+                "value": "Den_wall_116__t2"
+              },
+              "Transform": {
+                "posX": 25.4607,
+                "posY": 1.5,
+                "posZ": 21.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 229,
             "components": {
               "Name": {
                 "value": "Den_wall_117"
@@ -3959,17 +5879,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 165,
+            "localId": 230,
             "components": {
               "Name": {
                 "value": "Den_wall_118"
@@ -3983,41 +5903,73 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 166,
+            "localId": 231,
             "components": {
               "Name": {
-                "value": "Den_wall_119"
+                "value": "Den_wall_119__t0"
               },
               "Transform": {
-                "posX": 25.2,
+                "posX": 24.9393,
                 "posY": 1.5,
                 "posZ": 24,
-                "scaleX": 4.8,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 167,
+            "localId": 232,
+            "components": {
+              "Name": {
+                "value": "Den_wall_119__t1"
+              },
+              "Transform": {
+                "posX": 25.4607,
+                "posY": 1.5,
+                "posZ": 24,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 233,
             "components": {
               "Name": {
                 "value": "Den_wall_120"
@@ -4031,17 +5983,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 168,
+            "localId": 234,
             "components": {
               "Name": {
                 "value": "Den_wall_121"
@@ -4055,17 +6007,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 169,
+            "localId": 235,
             "components": {
               "Name": {
                 "value": "Den_wall_122"
@@ -4079,17 +6031,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 170,
+            "localId": 236,
             "components": {
               "Name": {
                 "value": "Den_wall_123"
@@ -4103,17 +6055,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 171,
+            "localId": 237,
             "components": {
               "Name": {
                 "value": "Den_wall_124"
@@ -4127,17 +6079,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 172,
+            "localId": 238,
             "components": {
               "Name": {
                 "value": "Den_wall_125"
@@ -4151,41 +6103,73 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 173,
+            "localId": 239,
             "components": {
               "Name": {
-                "value": "Den_wall_126"
+                "value": "Den_wall_126__t0"
               },
               "Transform": {
-                "posX": 25.2,
+                "posX": 24.9393,
                 "posY": 1.5,
                 "posZ": 31.2,
-                "scaleX": 4.8,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 174,
+            "localId": 240,
+            "components": {
+              "Name": {
+                "value": "Den_wall_126__t1"
+              },
+              "Transform": {
+                "posX": 25.4607,
+                "posY": 1.5,
+                "posZ": 31.2,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 241,
             "components": {
               "Name": {
                 "value": "Den_wall_127"
@@ -4199,17 +6183,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 175,
+            "localId": 242,
             "components": {
               "Name": {
                 "value": "Den_wall_128"
@@ -4223,41 +6207,185 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 176,
+            "localId": 243,
             "components": {
               "Name": {
-                "value": "Den_wall_129"
+                "value": "Den_wall_129__t0"
               },
               "Transform": {
-                "posX": 33.6,
+                "posX": 24.9393,
                 "posY": 1.5,
                 "posZ": 33.6,
-                "scaleX": 21.6,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 177,
+            "localId": 244,
+            "components": {
+              "Name": {
+                "value": "Den_wall_129__t1"
+              },
+              "Transform": {
+                "posX": 28.4036,
+                "posY": 1.5,
+                "posZ": 33.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 245,
+            "components": {
+              "Name": {
+                "value": "Den_wall_129__t2"
+              },
+              "Transform": {
+                "posX": 31.8679,
+                "posY": 1.5,
+                "posZ": 33.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 246,
+            "components": {
+              "Name": {
+                "value": "Den_wall_129__t3"
+              },
+              "Transform": {
+                "posX": 35.3321,
+                "posY": 1.5,
+                "posZ": 33.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 247,
+            "components": {
+              "Name": {
+                "value": "Den_wall_129__t4"
+              },
+              "Transform": {
+                "posX": 38.7964,
+                "posY": 1.5,
+                "posZ": 33.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 248,
+            "components": {
+              "Name": {
+                "value": "Den_wall_129__t5"
+              },
+              "Transform": {
+                "posX": 42.2607,
+                "posY": 1.5,
+                "posZ": 33.6,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 249,
             "components": {
               "Name": {
                 "value": "Den_wall_130"
@@ -4271,17 +6399,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 178,
+            "localId": 250,
             "components": {
               "Name": {
                 "value": "Den_wall_131"
@@ -4295,17 +6423,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 179,
+            "localId": 251,
             "components": {
               "Name": {
                 "value": "Den_wall_132"
@@ -4319,17 +6447,17 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 180,
+            "localId": 252,
             "components": {
               "Name": {
                 "value": "Den_wall_133"
@@ -4343,41 +6471,157 @@
                 "scaleZ": 2.4
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  12
                 ]
               }
             }
           },
           {
-            "localId": 181,
+            "localId": 253,
             "components": {
               "Name": {
-                "value": "Den_wall_134"
+                "value": "Den_wall_134__t0"
+              },
+              "Transform": {
+                "posX": 8.1393,
+                "posY": 1.5,
+                "posZ": 40.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 254,
+            "components": {
+              "Name": {
+                "value": "Den_wall_134__t1"
+              },
+              "Transform": {
+                "posX": 11.8696,
+                "posY": 1.5,
+                "posZ": 40.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 255,
+            "components": {
+              "Name": {
+                "value": "Den_wall_134__t2"
               },
               "Transform": {
                 "posX": 15.6,
                 "posY": 1.5,
                 "posZ": 40.8,
-                "scaleX": 19.2,
-                "scaleY": 3.2,
-                "scaleZ": 2.4
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 3
               },
               "MeshRenderer": {
                 "materials": [
-                  20
+                  19
                 ]
               }
             }
           },
           {
-            "localId": 182,
+            "localId": 256,
+            "components": {
+              "Name": {
+                "value": "Den_wall_134__t3"
+              },
+              "Transform": {
+                "posX": 19.3304,
+                "posY": 1.5,
+                "posZ": 40.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 257,
+            "components": {
+              "Name": {
+                "value": "Den_wall_134__t4"
+              },
+              "Transform": {
+                "posX": 23.0607,
+                "posY": 1.5,
+                "posZ": 40.8,
+                "scaleX": 2.1393,
+                "scaleY": 2.1393,
+                "scaleZ": 2.1393,
+                "quatX": 0,
+                "quatY": 0,
+                "quatZ": 0,
+                "quatW": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 3
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 258,
             "components": {
               "Name": {
                 "value": "Den_torchPost_1"
@@ -4391,17 +6635,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 183,
+            "localId": 259,
             "components": {
               "Name": {
                 "value": "Den_flame_1"
@@ -4415,17 +6659,17 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
               },
               "MeshRenderer": {
                 "materials": [
-                  22
+                  20
                 ]
               }
             }
           },
           {
-            "localId": 184,
+            "localId": 260,
             "components": {
               "Name": {
                 "value": "Den_torchPost_2"
@@ -4439,17 +6683,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 185,
+            "localId": 261,
             "components": {
               "Name": {
                 "value": "Den_flame_2"
@@ -4463,17 +6707,17 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
               },
               "MeshRenderer": {
                 "materials": [
-                  22
+                  20
                 ]
               }
             }
           },
           {
-            "localId": 186,
+            "localId": 262,
             "components": {
               "Name": {
                 "value": "Den_torchPost_3"
@@ -4487,17 +6731,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 187,
+            "localId": 263,
             "components": {
               "Name": {
                 "value": "Den_flame_3"
@@ -4511,17 +6755,17 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
               },
               "MeshRenderer": {
                 "materials": [
-                  22
+                  20
                 ]
               }
             }
           },
           {
-            "localId": 188,
+            "localId": 264,
             "components": {
               "Name": {
                 "value": "Den_torchPost_4"
@@ -4535,17 +6779,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 189,
+            "localId": 265,
             "components": {
               "Name": {
                 "value": "Den_flame_4"
@@ -4559,17 +6803,17 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
               },
               "MeshRenderer": {
                 "materials": [
-                  22
+                  20
                 ]
               }
             }
           },
           {
-            "localId": 190,
+            "localId": 266,
             "components": {
               "Name": {
                 "value": "Den_torchPost_5"
@@ -4583,17 +6827,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 191,
+            "localId": 267,
             "components": {
               "Name": {
                 "value": "Den_flame_5"
@@ -4607,17 +6851,17 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
               },
               "MeshRenderer": {
                 "materials": [
-                  22
+                  20
                 ]
               }
             }
           },
           {
-            "localId": 192,
+            "localId": 268,
             "components": {
               "Name": {
                 "value": "Den_torchPost_6"
@@ -4631,17 +6875,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 193,
+            "localId": 269,
             "components": {
               "Name": {
                 "value": "Den_flame_6"
@@ -4655,17 +6899,17 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
               },
               "MeshRenderer": {
                 "materials": [
-                  22
+                  20
                 ]
               }
             }
           },
           {
-            "localId": 194,
+            "localId": 270,
             "components": {
               "Name": {
                 "value": "Den_torchPost_7"
@@ -4679,17 +6923,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 195,
+            "localId": 271,
             "components": {
               "Name": {
                 "value": "Den_flame_7"
@@ -4703,17 +6947,17 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
               },
               "MeshRenderer": {
                 "materials": [
-                  22
+                  20
                 ]
               }
             }
           },
           {
-            "localId": 196,
+            "localId": 272,
             "components": {
               "Name": {
                 "value": "Den_torchPost_8"
@@ -4727,17 +6971,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 197,
+            "localId": 273,
             "components": {
               "Name": {
                 "value": "Den_flame_8"
@@ -4751,17 +6995,17 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
               },
               "MeshRenderer": {
                 "materials": [
-                  22
+                  20
                 ]
               }
             }
           },
           {
-            "localId": 198,
+            "localId": 274,
             "components": {
               "Name": {
                 "value": "Den_torchPost_9"
@@ -4775,17 +7019,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 199,
+            "localId": 275,
             "components": {
               "Name": {
                 "value": "Den_flame_9"
@@ -4799,17 +7043,17 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
               },
               "MeshRenderer": {
                 "materials": [
-                  22
+                  20
                 ]
               }
             }
           },
           {
-            "localId": 200,
+            "localId": 276,
             "components": {
               "Name": {
                 "value": "Den_torchPost_10"
@@ -4823,17 +7067,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 201,
+            "localId": 277,
             "components": {
               "Name": {
                 "value": "Den_flame_10"
@@ -4847,17 +7091,17 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
               },
               "MeshRenderer": {
                 "materials": [
-                  22
+                  20
                 ]
               }
             }
           },
           {
-            "localId": 202,
+            "localId": 278,
             "components": {
               "Name": {
                 "value": "Den_torchPost_11"
@@ -4871,17 +7115,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 203,
+            "localId": 279,
             "components": {
               "Name": {
                 "value": "Den_flame_11"
@@ -4895,17 +7139,17 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
               },
               "MeshRenderer": {
                 "materials": [
-                  22
+                  20
                 ]
               }
             }
           },
           {
-            "localId": 204,
+            "localId": 280,
             "components": {
               "Name": {
                 "value": "Den_torchPost_12"
@@ -4919,17 +7163,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 205,
+            "localId": 281,
             "components": {
               "Name": {
                 "value": "Den_flame_12"
@@ -4943,17 +7187,17 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
               },
               "MeshRenderer": {
                 "materials": [
-                  22
+                  20
                 ]
               }
             }
           },
           {
-            "localId": 206,
+            "localId": 282,
             "components": {
               "Name": {
                 "value": "Den_torchPost_13"
@@ -4967,17 +7211,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 207,
+            "localId": 283,
             "components": {
               "Name": {
                 "value": "Den_flame_13"
@@ -4991,17 +7235,17 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
               },
               "MeshRenderer": {
                 "materials": [
-                  22
+                  20
                 ]
               }
             }
           },
           {
-            "localId": 208,
+            "localId": 284,
             "components": {
               "Name": {
                 "value": "Den_torchPost_14"
@@ -5015,17 +7259,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 209,
+            "localId": 285,
             "components": {
               "Name": {
                 "value": "Den_flame_14"
@@ -5039,17 +7283,17 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
               },
               "MeshRenderer": {
                 "materials": [
-                  22
+                  20
                 ]
               }
             }
           },
           {
-            "localId": 210,
+            "localId": 286,
             "components": {
               "Name": {
                 "value": "Den_torchPost_15"
@@ -5063,17 +7307,17 @@
                 "scaleZ": 0.14
               },
               "MeshFilter": {
-                "assetHandle": 3
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  21
+                  13
                 ]
               }
             }
           },
           {
-            "localId": 211,
+            "localId": 287,
             "components": {
               "Name": {
                 "value": "Den_flame_15"
@@ -5087,7 +7331,143 @@
                 "scaleZ": 0.26
               },
               "MeshFilter": {
-                "assetHandle": 4
+                "assetHandle": 5
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 288,
+            "components": {
+              "Name": {
+                "value": "Den_bone_1"
+              },
+              "Transform": {
+                "posX": 14.3645,
+                "posY": 0.1208,
+                "posZ": 30.9133,
+                "scaleX": 0.25,
+                "scaleY": 0.25,
+                "scaleZ": 0.25,
+                "quatX": 0,
+                "quatY": 0.198669,
+                "quatZ": 0,
+                "quatW": 0.980067
+              },
+              "MeshFilter": {
+                "assetHandle": 8
+              },
+              "MeshRenderer": {
+                "materials": [
+                  21
+                ]
+              }
+            }
+          },
+          {
+            "localId": 289,
+            "components": {
+              "Name": {
+                "value": "Den_bone_2"
+              },
+              "Transform": {
+                "posX": 14.4645,
+                "posY": 0.0967,
+                "posZ": 31.0633,
+                "scaleX": 0.2,
+                "scaleY": 0.2,
+                "scaleZ": 0.2,
+                "quatX": 0,
+                "quatY": -0.42141,
+                "quatZ": 0,
+                "quatW": 0.90687
+              },
+              "MeshFilter": {
+                "assetHandle": 8
+              },
+              "MeshRenderer": {
+                "materials": [
+                  21
+                ]
+              }
+            }
+          },
+          {
+            "localId": 290,
+            "components": {
+              "Name": {
+                "value": "Den_bone_3"
+              },
+              "Transform": {
+                "posX": 14.5176,
+                "posY": 0.1208,
+                "posZ": 27.0982,
+                "scaleX": 0.25,
+                "scaleY": 0.25,
+                "scaleZ": 0.25,
+                "quatX": 0,
+                "quatY": 0.198669,
+                "quatZ": 0,
+                "quatW": 0.980067
+              },
+              "MeshFilter": {
+                "assetHandle": 8
+              },
+              "MeshRenderer": {
+                "materials": [
+                  21
+                ]
+              }
+            }
+          },
+          {
+            "localId": 291,
+            "components": {
+              "Name": {
+                "value": "Den_bone_4"
+              },
+              "Transform": {
+                "posX": 14.6176,
+                "posY": 0.0967,
+                "posZ": 27.2482,
+                "scaleX": 0.2,
+                "scaleY": 0.2,
+                "scaleZ": 0.2,
+                "quatX": 0,
+                "quatY": -0.42141,
+                "quatZ": 0,
+                "quatW": 0.90687
+              },
+              "MeshFilter": {
+                "assetHandle": 8
+              },
+              "MeshRenderer": {
+                "materials": [
+                  21
+                ]
+              }
+            }
+          },
+          {
+            "localId": 292,
+            "components": {
+              "Name": {
+                "value": "Den_rubble_1"
+              },
+              "Transform": {
+                "posX": 13.8424,
+                "posY": 0.129,
+                "posZ": 31.4432,
+                "scaleX": 0.275,
+                "scaleY": 0.275,
+                "scaleZ": 0.275
+              },
+              "MeshFilter": {
+                "assetHandle": 7
               },
               "MeshRenderer": {
                 "materials": [
@@ -5097,171 +7477,35 @@
             }
           },
           {
-            "localId": 212,
-            "components": {
-              "Name": {
-                "value": "Den_bone_1"
-              },
-              "Transform": {
-                "posX": 14.3645,
-                "posY": 0.07,
-                "posZ": 30.9133,
-                "scaleX": 0.5,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 0,
-                "quatY": 0.198669,
-                "quatZ": 0,
-                "quatW": 0.980067
-              },
-              "MeshFilter": {
-                "assetHandle": 7
-              },
-              "MeshRenderer": {
-                "materials": [
-                  23
-                ]
-              }
-            }
-          },
-          {
-            "localId": 213,
-            "components": {
-              "Name": {
-                "value": "Den_bone_2"
-              },
-              "Transform": {
-                "posX": 14.4645,
-                "posY": 0.07,
-                "posZ": 31.0633,
-                "scaleX": 0.4,
-                "scaleY": 0.1,
-                "scaleZ": 0.12,
-                "quatX": 0,
-                "quatY": -0.42141,
-                "quatZ": 0,
-                "quatW": 0.90687
-              },
-              "MeshFilter": {
-                "assetHandle": 7
-              },
-              "MeshRenderer": {
-                "materials": [
-                  23
-                ]
-              }
-            }
-          },
-          {
-            "localId": 214,
-            "components": {
-              "Name": {
-                "value": "Den_bone_3"
-              },
-              "Transform": {
-                "posX": 14.5176,
-                "posY": 0.07,
-                "posZ": 27.0982,
-                "scaleX": 0.5,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 0,
-                "quatY": 0.198669,
-                "quatZ": 0,
-                "quatW": 0.980067
-              },
-              "MeshFilter": {
-                "assetHandle": 7
-              },
-              "MeshRenderer": {
-                "materials": [
-                  23
-                ]
-              }
-            }
-          },
-          {
-            "localId": 215,
-            "components": {
-              "Name": {
-                "value": "Den_bone_4"
-              },
-              "Transform": {
-                "posX": 14.6176,
-                "posY": 0.07,
-                "posZ": 27.2482,
-                "scaleX": 0.4,
-                "scaleY": 0.1,
-                "scaleZ": 0.12,
-                "quatX": 0,
-                "quatY": -0.42141,
-                "quatZ": 0,
-                "quatW": 0.90687
-              },
-              "MeshFilter": {
-                "assetHandle": 7
-              },
-              "MeshRenderer": {
-                "materials": [
-                  23
-                ]
-              }
-            }
-          },
-          {
-            "localId": 216,
-            "components": {
-              "Name": {
-                "value": "Den_rubble_1"
-              },
-              "Transform": {
-                "posX": 13.8424,
-                "posY": 0.16,
-                "posZ": 31.4432,
-                "scaleX": 0.55,
-                "scaleY": 0.32,
-                "scaleZ": 0.45
-              },
-              "MeshFilter": {
-                "assetHandle": 6
-              },
-              "MeshRenderer": {
-                "materials": [
-                  24
-                ]
-              }
-            }
-          },
-          {
-            "localId": 217,
+            "localId": 293,
             "components": {
               "Name": {
                 "value": "Den_rubble_2"
               },
               "Transform": {
                 "posX": 14.1924,
-                "posY": 0.1,
+                "posY": 0.0704,
                 "posZ": 31.6432,
-                "scaleX": 0.3,
-                "scaleY": 0.2,
-                "scaleZ": 0.3,
+                "scaleX": 0.15,
+                "scaleY": 0.15,
+                "scaleZ": 0.15,
                 "quatX": 0,
                 "quatY": 0.309816,
                 "quatZ": 0,
                 "quatW": 0.950796
               },
               "MeshFilter": {
-                "assetHandle": 6
+                "assetHandle": 7
               },
               "MeshRenderer": {
                 "materials": [
-                  24
+                  22
                 ]
               }
             }
           },
           {
-            "localId": 218,
+            "localId": 294,
             "components": {
               "Name": {
                 "value": "Den_slag_1"
@@ -5279,181 +7523,181 @@
                 "quatW": 0.997991
               },
               "MeshFilter": {
-                "assetHandle": 8
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  25
+                  18
                 ]
               }
             }
           },
           {
-            "localId": 219,
+            "localId": 295,
             "components": {
               "Name": {
                 "value": "Den_rubble_3"
               },
               "Transform": {
                 "posX": -14.8266,
-                "posY": 0.16,
+                "posY": 0.129,
                 "posZ": -16.895,
-                "scaleX": 0.55,
-                "scaleY": 0.32,
-                "scaleZ": 0.45
+                "scaleX": 0.275,
+                "scaleY": 0.275,
+                "scaleZ": 0.275
               },
               "MeshFilter": {
-                "assetHandle": 6
+                "assetHandle": 7
               },
               "MeshRenderer": {
                 "materials": [
-                  24
+                  22
                 ]
               }
             }
           },
           {
-            "localId": 220,
+            "localId": 296,
             "components": {
               "Name": {
                 "value": "Den_rubble_4"
               },
               "Transform": {
                 "posX": -14.4766,
-                "posY": 0.1,
+                "posY": 0.0704,
                 "posZ": -16.695,
-                "scaleX": 0.3,
-                "scaleY": 0.2,
-                "scaleZ": 0.3,
+                "scaleX": 0.15,
+                "scaleY": 0.15,
+                "scaleZ": 0.15,
                 "quatX": 0,
                 "quatY": 0.309816,
                 "quatZ": 0,
                 "quatW": 0.950796
               },
               "MeshFilter": {
-                "assetHandle": 6
+                "assetHandle": 7
               },
               "MeshRenderer": {
                 "materials": [
-                  24
+                  22
                 ]
               }
             }
           },
           {
-            "localId": 221,
+            "localId": 297,
             "components": {
               "Name": {
                 "value": "Den_bone_5"
               },
               "Transform": {
                 "posX": 30.7075,
-                "posY": 0.07,
+                "posY": 0.1208,
                 "posZ": -42.7082,
-                "scaleX": 0.5,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
+                "scaleX": 0.25,
+                "scaleY": 0.25,
+                "scaleZ": 0.25,
                 "quatX": 0,
                 "quatY": 0.198669,
                 "quatZ": 0,
                 "quatW": 0.980067
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  23
+                  21
                 ]
               }
             }
           },
           {
-            "localId": 222,
+            "localId": 298,
             "components": {
               "Name": {
                 "value": "Den_bone_6"
               },
               "Transform": {
                 "posX": 30.8075,
-                "posY": 0.07,
+                "posY": 0.0967,
                 "posZ": -42.5582,
-                "scaleX": 0.4,
-                "scaleY": 0.1,
-                "scaleZ": 0.12,
+                "scaleX": 0.2,
+                "scaleY": 0.2,
+                "scaleZ": 0.2,
                 "quatX": 0,
                 "quatY": -0.42141,
                 "quatZ": 0,
                 "quatW": 0.90687
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  23
+                  21
                 ]
               }
             }
           },
           {
-            "localId": 223,
+            "localId": 299,
             "components": {
               "Name": {
                 "value": "Den_bone_7"
               },
               "Transform": {
                 "posX": -36.5135,
-                "posY": 0.07,
+                "posY": 0.1208,
                 "posZ": 11.306,
-                "scaleX": 0.5,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
+                "scaleX": 0.25,
+                "scaleY": 0.25,
+                "scaleZ": 0.25,
                 "quatX": 0,
                 "quatY": 0.198669,
                 "quatZ": 0,
                 "quatW": 0.980067
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  23
+                  21
                 ]
               }
             }
           },
           {
-            "localId": 224,
+            "localId": 300,
             "components": {
               "Name": {
                 "value": "Den_bone_8"
               },
               "Transform": {
                 "posX": -36.4135,
-                "posY": 0.07,
+                "posY": 0.0967,
                 "posZ": 11.456,
-                "scaleX": 0.4,
-                "scaleY": 0.1,
-                "scaleZ": 0.12,
+                "scaleX": 0.2,
+                "scaleY": 0.2,
+                "scaleZ": 0.2,
                 "quatX": 0,
                 "quatY": -0.42141,
                 "quatZ": 0,
                 "quatW": 0.90687
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  23
+                  21
                 ]
               }
             }
           },
           {
-            "localId": 225,
+            "localId": 301,
             "components": {
               "Name": {
                 "value": "Den_slag_2"
@@ -5471,233 +7715,233 @@
                 "quatW": 0.962316
               },
               "MeshFilter": {
-                "assetHandle": 8
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  25
+                  18
                 ]
               }
             }
           },
           {
-            "localId": 226,
+            "localId": 302,
             "components": {
               "Name": {
                 "value": "Den_rubble_5"
               },
               "Transform": {
                 "posX": -33.1508,
-                "posY": 0.16,
+                "posY": 0.129,
                 "posZ": 9.7058,
-                "scaleX": 0.55,
-                "scaleY": 0.32,
-                "scaleZ": 0.45
+                "scaleX": 0.275,
+                "scaleY": 0.275,
+                "scaleZ": 0.275
               },
               "MeshFilter": {
-                "assetHandle": 6
+                "assetHandle": 7
               },
               "MeshRenderer": {
                 "materials": [
-                  24
+                  22
                 ]
               }
             }
           },
           {
-            "localId": 227,
+            "localId": 303,
             "components": {
               "Name": {
                 "value": "Den_rubble_6"
               },
               "Transform": {
                 "posX": -32.8008,
-                "posY": 0.1,
+                "posY": 0.0704,
                 "posZ": 9.9058,
-                "scaleX": 0.3,
-                "scaleY": 0.2,
-                "scaleZ": 0.3,
+                "scaleX": 0.15,
+                "scaleY": 0.15,
+                "scaleZ": 0.15,
                 "quatX": 0,
                 "quatY": 0.309816,
                 "quatZ": 0,
                 "quatW": 0.950796
               },
               "MeshFilter": {
-                "assetHandle": 6
+                "assetHandle": 7
               },
               "MeshRenderer": {
                 "materials": [
-                  24
+                  22
                 ]
               }
             }
           },
           {
-            "localId": 228,
+            "localId": 304,
             "components": {
               "Name": {
                 "value": "Den_bone_9"
               },
               "Transform": {
                 "posX": 19.4626,
-                "posY": 0.07,
+                "posY": 0.1208,
                 "posZ": 4.2237,
-                "scaleX": 0.5,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
+                "scaleX": 0.25,
+                "scaleY": 0.25,
+                "scaleZ": 0.25,
                 "quatX": 0,
                 "quatY": 0.198669,
                 "quatZ": 0,
                 "quatW": 0.980067
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  23
+                  21
                 ]
               }
             }
           },
           {
-            "localId": 229,
+            "localId": 305,
             "components": {
               "Name": {
                 "value": "Den_bone_10"
               },
               "Transform": {
                 "posX": 19.5626,
-                "posY": 0.07,
+                "posY": 0.0967,
                 "posZ": 4.3737,
-                "scaleX": 0.4,
-                "scaleY": 0.1,
-                "scaleZ": 0.12,
+                "scaleX": 0.2,
+                "scaleY": 0.2,
+                "scaleZ": 0.2,
                 "quatX": 0,
                 "quatY": -0.42141,
                 "quatZ": 0,
                 "quatW": 0.90687
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  23
+                  21
                 ]
               }
             }
           },
           {
-            "localId": 230,
+            "localId": 306,
             "components": {
               "Name": {
                 "value": "Den_rubble_7"
               },
               "Transform": {
                 "posX": 14.8801,
-                "posY": 0.16,
+                "posY": 0.129,
                 "posZ": 2.1851,
-                "scaleX": 0.55,
-                "scaleY": 0.32,
-                "scaleZ": 0.45
+                "scaleX": 0.275,
+                "scaleY": 0.275,
+                "scaleZ": 0.275
               },
               "MeshFilter": {
-                "assetHandle": 6
+                "assetHandle": 7
               },
               "MeshRenderer": {
                 "materials": [
-                  24
+                  22
                 ]
               }
             }
           },
           {
-            "localId": 231,
+            "localId": 307,
             "components": {
               "Name": {
                 "value": "Den_rubble_8"
               },
               "Transform": {
                 "posX": 15.2301,
-                "posY": 0.1,
+                "posY": 0.0704,
                 "posZ": 2.3851,
-                "scaleX": 0.3,
-                "scaleY": 0.2,
-                "scaleZ": 0.3,
+                "scaleX": 0.15,
+                "scaleY": 0.15,
+                "scaleZ": 0.15,
                 "quatX": 0,
                 "quatY": 0.309816,
                 "quatZ": 0,
                 "quatW": 0.950796
               },
               "MeshFilter": {
-                "assetHandle": 6
+                "assetHandle": 7
               },
               "MeshRenderer": {
                 "materials": [
-                  24
+                  22
                 ]
               }
             }
           },
           {
-            "localId": 232,
+            "localId": 308,
             "components": {
               "Name": {
                 "value": "Den_bone_11"
               },
               "Transform": {
                 "posX": 16.6167,
-                "posY": 0.07,
+                "posY": 0.1208,
                 "posZ": -13.7387,
-                "scaleX": 0.5,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
+                "scaleX": 0.25,
+                "scaleY": 0.25,
+                "scaleZ": 0.25,
                 "quatX": 0,
                 "quatY": 0.198669,
                 "quatZ": 0,
                 "quatW": 0.980067
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  23
+                  21
                 ]
               }
             }
           },
           {
-            "localId": 233,
+            "localId": 309,
             "components": {
               "Name": {
                 "value": "Den_bone_12"
               },
               "Transform": {
                 "posX": 16.7167,
-                "posY": 0.07,
+                "posY": 0.0967,
                 "posZ": -13.5887,
-                "scaleX": 0.4,
-                "scaleY": 0.1,
-                "scaleZ": 0.12,
+                "scaleX": 0.2,
+                "scaleY": 0.2,
+                "scaleZ": 0.2,
                 "quatX": 0,
                 "quatY": -0.42141,
                 "quatZ": 0,
                 "quatW": 0.90687
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  23
+                  21
                 ]
               }
             }
           },
           {
-            "localId": 234,
+            "localId": 310,
             "components": {
               "Name": {
                 "value": "Den_slag_3"
@@ -5715,17 +7959,17 @@
                 "quatW": 0.975239
               },
               "MeshFilter": {
-                "assetHandle": 8
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  25
+                  18
                 ]
               }
             }
           },
           {
-            "localId": 235,
+            "localId": 311,
             "components": {
               "Name": {
                 "value": "Den_slag_4"
@@ -5743,69 +7987,69 @@
                 "quatW": 0.978943
               },
               "MeshFilter": {
-                "assetHandle": 8
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  25
+                  18
                 ]
               }
             }
           },
           {
-            "localId": 236,
+            "localId": 312,
             "components": {
               "Name": {
                 "value": "Den_rubble_9"
               },
               "Transform": {
                 "posX": -38.4567,
-                "posY": 0.16,
+                "posY": 0.129,
                 "posZ": -19.8295,
-                "scaleX": 0.55,
-                "scaleY": 0.32,
-                "scaleZ": 0.45
+                "scaleX": 0.275,
+                "scaleY": 0.275,
+                "scaleZ": 0.275
               },
               "MeshFilter": {
-                "assetHandle": 6
+                "assetHandle": 7
               },
               "MeshRenderer": {
                 "materials": [
-                  24
+                  22
                 ]
               }
             }
           },
           {
-            "localId": 237,
+            "localId": 313,
             "components": {
               "Name": {
                 "value": "Den_rubble_10"
               },
               "Transform": {
                 "posX": -38.1067,
-                "posY": 0.1,
+                "posY": 0.0704,
                 "posZ": -19.6295,
-                "scaleX": 0.3,
-                "scaleY": 0.2,
-                "scaleZ": 0.3,
+                "scaleX": 0.15,
+                "scaleY": 0.15,
+                "scaleZ": 0.15,
                 "quatX": 0,
                 "quatY": 0.309816,
                 "quatZ": 0,
                 "quatW": 0.950796
               },
               "MeshFilter": {
-                "assetHandle": 6
+                "assetHandle": 7
               },
               "MeshRenderer": {
                 "materials": [
-                  24
+                  22
                 ]
               }
             }
           },
           {
-            "localId": 238,
+            "localId": 314,
             "components": {
               "Name": {
                 "value": "Den_slag_5"
@@ -5823,73 +8067,73 @@
                 "quatW": 0.99662
               },
               "MeshFilter": {
-                "assetHandle": 8
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  25
+                  18
                 ]
               }
             }
           },
           {
-            "localId": 239,
+            "localId": 315,
             "components": {
               "Name": {
                 "value": "Den_bone_13"
               },
               "Transform": {
                 "posX": -24.5438,
-                "posY": 0.07,
+                "posY": 0.1208,
                 "posZ": -40.6889,
-                "scaleX": 0.5,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
+                "scaleX": 0.25,
+                "scaleY": 0.25,
+                "scaleZ": 0.25,
                 "quatX": 0,
                 "quatY": 0.198669,
                 "quatZ": 0,
                 "quatW": 0.980067
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  23
+                  21
                 ]
               }
             }
           },
           {
-            "localId": 240,
+            "localId": 316,
             "components": {
               "Name": {
                 "value": "Den_bone_14"
               },
               "Transform": {
                 "posX": -24.4438,
-                "posY": 0.07,
+                "posY": 0.0967,
                 "posZ": -40.5389,
-                "scaleX": 0.4,
-                "scaleY": 0.1,
-                "scaleZ": 0.12,
+                "scaleX": 0.2,
+                "scaleY": 0.2,
+                "scaleZ": 0.2,
                 "quatX": 0,
                 "quatY": -0.42141,
                 "quatZ": 0,
                 "quatW": 0.90687
               },
               "MeshFilter": {
-                "assetHandle": 7
+                "assetHandle": 8
               },
               "MeshRenderer": {
                 "materials": [
-                  23
+                  21
                 ]
               }
             }
           },
           {
-            "localId": 241,
+            "localId": 317,
             "components": {
               "Name": {
                 "value": "Den_slag_6"
@@ -5907,17 +8151,17 @@
                 "quatW": 0.971016
               },
               "MeshFilter": {
-                "assetHandle": 8
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  25
+                  18
                 ]
               }
             }
           },
           {
-            "localId": 242,
+            "localId": 318,
             "components": {
               "Name": {
                 "value": "Den_brazier_1"
@@ -5926,22 +8170,22 @@
                 "posX": -24.6,
                 "posY": 0.35,
                 "posZ": -43.8,
-                "scaleX": 0.7,
-                "scaleY": 0.7,
-                "scaleZ": 0.7
+                "scaleX": 0.35,
+                "scaleY": 0.35,
+                "scaleZ": 0.35
               },
               "MeshFilter": {
-                "assetHandle": 5
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  26
+                  23
                 ]
               }
             }
           },
           {
-            "localId": 243,
+            "localId": 319,
             "components": {
               "Name": {
                 "value": "Den_brazier_2"
@@ -5950,16 +8194,16 @@
                 "posX": -18.6,
                 "posY": 0.35,
                 "posZ": -37.8,
-                "scaleX": 0.7,
-                "scaleY": 0.7,
-                "scaleZ": 0.7
+                "scaleX": 0.35,
+                "scaleY": 0.35,
+                "scaleZ": 0.35
               },
               "MeshFilter": {
-                "assetHandle": 5
+                "assetHandle": 6
               },
               "MeshRenderer": {
                 "materials": [
-                  26
+                  23
                 ]
               }
             }
@@ -5967,6 +8211,7 @@
         ]
       },
       "refs": [
+        "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
         "2f83ed60-49e8-6d83-5704-af5a37aa4af1",
         "ad822e67-fb7f-4787-d754-2b1cd0704754",
         "d86fb0f3-c38b-8ff8-df5e-a3888bd7cac7",
@@ -5985,14 +8230,10 @@
         "e83a1d59-9f62-4a14-87c3-2b0e6d8f41d7",
         "60d7f2c4-3a85-4c96-9e07-8c4b1e5a72e8",
         "b52e8a07-4d93-4e60-a3f9-1a6d0c9b53f9",
-        "1891529a-ca02-d23d-d03d-193eade880c3",
-        "ab12495d-f18a-d2e3-2535-8123fd7ea21b",
         "9b182198-07a5-f1d1-bee9-83a6972ce71d",
-        "c31f3f58-3239-ff17-f84b-4857a65b9702",
         "e0c5bdf2-3ff6-60db-12a5-38bfc628134c",
         "f324df8f-fc78-df6e-1176-8f0cb7a6a400",
         "5022f423-bff2-08df-1744-574acebb7035",
-        "31bd7990-9af5-7b87-5d71-cb5a6bea3ad4",
         "c4d3f170-2b55-827e-6a82-d3a6f582bddc"
       ]
     },

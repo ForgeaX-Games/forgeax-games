@@ -1,0 +1,3212 @@
+{
+  "version": 1,
+  "activeId": "nodia-main",
+  "items": [
+    {
+      "id": "nodia-main",
+      "title": "战斗蓝图",
+      "scenario": {
+        "id": "nodia-main",
+        "title": "战斗蓝图",
+        "synopsis": "回合制循环（待机 / 演出 / 结算）：进战待机 → 出手判断 → 先手出手 → 后手出手 → 回合结束 → 胜负。",
+        "originIdea": "从新影游平台交互原型迁移的层级战斗蓝图 demo。",
+        "rootSceneId": "n_open",
+        "defaultCharMs": 32,
+        "schemaVersion": 10,
+        "modules": {
+          "gameplay": true,
+          "rules": true
+        },
+        "variables": {
+          "qi": {
+            "id": "qi",
+            "name": "气力",
+            "kind": "number",
+            "initial": 0,
+            "min": 0,
+            "max": 5
+          },
+          "lizhi": {
+            "id": "lizhi",
+            "name": "理智",
+            "kind": "number",
+            "initial": 5,
+            "min": 0,
+            "max": 12
+          },
+          "foxing": {
+            "id": "foxing",
+            "name": "佛性",
+            "kind": "number",
+            "initial": 10,
+            "min": 0,
+            "max": 12
+          },
+          "yezhang": {
+            "id": "yezhang",
+            "name": "业障",
+            "kind": "number",
+            "initial": 1,
+            "min": 0,
+            "max": 12
+          },
+          "chi": {
+            "id": "chi",
+            "name": "痴",
+            "kind": "number",
+            "initial": 1,
+            "min": 0,
+            "max": 12
+          },
+          "guihuo": {
+            "id": "guihuo",
+            "name": "鬼火种",
+            "kind": "number",
+            "initial": 0,
+            "min": 0
+          },
+          "lotusClue": {
+            "id": "lotusClue",
+            "name": "莲花妖线索",
+            "kind": "flag",
+            "initial": 0
+          }
+        },
+        "entities": {
+          "ent-player": {
+            "id": "ent-player",
+            "name": "空藏",
+            "kind": "player",
+            "maxHp": 300,
+            "initialHp": 300
+          },
+          "ent-boss": {
+            "id": "ent-boss",
+            "name": "小怪",
+            "kind": "boss",
+            "maxHp": 700,
+            "initialHp": 700
+          }
+        },
+        "ui": {
+          "hud": [
+            {
+              "element": "playerHp",
+              "show": "always"
+            },
+            {
+              "element": "bossHp",
+              "show": "always"
+            },
+            {
+              "element": "score",
+              "show": "always"
+            }
+          ]
+        },
+        "characters": {},
+        "locations": {},
+        "ext": {
+          "combatRules": {
+            "playerAttack": 80,
+            "playerDefense": 40,
+            "playerCritRate": 10,
+            "playerSpeed": 30,
+            "bossAttack": 75,
+            "bossDefense": 50,
+            "bossCritRate": 8,
+            "bossAggression": 0.5,
+            "bossSpeed": 25
+          }
+        },
+        "scenes": {
+          "enter": {
+            "id": "enter",
+            "title": "进战待机",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 8080,
+            "pos": {
+              "x": 80,
+              "y": 220
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "enter-init",
+                "kind": "auto",
+                "targetSceneId": "init",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "mediaPlayMode": "loop",
+            "background": "承接 L3 决战单挑调用（输入小怪·无常豺）：镜头切入战场，主将与小怪列阵对峙、亮明双方血量 / 技能，进入回合制战斗的待机 loop。",
+            "clipId": "vd-wcc-idle",
+            "episodeId": "ep-default"
+          },
+          "init": {
+            "id": "init",
+            "title": "出手判断",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 600,
+            "pos": {
+              "x": 300,
+              "y": 220
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "init-me",
+                "kind": "auto",
+                "targetSceneId": "a_my",
+                "label": "我方先手"
+              },
+              {
+                "id": "init-foe",
+                "kind": "auto",
+                "targetSceneId": "b_ai",
+                "label": "敌方先手"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "出手判断",
+            "background": "每回合开始，比较双方「出手速度」做隐藏计算判定本回合先攻方（速度大者先手，相等则空藏先手；无界面选项）。",
+            "episodeId": "ep-default"
+          },
+          "a_my": {
+            "id": "a_my",
+            "title": "我方回合",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 3200,
+            "pos": {
+              "x": 520,
+              "y": 120
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "a-my-check",
+                "kind": "auto",
+                "targetSceneId": "a_chk",
+                "label": "行动完毕"
+              }
+            ],
+            "hudPreset": "battle",
+            "subFlowRef": "g-cb-my",
+            "background": "我方先手出手：进入战斗待机 loop，弹出战斗界面；空藏选技能后做技能表演与数值计算，更新双方血量 / 状态。",
+            "episodeId": "ep-default"
+          },
+          "b_ai": {
+            "id": "b_ai",
+            "title": "敌方回合",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 3200,
+            "pos": {
+              "x": 520,
+              "y": 340
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "b-ai-check",
+                "kind": "auto",
+                "targetSceneId": "b_chk",
+                "label": "行动完毕"
+              }
+            ],
+            "hudPreset": "battle",
+            "subFlowRef": "g-cb-ai",
+            "background": "敌方先手出手：敌将按自身行为树评估局势、决策行动（进攻 / 技能 / 防御蓄力），执行演出并做数值结算。",
+            "episodeId": "ep-default"
+          },
+          "a_chk": {
+            "id": "a_chk",
+            "title": "血量判定",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 600,
+            "pos": {
+              "x": 760,
+              "y": 120
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "a-check-ai",
+                "kind": "auto",
+                "targetSceneId": "a_ai",
+                "label": "敌方出手",
+                "condition": {
+                  "all": [
+                    {
+                      "type": "hpRatio",
+                      "entityId": "ent-boss",
+                      "op": "gt",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "a-check-over",
+                "kind": "auto",
+                "targetSceneId": "settle",
+                "label": "分出胜负"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "血量判定",
+            "background": "我方（先手）行动后隐藏计算双方血量：敌方血量清空则本回合直接分出胜负；否则进入敌方出手（本回合后手）。",
+            "episodeId": "ep-default"
+          },
+          "b_chk": {
+            "id": "b_chk",
+            "title": "血量判定",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 600,
+            "pos": {
+              "x": 760,
+              "y": 340
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "b-check-my",
+                "kind": "auto",
+                "targetSceneId": "b_my",
+                "label": "我方出手",
+                "condition": {
+                  "all": [
+                    {
+                      "type": "hpRatio",
+                      "entityId": "ent-player",
+                      "op": "gt",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "b-check-over",
+                "kind": "auto",
+                "targetSceneId": "settle",
+                "label": "分出胜负"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "血量判定",
+            "background": "敌方（先手）行动后隐藏计算双方血量：我方血量清空则本回合直接分出胜负；否则进入我方出手（本回合后手）。",
+            "episodeId": "ep-default"
+          },
+          "a_ai": {
+            "id": "a_ai",
+            "title": "敌方回合",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 3200,
+            "pos": {
+              "x": 980,
+              "y": 120
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "a-ai-round",
+                "kind": "auto",
+                "targetSceneId": "round",
+                "label": "行动完毕"
+              }
+            ],
+            "hudPreset": "battle",
+            "subFlowRef": "g-cb-ai",
+            "background": "本回合后手：敌将按行为树决策并执行行动、做数值结算，更新双方血量 / 状态——至此本回合双方均已出手。",
+            "episodeId": "ep-default"
+          },
+          "b_my": {
+            "id": "b_my",
+            "title": "我方回合",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 3200,
+            "pos": {
+              "x": 980,
+              "y": 340
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "b-my-round",
+                "kind": "auto",
+                "targetSceneId": "round",
+                "label": "行动完毕"
+              }
+            ],
+            "hudPreset": "battle",
+            "subFlowRef": "g-cb-my",
+            "background": "本回合后手：我方进入战斗待机 loop、选技能并做技能表演与数值结算，更新双方血量 / 状态——至此本回合双方均已出手。",
+            "episodeId": "ep-default"
+          },
+          "round": {
+            "id": "round",
+            "title": "回合结束判定",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 600,
+            "pos": {
+              "x": 1220,
+              "y": 220
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "round-next",
+                "kind": "auto",
+                "targetSceneId": "init",
+                "label": "下一回合",
+                "condition": {
+                  "all": [
+                    {
+                      "type": "hpRatio",
+                      "entityId": "ent-player",
+                      "op": "gt",
+                      "value": 0
+                    },
+                    {
+                      "type": "hpRatio",
+                      "entityId": "ent-boss",
+                      "op": "gt",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "round-over",
+                "kind": "auto",
+                "targetSceneId": "settle",
+                "label": "分出胜负"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "回合结束判定",
+            "background": "本回合双方均已出手，隐藏计算双方血量：任一方血量清空则战斗结束、进入胜负判定；否则进入下一回合、重新做出手判断。",
+            "episodeId": "ep-default"
+          },
+          "settle": {
+            "id": "settle",
+            "title": "胜负判定",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 600,
+            "pos": {
+              "x": 1440,
+              "y": 220
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "settle-win",
+                "kind": "auto",
+                "targetSceneId": "win",
+                "label": "胜利",
+                "condition": {
+                  "all": [
+                    {
+                      "type": "hpRatio",
+                      "entityId": "ent-boss",
+                      "op": "lte",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "settle-lose",
+                "kind": "auto",
+                "targetSceneId": "lose",
+                "label": "失败"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "胜负判定",
+            "background": "一方血量清空，战斗结束：隐藏计算比较双方存活——敌将（无常豺）倒下则我方胜利、主将倒下则我方失败。",
+            "episodeId": "ep-default"
+          },
+          "win": {
+            "id": "win",
+            "title": "战斗胜利",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 10000,
+            "pos": {
+              "x": 1660,
+              "y": 120
+            },
+            "dialogue": [],
+            "branches": [],
+            "hudPreset": "hidden",
+            "background": "我方胜利：空藏力克敌将、傲立胜场的得胜演出（敌将无常豺力竭溃灭），结果（胜利）回传叙事 L3 → E1。",
+            "clipId": "vd-wcc-shengli",
+            "episodeId": "ep-default"
+          },
+          "lose": {
+            "id": "lose",
+            "title": "战斗失败",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 6000,
+            "pos": {
+              "x": 1660,
+              "y": 340
+            },
+            "dialogue": [],
+            "branches": [],
+            "hudPreset": "hidden",
+            "background": "我方失败：空藏力竭不支、颓然倒地的败亡演出（敌将无常豺得胜），结果（失败）回传叙事 L3 → E2。",
+            "clipId": "vd-wcc-shibai",
+            "episodeId": "ep-default"
+          },
+          "wait": {
+            "id": "wait",
+            "title": "战斗待机",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 8000,
+            "pos": {
+              "x": 60,
+              "y": 490
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "my-s1",
+                "kind": "choice",
+                "targetSceneId": "pjudge",
+                "label": "轻攻击",
+                "effects": [
+                  {
+                    "id": "my-s1-qi",
+                    "kind": "var",
+                    "varId": "qi",
+                    "op": "add",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "id": "my-s2",
+                "kind": "choice",
+                "targetSceneId": "zjudge",
+                "label": "重攻击",
+                "condition": {
+                  "all": [
+                    {
+                      "type": "var",
+                      "varId": "qi",
+                      "op": "gte",
+                      "value": 2
+                    }
+                  ]
+                },
+                "gateMode": "lock",
+                "effects": [
+                  {
+                    "id": "my-s2-qi",
+                    "kind": "var",
+                    "varId": "qi",
+                    "op": "add",
+                    "value": -2
+                  }
+                ]
+              },
+              {
+                "id": "my-s3",
+                "kind": "choice",
+                "targetSceneId": "fuzhu",
+                "label": "冥想"
+              },
+              {
+                "id": "my-ult",
+                "kind": "choice",
+                "targetSceneId": "ult",
+                "label": "灭世",
+                "condition": {
+                  "all": [
+                    {
+                      "type": "var",
+                      "varId": "qi",
+                      "op": "gte",
+                      "value": 5
+                    }
+                  ]
+                },
+                "gateMode": "lock",
+                "effects": [
+                  {
+                    "id": "my-ult-qi",
+                    "kind": "var",
+                    "varId": "qi",
+                    "op": "set",
+                    "value": 0
+                  }
+                ]
+              }
+            ],
+            "hudPreset": "battle",
+            "mediaPlayMode": "loop",
+            "kind": "choice",
+            "decision": {
+              "optType": "static",
+              "prompt": "选择技能",
+              "windowStartMs": 1000,
+              "fireAt": "on_pick"
+            },
+            "ext": {
+              "choiceUi": "battleSkillBar"
+            },
+            "background": "我方回合待机循环（idle）：弹出战斗界面，呈现 4 个技能（轻攻击 / 重攻击 / 冥想 / 灭世），按当前气力 / 冷却可用性灰显不可选项，等待空藏选择（防反不在此选择，改由敌方进攻时的「防反」反应触发）。",
+            "clipId": "vd-wcc-idle",
+            "episodeId": "ep-default"
+          },
+          "pjudge": {
+            "id": "pjudge",
+            "title": "变招判定",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 500,
+            "pos": {
+              "x": 380,
+              "y": 130
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "pjudge-plain",
+                "kind": "auto",
+                "targetSceneId": "pu",
+                "label": "轻攻击"
+              },
+              {
+                "id": "pjudge-combo",
+                "kind": "auto",
+                "targetSceneId": "pu2",
+                "label": "变招"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "变招判定",
+            "background": "选定轻攻击后、出手前先做隐藏计算（50% 概率，无界面选项）：本次轻击究竟以「轻攻击」还是「轻攻击·变招」打出。",
+            "episodeId": "ep-default"
+          },
+          "pu": {
+            "id": "pu",
+            "title": "轻攻击",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 5000,
+            "pos": {
+              "x": 700,
+              "y": 40
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "pu-done",
+                "kind": "auto",
+                "targetSceneId": "my-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "轻攻击",
+            "background": "变招判定为普通：欺身前扑挥击，命中迸出爪痕 / 刀痕与受击顿帧（威力1.0·命中100%·不可破防）。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "pu-hit",
+                  "atMs": 1000,
+                  "label": "命中结算 威力1.0",
+                  "effects": [
+                    {
+                      "id": "pu-hit-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -80
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-pugong",
+            "episodeId": "ep-default"
+          },
+          "pu2": {
+            "id": "pu2",
+            "title": "轻攻击·变招",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 5000,
+            "pos": {
+              "x": 700,
+              "y": 220
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "pu2-done",
+                "kind": "auto",
+                "targetSceneId": "my-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "轻攻击·变招",
+            "background": "变招判定触发：本次以轻攻击变招（反手补击 / 连段）打出，沿演出分 4 次逐次递增结算（威力 0.25 → 0.3 → 0.35 → 0.4）。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "pu2-1",
+                  "atMs": 600,
+                  "label": "第1段 威力0.25",
+                  "effects": [
+                    {
+                      "id": "pu2-1-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -20
+                    }
+                  ]
+                },
+                {
+                  "id": "pu2-2",
+                  "atMs": 800,
+                  "label": "第2段 威力0.3",
+                  "effects": [
+                    {
+                      "id": "pu2-2-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -24
+                    }
+                  ]
+                },
+                {
+                  "id": "pu2-3",
+                  "atMs": 1300,
+                  "label": "第3段 威力0.35",
+                  "effects": [
+                    {
+                      "id": "pu2-3-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -28
+                    }
+                  ]
+                },
+                {
+                  "id": "pu2-4",
+                  "atMs": 1800,
+                  "label": "第4段 威力0.4",
+                  "effects": [
+                    {
+                      "id": "pu2-4-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -32
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-pugong2",
+            "episodeId": "ep-default"
+          },
+          "zjudge": {
+            "id": "zjudge",
+            "title": "变招判定",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 500,
+            "pos": {
+              "x": 380,
+              "y": 490
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "zjudge-plain",
+                "kind": "auto",
+                "targetSceneId": "zhong",
+                "label": "重攻击"
+              },
+              {
+                "id": "zjudge-combo",
+                "kind": "auto",
+                "targetSceneId": "z2",
+                "label": "变招"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "变招判定",
+            "background": "选定重攻击（已扣气力2）后、出手前先做隐藏计算（50% 概率，无界面选项）：本次重击究竟以「重攻击」还是「重攻击·变招」打出。",
+            "episodeId": "ep-default"
+          },
+          "zhong": {
+            "id": "zhong",
+            "title": "重攻击",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 6000,
+            "pos": {
+              "x": 700,
+              "y": 400
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "zhong-done",
+                "kind": "auto",
+                "targetSceneId": "my-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "重攻击",
+            "background": "变招判定为普通：蓄力后一记沉重扑砸 / 重劈，单组大字伤害弹出（威力1.8·命中95%·暴击+5%·破防）。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "zhong-hit",
+                  "atMs": 1700,
+                  "label": "命中结算 威力1.8",
+                  "effects": [
+                    {
+                      "id": "zhong-hit-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -144
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-zhong",
+            "episodeId": "ep-default"
+          },
+          "z2": {
+            "id": "z2",
+            "title": "重攻击·变招",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 6000,
+            "pos": {
+              "x": 700,
+              "y": 580
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "z2-done",
+                "kind": "auto",
+                "targetSceneId": "my-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "重攻击·变招",
+            "background": "变招判定触发：本次以重击变招（延迟 / 二段变化）打出，沿演出分 2 次逐次递增结算（威力 1.0 → 1.4）。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "z2-1",
+                  "atMs": 2500,
+                  "label": "第1段 威力1.0",
+                  "effects": [
+                    {
+                      "id": "z2-1-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -80
+                    }
+                  ]
+                },
+                {
+                  "id": "z2-2",
+                  "atMs": 3700,
+                  "label": "第2段 威力1.4",
+                  "effects": [
+                    {
+                      "id": "z2-2-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -112
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-zhong2",
+            "episodeId": "ep-default"
+          },
+          "fuzhu": {
+            "id": "fuzhu",
+            "title": "冥想",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 5000,
+            "pos": {
+              "x": 700,
+              "y": 760
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "fuzhu-done",
+                "kind": "auto",
+                "targetSceneId": "my-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "冥想",
+            "background": "空藏冥想调息：回复气力+2、回血 30、解除异常状态（不造成伤害），用后进入 3 回合冷却。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "fuzhu-heal",
+                  "atMs": 2000,
+                  "label": "回气回血结算",
+                  "effects": [
+                    {
+                      "id": "fuzhu-qi",
+                      "kind": "var",
+                      "varId": "qi",
+                      "op": "add",
+                      "value": 2
+                    },
+                    {
+                      "id": "fuzhu-heal-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-player",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": 30
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-huiqi",
+            "episodeId": "ep-default"
+          },
+          "ult": {
+            "id": "ult",
+            "title": "灭世",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 12000,
+            "pos": {
+              "x": 700,
+              "y": 940
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "ult-done",
+                "kind": "auto",
+                "targetSceneId": "my-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "灭世",
+            "background": "气力满（5）方可释放，释放清空气力；招牌绝技长前摇蓄力后全力爆发（威力3.0·命中100%）。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "ult-hit",
+                  "atMs": 7000,
+                  "label": "命中结算 威力3.0",
+                  "effects": [
+                    {
+                      "id": "ult-hit-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -240
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-dazhao",
+            "episodeId": "ep-default"
+          },
+          "my-done": {
+            "id": "my-done",
+            "title": "行动完毕",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 500,
+            "pos": {
+              "x": 1020,
+              "y": 490
+            },
+            "dialogue": [],
+            "branches": [],
+            "hudPreset": "battle",
+            "background": "我方行动结算完成，交还战斗主循环（进入血量判定）。",
+            "episodeId": "ep-default"
+          },
+          "bt": {
+            "id": "bt",
+            "title": "行为树决策",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 500,
+            "pos": {
+              "x": 80,
+              "y": 1380
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "ai-atk",
+                "kind": "auto",
+                "targetSceneId": "tele",
+                "label": "进攻"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "行为树决策",
+            "background": "敌将行为树读取双方血量 / 状态做隐藏计算评估，本回合发起进攻（无界面选项）：进入攻击前摇预警，随后由空藏在前摇窗口做「防反」QTE 决定结果。",
+            "episodeId": "ep-default"
+          },
+          "tele": {
+            "id": "tele",
+            "title": "攻击前摇",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 4000,
+            "pos": {
+              "x": 320,
+              "y": 1380
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "ai-qte-great",
+                "kind": "qte_pass",
+                "qteOutcome": "pass",
+                "targetSceneId": "block",
+                "label": "受击防反"
+              },
+              {
+                "id": "ai-qte-good",
+                "kind": "qte_pass",
+                "qteOutcome": "good",
+                "targetSceneId": "dodgeP",
+                "label": "受击闪避",
+                "effects": [
+                  {
+                    "id": "ai-qte-good-qi",
+                    "kind": "var",
+                    "varId": "qi",
+                    "op": "add",
+                    "value": -1
+                  }
+                ]
+              },
+              {
+                "id": "ai-qte-fail",
+                "kind": "qte_fail",
+                "qteOutcome": "fail",
+                "targetSceneId": "hurt",
+                "label": "受击",
+                "effects": [
+                  {
+                    "id": "ai-qte-fail-qi",
+                    "kind": "var",
+                    "varId": "qi",
+                    "op": "add",
+                    "value": 1
+                  }
+                ]
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "防反判定",
+            "kind": "qte",
+            "decision": {
+              "optType": "timed_qte",
+              "qteKind": "parry",
+              "timeoutMs": 2600,
+              "prompt": "防反 QTE · 按 A/B/C 选择判定"
+            },
+            "ext": {
+              "qteUi": "battleParry"
+            },
+            "background": "小怪压低重心、利爪后扬、双目锁定的起手蓄力，给予空藏可读的预警窗口；窗口内空藏做「防反」QTE 输入，按时机隐藏计算三档判定结果。",
+            "qte": {
+              "window": {
+                "perfect": 120,
+                "great": 260,
+                "good": 480
+              },
+              "score": {
+                "perfect": 100,
+                "great": 70,
+                "good": 40,
+                "miss": 0
+              },
+              "timeoutMs": 2600,
+              "outcomeLabels": {
+                "pass": "受击防反",
+                "good": "受击闪避",
+                "fail": "受击"
+              },
+              "cues": [
+                {
+                  "id": "parry",
+                  "shape": "tap",
+                  "x": 0.5,
+                  "y": 0.55,
+                  "appearAt": 700,
+                  "targetAt": 1300,
+                  "label": "防反"
+                }
+              ]
+            },
+            "clipId": "vd-wcc-qianyao",
+            "episodeId": "ep-default"
+          },
+          "block": {
+            "id": "block",
+            "title": "受击防反",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 4000,
+            "pos": {
+              "x": 560,
+              "y": 1280
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "block-done",
+                "kind": "auto",
+                "targetSceneId": "ai-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "防反·大成功",
+            "background": "受击防反：主将精准格挡卸力、周身泛起反震光罩——完全免疫来袭伤害，并顺势反击敌方（威力1.2）。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "block-hit",
+                  "atMs": 1800,
+                  "label": "反击结算 威力1.2",
+                  "effects": [
+                    {
+                      "id": "block-hit-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -96
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-fangfan",
+            "episodeId": "ep-default"
+          },
+          "dodgeP": {
+            "id": "dodgeP",
+            "title": "受击闪避",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 4000,
+            "pos": {
+              "x": 560,
+              "y": 1440
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "dodge-done",
+                "kind": "auto",
+                "targetSceneId": "ai-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "防反·成功",
+            "background": "受击闪避：主将侧身卸力闪避，完全免疫来袭伤害并顺势反击敌方（威力0.8）；消耗气力1。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "dodge-hit",
+                  "atMs": 2000,
+                  "label": "反击结算 威力0.8",
+                  "effects": [
+                    {
+                      "id": "dodge-hit-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -64
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-shanbi",
+            "episodeId": "ep-default"
+          },
+          "hurt": {
+            "id": "hurt",
+            "title": "受击",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 4000,
+            "pos": {
+              "x": 560,
+              "y": 1600
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "hurt-done",
+                "kind": "auto",
+                "targetSceneId": "ai-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "防反·失败",
+            "background": "防反失败：主将未能防反、正面中招踉跄硬直破势，承受小怪攻击全额伤害（命中100%·暴击8%），但受击积累气力+1。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "hurt-hit",
+                  "atMs": 10,
+                  "label": "受击结算",
+                  "effects": [
+                    {
+                      "id": "hurt-hit-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-player",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -120
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-shouji",
+            "episodeId": "ep-default"
+          },
+          "ai-done": {
+            "id": "ai-done",
+            "title": "行动完毕",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 500,
+            "pos": {
+              "x": 820,
+              "y": 1440
+            },
+            "dialogue": [],
+            "branches": [],
+            "hudPreset": "battle",
+            "background": "敌方行动结算完成，交还战斗主循环（进入血量判定）。",
+            "episodeId": "ep-default"
+          },
+          "n_open": {
+            "id": "n_open",
+            "title": "序章",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-open",
+              "meta": {}
+            },
+            "durationMs": 15975,
+            "episodeId": "ep-narrative",
+            "hudPreset": "hidden",
+            "dialogue": [],
+            "kind": "story",
+            "branches": [
+              {
+                "id": "n_open-out",
+                "kind": "auto",
+                "targetSceneId": "n_door",
+                "label": "Out"
+              }
+            ]
+          },
+          "n_door": {
+            "id": "n_door",
+            "title": "慈悲狱门口",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-door",
+              "meta": {}
+            },
+            "durationMs": 15100,
+            "episodeId": "ep-narrative",
+            "hudPreset": "hidden",
+            "dialogue": [],
+            "kind": "qte",
+            "ext": {
+              "qteUi": "inkKou"
+            },
+            "qte": {
+              "cues": [
+                {
+                  "id": "kou",
+                  "shape": "tap",
+                  "x": 0.58,
+                  "y": 0.39,
+                  "appearAt": 9000,
+                  "targetAt": 14100,
+                  "label": "叩"
+                }
+              ],
+              "window": {
+                "perfect": 200,
+                "great": 400,
+                "good": 700
+              },
+              "score": {
+                "perfect": 100,
+                "great": 70,
+                "good": 40,
+                "miss": 0
+              },
+              "timeoutMs": 15100,
+              "outcomeLabels": {
+                "pass": "叩中",
+                "good": "叩中",
+                "fail": "错过"
+              }
+            },
+            "branches": [
+              {
+                "id": "n_door-pass",
+                "kind": "qte_pass",
+                "qteOutcome": "pass",
+                "targetSceneId": "n_soul",
+                "label": "叩"
+              },
+              {
+                "id": "n_door-fail",
+                "kind": "qte_fail",
+                "qteOutcome": "fail",
+                "targetSceneId": "n_river",
+                "label": "超时"
+              }
+            ]
+          },
+          "n_soul": {
+            "id": "n_soul",
+            "title": "小魂对话",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-soul",
+              "meta": {}
+            },
+            "durationMs": 15093,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "story",
+            "branches": [
+              {
+                "id": "n_soul-out",
+                "kind": "auto",
+                "targetSceneId": "n_river",
+                "label": "Out"
+              }
+            ]
+          },
+          "n_river": {
+            "id": "n_river",
+            "title": "划船渡河",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-river",
+              "meta": {}
+            },
+            "durationMs": 15069,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "choice",
+            "ext": {
+              "choiceUi": "inkYingMo"
+            },
+            "decision": {
+              "optType": "timed",
+              "fireAt": "video_end",
+              "windowStartMs": 12069,
+              "windowEndMs": 15069,
+              "timeoutMs": 8000,
+              "defaultBranchId": "n_river-mo",
+              "prompt": ""
+            },
+            "branches": [
+              {
+                "id": "n_river-ying",
+                "kind": "choice",
+                "label": "應",
+                "targetSceneId": "n_child"
+              },
+              {
+                "id": "n_river-mo",
+                "kind": "choice",
+                "label": "默",
+                "targetSceneId": "n_land"
+              }
+            ]
+          },
+          "n_child": {
+            "id": "n_child",
+            "title": "小孩对话",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-child",
+              "meta": {}
+            },
+            "durationMs": 12887,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "story",
+            "branches": [
+              {
+                "id": "n_child-out",
+                "kind": "auto",
+                "targetSceneId": "n_land",
+                "label": "Out"
+              }
+            ]
+          },
+          "n_land": {
+            "id": "n_land",
+            "title": "上岸",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-land",
+              "meta": {}
+            },
+            "durationMs": 16200,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "choice",
+            "ext": {
+              "choiceUi": "inkYingMo"
+            },
+            "decision": {
+              "optType": "timed",
+              "fireAt": "video_end",
+              "windowStartMs": 13200,
+              "windowEndMs": 16200,
+              "timeoutMs": 8000,
+              "defaultBranchId": "n_land-mo",
+              "prompt": ""
+            },
+            "branches": [
+              {
+                "id": "n_land-ying",
+                "kind": "choice",
+                "label": "應",
+                "targetSceneId": "n_mask"
+              },
+              {
+                "id": "n_land-mo",
+                "kind": "choice",
+                "label": "默",
+                "targetSceneId": "n_mengpo"
+              }
+            ]
+          },
+          "n_mask": {
+            "id": "n_mask",
+            "title": "灯笼对话",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-mask",
+              "meta": {}
+            },
+            "durationMs": 15093,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "story",
+            "branches": [
+              {
+                "id": "n_mask-out",
+                "kind": "auto",
+                "targetSceneId": "n_mengpo",
+                "label": "Out"
+              }
+            ]
+          },
+          "n_mengpo": {
+            "id": "n_mengpo",
+            "title": "过桥见孟婆",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-mengpo",
+              "meta": {}
+            },
+            "durationMs": 17136,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "story",
+            "branches": [
+              {
+                "id": "n_mengpo-out",
+                "kind": "auto",
+                "targetSceneId": "n_tea",
+                "label": "Out"
+              }
+            ]
+          },
+          "n_tea": {
+            "id": "n_tea",
+            "title": "喝孟婆汤",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-tea",
+              "meta": {}
+            },
+            "durationMs": 15093,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "choice",
+            "ext": {
+              "choiceUi": "inkYingMo"
+            },
+            "decision": {
+              "optType": "timed",
+              "fireAt": "video_end",
+              "windowStartMs": 12093,
+              "windowEndMs": 15093,
+              "timeoutMs": 8000,
+              "defaultBranchId": "n_tea-mo",
+              "prompt": ""
+            },
+            "branches": [
+              {
+                "id": "n_tea-ying",
+                "kind": "choice",
+                "label": "應",
+                "targetSceneId": "n_drink"
+              },
+              {
+                "id": "n_tea-mo",
+                "kind": "choice",
+                "label": "默",
+                "targetSceneId": "n_nodrink"
+              }
+            ]
+          },
+          "n_drink": {
+            "id": "n_drink",
+            "title": "饮汤应答",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-drink",
+              "meta": {}
+            },
+            "durationMs": 14489,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "story",
+            "branches": [
+              {
+                "id": "n_drink-out",
+                "kind": "auto",
+                "targetSceneId": "n_follow",
+                "label": "Out",
+                "effects": [
+                  {
+                    "id": "drink-lizhi",
+                    "kind": "var",
+                    "varId": "lizhi",
+                    "op": "add",
+                    "value": -1
+                  },
+                  {
+                    "id": "drink-yezhang",
+                    "kind": "var",
+                    "varId": "yezhang",
+                    "op": "add",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          },
+          "n_nodrink": {
+            "id": "n_nodrink",
+            "title": "不喝",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-nodrink",
+              "meta": {}
+            },
+            "durationMs": 15093,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "choice",
+            "ext": {
+              "choiceUi": "inkYingMo"
+            },
+            "decision": {
+              "optType": "timed",
+              "fireAt": "video_end",
+              "windowStartMs": 12093,
+              "windowEndMs": 15093,
+              "timeoutMs": 8000,
+              "defaultBranchId": "n_nodrink-mo",
+              "prompt": ""
+            },
+            "branches": [
+              {
+                "id": "n_nodrink-ying",
+                "kind": "choice",
+                "label": "應",
+                "targetSceneId": "n_follow"
+              },
+              {
+                "id": "n_nodrink-mo",
+                "kind": "choice",
+                "label": "默",
+                "targetSceneId": "n_nofollow"
+              }
+            ]
+          },
+          "n_follow": {
+            "id": "n_follow",
+            "title": "跟随引魂",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-follow",
+              "meta": {}
+            },
+            "durationMs": 15093,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "choice",
+            "ext": {
+              "choiceUi": "inkYingMo"
+            },
+            "decision": {
+              "optType": "timed",
+              "fireAt": "video_end",
+              "windowStartMs": 12093,
+              "windowEndMs": 15093,
+              "timeoutMs": 8000,
+              "defaultBranchId": "n_follow-mo",
+              "prompt": ""
+            },
+            "branches": [
+              {
+                "id": "n_follow-ying",
+                "kind": "choice",
+                "label": "應",
+                "targetSceneId": "n_getlight"
+              },
+              {
+                "id": "n_follow-mo",
+                "kind": "choice",
+                "label": "默",
+                "targetSceneId": "n_nolight"
+              }
+            ]
+          },
+          "n_getlight": {
+            "id": "n_getlight",
+            "title": "获取道具",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-getlight",
+              "meta": {}
+            },
+            "durationMs": 15093,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "story",
+            "branches": [
+              {
+                "id": "n_getlight-out",
+                "kind": "auto",
+                "targetSceneId": "enter",
+                "label": "Out"
+              }
+            ]
+          },
+          "n_nolight": {
+            "id": "n_nolight",
+            "title": "没能道具",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-nolight",
+              "meta": {}
+            },
+            "durationMs": 15093,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "story",
+            "branches": [
+              {
+                "id": "n_nolight-out",
+                "kind": "auto",
+                "targetSceneId": "enter",
+                "label": "Out"
+              }
+            ]
+          },
+          "n_nofollow": {
+            "id": "n_nofollow",
+            "title": "不跟随",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-nofollow",
+              "meta": {}
+            },
+            "durationMs": 15093,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "choice",
+            "ext": {
+              "choiceUi": "inkYingMo"
+            },
+            "decision": {
+              "optType": "timed",
+              "fireAt": "video_end",
+              "windowStartMs": 12093,
+              "windowEndMs": 15093,
+              "timeoutMs": 8000,
+              "defaultBranchId": "n_nofollow-mo",
+              "prompt": ""
+            },
+            "branches": [
+              {
+                "id": "n_nofollow-ying",
+                "kind": "choice",
+                "label": "應",
+                "targetSceneId": "n_lotus"
+              },
+              {
+                "id": "n_nofollow-mo",
+                "kind": "choice",
+                "label": "默",
+                "targetSceneId": "n_nolotus"
+              }
+            ]
+          },
+          "n_lotus": {
+            "id": "n_lotus",
+            "title": "接过莲藕",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-lotus",
+              "meta": {}
+            },
+            "durationMs": 15093,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "story",
+            "branches": [
+              {
+                "id": "n_lotus-out",
+                "kind": "auto",
+                "targetSceneId": "enter",
+                "label": "Out"
+              }
+            ]
+          },
+          "n_nolotus": {
+            "id": "n_nolotus",
+            "title": "不要莲藕",
+            "media": {
+              "kind": "VIDEO",
+              "ref": "m-narr-nolotus",
+              "meta": {}
+            },
+            "durationMs": 15069,
+            "episodeId": "ep-narrative",
+            "hudPreset": "narrative",
+            "dialogue": [],
+            "kind": "story",
+            "branches": [
+              {
+                "id": "n_nolotus-out",
+                "kind": "auto",
+                "targetSceneId": "enter",
+                "label": "Out",
+                "effects": [
+                  {
+                    "id": "nolotus-clue",
+                    "kind": "flag",
+                    "varId": "lotusClue",
+                    "value": true
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "blueprintGraphs": {
+          "g-cb-my": {
+            "id": "g-cb-my",
+            "title": "我方回合",
+            "rootSceneId": "wait",
+            "parentSceneId": "a_my",
+            "sceneIds": [
+              "wait",
+              "pjudge",
+              "pu",
+              "pu2",
+              "zjudge",
+              "zhong",
+              "z2",
+              "fuzhu",
+              "ult",
+              "my-done"
+            ]
+          },
+          "g-cb-ai": {
+            "id": "g-cb-ai",
+            "title": "敌方回合",
+            "rootSceneId": "bt",
+            "parentSceneId": "b_ai",
+            "sceneIds": [
+              "bt",
+              "tele",
+              "block",
+              "dodgeP",
+              "hurt",
+              "ai-done"
+            ]
+          }
+        },
+        "episodes": [
+          {
+            "id": "ep-default",
+            "title": "第一集",
+            "rootSceneId": "enter",
+            "order": 0,
+            "createdAt": 1782999411089
+          }
+        ]
+      },
+      "createdAt": 1782891315486,
+      "updatedAt": 1783050225341
+    },
+    {
+      "id": "demo-001",
+      "title": "战斗蓝图",
+      "scenario": {
+        "id": "demo-001",
+        "title": "战斗蓝图",
+        "synopsis": "回合制循环（待机 / 演出 / 结算）：进战待机 → 出手判断 → 先手出手 → 后手出手 → 回合结束 → 胜负。",
+        "originIdea": "从新影游平台交互原型迁移的层级战斗蓝图 demo。",
+        "rootSceneId": "enter",
+        "defaultCharMs": 32,
+        "schemaVersion": 10,
+        "modules": {
+          "gameplay": true,
+          "rules": true
+        },
+        "variables": {
+          "qi": {
+            "id": "qi",
+            "name": "气力",
+            "kind": "number",
+            "initial": 0,
+            "min": 0,
+            "max": 5
+          }
+        },
+        "entities": {
+          "ent-player": {
+            "id": "ent-player",
+            "name": "空藏",
+            "kind": "player",
+            "maxHp": 300,
+            "initialHp": 300
+          },
+          "ent-boss": {
+            "id": "ent-boss",
+            "name": "小怪",
+            "kind": "boss",
+            "maxHp": 700,
+            "initialHp": 700
+          }
+        },
+        "ui": {
+          "hud": [
+            {
+              "element": "playerHp",
+              "show": "always"
+            },
+            {
+              "element": "bossHp",
+              "show": "always"
+            },
+            {
+              "element": "score",
+              "show": "always"
+            }
+          ]
+        },
+        "characters": {},
+        "locations": {},
+        "ext": {
+          "combatRules": {
+            "playerAttack": 80,
+            "playerDefense": 40,
+            "playerCritRate": 10,
+            "playerSpeed": 30,
+            "bossAttack": 75,
+            "bossDefense": 50,
+            "bossCritRate": 8,
+            "bossAggression": 0.5,
+            "bossSpeed": 25
+          }
+        },
+        "scenes": {
+          "enter": {
+            "id": "enter",
+            "title": "进战待机",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 8080,
+            "pos": {
+              "x": 80,
+              "y": 220
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "enter-init",
+                "kind": "auto",
+                "targetSceneId": "init",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "mediaPlayMode": "loop",
+            "background": "承接 L3 决战单挑调用（输入小怪·无常豺）：镜头切入战场，主将与小怪列阵对峙、亮明双方血量 / 技能，进入回合制战斗的待机 loop。",
+            "clipId": "vd-wcc-idle",
+            "episodeId": "ep-default"
+          },
+          "init": {
+            "id": "init",
+            "title": "出手判断",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 600,
+            "pos": {
+              "x": 300,
+              "y": 220
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "init-me",
+                "kind": "auto",
+                "targetSceneId": "a_my",
+                "label": "我方先手"
+              },
+              {
+                "id": "init-foe",
+                "kind": "auto",
+                "targetSceneId": "b_ai",
+                "label": "敌方先手"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "出手判断",
+            "background": "每回合开始，比较双方「出手速度」做隐藏计算判定本回合先攻方（速度大者先手，相等则空藏先手；无界面选项）。",
+            "episodeId": "ep-default"
+          },
+          "a_my": {
+            "id": "a_my",
+            "title": "我方回合",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 3200,
+            "pos": {
+              "x": 520,
+              "y": 120
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "a-my-check",
+                "kind": "auto",
+                "targetSceneId": "a_chk",
+                "label": "行动完毕"
+              }
+            ],
+            "hudPreset": "battle",
+            "subFlowRef": "g-cb-my",
+            "background": "我方先手出手：进入战斗待机 loop，弹出战斗界面；空藏选技能后做技能表演与数值计算，更新双方血量 / 状态。",
+            "episodeId": "ep-default"
+          },
+          "b_ai": {
+            "id": "b_ai",
+            "title": "敌方回合",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 3200,
+            "pos": {
+              "x": 520,
+              "y": 340
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "b-ai-check",
+                "kind": "auto",
+                "targetSceneId": "b_chk",
+                "label": "行动完毕"
+              }
+            ],
+            "hudPreset": "battle",
+            "subFlowRef": "g-cb-ai",
+            "background": "敌方先手出手：敌将按自身行为树评估局势、决策行动（进攻 / 技能 / 防御蓄力），执行演出并做数值结算。",
+            "episodeId": "ep-default"
+          },
+          "a_chk": {
+            "id": "a_chk",
+            "title": "血量判定",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 600,
+            "pos": {
+              "x": 760,
+              "y": 120
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "a-check-ai",
+                "kind": "auto",
+                "targetSceneId": "a_ai",
+                "label": "敌方出手",
+                "condition": {
+                  "all": [
+                    {
+                      "type": "hpRatio",
+                      "entityId": "ent-boss",
+                      "op": "gt",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "a-check-over",
+                "kind": "auto",
+                "targetSceneId": "settle",
+                "label": "分出胜负"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "血量判定",
+            "background": "我方（先手）行动后隐藏计算双方血量：敌方血量清空则本回合直接分出胜负；否则进入敌方出手（本回合后手）。",
+            "episodeId": "ep-default"
+          },
+          "b_chk": {
+            "id": "b_chk",
+            "title": "血量判定",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 600,
+            "pos": {
+              "x": 760,
+              "y": 340
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "b-check-my",
+                "kind": "auto",
+                "targetSceneId": "b_my",
+                "label": "我方出手",
+                "condition": {
+                  "all": [
+                    {
+                      "type": "hpRatio",
+                      "entityId": "ent-player",
+                      "op": "gt",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "b-check-over",
+                "kind": "auto",
+                "targetSceneId": "settle",
+                "label": "分出胜负"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "血量判定",
+            "background": "敌方（先手）行动后隐藏计算双方血量：我方血量清空则本回合直接分出胜负；否则进入我方出手（本回合后手）。",
+            "episodeId": "ep-default"
+          },
+          "a_ai": {
+            "id": "a_ai",
+            "title": "敌方回合",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 3200,
+            "pos": {
+              "x": 980,
+              "y": 120
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "a-ai-round",
+                "kind": "auto",
+                "targetSceneId": "round",
+                "label": "行动完毕"
+              }
+            ],
+            "hudPreset": "battle",
+            "subFlowRef": "g-cb-ai",
+            "background": "本回合后手：敌将按行为树决策并执行行动、做数值结算，更新双方血量 / 状态——至此本回合双方均已出手。",
+            "episodeId": "ep-default"
+          },
+          "b_my": {
+            "id": "b_my",
+            "title": "我方回合",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 3200,
+            "pos": {
+              "x": 980,
+              "y": 340
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "b-my-round",
+                "kind": "auto",
+                "targetSceneId": "round",
+                "label": "行动完毕"
+              }
+            ],
+            "hudPreset": "battle",
+            "subFlowRef": "g-cb-my",
+            "background": "本回合后手：我方进入战斗待机 loop、选技能并做技能表演与数值结算，更新双方血量 / 状态——至此本回合双方均已出手。",
+            "episodeId": "ep-default"
+          },
+          "round": {
+            "id": "round",
+            "title": "回合结束判定",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 600,
+            "pos": {
+              "x": 1220,
+              "y": 220
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "round-next",
+                "kind": "auto",
+                "targetSceneId": "init",
+                "label": "下一回合",
+                "condition": {
+                  "all": [
+                    {
+                      "type": "hpRatio",
+                      "entityId": "ent-player",
+                      "op": "gt",
+                      "value": 0
+                    },
+                    {
+                      "type": "hpRatio",
+                      "entityId": "ent-boss",
+                      "op": "gt",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "round-over",
+                "kind": "auto",
+                "targetSceneId": "settle",
+                "label": "分出胜负"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "回合结束判定",
+            "background": "本回合双方均已出手，隐藏计算双方血量：任一方血量清空则战斗结束、进入胜负判定；否则进入下一回合、重新做出手判断。",
+            "episodeId": "ep-default"
+          },
+          "settle": {
+            "id": "settle",
+            "title": "胜负判定",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 600,
+            "pos": {
+              "x": 1440,
+              "y": 220
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "settle-win",
+                "kind": "auto",
+                "targetSceneId": "win",
+                "label": "胜利",
+                "condition": {
+                  "all": [
+                    {
+                      "type": "hpRatio",
+                      "entityId": "ent-boss",
+                      "op": "lte",
+                      "value": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "settle-lose",
+                "kind": "auto",
+                "targetSceneId": "lose",
+                "label": "失败"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "胜负判定",
+            "background": "一方血量清空，战斗结束：隐藏计算比较双方存活——敌将（无常豺）倒下则我方胜利、主将倒下则我方失败。",
+            "episodeId": "ep-default"
+          },
+          "win": {
+            "id": "win",
+            "title": "战斗胜利",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 10000,
+            "pos": {
+              "x": 1660,
+              "y": 120
+            },
+            "dialogue": [],
+            "branches": [],
+            "hudPreset": "hidden",
+            "background": "我方胜利：空藏力克敌将、傲立胜场的得胜演出（敌将无常豺力竭溃灭），结果（胜利）回传叙事 L3 → E1。",
+            "clipId": "vd-wcc-shengli",
+            "episodeId": "ep-default"
+          },
+          "lose": {
+            "id": "lose",
+            "title": "战斗失败",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 6000,
+            "pos": {
+              "x": 1660,
+              "y": 340
+            },
+            "dialogue": [],
+            "branches": [],
+            "hudPreset": "hidden",
+            "background": "我方失败：空藏力竭不支、颓然倒地的败亡演出（敌将无常豺得胜），结果（失败）回传叙事 L3 → E2。",
+            "clipId": "vd-wcc-shibai",
+            "episodeId": "ep-default"
+          },
+          "wait": {
+            "id": "wait",
+            "title": "战斗待机",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 8000,
+            "pos": {
+              "x": 60,
+              "y": 490
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "my-s1",
+                "kind": "choice",
+                "targetSceneId": "pjudge",
+                "label": "轻攻击",
+                "effects": [
+                  {
+                    "id": "my-s1-qi",
+                    "kind": "var",
+                    "varId": "qi",
+                    "op": "add",
+                    "value": 2
+                  }
+                ]
+              },
+              {
+                "id": "my-s2",
+                "kind": "choice",
+                "targetSceneId": "zjudge",
+                "label": "重攻击",
+                "condition": {
+                  "all": [
+                    {
+                      "type": "var",
+                      "varId": "qi",
+                      "op": "gte",
+                      "value": 2
+                    }
+                  ]
+                },
+                "gateMode": "lock",
+                "effects": [
+                  {
+                    "id": "my-s2-qi",
+                    "kind": "var",
+                    "varId": "qi",
+                    "op": "add",
+                    "value": -2
+                  }
+                ]
+              },
+              {
+                "id": "my-s3",
+                "kind": "choice",
+                "targetSceneId": "fuzhu",
+                "label": "冥想"
+              },
+              {
+                "id": "my-ult",
+                "kind": "choice",
+                "targetSceneId": "ult",
+                "label": "灭世",
+                "condition": {
+                  "all": [
+                    {
+                      "type": "var",
+                      "varId": "qi",
+                      "op": "gte",
+                      "value": 5
+                    }
+                  ]
+                },
+                "gateMode": "lock",
+                "effects": [
+                  {
+                    "id": "my-ult-qi",
+                    "kind": "var",
+                    "varId": "qi",
+                    "op": "set",
+                    "value": 0
+                  }
+                ]
+              }
+            ],
+            "hudPreset": "battle",
+            "mediaPlayMode": "loop",
+            "kind": "choice",
+            "decision": {
+              "optType": "static",
+              "prompt": "选择技能",
+              "windowStartMs": 1000,
+              "fireAt": "on_pick"
+            },
+            "ext": {
+              "choiceUi": "battleSkillBar"
+            },
+            "background": "我方回合待机循环（idle）：弹出战斗界面，呈现 4 个技能（轻攻击 / 重攻击 / 冥想 / 灭世），按当前气力 / 冷却可用性灰显不可选项，等待空藏选择（防反不在此选择，改由敌方进攻时的「防反」反应触发）。",
+            "clipId": "vd-wcc-idle",
+            "episodeId": "ep-default"
+          },
+          "pjudge": {
+            "id": "pjudge",
+            "title": "变招判定",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 500,
+            "pos": {
+              "x": 380,
+              "y": 130
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "pjudge-plain",
+                "kind": "auto",
+                "targetSceneId": "pu",
+                "label": "轻攻击"
+              },
+              {
+                "id": "pjudge-combo",
+                "kind": "auto",
+                "targetSceneId": "pu2",
+                "label": "变招"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "变招判定",
+            "background": "选定轻攻击后、出手前先做隐藏计算（50% 概率，无界面选项）：本次轻击究竟以「轻攻击」还是「轻攻击·变招」打出。",
+            "episodeId": "ep-default"
+          },
+          "pu": {
+            "id": "pu",
+            "title": "轻攻击",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 5000,
+            "pos": {
+              "x": 700,
+              "y": 40
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "pu-done",
+                "kind": "auto",
+                "targetSceneId": "my-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "轻攻击",
+            "background": "变招判定为普通：欺身前扑挥击，命中迸出爪痕 / 刀痕与受击顿帧（威力1.0·命中100%·不可破防）。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "pu-hit",
+                  "atMs": 1000,
+                  "label": "命中结算 威力1.0",
+                  "effects": [
+                    {
+                      "id": "pu-hit-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -80
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-pugong",
+            "episodeId": "ep-default"
+          },
+          "pu2": {
+            "id": "pu2",
+            "title": "轻攻击·变招",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 5000,
+            "pos": {
+              "x": 700,
+              "y": 220
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "pu2-done",
+                "kind": "auto",
+                "targetSceneId": "my-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "轻攻击·变招",
+            "background": "变招判定触发：本次以轻攻击变招（反手补击 / 连段）打出，沿演出分 4 次逐次递增结算（威力 0.25 → 0.3 → 0.35 → 0.4）。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "pu2-1",
+                  "atMs": 600,
+                  "label": "第1段 威力0.25",
+                  "effects": [
+                    {
+                      "id": "pu2-1-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -20
+                    }
+                  ]
+                },
+                {
+                  "id": "pu2-2",
+                  "atMs": 800,
+                  "label": "第2段 威力0.3",
+                  "effects": [
+                    {
+                      "id": "pu2-2-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -24
+                    }
+                  ]
+                },
+                {
+                  "id": "pu2-3",
+                  "atMs": 1300,
+                  "label": "第3段 威力0.35",
+                  "effects": [
+                    {
+                      "id": "pu2-3-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -28
+                    }
+                  ]
+                },
+                {
+                  "id": "pu2-4",
+                  "atMs": 1800,
+                  "label": "第4段 威力0.4",
+                  "effects": [
+                    {
+                      "id": "pu2-4-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -32
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-pugong2",
+            "episodeId": "ep-default"
+          },
+          "zjudge": {
+            "id": "zjudge",
+            "title": "变招判定",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 500,
+            "pos": {
+              "x": 380,
+              "y": 490
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "zjudge-plain",
+                "kind": "auto",
+                "targetSceneId": "zhong",
+                "label": "重攻击"
+              },
+              {
+                "id": "zjudge-combo",
+                "kind": "auto",
+                "targetSceneId": "z2",
+                "label": "变招"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "变招判定",
+            "background": "选定重攻击（已扣气力2）后、出手前先做隐藏计算（50% 概率，无界面选项）：本次重击究竟以「重攻击」还是「重攻击·变招」打出。",
+            "episodeId": "ep-default"
+          },
+          "zhong": {
+            "id": "zhong",
+            "title": "重攻击",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 6000,
+            "pos": {
+              "x": 700,
+              "y": 400
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "zhong-done",
+                "kind": "auto",
+                "targetSceneId": "my-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "重攻击",
+            "background": "变招判定为普通：蓄力后一记沉重扑砸 / 重劈，单组大字伤害弹出（威力1.8·命中95%·暴击+5%·破防）。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "zhong-hit",
+                  "atMs": 1700,
+                  "label": "命中结算 威力1.8",
+                  "effects": [
+                    {
+                      "id": "zhong-hit-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -144
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-zhong",
+            "episodeId": "ep-default"
+          },
+          "z2": {
+            "id": "z2",
+            "title": "重攻击·变招",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 6000,
+            "pos": {
+              "x": 700,
+              "y": 580
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "z2-done",
+                "kind": "auto",
+                "targetSceneId": "my-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "重攻击·变招",
+            "background": "变招判定触发：本次以重击变招（延迟 / 二段变化）打出，沿演出分 2 次逐次递增结算（威力 1.0 → 1.4）。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "z2-1",
+                  "atMs": 2500,
+                  "label": "第1段 威力1.0",
+                  "effects": [
+                    {
+                      "id": "z2-1-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -80
+                    }
+                  ]
+                },
+                {
+                  "id": "z2-2",
+                  "atMs": 3700,
+                  "label": "第2段 威力1.4",
+                  "effects": [
+                    {
+                      "id": "z2-2-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -112
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-zhong2",
+            "episodeId": "ep-default"
+          },
+          "fuzhu": {
+            "id": "fuzhu",
+            "title": "冥想",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 5000,
+            "pos": {
+              "x": 700,
+              "y": 760
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "fuzhu-done",
+                "kind": "auto",
+                "targetSceneId": "my-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "冥想",
+            "background": "空藏冥想调息：回复气力+2、回血 30、解除异常状态（不造成伤害），用后进入 3 回合冷却。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "fuzhu-heal",
+                  "atMs": 2000,
+                  "label": "回气回血结算",
+                  "effects": [
+                    {
+                      "id": "fuzhu-qi",
+                      "kind": "var",
+                      "varId": "qi",
+                      "op": "add",
+                      "value": 2
+                    },
+                    {
+                      "id": "fuzhu-heal-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-player",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": 30
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-huiqi",
+            "episodeId": "ep-default"
+          },
+          "ult": {
+            "id": "ult",
+            "title": "灭世",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 12000,
+            "pos": {
+              "x": 700,
+              "y": 940
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "ult-done",
+                "kind": "auto",
+                "targetSceneId": "my-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "灭世",
+            "background": "气力满（5）方可释放，释放清空气力；招牌绝技长前摇蓄力后全力爆发（威力3.0·命中100%）。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "ult-hit",
+                  "atMs": 7000,
+                  "label": "命中结算 威力3.0",
+                  "effects": [
+                    {
+                      "id": "ult-hit-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -240
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-dazhao",
+            "episodeId": "ep-default"
+          },
+          "my-done": {
+            "id": "my-done",
+            "title": "行动完毕",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 500,
+            "pos": {
+              "x": 1020,
+              "y": 490
+            },
+            "dialogue": [],
+            "branches": [],
+            "hudPreset": "battle",
+            "background": "我方行动结算完成，交还战斗主循环（进入血量判定）。",
+            "episodeId": "ep-default"
+          },
+          "bt": {
+            "id": "bt",
+            "title": "行为树决策",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 500,
+            "pos": {
+              "x": 80,
+              "y": 1380
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "ai-atk",
+                "kind": "auto",
+                "targetSceneId": "tele",
+                "label": "进攻"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "行为树决策",
+            "background": "敌将行为树读取双方血量 / 状态做隐藏计算评估，本回合发起进攻（无界面选项）：进入攻击前摇预警，随后由空藏在前摇窗口做「防反」QTE 决定结果。",
+            "episodeId": "ep-default"
+          },
+          "tele": {
+            "id": "tele",
+            "title": "攻击前摇",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 4000,
+            "pos": {
+              "x": 320,
+              "y": 1380
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "ai-qte-great",
+                "kind": "qte_pass",
+                "qteOutcome": "pass",
+                "targetSceneId": "block",
+                "label": "受击防反"
+              },
+              {
+                "id": "ai-qte-good",
+                "kind": "qte_pass",
+                "qteOutcome": "good",
+                "targetSceneId": "dodgeP",
+                "label": "受击闪避",
+                "effects": [
+                  {
+                    "id": "ai-qte-good-qi",
+                    "kind": "var",
+                    "varId": "qi",
+                    "op": "add",
+                    "value": -1
+                  }
+                ]
+              },
+              {
+                "id": "ai-qte-fail",
+                "kind": "qte_fail",
+                "qteOutcome": "fail",
+                "targetSceneId": "hurt",
+                "label": "受击",
+                "effects": [
+                  {
+                    "id": "ai-qte-fail-qi",
+                    "kind": "var",
+                    "varId": "qi",
+                    "op": "add",
+                    "value": 1
+                  }
+                ]
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "防反判定",
+            "kind": "qte",
+            "decision": {
+              "optType": "timed_qte",
+              "qteKind": "parry",
+              "timeoutMs": 2600,
+              "prompt": "防反 QTE · 按 A/B/C 选择判定"
+            },
+            "ext": {
+              "qteUi": "battleParry"
+            },
+            "background": "小怪压低重心、利爪后扬、双目锁定的起手蓄力，给予空藏可读的预警窗口；窗口内空藏做「防反」QTE 输入，按时机隐藏计算三档判定结果。",
+            "qte": {
+              "window": {
+                "perfect": 120,
+                "great": 260,
+                "good": 480
+              },
+              "score": {
+                "perfect": 100,
+                "great": 70,
+                "good": 40,
+                "miss": 0
+              },
+              "timeoutMs": 2600,
+              "outcomeLabels": {
+                "pass": "受击防反",
+                "good": "受击闪避",
+                "fail": "受击"
+              },
+              "cues": [
+                {
+                  "id": "parry",
+                  "shape": "tap",
+                  "x": 0.5,
+                  "y": 0.55,
+                  "appearAt": 700,
+                  "targetAt": 1300,
+                  "label": "防反"
+                }
+              ]
+            },
+            "clipId": "vd-wcc-qianyao",
+            "episodeId": "ep-default"
+          },
+          "block": {
+            "id": "block",
+            "title": "受击防反",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 4000,
+            "pos": {
+              "x": 560,
+              "y": 1280
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "block-done",
+                "kind": "auto",
+                "targetSceneId": "ai-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "防反·大成功",
+            "background": "受击防反：主将精准格挡卸力、周身泛起反震光罩——完全免疫来袭伤害，并顺势反击敌方（威力1.2）。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "block-hit",
+                  "atMs": 1800,
+                  "label": "反击结算 威力1.2",
+                  "effects": [
+                    {
+                      "id": "block-hit-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -96
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-fangfan",
+            "episodeId": "ep-default"
+          },
+          "dodgeP": {
+            "id": "dodgeP",
+            "title": "受击闪避",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 4000,
+            "pos": {
+              "x": 560,
+              "y": 1440
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "dodge-done",
+                "kind": "auto",
+                "targetSceneId": "ai-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "防反·成功",
+            "background": "受击闪避：主将侧身卸力闪避，完全免疫来袭伤害并顺势反击敌方（威力0.8）；消耗气力1。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "dodge-hit",
+                  "atMs": 2000,
+                  "label": "反击结算 威力0.8",
+                  "effects": [
+                    {
+                      "id": "dodge-hit-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-boss",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -64
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-shanbi",
+            "episodeId": "ep-default"
+          },
+          "hurt": {
+            "id": "hurt",
+            "title": "受击",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 4000,
+            "pos": {
+              "x": 560,
+              "y": 1600
+            },
+            "dialogue": [],
+            "branches": [
+              {
+                "id": "hurt-done",
+                "kind": "auto",
+                "targetSceneId": "ai-done",
+                "label": "Out"
+              }
+            ],
+            "hudPreset": "battle",
+            "calcType": "防反·失败",
+            "background": "防反失败：主将未能防反、正面中招踉跄硬直破势，承受小怪攻击全额伤害（命中100%·暴击8%），但受击积累气力+1。",
+            "performance": {
+              "cues": [
+                {
+                  "id": "hurt-hit",
+                  "atMs": 10,
+                  "label": "受击结算",
+                  "effects": [
+                    {
+                      "id": "hurt-hit-hp",
+                      "kind": "entityStat",
+                      "entityId": "ent-player",
+                      "stat": "hp",
+                      "op": "add",
+                      "value": -120
+                    }
+                  ]
+                }
+              ]
+            },
+            "clipId": "vd-wcc-shouji",
+            "episodeId": "ep-default"
+          },
+          "ai-done": {
+            "id": "ai-done",
+            "title": "行动完毕",
+            "media": {
+              "kind": "PLACEHOLDER",
+              "meta": {}
+            },
+            "durationMs": 500,
+            "pos": {
+              "x": 820,
+              "y": 1440
+            },
+            "dialogue": [],
+            "branches": [],
+            "hudPreset": "battle",
+            "background": "敌方行动结算完成，交还战斗主循环（进入血量判定）。",
+            "episodeId": "ep-default"
+          }
+        },
+        "blueprintGraphs": {
+          "g-cb-my": {
+            "id": "g-cb-my",
+            "title": "我方回合",
+            "rootSceneId": "wait",
+            "parentSceneId": "a_my",
+            "sceneIds": [
+              "wait",
+              "pjudge",
+              "pu",
+              "pu2",
+              "zjudge",
+              "zhong",
+              "z2",
+              "fuzhu",
+              "ult",
+              "my-done"
+            ]
+          },
+          "g-cb-ai": {
+            "id": "g-cb-ai",
+            "title": "敌方回合",
+            "rootSceneId": "bt",
+            "parentSceneId": "b_ai",
+            "sceneIds": [
+              "bt",
+              "tele",
+              "block",
+              "dodgeP",
+              "hurt",
+              "ai-done"
+            ]
+          }
+        },
+        "episodes": [
+          {
+            "id": "ep-default",
+            "title": "第一集",
+            "rootSceneId": "enter",
+            "order": 0,
+            "createdAt": 1782999411089
+          }
+        ]
+      },
+      "createdAt": 1782891315486,
+      "updatedAt": 1783012928994
+    }
+  ]
+}
