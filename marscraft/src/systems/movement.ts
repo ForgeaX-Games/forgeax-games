@@ -19,8 +19,8 @@
  *
  * ── ECS adaptation ───────────────────────────────────────────────────────────
  * Transform / Movement / Motion are SoA columns. The source's `transform.x/z`,
- * `transform.rotationY` and `transform.fallVelocity` map to `Transform.posX/posZ`,
- * `Motion.facingY` and `Motion.fallVelocity`; the engine `Transform` stores
+ * `transform.rotationY` and `transform.fallVelocity` map to the `Transform.pos`
+ * x/z lanes, `Motion.facingY` and `Motion.fallVelocity`; the engine `Transform` stores
  * rotation as a quaternion, so each frame we derive the yaw quat from `facingY`
  * (a rotation about +Y) and write it back. Per-frame separation needs every
  * mover's position; we gather them from the batch into a scratch array.
@@ -158,8 +158,8 @@ export function installMovement(world: World, deps: MovementDeps): void {
         if (n === 0) continue;
         const hasRenderable = !!b.Renderable;
         for (let i = 0; i < n; i++) {
-          const x = b.Transform.posX[i];
-          const z = b.Transform.posZ[i];
+          const x = b.Transform.pos[i * 3];
+          const z = b.Transform.pos[i * 3 + 2];
           const moveType = b.Movement.moveType[i];
           const size = hasRenderable ? b.Renderable.size[i] : 1;
           const halfSize = size * 0.5 * PATHING_RADIUS_RATIO;
@@ -198,8 +198,8 @@ export function installMovement(world: World, deps: MovementDeps): void {
         const hasRenderable = !!b.Renderable;
         const entity = b.Entity.self[bi] as EntityHandle;
 
-        let tx = b.Transform.posX[bi];
-        let tz = b.Transform.posZ[bi];
+        let tx = b.Transform.pos[bi * 3];
+        let tz = b.Transform.pos[bi * 3 + 2];
         const moveType = b.Movement.moveType[bi];
         const speed = b.Movement.speed[bi];
         const turnRate = b.Movement.turnRate[bi];
@@ -222,8 +222,8 @@ export function installMovement(world: World, deps: MovementDeps): void {
             const pStep = Math.min(pushSpeed * dt, pDist);
             tx += (pdx / pDist) * pStep;
             tz += (pdz / pDist) * pStep;
-            b.Transform.posX[bi] = tx;
-            b.Transform.posZ[bi] = tz;
+            b.Transform.pos[bi * 3] = tx;
+            b.Transform.pos[bi * 3 + 2] = tz;
             writeTerrainY(b, bi, tx, tz, moveType, dt, getTerrainHeight, hasRenderable, fallVelocity);
             continue;
           }
@@ -313,8 +313,8 @@ export function installMovement(world: World, deps: MovementDeps): void {
           }
 
           b.Movement.currentSpeed[bi] = currentSpeed;
-          b.Transform.posX[bi] = tx;
-          b.Transform.posZ[bi] = tz;
+          b.Transform.pos[bi * 3] = tx;
+          b.Transform.pos[bi * 3 + 2] = tz;
           writeTerrainY(b, bi, tx, tz, moveType, dt, getTerrainHeight, hasRenderable, fallVelocity);
           continue;
         }
@@ -488,17 +488,17 @@ export function installMovement(world: World, deps: MovementDeps): void {
         }
 
         // ---- write back position + facing + speed ----
-        b.Transform.posX[bi] = tx;
-        b.Transform.posZ[bi] = tz;
+        b.Transform.pos[bi * 3] = tx;
+        b.Transform.pos[bi * 3 + 2] = tz;
         b.Motion.facingY[bi] = facingY;
         b.Movement.currentSpeed[bi] = currentSpeed;
 
         // yaw quaternion from facingY (rotation about +Y)
         quat.fromAxisAngle(_yawQuat, [0, 1, 0], facingY);
-        b.Transform.quatX[bi] = _yawQuat[0];
-        b.Transform.quatY[bi] = _yawQuat[1];
-        b.Transform.quatZ[bi] = _yawQuat[2];
-        b.Transform.quatW[bi] = _yawQuat[3];
+        b.Transform.quat[bi * 4] = _yawQuat[0];
+        b.Transform.quat[bi * 4 + 1] = _yawQuat[1];
+        b.Transform.quat[bi * 4 + 2] = _yawQuat[2];
+        b.Transform.quat[bi * 4 + 3] = _yawQuat[3];
 
         // terrain follow (reads back the just-updated fallVelocity)
         fallVelocity = b.Motion.fallVelocity[bi];
@@ -509,9 +509,9 @@ export function installMovement(world: World, deps: MovementDeps): void {
 }
 
 /**
- * Update Transform.posY to follow the terrain (ground sits on it; air floats
- * FLY_HEIGHT above with smoothing; post-dash fall uses gravity). Writes both
- * posY and Motion.fallVelocity. `halfSize` here is the FULL visual half-size
+ * Update the Transform.pos y-lane to follow the terrain (ground sits on it; air
+ * floats FLY_HEIGHT above with smoothing; post-dash fall uses gravity). Writes both
+ * the y-lane and Motion.fallVelocity. `halfSize` here is the FULL visual half-size
  * (model rests on its base), distinct from the pathing half-size.
  */
 function writeTerrainY(
@@ -528,12 +528,12 @@ function writeTerrainY(
   const terrainY = getTerrainHeight(x, z);
   const size = hasRenderable ? b.Renderable.size[i] : 1;
   const halfSize = size / 2;
-  let y = b.Transform.posY[i];
+  let y = b.Transform.pos[i * 3 + 1];
 
   if (moveType === MOVE_TYPE.AIR) {
     const targetY = terrainY + halfSize + FLY_HEIGHT;
     y += (targetY - y) * FLY_SMOOTH;
-    b.Transform.posY[i] = y;
+    b.Transform.pos[i * 3 + 1] = y;
     b.Motion.fallVelocity[i] = 0;
     return;
   }
@@ -546,10 +546,10 @@ function writeTerrainY(
       y = groundY;
       fallVelocity = 0;
     }
-    b.Transform.posY[i] = y;
+    b.Transform.pos[i * 3 + 1] = y;
     b.Motion.fallVelocity[i] = fallVelocity;
   } else {
-    b.Transform.posY[i] = groundY;
+    b.Transform.pos[i * 3 + 1] = groundY;
     b.Motion.fallVelocity[i] = 0;
   }
 }

@@ -115,8 +115,8 @@ export class GroundEffectSystem implements GroundEffectHandle {
             const playerId = b.GroundEffect.playerId[i] as number;
             const typeId = groundEffectTypeId.get(e) ?? '';
             live.push({
-              x: b.Transform.posX[i] as number,
-              z: b.Transform.posZ[i] as number,
+              x: b.Transform.pos[i * 3] as number,
+              z: b.Transform.pos[i * 3 + 2] as number,
               playerId,
               radius: b.GroundEffect.radius[i] as number,
               caster: b.GroundEffect.casterEntity[i] as number,
@@ -202,7 +202,7 @@ export class GroundEffectSystem implements GroundEffectHandle {
     if (!def) { console.warn(`[marscraft][ground-effect] unknown type "${args.typeId}"`); return null; }
     const y = this._deps.heightAt(args.x, args.z);
     const res = world.spawn(
-      { component: Transform, data: { posX: args.x, posY: y, posZ: args.z } },
+      { component: Transform, data: { pos: [args.x, y, args.z] } },
       {
         component: GroundEffect,
         data: {
@@ -224,8 +224,8 @@ export class GroundEffectSystem implements GroundEffectHandle {
       {
         component: Transform,
         data: {
-          posX: 0, posY: 0.12, posZ: 0,
-          scaleX: args.radius * 2, scaleY: 0.05, scaleZ: args.radius * 2,
+          pos: [0, 0.12, 0],
+          scale: [args.radius * 2, 0.05, args.radius * 2],
         },
       },
       { component: MeshFilter, data: { assetHandle: this._deps.prims.cylinder } },
@@ -258,8 +258,8 @@ export class GroundEffectSystem implements GroundEffectHandle {
         playerId: g.value.playerId,
         radius: g.value.radius,
         remaining: Number(g.value.remainingDuration.toFixed(3)),
-        x: t.ok ? Number(t.value.posX.toFixed(2)) : null,
-        z: t.ok ? Number(t.value.posZ.toFixed(2)) : null,
+        x: t.ok ? Number(t.value.pos[0].toFixed(2)) : null,
+        z: t.ok ? Number(t.value.pos[2].toFixed(2)) : null,
       });
     }
     return out;

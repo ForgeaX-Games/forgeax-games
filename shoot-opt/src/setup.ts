@@ -11,7 +11,8 @@ import {
   createConeGeometry,
   createCylinderGeometry,
 } from '@forgeax/engine-runtime';
-import type { AssetRegistry, MaterialAsset, MeshAsset } from '@forgeax/engine-runtime';
+import type { MaterialAsset } from '@forgeax/engine-runtime';
+import type { AssetRegistry, MeshAsset } from '@forgeax/engine-assets-runtime';
 import type { Handle, World } from '@forgeax/engine-ecs';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 

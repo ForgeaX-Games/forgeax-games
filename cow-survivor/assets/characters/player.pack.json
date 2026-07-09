@@ -15,12 +15,16 @@
                 "value": "body"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 0,
-                "posZ": 0,
-                "scaleX": 0.5,
-                "scaleY": 0.55,
-                "scaleZ": 0.28
+                "pos": [
+                  0,
+                  0,
+                  0
+                ],
+                "scale": [
+                  0.5,
+                  0.55,
+                  0.28
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -39,12 +43,16 @@
                 "value": "horn_1"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 0.5,
-                "posZ": 0.02,
-                "scaleX": 0.32,
-                "scaleY": 0.32,
-                "scaleZ": 0.32
+                "pos": [
+                  0,
+                  0.5,
+                  0.02
+                ],
+                "scale": [
+                  0.32,
+                  0.32,
+                  0.32
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -63,12 +71,16 @@
                 "value": "horn_2"
               },
               "Transform": {
-                "posX": -0.34,
-                "posY": 0,
-                "posZ": 0,
-                "scaleX": 0.14,
-                "scaleY": 0.45,
-                "scaleZ": 0.14
+                "pos": [
+                  -0.34,
+                  0,
+                  0
+                ],
+                "scale": [
+                  0.14,
+                  0.45,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -87,12 +99,16 @@
                 "value": "horn_3"
               },
               "Transform": {
-                "posX": 0.34,
-                "posY": 0,
-                "posZ": 0,
-                "scaleX": 0.14,
-                "scaleY": 0.45,
-                "scaleZ": 0.14
+                "pos": [
+                  0.34,
+                  0,
+                  0
+                ],
+                "scale": [
+                  0.14,
+                  0.45,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -111,12 +127,16 @@
                 "value": "spot_1"
               },
               "Transform": {
-                "posX": -0.12,
-                "posY": -0.5,
-                "posZ": 0,
-                "scaleX": 0.18,
-                "scaleY": 0.5,
-                "scaleZ": 0.18
+                "pos": [
+                  -0.12,
+                  -0.5,
+                  0
+                ],
+                "scale": [
+                  0.18,
+                  0.5,
+                  0.18
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -135,12 +155,16 @@
                 "value": "spot_2"
               },
               "Transform": {
-                "posX": 0.12,
-                "posY": -0.5,
-                "posZ": 0,
-                "scaleX": 0.18,
-                "scaleY": 0.5,
-                "scaleZ": 0.18
+                "pos": [
+                  0.12,
+                  -0.5,
+                  0
+                ],
+                "scale": [
+                  0.18,
+                  0.5,
+                  0.18
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0

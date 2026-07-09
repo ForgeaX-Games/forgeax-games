@@ -93,7 +93,7 @@ export class RallyRenderer implements RallyRendererHandle {
       if (!t.ok) continue;
       const type = b.value.rallyResourceEntity !== NO_ENTITY ? 'resource'
         : b.value.rallyAttackEntity !== NO_ENTITY ? 'attack' : 'normal';
-      const r: Rally = { bx: t.value.posX, bz: t.value.posZ, rx: b.value.rallyX, rz: b.value.rallyZ, type };
+      const r: Rally = { bx: t.value.pos[0], bz: t.value.pos[2], rx: b.value.rallyX, rz: b.value.rallyZ, type };
       rallies.push(r);
       sig += `${rawId(e)}:${r.rx.toFixed(1)},${r.rz.toFixed(1)},${type};`;
     }
@@ -121,9 +121,9 @@ export class RallyRenderer implements RallyRendererHandle {
       const midY = (by + ry) / 2;
       const line = world.spawn(
         { component: Transform, data: {
-          posX: (bx + rx) / 2, posY: midY, posZ: (bz + rz) / 2,
-          quatX: _q[0], quatY: _q[1], quatZ: _q[2], quatW: _q[3],
-          scaleX: 0.07, scaleY: 0.07, scaleZ: len,
+          pos: [(bx + rx) / 2, midY, (bz + rz) / 2],
+          quat: [_q[0], _q[1], _q[2], _q[3]],
+          scale: [0.07, 0.07, len],
         } },
         { component: MeshFilter, data: { assetHandle: prims.box } },
         { component: MeshRenderer, data: { materials: [mat] } },
@@ -132,14 +132,14 @@ export class RallyRenderer implements RallyRendererHandle {
     }
     // flag pole (thin tall cylinder) at the rally point.
     const pole = world.spawn(
-      { component: Transform, data: { posX: rx, posY: ry + POLE_H / 2, posZ: rz, scaleX: 0.06, scaleY: POLE_H, scaleZ: 0.06 } },
+      { component: Transform, data: { pos: [rx, ry + POLE_H / 2, rz], scale: [0.06, POLE_H, 0.06] } },
       { component: MeshFilter, data: { assetHandle: prims.cylinder } },
       { component: MeshRenderer, data: { materials: [mat] } },
     );
     if (pole.ok) this._marks.push(pole.value);
     // flag (small box near the pole top).
     const flag = world.spawn(
-      { component: Transform, data: { posX: rx + 0.18, posY: ry + POLE_H - 0.2, posZ: rz, scaleX: 0.36, scaleY: 0.24, scaleZ: 0.02 } },
+      { component: Transform, data: { pos: [rx + 0.18, ry + POLE_H - 0.2, rz], scale: [0.36, 0.24, 0.02] } },
       { component: MeshFilter, data: { assetHandle: prims.box } },
       { component: MeshRenderer, data: { materials: [mat] } },
     );

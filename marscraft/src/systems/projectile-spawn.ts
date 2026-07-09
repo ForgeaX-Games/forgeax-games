@@ -17,8 +17,9 @@
 import { type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer,
-  type Handle, type MeshAsset,
+  type Handle,
 } from '@forgeax/engine-runtime';
+import { type MeshAsset } from '@forgeax/engine-assets-runtime';
 import {
   Projectile, PROJECTILE_TYPE,
   projectileWeaponId,
@@ -118,8 +119,8 @@ export function spawnProjectile(
     {
       component: Transform,
       data: {
-        posX: a.startX, posY: a.startY, posZ: a.startZ,
-        scaleX: size, scaleY: size, scaleZ: size,
+        pos: [a.startX, a.startY, a.startZ],
+        scale: [size, size, size],
       },
     },
     {

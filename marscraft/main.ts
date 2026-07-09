@@ -123,7 +123,7 @@ const PBR_BASE_GUID = 'b1a4c0de-1111-4a2b-9c3d-000000000001';
 // reads truly DARK (a lit near-black material got washed to grey by the skylight).
 const UNLIT_BASE_GUID = 'b1a4c0de-1111-4a2b-9c3d-000000000002';
 
-type Ctx = { world: World; assets: import('@forgeax/engine-runtime').AssetRegistry };
+type Ctx = { world: World; assets: import('@forgeax/engine-assets-runtime').AssetRegistry };
 
 /**
  * Site a town hall next to a mineral field. The CC is offset from the field
@@ -163,7 +163,7 @@ function nearestMineralCluster(
   for (const e of fields.minerals) {
     const t = world.get(e, Transform);
     if (!t.ok) continue;
-    const x = t.value.posX, z = t.value.posZ;
+    const x = t.value.pos[0], z = t.value.pos[2];
     pts.push({ x, z });
     const dsq = (x - px) ** 2 + (z - pz) ** 2;
     if (dsq < bestSq) { bestSq = dsq; best = { e, x, z }; }
@@ -273,7 +273,7 @@ export async function bootstrap(world: World, bctx?: BootstrapContext) {
   const camQuat = quat.create();
   quat.fromAxisAngle(camQuat, [1, 0, 0], pitch);
   const cameraEntity = world.spawn(
-    { component: Transform, data: { posX: 0, posY: 34, posZ: 26, quatX: camQuat[0], quatY: camQuat[1], quatZ: camQuat[2], quatW: camQuat[3] } },
+    { component: Transform, data: { pos: [0, 34, 26], quat: camQuat } },
     { component: Camera, data: { ...perspective({ fov: Math.PI / 4, aspect, near: 0.5, far: 600 }), clearR: 0.55, clearG: 0.34, clearB: 0.26 } },
   ).unwrap();
 
@@ -838,7 +838,7 @@ export async function bootstrap(world: World, bctx?: BootstrapContext) {
         // player base (from the auto-start above) is the AI's attack target;
         // falls back to the player spawn until the AI observes the real base.
         enemyBase: playerBase && world.get(playerBase, Transform).ok
-          ? { x: world.get(playerBase, Transform).value.posX, z: world.get(playerBase, Transform).value.posZ }
+          ? { x: world.get(playerBase, Transform).value.pos[0], z: world.get(playerBase, Transform).value.pos[2] }
           : { x: playerSpawn.x, z: playerSpawn.z },
       }).install(world);
     }
@@ -1006,7 +1006,7 @@ export async function bootstrap(world: World, bctx?: BootstrapContext) {
       installControlGroupBar({
         groups: controlGroups,
         onRecall: (n) => cgSys.recall(n),
-        onCenter: (n) => { cgSys.recall(n); const g = cgSys.getGroup(n); if (g.length) { let sx = 0, sz = 0; for (const e of g) { const t = world.get(e, Transform); if (t.ok) { sx += t.value.posX; sz += t.value.posZ; } } cam?.jumpTo?.(sx / g.length, sz / g.length); } },
+        onCenter: (n) => { cgSys.recall(n); const g = cgSys.getGroup(n); if (g.length) { let sx = 0, sz = 0; for (const e of g) { const t = world.get(e, Transform); if (t.ok) { sx += t.value.pos[0]; sz += t.value.pos[2]; } } cam?.jumpTo?.(sx / g.length, sz / g.length); } },
       });
     }
 
@@ -1172,7 +1172,7 @@ export async function bootstrap(world: World, bctx?: BootstrapContext) {
       // M5 movement + pathfinding: the pathing stack + a deterministic move-order
       // test helper. `moveSelectedTo(x,z)` issues a formation-spread move order to
       // the current selection synchronously; after a few frames the selected
-      // units' Transform.posX/posZ head toward (x,z).
+      // units' Transform.pos[0]/pos[2] head toward (x,z).
       commandLayer,
       moveSelectedTo: (x: number, z: number) => commandLayer?.moveSelectedTo(x, z),
       screenToGround: (px: number, py: number) => commandLayer?.screenToGround(px, py) ?? null,
@@ -1319,9 +1319,11 @@ export async function bootstrap(world: World, bctx?: BootstrapContext) {
         const e = placement.placeAt(typeId, x, z, builder);
         if (!e) { if (builder) world.set(builder, Health, { isDead: true }); return null; }
         // Park the builder ON the site so the construction tick sees it on-site.
-        if (builder && world.get(builder, Transform).ok) {
+        const builderT = builder ? world.get(builder, Transform) : null;
+        if (builder && builderT?.ok) {
           const bt = world.get(e, Transform);
-          if (bt.ok) world.set(builder, Transform, { posX: bt.value.posX + 1, posZ: bt.value.posZ + 1 });
+          // move builder to the site (offset +1,+1 on X/Z); keep its own Y.
+          if (bt.ok) world.set(builder, Transform, { pos: [bt.value.pos[0] + 1, builderT.value.pos[1], bt.value.pos[2] + 1] });
         }
         return e as unknown as number;
       },
@@ -1883,7 +1885,7 @@ export async function bootstrap(world: World, bctx?: BootstrapContext) {
         return {
           selected: sel.length,
           entity: e as unknown as number,
-          pos: t.ok ? { x: t.value.posX, z: t.value.posZ, y: t.value.posY } : 'no-transform',
+          pos: t.ok ? { x: t.value.pos[0], z: t.value.pos[2], y: t.value.pos[1] } : 'no-transform',
           movement: mv.ok ? {
             speed: mv.value.speed, currentSpeed: mv.value.currentSpeed,
             hasTarget: mv.value.hasTarget, targetX: mv.value.targetX, targetZ: mv.value.targetZ,
@@ -1925,7 +1927,7 @@ export async function bootstrap(world: World, bctx?: BootstrapContext) {
             entity: raw, state: h.value.state, targetMineral: h.value.targetMineral,
             targetBase: h.value.targetBase, carryAmount: h.value.carryAmount,
             isHarvesting: h.value.isHarvesting, command: cmd ? cmd.type : null,
-            pos: t.ok ? { x: +t.value.posX.toFixed(1), z: +t.value.posZ.toFixed(1) } : null,
+            pos: t.ok ? { x: +t.value.pos[0].toFixed(1), z: +t.value.pos[2].toFixed(1) } : null,
             mv: mv.ok ? { hasTarget: mv.value.hasTarget, tx: +mv.value.targetX.toFixed(1), tz: +mv.value.targetZ.toFixed(1), spd: mv.value.speed, cur: +mv.value.currentSpeed.toFixed(2) } : null,
           });
         }

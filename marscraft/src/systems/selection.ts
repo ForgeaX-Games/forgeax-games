@@ -45,8 +45,9 @@
 import {
   Transform, Camera, MeshFilter, MeshRenderer, ChildOf,
   quat,
-  type Handle, type MeshAsset,
+  type Handle,
 } from '@forgeax/engine-runtime';
+import { type MeshAsset } from '@forgeax/engine-assets-runtime';
 import { createTorusGeometry } from '@forgeax/engine-geometry';
 import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
@@ -159,14 +160,14 @@ function readCamera(world: World, cameraEntity: EntityHandle): CamProj | null {
   if (!tr.ok || !cam.ok) return null;
   const t = tr.value;
   const c = cam.value;
-  const q: [number, number, number, number] = [t.quatX, t.quatY, t.quatZ, t.quatW];
+  const q: [number, number, number, number] = [t.quat[0], t.quat[1], t.quat[2], t.quat[3]];
   // Default camera looks down -Z, right +X, up +Y (engine convention). Rotate the
   // basis by the camera quaternion to get world-space axes.
   quat.transformVec3(_fwd, q, [0, 0, -1]);
   quat.transformVec3(_right, q, [1, 0, 0]);
   quat.transformVec3(_up, q, [0, 1, 0]);
   return {
-    px: t.posX, py: t.posY, pz: t.posZ,
+    px: t.pos[0], py: t.pos[1], pz: t.pos[2],
     rx: _right[0], ry: _right[1], rz: _right[2],
     ux: _up[0], uy: _up[1], uz: _up[2],
     fx: _fwd[0], fy: _fwd[1], fz: _fwd[2],
@@ -291,7 +292,7 @@ export function installSelection(
   // forgeax queries are only live inside a system's fn (the batch column views are
   // valid only for that frame). Pointer-up resolution therefore runs INSIDE the
   // system fn, against that frame's query bundle, captured here for the helpers.
-  // Shapes: each batch exposes `Entity.self[]`, `Transform.posX/Y/Z[]`,
+  // Shapes: each batch exposes `Entity.self[]`, `Transform.pos[]` (flat xyz per row),
   // `Selectable.selectionRadius/priority[]`, `Faction.playerId[]`, `UnitType.*[]`.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   type UnitBatch = any;
@@ -330,9 +331,9 @@ export function installSelection(
           {
             component: Transform,
             data: {
-              posX: 0, posY: yLift, posZ: 0,
-              quatX: _qe[0], quatY: _qe[1], quatZ: _qe[2], quatW: _qe[3],
-              scaleX: radius, scaleY: radius, scaleZ: radius,
+              pos: [0, yLift, 0],
+              quat: [_qe[0], _qe[1], _qe[2], _qe[3]],
+              scale: [radius, radius, radius],
             },
           },
           { component: MeshFilter, data: { assetHandle: ra.mesh } },
@@ -346,16 +347,16 @@ export function installSelection(
         const radius = sel.ok ? Math.max(0.4, sel.value.selectionRadius * 1.4) : 1.0;
         quat.fromAxisAngle(_qe, [1, 0, 0], -Math.PI / 2);
         world.set(ring, Transform, {
-          posX: 0, posY: 0.05, posZ: 0,
-          quatX: _qe[0], quatY: _qe[1], quatZ: _qe[2], quatW: _qe[3],
-          scaleX: radius, scaleY: radius, scaleZ: radius,
+          pos: [0, 0.05, 0],
+          quat: [_qe[0], _qe[1], _qe[2], _qe[3]],
+          scale: [radius, radius, radius],
         });
       }
     } else {
       const ring = ringOf.get(id);
       if (ring !== undefined) {
         // Hide by collapsing scale to 0 (cheaper than despawn+respawn churn).
-        world.set(ring, Transform, { scaleX: 0, scaleY: 0, scaleZ: 0 });
+        world.set(ring, Transform, { scale: [0, 0, 0] });
       }
     }
   }
@@ -434,9 +435,9 @@ export function installSelection(
         const n = batch.Entity.self.length;
         for (let i = 0; i < n; i++) {
           if (!isOwn(batch.Faction.playerId[i])) continue;
-          const wx = batch.Transform.posX[i];
-          const wy = batch.Transform.posY[i];
-          const wz = batch.Transform.posZ[i];
+          const wx = batch.Transform.pos[i * 3];
+          const wy = batch.Transform.pos[i * 3 + 1];
+          const wz = batch.Transform.pos[i * 3 + 2];
           projectPoint(cam, wx, wy, wz, w, h, proj);
           if (!proj.visible) continue;
           // Screen-space pick radius from the unit's selectionRadius, scaled by the
@@ -510,9 +511,9 @@ export function installSelection(
         if (batch.UnitType.race[i] !== wantRace) continue;
         if (batch.UnitType.combatType[i] !== wantCombat) continue;
         const e = batch.Entity.self[i];
-        const wx = batch.Transform.posX[i];
-        const wy = batch.Transform.posY[i];
-        const wz = batch.Transform.posZ[i];
+        const wx = batch.Transform.pos[i * 3];
+        const wy = batch.Transform.pos[i * 3 + 1];
+        const wz = batch.Transform.pos[i * 3 + 2];
         projectPoint(cam, wx, wy, wz, w, h, proj);
         if (!proj.visible) continue;
         if (proj.x < 0 || proj.x > w || proj.y < 0 || proj.y > h) continue; // on-screen only
@@ -537,9 +538,9 @@ export function installSelection(
         const n = batch.Entity.self.length;
         for (let i = 0; i < n; i++) {
           if (!isOwn(batch.Faction.playerId[i])) continue;
-          const wx = batch.Transform.posX[i];
-          const wy = batch.Transform.posY[i];
-          const wz = batch.Transform.posZ[i];
+          const wx = batch.Transform.pos[i * 3];
+          const wy = batch.Transform.pos[i * 3 + 1];
+          const wz = batch.Transform.pos[i * 3 + 2];
           projectPoint(cam, wx, wy, wz, w, h, proj);
           if (!proj.visible) continue;
           if (proj.x < minX || proj.x > maxX || proj.y < minY || proj.y > maxY) continue;

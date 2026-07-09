@@ -14,9 +14,10 @@
 import {
   AnimationPlayer, ChildOf, Materials, MeshFilter, MeshRenderer,
   SceneInstance, Skin, Transform,
-  HANDLE_CUBE, HANDLE_SPHERE, quat,
+  quat,
   type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { AnimationClip, Handle, SceneAsset } from '@forgeax/engine-types';
@@ -453,7 +454,7 @@ export class MonsterManager {
   spawn(kind: MonsterKind, x: number, z: number, zone: 'wild' | 'den'): Monster | null {
     const def = MONSTERS[kind];
     const rootRes = this.world.spawn(
-      { component: Transform, data: { posX: x, posY: 0, posZ: z, scaleX: 1, scaleY: 1, scaleZ: 1 } },
+      { component: Transform, data: { pos: [x, 0, z], scale: [1, 1, 1] } },
     );
     if (!rootRes.ok) return null;
     const root = rootRes.value as EntityHandle;
@@ -491,9 +492,9 @@ export class MonsterManager {
           // the detach, the root transform applies TWICE.
           this.world.removeComponent(skinEnt, ChildOf);
           this.world.set(skinEnt, Transform, {
-            posX: 0, posY: 0, posZ: 0,
-            quatX: 0, quatY: 0, quatZ: 0, quatW: 1,
-            scaleX: 1, scaleY: 1, scaleZ: 1,
+            pos: [0, 0, 0],
+            quat: [0, 0, 0, 1],
+            scale: [1, 1, 1],
           });
         } else {
           console.warn(`[hellforge] ${kind} GLB instantiated but no Skin entity — animation off`);
@@ -507,13 +508,13 @@ export class MonsterManager {
       for (const ps of def.parts) {
         const slot = bank.byKey.get(ps.mat);
         if (!slot) continue;
-        const tform: Record<string, number> = {
-          posX: ps.px, posY: ps.py, posZ: ps.pz,
-          scaleX: ps.sx, scaleY: ps.sy, scaleZ: ps.sz,
+        const tform: { pos: number[]; scale: number[]; quat?: number[] } = {
+          pos: [ps.px, ps.py, ps.pz],
+          scale: [ps.sx, ps.sy, ps.sz],
         };
         if (ps.rotY !== undefined) {
           const q = quat.eulerY(ps.rotY);
-          tform.quatX = q[0]!; tform.quatY = q[1]!; tform.quatZ = q[2]!; tform.quatW = q[3]!;
+          tform.quat = [q[0]!, q[1]!, q[2]!, q[3]!];
         }
         const partRes = this.world.spawn(
           { component: Transform, data: tform },
@@ -712,7 +713,7 @@ export class MonsterManager {
           // Loose the bolt at the player's CURRENT position.
           const bd = Math.hypot(dx, dz) || 1;
           const spawned = this.world.spawn(
-            { component: Transform, data: { posX: m.x, posY: 1.1, posZ: m.z, scaleX: 0.22, scaleY: 0.22, scaleZ: 0.22 } },
+            { component: Transform, data: { pos: [m.x, 1.1, m.z], scale: [0.22, 0.22, 0.22] } },
             { component: MeshFilter, data: { assetHandle: HANDLE_SPHERE } },
             { component: MeshRenderer, data: { materials: [this.boltMat] } },
           );
@@ -789,9 +790,9 @@ export class MonsterManager {
       const bob = moving && !isGlb ? Math.abs(Math.sin(m.bobPhase)) * 0.09 : 0;
       const q = quat.eulerY(m.yaw);
       this.world.set(m.e, Transform, {
-        posX: m.x, posY: bob, posZ: m.z,
-        quatX: q[0]!, quatY: q[1]!, quatZ: q[2]!, quatW: q[3]!,
-        scaleX: 1, scaleY: 1, scaleZ: 1,
+        pos: [m.x, bob, m.z],
+        quat: [q[0]!, q[1]!, q[2]!, q[3]!],
+        scale: [1, 1, 1],
       });
 
       if (isGlb) {
@@ -854,8 +855,8 @@ export class MonsterManager {
         continue;
       }
       this.world.set(b.e, Transform, {
-        posX: b.x, posY: b.y, posZ: b.z,
-        scaleX: 0.22, scaleY: 0.22, scaleZ: 0.22,
+        pos: [b.x, b.y, b.z],
+        scale: [0.22, 0.22, 0.22],
       });
     }
   }

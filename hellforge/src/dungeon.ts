@@ -15,9 +15,9 @@
 
 import {
   Transform, MeshFilter, MeshRenderer, Materials,
-  HANDLE_CUBE,
   type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle, SceneAsset } from '@forgeax/engine-types';
@@ -84,7 +84,7 @@ export class Dungeon {
           const res = await assets.loadByGuid<SceneAsset>(g.value);
           if (res.ok && res.value) {
             const rootRes = this.world.spawn(
-              { component: Transform, data: { posX: DUNGEON_ORIGIN.x, posY: 0, posZ: DUNGEON_ORIGIN.z, scaleX: 1, scaleY: 1, scaleZ: 1 } },
+              { component: Transform, data: { pos: [DUNGEON_ORIGIN.x, 0, DUNGEON_ORIGIN.z], scale: [1, 1, 1] } },
             );
             if (rootRes.ok) {
               const handle = this.world.allocSharedRef<'SceneAsset', SceneAsset>('SceneAsset', res.value);
@@ -141,13 +141,13 @@ export class Dungeon {
       crate:     mkMat([0.45, 0.30, 0.18, 1], { rough: 0.85 }),
     };
     for (const g of this.layout.geometry) {
-      const t: Record<string, number> = {
-        posX: g.x + DUNGEON_ORIGIN.x, posY: g.y, posZ: g.z + DUNGEON_ORIGIN.z,
-        scaleX: g.sx, scaleY: g.sy, scaleZ: g.sz,
+      const t: { pos: number[]; scale: number[]; quat?: number[] } = {
+        pos: [g.x + DUNGEON_ORIGIN.x, g.y, g.z + DUNGEON_ORIGIN.z],
+        scale: [g.sx, g.sy, g.sz],
       };
       if (g.rotY !== undefined) {
         const q = quatY(g.rotY);
-        t.quatX = q[0]; t.quatY = q[1]; t.quatZ = q[2]; t.quatW = q[3];
+        t.quat = [q[0], q[1], q[2], q[3]];
       }
       this.world.spawn(
         { component: Transform, data: t },

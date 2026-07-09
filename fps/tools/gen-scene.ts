@@ -59,7 +59,7 @@ function std(rgb: Vec3, rough = 0.6, metal = 0, emis?: Vec3, ei = 1): MaterialDa
 // ── geometry emitters (port of main.ts `box` / `spawnMesh`) ────────────────────
 function box(parent: number, name: string, mat: MaterialData, px: number, py: number, pz: number, sx: number, sy: number, sz: number, collider?: Collider): number {
   const components: Components = {
-    Transform: { x: r4(px), y: r4(py), z: r4(pz), scaleX: r4(sx), scaleY: r4(sy), scaleZ: r4(sz) },
+    Transform: { x: r4(px), y: r4(py), z: r4(pz), scale: [r4(sx), r4(sy), r4(sz)] },
     Mesh: { kind: 'cube' },
     Material: mat,
   };
@@ -68,7 +68,7 @@ function box(parent: number, name: string, mat: MaterialData, px: number, py: nu
 }
 function meshE(parent: number, name: string, kind: 'sphere' | 'cylinder', mat: MaterialData, px: number, py: number, pz: number, sx: number, sy: number, sz: number, collider?: Collider): number {
   const components: Components = {
-    Transform: { x: r4(px), y: r4(py), z: r4(pz), scaleX: r4(sx), scaleY: r4(sy), scaleZ: r4(sz) },
+    Transform: { x: r4(px), y: r4(py), z: r4(pz), scale: [r4(sx), r4(sy), r4(sz)] },
     Mesh: { kind },
     Material: mat,
   };
@@ -188,7 +188,7 @@ const tower = (cx: number, cz: number): void => {
   const g = group(`Tower ${++nTower}`, gBuild);
   for (const sx of [-1, 1]) for (const sz of [-1, 1]) box(g, `leg ${sx},${sz}`, matMetalWall, cx + sx, 2.4, cz + sz, 0.3, 4.8, 0.3);
   // center box collider (hw=hd=1.3) — invisible, matches main.ts walls.push.
-  add('collider', g, { Transform: { x: cx, y: 0, z: cz, scaleX: 2.6, scaleY: 1, scaleZ: 2.6 }, Collider: { shape: 'box' } });
+  add('collider', g, { Transform: { x: cx, y: 0, z: cz, scale: [2.6, 1, 2.6] }, Collider: { shape: 'box' } });
   box(g, 'roof', matRoof, cx, 4.9, cz, 3.0, 0.3, 3.0);
   box(g, 'rail N', matMetalWall, cx, 5.45, cz + 1.4, 3.0, 0.9, 0.14);
   box(g, 'rail S', matMetalWall, cx, 5.45, cz - 1.4, 3.0, 0.9, 0.14);

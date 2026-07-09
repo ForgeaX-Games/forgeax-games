@@ -1,4 +1,5 @@
-import { Transform, MeshFilter, MeshRenderer, Camera, Skylight, perspective, quat, HANDLE_CUBE, type Handle, type MaterialAsset } from '@forgeax/engine-runtime';
+import { Transform, MeshFilter, MeshRenderer, Camera, Skylight, perspective, quat, type Handle, type MaterialAsset } from '@forgeax/engine-runtime';
+import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import { defineComponent, Entity, type World } from '@forgeax/engine-ecs';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { BootstrapContext } from '@forgeax/engine-app';
@@ -32,7 +33,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const baseMaterialGuid = guidRes.value;
 
   world.spawn(
-    { component: Transform, data: { posY: 0, posZ: 8 } },
+    { component: Transform, data: { pos: [0, 0, 8] } },
     // clearR/G/B = visible sky-ish background on WebKit (no cubemap skybox
     // there; without this the background is black). Neutral studio blue-grey.
     { component: Camera, data: { ...perspective({ fov: Math.PI / 3, aspect }), clearR: 0.14, clearG: 0.17, clearB: 0.24 } },
@@ -56,7 +57,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const ax = Math.random() - 0.5, ay = Math.random() - 0.5, az = Math.random() - 0.5;
     const len = Math.hypot(ax, ay, az) || 1;
     world.spawn(
-      { component: Transform, data: { posX: (Math.random() - 0.5) * 8, posY: (Math.random() - 0.5) * 5, posZ: (Math.random() - 0.5) * 6 } },
+      { component: Transform, data: { pos: [(Math.random() - 0.5) * 8, (Math.random() - 0.5) * 5, (Math.random() - 0.5) * 6] } },
       { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
       { component: MeshRenderer, data: { materials: [material] } },
       { component: Spin, data: { axisX: ax / len, axisY: ay / len, axisZ: az / len, speed: 0.5 + Math.random() * 2 } },
@@ -74,9 +75,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         const n = b.Entity.self.length;
         for (let i = 0; i < n; i++) {
           quat.fromAxisAngle(dq, [b.Spin.axisX[i]!, b.Spin.axisY[i]!, b.Spin.axisZ[i]!], dt * b.Spin.speed[i]!);
-          cur[0] = b.Transform.quatX[i]!; cur[1] = b.Transform.quatY[i]!; cur[2] = b.Transform.quatZ[i]!; cur[3] = b.Transform.quatW[i]!;
+          cur[0] = b.Transform.quat[i * 4 + 0]!; cur[1] = b.Transform.quat[i * 4 + 1]!; cur[2] = b.Transform.quat[i * 4 + 2]!; cur[3] = b.Transform.quat[i * 4 + 3]!;
           quat.multiply(cur, dq, cur);
-          b.Transform.quatX[i] = cur[0]; b.Transform.quatY[i] = cur[1]; b.Transform.quatZ[i] = cur[2]; b.Transform.quatW[i] = cur[3];
+          b.Transform.quat[i * 4 + 0] = cur[0]; b.Transform.quat[i * 4 + 1] = cur[1]; b.Transform.quat[i * 4 + 2] = cur[2]; b.Transform.quat[i * 4 + 3] = cur[3];
         }
       }
     },

@@ -156,14 +156,14 @@ export class BuffAuraSystem implements BuffAuraHandle {
     // activation burst (one-shot flash + motes, delegated to VfxSystem) + ring
     if (cfg.burst) {
       const b = cfg.burst;
-      this._vfx.spawnVfx('buff_burst', tf.posX, tf.posY + 0.3, tf.posZ, {
+      this._vfx.spawnVfx('buff_burst', tf.pos[0], tf.pos[1] + 0.3, tf.pos[2], {
         color: rgbOf(b.color), count: b.count, size: b.size, speed: b.speed,
       });
       if (b.ring) {
         const mesh = this._flat.ring(0.82, 1.0, 32);
         const mat = this._tint(rgbOf(b.ring.color), { metallic: 0, roughness: 1 });
         const res = this._world.spawn(
-          { component: Transform, data: { posX: tf.posX, posY: tf.posY + 0.05, posZ: tf.posZ, scaleX: 0.01, scaleY: 1, scaleZ: 0.01 } },
+          { component: Transform, data: { pos: [tf.pos[0], tf.pos[1] + 0.05, tf.pos[2]], scale: [0.01, 1, 0.01] } },
           { component: MeshFilter, data: { assetHandle: mesh } },
           { component: MeshRenderer, data: { materials: [mat] } },
         );
@@ -178,7 +178,7 @@ export class BuffAuraSystem implements BuffAuraHandle {
         : this._flat.disc(m.size, m.shape === 'diamond' ? 4 : 16);
       const mat = this._tint(rgbOf(m.color), { metallic: 0, roughness: 1 });
       const res = this._world.spawn(
-        { component: Transform, data: { posX: tf.posX, posY: tf.posY + 1.0, posZ: tf.posZ } },
+        { component: Transform, data: { pos: [tf.pos[0], tf.pos[1] + 1.0, tf.pos[2]] } },
         { component: MeshFilter, data: { assetHandle: mesh } },
         { component: MeshRenderer, data: { materials: [mat] } },
       );
@@ -191,7 +191,7 @@ export class BuffAuraSystem implements BuffAuraHandle {
       const mesh = this._flat.ring(gr.radius * 0.85, gr.radius, 32);
       const mat = this._tint(rgbOf(gr.color), { metallic: 0, roughness: 1 });
       const res = this._world.spawn(
-        { component: Transform, data: { posX: tf.posX, posY: tf.posY + 0.05, posZ: tf.posZ } },
+        { component: Transform, data: { pos: [tf.pos[0], tf.pos[1] + 0.05, tf.pos[2]] } },
         { component: MeshFilter, data: { assetHandle: mesh } },
         { component: MeshRenderer, data: { materials: [mat] } },
       );
@@ -234,7 +234,7 @@ export class BuffAuraSystem implements BuffAuraHandle {
           if (p.direction === 'up') vel = [0, p.speed, 0];
           else if (p.direction === 'down') vel = [(this._rng() - 0.5) * p.speed * 0.2, -p.speed, (this._rng() - 0.5) * p.speed * 0.2];
           else vel = [Math.cos(this._rng() * Math.PI * 2) * p.speed * 0.5, p.speed * 0.3, Math.sin(this._rng() * Math.PI * 2) * p.speed * 0.5];
-          this._vfx.spawnVfx('buff_mote', tf.posX + ox, tf.posY + 0.4, tf.posZ + oz, {
+          this._vfx.spawnVfx('buff_mote', tf.pos[0] + ox, tf.pos[1] + 0.4, tf.pos[2] + oz, {
             color: rgbOf(packed), size: p.size, vel, lifetime: p.lifetime,
           });
         }
@@ -244,10 +244,12 @@ export class BuffAuraSystem implements BuffAuraHandle {
       if (inst.marker && cfg.marker) {
         const m = cfg.marker;
         const floatY = m.pulse ? Math.sin(inst.elapsed * 3) * 0.05 : 0;
-        const patch: Record<string, number> = { posX: tf.posX, posY: tf.posY + 1.0 + floatY, posZ: tf.posZ };
+        const patch: { pos: [number, number, number]; quat?: [number, number, number, number] } = {
+          pos: [tf.pos[0], tf.pos[1] + 1.0 + floatY, tf.pos[2]],
+        };
         if (m.spin) {
           const half = inst.elapsed * 0.5 * 0.5; // θ/2, θ = elapsed*0.5
-          patch.quatX = 0; patch.quatY = Math.sin(half); patch.quatZ = 0; patch.quatW = Math.cos(half);
+          patch.quat = [0, Math.sin(half), 0, Math.cos(half)];
         }
         world.set(inst.marker, Transform, patch);
       }
@@ -255,8 +257,11 @@ export class BuffAuraSystem implements BuffAuraHandle {
       // foot ground-ring: follow + pulse (opacity->scale)
       if (inst.ground && cfg.groundRing) {
         const gr = cfg.groundRing;
-        const patch: Record<string, number> = { posX: tf.posX, posY: tf.posY + 0.05, posZ: tf.posZ };
-        if (gr.pulse) { const s = 1 + Math.sin(inst.elapsed * 4) * 0.15; patch.scaleX = s; patch.scaleZ = s; }
+        const patch: { pos: [number, number, number]; scale?: [number, number, number] } = {
+          pos: [tf.pos[0], tf.pos[1] + 0.05, tf.pos[2]],
+        };
+        // ground ring spawned with default scale [1,1,1]; pulse drives X/Z, Y stays 1.
+        if (gr.pulse) { const s = 1 + Math.sin(inst.elapsed * 4) * 0.15; patch.scale = [s, 1, s]; }
         world.set(inst.ground, Transform, patch);
       }
     }
@@ -270,7 +275,8 @@ export class BuffAuraSystem implements BuffAuraHandle {
         if (r.life <= 0) { if (world.get(r.entity, Transform).ok) world.despawn(r.entity); continue; }
         const progress = 1 - r.life / r.maxLife;
         const s = Math.max(0.01, r.radius * progress);
-        world.set(r.entity, Transform, { scaleX: s, scaleZ: s });
+        // burst ring spawned with scale [0.01, 1, 0.01]; expand drives X/Z, Y stays 1.
+        world.set(r.entity, Transform, { scale: [s, 1, s] });
         keepRings.push(r);
       }
       this._rings.length = 0;

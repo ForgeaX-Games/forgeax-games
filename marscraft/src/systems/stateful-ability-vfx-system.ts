@@ -202,7 +202,7 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
     const e = toHandle(req.entityId);
     const tr = this._world.get(e, Transform);
     if (!tr.ok) return;
-    const { posX: x, posY: y, posZ: z } = tr.value;
+    const [x, y, z] = tr.value.pos;
     const base: EffectInstance = { entity: e, entityId: req.entityId, tag: req.tag, driver: req.driver, kind: req.kind, parts: [], elapsed: 0, particleTimer: 0, lastX: x, lastZ: z, timed: req.seconds ?? 0, tx: req.tx ?? x, tz: req.tz ?? z };
     if (req.kind === 'eye') base.parts = this._buildEye(x, y, z);
     else if (req.kind === 'phase') base.parts = this._buildPhase(e, x, y, z);
@@ -217,8 +217,8 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
   private _decal(mesh: Handle<'MeshAsset', 'shared'>, color: [number, number, number], x: number, y: number, z: number, anim: Decal['anim'], life: number, a: number, b = 0, rotY = 0): void {
     const mat = this._deps.tint(color, { metallic: 0, roughness: 1 });
     const s0 = anim === 'expand' ? 0.01 : 1;
-    const data: Record<string, number> = { posX: x, posY: y, posZ: z, scaleX: s0, scaleY: anim === 'rise' ? 0.01 : s0, scaleZ: s0 };
-    if (rotY) { data.quatY = Math.sin(rotY / 2); data.quatW = Math.cos(rotY / 2); }
+    const data: Record<string, number[]> = { pos: [x, y, z], scale: [s0, anim === 'rise' ? 0.01 : s0, s0] };
+    if (rotY) { data.quat = [0, Math.sin(rotY / 2), 0, Math.cos(rotY / 2)]; }
     const res = this._world.spawn(
       { component: Transform, data },
       { component: MeshFilter, data: { assetHandle: mesh } },
@@ -230,7 +230,7 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
   private _spawnMesh(mesh: Handle<'MeshAsset', 'shared'>, color: [number, number, number], x: number, y: number, z: number, scale: number): EntityHandle | null {
     const mat = this._deps.tint(color, { metallic: 0, roughness: 1 });
     const res = this._world.spawn(
-      { component: Transform, data: { posX: x, posY: y, posZ: z, scaleX: scale, scaleY: scale, scaleZ: scale } },
+      { component: Transform, data: { pos: [x, y, z], scale: [scale, scale, scale] } },
       { component: MeshFilter, data: { assetHandle: mesh } },
       { component: MeshRenderer, data: { materials: [mat] } },
     );
@@ -274,7 +274,7 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
   private _cloakBurst(entityId: number): void {
     const tr = this._world.get(toHandle(entityId), Transform);
     if (!tr.ok) return;
-    this._deps.vfx.spawnVfx('buff_burst', tr.value.posX, tr.value.posY + 0.3, tr.value.posZ, {
+    this._deps.vfx.spawnVfx('buff_burst', tr.value.pos[0], tr.value.pos[1] + 0.3, tr.value.pos[2], {
       color: [0.53, 0.67, 0.8], count: 7, size: 0.06, speed: 1.2,
     });
   }
@@ -286,7 +286,7 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
     if (inst.kind === 'earth' || inst.kind === 'spine') {
       const tr = this._world.get(inst.entity, Transform);
       if (tr.ok) {
-        const { posX: x, posY: y, posZ: z } = tr.value;
+        const [x, y, z] = tr.value.pos;
         if (inst.kind === 'earth') this._emitDebris(x, y, z, 14, 0.24, [0.4, 0.32, 0.22]);
         else { this._decal(this._flat.disc(0.4, 6), [0.87, 0.8, 0.67], x, y, z, 'rise', 1.1, 1.6); this._emitDebris(x, y, z, 20, 0.22, [0.53, 0.47, 0.33]); }
       }
@@ -339,51 +339,51 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
   }
 
   /** earth_shatter: rocks + dust + crack lines laid along the dash path. */
-  private _updateEarth(inst: EffectInstance, tf: { posX: number; posY: number; posZ: number }, dt: number): void {
-    const dx = tf.posX - inst.lastX, dz = tf.posZ - inst.lastZ;
+  private _updateEarth(inst: EffectInstance, tf: { pos: number[] }, dt: number): void {
+    const dx = tf.pos[0] - inst.lastX, dz = tf.pos[2] - inst.lastZ;
     const dist = Math.hypot(dx, dz);
     if (dist >= 0.4) {
       const ang = Math.atan2(dx, dz) + (this._rng() - 0.5) * 1.2, len = 0.3 + this._rng() * 0.4;
       // a short ground crack (thin flat box) + a rock spray at the current step
-      this._decal(this._flat.ellipse(len, 0.05, 4), [0.2, 0.13, 0.07], tf.posX, tf.posY + 0.03, tf.posZ, 'hold', 1.5, 0, 0, ang);
-      this._emitDebris(tf.posX, tf.posY, tf.posZ, 5, 0.2, [0.33, 0.27, 0.2]);
-      inst.lastX = tf.posX; inst.lastZ = tf.posZ;
+      this._decal(this._flat.ellipse(len, 0.05, 4), [0.2, 0.13, 0.07], tf.pos[0], tf.pos[1] + 0.03, tf.pos[2], 'hold', 1.5, 0, 0, ang);
+      this._emitDebris(tf.pos[0], tf.pos[1], tf.pos[2], 5, 0.2, [0.33, 0.27, 0.2]);
+      inst.lastX = tf.pos[0]; inst.lastZ = tf.pos[2];
     }
     inst.particleTimer += dt;
     if (inst.particleTimer >= 0.04) {
       inst.particleTimer = 0;
-      this._deps.vfx.spawnVfx('buff_mote', tf.posX + (this._rng() - 0.5) * 2, tf.posY + 0.1, tf.posZ + (this._rng() - 0.5) * 2, { color: [0.8, 0.73, 0.53], size: 0.35, vel: [0, 0.3, 0], lifetime: 0.8 });
+      this._deps.vfx.spawnVfx('buff_mote', tf.pos[0] + (this._rng() - 0.5) * 2, tf.pos[1] + 0.1, tf.pos[2] + (this._rng() - 0.5) * 2, { color: [0.8, 0.73, 0.53], size: 0.35, vel: [0, 0.3, 0], lifetime: 0.8 });
     }
   }
 
   /** spine_rush: bone spines (cones) erupt from the ground along the dash path. */
-  private _updateSpine(inst: EffectInstance, tf: { posX: number; posY: number; posZ: number }): void {
+  private _updateSpine(inst: EffectInstance, tf: { pos: number[] }): void {
     // keep the ground-bulge disc under the runner
-    if (inst.parts[0]) this._world.set(inst.parts[0], Transform, { posX: tf.posX, posY: tf.posY + 0.04, posZ: tf.posZ });
-    const dx = tf.posX - inst.lastX, dz = tf.posZ - inst.lastZ;
+    if (inst.parts[0]) this._world.set(inst.parts[0], Transform, { pos: [tf.pos[0], tf.pos[1] + 0.04, tf.pos[2]] });
+    const dx = tf.pos[0] - inst.lastX, dz = tf.pos[2] - inst.lastZ;
     if (Math.hypot(dx, dz) >= 0.5) {
       const h = 1.2 + this._rng() * 1.0;
       // rising bone spine (cone), tilted slightly, grows up from the ground
-      this._decal(this._deps.prims.cone, [0.87, 0.8, 0.67], tf.posX, tf.posY + h / 2, tf.posZ, 'rise', 0.9, h);
-      this._emitDebris(tf.posX, tf.posY, tf.posZ, 5, 0.18, [0.53, 0.47, 0.33]);
-      inst.lastX = tf.posX; inst.lastZ = tf.posZ;
+      this._decal(this._deps.prims.cone, [0.87, 0.8, 0.67], tf.pos[0], tf.pos[1] + h / 2, tf.pos[2], 'rise', 0.9, h);
+      this._emitDebris(tf.pos[0], tf.pos[1], tf.pos[2], 5, 0.18, [0.53, 0.47, 0.33]);
+      inst.lastX = tf.pos[0]; inst.lastZ = tf.pos[2];
     }
   }
 
   /** lurker_burrow: dirt spray + a settling mound while the unit submerges. */
-  private _updateBurrow(inst: EffectInstance, tf: { posX: number; posY: number; posZ: number }, _dt: number): void {
+  private _updateBurrow(inst: EffectInstance, tf: { pos: number[] }, _dt: number): void {
     inst.particleTimer += _dt;
     if (inst.particleTimer >= 0.05) {
       inst.particleTimer = 0;
       const ang = this._rng() * Math.PI * 2, sp = 1.5 + this._rng() * 2;
-      this._deps.vfx.spawnVfx('buff_mote', tf.posX + (this._rng() - 0.5) * 0.3, tf.posY + 0.1, tf.posZ + (this._rng() - 0.5) * 0.3, {
+      this._deps.vfx.spawnVfx('buff_mote', tf.pos[0] + (this._rng() - 0.5) * 0.3, tf.pos[1] + 0.1, tf.pos[2] + (this._rng() - 0.5) * 0.3, {
         color: this._rng() < 0.3 ? [0.53, 0.47, 0.33] : [0.73, 0.67, 0.47], size: 0.06, shape: 'box', gravity: 9,
         vel: [Math.cos(ang) * sp, 1.5 + this._rng() * 2, Math.sin(ang) * sp], lifetime: 0.6,
       });
     }
     // near the end, settle a mound mark once
     if (inst.timed <= 0.2 && inst.parts.length === 0) {
-      const p = this._spawnMesh(this._flat.disc(0.7, 20), [0.47, 0.4, 0.27], tf.posX, tf.posY + 0.02, tf.posZ, 1);
+      const p = this._spawnMesh(this._flat.disc(0.7, 20), [0.47, 0.4, 0.27], tf.pos[0], tf.pos[1] + 0.02, tf.pos[2], 1);
       if (p) inst.parts.push(p);
     }
   }
@@ -402,23 +402,23 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
   }
 
   /** prismatic_charge: grow head orb, spin the omen ring, converge + rising motes. */
-  private _updatePrismatic(inst: EffectInstance, tf: { posX: number; posY: number; posZ: number }, dt: number): void {
+  private _updatePrismatic(inst: EffectInstance, tf: { pos: number[] }, dt: number): void {
     const world = this._world;
-    const headY = tf.posY + 0.8;
+    const headY = tf.pos[1] + 0.8;
     const prog = Math.min(inst.elapsed / 3.0, 1); // ~duration; cosmetic growth
     const ball = (0.15 + prog * 0.35) * 2; // prim sphere r0.5 → *2
-    if (inst.parts[0]) world.set(inst.parts[0], Transform, { posX: tf.posX, posY: headY, posZ: tf.posZ, scaleX: ball, scaleY: ball, scaleZ: ball });
-    if (inst.parts[1]) { const g = ball * 1.6; world.set(inst.parts[1], Transform, { posX: tf.posX, posY: headY, posZ: tf.posZ, scaleX: g, scaleY: g, scaleZ: g }); }
-    if (inst.parts[2]) { const a = inst.elapsed * 0.5; world.set(inst.parts[2], Transform, { quatY: Math.sin(a / 2), quatW: Math.cos(a / 2) }); } // spin omen ring
+    if (inst.parts[0]) world.set(inst.parts[0], Transform, { pos: [tf.pos[0], headY, tf.pos[2]], scale: [ball, ball, ball] });
+    if (inst.parts[1]) { const g = ball * 1.6; world.set(inst.parts[1], Transform, { pos: [tf.pos[0], headY, tf.pos[2]], scale: [g, g, g] }); }
+    if (inst.parts[2]) { const a = inst.elapsed * 0.5; world.set(inst.parts[2], Transform, { quat: [0, Math.sin(a / 2), 0, Math.cos(a / 2)] }); } // spin omen ring
     // charge motes converging to the head orb (blue → gold as it charges)
     inst.particleTimer += dt;
     if (inst.particleTimer >= 0.06) {
       inst.particleTimer = 0;
       const ang = this._rng() * Math.PI * 2, dist = 0.4 + this._rng() * 0.3, sp = dist / 0.2;
-      const px = tf.posX + Math.cos(ang) * dist, pz = tf.posZ + Math.sin(ang) * dist, py = headY + (this._rng() - 0.5) * 0.3;
+      const px = tf.pos[0] + Math.cos(ang) * dist, pz = tf.pos[2] + Math.sin(ang) * dist, py = headY + (this._rng() - 0.5) * 0.3;
       this._deps.vfx.spawnVfx('buff_mote', px, py, pz, {
         color: prog < 0.5 ? [0.4, 0.87, 1.0] : [1.0, 0.87, 0.53], size: 0.05,
-        vel: [(tf.posX - px) * sp, (headY - py) * 2, (tf.posZ - pz) * sp], lifetime: 0.2,
+        vel: [(tf.pos[0] - px) * sp, (headY - py) * 2, (tf.pos[2] - pz) * sp], lifetime: 0.2,
       });
       // an omen ground mote rising in the target area
       const oa = this._rng() * Math.PI * 2, od = this._rng() * PRISM_OMEN_R * 0.8;
@@ -457,7 +457,7 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
   /** Set an explicit non-uniform scale on the most-recently-spawned decal (pillars). */
   private _scaleDecalLast(sx: number, sy: number, sz: number): void {
     const d = this._decals[this._decals.length - 1];
-    if (d && this._world.get(d.entity, Transform).ok) this._world.set(d.entity, Transform, { scaleX: sx, scaleY: sy, scaleZ: sz });
+    if (d && this._world.get(d.entity, Transform).ok) this._world.set(d.entity, Transform, { scale: [sx, sy, sz] });
   }
 
   /** Animate + expire the transient decals. */
@@ -468,36 +468,38 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
       d.life -= dt;
       if (d.life <= 0) { if (this._world.get(d.entity, Transform).ok) this._world.despawn(d.entity); continue; }
       const prog = 1 - d.life / d.maxLife;
-      if (d.anim === 'expand') { const s = Math.max(0.01, d.a * prog); this._world.set(d.entity, Transform, { scaleX: s, scaleZ: s }); }
-      else if (d.anim === 'rise') { const s = Math.min(d.a, (prog / 0.15) * d.a); this._world.set(d.entity, Transform, { scaleY: Math.max(0.01, s) }); }
+      // expand decals spawn flat ([_,0.01,_]) and only X/Z animate; rise decals spawn [1,0.01,1] and only Y animates.
+      if (d.anim === 'expand') { const s = Math.max(0.01, d.a * prog); this._world.set(d.entity, Transform, { scale: [s, 0.01, s] }); }
+      else if (d.anim === 'rise') { const s = Math.min(d.a, (prog / 0.15) * d.a); this._world.set(d.entity, Transform, { scale: [1, Math.max(0.01, s), 1] }); }
       keep.push(d);
     }
     this._decals.length = 0;
     this._decals.push(...keep);
   }
 
-  private _updateEye(inst: EffectInstance, tf: { posX: number; posY: number; posZ: number }): void {
+  private _updateEye(inst: EffectInstance, tf: { pos: number[] }): void {
     const world = this._world;
-    const baseY = tf.posY + EYE_Y;
+    const baseY = tf.pos[1] + EYE_Y;
     const glowPulse = 1 + Math.sin(inst.elapsed * 3.5) * 0.12;
     const pupilPulse = 0.85 + Math.sin(inst.elapsed * 5) * 0.25;
     const layerY = [0.0, 0.02, 0.04, 0.05, 0.06];
     for (let i = 0; i < inst.parts.length; i++) {
-      const patch: Record<string, number> = { posX: tf.posX, posY: baseY + (layerY[i] ?? 0), posZ: tf.posZ };
-      if (i === 0) { patch.scaleX = glowPulse; patch.scaleZ = glowPulse; }
-      else if (i === 4) { patch.scaleX = pupilPulse; patch.scaleZ = pupilPulse; }
+      // parts spawn at scale [1,1,1]; only the glow ring (i=0) and pupil (i=4) pulse in X/Z, Y stays 1.
+      const patch: Record<string, number[]> = { pos: [tf.pos[0], baseY + (layerY[i] ?? 0), tf.pos[2]] };
+      if (i === 0) { patch.scale = [glowPulse, 1, glowPulse]; }
+      else if (i === 4) { patch.scale = [pupilPulse, 1, pupilPulse]; }
       world.set(inst.parts[i], Transform, patch);
     }
   }
 
-  private _updatePhase(inst: EffectInstance, tf: { posX: number; posY: number; posZ: number }, _dt: number): void {
+  private _updatePhase(inst: EffectInstance, tf: { pos: number[] }, _dt: number): void {
     const world = this._world;
     const f = this._facing(inst.entity);
-    const mx = tf.posX + Math.sin(f) * 0.5, my = tf.posY + 0.5, mz = tf.posZ + Math.cos(f) * 0.5;
+    const mx = tf.pos[0] + Math.sin(f) * 0.5, my = tf.pos[1] + 0.5, mz = tf.pos[2] + Math.cos(f) * 0.5;
     const chargeProgress = Math.min(inst.elapsed / 1.0, 1.0);
     const ballScale = (0.05 + chargeProgress * 0.15) * 2; // prim sphere is r0.5 → *2 = visual radius
-    if (inst.parts[0]) world.set(inst.parts[0], Transform, { posX: mx, posY: my, posZ: mz, scaleX: ballScale, scaleY: ballScale, scaleZ: ballScale });
-    if (inst.parts[1]) { const g = ballScale * 1.8; world.set(inst.parts[1], Transform, { posX: mx, posY: my, posZ: mz, scaleX: g, scaleY: g, scaleZ: g }); }
+    if (inst.parts[0]) world.set(inst.parts[0], Transform, { pos: [mx, my, mz], scale: [ballScale, ballScale, ballScale] });
+    if (inst.parts[1]) { const g = ballScale * 1.8; world.set(inst.parts[1], Transform, { pos: [mx, my, mz], scale: [g, g, g] }); }
     // converging motes toward the muzzle
     inst.particleTimer += _dt;
     if (inst.particleTimer >= 0.08) {
@@ -511,17 +513,17 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
     }
   }
 
-  private _updateFlame(inst: EffectInstance, tf: { posX: number; posY: number; posZ: number }, _dt: number): void {
+  private _updateFlame(inst: EffectInstance, tf: { pos: number[] }, _dt: number): void {
     const world = this._world;
     const pulse = (1.0 + Math.sin(inst.elapsed * 15) * 0.1) * 0.8;
-    if (inst.parts[0]) world.set(inst.parts[0], Transform, { posX: tf.posX, posY: tf.posY + 0.3, posZ: tf.posZ, scaleX: pulse, scaleY: pulse, scaleZ: pulse });
+    if (inst.parts[0]) world.set(inst.parts[0], Transform, { pos: [tf.pos[0], tf.pos[1] + 0.3, tf.pos[2]], scale: [pulse, pulse, pulse] });
     // backward flame trail
     inst.particleTimer += _dt;
     if (inst.particleTimer >= 0.05) {
       inst.particleTimer = 0;
       const back = this._facing(inst.entity) + Math.PI + (this._rng() - 0.5) * 0.6;
       const speed = 1.0 + this._rng() * 1.5;
-      this._deps.vfx.spawnVfx('buff_mote', tf.posX + (this._rng() - 0.5) * 0.15, tf.posY + 0.25, tf.posZ + (this._rng() - 0.5) * 0.15, {
+      this._deps.vfx.spawnVfx('buff_mote', tf.pos[0] + (this._rng() - 0.5) * 0.15, tf.pos[1] + 0.25, tf.pos[2] + (this._rng() - 0.5) * 0.15, {
         color: [1.0, 0.55 + this._rng() * 0.2, 0.1], size: 0.12, vel: [Math.sin(back) * speed, 0.3 + this._rng() * 0.3, Math.cos(back) * speed], lifetime: 0.25,
       });
     }

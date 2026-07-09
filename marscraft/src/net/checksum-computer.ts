@@ -74,9 +74,9 @@ export function computeGameChecksum(world: World, scanMax = DEFAULT_SCAN_MAX): C
 
     const tr = world.get(eh, Transform);
     if (tr.ok) {
-      _builder.feedFloat(tr.value.posX);
-      _builder.feedFloat(tr.value.posY);
-      _builder.feedFloat(tr.value.posZ);
+      _builder.feedFloat(tr.value.pos[0]);
+      _builder.feedFloat(tr.value.pos[1]);
+      _builder.feedFloat(tr.value.pos[2]);
     }
 
     const health = world.get(eh, Health);

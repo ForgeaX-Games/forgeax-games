@@ -47,7 +47,7 @@ export class ShieldBatterySystem {
           for (let i = 0; i < n; i++) {
             const e = b.Entity.self[i] as EntityHandle;
             const isDead = !!b.Health.isDead[i];
-            const x = b.Transform.posX[i] as number, z = b.Transform.posZ[i] as number;
+            const x = b.Transform.pos[i * 3] as number, z = b.Transform.pos[i * 3 + 2] as number;
             const playerId = b.Faction.playerId[i] as number;
 
             // battery candidate

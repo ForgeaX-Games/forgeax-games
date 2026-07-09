@@ -20,9 +20,9 @@ export interface BBox {
 }
 
 export interface TransformData {
-  posX: number; posY: number; posZ: number;
-  quatX: number; quatY: number; quatZ: number; quatW: number;
-  scaleX: number; scaleY: number; scaleZ: number;
+  pos: [number, number, number];
+  quat: [number, number, number, number];
+  scale: [number, number, number];
 }
 
 export interface Entity {
@@ -287,9 +287,9 @@ export function setMeshHandle(scene: SceneAsset, e: Entity, guid: string): void 
 export function getTransform(e: Entity): TransformData {
   const t = (e.components.Transform ?? {}) as Partial<TransformData>;
   return {
-    posX: t.posX ?? 0, posY: t.posY ?? 0, posZ: t.posZ ?? 0,
-    quatX: t.quatX ?? 0, quatY: t.quatY ?? 0, quatZ: t.quatZ ?? 0, quatW: t.quatW ?? 1,
-    scaleX: t.scaleX ?? 1, scaleY: t.scaleY ?? 1, scaleZ: t.scaleZ ?? 1,
+    pos: [t.pos?.[0] ?? 0, t.pos?.[1] ?? 0, t.pos?.[2] ?? 0],
+    quat: [t.quat?.[0] ?? 0, t.quat?.[1] ?? 0, t.quat?.[2] ?? 0, t.quat?.[3] ?? 1],
+    scale: [t.scale?.[0] ?? 1, t.scale?.[1] ?? 1, t.scale?.[2] ?? 1],
   };
 }
 
@@ -308,7 +308,7 @@ export interface Override {
   /** Uniform single number, or [x,y,z] for per-axis (cube). Omit = keep original. */
   scale?: number | [number, number, number];
   rotYDeg?: number;
-  /** Ground posY so the prop's bbox bottom sits at y=0. */
+  /** Ground pos[1] so the prop's bbox bottom sits at y=0. */
   ground?: boolean;
 }
 
@@ -316,7 +316,7 @@ const EFFECT_NAME = /Glow|Flame|Light|Ember/i;
 
 export function proposeOverride(e: Entity, bbox: BBox | null): Override {
   const t = getTransform(e);
-  const S = [t.scaleX, t.scaleY, t.scaleZ];
+  const S = t.scale;
   const sMax = Math.max(...S);
   const sMin = Math.min(...S);
   const name = (e.components.Name?.value as string) ?? '';
@@ -369,26 +369,26 @@ export function applyOverride(
   }
 
   const cur = getTransform(e);
-  const pos = ov.pos ?? [cur.posX, cur.posY, cur.posZ];
+  const pos = ov.pos ?? cur.pos;
   const rotYDeg = ov.rotYDeg ?? quatToRotYDeg(cur);
 
   let scale: [number, number, number];
   if (Array.isArray(ov.scale)) scale = ov.scale;
   else if (typeof ov.scale === 'number') scale = [ov.scale, ov.scale, ov.scale];
-  else scale = [cur.scaleX, cur.scaleY, cur.scaleZ];
+  else scale = cur.scale;
 
-  let posY = pos[1];
+  let yPos = pos[1];
   if (ov.ground && ov.mesh !== 'cube') {
     const stem = ov.mesh === 'keep' ? null : ov.mesh;
     const bbox = stem ? readPropBBox(propsDir, stem) : guessCurrentBBox(scene, e, propsDir);
-    posY = -bbox.min[1] * scale[1];
+    yPos = -bbox.min[1] * scale[1];
   }
 
   const q = quatFromRotYDeg(rotYDeg);
   setTransform(e, {
-    posX: pos[0], posY, posZ: pos[2],
-    quatX: q[0], quatY: q[1], quatZ: q[2], quatW: q[3],
-    scaleX: scale[0], scaleY: scale[1], scaleZ: scale[2],
+    pos: [pos[0], yPos, pos[2]],
+    quat: [q[0], q[1], q[2], q[3]],
+    scale: [scale[0], scale[1], scale[2]],
   });
 }
 
@@ -414,8 +414,8 @@ function guessCurrentBBox(scene: SceneAsset, e: Entity, propsDir: string): BBox 
 
 function quatToRotYDeg(t: TransformData): number {
   // Inverse of quatFromRotYDeg for a pure Y rotation.
-  if (Math.abs(t.quatX) < 1e-6 && Math.abs(t.quatZ) < 1e-6) {
-    const ang = Math.atan2(t.quatY, t.quatW) * 2;
+  if (Math.abs(t.quat[0]) < 1e-6 && Math.abs(t.quat[2]) < 1e-6) {
+    const ang = Math.atan2(t.quat[1], t.quat[3]) * 2;
     return (ang * 180) / Math.PI;
   }
   return 0;
@@ -476,7 +476,7 @@ export function tileLinear(slot: TileSlot, panel: BBox, fillThin?: boolean): Til
     ? slotLong / panel.size[0]
     : us;
   const slotBottomY = slot.pos[1] - sy / 2;
-  const posY = slotBottomY - panel.min[1] * us;                      // bottom-align
+  const yPos = slotBottomY - panel.min[1] * us;                      // bottom-align
   const panelRotY = slot.rotYDeg + (longIsZ ? 90 : 0);              // panel length → slot long axis
   const [ss, cs] = ROT_Y(slot.rotYDeg);                             // offset rotates with the SLOT
   const out: TileSegment[] = [];
@@ -493,7 +493,7 @@ export function tileLinear(slot: TileSlot, panel: BBox, fillThin?: boolean): Til
     const wx = lx * cs - lz * ss;
     const wz = lx * ss + lz * cs;
     out.push({
-      pos: [+(slot.pos[0] + wx).toFixed(4), +posY.toFixed(4), +(slot.pos[2] + wz).toFixed(4)],
+      pos: [+(slot.pos[0] + wx).toFixed(4), +yPos.toFixed(4), +(slot.pos[2] + wz).toFixed(4)],
       scale: [+lengthScale.toFixed(4), +us.toFixed(4), +depthScale.toFixed(4)],
       rotYDeg: +panelRotY.toFixed(3),
     });
@@ -518,7 +518,7 @@ export function tileGrid(slot: TileSlot, panel: BBox): TileSegment[] {
   // else squash to the slot's thin Y.
   const depthScale = pY > 0 ? Math.min(us, sy / pY) : us;
   const segLenX = pX * us, segLenZ = pZ * us;
-  const posY = slot.pos[1] - panel.min[1] * depthScale;
+  const yPos = slot.pos[1] - panel.min[1] * depthScale;
   const [ss, cs] = ROT_Y(slot.rotYDeg);
   const out: TileSegment[] = [];
   for (let i = 0; i < Nx; i++) {
@@ -530,7 +530,7 @@ export function tileGrid(slot: TileSlot, panel: BBox): TileSegment[] {
       // Nudge each segment ~2 mm UP so overlapping top faces don't Z-fight.
       const yNudge = (i * Nz + j) * 0.002;
       out.push({
-        pos: [+(slot.pos[0] + wx).toFixed(4), +(posY + yNudge).toFixed(4), +(slot.pos[2] + wz).toFixed(4)],
+        pos: [+(slot.pos[0] + wx).toFixed(4), +(yPos + yNudge).toFixed(4), +(slot.pos[2] + wz).toFixed(4)],
         scale: [+us.toFixed(4), +depthScale.toFixed(4), +us.toFixed(4)],
         rotYDeg: +slot.rotYDeg.toFixed(3),
       });

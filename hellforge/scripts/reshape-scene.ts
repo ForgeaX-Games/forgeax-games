@@ -19,7 +19,7 @@
 //   pos     [x,y,z] absolute; omit = keep original
 //   scale   uniform number OR [x,y,z]; omit = keep original (cube entities usually keep)
 //   rotYDeg Y rotation in degrees; omit = keep original
-//   ground  true → set posY so the GLB bbox bottom sits at y=0 (decor)
+//   ground  true → set Transform.pos[1] so the GLB bbox bottom sits at y=0 (decor)
 //
 // init classifies each mesh entity: chunky GLB in a panel/slab/line slot →
 // "cube" (boxes have no UV stretch); volumetric decor → "keep" uniform +
@@ -81,14 +81,14 @@ function cmdInit(packPath: string): void {
     if (ov.mesh === 'cube') {
       // Keep the original (box) transform — record it so `apply` is a no-op
       // unless the user edits, and `dump` matches.
-      ov.pos = [+t.posX.toFixed(4), +t.posY.toFixed(4), +t.posZ.toFixed(4)];
-      ov.scale = [+t.scaleX.toFixed(4), +t.scaleY.toFixed(4), +t.scaleZ.toFixed(4)];
+      ov.pos = [+t.pos[0].toFixed(4), +t.pos[1].toFixed(4), +t.pos[2].toFixed(4)];
+      ov.scale = [+t.scale[0].toFixed(4), +t.scale[1].toFixed(4), +t.scale[2].toFixed(4)];
       const ry = quatToRotYDeg(t);
       if (Math.abs(ry) > 1e-3) ov.rotYDeg = +ry.toFixed(3);
       ov.ground = false;
     } else {
-      ov.pos = [+t.posX.toFixed(4), /* posY recomputed by ground */ 0, +t.posZ.toFixed(4)];
-      if (!ov.ground) ov.pos[1] = +t.posY.toFixed(4);
+      ov.pos = [+t.pos[0].toFixed(4), /* pos[1] recomputed by ground */ 0, +t.pos[2].toFixed(4)];
+      if (!ov.ground) ov.pos[1] = +t.pos[1].toFixed(4);
       const ry = quatToRotYDeg(t);
       if (Math.abs(ry) > 1e-3) ov.rotYDeg = +ry.toFixed(3);
     }
@@ -163,8 +163,8 @@ function cmdDump(packPath: string): void {
     const mesh = !mf ? 'light' : guid === CUBE_GUID ? 'CUBE' : (guid?.slice(0, 8) ?? '?');
     const ry = quatToRotYDeg(t);
     console.log(
-      `${name.padEnd(22)} pos(${fmt(t.posX)},${fmt(t.posY)},${fmt(t.posZ)}) ` +
-      `scale(${fmt(t.scaleX)},${fmt(t.scaleY)},${fmt(t.scaleZ)})` +
+      `${name.padEnd(22)} pos(${fmt(t.pos[0])},${fmt(t.pos[1])},${fmt(t.pos[2])}) ` +
+      `scale(${fmt(t.scale[0])},${fmt(t.scale[1])},${fmt(t.scale[2])})` +
       (Math.abs(ry) > 1e-3 ? ` rotY=${ry.toFixed(1)}` : '') +
       ` mesh=${mesh}`,
     );
@@ -172,8 +172,8 @@ function cmdDump(packPath: string): void {
 }
 
 function quatToRotYDeg(t: ReturnType<typeof getTransform>): number {
-  if (Math.abs(t.quatX) < 1e-6 && Math.abs(t.quatZ) < 1e-6) {
-    return (Math.atan2(t.quatY, t.quatW) * 2 * 180) / Math.PI;
+  if (Math.abs(t.quat[0]) < 1e-6 && Math.abs(t.quat[2]) < 1e-6) {
+    return (Math.atan2(t.quat[1], t.quat[3]) * 2 * 180) / Math.PI;
   }
   return 0;
 }
@@ -237,8 +237,8 @@ function cmdTileInit(packPath: string): void {
     tiles[name] = {
       panel, mode,
       slot: {
-        pos: [+t.posX.toFixed(4), +t.posY.toFixed(4), +t.posZ.toFixed(4)],
-        size: [+t.scaleX.toFixed(4), +t.scaleY.toFixed(4), +t.scaleZ.toFixed(4)],
+        pos: [+t.pos[0].toFixed(4), +t.pos[1].toFixed(4), +t.pos[2].toFixed(4)],
+        size: [+t.scale[0].toFixed(4), +t.scale[1].toFixed(4), +t.scale[2].toFixed(4)],
         rotYDeg: +quatToRotYDeg(t).toFixed(3),
       },
     };
@@ -307,9 +307,9 @@ function cmdTileApply(packPath: string): void {
         components: {
           Name: { value: `${name}__t${j}` },
           Transform: {
-            posX: s.pos[0], posY: s.pos[1], posZ: s.pos[2],
-            scaleX: s.scale[0], scaleY: s.scale[1], scaleZ: s.scale[2],
-            quatX: +q[0].toFixed(6), quatY: +q[1].toFixed(6), quatZ: +q[2].toFixed(6), quatW: +q[3].toFixed(6),
+            pos: [s.pos[0], s.pos[1], s.pos[2]],
+            scale: [s.scale[0], s.scale[1], s.scale[2]],
+            quat: [+q[0].toFixed(6), +q[1].toFixed(6), +q[2].toFixed(6), +q[3].toFixed(6)],
           },
           MeshFilter: { assetHandle: meshIdx },
           MeshRenderer: { materials: [matIdx] },
@@ -380,12 +380,13 @@ function cmdJitter(packPath: string): void {
     const t = e.components.Transform;
     if (!t) continue;
     const rotRad = Math.floor(rnd() * 2) === 1 ? Math.PI : 0;   // 0° or 180° flip
-    t.quatX = 0; t.quatY = +Math.sin(rotRad / 2).toFixed(6);
-    t.quatZ = 0; t.quatW = +Math.cos(rotRad / 2).toFixed(6);
+    t.quat = [0, +Math.sin(rotRad / 2).toFixed(6), 0, +Math.cos(rotRad / 2).toFixed(6)];
     const sMod = 0.9 + rnd() * 0.2;                             // ±10% uniform scale
-    t.scaleX = +(t.scaleX * sMod).toFixed(4);
-    t.scaleY = +(t.scaleY * sMod).toFixed(4);
-    t.scaleZ = +(t.scaleZ * sMod).toFixed(4);
+    t.scale = [
+      +(t.scale[0] * sMod).toFixed(4),
+      +(t.scale[1] * sMod).toFixed(4),
+      +(t.scale[2] * sMod).toFixed(4),
+    ];
     jittered++;
   }
   writePack(packPath, pack);
@@ -488,9 +489,9 @@ function cmdScatter(packPath: string): void {
         components: {
           Name: { value: `Scatter_${g.name}_${i}` },
           Transform: {
-            posX: +px.toFixed(4), posY: +(-bbox.min[1] * us).toFixed(4), posZ: +pz.toFixed(4),
-            quatX: +q[0].toFixed(6), quatY: +q[1].toFixed(6), quatZ: +q[2].toFixed(6), quatW: +q[3].toFixed(6),
-            scaleX: +us.toFixed(4), scaleY: +us.toFixed(4), scaleZ: +us.toFixed(4),
+            pos: [+px.toFixed(4), +(-bbox.min[1] * us).toFixed(4), +pz.toFixed(4)],
+            quat: [+q[0].toFixed(6), +q[1].toFixed(6), +q[2].toFixed(6), +q[3].toFixed(6)],
+            scale: [+us.toFixed(4), +us.toFixed(4), +us.toFixed(4)],
           },
           MeshFilter: { assetHandle: meshIdx },
           MeshRenderer: { materials: [matIdx] },

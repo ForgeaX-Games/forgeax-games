@@ -4,9 +4,9 @@
 
 import {
   Transform, MeshFilter, MeshRenderer, Materials,
-  HANDLE_CUBE, HANDLE_SPHERE,
   type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle } from '@forgeax/engine-types';
 
@@ -101,7 +101,7 @@ export class LootSystem {
     const sy = s * (kind === 'xp' ? 1.6 : 1);
     const shape = kind === 'xp' ? HANDLE_CUBE : HANDLE_SPHERE;
     const res = this.world.spawn(
-      { component: Transform, data: { posX: x, posY: baseY, posZ: z, scaleX: s, scaleY: sy, scaleZ: s } },
+      { component: Transform, data: { pos: [x, baseY, z], scale: [s, sy, s] } },
       { component: MeshFilter, data: { assetHandle: shape } },
       { component: MeshRenderer, data: { materials: [this.mats[kind]] } },
     );
@@ -126,7 +126,7 @@ export class LootSystem {
     const tall = item.rarity === 'legendary' ? 3.0 : 2.2;
     const baseY = tall / 2;
     const res = this.world.spawn(
-      { component: Transform, data: { posX: x, posY: baseY, posZ: z, scaleX: fat, scaleY: tall, scaleZ: fat } },
+      { component: Transform, data: { pos: [x, baseY, z], scale: [fat, tall, fat] } },
       { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
       { component: MeshRenderer, data: { materials: [this.beamMats[item.rarity]] } },
     );
@@ -187,9 +187,9 @@ export class LootSystem {
       g.spinPhase += dt * (g.kind === 'item' ? 0.9 : 2.2);
       const h = g.spinPhase * 0.5;
       this.world.set(g.e, Transform, {
-        posX: g.x, posY: g.y, posZ: g.z,
-        quatX: 0, quatY: Math.sin(h), quatZ: 0, quatW: Math.cos(h),
-        scaleX: g.sx, scaleY: g.sy, scaleZ: g.sz,
+        pos: [g.x, g.y, g.z],
+        quat: [0, Math.sin(h), 0, Math.cos(h)],
+        scale: [g.sx, g.sy, g.sz],
       });
     }
     return events;

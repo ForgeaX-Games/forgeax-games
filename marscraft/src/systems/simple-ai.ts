@@ -382,14 +382,14 @@ export class SimpleAI {
       const n = b.Entity.self.length as number;
       for (let i = 0; i < n; i++) {
         if ((b.Mineral.amount[i] as number) <= 0) continue;
-        this._minerals.push({ entity: b.Entity.self[i], x: b.Transform.posX[i], z: b.Transform.posZ[i] });
+        this._minerals.push({ entity: b.Entity.self[i], x: b.Transform.pos[i * 3], z: b.Transform.pos[i * 3 + 2] });
       }
     }
     this._geysers.length = 0;
     for (const b of geyserBatches) {
       const n = b.Entity.self.length as number;
       for (let i = 0; i < n; i++) {
-        this._geysers.push({ entity: b.Entity.self[i], x: b.Transform.posX[i], z: b.Transform.posZ[i] });
+        this._geysers.push({ entity: b.Entity.self[i], x: b.Transform.pos[i * 3], z: b.Transform.pos[i * 3 + 2] });
       }
     }
   }
@@ -424,8 +424,8 @@ export class SimpleAI {
         const pid = b.Faction.playerId[i] as number;
         const tid = buildingTypeId.get(e);
         const state = b.Building.state[i] as number;
-        const bx = b.Transform.posX[i] as number;
-        const bz = b.Transform.posZ[i] as number;
+        const bx = b.Transform.pos[i * 3] as number;
+        const bz = b.Transform.pos[i * 3 + 2] as number;
 
         if (pid === this._playerId) {
           if (!tid) continue;
@@ -491,8 +491,8 @@ export class SimpleAI {
     for (const e of army) {
       const t = this._world.get(e, Transform);
       if (!t.ok) continue;
-      const dx = t.value.posX - baseX;
-      const dz = t.value.posZ - baseZ;
+      const dx = t.value.pos[0] - baseX;
+      const dz = t.value.pos[2] - baseZ;
       if (dx * dx + dz * dz >= nearSq) armyFarFromBase.push(e);
       else armyNearBase.push(e);
     }
@@ -504,8 +504,8 @@ export class SimpleAI {
       for (const e of allEnemyUnits) {
         const t = this._world.get(e, Transform);
         if (!t.ok) continue;
-        const dx = t.value.posX - baseX;
-        const dz = t.value.posZ - baseZ;
+        const dx = t.value.pos[0] - baseX;
+        const dz = t.value.pos[2] - baseZ;
         if (dx * dx + dz * dz < defSq) enemyUnitsNearBase.push(e);
       }
     }
@@ -716,7 +716,7 @@ export class SimpleAI {
     for (const w of snap.idleWorkers) {
       const t = this._world.get(w, Transform);
       if (!t.ok) continue;
-      const m = this._findBestMineral(t.value.posX, t.value.posZ, snap.baseX, snap.baseZ);
+      const m = this._findBestMineral(t.value.pos[0], t.value.pos[2], snap.baseX, snap.baseZ);
       if (m) this._harvest.assignWorkersToMineral([w], m);
     }
 
@@ -1126,7 +1126,7 @@ export class SimpleAI {
     for (const e of units) {
       const t = this._world.get(e, Transform);
       if (!t.ok) continue;
-      const dx = t.value.posX - x, dz = t.value.posZ - z;
+      const dx = t.value.pos[0] - x, dz = t.value.pos[2] - z;
       if (dx * dx + dz * dz <= rSq) n++;
     }
     return n;
@@ -1231,7 +1231,7 @@ export class SimpleAI {
     let ex = 0, ez = 0, n = 0;
     for (const e of snap.enemyUnitsNearBase) {
       const t = this._world.get(e, Transform);
-      if (t.ok) { ex += t.value.posX; ez += t.value.posZ; n++; }
+      if (t.ok) { ex += t.value.pos[0]; ez += t.value.pos[2]; n++; }
     }
     if (n === 0) return;
     ex /= n; ez /= n;
@@ -1240,7 +1240,7 @@ export class SimpleAI {
       .map((e) => {
         const t = this._world.get(e, Transform);
         if (!t.ok) return { e, d: Infinity };
-        const dx = t.value.posX - ex, dz = t.value.posZ - ez;
+        const dx = t.value.pos[0] - ex, dz = t.value.pos[2] - ez;
         return { e, d: dx * dx + dz * dz };
       })
       .sort((a, b) => a.d - b.d)
@@ -1308,7 +1308,7 @@ export class SimpleAI {
       if (!cmd) {
         const t = this._world.get(scout, Transform);
         if (t.ok) {
-          const m = this._findBestMineral(t.value.posX, t.value.posZ, snap.baseX, snap.baseZ);
+          const m = this._findBestMineral(t.value.pos[0], t.value.pos[2], snap.baseX, snap.baseZ);
           if (m) this._harvest.assignWorkersToMineral([scout], m);
         }
         this._scoutSent = false; this._scoutEntity = null; this._scoutCompletedCount++;
@@ -1529,7 +1529,7 @@ export class SimpleAI {
       const tid = buildingTypeId.get(be);
       if (!tid || !this._raceConfig.baseEquivalents.includes(tid)) continue;
       const t = this._world.get(be, Transform);
-      if (t.ok) ownBases.push({ x: t.value.posX, z: t.value.posZ });
+      if (t.ok) ownBases.push({ x: t.value.pos[0], z: t.value.pos[2] });
     }
     let best: { x: number; z: number } | null = null;
     let bestScore = Infinity;

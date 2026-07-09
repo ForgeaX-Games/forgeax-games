@@ -26,11 +26,11 @@ import {
   perspective,
   Materials,
   quat,
-  HANDLE_CUBE,
   createSphereGeometry,
   createCylinderGeometry,
   type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { TextureAsset } from '@forgeax/engine-types';
 import type { Entity, World } from '@forgeax/engine-ecs';
@@ -175,7 +175,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     sx: number, sy: number, sz: number,
   ): Entity =>
     world.spawn(
-      { component: Transform, data: { posX: px, posY: py, posZ: pz, scaleX: sx, scaleY: sy, scaleZ: sz } },
+      { component: Transform, data: { pos: [px, py, pz], scale: [sx, sy, sz] } },
       { component: MeshFilter, data: { assetHandle: mesh } },
       { component: MeshRenderer, data: { materials: [material] } },
     ).unwrap();
@@ -296,12 +296,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // gameplay-driven: the flashlight follows the camera, the muzzleLight pulses on
   // fire (both positioned/animated in the update loop).
   const flashlight = world.spawn(
-    { component: Transform, data: { posY: EYE_Y } },
+    { component: Transform, data: { pos: [0, EYE_Y, 0] } },
     { component: PointLight, data: { colorR: 1.0, colorG: 0.93, colorB: 0.78, intensity: 9, range: 18 } },
   ).unwrap();
   // muzzle-flash light (pulsed on fire)
   const muzzleLight = world.spawn(
-    { component: Transform, data: { posY: EYE_Y } },
+    { component: Transform, data: { pos: [0, EYE_Y, 0] } },
     { component: PointLight, data: { colorR: 1.0, colorG: 0.85, colorB: 0.5, intensity: 0, range: 14 } },
   ).unwrap();
 
@@ -312,7 +312,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // detail before turning, easing the "everything is too close" feel.
   const HIP_FOV = Math.PI / 2;
   const camera = world.spawn(
-    { component: Transform, data: { posY: EYE_Y } },
+    { component: Transform, data: { pos: [0, EYE_Y, 0] } },
     { component: Camera, data: { ...perspective({ fov: HIP_FOV, aspect, near: 0.04, far: 320 }), tonemap: TONEMAP_ACES_FILMIC, ...SKY_CLEAR } },
   ).unwrap();
 
@@ -651,16 +651,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // rendered frame — the "enemy flashes then vanishes" artefact.
     for (const pt of en.parts) {
       world.set(pt.ent, Transform, {
-        posX: en.x + pt.lx, posY: en.feetY + pt.ly, posZ: en.z + pt.lz,
-        quatX: 0, quatY: 0, quatZ: 0, quatW: 1,
-        scaleX: pt.sx, scaleY: pt.sy, scaleZ: pt.sz,
+        pos: [en.x + pt.lx, en.feetY + pt.ly, en.z + pt.lz],
+        quat: [0, 0, 0, 1],
+        scale: [pt.sx, pt.sy, pt.sz],
       });
       if (pt.flashable) world.set(pt.ent, MeshRenderer, { materials: [defaultMatFor(pt)] });
     }
   }
   const defaultMatFor = (pt: Part): MatH => pt.baseMat;
   function hideEnemy(en: Enemy) {
-    for (const pt of en.parts) world.set(pt.ent, Transform, { scaleX: 0.0001, scaleY: 0.0001, scaleZ: 0.0001 });
+    for (const pt of en.parts) world.set(pt.ent, Transform, { scale: [0.0001, 0.0001, 0.0001] });
   }
 
   const spawnTracer = (len: number) => {
@@ -668,9 +668,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     tr.t = 0.05;
     quat.transformVec3(off, qCam, [0.26, -0.16, -(len / 2) - 0.6]);
     world.set(tr.ent, Transform, {
-      posX: state.px + off[0], posY: state.feetY + EYE_Y + off[1], posZ: state.pz + off[2],
-      quatX: qCam[0], quatY: qCam[1], quatZ: qCam[2], quatW: qCam[3],
-      scaleX: 0.03, scaleY: 0.03, scaleZ: len,
+      pos: [state.px + off[0], state.feetY + EYE_Y + off[1], state.pz + off[2]],
+      quat: [qCam[0], qCam[1], qCam[2], qCam[3]],
+      scale: [0.03, 0.03, len],
     });
   };
 
@@ -825,16 +825,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const shx = (Math.random() - 0.5) * state.shake;
     const shy = (Math.random() - 0.5) * state.shake;
     world.set(camera, Transform, {
-      posX: state.px + shx, posY: state.feetY + EYE_Y + bob + shy, posZ: state.pz,
-      quatX: qCam[0], quatY: qCam[1], quatZ: qCam[2], quatW: qCam[3],
+      pos: [state.px + shx, state.feetY + EYE_Y + bob + shy, state.pz],
+      quat: [qCam[0], qCam[1], qCam[2], qCam[3]],
     });
-    world.set(flashlight, Transform, { posX: state.px, posY: state.feetY + EYE_Y + 0.1, posZ: state.pz });
+    world.set(flashlight, Transform, { pos: [state.px, state.feetY + EYE_Y + 0.1, state.pz] });
 
     // muzzle-flash light pulse
     if (muzzleT > 0) {
       muzzleT -= dt;
       quat.transformVec3(off, qCam, [0.26, -0.14, -(w.barLen + w.recLen + 0.2)]);
-      world.set(muzzleLight, Transform, { posX: state.px + off[0], posY: state.feetY + EYE_Y + off[1], posZ: state.pz + off[2] });
+      world.set(muzzleLight, Transform, { pos: [state.px + off[0], state.feetY + EYE_Y + off[1], state.pz + off[2]] });
       world.set(muzzleLight, PointLight, { intensity: 30 });
     } else {
       world.set(muzzleLight, PointLight, { intensity: 0 });
@@ -851,22 +851,22 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const placeRel = (ent: Entity, lx: number, ly: number, lz: number, sx: number, sy: number, sz: number, q: Float32Array = qCam) => {
       quat.transformVec3(off, qCam, [lx + sway, ly, lz]);
       world.set(ent, Transform, {
-        posX: state.px + off[0], posY: state.feetY + EYE_Y + bob + off[1], posZ: state.pz + off[2],
-        quatX: q[0], quatY: q[1], quatZ: q[2], quatW: q[3],
-        scaleX: sx, scaleY: sy, scaleZ: sz,
+        pos: [state.px + off[0], state.feetY + EYE_Y + bob + off[1], state.pz + off[2]],
+        quat: [q[0], q[1], q[2], q[3]],
+        scale: [sx, sy, sz],
       });
     };
     const scoped = w.scope && state.ads > 0.85;
     const HIDE = 0.0001;
     if (scoped) {
       // hide the whole viewmodel while looking through the scope
-      for (const e of [gunReceiver, gunBarrel, gunMag, gunStock, gunSightL, gunSightR, gunSightB, gunScope, muzzle]) world.set(e, Transform, { scaleX: HIDE, scaleY: HIDE, scaleZ: HIDE });
+      for (const e of [gunReceiver, gunBarrel, gunMag, gunStock, gunSightL, gunSightR, gunSightB, gunScope, muzzle]) world.set(e, Transform, { scale: [HIDE, HIDE, HIDE] });
     } else {
       placeRel(gunReceiver, adsX, adsY, -0.3 + kick, 0.11, 0.13, w.recLen, qCam);
       placeRel(gunBarrel, adsX, adsY + 0.02, -(w.recLen / 2) - (w.barLen / 2) - 0.28 + kick, w.barRad * 2, w.barLen, w.barRad * 2, qBarrel);
       placeRel(gunMag, adsX, adsY - 0.16, -0.2 + kick, 0.07, 0.2, 0.12, qCam);
       placeRel(gunStock, adsX, adsY + 0.01, 0.12 + kick, 0.08, 0.11, 0.2, qCam);
-      const hideSight = () => { for (const e of [gunSightL, gunSightR, gunSightB]) world.set(e, Transform, { scaleX: HIDE, scaleY: HIDE, scaleZ: HIDE }); };
+      const hideSight = () => { for (const e of [gunSightL, gunSightR, gunSightB]) world.set(e, Transform, { scale: [HIDE, HIDE, HIDE] }); };
       if (w.scope) { placeRel(gunScope, adsX, adsY + 0.11, -0.34 + kick, 0.07, 0.34, 0.07, qBarrel); hideSight(); }
       else {
         // U-bracket: two vertical posts spaced in X, joined by a base bar; top stays open.
@@ -876,16 +876,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         placeRel(gunSightL, adsX - hwU, sgY + postH / 2, sgZ, 0.018, postH, 0.05, qCam);
         placeRel(gunSightR, adsX + hwU, sgY + postH / 2, sgZ, 0.018, postH, 0.05, qCam);
         placeRel(gunSightB, adsX, sgY, sgZ, hwU * 2 + 0.018, 0.018, 0.05, qCam);
-        world.set(gunScope, Transform, { scaleX: HIDE, scaleY: HIDE, scaleZ: HIDE });
+        world.set(gunScope, Transform, { scale: [HIDE, HIDE, HIDE] });
       }
       // muzzle flash sphere
       if (muzzleT > 0) { const s = 0.14 + Math.random() * 0.12; placeRel(muzzle, adsX, adsY + 0.02, -(w.recLen / 2) - w.barLen - 0.3 + kick, s, s, s * 1.4, qCam); }
-      else world.set(muzzle, Transform, { scaleX: HIDE, scaleY: HIDE, scaleZ: HIDE });
+      else world.set(muzzle, Transform, { scale: [HIDE, HIDE, HIDE] });
     }
 
     // tracers
     for (const tr of tracers) {
-      if (tr.t > 0) { tr.t -= dt; if (tr.t <= 0) world.set(tr.ent, Transform, { posY: -50, scaleX: HIDE, scaleY: HIDE, scaleZ: HIDE }); }
+      if (tr.t > 0) { tr.t -= dt; if (tr.t <= 0) world.set(tr.ent, Transform, { pos: [0, -50, 0], scale: [HIDE, HIDE, HIDE] }); }
     }
 
     // ── enemies ──────────────────────────────────────────────────────────
@@ -937,9 +937,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         else if (pt.anim === 'armR' || pt.anim === 'handR') lz += swing * 0.8;
         quat.transformVec3(off, eq, [pt.lx, pt.ly + vbob, lz]);
         world.set(pt.ent, Transform, {
-          posX: en.x + off[0], posY: en.feetY + off[1], posZ: en.z + off[2],
-          quatX: eq[0], quatY: eq[1], quatZ: eq[2], quatW: eq[3],
-          scaleX: pt.sx, scaleY: pt.sy, scaleZ: pt.sz,
+          pos: [en.x + off[0], en.feetY + off[1], en.z + off[2]],
+          quat: [eq[0], eq[1], eq[2], eq[3]],
+          scale: [pt.sx, pt.sy, pt.sz],
         });
       }
       // hit flash

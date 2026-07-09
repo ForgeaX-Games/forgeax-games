@@ -36,13 +36,13 @@ const SCENE_GUID: Record<string, string> = {
 interface PackNode { localId: number; components: Record<string, Record<string, unknown>>; }
 
 /** Y-rotation quaternion (facing about +Y). */
-function quatY(rad: number): { quatX: number; quatY: number; quatZ: number; quatW: number } {
+function quatY(rad: number): { quat: [number, number, number, number] } {
   const h = rad * 0.5;
-  return { quatX: 0, quatY: Math.sin(h), quatZ: 0, quatW: Math.cos(h) };
+  return { quat: [0, Math.sin(h), 0, Math.cos(h)] };
 }
 
 function nameMarker(localId: number, name: string, x: number, z: number, rot?: number): PackNode {
-  const t: Record<string, number> = { posX: x, posY: 0, posZ: z, scaleX: 1, scaleY: 1, scaleZ: 1 };
+  const t: Record<string, unknown> = { pos: [x, 0, z], scale: [1, 1, 1] };
   if (rot !== undefined) Object.assign(t, quatY(rot));
   return { localId, components: { Name: { value: name }, Transform: t } };
 }

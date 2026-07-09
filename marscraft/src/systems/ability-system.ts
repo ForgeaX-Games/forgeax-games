@@ -254,7 +254,7 @@ export class AbilitySystem implements AbilitySystemHandle {
     if (def.targetType === 'direction' && targetX !== undefined && targetZ !== undefined) {
       const tr = world.get(caster, Transform);
       if (tr.ok) {
-        const dx = targetX - tr.value.posX, dz = targetZ - tr.value.posZ;
+        const dx = targetX - tr.value.pos[0], dz = targetZ - tr.value.pos[2];
         const len = Math.sqrt(dx * dx + dz * dz);
         if (len > 0.001) { targetX = dx / len; targetZ = dz / len; }
         else {
@@ -285,10 +285,10 @@ export class AbilitySystem implements AbilitySystemHandle {
         let fx = targetX, fz = targetZ;
         if (targetEntity !== undefined) {
           const tt = world.get(targetEntity, Transform);
-          if (tt.ok) { fx = tt.value.posX; fz = tt.value.posZ; }
+          if (tt.ok) { fx = tt.value.pos[0]; fz = tt.value.pos[2]; }
         }
         if (fx !== undefined && fz !== undefined) {
-          const dx = fx - tr.value.posX, dz = fz - tr.value.posZ;
+          const dx = fx - tr.value.pos[0], dz = fz - tr.value.pos[2];
           if (dx * dx + dz * dz > 0.01) {
             const mo = world.get(caster, Motion);
             if (mo.ok) world.set(caster, Motion, { facingY: Math.atan2(dx, dz) });
@@ -511,10 +511,10 @@ export class AbilitySystem implements AbilitySystemHandle {
     let tx = targetX, tz = targetZ;
     if (targetEntity !== undefined) {
       const tt = world.get(targetEntity, Transform);
-      if (tt.ok) { tx = tt.value.posX; tz = tt.value.posZ; }
+      if (tt.ok) { tx = tt.value.pos[0]; tz = tt.value.pos[2]; }
     }
     if (tx === undefined || tz === undefined) return 0;
-    const d = Math.hypot(tx - ct.value.posX, tz - ct.value.posZ);
+    const d = Math.hypot(tx - ct.value.pos[0], tz - ct.value.pos[2]);
     const speed = proj.speed > 0 ? proj.speed : 18;
     return d / speed;
   }
@@ -630,7 +630,7 @@ export class AbilitySystem implements AbilitySystemHandle {
         const ct = world.get(caster, Transform);
         const tt = world.get(targetEntity, Transform);
         if (ct.ok && tt.ok) {
-          const dx = tt.value.posX - ct.value.posX, dz = tt.value.posZ - ct.value.posZ;
+          const dx = tt.value.pos[0] - ct.value.pos[0], dz = tt.value.pos[2] - ct.value.pos[2];
           if (Math.sqrt(dx * dx + dz * dz) > def.castRange) return 'out of range';
         }
       }
@@ -639,7 +639,7 @@ export class AbilitySystem implements AbilitySystemHandle {
     if (def.targetType === 'point' && def.castRange > 0 && targetX !== undefined && targetZ !== undefined) {
       const ct = world.get(caster, Transform);
       if (ct.ok) {
-        const dx = targetX - ct.value.posX, dz = targetZ - ct.value.posZ;
+        const dx = targetX - ct.value.pos[0], dz = targetZ - ct.value.pos[2];
         if (Math.sqrt(dx * dx + dz * dz) > def.castRange) return 'out of range';
       }
     }
@@ -672,7 +672,7 @@ export class AbilitySystem implements AbilitySystemHandle {
         if (!er.ok || er.value.energy < def.energyCost) continue;
       }
       if (def.targetType !== 'unit') continue;
-      const target = this._findAutocastTarget(world, caster, def, ct.value.posX, ct.value.posZ, cf.value.playerId);
+      const target = this._findAutocastTarget(world, caster, def, ct.value.pos[0], ct.value.pos[2], cf.value.playerId);
       if (target !== null) out.push({ caster, abilityId, target });
     }
   }

@@ -50,7 +50,7 @@ bun scripts/reshape-scene.ts dump  assets/scenes/rogue-encampment.pack.json
 | `pos` | `[x,y,z]` | 绝对世界坐标;省略=保留原值。`ground:true` 时 `y` 被自动重算 |
 | `scale` | `number` \| `[x,y,z]` | 单值=等比;数组=逐轴(盒体用);省略=保留原值 |
 | `rotYDeg` | `number` | 绕 Y 轴旋转度数;省略=保留原旋转 |
-| `ground` | `boolean` | `true` 时把 `posY` 设为让 GLB 包围盒底部贴地(y=0)。装饰用;特效(Glow/Flame)别开 |
+| `ground` | `boolean` | `true` 时把 `pos[1]` 设为让 GLB 包围盒底部贴地(y=0)。装饰用;特效(Glow/Flame)别开 |
 
 ### init 的分类启发式
 
@@ -67,7 +67,7 @@ bun scripts/reshape-scene.ts dump  assets/scenes/rogue-encampment.pack.json
 ### apply 做了什么(幂等)
 
 - `mesh:"cube"` → MeshFilter 指向 CUBE_GUID;MeshRenderer 材质换成 `StructBox` 纯色。
-- `mesh:"keep"` → MeshFilter 不变;Transform 写等比 scale + 落地 posY。
+- `mesh:"keep"` → MeshFilter 不变;Transform 写等比 scale + 落地 pos[1]。
 - `mesh:"<stem>"` → MeshFilter 指向该 prop 的 mesh GUID(从 sidecar 读)。
 - 只动 `Transform` + `MeshFilter` + `MeshRenderer.materials`;`refs[]` 由 `ensureRefGuid`
   追加。与 `reflow-rogue-props.ts` / `fix-prop-materials.ts` 正交。

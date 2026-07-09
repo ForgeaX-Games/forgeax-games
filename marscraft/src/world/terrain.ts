@@ -28,8 +28,8 @@ import {
   quat,
   type Handle,
   type MaterialAsset,
-  type MeshAsset,
 } from '@forgeax/engine-runtime';
+import { type MeshAsset } from '@forgeax/engine-assets-runtime';
 import { createBoxGeometry, meshFromInterleaved } from '@forgeax/engine-geometry';
 import type { World } from '@forgeax/engine-ecs';
 import type { AssetGuid } from '@forgeax/engine-pack/guid';
@@ -353,7 +353,7 @@ export function buildTerrain(
     const handle: Handle<'MeshAsset', 'shared'> = world.allocSharedRef('MeshAsset', mesh);
     const tint: RGB = [bk.sum[0] / bk.count, bk.sum[1] / bk.count, bk.sum[2] / bk.count];
     world.spawn(
-      { component: Transform, data: { posX: 0, posY: 0, posZ: 0 } },
+      { component: Transform, data: { pos: [0, 0, 0] } },
       { component: MeshFilter, data: { assetHandle: handle } },
       {
         component: MeshRenderer,
@@ -480,16 +480,9 @@ function buildCliffWalls(
       {
         component: Transform,
         data: {
-          posX: cx,
-          posY: baseY + wallHExt / 2,
-          posZ: cz,
-          quatX: q[0],
-          quatY: q[1],
-          quatZ: q[2],
-          quatW: q[3],
-          scaleX: boxLen,
-          scaleY: wallHExt,
-          scaleZ: WALL_THICKNESS,
+          pos: [cx, baseY + wallHExt / 2, cz],
+          quat: [q[0], q[1], q[2], q[3]],
+          scale: [boxLen, wallHExt, WALL_THICKNESS],
         },
       },
       { component: MeshFilter, data: { assetHandle: boxHandle } },

@@ -391,23 +391,23 @@ function executeKnockback(world: World, ctx: CastContext, effect: KnockbackEffec
 
   let originX: number, originZ: number;
   if (effect.direction === 'away_from_target') {
-    originX = ctx.targetX ?? tr.value.posX;
-    originZ = ctx.targetZ ?? tr.value.posZ;
+    originX = ctx.targetX ?? tr.value.pos[0];
+    originZ = ctx.targetZ ?? tr.value.pos[2];
   } else {
     const ct = world.get(ctx.caster, Transform);
     if (!ct.ok) return;
-    originX = ct.value.posX;
-    originZ = ct.value.posZ;
+    originX = ct.value.pos[0];
+    originZ = ct.value.pos[2];
   }
-  let dx = tr.value.posX - originX;
-  let dz = tr.value.posZ - originZ;
+  let dx = tr.value.pos[0] - originX;
+  let dz = tr.value.pos[2] - originZ;
   const len = Math.sqrt(dx * dx + dz * dz);
   if (len < 0.01) { const a = Math.random() * Math.PI * 2; dx = Math.cos(a); dz = Math.sin(a); }
   else { dx /= len; dz /= len; }
 
   const MAP_BOUND = 62;
-  const landX = Math.max(-MAP_BOUND, Math.min(MAP_BOUND, tr.value.posX + dx * effect.distance));
-  const landZ = Math.max(-MAP_BOUND, Math.min(MAP_BOUND, tr.value.posZ + dz * effect.distance));
+  const landX = Math.max(-MAP_BOUND, Math.min(MAP_BOUND, tr.value.pos[0] + dx * effect.distance));
+  const landZ = Math.max(-MAP_BOUND, Math.min(MAP_BOUND, tr.value.pos[2] + dz * effect.distance));
 
   // Push via the Movement push channel (the movement system steers pushTarget).
   world.set(target, Movement, { isPushed: true, pushTargetX: landX, pushTargetZ: landZ });
@@ -430,7 +430,7 @@ function executeTeleport(world: World, ctx: CastContext, effect: TeleportEffect)
   if (ctx.targetX === undefined || ctx.targetZ === undefined) return;
   const tr = world.get(ctx.caster, Transform);
   if (!tr.ok) return;
-  const prevX = tr.value.posX, prevZ = tr.value.posZ;
+  const prevX = tr.value.pos[0], prevZ = tr.value.pos[2];
   let tx = ctx.targetX, tz = ctx.targetZ;
 
   if (effect.maxRange > 0) {
@@ -443,7 +443,7 @@ function executeTeleport(world: World, ctx: CastContext, effect: TeleportEffect)
   }
   if (ctx.clampToWalkable) { const s = ctx.clampToWalkable(tx, tz); tx = s.x; tz = s.z; }
 
-  world.set(ctx.caster, Transform, { posX: tx, posZ: tz });
+  world.set(ctx.caster, Transform, { pos: [tx, tr.value.pos[1], tz] });
   const mv = world.get(ctx.caster, Movement);
   if (mv.ok) world.set(ctx.caster, Movement, { hasTarget: false, arrived: true });
   // Blink VFX: departure implosion @ old pos + arrival burst @ new pos (the
@@ -477,20 +477,20 @@ function executeAreaEffect(world: World, ctx: CastContext, effect: AreaEffectDef
   let dirX: number | undefined, dirZ: number | undefined;
 
   if (effect.shape === 'cone' && ct.ok) {
-    cx = ct.value.posX; cz = ct.value.posZ;
-    dirX = ct.value.posX; dirZ = ct.value.posZ;
+    cx = ct.value.pos[0]; cz = ct.value.pos[2];
+    dirX = ct.value.pos[0]; dirZ = ct.value.pos[2];
     // forward point from caster facing (Motion.facingY would be ideal; use the
     // cast direction toward the target point if present, else +Z).
-    const fx = (ctx.targetX ?? (ct.value.posX)) - ct.value.posX;
-    const fz = (ctx.targetZ ?? (ct.value.posZ + 1)) - ct.value.posZ;
+    const fx = (ctx.targetX ?? (ct.value.pos[0])) - ct.value.pos[0];
+    const fz = (ctx.targetZ ?? (ct.value.pos[2] + 1)) - ct.value.pos[2];
     const flen = Math.sqrt(fx * fx + fz * fz) || 1;
-    queryCx = ct.value.posX + fx / flen;
-    queryCz = ct.value.posZ + fz / flen;
+    queryCx = ct.value.pos[0] + fx / flen;
+    queryCz = ct.value.pos[2] + fz / flen;
   } else {
     cx = ctx.targetX ?? 0; cz = ctx.targetZ ?? 0;
     queryCx = cx; queryCz = cz;
-    dirX = ct.ok ? ct.value.posX : undefined;
-    dirZ = ct.ok ? ct.value.posZ : undefined;
+    dirX = ct.ok ? ct.value.pos[0] : undefined;
+    dirZ = ct.ok ? ct.value.pos[2] : undefined;
   }
 
   const cands = ctx.targets ?? [];
@@ -535,7 +535,7 @@ function executeSpawnGroundEffect(world: World, ctx: CastContext, effect: SpawnG
   let x = ctx.targetX, z = ctx.targetZ;
   if (x === undefined || z === undefined) {
     const tr = world.get(ctx.caster, Transform);
-    if (tr.ok) { x = tr.value.posX; z = tr.value.posZ; }
+    if (tr.ok) { x = tr.value.pos[0]; z = tr.value.pos[2]; }
   }
   if (x === undefined || z === undefined) return;
   _groundEffectHandler({
@@ -552,14 +552,14 @@ function executeSpawnHazard(world: World, ctx: CastContext, effect: SpawnHazardE
   let x = ctx.targetX, z = ctx.targetZ;
   if (x === undefined || z === undefined) {
     const tr = world.get(ctx.caster, Transform);
-    if (tr.ok) { x = tr.value.posX; z = tr.value.posZ; }
+    if (tr.ok) { x = tr.value.pos[0]; z = tr.value.pos[2]; }
   }
   if (x === undefined || z === undefined) return;
   // Direction: from caster toward the cast point (for arc/line hazards).
   let dirX = 0, dirZ = 1;
   const ct = world.get(ctx.caster, Transform);
   if (ct.ok) {
-    const dx = x - ct.value.posX, dz = z - ct.value.posZ;
+    const dx = x - ct.value.pos[0], dz = z - ct.value.pos[2];
     const len = Math.sqrt(dx * dx + dz * dz);
     if (len > 0.001) { dirX = dx / len; dirZ = dz / len; }
   }
@@ -587,7 +587,7 @@ function executeSpawnDirectionWave(world: World, ctx: CastContext, effect: Spawn
   const len = Math.hypot(dirX, dirZ);
   if (len < 1e-4) { dirX = 0; dirZ = 1; }
   _directionWaveHandler({
-    casterEntity: ctx.caster, playerId, x: tr.value.posX, z: tr.value.posZ,
+    casterEntity: ctx.caster, playerId, x: tr.value.pos[0], z: tr.value.pos[2],
     dirX, dirZ, speed: effect.speed, maxRange: effect.maxRange, width: effect.width,
     hitEffects: effect.hitEffects, revealRange: effect.revealRange, revealDuration: effect.revealDuration,
   });
@@ -602,7 +602,7 @@ function executeSpawnUnit(world: World, ctx: CastContext, effect: SpawnUnitEffec
   if (effect.spawnAtTarget) { baseX = ctx.targetX; baseZ = ctx.targetZ; }
   if (baseX === undefined || baseZ === undefined) {
     const tr = world.get(ctx.caster, Transform);
-    if (tr.ok) { baseX = tr.value.posX + (effect.offsetX ?? 0); baseZ = tr.value.posZ + (effect.offsetZ ?? 0); }
+    if (tr.ok) { baseX = tr.value.pos[0] + (effect.offsetX ?? 0); baseZ = tr.value.pos[2] + (effect.offsetZ ?? 0); }
   }
   if (baseX === undefined || baseZ === undefined) return;
   _summonHandler({

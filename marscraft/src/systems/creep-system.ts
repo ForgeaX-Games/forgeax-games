@@ -20,8 +20,9 @@
 import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer, ChildOf,
-  type Handle, type MeshAsset,
+  type Handle,
 } from '@forgeax/engine-runtime';
+import { type MeshAsset } from '@forgeax/engine-assets-runtime';
 import { meshFromInterleaved } from '@forgeax/engine-geometry';
 import {
   Building, CreepTumor, Faction, Movement, UnitType,
@@ -155,8 +156,8 @@ export class CreepSystem implements CreepHandle {
         const isStarter = this._startingBases.has(rawId(e));
         next.push({
           entity: e,
-          x: b.Transform.posX[i] as number,
-          z: b.Transform.posZ[i] as number,
+          x: b.Transform.pos[i * 3] as number,
+          z: b.Transform.pos[i * 3 + 2] as number,
           radius: isStarter ? CREEP_MAX_RADIUS : CREEP_INITIAL_RADIUS,
           playerId: b.Faction.playerId[i] as number,
           isTumor: false,
@@ -173,8 +174,8 @@ export class CreepSystem implements CreepHandle {
         if (existing) { existing.radius = radius; next.push(existing); continue; }
         next.push({
           entity: e,
-          x: b.Transform.posX[i] as number,
-          z: b.Transform.posZ[i] as number,
+          x: b.Transform.pos[i * 3] as number,
+          z: b.Transform.pos[i * 3 + 2] as number,
           radius,
           playerId: b.Faction.playerId[i] as number,
           isTumor: true,
@@ -191,7 +192,7 @@ export class CreepSystem implements CreepHandle {
       for (let i = 0; i < n; i++) {
         if ((b.Movement.moveType[i] as number) !== MOVE_TYPE.GROUND) continue;
         if ((b.UnitType.race[i] as number) !== RACE.ZERG) continue;
-        const onCreep = this.isOnCreep(b.Transform.posX[i] as number, b.Transform.posZ[i] as number);
+        const onCreep = this.isOnCreep(b.Transform.pos[i * 3] as number, b.Transform.pos[i * 3 + 2] as number);
         b.Movement.creepBoosted[i] = onCreep;
         // vision bonus: visionRange = baseVisionRange (+bonus on creep).
         const baseVision = b.UnitType.baseVisionRange[i] as number;
@@ -237,7 +238,7 @@ export class CreepSystem implements CreepHandle {
       const handle: Handle<'MeshAsset', 'shared'> = world.allocSharedRef('MeshAsset', mesh);
       const res = world.spawn(
         // vertices are in WORLD space already → identity transform.
-        { component: Transform, data: { posX: 0, posY: 0, posZ: 0 } },
+        { component: Transform, data: { pos: [0, 0, 0] } },
         { component: MeshFilter, data: { assetHandle: handle } },
         { component: MeshRenderer, data: { materials: [this._discMaterial()] } },
       );

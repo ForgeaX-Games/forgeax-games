@@ -25,8 +25,9 @@
 
 import {
   Transform, MeshFilter, MeshRenderer, Instances,
-  HANDLE_SPHERE, HANDLE_CUBE, type MaterialAsset, type Handle,
+  type MaterialAsset, type Handle,
 } from '@forgeax/engine-runtime';
+import { HANDLE_SPHERE, HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import type { Entity } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
 
@@ -191,7 +192,7 @@ export class ParticleEmitter {
     // the entity to scale 0 + y=-2000 means the shadow pass either clips
     // the degenerate geometry outside the frustum or writes zero area.
     this.entity = ctx.world.spawn(
-      { component: Transform,    data: { posX: 0, posY: -2000, posZ: 0, scaleX: 0, scaleY: 0, scaleZ: 0 } },
+      { component: Transform,    data: { pos: [0, -2000, 0], scale: [0, 0, 0] } },
       { component: MeshFilter,   data: { assetHandle: handle } },
       { component: MeshRenderer, data: { materials: [materialHandle] } },
       { component: Instances,    data: { transforms: this.transforms } },

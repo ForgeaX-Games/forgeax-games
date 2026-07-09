@@ -254,7 +254,7 @@ export class HarvestSystem {
       for (let i = 0; i < n; i++) {
         this._minerals.push({
           entity: b.Entity.self[i] as EntityHandle,
-          x: b.Transform.posX[i], z: b.Transform.posZ[i],
+          x: b.Transform.pos[i * 3], z: b.Transform.pos[i * 3 + 2],
         });
       }
     }
@@ -271,7 +271,7 @@ export class HarvestSystem {
         if (!typeId || !BASE_TYPE_IDS.has(typeId)) continue;
         if (b.Building.state[i] !== BUILDING_STATE.COMPLETE) continue;
         this._bases.push({
-          entity, x: b.Transform.posX[i], z: b.Transform.posZ[i],
+          entity, x: b.Transform.pos[i * 3], z: b.Transform.pos[i * 3 + 2],
           playerId: b.Faction.playerId[i] as number,
         });
       }
@@ -286,8 +286,8 @@ export class HarvestSystem {
     const entity = b.Entity.self[i] as EntityHandle;
     const h = new HarvesterView(b, i);
     const mv = new MovementView(b, i);
-    const tx = b.Transform.posX[i] as number;
-    const tz = b.Transform.posZ[i] as number;
+    const tx = b.Transform.pos[i * 3] as number;
+    const tz = b.Transform.pos[i * 3 + 2] as number;
     const playerId = b.Faction.playerId[i] as number;
     const rawId = entity as unknown as number;
 
@@ -344,8 +344,8 @@ export class HarvestSystem {
     const mt = world.get(this._handle(h.targetMineral), Transform);
     if (!mt.ok) { h.reset(); this._clearHarvestCommand(entity, mv); return; }
 
-    const dx = mt.value.posX - tx;
-    const dz = mt.value.posZ - tz;
+    const dx = mt.value.pos[0] - tx;
+    const dz = mt.value.pos[2] - tz;
     const dist = Math.sqrt(dx * dx + dz * dz);
 
     if (dist < MINERAL_REACH_DIST) {
@@ -371,7 +371,7 @@ export class HarvestSystem {
         else h.reset();
       }
     } else {
-      this._moveToTarget(entity, mv, 'harvest', mt.value.posX, mt.value.posZ, dist);
+      this._moveToTarget(entity, mv, 'harvest', mt.value.pos[0], mt.value.pos[2], dist);
     }
   }
 
@@ -424,8 +424,8 @@ export class HarvestSystem {
     const bt = world.get(this._handle(h.targetBase), Transform);
     if (!bt.ok) { h.reset(); this._clearHarvestCommand(entity, mv); return; }
 
-    const dx = bt.value.posX - tx;
-    const dz = bt.value.posZ - tz;
+    const dx = bt.value.pos[0] - tx;
+    const dz = bt.value.pos[2] - tz;
     const dist = Math.sqrt(dx * dx + dz * dz);
 
     if (dist < BASE_REACH_DIST) {
@@ -442,7 +442,7 @@ export class HarvestSystem {
       if (nm !== NO_ENTITY) { h.targetMineral = nm; h.state = HARVEST_STATE.MOVING_TO_MINERAL; }
       else h.reset();
     } else {
-      this._moveToTarget(entity, mv, 'return_cargo', bt.value.posX, bt.value.posZ, dist);
+      this._moveToTarget(entity, mv, 'return_cargo', bt.value.pos[0], bt.value.pos[2], dist);
     }
   }
 
@@ -470,8 +470,8 @@ export class HarvestSystem {
       }
     }
 
-    const dx = gt.value.posX - tx;
-    const dz = gt.value.posZ - tz;
+    const dx = gt.value.pos[0] - tx;
+    const dz = gt.value.pos[2] - tz;
     const dist = Math.sqrt(dx * dx + dz * dz);
 
     if (dist < GAS_REACH_DIST) {
@@ -488,7 +488,7 @@ export class HarvestSystem {
         h.timer = 0.5; // workers full -> wait
       }
     } else {
-      this._moveToTarget(entity, mv, 'harvest', gt.value.posX, gt.value.posZ, dist);
+      this._moveToTarget(entity, mv, 'harvest', gt.value.pos[0], gt.value.pos[2], dist);
     }
   }
 
@@ -535,8 +535,8 @@ export class HarvestSystem {
     const bt = world.get(this._handle(h.targetBase), Transform);
     if (!bt.ok) { this._releaseGeyser(h, rawId); h.reset(); this._clearHarvestCommand(entity, mv); return; }
 
-    const dx = bt.value.posX - tx;
-    const dz = bt.value.posZ - tz;
+    const dx = bt.value.pos[0] - tx;
+    const dz = bt.value.pos[2] - tz;
     const dist = Math.sqrt(dx * dx + dz * dz);
 
     if (dist < BASE_REACH_DIST) {
@@ -559,7 +559,7 @@ export class HarvestSystem {
       this._releaseGeyser(h, rawId);
       h.reset();
     } else {
-      this._moveToTarget(entity, mv, 'return_cargo', bt.value.posX, bt.value.posZ, dist);
+      this._moveToTarget(entity, mv, 'return_cargo', bt.value.pos[0], bt.value.pos[2], dist);
     }
   }
 
@@ -690,7 +690,7 @@ export class HarvestSystem {
     for (const m of this._minerals) {
       const mr = world.get(m.entity, Mineral);
       if (!mr.ok || mr.value.amount <= 0) continue;
-      const dx = m.x - tt.value.posX, dz = m.z - tt.value.posZ;
+      const dx = m.x - tt.value.pos[0], dz = m.z - tt.value.pos[2];
       const dsq = dx * dx + dz * dz;
       if (dsq <= MINERAL_SEARCH_RADIUS * MINERAL_SEARCH_RADIUS) nearby.push({ entity: m.entity, distSq: dsq, x: m.x, z: m.z });
     }
@@ -708,7 +708,7 @@ export class HarvestSystem {
       this._releaseGeyserFor(w);
 
       const assigned = nearby[i % nearby.length].entity;
-      const base = this._findNearestBase(wt.value.posX, wt.value.posZ, fr.value.playerId);
+      const base = this._findNearestBase(wt.value.pos[0], wt.value.pos[2], fr.value.playerId);
       if (base === NO_ENTITY) continue;
 
       world.set(w, Harvester, {
@@ -739,7 +739,7 @@ export class HarvestSystem {
     this._releaseMineralFor(worker);
     this._releaseGeyserFor(worker);
 
-    const base = this._findNearestBase(wt.value.posX, wt.value.posZ, fr.value.playerId);
+    const base = this._findNearestBase(wt.value.pos[0], wt.value.pos[2], fr.value.playerId);
     if (base === NO_ENTITY) return;
 
     world.set(worker, Harvester, {

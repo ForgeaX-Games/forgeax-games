@@ -12,16 +12,22 @@
             "localId": 0,
             "components": {
               "Transform": {
-                "posX": 0,
-                "posY": 0,
-                "posZ": 0,
-                "quatX": 0,
-                "quatY": 0,
-                "quatZ": 0,
-                "quatW": 1,
-                "scaleX": 1,
-                "scaleY": 1,
-                "scaleZ": 1
+                "pos": [
+                  0,
+                  0,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
               },
               "Enemy": {
                 "speed": 2.901638,
@@ -37,15 +43,22 @@
             "localId": 1,
             "components": {
               "Transform": {
-                "posX": 0,
-                "posZ": 0,
-                "quatX": 0.707107,
-                "quatY": 0,
-                "quatZ": 0,
-                "quatW": 0.707107,
-                "scaleX": 1.3,
-                "scaleY": 0.8,
-                "scaleZ": 1.3
+                "pos": [
+                  0,
+                  0,
+                  0
+                ],
+                "quat": [
+                  0.707107,
+                  0,
+                  0,
+                  0.707107
+                ],
+                "scale": [
+                  1.3,
+                  0.8,
+                  1.3
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -64,11 +77,16 @@
             "localId": 2,
             "components": {
               "Transform": {
-                "posX": 0,
-                "posZ": 0.1,
-                "scaleX": 2.6,
-                "scaleY": 0.12,
-                "scaleZ": 0.18
+                "pos": [
+                  0,
+                  0,
+                  0.1
+                ],
+                "scale": [
+                  2.6,
+                  0.12,
+                  0.18
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 2
@@ -87,11 +105,16 @@
             "localId": 3,
             "components": {
               "Transform": {
-                "posX": -1.2,
-                "posZ": 0.15,
-                "scaleX": 0.55,
-                "scaleY": 0.35,
-                "scaleZ": 0.55
+                "pos": [
+                  -1.2,
+                  0,
+                  0.15
+                ],
+                "scale": [
+                  0.55,
+                  0.35,
+                  0.55
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 4
@@ -110,11 +133,16 @@
             "localId": 4,
             "components": {
               "Transform": {
-                "posX": 1.2,
-                "posZ": 0.15,
-                "scaleX": 0.55,
-                "scaleY": 0.35,
-                "scaleZ": 0.55
+                "pos": [
+                  1.2,
+                  0,
+                  0.15
+                ],
+                "scale": [
+                  0.55,
+                  0.35,
+                  0.55
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 4
@@ -133,11 +161,16 @@
             "localId": 5,
             "components": {
               "Transform": {
-                "posX": -1.2,
-                "posZ": -0.35,
-                "scaleX": 0.2,
-                "scaleY": 0.2,
-                "scaleZ": 0.3
+                "pos": [
+                  -1.2,
+                  0,
+                  -0.35
+                ],
+                "scale": [
+                  0.2,
+                  0.2,
+                  0.3
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 5
@@ -156,11 +189,16 @@
             "localId": 6,
             "components": {
               "Transform": {
-                "posX": 1.2,
-                "posZ": -0.35,
-                "scaleX": 0.2,
-                "scaleY": 0.2,
-                "scaleZ": 0.3
+                "pos": [
+                  1.2,
+                  0,
+                  -0.35
+                ],
+                "scale": [
+                  0.2,
+                  0.2,
+                  0.3
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 5
@@ -179,12 +217,16 @@
             "localId": 7,
             "components": {
               "Transform": {
-                "posX": -1.2,
-                "posY": -0.2,
-                "posZ": 0.2,
-                "scaleX": 0.4,
-                "scaleY": 0.04,
-                "scaleZ": 0.6
+                "pos": [
+                  -1.2,
+                  -0.2,
+                  0.2
+                ],
+                "scale": [
+                  0.4,
+                  0.04,
+                  0.6
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 2
@@ -203,12 +245,16 @@
             "localId": 8,
             "components": {
               "Transform": {
-                "posX": 1.2,
-                "posY": -0.2,
-                "posZ": 0.2,
-                "scaleX": 0.4,
-                "scaleY": 0.04,
-                "scaleZ": 0.6
+                "pos": [
+                  1.2,
+                  -0.2,
+                  0.2
+                ],
+                "scale": [
+                  0.4,
+                  0.04,
+                  0.6
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 2
@@ -227,12 +273,16 @@
             "localId": 9,
             "components": {
               "Transform": {
-                "posX": -0.5,
-                "posY": 0.2,
-                "posZ": 0.05,
-                "scaleX": 0.6,
-                "scaleY": 0.06,
-                "scaleZ": 0.4
+                "pos": [
+                  -0.5,
+                  0.2,
+                  0.05
+                ],
+                "scale": [
+                  0.6,
+                  0.06,
+                  0.4
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 2
@@ -251,12 +301,16 @@
             "localId": 10,
             "components": {
               "Transform": {
-                "posX": 0.5,
-                "posY": 0.2,
-                "posZ": 0.05,
-                "scaleX": 0.6,
-                "scaleY": 0.06,
-                "scaleZ": 0.4
+                "pos": [
+                  0.5,
+                  0.2,
+                  0.05
+                ],
+                "scale": [
+                  0.6,
+                  0.06,
+                  0.4
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 2
@@ -275,12 +329,16 @@
             "localId": 11,
             "components": {
               "Transform": {
-                "posX": 0,
-                "posY": 0.28,
-                "posZ": 0.2,
-                "scaleX": 0.22,
-                "scaleY": 0.18,
-                "scaleZ": 0.22
+                "pos": [
+                  0,
+                  0.28,
+                  0.2
+                ],
+                "scale": [
+                  0.22,
+                  0.18,
+                  0.22
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 4
@@ -299,12 +357,16 @@
             "localId": 12,
             "components": {
               "Transform": {
-                "posX": -0.15,
-                "posY": 0.4,
-                "posZ": 0.2,
-                "scaleX": 0.02,
-                "scaleY": 0.2,
-                "scaleZ": 0.02
+                "pos": [
+                  -0.15,
+                  0.4,
+                  0.2
+                ],
+                "scale": [
+                  0.02,
+                  0.2,
+                  0.02
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 2
@@ -323,12 +385,16 @@
             "localId": 13,
             "components": {
               "Transform": {
-                "posX": 0.15,
-                "posY": 0.4,
-                "posZ": 0.2,
-                "scaleX": 0.02,
-                "scaleY": 0.2,
-                "scaleZ": 0.02
+                "pos": [
+                  0.15,
+                  0.4,
+                  0.2
+                ],
+                "scale": [
+                  0.02,
+                  0.2,
+                  0.02
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 2
@@ -347,12 +413,16 @@
             "localId": 14,
             "components": {
               "Transform": {
-                "posX": -0.6,
-                "posY": 0.1,
-                "posZ": -0.4,
-                "scaleX": 0.5,
-                "scaleY": 0.04,
-                "scaleZ": 0.25
+                "pos": [
+                  -0.6,
+                  0.1,
+                  -0.4
+                ],
+                "scale": [
+                  0.5,
+                  0.04,
+                  0.25
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 2
@@ -371,12 +441,16 @@
             "localId": 15,
             "components": {
               "Transform": {
-                "posX": 0.6,
-                "posY": 0.1,
-                "posZ": -0.4,
-                "scaleX": 0.5,
-                "scaleY": 0.04,
-                "scaleZ": 0.25
+                "pos": [
+                  0.6,
+                  0.1,
+                  -0.4
+                ],
+                "scale": [
+                  0.5,
+                  0.04,
+                  0.25
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 2

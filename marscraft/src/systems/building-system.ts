@@ -336,7 +336,7 @@ export class BuildingSystem {
         const pid = b.Faction.playerId[i] as number;
         let list = this._pylonsByPlayer.get(pid);
         if (!list) { list = []; this._pylonsByPlayer.set(pid, list); }
-        list.push({ x: b.Transform.posX[i] as number, z: b.Transform.posZ[i] as number });
+        list.push({ x: b.Transform.pos[i * 3] as number, z: b.Transform.pos[i * 3 + 2] as number });
       }
     }
     // 2. set isPowered on every building.
@@ -349,7 +349,7 @@ export class BuildingSystem {
         const tid = buildingTypeId.get(e) ?? '';
         if (!requiresPylonPower(tid)) { b.Building.isPowered[i] = 1; continue; }
         b.Building.isPowered[i] =
-          this._inPowerField(b.Faction.playerId[i] as number, b.Transform.posX[i] as number, b.Transform.posZ[i] as number) ? 1 : 0;
+          this._inPowerField(b.Faction.playerId[i] as number, b.Transform.pos[i * 3] as number, b.Transform.pos[i * 3 + 2] as number) ? 1 : 0;
       }
     }
   }
@@ -387,8 +387,8 @@ export class BuildingSystem {
     if (isAutoConstruct) {
       builderCount = 1;
     } else {
-      const bx = b.Transform.posX[i] as number;
-      const bz = b.Transform.posZ[i] as number;
+      const bx = b.Transform.pos[i * 3] as number;
+      const bz = b.Transform.pos[i * 3 + 2] as number;
       // main builder
       const main = b.Building.builderEntity[i] as number;
       if (main >= 0 && this._builderOnSite(main as unknown as EntityHandle, entity, bx, bz)) {
@@ -452,8 +452,8 @@ export class BuildingSystem {
     }
 
     // Release the on-site builder: clear its build command + push it out.
-    const bx = b.Transform.posX[i] as number;
-    const bz = b.Transform.posZ[i] as number;
+    const bx = b.Transform.pos[i * 3] as number;
+    const bz = b.Transform.pos[i * 3 + 2] as number;
     // AlertSystem toast (local player only): building complete.
     if (playerId === PLAYER_ID.PLAYER) eventBus.emit('alert:build_complete', { buildingTypeId: tid, x: bx, z: bz });
     const def = getBuildingDef(tid);
@@ -476,8 +476,8 @@ export class BuildingSystem {
     const t = world.get(be, Transform);
     if (!t.ok) return false;
     if (!this._isBuildingThis(be, building)) return false;
-    const dx = t.value.posX - bx;
-    const dz = t.value.posZ - bz;
+    const dx = t.value.pos[0] - bx;
+    const dz = t.value.pos[2] - bz;
     return dx * dx + dz * dz <= BUILD_ARRIVE_DIST * BUILD_ARRIVE_DIST;
   }
 
@@ -501,8 +501,8 @@ export class BuildingSystem {
     }
     // push out of the footprint (issue a short move to the building edge).
     if (!world.get(be, Movement).ok) return;
-    const px = t.value.posX;
-    const pz = t.value.posZ;
+    const px = t.value.pos[0];
+    const pz = t.value.pos[2];
     const dx = px - bx;
     const dz = pz - bz;
     const adx = Math.abs(dx);
@@ -551,8 +551,8 @@ export class BuildingSystem {
           playerId: b.Faction.playerId[i] as number,
           color: b.Faction.color[i] as number,
           raceCode: b.Faction.race[i] as number,
-          bx: b.Transform.posX[i] as number,
-          bz: b.Transform.posZ[i] as number,
+          bx: b.Transform.pos[i * 3] as number,
+          bz: b.Transform.pos[i * 3 + 2] as number,
           hasRally: !!b.Building.hasRally[i],
           rallyX: b.Building.rallyX[i] as number,
           rallyZ: b.Building.rallyZ[i] as number,
@@ -629,7 +629,7 @@ export class BuildingSystem {
       const at = this._world.get(attackE as unknown as EntityHandle, Transform);
       const cmd: UnitCommand = {
         type: 'attack', targetEntity: attackE,
-        targetX: at.ok ? at.value.posX : rx, targetZ: at.ok ? at.value.posZ : rz,
+        targetX: at.ok ? at.value.pos[0] : rx, targetZ: at.ok ? at.value.pos[2] : rz,
       };
       commandCurrent.set(newE, cmd);
       const q = commandQueue.get(newE); if (q) q.length = 0;
@@ -909,8 +909,8 @@ export class BuildingSystem {
       const dist = halfFp + 1.0;
       pending.push({
         building: entity,
-        x: (b.Transform.posX[i] as number) + Math.cos(angle) * dist,
-        z: (b.Transform.posZ[i] as number) + Math.sin(angle) * dist,
+        x: (b.Transform.pos[i * 3] as number) + Math.cos(angle) * dist,
+        z: (b.Transform.pos[i * 3 + 2] as number) + Math.sin(angle) * dist,
         playerId: b.Faction.playerId[i] as number,
         color: b.Faction.color[i] as number,
       });
@@ -999,7 +999,7 @@ export class BuildingSystem {
       const jx = (Math.random() - 0.5) * 0.6;
       const dist = 0.3 + Math.random() * 0.3;
       spawnUnit(world, this._factoryCtx, {
-        typeId, x: tr.value.posX + Math.cos(jx) * dist, z: tr.value.posZ + Math.sin(jx) * dist,
+        typeId, x: tr.value.pos[0] + Math.cos(jx) * dist, z: tr.value.pos[2] + Math.sin(jx) * dist,
         playerId: fac.value.playerId, playerColor: fac.value.color, race: 'zerg',
       });
     }

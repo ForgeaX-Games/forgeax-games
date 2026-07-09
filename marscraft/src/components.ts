@@ -425,8 +425,8 @@ export const CREEP_TUMOR_MAX_RADIUS = 10;
 // §1  Transform / Motion
 // =============================================================================
 // Source CTransform { x,y,z, rotationY, scaleX/Y/Z, fallVelocity }.
-//   - x,y,z          → engine Transform.posX/posY/posZ
-//   - scaleX/Y/Z     → engine Transform.scaleX/scaleY/scaleZ
+//   - x,y,z          → engine Transform.pos
+//   - scaleX/Y/Z     → engine Transform.scale
 //   - rotationY      → horizontal facing (radians). The engine Transform stores
 //     rotation as a quaternion; systems derive the quat from facingY each frame,
 //     but the source's authoritative scalar facing is kept here so RTS turn-rate

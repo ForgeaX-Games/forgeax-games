@@ -20,12 +20,14 @@
       "parent": 2,
       "components": {
         "Transform": {
+          "scale": [
+            48,
+            0.2,
+            48
+          ],
           "x": -0.19607689275001583,
           "y": -0.1,
-          "z": -0.40184120896802167,
-          "scaleX": 48,
-          "scaleY": 0.2,
-          "scaleZ": 48
+          "z": -0.40184120896802167
         },
         "Mesh": {
           "kind": "cube"
@@ -44,12 +46,14 @@
       "parent": 2,
       "components": {
         "Transform": {
+          "scale": [
+            0.25,
+            0.04,
+            46
+          ],
           "x": -18,
           "y": 0.01,
-          "z": 0,
-          "scaleX": 0.25,
-          "scaleY": 0.04,
-          "scaleZ": 46
+          "z": 0
         },
         "Mesh": {
           "kind": "cube"
@@ -68,12 +72,14 @@
       "parent": 2,
       "components": {
         "Transform": {
+          "scale": [
+            46,
+            0.04,
+            0.25
+          ],
           "x": 0,
           "y": 0.01,
-          "z": -18,
-          "scaleX": 46,
-          "scaleY": 0.04,
-          "scaleZ": 0.25
+          "z": -18
         },
         "Mesh": {
           "kind": "cube"
@@ -92,12 +98,14 @@
       "parent": 2,
       "components": {
         "Transform": {
+          "scale": [
+            0.25,
+            0.04,
+            46
+          ],
           "x": -9,
           "y": 0.01,
-          "z": 0,
-          "scaleX": 0.25,
-          "scaleY": 0.04,
-          "scaleZ": 46
+          "z": 0
         },
         "Mesh": {
           "kind": "cube"
@@ -116,12 +124,14 @@
       "parent": 2,
       "components": {
         "Transform": {
+          "scale": [
+            46,
+            0.04,
+            0.25
+          ],
           "x": 0,
           "y": 0.01,
-          "z": -9,
-          "scaleX": 46,
-          "scaleY": 0.04,
-          "scaleZ": 0.25
+          "z": -9
         },
         "Mesh": {
           "kind": "cube"
@@ -140,12 +150,14 @@
       "parent": 2,
       "components": {
         "Transform": {
+          "scale": [
+            0.25,
+            0.04,
+            46
+          ],
           "x": 0,
           "y": 0.01,
-          "z": 0,
-          "scaleX": 0.25,
-          "scaleY": 0.04,
-          "scaleZ": 46
+          "z": 0
         },
         "Mesh": {
           "kind": "cube"
@@ -164,12 +176,14 @@
       "parent": 2,
       "components": {
         "Transform": {
+          "scale": [
+            46,
+            0.04,
+            0.25
+          ],
           "x": 1.591968333641752,
           "y": 0.01,
-          "z": 2.1347053611882814,
-          "scaleX": 46,
-          "scaleY": 0.04,
-          "scaleZ": 0.25
+          "z": 2.1347053611882814
         },
         "Mesh": {
           "kind": "cube"
@@ -188,12 +202,14 @@
       "parent": 2,
       "components": {
         "Transform": {
+          "scale": [
+            0.25,
+            0.04,
+            46
+          ],
           "x": 9,
           "y": 0.01,
-          "z": 0,
-          "scaleX": 0.25,
-          "scaleY": 0.04,
-          "scaleZ": 46
+          "z": 0
         },
         "Mesh": {
           "kind": "cube"
@@ -212,12 +228,14 @@
       "parent": 2,
       "components": {
         "Transform": {
+          "scale": [
+            46,
+            0.04,
+            0.25
+          ],
           "x": 0,
           "y": 0.01,
-          "z": 9,
-          "scaleX": 46,
-          "scaleY": 0.04,
-          "scaleZ": 0.25
+          "z": 9
         },
         "Mesh": {
           "kind": "cube"
@@ -236,12 +254,14 @@
       "parent": 2,
       "components": {
         "Transform": {
+          "scale": [
+            0.25,
+            0.04,
+            46
+          ],
           "x": 18,
           "y": 0.01,
-          "z": 0,
-          "scaleX": 0.25,
-          "scaleY": 0.04,
-          "scaleZ": 46
+          "z": 0
         },
         "Mesh": {
           "kind": "cube"
@@ -260,12 +280,14 @@
       "parent": 2,
       "components": {
         "Transform": {
+          "scale": [
+            46,
+            0.04,
+            0.25
+          ],
           "x": 0,
           "y": 0.01,
-          "z": 18,
-          "scaleX": 46,
-          "scaleY": 0.04,
-          "scaleZ": 0.25
+          "z": 18
         },
         "Mesh": {
           "kind": "cube"
@@ -290,12 +312,14 @@
       "parent": 14,
       "components": {
         "Transform": {
+          "scale": [
+            46,
+            0.12,
+            0.08
+          ],
           "x": 0,
           "y": 2.7,
-          "z": 23.65,
-          "scaleX": 46,
-          "scaleY": 0.12,
-          "scaleZ": 0.08
+          "z": 23.65
         },
         "Mesh": {
           "kind": "cube"
@@ -316,12 +340,14 @@
       "parent": 14,
       "components": {
         "Transform": {
+          "scale": [
+            46,
+            0.12,
+            0.08
+          ],
           "x": 0,
           "y": 2.7,
-          "z": -23.65,
-          "scaleX": 46,
-          "scaleY": 0.12,
-          "scaleZ": 0.08
+          "z": -23.65
         },
         "Mesh": {
           "kind": "cube"
@@ -342,12 +368,14 @@
       "parent": 14,
       "components": {
         "Transform": {
+          "scale": [
+            0.08,
+            0.12,
+            46
+          ],
           "x": 23.65,
           "y": 2.7,
-          "z": 0,
-          "scaleX": 0.08,
-          "scaleY": 0.12,
-          "scaleZ": 46
+          "z": 0
         },
         "Mesh": {
           "kind": "cube"
@@ -368,12 +396,14 @@
       "parent": 14,
       "components": {
         "Transform": {
+          "scale": [
+            0.08,
+            0.12,
+            46
+          ],
           "x": -23.65,
           "y": 2.7,
-          "z": 0,
-          "scaleX": 0.08,
-          "scaleY": 0.12,
-          "scaleZ": 46
+          "z": 0
         },
         "Mesh": {
           "kind": "cube"
@@ -400,12 +430,14 @@
       "parent": 19,
       "components": {
         "Transform": {
+          "scale": [
+            48,
+            3.4,
+            0.6
+          ],
           "x": 0,
           "y": 1.6,
-          "z": 24,
-          "scaleX": 48,
-          "scaleY": 3.4,
-          "scaleZ": 0.6
+          "z": 24
         },
         "Mesh": {
           "kind": "cube"
@@ -424,12 +456,14 @@
       "parent": 19,
       "components": {
         "Transform": {
+          "scale": [
+            48,
+            3.4,
+            0.6
+          ],
           "x": -0.1061285644302199,
           "y": 1.6,
-          "z": -24.512807193288914,
-          "scaleX": 48,
-          "scaleY": 3.4,
-          "scaleZ": 0.6
+          "z": -24.512807193288914
         },
         "Mesh": {
           "kind": "cube"
@@ -448,12 +482,14 @@
       "parent": 19,
       "components": {
         "Transform": {
+          "scale": [
+            0.6,
+            3.4,
+            48
+          ],
           "x": 24,
           "y": 1.6,
-          "z": 0,
-          "scaleX": 0.6,
-          "scaleY": 3.4,
-          "scaleZ": 48
+          "z": 0
         },
         "Mesh": {
           "kind": "cube"
@@ -472,12 +508,14 @@
       "parent": 19,
       "components": {
         "Transform": {
+          "scale": [
+            0.6,
+            3.4,
+            48
+          ],
           "x": -24,
           "y": 1.6,
-          "z": 0,
-          "scaleX": 0.6,
-          "scaleY": 3.4,
-          "scaleZ": 48
+          "z": 0
         },
         "Mesh": {
           "kind": "cube"
@@ -496,12 +534,14 @@
       "parent": 19,
       "components": {
         "Transform": {
+          "scale": [
+            48,
+            0.3,
+            0.7
+          ],
           "x": 0,
           "y": 3.35,
-          "z": 24,
-          "scaleX": 48,
-          "scaleY": 0.3,
-          "scaleZ": 0.7
+          "z": 24
         },
         "Mesh": {
           "kind": "cube"
@@ -520,12 +560,14 @@
       "parent": 19,
       "components": {
         "Transform": {
+          "scale": [
+            48,
+            0.3,
+            0.7
+          ],
           "x": 0,
           "y": 3.35,
-          "z": -24,
-          "scaleX": 48,
-          "scaleY": 0.3,
-          "scaleZ": 0.7
+          "z": -24
         },
         "Mesh": {
           "kind": "cube"
@@ -544,12 +586,14 @@
       "parent": 19,
       "components": {
         "Transform": {
+          "scale": [
+            0.7,
+            0.3,
+            48
+          ],
           "x": 24,
           "y": 3.35,
-          "z": 0,
-          "scaleX": 0.7,
-          "scaleY": 0.3,
-          "scaleZ": 48
+          "z": 0
         },
         "Mesh": {
           "kind": "cube"
@@ -568,12 +612,14 @@
       "parent": 19,
       "components": {
         "Transform": {
+          "scale": [
+            0.7,
+            0.3,
+            48
+          ],
           "x": -24,
           "y": 3.35,
-          "z": 0,
-          "scaleX": 0.7,
-          "scaleY": 0.3,
-          "scaleZ": 48
+          "z": 0
         },
         "Mesh": {
           "kind": "cube"
@@ -598,12 +644,14 @@
       "parent": 28,
       "components": {
         "Transform": {
+          "scale": [
+            1.7,
+            1.7,
+            1.7
+          ],
           "x": -6,
           "y": 0.85,
-          "z": -5,
-          "scaleX": 1.7,
-          "scaleY": 1.7,
-          "scaleZ": 1.7
+          "z": -5
         },
         "Mesh": {
           "kind": "cube"
@@ -626,12 +674,14 @@
       "parent": 28,
       "components": {
         "Transform": {
+          "scale": [
+            1.3,
+            1.3,
+            1.3
+          ],
           "x": -4.4,
           "y": 0.65,
-          "z": -6.4,
-          "scaleX": 1.3,
-          "scaleY": 1.3,
-          "scaleZ": 1.3
+          "z": -6.4
         },
         "Mesh": {
           "kind": "cube"
@@ -654,12 +704,14 @@
       "parent": 28,
       "components": {
         "Transform": {
+          "scale": [
+            1.7,
+            1.7,
+            1.7
+          ],
           "x": 7,
           "y": 0.85,
-          "z": 4,
-          "scaleX": 1.7,
-          "scaleY": 1.7,
-          "scaleZ": 1.7
+          "z": 4
         },
         "Mesh": {
           "kind": "cube"
@@ -682,12 +734,14 @@
       "parent": 28,
       "components": {
         "Transform": {
+          "scale": [
+            1.2,
+            1.2,
+            1.2
+          ],
           "x": 8.4,
           "y": 0.6,
-          "z": 5.3,
-          "scaleX": 1.2,
-          "scaleY": 1.2,
-          "scaleZ": 1.2
+          "z": 5.3
         },
         "Mesh": {
           "kind": "cube"
@@ -711,12 +765,14 @@
       "parent": 28,
       "components": {
         "Transform": {
+          "scale": [
+            1.7,
+            1.7,
+            1.7
+          ],
           "x": -9,
           "y": 0.85,
-          "z": 8,
-          "scaleX": 1.7,
-          "scaleY": 1.7,
-          "scaleZ": 1.7
+          "z": 8
         },
         "Mesh": {
           "kind": "cube"
@@ -739,12 +795,14 @@
       "parent": 28,
       "components": {
         "Transform": {
+          "scale": [
+            1.7,
+            1.7,
+            1.7
+          ],
           "x": 10,
           "y": 0.85,
-          "z": -9,
-          "scaleX": 1.7,
-          "scaleY": 1.7,
-          "scaleZ": 1.7
+          "z": -9
         },
         "Mesh": {
           "kind": "cube"
@@ -767,12 +825,14 @@
       "parent": 28,
       "components": {
         "Transform": {
+          "scale": [
+            1.7,
+            1.7,
+            1.7
+          ],
           "x": 2.5,
           "y": 0.85,
-          "z": 12,
-          "scaleX": 1.7,
-          "scaleY": 1.7,
-          "scaleZ": 1.7
+          "z": 12
         },
         "Mesh": {
           "kind": "cube"
@@ -795,12 +855,14 @@
       "parent": 28,
       "components": {
         "Transform": {
+          "scale": [
+            2.1,
+            2.1,
+            2.1
+          ],
           "x": -13,
           "y": 1.05,
-          "z": -3,
-          "scaleX": 2.1,
-          "scaleY": 2.1,
-          "scaleZ": 2.1
+          "z": -3
         },
         "Mesh": {
           "kind": "cube"
@@ -829,12 +891,14 @@
       "parent": 37,
       "components": {
         "Transform": {
+          "scale": [
+            1,
+            1.2,
+            1
+          ],
           "x": -5.2,
           "y": 0.6,
-          "z": -3.6,
-          "scaleX": 1,
-          "scaleY": 1.2,
-          "scaleZ": 1
+          "z": -3.6
         },
         "Mesh": {
           "kind": "cylinder"
@@ -857,12 +921,14 @@
       "parent": 37,
       "components": {
         "Transform": {
+          "scale": [
+            0.5,
+            0.18,
+            0.5
+          ],
           "x": -5.2,
           "y": 1.18,
-          "z": -3.6,
-          "scaleX": 0.5,
-          "scaleY": 0.18,
-          "scaleZ": 0.5
+          "z": -3.6
         },
         "Mesh": {
           "kind": "sphere"
@@ -887,12 +953,14 @@
       "parent": 40,
       "components": {
         "Transform": {
+          "scale": [
+            1,
+            1.2,
+            1
+          ],
           "x": 8.6,
           "y": 0.6,
-          "z": 3,
-          "scaleX": 1,
-          "scaleY": 1.2,
-          "scaleZ": 1
+          "z": 3
         },
         "Mesh": {
           "kind": "cylinder"
@@ -915,12 +983,14 @@
       "parent": 40,
       "components": {
         "Transform": {
+          "scale": [
+            0.5,
+            0.18,
+            0.5
+          ],
           "x": 8.6,
           "y": 1.18,
-          "z": 3,
-          "scaleX": 0.5,
-          "scaleY": 0.18,
-          "scaleZ": 0.5
+          "z": 3
         },
         "Mesh": {
           "kind": "sphere"
@@ -945,12 +1015,14 @@
       "parent": 43,
       "components": {
         "Transform": {
+          "scale": [
+            1,
+            1.2,
+            1
+          ],
           "x": 3,
           "y": 0.6,
-          "z": 13.2,
-          "scaleX": 1,
-          "scaleY": 1.2,
-          "scaleZ": 1
+          "z": 13.2
         },
         "Mesh": {
           "kind": "cylinder"
@@ -973,12 +1045,14 @@
       "parent": 43,
       "components": {
         "Transform": {
+          "scale": [
+            0.5,
+            0.18,
+            0.5
+          ],
           "x": 3,
           "y": 1.18,
-          "z": 13.2,
-          "scaleX": 0.5,
-          "scaleY": 0.18,
-          "scaleZ": 0.5
+          "z": 13.2
         },
         "Mesh": {
           "kind": "sphere"
@@ -1003,12 +1077,14 @@
       "parent": 46,
       "components": {
         "Transform": {
+          "scale": [
+            1,
+            1.2,
+            1
+          ],
           "x": -11.2,
           "y": 0.6,
-          "z": -4.3,
-          "scaleX": 1,
-          "scaleY": 1.2,
-          "scaleZ": 1
+          "z": -4.3
         },
         "Mesh": {
           "kind": "cylinder"
@@ -1031,12 +1107,14 @@
       "parent": 46,
       "components": {
         "Transform": {
+          "scale": [
+            0.5,
+            0.18,
+            0.5
+          ],
           "x": -11.2,
           "y": 1.18,
-          "z": -4.3,
-          "scaleX": 0.5,
-          "scaleY": 0.18,
-          "scaleZ": 0.5
+          "z": -4.3
         },
         "Mesh": {
           "kind": "sphere"
@@ -1061,12 +1139,14 @@
       "parent": 49,
       "components": {
         "Transform": {
+          "scale": [
+            1,
+            1.2,
+            1
+          ],
           "x": 11.5,
           "y": 0.6,
-          "z": -7.4,
-          "scaleX": 1,
-          "scaleY": 1.2,
-          "scaleZ": 1
+          "z": -7.4
         },
         "Mesh": {
           "kind": "cylinder"
@@ -1089,12 +1169,14 @@
       "parent": 49,
       "components": {
         "Transform": {
+          "scale": [
+            0.5,
+            0.18,
+            0.5
+          ],
           "x": 11.5,
           "y": 1.18,
-          "z": -7.4,
-          "scaleX": 0.5,
-          "scaleY": 0.18,
-          "scaleZ": 0.5
+          "z": -7.4
         },
         "Mesh": {
           "kind": "sphere"
@@ -1119,12 +1201,14 @@
       "parent": 52,
       "components": {
         "Transform": {
+          "scale": [
+            1.2,
+            3.4,
+            1.2
+          ],
           "x": 0.08917555903077257,
           "y": 1.7,
-          "z": 0.1334138203806159,
-          "scaleX": 1.2,
-          "scaleY": 3.4,
-          "scaleZ": 1.2
+          "z": 0.1334138203806159
         },
         "Mesh": {
           "kind": "cube"
@@ -1147,12 +1231,14 @@
       "parent": 52,
       "components": {
         "Transform": {
+          "scale": [
+            1.4,
+            0.25,
+            1.4
+          ],
           "x": 0,
           "y": 3.45,
-          "z": 0,
-          "scaleX": 1.4,
-          "scaleY": 0.25,
-          "scaleZ": 1.4
+          "z": 0
         },
         "Mesh": {
           "kind": "cube"
@@ -1177,12 +1263,14 @@
       "parent": 55,
       "components": {
         "Transform": {
+          "scale": [
+            1.2,
+            3.4,
+            1.2
+          ],
           "x": -14,
           "y": 1.7,
-          "z": 13,
-          "scaleX": 1.2,
-          "scaleY": 3.4,
-          "scaleZ": 1.2
+          "z": 13
         },
         "Mesh": {
           "kind": "cube"
@@ -1205,12 +1293,14 @@
       "parent": 55,
       "components": {
         "Transform": {
+          "scale": [
+            1.4,
+            0.25,
+            1.4
+          ],
           "x": -14,
           "y": 3.45,
-          "z": 13,
-          "scaleX": 1.4,
-          "scaleY": 0.25,
-          "scaleZ": 1.4
+          "z": 13
         },
         "Mesh": {
           "kind": "cube"
@@ -1235,12 +1325,14 @@
       "parent": 58,
       "components": {
         "Transform": {
+          "scale": [
+            1.2,
+            3.4,
+            1.2
+          ],
           "x": 14,
           "y": 1.7,
-          "z": -13,
-          "scaleX": 1.2,
-          "scaleY": 3.4,
-          "scaleZ": 1.2
+          "z": -13
         },
         "Mesh": {
           "kind": "cube"
@@ -1263,12 +1355,14 @@
       "parent": 58,
       "components": {
         "Transform": {
+          "scale": [
+            1.4,
+            0.25,
+            1.4
+          ],
           "x": 14,
           "y": 3.45,
-          "z": -13,
-          "scaleX": 1.4,
-          "scaleY": 0.25,
-          "scaleZ": 1.4
+          "z": -13
         },
         "Mesh": {
           "kind": "cube"
@@ -1293,12 +1387,14 @@
       "parent": 61,
       "components": {
         "Transform": {
+          "scale": [
+            1.2,
+            3.4,
+            1.2
+          ],
           "x": 15,
           "y": 1.7,
-          "z": 14,
-          "scaleX": 1.2,
-          "scaleY": 3.4,
-          "scaleZ": 1.2
+          "z": 14
         },
         "Mesh": {
           "kind": "cube"
@@ -1321,12 +1417,14 @@
       "parent": 61,
       "components": {
         "Transform": {
+          "scale": [
+            1.4,
+            0.25,
+            1.4
+          ],
           "x": 15,
           "y": 3.45,
-          "z": 14,
-          "scaleX": 1.4,
-          "scaleY": 0.25,
-          "scaleZ": 1.4
+          "z": 14
         },
         "Mesh": {
           "kind": "cube"
@@ -1351,12 +1449,14 @@
       "parent": 64,
       "components": {
         "Transform": {
+          "scale": [
+            1.2,
+            3.4,
+            1.2
+          ],
           "x": -15,
           "y": 1.7,
-          "z": -14,
-          "scaleX": 1.2,
-          "scaleY": 3.4,
-          "scaleZ": 1.2
+          "z": -14
         },
         "Mesh": {
           "kind": "cube"
@@ -1379,12 +1479,14 @@
       "parent": 64,
       "components": {
         "Transform": {
+          "scale": [
+            1.4,
+            0.25,
+            1.4
+          ],
           "x": -15,
           "y": 3.45,
-          "z": -14,
-          "scaleX": 1.4,
-          "scaleY": 0.25,
-          "scaleZ": 1.4
+          "z": -14
         },
         "Mesh": {
           "kind": "cube"
@@ -1415,12 +1517,14 @@
       "parent": 68,
       "components": {
         "Transform": {
+          "scale": [
+            3.3,
+            3.3,
+            0.5
+          ],
           "x": -16.85,
           "y": 1.65,
-          "z": -8.5,
-          "scaleX": 3.3,
-          "scaleY": 3.3,
-          "scaleZ": 0.5
+          "z": -8.5
         },
         "Mesh": {
           "kind": "cube"
@@ -1442,12 +1546,14 @@
       "parent": 68,
       "components": {
         "Transform": {
+          "scale": [
+            3.3,
+            3.3,
+            0.5
+          ],
           "x": -11.15,
           "y": 1.65,
-          "z": -8.5,
-          "scaleX": 3.3,
-          "scaleY": 3.3,
-          "scaleZ": 0.5
+          "z": -8.5
         },
         "Mesh": {
           "kind": "cube"
@@ -1469,12 +1575,14 @@
       "parent": 68,
       "components": {
         "Transform": {
+          "scale": [
+            2.4,
+            0.3,
+            0.525
+          ],
           "x": -14,
           "y": 3.05,
-          "z": -8.5,
-          "scaleX": 2.4,
-          "scaleY": 0.3,
-          "scaleZ": 0.525
+          "z": -8.5
         },
         "Mesh": {
           "kind": "cube"
@@ -1495,12 +1603,14 @@
       "parent": 68,
       "components": {
         "Transform": {
+          "scale": [
+            9,
+            3.3,
+            0.5
+          ],
           "x": -14,
           "y": 1.65,
-          "z": -15.5,
-          "scaleX": 9,
-          "scaleY": 3.3,
-          "scaleZ": 0.5
+          "z": -15.5
         },
         "Mesh": {
           "kind": "cube"
@@ -1522,12 +1632,14 @@
       "parent": 68,
       "components": {
         "Transform": {
+          "scale": [
+            0.5,
+            3.3,
+            7
+          ],
           "x": -9.5,
           "y": 1.65,
-          "z": -12,
-          "scaleX": 0.5,
-          "scaleY": 3.3,
-          "scaleZ": 7
+          "z": -12
         },
         "Mesh": {
           "kind": "cube"
@@ -1549,12 +1661,14 @@
       "parent": 68,
       "components": {
         "Transform": {
+          "scale": [
+            0.5,
+            3.3,
+            7
+          ],
           "x": -18.5,
           "y": 1.65,
-          "z": -12,
-          "scaleX": 0.5,
-          "scaleY": 3.3,
-          "scaleZ": 7
+          "z": -12
         },
         "Mesh": {
           "kind": "cube"
@@ -1576,12 +1690,14 @@
       "parent": 68,
       "components": {
         "Transform": {
+          "scale": [
+            5.94,
+            0.55,
+            0.05
+          ],
           "x": -14,
           "y": 1.98,
-          "z": -8.48,
-          "scaleX": 5.94,
-          "scaleY": 0.55,
-          "scaleZ": 0.05
+          "z": -8.48
         },
         "Mesh": {
           "kind": "cube"
@@ -1602,12 +1718,14 @@
       "parent": 68,
       "components": {
         "Transform": {
+          "scale": [
+            5.94,
+            0.55,
+            0.05
+          ],
           "x": -14,
           "y": 1.98,
-          "z": -15.52,
-          "scaleX": 5.94,
-          "scaleY": 0.55,
-          "scaleZ": 0.05
+          "z": -15.52
         },
         "Mesh": {
           "kind": "cube"
@@ -1628,12 +1746,14 @@
       "parent": 68,
       "components": {
         "Transform": {
+          "scale": [
+            9.3,
+            0.24,
+            7.3
+          ],
           "x": -14,
           "y": 3.42,
-          "z": -12,
-          "scaleX": 9.3,
-          "scaleY": 0.24,
-          "scaleZ": 7.3
+          "z": -12
         },
         "Mesh": {
           "kind": "cube"
@@ -1652,12 +1772,14 @@
       "parent": 68,
       "components": {
         "Transform": {
+          "scale": [
+            9.3,
+            0.4,
+            0.18
+          ],
           "x": -14,
           "y": 3.72,
-          "z": -8.5,
-          "scaleX": 9.3,
-          "scaleY": 0.4,
-          "scaleZ": 0.18
+          "z": -8.5
         },
         "Mesh": {
           "kind": "cube"
@@ -1676,12 +1798,14 @@
       "parent": 68,
       "components": {
         "Transform": {
+          "scale": [
+            9.3,
+            0.4,
+            0.18
+          ],
           "x": -14,
           "y": 3.72,
-          "z": -15.5,
-          "scaleX": 9.3,
-          "scaleY": 0.4,
-          "scaleZ": 0.18
+          "z": -15.5
         },
         "Mesh": {
           "kind": "cube"
@@ -1700,12 +1824,14 @@
       "parent": 68,
       "components": {
         "Transform": {
+          "scale": [
+            0.18,
+            0.4,
+            7.3
+          ],
           "x": -9.5,
           "y": 3.72,
-          "z": -12,
-          "scaleX": 0.18,
-          "scaleY": 0.4,
-          "scaleZ": 7.3
+          "z": -12
         },
         "Mesh": {
           "kind": "cube"
@@ -1724,12 +1850,14 @@
       "parent": 68,
       "components": {
         "Transform": {
+          "scale": [
+            0.18,
+            0.4,
+            7.3
+          ],
           "x": -18.5,
           "y": 3.72,
-          "z": -12,
-          "scaleX": 0.18,
-          "scaleY": 0.4,
-          "scaleZ": 7.3
+          "z": -12
         },
         "Mesh": {
           "kind": "cube"
@@ -1754,12 +1882,14 @@
       "parent": 82,
       "components": {
         "Transform": {
+          "scale": [
+            8,
+            3.4,
+            0.5
+          ],
           "x": 15,
           "y": 1.7,
-          "z": 13,
-          "scaleX": 8,
-          "scaleY": 3.4,
-          "scaleZ": 0.5
+          "z": 13
         },
         "Mesh": {
           "kind": "cube"
@@ -1781,12 +1911,14 @@
       "parent": 82,
       "components": {
         "Transform": {
+          "scale": [
+            2.8,
+            3.4,
+            0.5
+          ],
           "x": 12.4,
           "y": 1.7,
-          "z": 5,
-          "scaleX": 2.8,
-          "scaleY": 3.4,
-          "scaleZ": 0.5
+          "z": 5
         },
         "Mesh": {
           "kind": "cube"
@@ -1808,12 +1940,14 @@
       "parent": 82,
       "components": {
         "Transform": {
+          "scale": [
+            2.8,
+            3.4,
+            0.5
+          ],
           "x": 17.6,
           "y": 1.7,
-          "z": 5,
-          "scaleX": 2.8,
-          "scaleY": 3.4,
-          "scaleZ": 0.5
+          "z": 5
         },
         "Mesh": {
           "kind": "cube"
@@ -1835,12 +1969,14 @@
       "parent": 82,
       "components": {
         "Transform": {
+          "scale": [
+            2.4,
+            0.3,
+            0.525
+          ],
           "x": 15,
           "y": 3.15,
-          "z": 5,
-          "scaleX": 2.4,
-          "scaleY": 0.3,
-          "scaleZ": 0.525
+          "z": 5
         },
         "Mesh": {
           "kind": "cube"
@@ -1861,12 +1997,14 @@
       "parent": 82,
       "components": {
         "Transform": {
+          "scale": [
+            0.5,
+            3.4,
+            8
+          ],
           "x": 19,
           "y": 1.7,
-          "z": 9,
-          "scaleX": 0.5,
-          "scaleY": 3.4,
-          "scaleZ": 8
+          "z": 9
         },
         "Mesh": {
           "kind": "cube"
@@ -1888,12 +2026,14 @@
       "parent": 82,
       "components": {
         "Transform": {
+          "scale": [
+            0.5,
+            3.4,
+            8
+          ],
           "x": 11,
           "y": 1.7,
-          "z": 9,
-          "scaleX": 0.5,
-          "scaleY": 3.4,
-          "scaleZ": 8
+          "z": 9
         },
         "Mesh": {
           "kind": "cube"
@@ -1915,12 +2055,14 @@
       "parent": 82,
       "components": {
         "Transform": {
+          "scale": [
+            5.28,
+            0.55,
+            0.05
+          ],
           "x": 15,
           "y": 2.04,
-          "z": 13.02,
-          "scaleX": 5.28,
-          "scaleY": 0.55,
-          "scaleZ": 0.05
+          "z": 13.02
         },
         "Mesh": {
           "kind": "cube"
@@ -1941,12 +2083,14 @@
       "parent": 82,
       "components": {
         "Transform": {
+          "scale": [
+            5.28,
+            0.55,
+            0.05
+          ],
           "x": 15,
           "y": 2.04,
-          "z": 4.98,
-          "scaleX": 5.28,
-          "scaleY": 0.55,
-          "scaleZ": 0.05
+          "z": 4.98
         },
         "Mesh": {
           "kind": "cube"
@@ -1967,12 +2111,14 @@
       "parent": 82,
       "components": {
         "Transform": {
+          "scale": [
+            8.3,
+            0.24,
+            8.3
+          ],
           "x": 15,
           "y": 3.52,
-          "z": 9,
-          "scaleX": 8.3,
-          "scaleY": 0.24,
-          "scaleZ": 8.3
+          "z": 9
         },
         "Mesh": {
           "kind": "cube"
@@ -1991,12 +2137,14 @@
       "parent": 82,
       "components": {
         "Transform": {
+          "scale": [
+            8.3,
+            0.4,
+            0.18
+          ],
           "x": 15,
           "y": 3.82,
-          "z": 13,
-          "scaleX": 8.3,
-          "scaleY": 0.4,
-          "scaleZ": 0.18
+          "z": 13
         },
         "Mesh": {
           "kind": "cube"
@@ -2015,12 +2163,14 @@
       "parent": 82,
       "components": {
         "Transform": {
+          "scale": [
+            8.3,
+            0.4,
+            0.18
+          ],
           "x": 15,
           "y": 3.82,
-          "z": 5,
-          "scaleX": 8.3,
-          "scaleY": 0.4,
-          "scaleZ": 0.18
+          "z": 5
         },
         "Mesh": {
           "kind": "cube"
@@ -2039,12 +2189,14 @@
       "parent": 82,
       "components": {
         "Transform": {
+          "scale": [
+            0.18,
+            0.4,
+            8.3
+          ],
           "x": 19,
           "y": 3.82,
-          "z": 9,
-          "scaleX": 0.18,
-          "scaleY": 0.4,
-          "scaleZ": 8.3
+          "z": 9
         },
         "Mesh": {
           "kind": "cube"
@@ -2063,12 +2215,14 @@
       "parent": 82,
       "components": {
         "Transform": {
+          "scale": [
+            0.18,
+            0.4,
+            8.3
+          ],
           "x": 11,
           "y": 3.82,
-          "z": 9,
-          "scaleX": 0.18,
-          "scaleY": 0.4,
-          "scaleZ": 8.3
+          "z": 9
         },
         "Mesh": {
           "kind": "cube"
@@ -2093,12 +2247,14 @@
       "parent": 96,
       "components": {
         "Transform": {
+          "scale": [
+            2.3,
+            3,
+            0.5
+          ],
           "x": -5.35,
           "y": 1.5,
-          "z": -13.5,
-          "scaleX": 2.3,
-          "scaleY": 3,
-          "scaleZ": 0.5
+          "z": -13.5
         },
         "Mesh": {
           "kind": "cube"
@@ -2120,12 +2276,14 @@
       "parent": 96,
       "components": {
         "Transform": {
+          "scale": [
+            2.3,
+            3,
+            0.5
+          ],
           "x": -0.65,
           "y": 1.5,
-          "z": -13.5,
-          "scaleX": 2.3,
-          "scaleY": 3,
-          "scaleZ": 0.5
+          "z": -13.5
         },
         "Mesh": {
           "kind": "cube"
@@ -2147,12 +2305,14 @@
       "parent": 96,
       "components": {
         "Transform": {
+          "scale": [
+            2.4,
+            0.3,
+            0.525
+          ],
           "x": -3,
           "y": 2.75,
-          "z": -13.5,
-          "scaleX": 2.4,
-          "scaleY": 0.3,
-          "scaleZ": 0.525
+          "z": -13.5
         },
         "Mesh": {
           "kind": "cube"
@@ -2173,12 +2333,14 @@
       "parent": 96,
       "components": {
         "Transform": {
+          "scale": [
+            7,
+            3,
+            0.5
+          ],
           "x": -3,
           "y": 1.5,
-          "z": -18.5,
-          "scaleX": 7,
-          "scaleY": 3,
-          "scaleZ": 0.5
+          "z": -18.5
         },
         "Mesh": {
           "kind": "cube"
@@ -2200,12 +2362,14 @@
       "parent": 96,
       "components": {
         "Transform": {
+          "scale": [
+            0.5,
+            3,
+            5
+          ],
           "x": 0.5,
           "y": 1.5,
-          "z": -16,
-          "scaleX": 0.5,
-          "scaleY": 3,
-          "scaleZ": 5
+          "z": -16
         },
         "Mesh": {
           "kind": "cube"
@@ -2227,12 +2391,14 @@
       "parent": 96,
       "components": {
         "Transform": {
+          "scale": [
+            0.5,
+            3,
+            5
+          ],
           "x": -6.5,
           "y": 1.5,
-          "z": -16,
-          "scaleX": 0.5,
-          "scaleY": 3,
-          "scaleZ": 5
+          "z": -16
         },
         "Mesh": {
           "kind": "cube"
@@ -2254,12 +2420,14 @@
       "parent": 96,
       "components": {
         "Transform": {
+          "scale": [
+            4.62,
+            0.55,
+            0.05
+          ],
           "x": -3,
           "y": 1.8,
-          "z": -13.48,
-          "scaleX": 4.62,
-          "scaleY": 0.55,
-          "scaleZ": 0.05
+          "z": -13.48
         },
         "Mesh": {
           "kind": "cube"
@@ -2280,12 +2448,14 @@
       "parent": 96,
       "components": {
         "Transform": {
+          "scale": [
+            4.62,
+            0.55,
+            0.05
+          ],
           "x": -3,
           "y": 1.8,
-          "z": -18.52,
-          "scaleX": 4.62,
-          "scaleY": 0.55,
-          "scaleZ": 0.05
+          "z": -18.52
         },
         "Mesh": {
           "kind": "cube"
@@ -2306,12 +2476,14 @@
       "parent": 96,
       "components": {
         "Transform": {
+          "scale": [
+            7.3,
+            0.24,
+            5.3
+          ],
           "x": -3,
           "y": 3.12,
-          "z": -16,
-          "scaleX": 7.3,
-          "scaleY": 0.24,
-          "scaleZ": 5.3
+          "z": -16
         },
         "Mesh": {
           "kind": "cube"
@@ -2330,12 +2502,14 @@
       "parent": 96,
       "components": {
         "Transform": {
+          "scale": [
+            7.3,
+            0.4,
+            0.18
+          ],
           "x": -3,
           "y": 3.42,
-          "z": -13.5,
-          "scaleX": 7.3,
-          "scaleY": 0.4,
-          "scaleZ": 0.18
+          "z": -13.5
         },
         "Mesh": {
           "kind": "cube"
@@ -2354,12 +2528,14 @@
       "parent": 96,
       "components": {
         "Transform": {
+          "scale": [
+            7.3,
+            0.4,
+            0.18
+          ],
           "x": -3,
           "y": 3.42,
-          "z": -18.5,
-          "scaleX": 7.3,
-          "scaleY": 0.4,
-          "scaleZ": 0.18
+          "z": -18.5
         },
         "Mesh": {
           "kind": "cube"
@@ -2378,12 +2554,14 @@
       "parent": 96,
       "components": {
         "Transform": {
+          "scale": [
+            0.18,
+            0.4,
+            5.3
+          ],
           "x": 0.5,
           "y": 3.42,
-          "z": -16,
-          "scaleX": 0.18,
-          "scaleY": 0.4,
-          "scaleZ": 5.3
+          "z": -16
         },
         "Mesh": {
           "kind": "cube"
@@ -2402,12 +2580,14 @@
       "parent": 96,
       "components": {
         "Transform": {
+          "scale": [
+            0.18,
+            0.4,
+            5.3
+          ],
           "x": -6.5,
           "y": 3.42,
-          "z": -16,
-          "scaleX": 0.18,
-          "scaleY": 0.4,
-          "scaleZ": 5.3
+          "z": -16
         },
         "Mesh": {
           "kind": "cube"
@@ -2432,12 +2612,14 @@
       "parent": 110,
       "components": {
         "Transform": {
+          "scale": [
+            0.3,
+            4.8,
+            0.3
+          ],
           "x": 16,
           "y": 2.4,
-          "z": -5,
-          "scaleX": 0.3,
-          "scaleY": 4.8,
-          "scaleZ": 0.3
+          "z": -5
         },
         "Mesh": {
           "kind": "cube"
@@ -2456,12 +2638,14 @@
       "parent": 110,
       "components": {
         "Transform": {
+          "scale": [
+            0.3,
+            4.8,
+            0.3
+          ],
           "x": 16,
           "y": 2.4,
-          "z": -3,
-          "scaleX": 0.3,
-          "scaleY": 4.8,
-          "scaleZ": 0.3
+          "z": -3
         },
         "Mesh": {
           "kind": "cube"
@@ -2480,12 +2664,14 @@
       "parent": 110,
       "components": {
         "Transform": {
+          "scale": [
+            0.3,
+            4.8,
+            0.3
+          ],
           "x": 18,
           "y": 2.4,
-          "z": -5,
-          "scaleX": 0.3,
-          "scaleY": 4.8,
-          "scaleZ": 0.3
+          "z": -5
         },
         "Mesh": {
           "kind": "cube"
@@ -2504,12 +2690,14 @@
       "parent": 110,
       "components": {
         "Transform": {
+          "scale": [
+            0.3,
+            4.8,
+            0.3
+          ],
           "x": 18,
           "y": 2.4,
-          "z": -3,
-          "scaleX": 0.3,
-          "scaleY": 4.8,
-          "scaleZ": 0.3
+          "z": -3
         },
         "Mesh": {
           "kind": "cube"
@@ -2528,12 +2716,14 @@
       "parent": 110,
       "components": {
         "Transform": {
+          "scale": [
+            2.6,
+            1,
+            2.6
+          ],
           "x": 17,
           "y": 0,
-          "z": -4,
-          "scaleX": 2.6,
-          "scaleY": 1,
-          "scaleZ": 2.6
+          "z": -4
         },
         "Collider": {
           "shape": "box"
@@ -2546,12 +2736,14 @@
       "parent": 110,
       "components": {
         "Transform": {
+          "scale": [
+            3,
+            0.3,
+            3
+          ],
           "x": 17,
           "y": 4.9,
-          "z": -4,
-          "scaleX": 3,
-          "scaleY": 0.3,
-          "scaleZ": 3
+          "z": -4
         },
         "Mesh": {
           "kind": "cube"
@@ -2570,12 +2762,14 @@
       "parent": 110,
       "components": {
         "Transform": {
+          "scale": [
+            3,
+            0.9,
+            0.14
+          ],
           "x": 17,
           "y": 5.45,
-          "z": -2.6,
-          "scaleX": 3,
-          "scaleY": 0.9,
-          "scaleZ": 0.14
+          "z": -2.6
         },
         "Mesh": {
           "kind": "cube"
@@ -2594,12 +2788,14 @@
       "parent": 110,
       "components": {
         "Transform": {
+          "scale": [
+            3,
+            0.9,
+            0.14
+          ],
           "x": 17,
           "y": 5.45,
-          "z": -5.4,
-          "scaleX": 3,
-          "scaleY": 0.9,
-          "scaleZ": 0.14
+          "z": -5.4
         },
         "Mesh": {
           "kind": "cube"
@@ -2618,12 +2814,14 @@
       "parent": 110,
       "components": {
         "Transform": {
+          "scale": [
+            0.55,
+            0.55,
+            0.55
+          ],
           "x": 17,
           "y": 5.95,
-          "z": -4,
-          "scaleX": 0.55,
-          "scaleY": 0.55,
-          "scaleZ": 0.55
+          "z": -4
         },
         "Mesh": {
           "kind": "cube"
@@ -2644,12 +2842,14 @@
       "parent": 67,
       "components": {
         "Transform": {
+          "scale": [
+            5.5,
+            2,
+            0.5
+          ],
           "x": -7,
           "y": 1,
-          "z": 5,
-          "scaleX": 5.5,
-          "scaleY": 2,
-          "scaleZ": 0.5
+          "z": 5
         },
         "Mesh": {
           "kind": "cube"
@@ -2671,12 +2871,14 @@
       "parent": 67,
       "components": {
         "Transform": {
+          "scale": [
+            0.5,
+            2,
+            5.5
+          ],
           "x": 7,
           "y": 1,
-          "z": -6,
-          "scaleX": 0.5,
-          "scaleY": 2,
-          "scaleZ": 5.5
+          "z": -6
         },
         "Mesh": {
           "kind": "cube"
@@ -2791,12 +2993,14 @@
       "parent": null,
       "components": {
         "Transform": {
+          "scale": [
+            1,
+            1,
+            1
+          ],
           "x": 0,
           "y": 0,
           "z": 0,
-          "scaleX": 1,
-          "scaleY": 1,
-          "scaleZ": 1,
           "rotX": 0,
           "rotY": 0,
           "rotZ": 0
@@ -2809,12 +3013,14 @@
       "parent": null,
       "components": {
         "Transform": {
+          "scale": [
+            1,
+            1,
+            1
+          ],
           "x": -8.341493119120727,
           "y": 2.131336611859054,
           "z": 2.8498655408609013,
-          "scaleX": 1,
-          "scaleY": 1,
-          "scaleZ": 1,
           "rotX": 0,
           "rotY": 0,
           "rotZ": 0
@@ -2838,12 +3044,14 @@
       "parent": null,
       "components": {
         "Transform": {
+          "scale": [
+            1,
+            1,
+            1
+          ],
           "x": 0,
           "y": 0,
           "z": 0,
-          "scaleX": 1,
-          "scaleY": 1,
-          "scaleZ": 1,
           "rotX": 0,
           "rotY": 0,
           "rotZ": 0
@@ -2861,12 +3069,14 @@
       "parent": null,
       "components": {
         "Transform": {
+          "scale": [
+            1,
+            1,
+            1
+          ],
           "x": 0,
           "y": 0,
           "z": 0,
-          "scaleX": 1,
-          "scaleY": 1,
-          "scaleZ": 1,
           "rotX": 0,
           "rotY": 0,
           "rotZ": 0
@@ -2902,12 +3112,14 @@
       "parent": 3,
       "components": {
         "Transform": {
+          "scale": [
+            1,
+            1,
+            1
+          ],
           "x": 0,
           "y": 0,
           "z": 0,
-          "scaleX": 1,
-          "scaleY": 1,
-          "scaleZ": 1,
           "rotX": 0,
           "rotY": 0,
           "rotZ": 0

@@ -144,7 +144,7 @@ export class SummonSystem implements SummonHandle {
     if (!ct.ok) return;
     const cf = world.get(caster, Faction);
     if (!cf.ok) return;
-    const destX = ct.value.posX, destZ = ct.value.posZ;
+    const destX = ct.value.pos[0], destZ = ct.value.pos[2];
     const r2 = radius * radius;
     // No World enumeration outside a system — scan a small raw-id range. Recall is
     // a rare, deterministic action; the cost is acceptable for the verify path.
@@ -154,12 +154,12 @@ export class SummonSystem implements SummonHandle {
       if (!tf.ok || tf.value.playerId !== cf.value.playerId) continue;
       const tt = world.get(eh, Transform);
       if (!tt.ok) continue;
-      const dx = tt.value.posX - x, dz = tt.value.posZ - z;
+      const dx = tt.value.pos[0] - x, dz = tt.value.pos[2] - z;
       if (dx * dx + dz * dz > r2) continue;
       // teleport near the caster (small spread so units don't stack).
       const a = Math.random() * Math.PI * 2;
       const d = Math.random() * 2;
-      world.set(eh, Transform, { posX: destX + Math.cos(a) * d, posZ: destZ + Math.sin(a) * d });
+      world.set(eh, Transform, { pos: [destX + Math.cos(a) * d, tt.value.pos[1], destZ + Math.sin(a) * d] });
       const mv = world.get(eh, Movement);
       if (mv.ok) world.set(eh, Movement, { hasTarget: false, arrived: true });
       commandCurrent.set(eh, null);

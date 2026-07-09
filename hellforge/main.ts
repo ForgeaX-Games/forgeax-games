@@ -40,12 +40,14 @@ import {
   SKYBOX_MODE_CUBEMAP,
   TONEMAP_ACES_FILMIC,
   Transform,
-  HANDLE_CUBE,
-  HANDLE_QUAD,
   perspective,
   quat,
   type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import {
+  HANDLE_CUBE,
+  HANDLE_QUAD,
+} from '@forgeax/engine-assets-runtime';
 import { createCylinderGeometry } from '@forgeax/engine-geometry';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
@@ -113,7 +115,7 @@ const SKY_HDR_GUID = 'c4061caa-8127-42a8-a1bb-54ef1a83d6d2';
 
 type SkyCtx = {
   world: World;
-  assets?: import('@forgeax/engine-runtime').AssetRegistry;
+  assets?: import('@forgeax/engine-assets-runtime').AssetRegistry;
   app?: import('@forgeax/engine-app').App;
 };
 
@@ -179,7 +181,7 @@ async function installSkyDome(ctx: SkyCtx): Promise<EntityHandle | null> {
   const meshH = ctx.world.allocSharedRef<'MeshAsset', MeshAsset>('MeshAsset', meshRes.value);
   const matH = ctx.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', matRes.value);
   const dome = ctx.world.spawn(
-    { component: Transform, data: { posX: 0, posY: 0, posZ: 0, scaleX: SKY_DOME_RADIUS, scaleY: SKY_DOME_RADIUS, scaleZ: SKY_DOME_RADIUS } },
+    { component: Transform, data: { pos: [0, 0, 0], scale: [SKY_DOME_RADIUS, SKY_DOME_RADIUS, SKY_DOME_RADIUS] } },
     { component: MeshFilter, data: { assetHandle: meshH } },
     { component: MeshRenderer, data: { materials: [matH] } },
   ).unwrap() as EntityHandle;
@@ -233,7 +235,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // carries her whole body + skeleton via the engine's ChildOf → Transform
   // propagation. Spawn it BEFORE instantiate so we can pass it as parent.
   const playerRig = world.spawn(
-    { component: Transform, data: { posX: 0, posY: 0, posZ: 5, scaleX: PLAYER_SCALE, scaleY: PLAYER_SCALE, scaleZ: PLAYER_SCALE } },
+    { component: Transform, data: { pos: [0, 0, 5], scale: [PLAYER_SCALE, PLAYER_SCALE, PLAYER_SCALE] } },
   ).unwrap() as EntityHandle;
 
   let witchRoot: EntityHandle | null = null;
@@ -294,9 +296,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // the playerRig drives through the joints — single, correct transform.
       world.removeComponent(witchSkinEnt, ChildOf);
       world.set(witchSkinEnt, Transform, {
-        posX: 0, posY: 0, posZ: 0,
-        quatX: 0, quatY: 0, quatZ: 0, quatW: 1,
-        scaleX: 1, scaleY: 1, scaleZ: 1,
+        pos: [0, 0, 0],
+        quat: [0, 0, 0, 1],
+        scale: [1, 1, 1],
       });
     } else {
       console.warn('[hellforge] witch spawned but Skin entity / idle clip missing — animation off');
@@ -316,7 +318,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       (createCylinderGeometry(0.5, 0.5, 1, 16) as unknown as { unwrap: () => MeshAsset }).unwrap(),
     );
     witchRoot = world.spawn(
-      { component: Transform, data: { posX: 0, posY: 0.85, posZ: 0, scaleX: 0.6, scaleY: 1.7, scaleZ: 0.6 } },
+      { component: Transform, data: { pos: [0, 0.85, 0], scale: [0.6, 1.7, 0.6] } },
       { component: MeshFilter, data: { assetHandle: cyl } },
       { component: MeshRenderer, data: { materials: [matWitch] } },
       { component: ChildOf, data: { parent: playerRig } },
@@ -570,7 +572,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const q = quat.create();
     quat.fromAxisAngle(q, [1, 0, 0], -Math.PI / 2);
     world.spawn(
-      { component: Transform, data: { posX: x, posY: 0.06, posZ: z, quatX: q[0]!, quatY: q[1]!, quatZ: q[2]!, quatW: q[3]!, scaleX: s, scaleY: s, scaleZ: s } },
+      { component: Transform, data: { pos: [x, 0.06, z], quat: [q[0]!, q[1]!, q[2]!, q[3]!], scale: [s, s, s] } },
       { component: MeshFilter, data: { assetHandle: HANDLE_QUAD } },
       { component: MeshRenderer, data: { materials: [mat] } },
     );
@@ -612,7 +614,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     if (col) {
       for (const dx of [-2.5, 2.5]) {
         world.spawn(
-          { component: Transform, data: { posX: CAVE_MOUTH.x + dx, posY: 1.5, posZ: CAVE_MOUTH.z, scaleX: 1.5, scaleY: 1.5, scaleZ: 1.5 } },
+          { component: Transform, data: { pos: [CAVE_MOUTH.x + dx, 1.5, CAVE_MOUTH.z], scale: [1.5, 1.5, 1.5] } },
           { component: MeshFilter, data: { assetHandle: col.mesh } },
           { component: MeshRenderer, data: { materials: [col.mat] } },
         );
@@ -622,7 +624,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     }
     if (lintel) {
       world.spawn(
-        { component: Transform, data: { posX: CAVE_MOUTH.x, posY: 3.2, posZ: CAVE_MOUTH.z, scaleX: 2.8, scaleY: 1, scaleZ: 0.8 } },
+        { component: Transform, data: { pos: [CAVE_MOUTH.x, 3.2, CAVE_MOUTH.z], scale: [2.8, 1, 0.8] } },
         { component: MeshFilter, data: { assetHandle: lintel.mesh } },
         { component: MeshRenderer, data: { materials: [lintel.mat] } },
       );
@@ -664,7 +666,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // right where the Sun's shadow falls, washing the shadow out. Tighter range
   // keeps the ground-shadow contrast.
   const playerLight = world.spawn(
-    { component: Transform, data: { posX: 0, posY: 2.4, posZ: 6.6 } },
+    { component: Transform, data: { pos: [0, 2.4, 6.6] } },
     { component: PointLight, data: { colorR: 1.0, colorG: 0.78, colorB: 0.62, intensity: 13, range: 5 } },
   ).unwrap();
 
@@ -686,7 +688,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     paramValues: {},
   });
   const shadowDisc = world.spawn(
-    { component: Transform, data: { posX: 0, posY: 0.85, posZ: 5, scaleX: 0.6 * PLAYER_SCALE, scaleY: 1.7 * PLAYER_SCALE, scaleZ: 0.45 * PLAYER_SCALE } },
+    { component: Transform, data: { pos: [0, 0.85, 5], scale: [0.6 * PLAYER_SCALE, 1.7 * PLAYER_SCALE, 0.45 * PLAYER_SCALE] } },
     { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
     { component: MeshRenderer, data: { materials: [shadowProxyMat] } },
   ).unwrap();
@@ -730,17 +732,17 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const GATE_L = { x: -2.5, y: 2.25, z: 13.5 } as const;
   const GATE_R = { x: 2.5, y: 2.25, z: 13.5 } as const;
   const campfireLight = world.spawn(
-    { component: Transform, data: { posX: 0, posY: 1.2, posZ: 0 } },
+    { component: Transform, data: { pos: [0, 1.2, 0] } },
     { component: PointLight, data: { colorR: 1, colorG: 0.6, colorB: 0.25, intensity: 12, range: 16 } },
     { component: PointLightShadow, data: { mapSize: 512, farPlane: 18 } },
   ).unwrap();
   const torchA = world.spawn(
-    { component: Transform, data: { posX: GATE_L.x, posY: GATE_L.y, posZ: GATE_L.z } },
+    { component: Transform, data: { pos: [GATE_L.x, GATE_L.y, GATE_L.z] } },
     { component: PointLight, data: { colorR: 1, colorG: 0.55, colorB: 0.18, intensity: 8, range: 12 } },
     { component: PointLightShadow, data: { mapSize: 512, farPlane: 14 } },
   ).unwrap();
   const torchB = world.spawn(
-    { component: Transform, data: { posX: GATE_R.x, posY: GATE_R.y, posZ: GATE_R.z } },
+    { component: Transform, data: { pos: [GATE_R.x, GATE_R.y, GATE_R.z] } },
     { component: PointLight, data: { colorR: 1, colorG: 0.55, colorB: 0.18, intensity: 8, range: 12 } },
   ).unwrap();
   let torchBaseA = 8, torchBaseB = 8;   // flicker centre per slot
@@ -757,8 +759,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     for (let i = 0; i < slots.length; i++) {
       const seat = near[i]?.p;
       world.set(slots[i]!, Transform, seat
-        ? { posX: seat.x, posY: seat.y, posZ: seat.z }
-        : { posX: 0, posY: -60, posZ: 0 });
+        ? { pos: [seat.x, seat.y, seat.z] }
+        : { pos: [0, -60, 0] });
     }
     torchBaseA = 9; torchBaseB = 9;
   };
@@ -774,8 +776,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     if (a === 'den') {
       seatDenTorches();
     } else {
-      world.set(torchA, Transform, { posX: GATE_L.x, posY: GATE_L.y, posZ: GATE_L.z });
-      world.set(torchB, Transform, { posX: GATE_R.x, posY: GATE_R.y, posZ: GATE_R.z });
+      world.set(torchA, Transform, { pos: [GATE_L.x, GATE_L.y, GATE_L.z] });
+      world.set(torchB, Transform, { pos: [GATE_R.x, GATE_R.y, GATE_R.z] });
       torchBaseA = 8; torchBaseB = 8;
     }
   };
@@ -806,7 +808,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // ── camera ────────────────────────────────────────────────────────────
   const FOV = Math.PI / 2.4;
   const camera = world.spawn(
-    { component: Transform, data: { posY: 1.6, posZ: 0 } },
+    { component: Transform, data: { pos: [0, 1.6, 0] } },
     { component: Camera, data: { ...perspective({ fov: FOV, aspect, near: 0.05, far: 200 }), tonemap: TONEMAP_ACES_FILMIC, ...SKY_CLEAR } },
   ).unwrap();
   world.set(camera, Camera, { tonemap: TONEMAP_ACES_FILMIC });
@@ -1215,15 +1217,15 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const qy = quat.create();
       quat.fromAxisAngle(qy, [0, 1, 0], yaw);
       world.set(playerRig, Transform, {
-        posX: state.px, posY: 0, posZ: state.pz,
-        quatX: qy[0]!, quatY: qy[1]!, quatZ: qy[2]!, quatW: qy[3]!,
-        scaleX: PLAYER_SCALE, scaleY: PLAYER_SCALE, scaleZ: PLAYER_SCALE,
+        pos: [state.px, 0, state.pz],
+        quat: [qy[0]!, qy[1]!, qy[2]!, qy[3]!],
+        scale: [PLAYER_SCALE, PLAYER_SCALE, PLAYER_SCALE],
       });
     }
-    world.set(playerLight, Transform, { posX: state.px, posY: 2.4, posZ: state.pz + 1.6 });
+    world.set(playerLight, Transform, { pos: [state.px, 2.4, state.pz + 1.6] });
     world.set(shadowDisc, Transform, {
-      posX: state.px, posY: 0.85, posZ: state.pz,
-      scaleX: 0.6 * PLAYER_SCALE, scaleY: 1.7 * PLAYER_SCALE, scaleZ: 0.45 * PLAYER_SCALE,
+      pos: [state.px, 0.85, state.pz],
+      scale: [0.6 * PLAYER_SCALE, 1.7 * PLAYER_SCALE, 0.45 * PLAYER_SCALE],
     });
     // ── lighting director tick ──
     // Sky upgrade resolved after boot → re-tint once for the current area.
@@ -1242,8 +1244,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // Keep the sky dome centred on the player so it reads as an infinite sky.
     if (skyDome !== null) {
       world.set(skyDome, Transform, {
-        posX: state.px, posY: 0, posZ: state.pz,
-        scaleX: SKY_DOME_RADIUS, scaleY: SKY_DOME_RADIUS, scaleZ: SKY_DOME_RADIUS,
+        pos: [state.px, 0, state.pz],
+        scale: [SKY_DOME_RADIUS, SKY_DOME_RADIUS, SKY_DOME_RADIUS],
       });
     }
 
@@ -1374,18 +1376,20 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const fwdZ = -cp * Math.cos(lookYaw);
       const tx = state.px, ty = TP_TARGET_Y, tz = state.pz;
       world.set(camera, Transform, {
-        posX: tx - fwdX * TP_DIST + shX,
-        posY: ty - fwdY * TP_DIST + shY,
-        posZ: tz - fwdZ * TP_DIST + shZ,
-        quatX: cq[0]!, quatY: cq[1]!, quatZ: cq[2]!, quatW: cq[3]!,
+        pos: [
+          tx - fwdX * TP_DIST + shX,
+          ty - fwdY * TP_DIST + shY,
+          tz - fwdZ * TP_DIST + shZ,
+        ],
+        quat: [cq[0]!, cq[1]!, cq[2]!, cq[3]!],
       });
     } else {
       const a = 1 - Math.exp(-CAM_LERP * dt);
       focusX += (state.px - focusX) * a;
       focusZ += (state.pz - focusZ) * a;
       world.set(camera, Transform, {
-        posX: focusX + shX, posY: TOP_DY + shY, posZ: focusZ + TOP_DZ + shZ,
-        quatX: topQ[0]!, quatY: topQ[1]!, quatZ: topQ[2]!, quatW: topQ[3]!,
+        pos: [focusX + shX, TOP_DY + shY, focusZ + TOP_DZ + shZ],
+        quat: [topQ[0]!, topQ[1]!, topQ[2]!, topQ[3]!],
       });
     }
   });

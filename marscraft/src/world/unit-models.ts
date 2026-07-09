@@ -44,8 +44,9 @@ import {
   Transform, MeshFilter, MeshRenderer,
   ChildOf,
   quat,
-  type Handle, type MeshAsset, type MaterialAsset,
+  type Handle, type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import { type MeshAsset } from '@forgeax/engine-assets-runtime';
 import {
   createBoxGeometry, createSphereGeometry, createConeGeometry, createCylinderGeometry,
 } from '@forgeax/engine-geometry';
@@ -191,9 +192,9 @@ export function spawnUnitModel(
       {
         component: Transform,
         data: {
-          posX: p.pos[0] * k, posY: p.pos[1] * k, posZ: p.pos[2] * k,
-          quatX: p.rot ? _q[0] : 0, quatY: p.rot ? _q[1] : 0, quatZ: p.rot ? _q[2] : 0, quatW: p.rot ? _q[3] : 1,
-          scaleX: p.scale[0] * k, scaleY: p.scale[1] * k, scaleZ: p.scale[2] * k,
+          pos: [p.pos[0] * k, p.pos[1] * k, p.pos[2] * k],
+          quat: p.rot ? [_q[0], _q[1], _q[2], _q[3]] : [0, 0, 0, 1],
+          scale: [p.scale[0] * k, p.scale[1] * k, p.scale[2] * k],
         },
       },
       { component: MeshFilter, data: { assetHandle: mesh } },

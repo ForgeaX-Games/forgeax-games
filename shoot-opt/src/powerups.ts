@@ -41,7 +41,7 @@ export function spawnPowerUp(
   const typeIdx = Math.floor(Math.random() * 4);
   const mats = [mat.puShield, mat.puTriple, mat.puBomb, mat.puHeal];
   const e = world.spawn(
-    { component: Transform, data: { posX: x, posY: 0.3, posZ: z, scaleX: 0.5, scaleY: 0.5, scaleZ: 0.5 } },
+    { component: Transform, data: { pos: [x, 0.3, z], scale: [0.5, 0.5, 0.5] } },
     { component: MeshFilter, data: { assetHandle: geo.sphereSm } },
     { component: MeshRenderer, data: { materials: [mats[typeIdx]!] } },
     { component: PowerUp, data: { type: typeIdx, bobPhase: Math.random() * 6.28, speed: 2.5 } },
@@ -61,7 +61,7 @@ export function spawnObstacle(
   // Floating asteroid/barrier — must be dodged or shot (2 hits)
   const s = 0.6 + Math.random() * 0.5;
   const entity = world.spawn(
-    { component: Transform, data: { posX: x, posY: 0, posZ: z, scaleX: s, scaleY: s * 0.6, scaleZ: s } },
+    { component: Transform, data: { pos: [x, 0, z], scale: [s, s * 0.6, s] } },
     { component: MeshFilter, data: { assetHandle: geo.sphere } },
     { component: MeshRenderer, data: { materials: [mat.obstacle] } },
     { component: Obstacle, data: { speed: 3 + Math.random() * 2, hp: 2 } },
@@ -69,7 +69,7 @@ export function spawnObstacle(
 
   // Glow ring decoration
   const ring = world.spawn(
-    { component: Transform, data: { posX: x, posY: 0, posZ: z, scaleX: s * 1.3, scaleY: 0.04, scaleZ: s * 1.3 } },
+    { component: Transform, data: { pos: [x, 0, z], scale: [s * 1.3, 0.04, s * 1.3] } },
     { component: MeshFilter, data: { assetHandle: geo.cylinder } },
     { component: MeshRenderer, data: { materials: [mat.obstacleGlow] } },
   ).unwrap();

@@ -36,8 +36,9 @@
 
 import {
   Transform, MeshFilter, MeshRenderer, Materials,
-  HANDLE_SPHERE, HANDLE_CUBE, type MaterialAsset, type Handle,
+  type MaterialAsset, type Handle,
 } from '@forgeax/engine-runtime';
+import { HANDLE_SPHERE, HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import type { Entity } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
 
@@ -592,7 +593,7 @@ export class FxSystem {
     pool.params.metallic = 0;            // progress = 0 (just born)
     const d = radius;                    // sphere mesh has unit-radius * 0.5? scale=2*radius for visual size
     const e = this.ctx.world.spawn(
-      { component: Transform, data: { posX: x, posY: y, posZ: z, scaleX: d, scaleY: d, scaleZ: d } },
+      { component: Transform, data: { pos: [x, y, z], scale: [d, d, d] } },
       { component: MeshFilter, data: { assetHandle: HANDLE_SPHERE } },
       { component: MeshRenderer, data: { materials: [pool.mat] } },
     ).unwrap();
@@ -633,17 +634,17 @@ export class FxSystem {
     gy: number,
     life: number,
     mode: ParticleMode,
-    quatY?: number,
+    rotY?: number,
     matOverride?: MatHandle,
   ): void {
     const mat = matOverride ?? this.mats[color];
     const handle = shape === 'cube' ? HANDLE_CUBE : HANDLE_SPHERE;
-    const data: Record<string, number> = {
-      posX: x, posY: y, posZ: z, scaleX: sx, scaleY: sy, scaleZ: sz,
+    const data: Record<string, number[]> = {
+      pos: [x, y, z], scale: [sx, sy, sz],
     };
-    if (quatY !== undefined) {
-      const h = quatY * 0.5;
-      data.quatX = 0; data.quatY = Math.sin(h); data.quatZ = 0; data.quatW = Math.cos(h);
+    if (rotY !== undefined) {
+      const h = rotY * 0.5;
+      data.quat = [0, Math.sin(h), 0, Math.cos(h)];
     }
     const e = this.ctx.world.spawn(
       { component: Transform, data },
@@ -958,7 +959,7 @@ export class FxSystem {
     const sy = baseScaleY;
     const yPos = a?.yPos ?? 0.06;
     const e = this.ctx.world.spawn(
-      { component: Transform, data: { posX: x, posY: yPos, posZ: z, scaleX: sx, scaleY: sy, scaleZ: sz } },
+      { component: Transform, data: { pos: [x, yPos, z], scale: [sx, sy, sz] } },
       { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
       { component: MeshRenderer, data: { materials: [pool.mat] } },
     ).unwrap();
@@ -1027,9 +1028,9 @@ export class FxSystem {
         p.vy += p.gy * dt;
         const tr = world.get(p.e, Transform);
         if (!tr.ok) continue;
-        nx = tr.value.posX + p.vx * dt;
-        ny = tr.value.posY + p.vy * dt;
-        nz = tr.value.posZ + p.vz * dt;
+        nx = tr.value.pos[0] + p.vx * dt;
+        ny = tr.value.pos[1] + p.vy * dt;
+        nz = tr.value.pos[2] + p.vz * dt;
         if (ny < 0.05) { ny = 0.05; p.vy *= -0.5; p.vx *= 0.6; p.vz *= 0.6; }
       }
       // animation curve (depends on mode)
@@ -1071,12 +1072,12 @@ export class FxSystem {
       // write Transform — partial set keeps quat from spawn intact
       if (hasMotion) {
         world.set(p.e, Transform, {
-          posX: nx, posY: ny, posZ: nz,
-          scaleX: sx, scaleY: sy, scaleZ: sz,
+          pos: [nx, ny, nz],
+          scale: [sx, sy, sz],
         });
       } else {
         world.set(p.e, Transform, {
-          scaleX: sx, scaleY: sy, scaleZ: sz,
+          scale: [sx, sy, sz],
         });
       }
     }

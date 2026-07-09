@@ -13,7 +13,7 @@
  *   - lift state lives in a parallel `Map<rawEntity, LiftData>` (the source kept
  *     it the same way, off-component); `liftPaused` is the one shared Building
  *     column (BuildingSystem already pauses production while it's set).
- *   - `pos.y` is driven directly on the engine Transform via world.get/set; the
+ *   - `pos[1]` (Y) is driven directly on the engine Transform via world.get/set; the
  *     air Movement is added/removed via world.addComponent / removeComponent.
  *   - `world.isAlive(e)` -> `world.get(e, Transform).ok`.
  *
@@ -81,7 +81,7 @@ export function installBuildingLift(world: World, deps: BuildingLiftDeps): Build
     const existing = liftData.get(raw(entity));
     if (existing && existing.state !== 'grounded') return false;
 
-    liftData.set(raw(entity), { state: 'lifting', timer: 0, baseY: t.value.posY });
+    liftData.set(raw(entity), { state: 'lifting', timer: 0, baseY: t.value.pos[1] });
     world.set(entity, Building, { liftPaused: true });
     deps.onLift?.(entity);
     return true;
@@ -107,12 +107,14 @@ export function installBuildingLift(world: World, deps: BuildingLiftDeps): Build
   function startLanding(entity: EntityHandle, d: LiftData, x: number, z: number): void {
     const t = world.get(entity, Transform);
     if (!t.ok) return;
-    d.baseY = deps.heightAt(x, z) + (t.value.scaleY ?? 1) * 0.5;
+    d.baseY = deps.heightAt(x, z) + (t.value.scale[1] ?? 1) * 0.5;
     d.state = 'landing';
     d.timer = 0;
     d.landX = undefined;
     d.landZ = undefined;
-    world.set(entity, Transform, { posX: x, posZ: z });
+    // move to the land spot horizontally; keep current (flying) Y — the landing
+    // state descends it. pos[1] preserved from the live transform.
+    world.set(entity, Transform, { pos: [x, t.value.pos[1], z] });
     if (world.get(entity, Movement).ok) world.set(entity, Movement, { hasTarget: false, arrived: true, currentSpeed: 0 });
   }
 
@@ -133,7 +135,7 @@ export function installBuildingLift(world: World, deps: BuildingLiftDeps): Build
           case 'lifting': {
             d.timer += dt;
             const p = Math.min(1, d.timer / LIFT_TIME);
-            world.set(entity, Transform, { posY: d.baseY + LIFT_HEIGHT * p });
+            world.set(entity, Transform, { pos: [t.value.pos[0], d.baseY + LIFT_HEIGHT * p, t.value.pos[2]] });
             if (p >= 1) {
               d.state = 'airborne';
               if (world.get(entity, Movement).ok) {
@@ -146,8 +148,8 @@ export function installBuildingLift(world: World, deps: BuildingLiftDeps): Build
           }
           case 'flying_to_land': {
             if (d.landX !== undefined && d.landZ !== undefined) {
-              const dx = d.landX - t.value.posX;
-              const dz = d.landZ - t.value.posZ;
+              const dx = d.landX - t.value.pos[0];
+              const dz = d.landZ - t.value.pos[2];
               const mv = world.get(entity, Movement);
               const arrived = mv.ok && !mv.value.hasTarget && mv.value.arrived;
               if (dx * dx + dz * dz < LAND_ARRIVE * LAND_ARRIVE || arrived) {
@@ -159,14 +161,14 @@ export function installBuildingLift(world: World, deps: BuildingLiftDeps): Build
           case 'landing': {
             d.timer += dt;
             const p = Math.min(1, d.timer / LAND_TIME);
-            world.set(entity, Transform, { posY: d.baseY + LIFT_HEIGHT * (1 - p) });
+            world.set(entity, Transform, { pos: [t.value.pos[0], d.baseY + LIFT_HEIGHT * (1 - p), t.value.pos[2]] });
             if (p >= 1) {
-              world.set(entity, Transform, { posY: d.baseY });
+              world.set(entity, Transform, { pos: [t.value.pos[0], d.baseY, t.value.pos[2]] });
               if (world.get(entity, Movement).ok) world.removeComponent(entity, Movement);
               // restore facing (movement derives the quat from Motion.facingY).
               if (world.get(entity, Motion).ok) world.set(entity, Motion, { facingY: 0 });
               world.set(entity, Building, { liftPaused: false });
-              deps.onLand?.(entity, t.value.posX, t.value.posZ);
+              deps.onLand?.(entity, t.value.pos[0], t.value.pos[2]);
               liftData.delete(rawE);
             }
             break;

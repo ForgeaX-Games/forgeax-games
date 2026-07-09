@@ -119,7 +119,7 @@ export function installPlacement(world: World, deps: PlacementDeps): PlacementHa
   function ensureGhost(): EntityHandle | null {
     if (ghost && world.get(ghost, Transform).ok) return ghost;
     const r = world.spawn(
-      { component: Transform, data: { posX: 0, posY: GHOST_PARK_Y, posZ: 0, scaleX: 1, scaleY: 0.2, scaleZ: 1 } },
+      { component: Transform, data: { pos: [0, GHOST_PARK_Y, 0], scale: [1, 0.2, 1] } },
       { component: MeshFilter, data: { assetHandle: prims.box } },
       { component: MeshRenderer, data: { materials: [greenMat] } },
     );
@@ -129,8 +129,10 @@ export function installPlacement(world: World, deps: PlacementDeps): PlacementHa
   }
 
   function parkGhost(): void {
-    if (ghost && world.get(ghost, Transform).ok) {
-      world.set(ghost, Transform, { posY: GHOST_PARK_Y });
+    const cur = ghost && world.get(ghost, Transform);
+    if (ghost && cur && cur.ok) {
+      const p = cur.value.pos;
+      world.set(ghost, Transform, { pos: [p[0], GHOST_PARK_Y, p[2]] });
     }
   }
 
@@ -274,8 +276,8 @@ export function installPlacement(world: World, deps: PlacementDeps): PlacementHa
         const widthWorld = snapped.gs * cs;
         const y = heightAt(snapped.x, snapped.z) + 0.4;
         world.set(g, Transform, {
-          posX: snapped.x, posY: y, posZ: snapped.z,
-          scaleX: widthWorld, scaleY: 0.4, scaleZ: widthWorld,
+          pos: [snapped.x, y, snapped.z],
+          scale: [widthWorld, 0.4, widthWorld],
         });
         setGhostTint(ok);
 

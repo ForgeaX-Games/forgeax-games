@@ -28,9 +28,10 @@
 
 import {
   Transform, MeshFilter, MeshRenderer, ChildOf,
-  HANDLE_CUBE, HANDLE_SPHERE, Materials, quat,
+  Materials, quat,
   type MaterialAsset, type Handle,
 } from '@forgeax/engine-runtime';
+import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import type { Entity } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
@@ -403,15 +404,15 @@ export class WeaponSystem {
     const q = quat.eulerY(yaw);
     // ROOT entity: invisible carrier (no MeshFilter / MeshRenderer), holds
     // the rigid body + collider. Visible parts are children below.
-    // Explicit scale 1 — partial Transform.set() later writes posX/Y/Z + quat
+    // Explicit scale 1 — partial Transform.set() later writes pos + quat
     // only, so the root must already carry the identity scale; otherwise some
     // ECS/physics paths can re-default scale to 0 and shrink every ChildOf
     // visual part to invisible.
     const e = world.spawn(
       { component: Transform, data: {
-        posX: bx, posY: by, posZ: bz,
-        quatX: q[0]!, quatY: q[1]!, quatZ: q[2]!, quatW: q[3]!,
-        scaleX: 1, scaleY: 1, scaleZ: 1,
+        pos: [bx, by, bz],
+        quat: q,
+        scale: [1, 1, 1],
       } },
       { component: RigidBody, data: { type: RigidBodyTypeValue.kinematic } },
       // RELIABLE CONTACT FIX (preserved from template):
@@ -436,13 +437,13 @@ export class WeaponSystem {
     for (const p of partsSpec) {
       const mat = p.mat === 'main' ? w.mainMat : w.accentMat;
       const handle = p.shape === 'cube' ? HANDLE_CUBE : HANDLE_SPHERE;
-      const partT: Record<string, number> = {
-        posX: p.px, posY: p.py, posZ: p.pz,
-        scaleX: p.sx, scaleY: p.sy, scaleZ: p.sz,
+      const partT: Record<string, number[]> = {
+        pos: [p.px, p.py, p.pz],
+        scale: [p.sx, p.sy, p.sz],
       };
       if (p.rotY !== undefined) {
         const pq = quat.eulerY(p.rotY);
-        partT.quatX = pq[0]!; partT.quatY = pq[1]!; partT.quatZ = pq[2]!; partT.quatW = pq[3]!;
+        partT.quat = [pq[0]!, pq[1]!, pq[2]!, pq[3]!];
       }
       const partE = world.spawn(
         { component: Transform, data: partT },
@@ -564,9 +565,9 @@ export class WeaponSystem {
       // Keep scale 1 in the partial set — safety against schema defaults
       // resetting unspecified scale fields to 0 on partial component writes.
       world.set(b.e, Transform, {
-        posX: b.x, posY: b.y, posZ: b.z,
-        quatX: qx, quatY: qy, quatZ: qz, quatW: qw,
-        scaleX: 1, scaleY: 1, scaleZ: 1,
+        pos: [b.x, b.y, b.z],
+        quat: [qx, qy, qz, qw],
+        scale: [1, 1, 1],
       });
       // P3: NO trail particles. The previous approach (emit particles
       // behind the bullet in world space) was correct in 3D — particles

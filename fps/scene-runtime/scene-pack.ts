@@ -156,12 +156,13 @@ export function docToPack(doc: SceneDocument): ScenePack {
     const c: Record<string, Record<string, unknown>> = {};
     if (node.name) c.Name = { value: node.name };
     if (t || isLight) {
-      const data: Record<string, number> = {
-        posX: num(t?.x, 0), posY: num(t?.y, 0), posZ: num(t?.z, 0),
-        scaleX: num(t?.scaleX, 1), scaleY: num(t?.scaleY, 1), scaleZ: num(t?.scaleZ, 1),
+      const s = t?.scale;
+      const data: Record<string, number[]> = {
+        pos: [num(t?.x, 0), num(t?.y, 0), num(t?.z, 0)],
+        scale: [num(s?.[0], 1), num(s?.[1], 1), num(s?.[2], 1)],
       };
       const rx = num(t?.rotX, 0), ry = num(t?.rotY, 0), rz = num(t?.rotZ, 0);
-      if (rx || ry || rz) { const q = eulerToQuat(rx, ry, rz); data.quatX = q[0]; data.quatY = q[1]; data.quatZ = q[2]; data.quatW = q[3]; }
+      if (rx || ry || rz) { data.quat = eulerToQuat(rx, ry, rz); }
       c.Transform = data;
     }
     if (isRenderable) {
@@ -227,11 +228,12 @@ export function packToDoc(pack: ScenePack): SceneDocument {
     const cc = n.components ?? {};
     const docComps: Record<string, unknown> = {};
     const name = (cc.Name?.value as string) ?? `Entity_${n.localId}`;
-    const tr = cc.Transform as Record<string, number> | undefined;
+    const tr = cc.Transform as { pos?: number[]; quat?: number[]; scale?: number[] } | undefined;
     if (tr) {
-      const td: TransformData = { x: num(tr.posX, 0), y: num(tr.posY, 0), z: num(tr.posZ, 0), scaleX: num(tr.scaleX, 1), scaleY: num(tr.scaleY, 1), scaleZ: num(tr.scaleZ, 1) };
-      if (tr.quatX || tr.quatY || tr.quatZ || (tr.quatW !== undefined && tr.quatW !== 1)) {
-        const e = quatToEuler(num(tr.quatX, 0), num(tr.quatY, 0), num(tr.quatZ, 0), num(tr.quatW, 1));
+      const p = tr.pos, s = tr.scale, q = tr.quat;
+      const td: TransformData = { x: num(p?.[0], 0), y: num(p?.[1], 0), z: num(p?.[2], 0), scale: [num(s?.[0], 1), num(s?.[1], 1), num(s?.[2], 1)] };
+      if (q && (q[0] || q[1] || q[2] || (q[3] !== undefined && q[3] !== 1))) {
+        const e = quatToEuler(num(q[0], 0), num(q[1], 0), num(q[2], 0), num(q[3], 1));
         td.rotX = e.rotX; td.rotY = e.rotY; td.rotZ = e.rotZ;
       }
       docComps.Transform = td;

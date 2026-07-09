@@ -151,18 +151,18 @@ export class DirectionWaveSystem implements DirectionWaveHandle {
     W.traveled[i] = traveled;
 
     // move the wavefront + face travel direction
-    b.Transform.posX[i] = (b.Transform.posX[i] as number) + dirX * step;
-    b.Transform.posZ[i] = (b.Transform.posZ[i] as number) + dirZ * step;
+    b.Transform.pos[i * 3] = (b.Transform.pos[i * 3] as number) + dirX * step;
+    b.Transform.pos[i * 3 + 2] = (b.Transform.pos[i * 3 + 2] as number) + dirZ * step;
     if (dirX !== 0 || dirZ !== 0) {
       const ang = Math.atan2(dirX, dirZ);
       quat.fromEuler(_q, 0, (ang * 180) / Math.PI, 0, 'XYZ');
-      b.Transform.quatX[i] = _q[0]; b.Transform.quatY[i] = _q[1];
-      b.Transform.quatZ[i] = _q[2]; b.Transform.quatW[i] = _q[3];
+      b.Transform.quat[i * 4] = _q[0]; b.Transform.quat[i * 4 + 1] = _q[1];
+      b.Transform.quat[i * 4 + 2] = _q[2]; b.Transform.quat[i * 4 + 3] = _q[3];
     }
 
     const originX = W.originX[i] as number;
     const originZ = W.originZ[i] as number;
-    const y = b.Transform.posY[i] as number;
+    const y = b.Transform.pos[i * 3 + 1] as number;
     const playerId = W.playerId[i] as number;
 
     // ── path reveal (temporary vision every revealRange*0.6 along the path) ──
@@ -233,7 +233,7 @@ export class DirectionWaveSystem implements DirectionWaveHandle {
     const res = world.spawn(
       {
         component: Transform,
-        data: { posX: args.x, posY: y, posZ: args.z },
+        data: { pos: [args.x, y, args.z] },
       },
       {
         component: DirectionWave,
@@ -263,8 +263,8 @@ export class DirectionWaveSystem implements DirectionWaveHandle {
       {
         component: Transform,
         data: {
-          posX: 0, posY: 0, posZ: 0,
-          scaleX: args.width, scaleY: 0.4, scaleZ: 0.25,
+          pos: [0, 0, 0],
+          scale: [args.width, 0.4, 0.25],
         },
       },
       { component: MeshFilter, data: { assetHandle: this._deps.prims.box } },
@@ -299,8 +299,8 @@ export class DirectionWaveSystem implements DirectionWaveHandle {
         traveled: Number(w.value.traveled.toFixed(2)),
         maxRange: Number(w.value.maxRange.toFixed(2)),
         hits: directionWaveHitSet.get(eh)?.size ?? 0,
-        x: t.ok ? Number(t.value.posX.toFixed(2)) : null,
-        z: t.ok ? Number(t.value.posZ.toFixed(2)) : null,
+        x: t.ok ? Number(t.value.pos[0].toFixed(2)) : null,
+        z: t.ok ? Number(t.value.pos[2].toFixed(2)) : null,
       });
     }
     return out;

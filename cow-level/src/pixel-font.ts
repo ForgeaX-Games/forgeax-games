@@ -11,7 +11,7 @@
 // We register the atlas TextureAsset + a SamplerAsset + the FontAsset and
 // return the FontAsset handle for GlyphText.fontHandle.
 
-import type { AssetRegistry } from '@forgeax/engine-runtime';
+import type { AssetRegistry } from '@forgeax/engine-assets-runtime';
 import type { World } from '@forgeax/engine-ecs';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { FontAsset, GlyphMetric, Handle, SamplerAsset, TextureAsset } from '@forgeax/engine-types';

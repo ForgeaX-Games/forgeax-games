@@ -31,8 +31,8 @@ import {
   MeshRenderer,
   quat,
   type Handle,
-  type MeshAsset,
 } from '@forgeax/engine-runtime';
+import { type MeshAsset } from '@forgeax/engine-assets-runtime';
 import {
   createBoxGeometry,
   createSphereGeometry,
@@ -251,16 +251,9 @@ export function buildEnvironment(
       {
         component: Transform,
         data: {
-          posX: x,
-          posY: y + yOffset,
-          posZ: z,
-          quatX: q[0],
-          quatY: q[1],
-          quatZ: q[2],
-          quatW: q[3],
-          scaleX,
-          scaleY,
-          scaleZ,
+          pos: [x, y + yOffset, z],
+          quat: [q[0], q[1], q[2], q[3]],
+          scale: [scaleX, scaleY, scaleZ],
         },
       },
       { component: MeshFilter, data: { assetHandle: mesh } },

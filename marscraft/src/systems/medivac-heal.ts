@@ -51,7 +51,7 @@ export class MedivacHealSystem {
             const isMedivac = unitTypeId.get(e) === 'medivac';
             if (isMedivac) anyMedivac = true;
             rows.push({
-              e, x: b.Transform.posX[i] as number, z: b.Transform.posZ[i] as number,
+              e, x: b.Transform.pos[i * 3] as number, z: b.Transform.pos[i * 3 + 2] as number,
               playerId: b.Faction.playerId[i] as number, category: b.UnitType.category[i] as number,
               hp: b.Health.hp[i] as number, maxHp: b.Health.maxHp[i] as number,
               isDead: !!b.Health.isDead[i], garrisoned: world.get(e, Garrisoned).ok,

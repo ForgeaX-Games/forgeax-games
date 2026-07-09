@@ -74,8 +74,8 @@ export class DetectionSystem implements DetectionHandle {
               vision = (ut.ok ? ut.value.visionRange : 10) + bonus;
             }
             detectors.push({
-              x: b.Transform.posX[i] as number,
-              z: b.Transform.posZ[i] as number,
+              x: b.Transform.pos[i * 3] as number,
+              z: b.Transform.pos[i * 3 + 2] as number,
               vision,
               playerId: b.Faction.playerId[i] as number,
             });
@@ -93,8 +93,8 @@ export class DetectionSystem implements DetectionHandle {
             const cloak = getToggleState(e, 'cloak');
             if (!cloak || !cloak.active) continue;
 
-            const px = b.Transform.posX[i] as number;
-            const pz = b.Transform.posZ[i] as number;
+            const px = b.Transform.pos[i * 3] as number;
+            const pz = b.Transform.pos[i * 3 + 2] as number;
             const playerId = b.Faction.playerId[i] as number;
 
             let revealed = false;

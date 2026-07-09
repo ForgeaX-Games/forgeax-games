@@ -24,8 +24,9 @@
 
 import {
   Transform, MeshFilter, MeshRenderer, Materials,
-  HANDLE_SPHERE, type MaterialAsset, type Handle,
+  type MaterialAsset, type Handle,
 } from '@forgeax/engine-runtime';
+import { HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import type { Entity } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
 
@@ -113,7 +114,7 @@ export class GemSystem {
     // gem visual size scales with tier so a boss drops feel chunkier
     const r = tier === 'BOSS' ? 0.32 : tier === 'T3' ? 0.22 : tier === 'T2' ? 0.18 : 0.15;
     const e = this.ctx.world.spawn(
-      { component: Transform, data: { posX: x, posY: baseY, posZ: z, scaleX: r, scaleY: r, scaleZ: r } },
+      { component: Transform, data: { pos: [x, baseY, z], scale: [r, r, r] } },
       { component: MeshFilter, data: { assetHandle: HANDLE_SPHERE } },
       { component: MeshRenderer, data: { materials: [this.mats[tier]] } },
     ).unwrap();
@@ -191,9 +192,9 @@ export class GemSystem {
       const cy = Math.cos(g.spinPhase * 0.5);
       const sy = Math.sin(g.spinPhase * 0.5);
       world.set(g.e, Transform, {
-        posX: g.x, posY: g.y, posZ: g.z,
+        pos: [g.x, g.y, g.z],
         // quat for Y-axis rotation: (0, sin(θ/2), 0, cos(θ/2))
-        quatX: 0, quatY: sy, quatZ: 0, quatW: cy,
+        quat: [0, sy, 0, cy],
       });
     }
     return events;

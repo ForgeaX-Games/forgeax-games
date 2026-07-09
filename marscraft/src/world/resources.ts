@@ -121,9 +121,9 @@ function spawnParts(world: World, parent: EntityHandle, parts: Part[], tint: Tin
       {
         component: Transform,
         data: {
-          posX: p.pos[0], posY: p.pos[1], posZ: p.pos[2],
-          quatX: p.rot ? _q[0] : 0, quatY: p.rot ? _q[1] : 0, quatZ: p.rot ? _q[2] : 0, quatW: p.rot ? _q[3] : 1,
-          scaleX: p.scale[0], scaleY: p.scale[1], scaleZ: p.scale[2],
+          pos: [p.pos[0], p.pos[1], p.pos[2]],
+          quat: p.rot ? [_q[0], _q[1], _q[2], _q[3]] : [0, 0, 0, 1],
+          scale: [p.scale[0], p.scale[1], p.scale[2]],
         },
       },
       { component: MeshFilter, data: { assetHandle: p.prim } },
@@ -192,7 +192,7 @@ export function spawnResourceFields(
   for (const m of minerals) {
     const y = heightAt(m.x, m.z);
     const res = world.spawn(
-      { component: Transform, data: { posX: m.x, posY: y, posZ: m.z } },
+      { component: Transform, data: { pos: [m.x, y, m.z] } },
       { component: Mineral, data: { amount: m.amount, maxAmount: m.amount, currentHarvester: -1 } },
       { component: Faction, data: { playerId: PLAYER_ID.NEUTRAL, race: RACE.TERRAN, color: 0x4aa0ff } },
       { component: Selectable, data: { selected: false, selectionRadius: 1.2, priority: 0 } },
@@ -205,7 +205,7 @@ export function spawnResourceFields(
   for (const g of geysers) {
     const y = heightAt(g.x, g.z);
     const res = world.spawn(
-      { component: Transform, data: { posX: g.x, posY: y, posZ: g.z } },
+      { component: Transform, data: { pos: [g.x, y, g.z] } },
       { component: Geyser, data: { amount: g.amount, maxAmount: g.amount, hasRefinery: false, refineryEntity: -1 } },
       { component: Faction, data: { playerId: PLAYER_ID.NEUTRAL, race: RACE.TERRAN, color: 0x4ad06a } },
       { component: Selectable, data: { selected: false, selectionRadius: 1.6, priority: 0 } },

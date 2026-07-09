@@ -21,9 +21,9 @@
 //
 import {
   Transform, MeshFilter, MeshRenderer, Materials, quat,
-  HANDLE_CUBE,
   type MaterialAsset, type Handle,
 } from '@forgeax/engine-runtime';
+import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import type { Entity } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
@@ -197,7 +197,7 @@ export class Survivor {
   // ── spawn helpers ───────────────────────────────────────────────────────────
   private cube(mat: MatHandle, x: number, y: number, z: number, sx: number, sy: number, sz: number, q?: [number, number, number, number]): Entity {
     return this.w.spawn(
-      { component: Transform, data: { posX: x, posY: y, posZ: z, scaleX: sx, scaleY: sy, scaleZ: sz, ...(q ? { quatX: q[0], quatY: q[1], quatZ: q[2], quatW: q[3] } : {}) } },
+      { component: Transform, data: { pos: [x, y, z], scale: [sx, sy, sz], ...(q ? { quat: [q[0], q[1], q[2], q[3]] } : {}) } },
       { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
       { component: MeshRenderer, data: { materials: [mat] } },
     ).unwrap();
@@ -347,9 +347,9 @@ export class Survivor {
       const yaw = Math.atan2(-dx, -dz);
       const q = quat.eulerY(yaw);
       this.w.set(en.e, Transform, {
-        posX: en.x, posY: en.y + bob, posZ: en.z,
-        scaleX: en.cfg.sx * pf, scaleY: en.cfg.sy * pf, scaleZ: en.cfg.sz * pf,
-        quatX: q[0]!, quatY: q[1]!, quatZ: q[2]!, quatW: q[3]!,
+        pos: [en.x, en.y + bob, en.z],
+        scale: [en.cfg.sx * pf, en.cfg.sy * pf, en.cfg.sz * pf],
+        quat: [q[0]!, q[1]!, q[2]!, q[3]!],
       });
       if (en.flash > 0) this.w.set(en.e, MeshRenderer, { materials: [this.mats.flash!] });
       else this.w.set(en.e, MeshRenderer, { materials: [this.mats['e_' + en.kind]!] });
@@ -420,7 +420,7 @@ export class Survivor {
       b.age += dt;
       if (b.age > b.life) { this.w.despawn(b.e); this.bullets.splice(i, 1); continue; }
       b.x += b.dx * b.speed * dt; b.y += b.dy * b.speed * dt; b.z += b.dz * b.speed * dt;
-      this.w.set(b.e, Transform, { posX: b.x, posY: b.y, posZ: b.z });
+      this.w.set(b.e, Transform, { pos: [b.x, b.y, b.z] });
       // light trail for flame bullets
       b.trail -= dt;
       if (b.burn > 0 && b.trail <= 0) { b.trail = 0.03; this.spawnParticle(b.x, b.y, b.z, this.mats.spark!, 0, 0, 0, 0.18, 0.12, 0); }
@@ -519,7 +519,7 @@ export class Survivor {
       bl.angle += spin * dt;
       const bx = this.px + Math.cos(bl.angle) * R, bz = this.pz + Math.sin(bl.angle) * R;
       const q = quat.eulerY(-bl.angle);
-      this.w.set(bl.e, Transform, { posX: bx, posY: this.py + 0.4, posZ: bz, quatX: q[0]!, quatY: q[1]!, quatZ: q[2]!, quatW: q[3]! });
+      this.w.set(bl.e, Transform, { pos: [bx, this.py + 0.4, bz], quat: [q[0]!, q[1]!, q[2]!, q[3]!] });
       for (const en of this.enemies) {
         if (this.bladeHitCd.has(en.e)) continue;
         const rr = 0.5 + en.cfg.r;
@@ -598,7 +598,7 @@ export class Survivor {
       for (let i = 0; i < chunks; i++) {
         const ox = (Math.random() - 0.5) * en.cfg.sx, oz = (Math.random() - 0.5) * en.cfg.sz;
         this.w.spawn(
-          { component: Transform, data: { posX: en.x + ox, posY: en.y + 0.6 + Math.random(), posZ: en.z + oz, scaleX: 0.4, scaleY: 0.4, scaleZ: 0.4 } },
+          { component: Transform, data: { pos: [en.x + ox, en.y + 0.6 + Math.random(), en.z + oz], scale: [0.4, 0.4, 0.4] } },
           { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
           { component: MeshRenderer, data: { materials: [this.mats.debris!] } },
           { component: RigidBody, data: { type: RigidBodyTypeValue.dynamic, mass: 1, linearDamping: 0.1, angularDamping: 0.2 } },
@@ -618,7 +618,7 @@ export class Survivor {
       if (p.y < 0.05) { p.y = 0.05; p.vy *= -0.4; p.vx *= 0.6; p.vz *= 0.6; }
       const k = 1 - p.age / p.life;
       const s = p.s * (0.4 + 0.6 * k);
-      this.w.set(p.e, Transform, { posX: p.x, posY: p.y, posZ: p.z, scaleX: s, scaleY: s, scaleZ: s });
+      this.w.set(p.e, Transform, { pos: [p.x, p.y, p.z], scale: [s, s, s] });
     }
   }
 
@@ -660,7 +660,7 @@ export class Survivor {
       }
       if (d < pr) { const k = (1 - d / pr) * 12 * dt; g.x += dx * k; g.z += dz * k; }
       const q = quat.eulerY(g.phase);
-      this.w.set(g.e, Transform, { posX: g.x, posY: g.y + Math.sin(g.phase) * 0.08, posZ: g.z, scaleX: 0.22, scaleY: 0.22, scaleZ: 0.22, quatX: q[0]!, quatY: q[1]!, quatZ: q[2]!, quatW: q[3]! });
+      this.w.set(g.e, Transform, { pos: [g.x, g.y + Math.sin(g.phase) * 0.08, g.z], scale: [0.22, 0.22, 0.22], quat: [q[0]!, q[1]!, q[2]!, q[3]!] });
     }
   }
 

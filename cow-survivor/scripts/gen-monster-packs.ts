@@ -70,13 +70,13 @@ for (const def of Object.values(ENEMIES)) {
   const entities = def.parts.map((ps, i) => {
     const n = (slotCounts.get(ps.mat) ?? 0) + 1;
     slotCounts.set(ps.mat, n);
-    const t: Record<string, number> = {
-      posX: ps.px, posY: ps.py, posZ: ps.pz,
-      scaleX: ps.sx, scaleY: ps.sy, scaleZ: ps.sz,
+    const t: Record<string, number[]> = {
+      pos: [ps.px, ps.py, ps.pz],
+      scale: [ps.sx, ps.sy, ps.sz],
     };
     if (ps.rotY !== undefined) {
       const h = ps.rotY / 2;
-      t.quatX = 0; t.quatY = Math.sin(h); t.quatZ = 0; t.quatW = Math.cos(h);
+      t.quat = [0, Math.sin(h), 0, Math.cos(h)];
     }
     return {
       localId: i,

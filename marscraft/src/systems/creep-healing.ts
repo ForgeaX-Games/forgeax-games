@@ -67,7 +67,7 @@ export class CreepHealingSystem {
             const e = b.Entity.self[i] as EntityHandle;
             if (world.get(e, Garrisoned).ok) continue;
             if (!this._ooc.isOutOfCombat(e, OUT_OF_COMBAT_THRESHOLD)) continue;
-            if (!this._isOnCreep(b.Transform.posX[i] as number, b.Transform.posZ[i] as number)) continue;
+            if (!this._isOnCreep(b.Transform.pos[i * 3] as number, b.Transform.pos[i * 3 + 2] as number)) continue;
 
             resolveHeal(world, e, heal);
           }

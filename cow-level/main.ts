@@ -1,11 +1,12 @@
 import {
   Transform, Camera, perspective, quat, Materials, MeshFilter, MeshRenderer,
-  HANDLE_CUBE, HANDLE_SPHERE, ChildOf,
+  ChildOf,
   SceneInstance,
   Skylight, SkyboxBackground, SKYBOX_MODE_CUBEMAP, TONEMAP_ACES_FILMIC,
   BLOOM_DISABLED, ANTIALIAS_MSAA, PointLight,
   type MaterialAsset, type Handle,
 } from '@forgeax/engine-runtime';
+import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { createCylinderGeometry, createSphereGeometry } from '@forgeax/engine-geometry';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
@@ -151,7 +152,7 @@ async function installHdrSky(ctx: CtxWorld): Promise<void> {
 
 function spawnGroundCollider(ctx: CtxWorld): void {
   ctx.world.spawn(
-    { component: Transform, data: { posX: 0, posY: -5, posZ: 0 } },
+    { component: Transform, data: { pos: [0, -5, 0] } },
     { component: RigidBody, data: { type: RigidBodyTypeValue.static } },
     { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtentsX: 42, halfExtentsY: 5, halfExtentsZ: 42, friction: 0.95, restitution: 0 } },
   );
@@ -163,10 +164,10 @@ function setupPlayer(
   loaded: { mapping: ReadonlyMap<number, Entity>; nodes: PackNode[] },
 ): void {
   const rt = ctx.world.get(root, Transform);
-  const rx = rt.ok ? rt.value.posX : 0, ry = rt.ok ? rt.value.posY : 0.8, rz = rt.ok ? rt.value.posZ : 0;
-  const rsx = rt.ok ? rt.value.scaleX || 1 : 1;
-  const rsy = rt.ok ? rt.value.scaleY || 1 : 1;
-  const rsz = rt.ok ? rt.value.scaleZ || 1 : 1;
+  const rx = rt.ok ? rt.value.pos[0] : 0, ry = rt.ok ? rt.value.pos[1] : 0.8, rz = rt.ok ? rt.value.pos[2] : 0;
+  const rsx = rt.ok ? rt.value.scale[0] || 1 : 1;
+  const rsy = rt.ok ? rt.value.scale[1] || 1 : 1;
+  const rsz = rt.ok ? rt.value.scale[2] || 1 : 1;
   for (const node of loaded.nodes) {
     const nm = (node.components.Name as { value?: string } | undefined)?.value;
     if (!nm || nm === 'Player' || !nm.startsWith('Player')) continue;
@@ -178,12 +179,16 @@ function setupPlayer(
     if (!alreadyParented) {
       ctx.world.addComponent(e, { component: ChildOf, data: { parent: root } });
       ctx.world.set(e, Transform, {
-        posX: (t.value.posX - rx) / rsx,
-        posY: (t.value.posY - ry) / rsy,
-        posZ: (t.value.posZ - rz) / rsz,
-        scaleX: (t.value.scaleX || 1) / rsx,
-        scaleY: (t.value.scaleY || 1) / rsy,
-        scaleZ: (t.value.scaleZ || 1) / rsz,
+        pos: [
+          (t.value.pos[0] - rx) / rsx,
+          (t.value.pos[1] - ry) / rsy,
+          (t.value.pos[2] - rz) / rsz,
+        ],
+        scale: [
+          (t.value.scale[0] || 1) / rsx,
+          (t.value.scale[1] || 1) / rsy,
+          (t.value.scale[2] || 1) / rsz,
+        ],
       });
     }
   }
@@ -196,8 +201,8 @@ function attachPackPhysics(ctx: CtxWorld, loaded: { mapping: ReadonlyMap<number,
     const name = (node.components.Name as { value?: string } | undefined)?.value ?? '';
     const e = loaded.mapping.get(node.localId);
     if (e === undefined || name === 'Player' || name.startsWith('Player')) continue;
-    const t = (node.components.Transform ?? {}) as Record<string, number>;
-    const sx = t.scaleX ?? 1, sy = t.scaleY ?? 1, sz = t.scaleZ ?? 1;
+    const t = (node.components.Transform ?? {}) as { scale?: number[] };
+    const sx = t.scale?.[0] ?? 1, sy = t.scale?.[1] ?? 1, sz = t.scale?.[2] ?? 1;
     if (name === 'Ground') continue;
     if (name.startsWith('Fence') || name.startsWith('Stone') || name.startsWith('Portal') || name.startsWith('Torch')) {
       ctx.world.addComponent(e, { component: RigidBody, data: { type: RigidBodyTypeValue.static } });
@@ -213,7 +218,7 @@ function attachPackPhysics(ctx: CtxWorld, loaded: { mapping: ReadonlyMap<number,
 function spawnFallbackScene(ctx: CtxWorld): void {
   const mat = ctx.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', Materials.standard({ baseColor: [0.18, 0.08, 0.08, 1], roughness: 0.95 }));
   ctx.world.spawn(
-    { component: Transform, data: { posY: -0.08, scaleX: 36, scaleY: 0.16, scaleZ: 36 } },
+    { component: Transform, data: { pos: [0, -0.08, 0], scale: [36, 0.16, 36] } },
     { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
     { component: MeshRenderer, data: { materials: [mat] } },
   );
@@ -270,8 +275,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     attachPackPhysics({ world }, loaded);
     const node = loaded.nodes.find((n) => (n.components.Name as { value?: string } | undefined)?.value === 'Player');
     if (node) {
-      const t = (node.components.Transform ?? {}) as Record<string, number>;
-      px = t.posX ?? 0; pz = t.posZ ?? 0;
+      const t = (node.components.Transform ?? {}) as { pos?: number[] };
+      px = t.pos?.[0] ?? 0; pz = t.pos?.[2] ?? 0;
       player = loaded.mapping.get(node.localId);
       if (player !== undefined) setupPlayer({ world }, player, loaded);
     }
@@ -288,7 +293,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   quat.fromAxisAngle(topQ, [1, 0, 0], topPitch);
   let camX = px, camZ = pz + 10;
   const camera = world.spawn(
-    { component: Transform, data: { posX: camX, posY: 15, posZ: camZ, quatX: topQ[0]!, quatY: topQ[1]!, quatZ: topQ[2]!, quatW: topQ[3]! } },
+    { component: Transform, data: { pos: [camX, 15, camZ], quat: topQ } },
     // engine #387 (CSM) changed the swap-chain attachment format; the FXAA +
     // bloom post path (@location(0) -> swap-chain) then raises "RenderPipeline
     // not compatible with RenderPassEncoder" every frame (stray pixels / black
@@ -300,8 +305,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // linear/pre-ACES. On Chromium the cubemap skybox draws over it.
     { component: Camera, data: { ...perspective({ fov: Math.PI / 3, aspect, near: 0.1, far: 220 }), tonemap: TONEMAP_ACES_FILMIC, bloom: BLOOM_DISABLED, antialias: ANTIALIAS_MSAA, clearR: 0.05, clearG: 0.07, clearB: 0.13 } },
   ).unwrap();
-  world.spawn({ component: Transform, data: { posX: -4, posY: 6, posZ: 2 } }, { component: PointLight, data: { colorR: 1, colorG: 0.18, colorB: 0.08, intensity: 65, range: 24 } });
-  world.spawn({ component: Transform, data: { posX: 6, posY: 4.5, posZ: -5 } }, { component: PointLight, data: { colorR: 0.55, colorG: 0.18, colorB: 1, intensity: 45, range: 18 } });
+  world.spawn({ component: Transform, data: { pos: [-4, 6, 2] } }, { component: PointLight, data: { colorR: 1, colorG: 0.18, colorB: 0.08, intensity: 65, range: 24 } });
+  world.spawn({ component: Transform, data: { pos: [6, 4.5, -5] } }, { component: PointLight, data: { colorR: 0.55, colorG: 0.18, colorB: 1, intensity: 45, range: 18 } });
 
   const enemyMats = new Map<string, MatHandle>();
   for (const t of ENEMY_TYPES) {
@@ -450,8 +455,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   function screenPopup(text: string, wx: number, wy: number, wz: number, kind: Parameters<typeof hud.popup>[3]): void {
     const cam = world.get(camera, Transform);
     if (!cam.ok) return;
-    const qx = -cam.value.quatX, qy = -cam.value.quatY, qz = -cam.value.quatZ, qw = cam.value.quatW;
-    const dx = wx - cam.value.posX, dy = wy - cam.value.posY, dz = wz - cam.value.posZ;
+    const qx = -cam.value.quat[0], qy = -cam.value.quat[1], qz = -cam.value.quat[2], qw = cam.value.quat[3];
+    const dx = wx - cam.value.pos[0], dy = wy - cam.value.pos[1], dz = wz - cam.value.pos[2];
     const tx = 2 * (qy * dz - qz * dy), ty = 2 * (qz * dx - qx * dz), tz = 2 * (qx * dy - qy * dx);
     const lx = dx + qw * tx + (qy * tz - qz * ty);
     const ly = dy + qw * ty + (qz * tx - qx * tz);
@@ -479,13 +484,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const y = type.scale * 0.55;
     const mat = enemyMats.get(type.id)!;
     const root = world.spawn(
-      { component: Transform, data: { posX: x, posY: y, posZ: z } },
+      { component: Transform, data: { pos: [x, y, z] } },
       { component: RigidBody, data: { type: RigidBodyTypeValue.kinematic } },
       { component: Collider, data: { shape: ColliderShapeValue.capsule, radius: type.radius, halfHeight: type.scale * 0.34, friction: 0.75, restitution: 0.1 } },
     ).unwrap();
     const part = (ox: number, oy: number, oz: number, sx: number, sy: number, sz: number, mesh: unknown, pm: MatHandle) => {
       const e = world.spawn(
-        { component: Transform, data: { posX: ox, posY: oy, posZ: oz, scaleX: sx, scaleY: sy, scaleZ: sz } },
+        { component: Transform, data: { pos: [ox, oy, oz], scale: [sx, sy, sz] } },
         { component: MeshFilter, data: { assetHandle: mesh as Handle<'MeshAsset', 'shared'> } },
         { component: MeshRenderer, data: { materials: [pm] } },
         { component: ChildOf, data: { parent: root } },
@@ -511,7 +516,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const len = Math.hypot(dx, dy, dz) || 1;
     const mat = kind === 'fire' ? fireMat : kind === 'ice' ? iceMat : kind === 'bone' ? boneMat : stakeMat;
     const e = world.spawn(
-      { component: Transform, data: { posX: x, posY: y, posZ: z, scaleX: radius / 0.16, scaleY: radius / 0.16, scaleZ: radius / 0.16 } },
+      { component: Transform, data: { pos: [x, y, z], scale: [radius / 0.16, radius / 0.16, radius / 0.16] } },
       { component: MeshFilter, data: { assetHandle: bulletMesh } },
       { component: MeshRenderer, data: { materials: [mat] } },
       { component: RigidBody, data: { type: RigidBodyTypeValue.kinematic } },
@@ -525,7 +530,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const a = Math.random() * Math.PI * 2;
       const sp = 1.5 + Math.random() * 4;
       const e = world.spawn(
-        { component: Transform, data: { posX: x, posY: y, posZ: z } },
+        { component: Transform, data: { pos: [x, y, z] } },
         { component: MeshFilter, data: { assetHandle: sparkMesh } },
         { component: MeshRenderer, data: { materials: [mat] } },
       ).unwrap();
@@ -554,7 +559,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     score += en.type.score;
     spawnSparks(en.x, en.y + 0.2, en.z, en.type.boss ? 26 : 10, bloodMat);
     const gem = world.spawn(
-      { component: Transform, data: { posX: en.x, posY: 0.2, posZ: en.z, scaleX: 0.32, scaleY: 0.32, scaleZ: 0.32 } },
+      { component: Transform, data: { pos: [en.x, 0.2, en.z], scale: [0.32, 0.32, 0.32] } },
       { component: MeshFilter, data: { assetHandle: HANDLE_SPHERE } },
       { component: MeshRenderer, data: { materials: [xpMat] } },
       { component: RigidBody, data: { type: RigidBodyTypeValue.dynamic, mass: 0.2, linearDamping: 0.85 } },
@@ -780,7 +785,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
       const yaw = Math.atan2(-faceX, -faceZ);
       const pq = quat.eulerY(yaw);
-      world.set(player!, Transform, { posX: px, posY: playerY, posZ: pz, quatX: pq[0]!, quatY: pq[1]!, quatZ: pq[2]!, quatW: pq[3]! });
+      world.set(player!, Transform, { pos: [px, playerY, pz], quat: pq });
 
       for (let i = bullets.length - 1; i >= 0; i--) {
         const b = bullets[i]!;
@@ -791,7 +796,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           continue;
         }
         b.x += b.vx * dt; b.y += b.vy * dt; b.z += b.vz * dt;
-        world.set(b.e, Transform, { posX: b.x, posY: b.y, posZ: b.z });
+        world.set(b.e, Transform, { pos: [b.x, b.y, b.z] });
         for (const en of enemies) {
           if (b.hit.has(en.e)) continue;
           const dx = en.x - b.x, dy = (en.y + 0.15) - b.y, dz = en.z - b.z;
@@ -835,7 +840,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         const q = quat.eulerY(yawE);
         const pulse = en.hitPulse > 0 ? 1 + en.hitPulse * 1.7 : 1;
         en.hitPulse = Math.max(0, en.hitPulse - dt);
-        world.set(en.e, Transform, { posX: en.x, posY: en.y, posZ: en.z, scaleX: pulse, scaleY: pulse, scaleZ: pulse, quatX: q[0]!, quatY: q[1]!, quatZ: q[2]!, quatW: q[3]! });
+        world.set(en.e, Transform, { pos: [en.x, en.y, en.z], scale: [pulse, pulse, pulse], quat: q });
         if (d < en.radius + 0.44 && invuln <= 0) {
           const dmg = Math.max(1, en.type.damage - playerStats.armor);
           playerStats.hp -= dmg;
@@ -860,7 +865,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           const pull = Math.min(18, 5 + (playerStats.magnet - d) * 5);
           p.x += dx / Math.max(0.01, d) * pull * dt;
           p.z += dz / Math.max(0.01, d) * pull * dt;
-          world.set(p.e, Transform, { posX: p.x, posY: 0.22 + Math.sin(time * 8 + p.age) * 0.05, posZ: p.z });
+          world.set(p.e, Transform, { pos: [p.x, 0.22 + Math.sin(time * 8 + p.age) * 0.05, p.z] });
         }
         if (d < 0.65) {
           world.despawn(p.e);
@@ -881,7 +886,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         sp.vy -= 8 * dt;
         sp.x += sp.vx * dt; sp.y += sp.vy * dt; sp.z += sp.vz * dt;
         const k = 1 - sp.age / sp.life;
-        world.set(sp.e, Transform, { posX: sp.x, posY: Math.max(0.05, sp.y), posZ: sp.z, scaleX: k, scaleY: k, scaleZ: k });
+        world.set(sp.e, Transform, { pos: [sp.x, Math.max(0.05, sp.y), sp.z], scale: [k, k, k] });
       }
 
       shake = Math.max(0, shake - dt);
@@ -891,12 +896,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         const qy = quat.create(); quat.fromAxisAngle(qy, [0, 1, 0], lookYaw);
         const qx = quat.create(); quat.fromAxisAngle(qx, [1, 0, 0], lookPitch);
         const cq = quat.create(); quat.multiply(cq, qy, qx);
-        world.set(camera, Transform, { posX: px + sx, posY: playerY + 0.62, posZ: pz + sz, quatX: cq[0]!, quatY: cq[1]!, quatZ: cq[2]!, quatW: cq[3]! });
+        world.set(camera, Transform, { pos: [px + sx, playerY + 0.62, pz + sz], quat: cq });
       } else {
         const a = 1 - Math.exp(-8 * dt);
         camX += (px - camX) * a;
         camZ += (pz + 10 - camZ) * a;
-        world.set(camera, Transform, { posX: camX + sx, posY: 15, posZ: camZ + sz, quatX: topQ[0]!, quatY: topQ[1]!, quatZ: topQ[2]!, quatW: topQ[3]! });
+        world.set(camera, Transform, { pos: [camX + sx, 15, camZ + sz], quat: topQ });
       }
       updateHud();
     });

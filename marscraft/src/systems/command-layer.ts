@@ -120,7 +120,7 @@ export function installCommandLayer(world: World, deps: CommandLayerDeps): Comma
     if (!tr.ok || !cam.ok) return null;
     const t = tr.value;
     const c = cam.value;
-    const q: [number, number, number, number] = [t.quatX, t.quatY, t.quatZ, t.quatW];
+    const q: [number, number, number, number] = [t.quat[0], t.quat[1], t.quat[2], t.quat[3]];
 
     // World-space camera axes (engine default: looks down -Z, right +X, up +Y).
     quat.transformVec3(_fwd, q, [0, 0, -1]);
@@ -147,9 +147,9 @@ export function installCommandLayer(world: World, deps: CommandLayerDeps): Comma
     const rdy = dirY / dlen;
     const rdz = dirZ / dlen;
 
-    const ox = t.posX;
-    const oy = t.posY;
-    const oz = t.posZ;
+    const ox = t.pos[0];
+    const oy = t.pos[1];
+    const oz = t.pos[2];
 
     // Intersect a flat Y=0 plane first; needs the ray to point downward.
     if (rdy >= -1e-4) return null;

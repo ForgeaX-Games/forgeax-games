@@ -113,7 +113,7 @@ export function spawnUnit(world: World, ctx: UnitFactoryCtx, args: SpawnUnitArgs
 
   // ── parent entity: engine Transform + Faction + Motion + Renderable tag ──
   const res = world.spawn(
-    { component: Transform, data: { posX: args.x, posY: yOffset, posZ: args.z } },
+    { component: Transform, data: { pos: [args.x, yOffset, args.z] } },
     { component: Faction, data: { playerId: args.playerId, race: RACE_CODE[race], color: playerColor } },
     { component: Motion, data: { facingY: 0, fallVelocity: 0 } },
     {

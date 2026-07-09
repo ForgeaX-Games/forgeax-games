@@ -86,7 +86,7 @@ export function installIdleTracker(deps: IdleTrackerDeps): IdleTrackerHandle {
     idxRef.i++;
     selection.select([e]);
     const t = world.get(e, Transform);
-    if (t.ok && deps.onJumpTo) deps.onJumpTo(t.value.posX, t.value.posZ);
+    if (t.ok && deps.onJumpTo) deps.onJumpTo(t.value.pos[0], t.value.pos[2]);
   };
 
   if (typeof document === 'undefined') {

@@ -37,10 +37,8 @@ export function spawnBackground(world: World, geo: Geo, mat: Mat) {
     const s = 0.03 + Math.random() * 0.05;
     world.spawn(
       { component: Transform, data: {
-        posX: (Math.random() - 0.5) * ARENA_W * 2.2,
-        posY: -12 - Math.random() * 5,
-        posZ: (Math.random() - 0.5) * totalDepth,
-        scaleX: s, scaleY: s, scaleZ: s,
+        pos: [(Math.random() - 0.5) * ARENA_W * 2.2, -12 - Math.random() * 5, (Math.random() - 0.5) * totalDepth],
+        scale: [s, s, s],
       }},
       { component: MeshFilter, data: { assetHandle: geo.sphereTiny } },
       { component: MeshRenderer, data: { materials: [Math.random() > 0.3 ? mat.starD : mat.starW] } },
@@ -81,7 +79,7 @@ function spawnCityZone(world: World, geo: Geo, mat: Mat, startZ: number) {
 
       // Building body (solid box with volume)
       world.spawn(
-        { component: Transform, data: { posX: bx, posY: BASE_Y - height / 2, posZ: bz, scaleX: width, scaleY: height, scaleZ: depth }},
+        { component: Transform, data: { pos: [bx, BASE_Y - height / 2, bz], scale: [width, height, depth] }},
         { component: MeshFilter, data: { assetHandle: geo.CUBE } },
         { component: MeshRenderer, data: { materials: [bMat] } },
         { component: Star, data: { speed: SCROLL_SPEED } },
@@ -93,10 +91,8 @@ function spawnCityZone(world: World, geo: Geo, mat: Mat, startZ: number) {
         const side = Math.random() > 0.5 ? 1 : -1;
         world.spawn(
           { component: Transform, data: {
-            posX: bx + side * (width / 2 + 0.08),
-            posY: BASE_Y - height * 0.6,
-            posZ: bz,
-            scaleX: 0.06, scaleY: 0.2 + Math.random() * 0.2, scaleZ: 0.4 + Math.random() * 0.3,
+            pos: [bx + side * (width / 2 + 0.08), BASE_Y - height * 0.6, bz],
+            scale: [0.06, 0.2 + Math.random() * 0.2, 0.4 + Math.random() * 0.3],
           }},
           { component: MeshFilter, data: { assetHandle: geo.CUBE } },
           { component: MeshRenderer, data: { materials: [nMat] } },
@@ -107,14 +103,14 @@ function spawnCityZone(world: World, geo: Geo, mat: Mat, startZ: number) {
       // Antenna on tall buildings
       if (height > 2.0 && Math.random() < 0.4) {
         world.spawn(
-          { component: Transform, data: { posX: bx, posY: BASE_Y - height - 0.3, posZ: bz, scaleX: 0.04, scaleY: 0.5, scaleZ: 0.04 }},
+          { component: Transform, data: { pos: [bx, BASE_Y - height - 0.3, bz], scale: [0.04, 0.5, 0.04] }},
           { component: MeshFilter, data: { assetHandle: geo.CUBE } },
           { component: MeshRenderer, data: { materials: [mat.antenna] } },
           { component: Star, data: { speed: SCROLL_SPEED } },
         );
         // Blinking light sphere at top
         world.spawn(
-          { component: Transform, data: { posX: bx, posY: BASE_Y - height - 0.6, posZ: bz, scaleX: 0.06, scaleY: 0.06, scaleZ: 0.06 }},
+          { component: Transform, data: { pos: [bx, BASE_Y - height - 0.6, bz], scale: [0.06, 0.06, 0.06] }},
           { component: MeshFilter, data: { assetHandle: geo.sphereTiny } },
           { component: MeshRenderer, data: { materials: [mat.neonCyan] } },
           { component: Star, data: { speed: SCROLL_SPEED } },
@@ -125,10 +121,8 @@ function spawnCityZone(world: World, geo: Geo, mat: Mat, startZ: number) {
       if (Math.random() < 0.25 && height > 1.2) {
         world.spawn(
           { component: Transform, data: {
-            posX: bx + (Math.random() - 0.5) * width * 0.4,
-            posY: BASE_Y - height - 0.12,
-            posZ: bz + (Math.random() - 0.5) * depth * 0.3,
-            scaleX: 0.2, scaleY: 0.2, scaleZ: 0.2,
+            pos: [bx + (Math.random() - 0.5) * width * 0.4, BASE_Y - height - 0.12, bz + (Math.random() - 0.5) * depth * 0.3],
+            scale: [0.2, 0.2, 0.2],
           }},
           { component: MeshFilter, data: { assetHandle: geo.CUBE } },
           { component: MeshRenderer, data: { materials: [mat.rooftop] } },
@@ -155,7 +149,7 @@ function spawnIndustrialZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     const h = 0.5 + Math.random() * 1.2;
     const d = 1.5 + Math.random() * 2.0;
     world.spawn(
-      { component: Transform, data: { posX: bx, posY: BASE_Y - h / 2, posZ: bz, scaleX: w, scaleY: h, scaleZ: d }},
+      { component: Transform, data: { pos: [bx, BASE_Y - h / 2, bz], scale: [w, h, d] }},
       { component: MeshFilter, data: { assetHandle: geo.CUBE } },
       { component: MeshRenderer, data: { materials: [mat.factory] } },
       { component: Star, data: { speed: SCROLL_SPEED } },
@@ -167,14 +161,14 @@ function spawnIndustrialZone(world: World, geo: Geo, mat: Mat, startZ: number) {
       const sx = bx + (s - stacks / 2) * 0.7;
       const stackH = 1.0 + Math.random() * 1.8;
       world.spawn(
-        { component: Transform, data: { posX: sx, posY: BASE_Y - h - stackH / 2, posZ: bz, scaleX: 0.25, scaleY: stackH, scaleZ: 0.25 }},
+        { component: Transform, data: { pos: [sx, BASE_Y - h - stackH / 2, bz], scale: [0.25, stackH, 0.25] }},
         { component: MeshFilter, data: { assetHandle: geo.cylinder } },
         { component: MeshRenderer, data: { materials: [mat.smokestack] } },
         { component: Star, data: { speed: SCROLL_SPEED } },
       );
       // Glow sphere at top (not flat)
       world.spawn(
-        { component: Transform, data: { posX: sx, posY: BASE_Y - h - stackH - 0.1, posZ: bz, scaleX: 0.18, scaleY: 0.18, scaleZ: 0.18 }},
+        { component: Transform, data: { pos: [sx, BASE_Y - h - stackH - 0.1, bz], scale: [0.18, 0.18, 0.18] }},
         { component: MeshFilter, data: { assetHandle: geo.sphereTiny } },
         { component: MeshRenderer, data: { materials: [mat.steamGlow] } },
         { component: Star, data: { speed: SCROLL_SPEED } },
@@ -185,7 +179,7 @@ function spawnIndustrialZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     if (Math.random() < 0.6) {
       const pipeLen = 2 + Math.random() * 3;
       world.spawn(
-        { component: Transform, data: { posX: bx, posY: BASE_Y - h * 0.4, posZ: bz + d / 2 + 0.3, scaleX: pipeLen, scaleY: 0.12, scaleZ: 0.12 }},
+        { component: Transform, data: { pos: [bx, BASE_Y - h * 0.4, bz + d / 2 + 0.3], scale: [pipeLen, 0.12, 0.12] }},
         { component: MeshFilter, data: { assetHandle: geo.CUBE } },
         { component: MeshRenderer, data: { materials: [mat.pipe] } },
         { component: Star, data: { speed: SCROLL_SPEED } },
@@ -196,7 +190,7 @@ function spawnIndustrialZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     if (Math.random() < 0.4) {
       const tankS = 0.4 + Math.random() * 0.5;
       world.spawn(
-        { component: Transform, data: { posX: bx + w * 0.4, posY: BASE_Y - tankS, posZ: bz + (Math.random() - 0.5) * d, scaleX: tankS, scaleY: tankS * 0.7, scaleZ: tankS }},
+        { component: Transform, data: { pos: [bx + w * 0.4, BASE_Y - tankS, bz + (Math.random() - 0.5) * d], scale: [tankS, tankS * 0.7, tankS] }},
         { component: MeshFilter, data: { assetHandle: geo.sphereSm } },
         { component: MeshRenderer, data: { materials: [mat.rust] } },
         { component: Star, data: { speed: SCROLL_SPEED } },
@@ -221,7 +215,7 @@ function spawnRiverZone(world: World, geo: Geo, mat: Mat, startZ: number) {
       const w = 0.5 + Math.random() * 1.0;
       const d = 0.5 + Math.random() * 0.8;
       world.spawn(
-        { component: Transform, data: { posX: bx, posY: BASE_Y - h / 2, posZ: bz, scaleX: w, scaleY: h, scaleZ: d }},
+        { component: Transform, data: { pos: [bx, BASE_Y - h / 2, bz], scale: [w, h, d] }},
         { component: MeshFilter, data: { assetHandle: geo.CUBE } },
         { component: MeshRenderer, data: { materials: [mat.cityMid] } },
         { component: Star, data: { speed: SCROLL_SPEED } },
@@ -230,7 +224,7 @@ function spawnRiverZone(world: World, geo: Geo, mat: Mat, startZ: number) {
 
     // River bank wall (volumetric, not flat)
     world.spawn(
-      { component: Transform, data: { posX: riverX + side * (riverWidth / 2), posY: BASE_Y - 0.2, posZ: startZ + ZONE_DEPTH / 2, scaleX: 0.3, scaleY: 0.4, scaleZ: ZONE_DEPTH }},
+      { component: Transform, data: { pos: [riverX + side * (riverWidth / 2), BASE_Y - 0.2, startZ + ZONE_DEPTH / 2], scale: [0.3, 0.4, ZONE_DEPTH] }},
       { component: MeshFilter, data: { assetHandle: geo.CUBE } },
       { component: MeshRenderer, data: { materials: [mat.riverBank] } },
       { component: Star, data: { speed: SCROLL_SPEED } },
@@ -243,7 +237,7 @@ function spawnRiverZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     const rz = startZ + Math.random() * ZONE_DEPTH;
     const s = 0.1 + Math.random() * 0.15;
     world.spawn(
-      { component: Transform, data: { posX: rx, posY: BASE_Y + 0.5, posZ: rz, scaleX: s * 3, scaleY: s, scaleZ: s * 2 }},
+      { component: Transform, data: { pos: [rx, BASE_Y + 0.5, rz], scale: [s * 3, s, s * 2] }},
       { component: MeshFilter, data: { assetHandle: geo.sphereTiny } },
       { component: MeshRenderer, data: { materials: [mat.waterGlow] } },
       { component: Star, data: { speed: SCROLL_SPEED + 0.5 } },
@@ -256,7 +250,7 @@ function spawnRiverZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     const bz = startZ + (i + 1) * ZONE_DEPTH / (bridgeCount + 1);
     // Bridge deck (thick)
     world.spawn(
-      { component: Transform, data: { posX: riverX, posY: BASE_Y - 0.6, posZ: bz, scaleX: riverWidth + 2, scaleY: 0.3, scaleZ: 1.0 }},
+      { component: Transform, data: { pos: [riverX, BASE_Y - 0.6, bz], scale: [riverWidth + 2, 0.3, 1.0] }},
       { component: MeshFilter, data: { assetHandle: geo.CUBE } },
       { component: MeshRenderer, data: { materials: [mat.bridge] } },
       { component: Star, data: { speed: SCROLL_SPEED } },
@@ -264,7 +258,7 @@ function spawnRiverZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     // Bridge pillars
     for (const px of [-riverWidth / 3, 0, riverWidth / 3]) {
       world.spawn(
-        { component: Transform, data: { posX: riverX + px, posY: BASE_Y - 0.15, posZ: bz, scaleX: 0.2, scaleY: 0.6, scaleZ: 0.2 }},
+        { component: Transform, data: { pos: [riverX + px, BASE_Y - 0.15, bz], scale: [0.2, 0.6, 0.2] }},
         { component: MeshFilter, data: { assetHandle: geo.cylinder } },
         { component: MeshRenderer, data: { materials: [mat.bridge] } },
         { component: Star, data: { speed: SCROLL_SPEED } },
@@ -273,7 +267,7 @@ function spawnRiverZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     // Bridge lamps (spheres)
     for (const lx of [-riverWidth / 2 - 0.5, riverWidth / 2 + 0.5]) {
       world.spawn(
-        { component: Transform, data: { posX: riverX + lx, posY: BASE_Y - 0.9, posZ: bz, scaleX: 0.08, scaleY: 0.08, scaleZ: 0.08 }},
+        { component: Transform, data: { pos: [riverX + lx, BASE_Y - 0.9, bz], scale: [0.08, 0.08, 0.08] }},
         { component: MeshFilter, data: { assetHandle: geo.sphereTiny } },
         { component: MeshRenderer, data: { materials: [mat.waterGlow] } },
         { component: Star, data: { speed: SCROLL_SPEED } },
@@ -293,7 +287,7 @@ function spawnParkZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     const treeH = 0.4 + Math.random() * 0.6;
     // Trunk (cylinder with visible thickness)
     world.spawn(
-      { component: Transform, data: { posX: tx, posY: BASE_Y - treeH / 2, posZ: tz, scaleX: 0.1, scaleY: treeH, scaleZ: 0.1 }},
+      { component: Transform, data: { pos: [tx, BASE_Y - treeH / 2, tz], scale: [0.1, treeH, 0.1] }},
       { component: MeshFilter, data: { assetHandle: geo.cylinder } },
       { component: MeshRenderer, data: { materials: [mat.treeTrunk] } },
       { component: Star, data: { speed: SCROLL_SPEED } },
@@ -301,7 +295,7 @@ function spawnParkZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     // Canopy (sphere)
     const canopy = 0.35 + Math.random() * 0.45;
     world.spawn(
-      { component: Transform, data: { posX: tx, posY: BASE_Y - treeH - canopy * 0.4, posZ: tz, scaleX: canopy, scaleY: canopy * 0.6, scaleZ: canopy }},
+      { component: Transform, data: { pos: [tx, BASE_Y - treeH - canopy * 0.4, tz], scale: [canopy, canopy * 0.6, canopy] }},
       { component: MeshFilter, data: { assetHandle: geo.sphereSm } },
       { component: MeshRenderer, data: { materials: [mat.tree] } },
       { component: Star, data: { speed: SCROLL_SPEED } },
@@ -314,14 +308,14 @@ function spawnParkZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     const hz = startZ + Math.random() * ZONE_DEPTH;
     // Billboard panel (thick enough to not z-fight)
     world.spawn(
-      { component: Transform, data: { posX: hx, posY: BASE_Y - 1.5, posZ: hz, scaleX: 1.2, scaleY: 0.1, scaleZ: 0.7 }},
+      { component: Transform, data: { pos: [hx, BASE_Y - 1.5, hz], scale: [1.2, 0.1, 0.7] }},
       { component: MeshFilter, data: { assetHandle: geo.CUBE } },
       { component: MeshRenderer, data: { materials: [mat.holoBillboard] } },
       { component: Star, data: { speed: SCROLL_SPEED } },
     );
     // Support pole
     world.spawn(
-      { component: Transform, data: { posX: hx, posY: BASE_Y - 0.7, posZ: hz, scaleX: 0.06, scaleY: 1.2, scaleZ: 0.06 }},
+      { component: Transform, data: { pos: [hx, BASE_Y - 0.7, hz], scale: [0.06, 1.2, 0.06] }},
       { component: MeshFilter, data: { assetHandle: geo.cylinder } },
       { component: MeshRenderer, data: { materials: [mat.highwayRail] } },
       { component: Star, data: { speed: SCROLL_SPEED } },
@@ -334,14 +328,14 @@ function spawnParkZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     const fz = startZ + ZONE_DEPTH / 2;
     // Pool basin (thick cylinder)
     world.spawn(
-      { component: Transform, data: { posX: fx, posY: BASE_Y - 0.15, posZ: fz, scaleX: 1.0, scaleY: 0.3, scaleZ: 1.0 }},
+      { component: Transform, data: { pos: [fx, BASE_Y - 0.15, fz], scale: [1.0, 0.3, 1.0] }},
       { component: MeshFilter, data: { assetHandle: geo.cylinder } },
       { component: MeshRenderer, data: { materials: [mat.bridge] } },
       { component: Star, data: { speed: SCROLL_SPEED } },
     );
     // Water jet glow (cylinder)
     world.spawn(
-      { component: Transform, data: { posX: fx, posY: BASE_Y - 0.7, posZ: fz, scaleX: 0.08, scaleY: 0.8, scaleZ: 0.08 }},
+      { component: Transform, data: { pos: [fx, BASE_Y - 0.7, fz], scale: [0.08, 0.8, 0.08] }},
       { component: MeshFilter, data: { assetHandle: geo.cylinder } },
       { component: MeshRenderer, data: { materials: [mat.fountain] } },
       { component: Star, data: { speed: SCROLL_SPEED } },
@@ -354,7 +348,7 @@ function spawnParkZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     const bz = startZ + Math.random() * ZONE_DEPTH;
     const s = 0.15 + Math.random() * 0.2;
     world.spawn(
-      { component: Transform, data: { posX: bx, posY: BASE_Y - s * 0.5, posZ: bz, scaleX: s, scaleY: s * 0.6, scaleZ: s }},
+      { component: Transform, data: { pos: [bx, BASE_Y - s * 0.5, bz], scale: [s, s * 0.6, s] }},
       { component: MeshFilter, data: { assetHandle: geo.sphereTiny } },
       { component: MeshRenderer, data: { materials: [mat.tree] } },
       { component: Star, data: { speed: SCROLL_SPEED } },
@@ -371,7 +365,7 @@ function spawnHighwayZone(world: World, geo: Geo, mat: Mat, startZ: number) {
 
   // Highway deck (THICK box — 0.4 height, no z-fighting possible)
   world.spawn(
-    { component: Transform, data: { posX: 0, posY: BASE_Y - 1.0, posZ: startZ + ZONE_DEPTH / 2, scaleX: totalW, scaleY: 0.4, scaleZ: ZONE_DEPTH }},
+    { component: Transform, data: { pos: [0, BASE_Y - 1.0, startZ + ZONE_DEPTH / 2], scale: [totalW, 0.4, ZONE_DEPTH] }},
     { component: MeshFilter, data: { assetHandle: geo.CUBE } },
     { component: MeshRenderer, data: { materials: [mat.highway] } },
     { component: Star, data: { speed: SCROLL_SPEED } },
@@ -380,7 +374,7 @@ function spawnHighwayZone(world: World, geo: Geo, mat: Mat, startZ: number) {
   // Guard rails (volumetric boxes on each side)
   for (const side of [-1, 1]) {
     world.spawn(
-      { component: Transform, data: { posX: side * (totalW / 2 + 0.12), posY: BASE_Y - 1.35, posZ: startZ + ZONE_DEPTH / 2, scaleX: 0.12, scaleY: 0.3, scaleZ: ZONE_DEPTH }},
+      { component: Transform, data: { pos: [side * (totalW / 2 + 0.12), BASE_Y - 1.35, startZ + ZONE_DEPTH / 2], scale: [0.12, 0.3, ZONE_DEPTH] }},
       { component: MeshFilter, data: { assetHandle: geo.CUBE } },
       { component: MeshRenderer, data: { materials: [mat.highwayRail] } },
       { component: Star, data: { speed: SCROLL_SPEED } },
@@ -392,7 +386,7 @@ function spawnHighwayZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     const pz = startZ + (p + 0.5) * ZONE_DEPTH / 4;
     for (const px of [-totalW / 3, totalW / 3]) {
       world.spawn(
-        { component: Transform, data: { posX: px, posY: BASE_Y - 0.4, posZ: pz, scaleX: 0.25, scaleY: 0.8, scaleZ: 0.25 }},
+        { component: Transform, data: { pos: [px, BASE_Y - 0.4, pz], scale: [0.25, 0.8, 0.25] }},
         { component: MeshFilter, data: { assetHandle: geo.cylinder } },
         { component: MeshRenderer, data: { materials: [mat.bridge] } },
         { component: Star, data: { speed: SCROLL_SPEED } },
@@ -407,7 +401,7 @@ function spawnHighwayZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     const tz = startZ + Math.random() * ZONE_DEPTH;
     const isRed = Math.random() > 0.5;
     world.spawn(
-      { component: Transform, data: { posX: tx, posY: BASE_Y - 1.25, posZ: tz, scaleX: 0.15, scaleY: 0.08, scaleZ: 0.25 }},
+      { component: Transform, data: { pos: [tx, BASE_Y - 1.25, tz], scale: [0.15, 0.08, 0.25] }},
       { component: MeshFilter, data: { assetHandle: geo.sphereTiny } },
       { component: MeshRenderer, data: { materials: [isRed ? mat.trafficB : mat.trafficA] } },
       { component: Star, data: { speed: SCROLL_SPEED + 3 + Math.random() * 4 } },
@@ -419,13 +413,13 @@ function spawnHighwayZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     const lz = startZ + (i + 0.5) * ZONE_DEPTH / 4;
     const side = i % 2 === 0 ? -1 : 1;
     world.spawn(
-      { component: Transform, data: { posX: side * (totalW / 2 + 0.6), posY: BASE_Y - 1.4, posZ: lz, scaleX: 0.05, scaleY: 0.8, scaleZ: 0.05 }},
+      { component: Transform, data: { pos: [side * (totalW / 2 + 0.6), BASE_Y - 1.4, lz], scale: [0.05, 0.8, 0.05] }},
       { component: MeshFilter, data: { assetHandle: geo.cylinder } },
       { component: MeshRenderer, data: { materials: [mat.highwayRail] } },
       { component: Star, data: { speed: SCROLL_SPEED } },
     );
     world.spawn(
-      { component: Transform, data: { posX: side * (totalW / 2 + 0.6), posY: BASE_Y - 1.85, posZ: lz, scaleX: 0.1, scaleY: 0.1, scaleZ: 0.1 }},
+      { component: Transform, data: { pos: [side * (totalW / 2 + 0.6), BASE_Y - 1.85, lz], scale: [0.1, 0.1, 0.1] }},
       { component: MeshFilter, data: { assetHandle: geo.sphereTiny } },
       { component: MeshRenderer, data: { materials: [mat.highwayLight] } },
       { component: Star, data: { speed: SCROLL_SPEED } },
@@ -439,7 +433,7 @@ function spawnHighwayZone(world: World, geo: Geo, mat: Mat, startZ: number) {
     const bz = startZ + Math.random() * ZONE_DEPTH;
     const h = 0.4 + Math.random() * 1.5;
     world.spawn(
-      { component: Transform, data: { posX: bx, posY: BASE_Y - h / 2, posZ: bz, scaleX: 0.7 + Math.random() * 1, scaleY: h, scaleZ: 0.5 + Math.random() * 0.8 }},
+      { component: Transform, data: { pos: [bx, BASE_Y - h / 2, bz], scale: [0.7 + Math.random() * 1, h, 0.5 + Math.random() * 0.8] }},
       { component: MeshFilter, data: { assetHandle: geo.CUBE } },
       { component: MeshRenderer, data: { materials: [mat.cityDark] } },
       { component: Star, data: { speed: SCROLL_SPEED } },

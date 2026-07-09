@@ -151,7 +151,7 @@ glTF 2.0 蒙皮规范要点（大意，见 spec “Skins” 一节及 *Implement
 ## 5. 复现
 
 1. 任取一个带 skin + 动画的 glTF（如 Mixamo 导出，mesh 与骨骼同在一个 Armature 下）。
-2. `loadByGuid<SceneAsset>` → `instantiate(handle, world, parent)`，其中 `parent` 是一个带非单位 `Transform`（例如 `posZ = 5`）的实体；或直接给该实例的合成根/Armature 设一个非单位 `Transform`。
+2. `loadByGuid<SceneAsset>` → `instantiate(handle, world, parent)`，其中 `parent` 是一个带非单位 `Transform`（例如 `pos = [0, 0, 5]`）的实体；或直接给该实例的合成根/Armature 设一个非单位 `Transform`。
 3. 运行一帧，观察渲染位置。
 
 **预期**：角色整体出现在父节点处（如 z=5），随父节点刚性移动/旋转。

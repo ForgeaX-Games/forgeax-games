@@ -277,7 +277,7 @@ export class TriggerSystem implements TriggerSystemHandle {
     let tx: number | undefined, tz: number | undefined;
     if (effectTargetEntity !== undefined) {
       const tt = world.get(effectTargetEntity, Transform);
-      if (tt.ok) { tx = tt.value.posX; tz = tt.value.posZ; }
+      if (tt.ok) { tx = tt.value.pos[0]; tz = tt.value.pos[2]; }
     }
     const ctx: CastContext = {
       caster: ownerEntity, targetEntity: effectTargetEntity, targetX: tx, targetZ: tz,
@@ -335,7 +335,7 @@ export class TriggerSystem implements TriggerSystemHandle {
         const creep = this._deps.creep;
         if (!creep) return false;
         const t = world.get(owner, Transform);
-        return t.ok && creep.isOnCreep(t.value.posX, t.value.posZ);
+        return t.ok && creep.isOnCreep(t.value.pos[0], t.value.pos[2]);
       }
       case 'is_out_of_combat': {
         const ooc = this._deps.outOfCombat;
@@ -356,7 +356,7 @@ export class TriggerSystem implements TriggerSystemHandle {
         for (const cand of snap) {
           if (cand.entity === owner) continue;
           if (cand.isDead) continue;
-          const dx = cand.x - t.value.posX, dz = cand.z - t.value.posZ;
+          const dx = cand.x - t.value.pos[0], dz = cand.z - t.value.pos[2];
           if (dx * dx + dz * dz > r2) continue;
           if (cond.filter !== 'any' && ownerFac.ok) {
             if (cond.filter === 'ally' && cand.playerId !== ownerFac.value.playerId) continue;

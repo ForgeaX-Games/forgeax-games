@@ -155,14 +155,14 @@ export class GarrisonSystem implements GarrisonHandle {
     if (!ct.ok) return;
     const building = world.get(carrierEntity, Building);
     const baseAngle = building.ok && building.value.hasRally
-      ? Math.atan2(building.value.rallyZ - ct.value.posZ, building.value.rallyX - ct.value.posX)
+      ? Math.atan2(building.value.rallyZ - ct.value.pos[2], building.value.rallyX - ct.value.pos[0])
       : Math.random() * Math.PI * 2;
     const list = [...units];
     units.length = 0;
     transportUnits.set(carrierEntity, units);
     world.set(carrierEntity, Transport, { usedSlots: 0 });
     for (let i = 0; i < list.length; i++) {
-      const pos = this._calcEjectPosition(ct.value.posX, ct.value.posZ, list.length, i, baseAngle);
+      const pos = this._calcEjectPosition(ct.value.pos[0], ct.value.pos[2], list.length, i, baseAngle);
       if (!this._onUnitUnloaded(list[i], pos.x, pos.z)) continue;
       if (building.ok && building.value.hasRally) this._issueRallyCommand(list[i], carrierEntity);
     }
@@ -219,10 +219,10 @@ export class GarrisonSystem implements GarrisonHandle {
     const ejectRadius = tr.ok ? tr.value.ejectRadius : 2.5;
     const building = world.get(carrierEntity, Building);
     const ejectAngle = building.ok && building.value.hasRally
-      ? Math.atan2(building.value.rallyZ - ct.value.posZ, building.value.rallyX - ct.value.posX)
+      ? Math.atan2(building.value.rallyZ - ct.value.pos[2], building.value.rallyX - ct.value.pos[0])
       : Math.random() * Math.PI * 2;
-    const ex = ct.value.posX + Math.cos(ejectAngle) * ejectRadius;
-    const ez = ct.value.posZ + Math.sin(ejectAngle) * ejectRadius;
+    const ex = ct.value.pos[0] + Math.cos(ejectAngle) * ejectRadius;
+    const ez = ct.value.pos[2] + Math.sin(ejectAngle) * ejectRadius;
     if (!this._onUnitUnloaded(unitEntity, ex, ez)) return false;
     if (building.ok && building.value.hasRally) this._issueRallyCommand(unitEntity, carrierEntity);
     return true;
@@ -239,7 +239,7 @@ export class GarrisonSystem implements GarrisonHandle {
     const building = world.get(carrierEntity, Building);
     const hasRally = building.ok && building.value.hasRally;
     const baseAngle = hasRally
-      ? Math.atan2(building.value.rallyZ - ct.value.posZ, building.value.rallyX - ct.value.posX)
+      ? Math.atan2(building.value.rallyZ - ct.value.pos[2], building.value.rallyX - ct.value.pos[0])
       : Math.random() * Math.PI * 2;
     const list = [...units];
     units.length = 0;
@@ -248,7 +248,7 @@ export class GarrisonSystem implements GarrisonHandle {
     for (let i = 0; i < list.length; i++) {
       const u = list[i];
       if (!world.get(u, Transform).ok) continue;
-      const pos = this._calcEjectPosition(ct.value.posX, ct.value.posZ, list.length, i, baseAngle);
+      const pos = this._calcEjectPosition(ct.value.pos[0], ct.value.pos[2], list.length, i, baseAngle);
       this._onUnitUnloaded(u, pos.x, pos.z);
       if (crashDmg > 0) {
         const h = world.get(u, Health);
@@ -279,7 +279,7 @@ export class GarrisonSystem implements GarrisonHandle {
     this._deps.selection?.notifyDespawned?.(unitEntity); // drop from selection + ring
     // hide: stash off-field (keep x/z for restore via the carrier eject path).
     const tr = world.get(unitEntity, Transform);
-    if (tr.ok) world.set(unitEntity, Transform, { posY: GARRISON_HIDE_Y });
+    if (tr.ok) world.set(unitEntity, Transform, { pos: [tr.value.pos[0], GARRISON_HIDE_Y, tr.value.pos[2]] });
   }
 
   private _onUnitUnloaded(unitEntity: EntityHandle, ejectX: number, ejectZ: number): boolean {
@@ -293,7 +293,7 @@ export class GarrisonSystem implements GarrisonHandle {
     let fx = ejectX, fz = ejectZ;
     if (!isAir) { const safe = this._deps.callbacks.clampToWalkable(ejectX, ejectZ); fx = safe.x; fz = safe.z; }
     const y = this._deps.callbacks.getTerrainHeight(fx, fz);
-    world.set(unitEntity, Transform, { posX: fx, posY: y + (isAir ? 1.5 : 0), posZ: fz });
+    world.set(unitEntity, Transform, { pos: [fx, y + (isAir ? 1.5 : 0), fz] });
     return true;
   }
 

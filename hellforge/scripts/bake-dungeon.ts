@@ -131,14 +131,16 @@ const vrand = mulberry32(DUNGEON_SEED ^ 0x5a5a5a5a);
 const counters: Partial<Record<GeoKind, number>> = {};
 let nextLocalId = 0;
 
-const boxTransform = (g: { x: number; y: number; z: number; sx: number; sy: number; sz: number; rotY?: number }): Record<string, number> => {
-  const t: Record<string, number> = {
-    posX: +g.x.toFixed(4), posY: +g.y.toFixed(4), posZ: +g.z.toFixed(4),
-    scaleX: +g.sx.toFixed(4), scaleY: +g.sy.toFixed(4), scaleZ: +g.sz.toFixed(4),
+type BakeTransform = { pos: number[]; scale: number[]; quat?: number[] };
+
+const boxTransform = (g: { x: number; y: number; z: number; sx: number; sy: number; sz: number; rotY?: number }): BakeTransform => {
+  const t: BakeTransform = {
+    pos: [+g.x.toFixed(4), +g.y.toFixed(4), +g.z.toFixed(4)],
+    scale: [+g.sx.toFixed(4), +g.sy.toFixed(4), +g.sz.toFixed(4)],
   };
   if (g.rotY !== undefined) {
     const q = quatY(g.rotY);
-    t.quatX = +q[0].toFixed(6); t.quatY = +q[1].toFixed(6); t.quatZ = +q[2].toFixed(6); t.quatW = +q[3].toFixed(6);
+    t.quat = [+q[0].toFixed(6), +q[1].toFixed(6), +q[2].toFixed(6), +q[3].toFixed(6)];
   }
   return t;
 };
@@ -146,7 +148,7 @@ const boxTransform = (g: { x: number; y: number; z: number; sx: number; sy: numb
 const entities = layout.geometry.flatMap((g) => {
   const policy = POLICY[g.kind];
   const n = (counters[g.kind] = (counters[g.kind] ?? 0) + 1);
-  const makeEntity = (suffix: string, t: Record<string, number>, meshIdx: number, mat?: number) => ({
+  const makeEntity = (suffix: string, t: BakeTransform, meshIdx: number, mat?: number) => ({
     localId: nextLocalId++,
     components: {
       Name: { value: `Den_${g.kind}_${n}${suffix}` },
@@ -169,9 +171,9 @@ const entities = layout.geometry.flatMap((g) => {
       const rot90 = Math.floor(vrand() * 4) * 90;
       const q = quatY(s.rotYDeg + (rot90 * Math.PI) / 180);
       return makeEntity(`__t${j}`, {
-        posX: s.pos[0], posY: s.pos[1], posZ: s.pos[2],
-        scaleX: s.scale[0], scaleY: s.scale[1], scaleZ: s.scale[2],
-        quatX: +q[0].toFixed(6), quatY: +q[1].toFixed(6), quatZ: +q[2].toFixed(6), quatW: +q[3].toFixed(6),
+        pos: [s.pos[0], s.pos[1], s.pos[2]],
+        scale: [s.scale[0], s.scale[1], s.scale[2]],
+        quat: [+q[0].toFixed(6), +q[1].toFixed(6), +q[2].toFixed(6), +q[3].toFixed(6)],
       }, propIdx(g.kind, 0));
     });
   }
@@ -180,7 +182,7 @@ const entities = layout.geometry.flatMap((g) => {
     // Walls: tile the wall mesh as a GRID of near-native-size blocks so the FRONT
     // texels stay ~square (NO vertical stretch). The old approach scaled a 1.5 m
     // mesh to fill a 3.2 m wall, stretching the face ~2×; here each column instead
-    // STACKS full-height crisp rows (scaleY≈1) + a per-column partial top CAP, so
+    // STACKS full-height crisp rows (scale y≈1) + a per-column partial top CAP, so
     // HEIGHT varies (jagged tops = the visible random dimension) while faces stay
     // undistorted. Columns span the run length at ~cell width. Depth fills the
     // cell (side faces hidden between contiguous segments). Alternating 180° Y
@@ -194,8 +196,8 @@ const entities = layout.geometry.flatMap((g) => {
     const depth = isH ? g.sz : g.sx;               // thin axis = CELL (2.4 m)
     const cols = Math.max(1, Math.round(runLen / nx));
     const colW = runLen / cols;
-    const scaleX = colW / nx;                       // block length fit (~1.0–1.2)
-    const scaleZ = depth / nz;                      // fill cell depth (hidden sides)
+    const sxFit = colW / nx;                        // block length fit (~1.0–1.2)
+    const szFit = depth / nz;                       // fill cell depth (hidden sides)
     const bottom = g.y - g.sy / 2;                 // ground plane (walls sit on floor)
     const baseRotY = isH ? 0 : Math.PI / 2;        // V-run: rotate block length onto Z
     const out: ReturnType<typeof makeEntity>[] = [];
@@ -213,13 +215,13 @@ const entities = layout.geometry.flatMap((g) => {
       for (let r = 0; r < rows; r++) {
         const isCap = capScale > 0 && r === rows - 1;
         const sy = isCap ? capScale : 1;
-        const posY = bottom + r * ny - bb.min[1] * sy;     // stack, bottom-align each row
+        const yPos = bottom + r * ny - bb.min[1] * sy;     // stack, bottom-align each row
         const flip = (r + c) % 2 === 1;                     // alternate flip breaks repetition
         const q = quatY(baseRotY + (flip ? Math.PI : 0));
         out.push(makeEntity(`__t${idx++}`, {
-          posX: +cxp.toFixed(4), posY: +posY.toFixed(4), posZ: +czp.toFixed(4),
-          scaleX: +scaleX.toFixed(4), scaleY: +sy.toFixed(4), scaleZ: +scaleZ.toFixed(4),
-          quatX: +q[0].toFixed(6), quatY: +q[1].toFixed(6), quatZ: +q[2].toFixed(6), quatW: +q[3].toFixed(6),
+          pos: [+cxp.toFixed(4), +yPos.toFixed(4), +czp.toFixed(4)],
+          scale: [+sxFit.toFixed(4), +sy.toFixed(4), +szFit.toFixed(4)],
+          quat: [+q[0].toFixed(6), +q[1].toFixed(6), +q[2].toFixed(6), +q[3].toFixed(6)],
         }, propIdx(g.kind, vi)));
       }
     }
@@ -241,9 +243,9 @@ const entities = layout.geometry.flatMap((g) => {
     const us4 = +us.toFixed(4);
     const q = quatY(vrand() * Math.PI * 2);
     return [makeEntity('', {
-      posX: +g.x.toFixed(4), posY: +(-bb.min[1] * us).toFixed(4), posZ: +g.z.toFixed(4),
-      scaleX: us4, scaleY: us4, scaleZ: us4,
-      quatX: +q[0].toFixed(6), quatY: +q[1].toFixed(6), quatZ: +q[2].toFixed(6), quatW: +q[3].toFixed(6),
+      pos: [+g.x.toFixed(4), +(-bb.min[1] * us).toFixed(4), +g.z.toFixed(4)],
+      scale: [us4, us4, us4],
+      quat: [+q[0].toFixed(6), +q[1].toFixed(6), +q[2].toFixed(6), +q[3].toFixed(6)],
     }, propIdx(g.kind, vi))];
   }
 
@@ -260,14 +262,14 @@ const entities = layout.geometry.flatMap((g) => {
     let us = bMax > 0 ? sMax / bMax : 1;
     if (jitterable) us *= 0.8 + vrand() * 0.4;   // ±20% size
     const us4 = +us.toFixed(4);
-    const t: Record<string, number> = {
-      posX: +g.x.toFixed(4), posY: +(-bbV.min[1] * us).toFixed(4), posZ: +g.z.toFixed(4),
-      scaleX: us4, scaleY: us4, scaleZ: us4,
+    const t: BakeTransform = {
+      pos: [+g.x.toFixed(4), +(-bbV.min[1] * us).toFixed(4), +g.z.toFixed(4)],
+      scale: [us4, us4, us4],
     };
     const rotY = jitterable ? vrand() * Math.PI * 2 : g.rotY;
     if (rotY !== undefined) {
       const q = quatY(rotY);
-      t.quatX = +q[0].toFixed(6); t.quatY = +q[1].toFixed(6); t.quatZ = +q[2].toFixed(6); t.quatW = +q[3].toFixed(6);
+      t.quat = [+q[0].toFixed(6), +q[1].toFixed(6), +q[2].toFixed(6), +q[3].toFixed(6)];
     }
     return [makeEntity('', t, propIdx(g.kind, vi))];
   }

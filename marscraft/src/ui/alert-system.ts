@@ -128,7 +128,7 @@ export function installAlerts(deps: AlertDeps): AlertHandle {
   };
   const posOf = (id: number): { x: number; z: number } | null => {
     const t = world.get(id as unknown as EntityHandle, Transform);
-    return t.ok ? { x: t.value.posX, z: t.value.posZ } : null;
+    return t.ok ? { x: t.value.pos[0], z: t.value.pos[2] } : null;
   };
 
   // ── bus wiring ──

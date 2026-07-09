@@ -21,7 +21,7 @@
 // a (yaw,pitch) spherical offset is exactly R = Ry(yaw) · Rx(pitch) applied to the
 // default -Z-looking camera — so we compose the quat directly (no mat4→quat round-
 // trip). With yaw=0, pitch=DEFAULT_PITCH this reproduces the inline default the
-// scaffold spawned (pitch quat about X, posY≈34/posZ≈26 at mid-zoom).
+// scaffold spawned (pitch quat about X, pos[1]≈34/pos[2]≈26 at mid-zoom).
 //
 // dt comes from the engine 'Time' resource (inserted by the frame-loop before
 // world.update()). The system declares `resources:['Time']` per the cheatsheet.
@@ -127,7 +127,7 @@ export function installRtsCamera(
   // ── live target/current state (source `_focusPoint/_target*/_current*`) ──
   const focus = { x: opts.focusX ?? 0, y: 0, z: opts.focusZ ?? 0 };
   // Mid-zoom default ≈ maxDistance*0.6 (source constructor) → ~30, the scaffold's
-  // posY≈34/posZ≈26 framing falls out of the spherical model at this distance.
+  // pos[1]≈34/pos[2]≈26 framing falls out of the spherical model at this distance.
   let targetDistance = clamp(maxDistance * 0.6, minDistance, maxDistance);
   let currentDistance = targetDistance;
   let targetYaw = 0;
@@ -153,8 +153,8 @@ export function installRtsCamera(
     const q = quat.create();
     orientFromYawPitch(q, currentYaw, currentPitch);
     world.set(cameraEntity, Transform, {
-      posX: px, posY: py, posZ: pz,
-      quatX: q[0] ?? 0, quatY: q[1] ?? 0, quatZ: q[2] ?? 0, quatW: q[3] ?? 1,
+      pos: [px, py, pz],
+      quat: [q[0] ?? 0, q[1] ?? 0, q[2] ?? 0, q[3] ?? 1],
     });
   };
 

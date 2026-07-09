@@ -42,8 +42,9 @@
 import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer,
-  type Handle, type MeshAsset,
+  type Handle,
 } from '@forgeax/engine-runtime';
+import { type MeshAsset } from '@forgeax/engine-assets-runtime';
 import { meshFromInterleaved } from '@forgeax/engine-geometry';
 import { Faction, PLAYER_ID } from '../components';
 import type { UnitPrimitives, TintFn } from '../world/unit-models';
@@ -150,8 +151,8 @@ export class FogSystem implements FogHandle {
             // Neutral resources (minerals/geysers) always visible (map features).
             if (playerId === PLAYER_ID.NEUTRAL) { toShow.push(e); continue; }
 
-            const x = b.Transform.posX[i] as number;
-            const z = b.Transform.posZ[i] as number;
+            const x = b.Transform.pos[i * 3] as number;
+            const z = b.Transform.pos[i * 3 + 2] as number;
             // Visible to the local player AND not a cloaked-undetected unit.
             const inVision = vision.isVisible(x, z, localPlayerId);
             const cloakHidden = detection ? !detection.isVisibleToEnemy(e) : false;
@@ -183,13 +184,13 @@ export class FogSystem implements FogHandle {
     const t = world.get(e, Transform);
     if (!t.ok) return;
     // capture the live scale so a restore is exact even if a form/morph changed it.
-    const sx = t.value.scaleX, sy = t.value.scaleY, sz = t.value.scaleZ;
-    // A unit hidden by garrison (off-field, posY very low) shouldn't be re-hidden
+    const sx = t.value.scale[0], sy = t.value.scale[1], sz = t.value.scale[2];
+    // A unit hidden by garrison (off-field, pos[1] very low) shouldn't be re-hidden
     // by scale — but scale-0 on an already-off-field unit is harmless. Capture is
     // the live scale (1,1,1 for a normal unit); never capture a 0 we wrote.
     if (sx === 0 && sy === 0 && sz === 0) return;
     this._hidden.set(id, { sx, sy, sz });
-    world.set(e, Transform, { scaleX: 0, scaleY: 0, scaleZ: 0 });
+    world.set(e, Transform, { scale: [0, 0, 0] });
   }
 
   private _show(world: World, e: EntityHandle): void {
@@ -198,7 +199,7 @@ export class FogSystem implements FogHandle {
     if (!rec) return; // not hidden
     this._hidden.delete(id);
     if (world.get(e, Transform).ok) {
-      world.set(e, Transform, { scaleX: rec.sx, scaleY: rec.sy, scaleZ: rec.sz });
+      world.set(e, Transform, { scale: [rec.sx, rec.sy, rec.sz] });
     }
   }
 
@@ -206,7 +207,7 @@ export class FogSystem implements FogHandle {
     for (const [id, rec] of this._hidden) {
       const e = id as unknown as EntityHandle;
       if (world.get(e, Transform).ok) {
-        world.set(e, Transform, { scaleX: rec.sx, scaleY: rec.sy, scaleZ: rec.sz });
+        world.set(e, Transform, { scale: [rec.sx, rec.sy, rec.sz] });
       }
     }
     this._hidden.clear();
@@ -293,7 +294,7 @@ export class FogSystem implements FogHandle {
     const mesh = meshFromInterleaved(inter, indices) as MeshAsset;
     const handle: Handle<'MeshAsset', 'shared'> = world.allocSharedRef('MeshAsset', mesh);
     const r = world.spawn(
-      { component: Transform, data: { posX: 0, posY: 0, posZ: 0 } },
+      { component: Transform, data: { pos: [0, 0, 0] } },
       { component: MeshFilter, data: { assetHandle: handle } },
       { component: MeshRenderer, data: { materials: [material] } },
     );

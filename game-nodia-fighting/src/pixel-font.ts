@@ -13,7 +13,7 @@
 
 import type { World } from '@forgeax/engine-ecs';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { AssetRegistry } from '@forgeax/engine-runtime';
+import type { AssetRegistry } from '@forgeax/engine-assets-runtime';
 import type { FontAsset, GlyphMetric, Handle } from '@forgeax/engine-types';
 
 // Stable GUIDs for the procedural atlas + sampler sub-assets. The FontAsset

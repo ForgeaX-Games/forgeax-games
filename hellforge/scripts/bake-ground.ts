@@ -19,7 +19,7 @@ import {
 const gameRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const packPath = process.argv[2] ?? join(gameRoot, 'assets', 'scenes', 'rogue-encampment.pack.json');
 
-const GROUND_SIZE = 50;   // metres (matches original Ground scaleX/Z)
+const GROUND_SIZE = 50;   // metres (matches original Ground scale x/z)
 const TILE_SIZE = 2;      // prop-path natural tile width ≈ 2m
 const UV_REPEAT = GROUND_SIZE / TILE_SIZE;
 
@@ -141,14 +141,10 @@ function patchGroundEntity(packPath: string): void {
 
   const t = ground.components.Transform!;
   // Keep horizontal centre; plane top just below y=0 (walkable) to avoid z-fight.
-  t.posY = -0.01;
-  t.scaleX = 1;
-  t.scaleY = 1;
-  t.scaleZ = 1;
-  t.quatX = 0;
-  t.quatY = 0;
-  t.quatZ = 0;
-  t.quatW = 1;
+  const curPos = (t.pos as number[] | undefined) ?? [0, 0, 0];
+  t.pos = [curPos[0] ?? 0, -0.01, curPos[2] ?? 0];
+  t.scale = [1, 1, 1];
+  t.quat = [0, 0, 0, 1];
 
   ground.components.MeshFilter = { assetHandle: ensureRefGuid(scene, meshGuid) };
   ground.components.MeshRenderer = {
@@ -157,7 +153,7 @@ function patchGroundEntity(packPath: string): void {
 
   writePack(packPath, pack);
   console.log(
-    `  Ground → prop-ground mesh (${bbox.size.map((v) => +v.toFixed(1)).join('×')}m native), pos=(${t.posX.toFixed(2)},0,${t.posZ.toFixed(2)})`,
+    `  Ground → prop-ground mesh (${bbox.size.map((v) => +v.toFixed(1)).join('×')}m native), pos=(${t.pos[0].toFixed(2)},0,${t.pos[2].toFixed(2)})`,
   );
 }
 

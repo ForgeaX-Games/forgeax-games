@@ -24,7 +24,7 @@ import type { SceneAsset, LocalEntityId, TextureAsset } from '@forgeax/engine-ty
 type HostFedContext = BootstrapContext;
 
 // Narrowed context for helper functions that need world + assets.
-type Sctx = { world: World; assets: import('@forgeax/engine-runtime').AssetRegistry };
+type Sctx = { world: World; assets: import('@forgeax/engine-assets-runtime').AssetRegistry };
 
 import { installHud, type ViewMode, type WeaponIconState } from './src/hud';
 import {
@@ -214,7 +214,7 @@ async function instantiateScenePack(
 // ── thick invisible ground collider (top at y=0) ─────────────────────────
 function spawnGroundCollider(ctx: Sctx): void {
   ctx.world.spawn(
-    { component: Transform, data: { posX: 0, posY: -5, posZ: 0 } },
+    { component: Transform, data: { pos: [0, -5, 0] } },
     { component: RigidBody, data: { type: RigidBodyTypeValue.static } },
     { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtentsX: 60, halfExtentsY: 5, halfExtentsZ: 60, friction: 0.9, restitution: 0 } },
   );
@@ -237,18 +237,18 @@ function attachBlockerPhysics(
   for (const n of loaded.nodes) {
     const nm = (n.components.Name as { value?: string } | undefined)?.value;
     if (!nm || !(nm.startsWith('Stele') || nm.startsWith('Blocker_'))) continue;
-    const t = (n.components.Transform ?? {}) as Record<string, number>;
-    const cx = t.posX ?? 0;
-    const cy = t.posY ?? 0.5;
-    const cz = t.posZ ?? 0;
-    const hx = Math.abs(t.scaleX ?? 1) * 0.5;
-    const hy = Math.abs(t.scaleY ?? 1) * 0.5;
-    const hz = Math.abs(t.scaleZ ?? 1) * 0.5;
+    const t = (n.components.Transform ?? {}) as { pos?: number[]; scale?: number[] };
+    const cx = t.pos?.[0] ?? 0;
+    const cy = t.pos?.[1] ?? 0.5;
+    const cz = t.pos?.[2] ?? 0;
+    const hx = Math.abs(t.scale?.[0] ?? 1) * 0.5;
+    const hy = Math.abs(t.scale?.[1] ?? 1) * 0.5;
+    const hz = Math.abs(t.scale?.[2] ?? 1) * 0.5;
     // Slightly pad the physics collider so the visible cube's outer face really
     // blocks; walkBlockers uses a rotation-agnostic diagonal radius for soft push.
     const PAD = 1.05;
     const c = ctx.world.spawn(
-      { component: Transform, data: { posX: cx, posY: cy, posZ: cz } },
+      { component: Transform, data: { pos: [cx, cy, cz] } },
       { component: RigidBody, data: { type: RigidBodyTypeValue.static } },
       { component: Collider, data: {
         shape: ColliderShapeValue.cuboid,
@@ -335,7 +335,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   quat.fromAxisAngle(topQ, [1, 0, 0], topPitch);
   let camX = px, camZ = pz + TOP_DZ;
   const camera = world.spawn(
-    { component: Transform, data: { posX: camX, posY: TOP_DY, posZ: camZ, quatX: topQ[0]!, quatY: topQ[1]!, quatZ: topQ[2]!, quatW: topQ[3]! } },
+    { component: Transform, data: { pos: [camX, TOP_DY, camZ], quat: topQ } },
     // T1 visual upgrade:
     //   • ACES filmic tonemap for cinematic dark scenes (vs the muddier reinhard)
     //   • MSAA replaces FXAA — low-poly cube edges read crisp instead of fuzzy
@@ -349,7 +349,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
   // ── one warm point light that follows the player (D2 atmospheric spot) ─
   const playerLight = world.spawn(
-    { component: Transform, data: { posX: px, posY: 4, posZ: pz } },
+    { component: Transform, data: { pos: [px, 4, pz] } },
     { component: PointLight, data: { colorR: 1, colorG: 0.55, colorB: 0.35, intensity: 12, range: 6 } },
   ).unwrap();
 
@@ -445,8 +445,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // hide body parts in FPS so they don't block the eye-cam
     for (const p of bodyParts) {
       world.set(p.e, Transform, m === 'fps'
-        ? { scaleX: 0, scaleY: 0, scaleZ: 0 }
-        : { scaleX: p.sx, scaleY: p.sy, scaleZ: p.sz });
+        ? { scale: [0, 0, 0] }
+        : { scale: [p.sx, p.sy, p.sz] });
     }
     canvas.style.cursor = m === 'fps' ? 'crosshair' : '';
     if (m !== 'fps' && locked) {
@@ -642,8 +642,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const project = (wx: number, wy: number, wz: number): { sx: number; sy: number } | null => {
     const camTr = world.get(camera, Transform);
     if (!camTr.ok) return null;
-    const cpx = camTr.value.posX, cpy = camTr.value.posY, cpz = camTr.value.posZ;
-    const qx = -camTr.value.quatX, qy = -camTr.value.quatY, qz = -camTr.value.quatZ, qw = camTr.value.quatW;
+    const cpx = camTr.value.pos[0], cpy = camTr.value.pos[1], cpz = camTr.value.pos[2];
+    const qx = -camTr.value.quat[0], qy = -camTr.value.quat[1], qz = -camTr.value.quat[2], qw = camTr.value.quat[3];
     const dx = wx - cpx, dy = wy - cpy, dz = wz - cpz;
     const tx = 2 * (qy * dz - qz * dy);
     const ty = 2 * (qz * dx - qx * dz);
@@ -732,9 +732,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     }
     player = pe;
     bodyParts = setupPlayerRoot(ctx, player, playerVisual);
-    const pT = (playerNode.components.Transform ?? {}) as Record<string, number>;
-    px = pT.posX ?? 0;
-    pz = pT.posZ ?? 0;
+    const pT = (playerNode.components.Transform ?? {}) as { pos?: number[] };
+    px = pT.pos?.[0] ?? 0;
+    pz = pT.pos?.[2] ?? 0;
     jumpY = PLAYER_Y; vy = 0; grounded = true;
     camX = px; camZ = pz + TOP_DZ;
     setMode(mode);   // re-apply FPS body-part hiding to the fresh parts
@@ -743,7 +743,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     if (skylight !== null) world.set(skylight, Skylight, { intensity: cfg.skylightIntensity });
     const [lr, lg, lb] = cfg.playerLight.color;
     world.set(playerLight, PointLight, { colorR: lr, colorG: lg, colorB: lb, intensity: cfg.playerLight.intensity, range: cfg.playerLight.range });
-    world.set(playerLight, Transform, { posX: px, posY: 4, posZ: pz });
+    world.set(playerLight, Transform, { pos: [px, 4, pz] });
 
     enemies.setLevel(cfg.spawn);
     // E1 — swap scene-effect materials onto level entities whose Name
@@ -883,7 +883,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const a = 1 - Math.exp(-CAM_FOLLOW * dt);
       camX += (px - camX) * a; camZ += (pz + TOP_DZ - camZ) * a;
       if (mode === 'topdown') {
-        world.set(camera, Transform, { posX: camX, posY: TOP_DY, posZ: camZ, quatX: topQ[0]!, quatY: topQ[1]!, quatZ: topQ[2]!, quatW: topQ[3]! });
+        world.set(camera, Transform, { pos: [camX, TOP_DY, camZ], quat: topQ });
       }
       return;
     }
@@ -955,9 +955,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // — drive player root —
     const yaw = Math.atan2(-faceX, -faceZ);
     const q = quat.eulerY(yaw);
-    world.set(player, Transform, { posX: px, posY: jumpY, posZ: pz, quatX: q[0]!, quatY: q[1]!, quatZ: q[2]!, quatW: q[3]! });
+    world.set(player, Transform, { pos: [px, jumpY, pz], quat: q });
     // follow light (D2 spotlight feel)
-    world.set(playerLight, Transform, { posX: px, posY: 4, posZ: pz });
+    world.set(playerLight, Transform, { pos: [px, 4, pz] });
 
     // — spawner —
     enemies.tickSpawn(dt, px, pz);
@@ -1208,16 +1208,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const qx = quat.create(); quat.fromAxisAngle(qx, [1, 0, 0], lookPitch);
       const cq = quat.create(); quat.multiply(cq, qy, qx);
       world.set(camera, Transform, {
-        posX: px + sh.dx, posY: jumpY + EYE + sh.dy, posZ: pz + sh.dz,
-        quatX: cq[0]!, quatY: cq[1]!, quatZ: cq[2]!, quatW: cq[3]!,
+        pos: [px + sh.dx, jumpY + EYE + sh.dy, pz + sh.dz],
+        quat: cq,
       });
     } else {
       const a = 1 - Math.exp(-CAM_FOLLOW * dt);
       camX += (px - camX) * a;
       camZ += (pz + TOP_DZ - camZ) * a;
       world.set(camera, Transform, {
-        posX: camX + sh.dx, posY: TOP_DY + sh.dy, posZ: camZ + sh.dz,
-        quatX: topQ[0]!, quatY: topQ[1]!, quatZ: topQ[2]!, quatW: topQ[3]!,
+        pos: [camX + sh.dx, TOP_DY + sh.dy, camZ + sh.dz],
+        quat: topQ,
       });
     }
   });

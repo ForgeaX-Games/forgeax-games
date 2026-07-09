@@ -63,21 +63,21 @@ import { Collider, RigidBody } from '@forgeax/engine-physics'; // when needed
       // undefined → silent per-frame throw (engine swallows it) → system does nothing.
       for (const b of qr[0]) {
         const n = b.Entity.self.length;
-        for (let i=0;i<n;i++){ /* b.Transform.posX[i], b.Entity.self[i] ... */ }
+        for (let i=0;i<n;i++){ /* b.Transform.pos[i], b.Entity.self[i] ... */ }
       }
     },
   });
   ```
   `b.Entity.self[i]` is the Entity handle for row i. `qr[0]`/`qr[1]`… are per-QUERY;
-  each is itself a **list of batches** (one per archetype). Writing `b.Transform.posX[i]=v`
+  each is itself a **list of batches** (one per archetype). Writing `b.Transform.pos[i]=v`
   to a batch column persists (it's the live archetype storage). For once-per-frame work
   (timers, cache invalidation), do it before the batch loop — not inside it.
 
 ## Transforms / camera
-- `Transform` fields: posX/Y/Z, quatX/Y/Z/W, scaleX/Y/Z. Default camera looks down -Z.
+- `Transform` fields: pos:[x,y,z], quat:[x,y,z,w], scale:[x,y,z]. Default camera looks down -Z.
 - Camera: `{ ...perspective({ fov, aspect, near, far }), clearR, clearG, clearB }`.
 - Quaternion helpers: `quat.create()`, `quat.fromAxisAngle(out,[x,y,z],rad)`, `quat.multiply(out,a,b)`.
-- RTS camera vantage (works): posY≈34, posZ≈26, pitch quat = fromAxisAngle X by ≈ -0.92 rad.
+- RTS camera vantage (works): pos[1]≈34, pos[2]≈26, pitch quat = fromAxisAngle X by ≈ -0.92 rad.
 
 ## Lighting (REQUIRED or PBR renders black)
 - `Skylight` cubemap-less: `{ colorR,colorG,colorB, intensity }` → flat ambient first frame,

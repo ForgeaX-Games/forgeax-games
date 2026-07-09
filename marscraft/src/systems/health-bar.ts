@@ -8,7 +8,7 @@
  * This port keeps the gameplay-meaningful behaviour and simplifies the visuals:
  *   - per unit: a two-quad bar (dark BACKGROUND quad + colored FILL quad), both
  *     `ChildOf` the unit so they track its position automatically.
- *   - FILL width = hp/maxHp (local scaleX of the fill quad); colored
+ *   - FILL width = hp/maxHp (local scale[0] of the fill quad); colored
  *     green -> yellow -> red by hp ratio (source HP gradient).
  *   - shown when: selected OR recently damaged (<3s) OR hp not full — matching the
  *     source `shouldShow`. Hidden otherwise (scale collapsed to 0).
@@ -31,8 +31,9 @@ import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer, ChildOf,
   quat,
-  type Handle, type MeshAsset, type MaterialAsset,
+  type Handle, type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import { type MeshAsset } from '@forgeax/engine-assets-runtime';
 import { createPlaneGeometry } from '@forgeax/engine-geometry';
 import { Health, Selectable, Renderable } from '../components';
 import type { TintFn } from '../world/unit-models';
@@ -199,9 +200,9 @@ export class HealthBarSystem {
       {
         component: Transform,
         data: {
-          posX: 0, posY: y, posZ: 0,
-          quatX: q[0], quatY: q[1], quatZ: q[2], quatW: q[3],
-          scaleX: BAR_WIDTH, scaleY: BAR_HEIGHT, scaleZ: 1,
+          pos: [0, y, 0],
+          quat: [q[0], q[1], q[2], q[3]],
+          scale: [BAR_WIDTH, BAR_HEIGHT, 1],
         },
       },
       { component: MeshFilter, data: { assetHandle: assets.quad } },
@@ -216,9 +217,9 @@ export class HealthBarSystem {
       {
         component: Transform,
         data: {
-          posX: 0, posY: y, posZ: 0.01,
-          quatX: q[0], quatY: q[1], quatZ: q[2], quatW: q[3],
-          scaleX: BAR_WIDTH, scaleY: BAR_HEIGHT * 0.8, scaleZ: 1,
+          pos: [0, y, 0.01],
+          quat: [q[0], q[1], q[2], q[3]],
+          scale: [BAR_WIDTH, BAR_HEIGHT * 0.8, 1],
         },
       },
       { component: MeshFilter, data: { assetHandle: assets.quad } },
@@ -236,14 +237,14 @@ export class HealthBarSystem {
   private _updateBar(group: BarGroup, assets: BarAssets, show: boolean, ratio: number): void {
     const world = this._world;
     if (!show) {
-      world.set(group.bgEntity, Transform, { scaleX: 0, scaleY: 0, scaleZ: 0 });
-      world.set(group.fillEntity, Transform, { scaleX: 0, scaleY: 0, scaleZ: 0 });
+      world.set(group.bgEntity, Transform, { scale: [0, 0, 0] });
+      world.set(group.fillEntity, Transform, { scale: [0, 0, 0] });
       return;
     }
     // restore bg scale
-    world.set(group.bgEntity, Transform, { scaleX: BAR_WIDTH, scaleY: BAR_HEIGHT, scaleZ: 1 });
+    world.set(group.bgEntity, Transform, { scale: [BAR_WIDTH, BAR_HEIGHT, 1] });
     // fill width by hp ratio
-    world.set(group.fillEntity, Transform, { scaleX: BAR_WIDTH * ratio, scaleY: BAR_HEIGHT * 0.8, scaleZ: 1 });
+    world.set(group.fillEntity, Transform, { scale: [BAR_WIDTH * ratio, BAR_HEIGHT * 0.8, 1] });
 
     // color bucket: green >0.5, yellow >0.25, red otherwise
     const bucket = ratio > 0.5 ? 0 : ratio > 0.25 ? 1 : 2;

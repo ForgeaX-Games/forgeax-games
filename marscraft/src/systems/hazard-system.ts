@@ -133,8 +133,8 @@ export class HazardSystem implements HazardHandle {
             const isExpired = (maxHp > 0 && hp <= 0) || (maxDuration > 0 && remaining <= 0);
             if (isExpired) { expired.push(e); continue; }
 
-            const x = b.Transform.posX[i] as number;
-            const z = b.Transform.posZ[i] as number;
+            const x = b.Transform.pos[i * 3] as number;
+            const z = b.Transform.pos[i * 3 + 2] as number;
             const shape = b.Hazard.shape[i] as HazardShapeCode;
             const radius = b.Hazard.radius[i] as number;
             const width = b.Hazard.width[i] as number;
@@ -267,7 +267,7 @@ export class HazardSystem implements HazardHandle {
     const world = this._world;
     const y = this._deps.heightAt(req.x, req.z);
     const res = world.spawn(
-      { component: Transform, data: { posX: req.x, posY: y, posZ: req.z } },
+      { component: Transform, data: { pos: [req.x, y, req.z] } },
       {
         component: Hazard,
         data: {
@@ -302,10 +302,12 @@ export class HazardSystem implements HazardHandle {
       {
         component: Transform,
         data: {
-          posX: 0, posY: (req.height ?? 2.0) * 0.5, posZ: 0,
-          scaleX: req.shape === 'line' ? (req.width ?? 0.5) : span,
-          scaleY: req.height ?? 2.0,
-          scaleZ: req.shape === 'line' ? span * 2 : span,
+          pos: [0, (req.height ?? 2.0) * 0.5, 0],
+          scale: [
+            req.shape === 'line' ? (req.width ?? 0.5) : span,
+            req.height ?? 2.0,
+            req.shape === 'line' ? span * 2 : span,
+          ],
         },
       },
       { component: MeshFilter, data: { assetHandle: this._deps.prims.box } },
@@ -338,8 +340,8 @@ export class HazardSystem implements HazardHandle {
         playerId: h.value.playerId,
         hp: h.value.hp, radius: h.value.radius,
         remaining: Number(h.value.remainingDuration.toFixed(3)),
-        x: t.ok ? Number(t.value.posX.toFixed(2)) : null,
-        z: t.ok ? Number(t.value.posZ.toFixed(2)) : null,
+        x: t.ok ? Number(t.value.pos[0].toFixed(2)) : null,
+        z: t.ok ? Number(t.value.pos[2].toFixed(2)) : null,
       });
     }
     return out;

@@ -130,9 +130,9 @@ export class ProjectileSystem {
       P.targetZ[i] = tgt.z;
     }
 
-    let px = b.Transform.posX[i] as number;
-    let py = b.Transform.posY[i] as number;
-    let pz = b.Transform.posZ[i] as number;
+    let px = b.Transform.pos[i * 3] as number;
+    let py = b.Transform.pos[i * 3 + 1] as number;
+    let pz = b.Transform.pos[i * 3 + 2] as number;
     const tx = P.targetX[i] as number;
     const ty = P.targetY[i] as number;
     const tz = P.targetZ[i] as number;
@@ -156,9 +156,9 @@ export class ProjectileSystem {
     if (P.isArcHoming[i]) {
       const arrived = this._stepArc(b, i, dt);
       if (arrived) {
-        b.Transform.posX[i] = tx;
-        b.Transform.posY[i] = ty;
-        b.Transform.posZ[i] = tz;
+        b.Transform.pos[i * 3] = tx;
+        b.Transform.pos[i * 3 + 1] = ty;
+        b.Transform.pos[i * 3 + 2] = tz;
         return this._onHit(b, i, tx, ty, tz);
       }
       return false;
@@ -182,9 +182,9 @@ export class ProjectileSystem {
       pz += (dz / distXZ) * step;
       py += (ty - py) * ratio;
     }
-    b.Transform.posX[i] = px;
-    b.Transform.posY[i] = py;
-    b.Transform.posZ[i] = pz;
+    b.Transform.pos[i * 3] = px;
+    b.Transform.pos[i * 3 + 1] = py;
+    b.Transform.pos[i * 3 + 2] = pz;
     return false;
   }
 
@@ -193,9 +193,9 @@ export class ProjectileSystem {
     const P = b.Projectile;
     // init start point on first arc frame
     if (P.arcProgress[i] === 0) {
-      P.arcStartX[i] = b.Transform.posX[i];
-      P.arcStartY[i] = b.Transform.posY[i];
-      P.arcStartZ[i] = b.Transform.posZ[i];
+      P.arcStartX[i] = b.Transform.pos[i * 3];
+      P.arcStartY[i] = b.Transform.pos[i * 3 + 1];
+      P.arcStartZ[i] = b.Transform.pos[i * 3 + 2];
     }
     const sx = P.arcStartX[i] as number;
     const sy = P.arcStartY[i] as number;
@@ -224,9 +224,9 @@ export class ProjectileSystem {
 
     const om = 1 - t;
     const a = om * om, bb = 2 * om * t, c = t * t;
-    b.Transform.posX[i] = a * sx + bb * ctrlX + c * tx;
-    b.Transform.posY[i] = a * sy + bb * ctrlY + c * ty;
-    b.Transform.posZ[i] = a * sz + bb * ctrlZ + c * tz;
+    b.Transform.pos[i * 3] = a * sx + bb * ctrlX + c * tx;
+    b.Transform.pos[i * 3 + 1] = a * sy + bb * ctrlY + c * ty;
+    b.Transform.pos[i * 3 + 2] = a * sz + bb * ctrlZ + c * tz;
     return P.arcProgress[i] >= 1.0;
   }
 

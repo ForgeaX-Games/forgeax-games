@@ -39,9 +39,10 @@
 
 import {
   Transform, MeshFilter, MeshRenderer, ChildOf,
-  HANDLE_CUBE, HANDLE_SPHERE, Materials, quat,
+  Materials, quat,
   type MaterialAsset, type Handle,
 } from '@forgeax/engine-runtime';
+import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import type { Entity } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
@@ -114,7 +115,7 @@ export interface EnemyDef {
   colliderHX: number;
   colliderHY: number;
   colliderHZ: number;
-  /** Anchor height (root posY = colliderHY + 0.05 → bottom rests at y=0.05). */
+  /** Anchor height (root Transform.pos[1] = colliderHY + 0.05 → bottom rests at y=0.05). */
   damage: number;         // contact damage / s? — applied as a single discrete
                           //   hit during the player's i-frame window
   score: number;
@@ -135,7 +136,7 @@ export interface EnemyDef {
 // ─── Bestiary ──────────────────────────────────────────────────────────────
 //
 // Coordinate convention: root anchor sits at (0, colliderHY+0.05, 0). Part
-// positions are LOCAL to the root, so part.py = world height − root.posY.
+// positions are LOCAL to the root, so part.py = world height − root.pos[1].
 // We model parts as if the root were at y=0; the engine's hierarchical
 // transform takes care of placing them above the floor.
 
@@ -670,7 +671,7 @@ function parseMonsterPack(pack: unknown): { parts: PartSpec[]; palette: EnemyDef
     const name = String((comps.Name as { value?: string } | undefined)?.value ?? 'body');
     const slotRaw = name.replace(/_\d+$/, '');
     const slot: PartMatKey = MAT_KEYS.has(slotRaw as PartMatKey) ? (slotRaw as PartMatKey) : 'body';
-    const t = (comps.Transform ?? {}) as Record<string, number>;
+    const t = (comps.Transform ?? {}) as { pos?: number[]; quat?: number[]; scale?: number[] };
     const meshGuid = refs[mf.assetHandle];
     // ubpa 17926e5 migrated MeshRenderer to `materials: [<ref-index>]` (plural
     // array) for engine 81dfc5297's spawn-data fail-fast. Read the new field
@@ -692,14 +693,14 @@ function parseMonsterPack(pack: unknown): { parts: PartSpec[]; palette: EnemyDef
     }
     const spec: PartSpec = {
       shape: meshGuid === PACK_SPHERE_GUID ? 'sphere' : 'cube',
-      px: t.posX ?? 0, py: t.posY ?? 0, pz: t.posZ ?? 0,
-      sx: t.scaleX ?? 1, sy: t.scaleY ?? 1, sz: t.scaleZ ?? 1,
+      px: t.pos?.[0] ?? 0, py: t.pos?.[1] ?? 0, pz: t.pos?.[2] ?? 0,
+      sx: t.scale?.[0] ?? 1, sy: t.scale?.[1] ?? 1, sz: t.scale?.[2] ?? 1,
       mat: slot,
     };
     // Recover a pure-Y rotation (the only axis lowpoly parts use). Editor
     // rotations on other axes are dropped — spawn() only applies eulerY.
-    const qy = t.quatY ?? 0, qw = t.quatW ?? 1;
-    if (Math.abs(t.quatX ?? 0) < 1e-3 && Math.abs(t.quatZ ?? 0) < 1e-3 && Math.abs(qy) > 1e-4) {
+    const qy = t.quat?.[1] ?? 0, qw = t.quat?.[3] ?? 1;
+    if (Math.abs(t.quat?.[0] ?? 0) < 1e-3 && Math.abs(t.quat?.[2] ?? 0) < 1e-3 && Math.abs(qy) > 1e-4) {
       spec.rotY = 2 * Math.atan2(qy, qw);
     }
     parts.push(spec);
@@ -761,13 +762,13 @@ export function spawnPackVisual(
   for (const ps of visual.parts) {
     const m = mats.get(ps.mat) ?? mats.get('body');
     if (!m) continue;
-    const tform: Record<string, number> = {
-      posX: ps.px, posY: ps.py, posZ: ps.pz,
-      scaleX: ps.sx, scaleY: ps.sy, scaleZ: ps.sz,
+    const tform: Record<string, number[]> = {
+      pos: [ps.px, ps.py, ps.pz],
+      scale: [ps.sx, ps.sy, ps.sz],
     };
     if (ps.rotY !== undefined) {
       const q = quat.eulerY(ps.rotY);
-      tform.quatX = q[0]!; tform.quatY = q[1]!; tform.quatZ = q[2]!; tform.quatW = q[3]!;
+      tform.quat = [q[0]!, q[1]!, q[2]!, q[3]!];
     }
     const e = world.spawn(
       { component: Transform, data: tform },
@@ -878,17 +879,17 @@ export class EnemyManager {
     // ROOT — invisible (no MeshFilter/Renderer). Holds the rigid body.
     //
     // Kinematic vs dynamic: we use **kinematic** here, NOT dynamic. Reason:
-    // tickAI() drives each enemy by WRITING Transform.posX/posZ every frame.
+    // tickAI() drives each enemy by WRITING Transform.pos every frame.
     // For a dynamic body, rapier overwrites the Transform from its own
     // simulation each step, so manual writes get clobbered → enemies sit
     // still. Kinematic = "you set the Transform, rapier honors it AND
     // generates contact events". The kinematic body still pushes dynamic
     // props out of the way (the same trick the player uses), and its
     // Collider still registers contacts (used for player damage). Knock-
-    // back from bullets is handled by main.ts (per-hit Transform.posX/Z
+    // back from bullets is handled by main.ts (per-hit Transform.pos
     // displacement), not by rapier impulses.
     const root = world.spawn(
-      { component: Transform, data: { posX: x, posY: rootY, posZ: z } },
+      { component: Transform, data: { pos: [x, rootY, z] } },
       { component: RigidBody, data: {
         type: RigidBodyTypeValue.kinematic,
       } },
@@ -906,13 +907,13 @@ export class EnemyManager {
       const slot = bank.byKey.get(ps.mat);
       if (!slot) continue;
       const meshHandle = ps.shape === 'cube' ? HANDLE_CUBE : HANDLE_SPHERE;
-      const tform: Record<string, number> = {
-        posX: ps.px, posY: ps.py, posZ: ps.pz,
-        scaleX: ps.sx, scaleY: ps.sy, scaleZ: ps.sz,
+      const tform: Record<string, number[]> = {
+        pos: [ps.px, ps.py, ps.pz],
+        scale: [ps.sx, ps.sy, ps.sz],
       };
       if (ps.rotY !== undefined) {
         const q = quat.eulerY(ps.rotY);
-        tform.quatX = q[0]!; tform.quatY = q[1]!; tform.quatZ = q[2]!; tform.quatW = q[3]!;
+        tform.quat = [q[0]!, q[1]!, q[2]!, q[3]!];
       }
       const partE = world.spawn(
         { component: Transform, data: tform },
@@ -1031,8 +1032,9 @@ export class EnemyManager {
     for (const en of this.enemies) {
       const tr = world.get(en.e, Transform);
       if (!tr.ok) continue;
-      en.x = tr.value.posX;
-      en.z = tr.value.posZ;
+      en.x = tr.value.pos[0];
+      en.z = tr.value.pos[2];
+      const rootY = tr.value.pos[1];
       const def = ENEMIES[en.kind];
 
       // Boss enrage: bump speed once below threshold
@@ -1054,8 +1056,8 @@ export class EnemyManager {
       const yaw = Math.atan2(-dx, -dz);
       const q = quat.eulerY(yaw);
       world.set(en.e, Transform, {
-        posX: nx, posZ: nz,
-        quatX: q[0]!, quatY: q[1]!, quatZ: q[2]!, quatW: q[3]!,
+        pos: [nx, rootY, nz],
+        quat: [q[0]!, q[1]!, q[2]!, q[3]!],
       });
       en.x = nx; en.z = nz;
 

@@ -112,7 +112,9 @@ function spawn(
   const inst = world.get(synth, SceneInstance);
   if (!inst.ok) throw new Error(`[shoot] SceneInstance lookup failed for "${type}"`);
   const container = inst.value.mapping[0] as EntityHandle;
-  world.set(container, Transform, { posX: x, posZ: z });
+  const ctr = world.get(container, Transform);
+  const cy = ctr.ok ? ctr.value.pos[1]! : 0;
+  world.set(container, Transform, { pos: [x, cy, z] });
   world.set(container, Enemy, { ...stats, hitFlash: 0 });
   return { entity: container, instanceId: synth };
 }

@@ -38,7 +38,8 @@ export interface SceneDocument {
 
 export interface TransformData {
   x?: number; y?: number; z?: number;
-  scaleX?: number; scaleY?: number; scaleZ?: number;
+  /** non-uniform scale as [x, y, z]; identity [1, 1, 1]. */
+  scale?: number[];
   /** euler degrees (optional; arena geometry is axis-aligned so usually absent). */
   rotX?: number; rotY?: number; rotZ?: number;
 }

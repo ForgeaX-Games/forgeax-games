@@ -93,7 +93,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const camQ = quat.create();
   quat.multiply(camQ, qDown, qRoll); // pitch then roll
   world.spawn(
-    { component: Transform, data: { posX: 0, posY: 18, posZ: 2, quatX: camQ[0], quatY: camQ[1], quatZ: camQ[2], quatW: camQ[3] } },
+    { component: Transform, data: { pos: [0, 18, 2], quat: [camQ[0], camQ[1], camQ[2], camQ[3]] } },
     // clearR/G/B = visible sky on WebKit (the desktop app can't render a
     // cubemap skybox; without this the background is black). Deep space-blue.
     { component: Camera, data: { ...perspective({ fov: 62, aspect: 16 / 9 }), clearR: 0.04, clearG: 0.06, clearB: 0.16 } },
@@ -256,10 +256,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   world.addSystem({ name: 'star-scroll', queries: [{ with: [Entity, Transform, Star] }], fn: (_w, qr) => {
     const dt = world.getResource<{dt:number}>('Time').dt;
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
-      b.Transform.posZ[i]! += b.Star.speed[i]! * dt;
-      if (b.Transform.posZ[i]! > ARENA_H / 2 + 8) {
-        b.Transform.posZ[i] = -ARENA_H / 2 - 8;
-        b.Transform.posX[i] = (Math.random() - 0.5) * ARENA_W * 2;
+      b.Transform.pos[i * 3 + 2]! += b.Star.speed[i]! * dt;
+      if (b.Transform.pos[i * 3 + 2]! > ARENA_H / 2 + 8) {
+        b.Transform.pos[i * 3 + 2] = -ARENA_H / 2 - 8;
+        b.Transform.pos[i * 3 + 0] = (Math.random() - 0.5) * ARENA_W * 2;
       }
     }
   }});
@@ -267,13 +267,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   world.addSystem({ name: 'particle-tick', queries: [{ with: [Entity, Transform, Particle] }], fn: (_w, qr) => {
     const dt = world.getResource<{dt:number}>('Time').dt;
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
-      b.Transform.posX[i]! += b.Particle.velX[i]! * dt;
-      b.Transform.posY[i]! += b.Particle.velY[i]! * dt;
-      b.Transform.posZ[i]! += b.Particle.velZ[i]! * dt;
+      b.Transform.pos[i * 3 + 0]! += b.Particle.velX[i]! * dt;
+      b.Transform.pos[i * 3 + 1]! += b.Particle.velY[i]! * dt;
+      b.Transform.pos[i * 3 + 2]! += b.Particle.velZ[i]! * dt;
       b.Particle.velY[i]! -= 6 * dt;
       b.Particle.life[i]! -= dt;
       const r = Math.max(0, b.Particle.life[i]! / b.Particle.maxLife[i]!) * 0.6;
-      b.Transform.scaleX[i] = r; b.Transform.scaleY[i] = r; b.Transform.scaleZ[i] = r;
+      b.Transform.scale[i * 3 + 0] = r; b.Transform.scale[i * 3 + 1] = r; b.Transform.scale[i * 3 + 2] = r;
     }
   }});
 
@@ -282,7 +282,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
       b.Thruster.phase[i]! += dt * 14;
       const p = 0.85 + 0.15 * Math.sin(b.Thruster.phase[i]!);
-      b.Transform.scaleX[i]! *= p; b.Transform.scaleZ[i]! *= p;
+      b.Transform.scale[i * 3 + 0]! *= p; b.Transform.scale[i * 3 + 2]! *= p;
     }
   }});
 
@@ -291,8 +291,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
       b.Trail.life[i]! -= dt;
       const r = Math.max(0, b.Trail.life[i]! / 0.35) * 0.12;
-      b.Transform.scaleX[i] = r; b.Transform.scaleY[i] = r; b.Transform.scaleZ[i] = r;
-      b.Transform.posZ[i]! += 2 * dt; // trails drift toward +Z (behind player visually)
+      b.Transform.scale[i * 3 + 0] = r; b.Transform.scale[i * 3 + 1] = r; b.Transform.scale[i * 3 + 2] = r;
+      b.Transform.pos[i * 3 + 2]! += 2 * dt; // trails drift toward +Z (behind player visually)
     }
   }});
 
@@ -300,10 +300,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const dt = world.getResource<{dt:number}>('Time').dt;
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
       b.PowerUp.bobPhase[i]! += dt * 5;
-      b.Transform.posY[i] = 0.3 + Math.sin(b.PowerUp.bobPhase[i]!) * 0.15;
-      b.Transform.posZ[i]! += b.PowerUp.speed[i]! * dt; // drift toward player (+Z)
+      b.Transform.pos[i * 3 + 1] = 0.3 + Math.sin(b.PowerUp.bobPhase[i]!) * 0.15;
+      b.Transform.pos[i * 3 + 2]! += b.PowerUp.speed[i]! * dt; // drift toward player (+Z)
       const pulse = 0.45 + 0.08 * Math.sin(b.PowerUp.bobPhase[i]! * 1.5);
-      b.Transform.scaleX[i] = pulse; b.Transform.scaleY[i] = pulse; b.Transform.scaleZ[i] = pulse;
+      b.Transform.scale[i * 3 + 0] = pulse; b.Transform.scale[i * 3 + 1] = pulse; b.Transform.scale[i * 3 + 2] = pulse;
     }
   }});
 
@@ -384,7 +384,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const e = enemies[i]!;
       if (e === bossEntity) continue;
       const tr = world.get(e, Transform);
-      if (tr.ok) spawnExplosion(world, geo, mat, tr.value.posX, tr.value.posZ, 8, particles);
+      if (tr.ok) spawnExplosion(world, geo, mat, tr.value.pos[0]!, tr.value.pos[2]!, 8, particles);
       despawnEnemy(e);
       enemies.splice(i, 1);
     }
@@ -399,8 +399,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     // 阶段下降→悬停
     if (gs.bossDescending) {
-      const newZ = tr.value.posZ + 1.4 * dt;
-      world.set(bossEntity, Transform, { ...tr.value, posZ: newZ });
+      const newZ = tr.value.pos[2]! + 1.4 * dt;
+      world.set(bossEntity, Transform, { ...tr.value, pos: [tr.value.pos[0]!, tr.value.pos[1]!, newZ] });
       if (newZ >= BOSS_HOVER_Z) {
         gs.bossDescending = false;
         world.set(bossEntity, Enemy, { ...er.value, speed: 0 });
@@ -420,7 +420,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const pct = er.value.hp / er.value.maxHp;
     gs.bossShootTimer -= dt;
     if (gs.bossShootTimer <= 0) {
-      const bx = tr.value.posX, bz = tr.value.posZ + 1.5;
+      const bx = tr.value.pos[0]!, bz = tr.value.pos[2]! + 1.5;
       if (pct > 0.66) {
         // Phase 1：父模块 — 双炮齐射
         spawnBullet(world, geo, mat, bx - 1.2, bz, 1, true, bullets, 0);
@@ -451,9 +451,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const tr = world.get(bossEntity, Transform);
     if (tr.ok) {
       // 崩裂三连爆
-      spawnExplosion(world, geo, mat, tr.value.posX, tr.value.posZ, 30, particles);
-      spawnExplosion(world, geo, mat, tr.value.posX - 1.5, tr.value.posZ - 0.5, 18, particles);
-      spawnExplosion(world, geo, mat, tr.value.posX + 1.5, tr.value.posZ + 0.5, 18, particles);
+      spawnExplosion(world, geo, mat, tr.value.pos[0]!, tr.value.pos[2]!, 30, particles);
+      spawnExplosion(world, geo, mat, tr.value.pos[0]! - 1.5, tr.value.pos[2]! - 0.5, 18, particles);
+      spawnExplosion(world, geo, mat, tr.value.pos[0]! + 1.5, tr.value.pos[2]! + 0.5, 18, particles);
     }
     despawnEnemy(bossEntity);
     const idx = enemies.indexOf(bossEntity);
@@ -522,8 +522,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     if (gs.keys.has('KeyW') || gs.keys.has('ArrowUp'))    mz -= 1; // W = up on screen = -Z
     if (gs.keys.has('KeyS') || gs.keys.has('ArrowDown'))  mz += 1; // S = down on screen = +Z
     const mLen = Math.hypot(mx, mz) || 1;
-    const nx = Math.max(-ARENA_W / 2, Math.min(ARENA_W / 2, pv.posX + (mx / mLen) * PLAYER_SPEED * dt));
-    const nz = Math.max(-4, Math.min(ARENA_H / 2 - 1, pv.posZ + (mz / mLen) * PLAYER_SPEED * dt));
+    const nx = Math.max(-ARENA_W / 2, Math.min(ARENA_W / 2, pv.pos[0]! + (mx / mLen) * PLAYER_SPEED * dt));
+    const nz = Math.max(-4, Math.min(ARENA_H / 2 - 1, pv.pos[2]! + (mz / mLen) * PLAYER_SPEED * dt));
 
     // Banking
     const targetBank = -mx * BANK_ANGLE;
@@ -531,11 +531,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const qPitch = quat.create(); quat.fromAxisAngle(qPitch, [1, 0, 0], Math.PI / 2);
     const qBR = quat.create(); quat.fromAxisAngle(qBR, [0, 0, 1], currentBank);
     const qF = quat.create(); quat.multiply(qF, qBR, qPitch);
-    world.set(player.entity, Transform, { ...pv, posX: nx, posZ: nz, quatX: qF[0], quatY: qF[1], quatZ: qF[2], quatW: qF[3] });
+    world.set(player.entity, Transform, { ...pv, pos: [nx, pv.pos[1]!, nz], quat: [qF[0], qF[1], qF[2], qF[3]] });
 
     for (const [ent, ox, , oz] of player.parts) {
       const r = world.get(ent, Transform);
-      if (r.ok) world.set(ent, Transform, { ...r.value, posX: nx + ox, posZ: nz + oz });
+      if (r.ok) world.set(ent, Transform, { ...r.value, pos: [nx + ox, r.value.pos[1]!, nz + oz] });
     }
 
     // ── Trails (behind player = +Z offset) ──
@@ -629,16 +629,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // Homing logic: steer toward nearest enemy
       if (br.value.homing > 0 && br.value.isEnemy === 0) {
         let bestDist = 999;
-        let bestX = tr.value.posX, bestZ = tr.value.posZ - 5;
+        let bestX = tr.value.pos[0]!, bestZ = tr.value.pos[2]! - 5;
         for (const eE of enemies) {
           const etr = world.get(eE, Transform);
           if (!etr.ok) continue;
-          const d = Math.hypot(etr.value.posX - tr.value.posX, etr.value.posZ - tr.value.posZ);
-          if (d < bestDist) { bestDist = d; bestX = etr.value.posX; bestZ = etr.value.posZ; }
+          const d = Math.hypot(etr.value.pos[0]! - tr.value.pos[0]!, etr.value.pos[2]! - tr.value.pos[2]!);
+          if (d < bestDist) { bestDist = d; bestX = etr.value.pos[0]!; bestZ = etr.value.pos[2]!; }
         }
         // Steer toward target
-        const toX = bestX - tr.value.posX;
-        const toZ = bestZ - tr.value.posZ;
+        const toX = bestX - tr.value.pos[0]!;
+        const toZ = bestZ - tr.value.pos[2]!;
         const toLen = Math.hypot(toX, toZ) || 1;
         const steer = 4.0; // steering strength per second
         bdx += (toX / toLen) * steer * dt;
@@ -656,13 +656,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // Life timeout
       if (br.value.life <= 0) { world.despawn(e); bullets.splice(i, 1); continue; }
 
-      const newZ = tr.value.posZ + bdz * br.value.speed * dt;
-      const newX = tr.value.posX + bdx * br.value.speed * dt;
+      const newZ = tr.value.pos[2]! + bdz * br.value.speed * dt;
+      const newX = tr.value.pos[0]! + bdx * br.value.speed * dt;
       const isPlayerBullet = br.value.isEnemy === 0;
       if (isPlayerBullet && newZ < PLAYER_BULLET_KILL_Z) { world.despawn(e); bullets.splice(i, 1); continue; }
       if (newZ < -ARENA_H / 2 - 4 || newZ > ARENA_H / 2 + 4) { world.despawn(e); bullets.splice(i, 1); continue; }
       if (Math.abs(newX) > ARENA_W / 2 + 4) { world.despawn(e); bullets.splice(i, 1); continue; }
-      world.set(e, Transform, { ...tr.value, posX: newX, posZ: newZ });
+      world.set(e, Transform, { ...tr.value, pos: [newX, tr.value.pos[1]!, newZ] });
     }
 
     // ── Move Enemies (complex behavior based on kind) ──
@@ -672,14 +672,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const tr = world.get(e, Transform); const er = world.get(e, Enemy);
       if (!tr.ok || !er.ok) { enemies.splice(i, 1); enemyInstances.delete(e); continue; }
 
-      let eNewX = tr.value.posX;
-      let eNewZ = tr.value.posZ + er.value.speed * dt;
+      let eNewX = tr.value.pos[0]!;
+      let eNewZ = tr.value.pos[2]! + er.value.speed * dt;
       const kind = er.value.kind;
 
       // Kind-specific movement patterns
       switch (kind) {
         case 2: // Interceptor — sine wave horizontal
-          eNewX += Math.sin(gs.time * 4 + tr.value.posZ * 0.5) * 6 * dt;
+          eNewX += Math.sin(gs.time * 4 + tr.value.pos[2]! * 0.5) * 6 * dt;
           break;
         case 4: // Scout — zigzag (sharp turns)
           eNewX += (Math.floor(gs.time * 3 + i) % 2 === 0 ? 1 : -1) * 4 * dt;
@@ -687,14 +687,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         case 7: // Assassin — random teleport sideways every ~2s
           if (Math.random() < dt * 0.5 && eNewZ > VISIBLE_TOP_Z) {
             eNewX = (Math.random() - 0.5) * ARENA_W * 0.8; // teleport!
-            spawnExplosion(world, geo, mat, tr.value.posX, tr.value.posZ, 4, particles);
+            spawnExplosion(world, geo, mat, tr.value.pos[0]!, tr.value.pos[2]!, 4, particles);
           }
           break;
         case 8: // Spiral — circular orbit while descending
           const radius = 3;
           const angle = gs.time * 2 + i * 1.5;
-          eNewX = tr.value.posX + Math.cos(angle) * radius * dt * 2;
-          eNewZ = tr.value.posZ + er.value.speed * dt; // still moves forward
+          eNewX = tr.value.pos[0]! + Math.cos(angle) * radius * dt * 2;
+          eNewZ = tr.value.pos[2]! + er.value.speed * dt; // still moves forward
           break;
       }
 
@@ -703,7 +703,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
       if (eNewZ > ARENA_H / 2 + 4) { despawnEnemy(e); enemies.splice(i, 1); continue; }
       // Move only the container root; parts follow via propagateTransforms.
-      world.set(e, Transform, { ...tr.value, posX: eNewX, posZ: eNewZ });
+      world.set(e, Transform, { ...tr.value, pos: [eNewX, tr.value.pos[1]!, eNewZ] });
 
       // Hit flash decay
       const flash = Math.max(0, er.value.hitFlash - dt * 3);
@@ -720,8 +720,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
             if (player) {
               const pr2 = world.get(player.entity, Transform);
               if (pr2.ok) {
-                const toX = pr2.value.posX - eNewX;
-                const toZ = pr2.value.posZ - eNewZ;
+                const toX = pr2.value.pos[0]! - eNewX;
+                const toZ = pr2.value.pos[2]! - eNewZ;
                 const len = Math.hypot(toX, toZ) || 1;
                 spawnBullet(world, geo, mat, eNewX, eNewZ + 0.3, toZ / len, true, bullets, toX / len);
               }
@@ -749,11 +749,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const e = obstacles[i]!;
       const tr = world.get(e, Transform); const ob = world.get(e, Obstacle);
       if (!tr.ok || !ob.ok) { obstacles.splice(i, 1); obstacleParts.delete(e); continue; }
-      const newZ = tr.value.posZ + ob.value.speed * dt;
+      const newZ = tr.value.pos[2]! + ob.value.speed * dt;
       if (newZ > ARENA_H / 2 + 4) { despawnObstacle(e); obstacles.splice(i, 1); continue; }
-      world.set(e, Transform, { ...tr.value, posZ: newZ });
+      world.set(e, Transform, { ...tr.value, pos: [tr.value.pos[0]!, tr.value.pos[1]!, newZ] });
       const pts = obstacleParts.get(e);
-      if (pts) for (const p of pts) { const r = world.get(p, Transform); if (r.ok) world.set(p, Transform, { ...r.value, posX: tr.value.posX, posZ: newZ }); }
+      if (pts) for (const p of pts) { const r = world.get(p, Transform); if (r.ok) world.set(p, Transform, { ...r.value, pos: [tr.value.pos[0]!, r.value.pos[1]!, newZ] }); }
     }
 
     // ── Move PowerUps ──
@@ -761,7 +761,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const e = powerups[i]!;
       const tr = world.get(e, Transform);
       if (!tr.ok) { powerups.splice(i, 1); continue; }
-      if (tr.value.posZ > ARENA_H / 2 + 4) { world.despawn(e); powerups.splice(i, 1); continue; }
+      if (tr.value.pos[2]! > ARENA_H / 2 + 4) { world.despawn(e); powerups.splice(i, 1); continue; }
     }
 
     // ── Collision: player bullets → enemies（屏外不受伤 + HP 扣血）──
@@ -770,15 +770,15 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const btr = world.get(bE, Transform); const bbr = world.get(bE, Bullet);
       if (!btr.ok || !bbr.ok) { bullets.splice(bi, 1); continue; }
       if (bbr.value.isEnemy > 0) continue;
-      const bx = btr.value.posX, bz = btr.value.posZ;
+      const bx = btr.value.pos[0]!, bz = btr.value.pos[2]!;
       for (let ei = enemies.length - 1; ei >= 0; ei--) {
         const eE = enemies[ei]!;
         const etr = world.get(eE, Transform); const er = world.get(eE, Enemy);
         if (!etr.ok || !er.ok) { enemies.splice(ei, 1); continue; }
         // 屏外敌人不受伤（BOSS 除外 — boss 总是可被击中，因为它下降过程中也会靠近屏幕）
-        if (eE !== bossEntity && etr.value.posZ < VISIBLE_TOP_Z) continue;
+        if (eE !== bossEntity && etr.value.pos[2]! < VISIBLE_TOP_Z) continue;
         const radius = (eE === bossEntity) ? BOSS_HIT_R : HIT_R;
-        if (Math.hypot(bx - etr.value.posX, bz - etr.value.posZ) < BUL_R + radius) {
+        if (Math.hypot(bx - etr.value.pos[0]!, bz - etr.value.pos[2]!) < BUL_R + radius) {
           // Handle pierce bullets (laser/plasma pass through)
           const pierceLeft = bbr.value.pierce;
           if (pierceLeft <= 0) {
@@ -793,16 +793,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
               onBossDeath();
             } else {
               despawnEnemy(eE); enemies.splice(ei, 1);
-              spawnExplosion(world, geo, mat, etr.value.posX, etr.value.posZ, 16, particles);
+              spawnExplosion(world, geo, mat, etr.value.pos[0]!, etr.value.pos[2]!, 16, particles);
               gs.comboCount++; gs.comboTimer = COMBO_WINDOW;
               gs.comboMultiplier = Math.min(8, Math.floor(gs.comboCount / 2) + 1);
               gs.score += 100 * gs.comboMultiplier;
-              if (shouldDropPowerUp()) spawnPowerUp(world, geo, mat, etr.value.posX, etr.value.posZ, powerups);
+              if (shouldDropPowerUp()) spawnPowerUp(world, geo, mat, etr.value.pos[0]!, etr.value.pos[2]!, powerups);
               updateHud();
             }
           } else {
             world.set(eE, Enemy, { ...er.value, hp: newHp, hitFlash: 1 });
-            spawnExplosion(world, geo, mat, btr.value.posX, btr.value.posZ, 3, particles);
+            spawnExplosion(world, geo, mat, btr.value.pos[0]!, btr.value.pos[2]!, 3, particles);
             if (eE === bossEntity) {
               gs.score += 25; updateHud(); updateBossHud();
             }
@@ -818,16 +818,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const btr = world.get(bE, Transform); const bbr = world.get(bE, Bullet);
       if (!btr.ok || !bbr.ok) { bullets.splice(bi, 1); continue; }
       if (bbr.value.isEnemy > 0) continue;
-      const bx = btr.value.posX, bz = btr.value.posZ;
+      const bx = btr.value.pos[0]!, bz = btr.value.pos[2]!;
       for (let oi = obstacles.length - 1; oi >= 0; oi--) {
         const oE = obstacles[oi]!;
         const otr = world.get(oE, Transform); const ob = world.get(oE, Obstacle);
         if (!otr.ok || !ob.ok) { obstacles.splice(oi, 1); continue; }
-        if (Math.hypot(bx - otr.value.posX, bz - otr.value.posZ) < BUL_R + 0.7) {
+        if (Math.hypot(bx - otr.value.pos[0]!, bz - otr.value.pos[2]!) < BUL_R + 0.7) {
           world.despawn(bE); bullets.splice(bi, 1);
           const newHp = ob.value.hp - 1;
           if (newHp <= 0) {
-            spawnExplosion(world, geo, mat, otr.value.posX, otr.value.posZ, 10, particles);
+            spawnExplosion(world, geo, mat, otr.value.pos[0]!, otr.value.pos[2]!, 10, particles);
             despawnObstacle(oE); obstacles.splice(oi, 1);
             gs.score += 50 * gs.comboMultiplier; updateHud();
           } else { world.set(oE, Obstacle, { ...ob.value, hp: newHp }); }
@@ -843,7 +843,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         const btr = world.get(bE, Transform); const bbr = world.get(bE, Bullet);
         if (!btr.ok || !bbr.ok) { bullets.splice(bi, 1); continue; }
         if (bbr.value.isEnemy === 0) continue;
-        if (Math.hypot(btr.value.posX - nx, btr.value.posZ - nz) < BUL_R + HIT_R) {
+        if (Math.hypot(btr.value.pos[0]! - nx, btr.value.pos[2]! - nz) < BUL_R + HIT_R) {
           world.despawn(bE); bullets.splice(bi, 1);
           takeDamage(nx, nz); break;
         }
@@ -852,7 +852,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         const eE = enemies[ei]!;
         const etr = world.get(eE, Transform);
         if (!etr.ok) { enemies.splice(ei, 1); continue; }
-        if (Math.hypot(etr.value.posX - nx, etr.value.posZ - nz) < HIT_R * 2) {
+        if (Math.hypot(etr.value.pos[0]! - nx, etr.value.pos[2]! - nz) < HIT_R * 2) {
           despawnEnemy(eE); enemies.splice(ei, 1);
           takeDamage(nx, nz); break;
         }
@@ -861,9 +861,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         const oE = obstacles[oi]!;
         const otr = world.get(oE, Transform);
         if (!otr.ok) { obstacles.splice(oi, 1); continue; }
-        if (Math.hypot(otr.value.posX - nx, otr.value.posZ - nz) < 0.7 + HIT_R) {
+        if (Math.hypot(otr.value.pos[0]! - nx, otr.value.pos[2]! - nz) < 0.7 + HIT_R) {
           despawnObstacle(oE); obstacles.splice(oi, 1);
-          spawnExplosion(world, geo, mat, otr.value.posX, otr.value.posZ, 8, particles);
+          spawnExplosion(world, geo, mat, otr.value.pos[0]!, otr.value.pos[2]!, 8, particles);
           takeDamage(nx, nz); break;
         }
       }
@@ -874,7 +874,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const pE = powerups[pi]!;
       const ptr = world.get(pE, Transform); const pur = world.get(pE, PowerUp);
       if (!ptr.ok || !pur.ok) { powerups.splice(pi, 1); continue; }
-      if (Math.hypot(ptr.value.posX - nx, ptr.value.posZ - nz) < 1.2) {
+      if (Math.hypot(ptr.value.pos[0]! - nx, ptr.value.pos[2]! - nz) < 1.2) {
         const type = getPowerUpType(pur.value.type);
         world.despawn(pE); powerups.splice(pi, 1);
         applyPowerUp(type);
@@ -949,13 +949,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
             continue;
           }
           const etr = world.get(eE, Transform);
-          if (etr.ok) spawnExplosion(world, geo, mat, etr.value.posX, etr.value.posZ, 8, particles);
+          if (etr.ok) spawnExplosion(world, geo, mat, etr.value.pos[0]!, etr.value.pos[2]!, 8, particles);
           despawnEnemy(eE); gs.score += 50;
           enemies.splice(i, 1);
         }
         for (let i = obstacles.length - 1; i >= 0; i--) {
           const oE = obstacles[i]!; const otr = world.get(oE, Transform);
-          if (otr.ok) spawnExplosion(world, geo, mat, otr.value.posX, otr.value.posZ, 6, particles);
+          if (otr.ok) spawnExplosion(world, geo, mat, otr.value.pos[0]!, otr.value.pos[2]!, 6, particles);
           despawnObstacle(oE);
         }
         obstacles.length = 0;
@@ -979,7 +979,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // 在屏幕中央放一束庆祝爆炸
     if (player) {
       const pr = world.get(player.entity, Transform);
-      if (pr.ok) spawnExplosion(world, geo, mat, pr.value.posX, pr.value.posZ, 24, particles);
+      if (pr.ok) spawnExplosion(world, geo, mat, pr.value.pos[0]!, pr.value.pos[2]!, 24, particles);
     }
     // 清场所有敌人 / 障碍 / 子弹 ——欢迎黎明
     for (const eE of enemies) despawnEnemy(eE);

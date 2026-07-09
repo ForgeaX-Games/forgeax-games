@@ -132,9 +132,9 @@ export class AttackSystem {
     this._ensureWeapon(world, entity, b, i);
 
     const A = b.Attack;
-    const selfX = b.Transform.posX[i] as number;
-    const selfZ = b.Transform.posZ[i] as number;
-    const selfY = b.Transform.posY[i] as number;
+    const selfX = b.Transform.pos[i * 3] as number;
+    const selfZ = b.Transform.pos[i * 3 + 2] as number;
+    const selfY = b.Transform.pos[i * 3 + 1] as number;
     const selfPlayer = b.Faction.playerId[i] as number;
 
     // 1. cooldown
@@ -386,10 +386,7 @@ export class AttackSystem {
 
     if (mo.ok) world.set(entity, Motion, { facingY });
     quat.fromAxisAngle(this._scratchQuat, [0, 1, 0], facingY);
-    world.set(entity, Transform, {
-      quatX: this._scratchQuat[0], quatY: this._scratchQuat[1],
-      quatZ: this._scratchQuat[2], quatW: this._scratchQuat[3],
-    });
+    world.set(entity, Transform, { quat: this._scratchQuat });
     return facing;
   }
 

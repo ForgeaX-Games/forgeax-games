@@ -95,7 +95,7 @@ export class ControlGroupSystem implements ControlGroupHandle {
       let sx = 0, sz = 0, cnt = 0;
       for (const e of live) {
         const t = this._world.get(e, Transform);
-        if (t.ok) { sx += t.value.posX; sz += t.value.posZ; cnt++; }
+        if (t.ok) { sx += t.value.pos[0]; sz += t.value.pos[2]; cnt++; }
       }
       if (cnt > 0) this._deps.jumpTo(sx / cnt, sz / cnt);
     }

@@ -15,12 +15,16 @@
                 "value": "Ground"
               },
               "Transform": {
-                "posX": 0,
-                "posY": -0.1,
-                "posZ": 0,
-                "scaleX": 60,
-                "scaleY": 0.2,
-                "scaleZ": 60
+                "pos": [
+                  0,
+                  -0.1,
+                  0
+                ],
+                "scale": [
+                  60,
+                  0.2,
+                  60
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -37,12 +41,16 @@
                 "value": "Sun"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 0,
-                "posZ": 0,
-                "scaleX": 1,
-                "scaleY": 1,
-                "scaleZ": 1
+                "pos": [
+                  0,
+                  0,
+                  0
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
               },
               "DirectionalLight": {
                 "directionX": 0.5,
@@ -67,12 +75,16 @@
                 "value": "Player"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 0.75,
-                "posZ": 0,
-                "scaleX": 1,
-                "scaleY": 1,
-                "scaleZ": 1
+                "pos": [
+                  0,
+                  0.75,
+                  0
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
               }
             }
           },
@@ -83,16 +95,22 @@
                 "value": "Stele1"
               },
               "Transform": {
-                "posX": 13.529,
-                "posY": 1.5,
-                "posZ": 3.599,
-                "scaleX": 0.7,
-                "scaleY": 3,
-                "scaleZ": 0.7,
-                "quatX": 0,
-                "quatY": -0.07777614739516167,
-                "quatZ": 0,
-                "quatW": 0.9969708475659487
+                "pos": [
+                  13.529,
+                  1.5,
+                  3.599
+                ],
+                "quat": [
+                  0,
+                  -0.07777614739516167,
+                  0,
+                  0.9969708475659487
+                ],
+                "scale": [
+                  0.7,
+                  3,
+                  0.7
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -109,12 +127,16 @@
                 "value": "Decor_SteleRune1"
               },
               "Transform": {
-                "posX": 13.529,
-                "posY": 1.7,
-                "posZ": 3.6,
-                "scaleX": 0.74,
-                "scaleY": 0.5,
-                "scaleZ": 0.74
+                "pos": [
+                  13.529,
+                  1.7,
+                  3.6
+                ],
+                "scale": [
+                  0.74,
+                  0.5,
+                  0.74
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -131,16 +153,22 @@
                 "value": "Stele2"
               },
               "Transform": {
-                "posX": 3.648,
-                "posY": 1.5,
-                "posZ": 13.516,
-                "scaleX": 0.7,
-                "scaleY": 3,
-                "scaleZ": 0.7,
-                "quatX": 0,
-                "quatY": -0.02000450207670613,
-                "quatZ": 0,
-                "quatW": 0.9997998899263107
+                "pos": [
+                  3.648,
+                  1.5,
+                  13.516
+                ],
+                "quat": [
+                  0,
+                  -0.02000450207670613,
+                  0,
+                  0.9997998899263107
+                ],
+                "scale": [
+                  0.7,
+                  3,
+                  0.7
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -157,12 +185,16 @@
                 "value": "Decor_SteleRune2"
               },
               "Transform": {
-                "posX": 3.648,
-                "posY": 1.7,
-                "posZ": 13.517,
-                "scaleX": 0.74,
-                "scaleY": 0.5,
-                "scaleZ": 0.74
+                "pos": [
+                  3.648,
+                  1.7,
+                  13.517
+                ],
+                "scale": [
+                  0.74,
+                  0.5,
+                  0.74
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -179,16 +211,22 @@
                 "value": "Stele3"
               },
               "Transform": {
-                "posX": -9.882,
-                "posY": 1.5,
-                "posZ": 9.917,
-                "scaleX": 0.7,
-                "scaleY": 3,
-                "scaleZ": 0.7,
-                "quatX": 0,
-                "quatY": 0.06344197118697986,
-                "quatZ": 0,
-                "quatW": 0.9979855290994506
+                "pos": [
+                  -9.882,
+                  1.5,
+                  9.917
+                ],
+                "quat": [
+                  0,
+                  0.06344197118697986,
+                  0,
+                  0.9979855290994506
+                ],
+                "scale": [
+                  0.7,
+                  3,
+                  0.7
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -205,12 +243,16 @@
                 "value": "Decor_SteleRune3"
               },
               "Transform": {
-                "posX": -9.882,
-                "posY": 1.7,
-                "posZ": 9.918,
-                "scaleX": 0.74,
-                "scaleY": 0.5,
-                "scaleZ": 0.74
+                "pos": [
+                  -9.882,
+                  1.7,
+                  9.918
+                ],
+                "scale": [
+                  0.74,
+                  0.5,
+                  0.74
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -227,16 +269,22 @@
                 "value": "Stele4"
               },
               "Transform": {
-                "posX": -13.529,
-                "posY": 1.5,
-                "posZ": -3.599,
-                "scaleX": 0.7,
-                "scaleY": 3,
-                "scaleZ": 0.7,
-                "quatX": 0,
-                "quatY": 0.0027820512389088808,
-                "quatZ": 0,
-                "quatW": 0.999996130087964
+                "pos": [
+                  -13.529,
+                  1.5,
+                  -3.599
+                ],
+                "quat": [
+                  0,
+                  0.0027820512389088808,
+                  0,
+                  0.999996130087964
+                ],
+                "scale": [
+                  0.7,
+                  3,
+                  0.7
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -253,12 +301,16 @@
                 "value": "Decor_SteleRune4"
               },
               "Transform": {
-                "posX": -13.529,
-                "posY": 1.7,
-                "posZ": -3.598,
-                "scaleX": 0.74,
-                "scaleY": 0.5,
-                "scaleZ": 0.74
+                "pos": [
+                  -13.529,
+                  1.7,
+                  -3.598
+                ],
+                "scale": [
+                  0.74,
+                  0.5,
+                  0.74
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -275,16 +327,22 @@
                 "value": "Stele5"
               },
               "Transform": {
-                "posX": -3.648,
-                "posY": 1.5,
-                "posZ": -13.516,
-                "scaleX": 0.7,
-                "scaleY": 3,
-                "scaleZ": 0.7,
-                "quatX": 0,
-                "quatY": -0.05458072540666627,
-                "quatZ": 0,
-                "quatW": 0.9985093612050325
+                "pos": [
+                  -3.648,
+                  1.5,
+                  -13.516
+                ],
+                "quat": [
+                  0,
+                  -0.05458072540666627,
+                  0,
+                  0.9985093612050325
+                ],
+                "scale": [
+                  0.7,
+                  3,
+                  0.7
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -301,12 +359,16 @@
                 "value": "Decor_SteleRune5"
               },
               "Transform": {
-                "posX": -3.648,
-                "posY": 1.7,
-                "posZ": -13.515,
-                "scaleX": 0.74,
-                "scaleY": 0.5,
-                "scaleZ": 0.74
+                "pos": [
+                  -3.648,
+                  1.7,
+                  -13.515
+                ],
+                "scale": [
+                  0.74,
+                  0.5,
+                  0.74
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -323,16 +385,22 @@
                 "value": "Stele6"
               },
               "Transform": {
-                "posX": 9.882,
-                "posY": 1.5,
-                "posZ": -9.917,
-                "scaleX": 0.7,
-                "scaleY": 3,
-                "scaleZ": 0.7,
-                "quatX": 0,
-                "quatY": 0.08215419979716101,
-                "quatZ": 0,
-                "quatW": 0.9966196302781157
+                "pos": [
+                  9.882,
+                  1.5,
+                  -9.917
+                ],
+                "quat": [
+                  0,
+                  0.08215419979716101,
+                  0,
+                  0.9966196302781157
+                ],
+                "scale": [
+                  0.7,
+                  3,
+                  0.7
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -349,12 +417,16 @@
                 "value": "Decor_SteleRune6"
               },
               "Transform": {
-                "posX": 9.882,
-                "posY": 1.7,
-                "posZ": -9.916,
-                "scaleX": 0.74,
-                "scaleY": 0.5,
-                "scaleZ": 0.74
+                "pos": [
+                  9.882,
+                  1.7,
+                  -9.916
+                ],
+                "scale": [
+                  0.74,
+                  0.5,
+                  0.74
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -371,12 +443,16 @@
                 "value": "AltarCore"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 0.05,
-                "posZ": -6.5,
-                "scaleX": 2.6,
-                "scaleY": 0.12,
-                "scaleZ": 2.6
+                "pos": [
+                  0,
+                  0.05,
+                  -6.5
+                ],
+                "scale": [
+                  2.6,
+                  0.12,
+                  2.6
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -393,12 +469,16 @@
                 "value": "AltarRune1"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 0.14,
-                "posZ": -6.5,
-                "scaleX": 1.9,
-                "scaleY": 0.05,
-                "scaleZ": 1.9
+                "pos": [
+                  0,
+                  0.14,
+                  -6.5
+                ],
+                "scale": [
+                  1.9,
+                  0.05,
+                  1.9
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -415,12 +495,16 @@
                 "value": "AltarRune2"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 0.2,
-                "posZ": -6.5,
-                "scaleX": 1,
-                "scaleY": 0.05,
-                "scaleZ": 1
+                "pos": [
+                  0,
+                  0.2,
+                  -6.5
+                ],
+                "scale": [
+                  1,
+                  0.05,
+                  1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -437,16 +521,22 @@
                 "value": "Blocker_Grave_01"
               },
               "Transform": {
-                "posX": -0.615,
-                "posY": 0.55,
-                "posZ": -16.848,
-                "scaleX": 0.72,
-                "scaleY": 1.1,
-                "scaleZ": 0.16,
-                "quatX": 0,
-                "quatY": 0.07698962411751507,
-                "quatZ": 0,
-                "quatW": 0.9970318940626943
+                "pos": [
+                  -0.615,
+                  0.55,
+                  -16.848
+                ],
+                "quat": [
+                  0,
+                  0.07698962411751507,
+                  0,
+                  0.9970318940626943
+                ],
+                "scale": [
+                  0.72,
+                  1.1,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -463,16 +553,22 @@
                 "value": "Decor_GraveCap_01"
               },
               "Transform": {
-                "posX": -0.615,
-                "posY": 1.18,
-                "posZ": -16.848,
-                "scaleX": 0.5,
-                "scaleY": 0.18,
-                "scaleZ": 0.2,
-                "quatX": 0,
-                "quatY": 0.07698962411751507,
-                "quatZ": 0,
-                "quatW": 0.9970318940626943
+                "pos": [
+                  -0.615,
+                  1.18,
+                  -16.848
+                ],
+                "quat": [
+                  0,
+                  0.07698962411751507,
+                  0,
+                  0.9970318940626943
+                ],
+                "scale": [
+                  0.5,
+                  0.18,
+                  0.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -489,16 +585,22 @@
                 "value": "Decor_GraveSoil_01"
               },
               "Transform": {
-                "posX": -0.615,
-                "posY": 0.06,
-                "posZ": -16.298,
-                "scaleX": 0.8,
-                "scaleY": 0.12,
-                "scaleZ": 1.1,
-                "quatX": 0,
-                "quatY": 0.07698962411751507,
-                "quatZ": 0,
-                "quatW": 0.9970318940626943
+                "pos": [
+                  -0.615,
+                  0.06,
+                  -16.298
+                ],
+                "quat": [
+                  0,
+                  0.07698962411751507,
+                  0,
+                  0.9970318940626943
+                ],
+                "scale": [
+                  0.8,
+                  0.12,
+                  1.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -515,16 +617,22 @@
                 "value": "Blocker_Grave_02"
               },
               "Transform": {
-                "posX": 12.529,
-                "posY": 0.55,
-                "posZ": 17.333,
-                "scaleX": 0.72,
-                "scaleY": 1.1,
-                "scaleZ": 0.16,
-                "quatX": 0,
-                "quatY": 0.17253255636317635,
-                "quatZ": 0,
-                "quatW": 0.9850038157260038
+                "pos": [
+                  12.529,
+                  0.55,
+                  17.333
+                ],
+                "quat": [
+                  0,
+                  0.17253255636317635,
+                  0,
+                  0.9850038157260038
+                ],
+                "scale": [
+                  0.72,
+                  1.1,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -541,16 +649,22 @@
                 "value": "Decor_GraveCap_02"
               },
               "Transform": {
-                "posX": 12.529,
-                "posY": 1.18,
-                "posZ": 17.333,
-                "scaleX": 0.5,
-                "scaleY": 0.18,
-                "scaleZ": 0.2,
-                "quatX": 0,
-                "quatY": 0.17253255636317635,
-                "quatZ": 0,
-                "quatW": 0.9850038157260038
+                "pos": [
+                  12.529,
+                  1.18,
+                  17.333
+                ],
+                "quat": [
+                  0,
+                  0.17253255636317635,
+                  0,
+                  0.9850038157260038
+                ],
+                "scale": [
+                  0.5,
+                  0.18,
+                  0.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -567,16 +681,22 @@
                 "value": "Decor_GraveSoil_02"
               },
               "Transform": {
-                "posX": 12.529,
-                "posY": 0.06,
-                "posZ": 17.883,
-                "scaleX": 0.8,
-                "scaleY": 0.12,
-                "scaleZ": 1.1,
-                "quatX": 0,
-                "quatY": 0.17253255636317635,
-                "quatZ": 0,
-                "quatW": 0.9850038157260038
+                "pos": [
+                  12.529,
+                  0.06,
+                  17.883
+                ],
+                "quat": [
+                  0,
+                  0.17253255636317635,
+                  0,
+                  0.9850038157260038
+                ],
+                "scale": [
+                  0.8,
+                  0.12,
+                  1.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -593,16 +713,22 @@
                 "value": "Blocker_Grave_03"
               },
               "Transform": {
-                "posX": 17.912,
-                "posY": 0.55,
-                "posZ": 20.047,
-                "scaleX": 0.72,
-                "scaleY": 1.1,
-                "scaleZ": 0.16,
-                "quatX": 0,
-                "quatY": -0.1046898883284557,
-                "quatZ": 0,
-                "quatW": 0.9945049156649631
+                "pos": [
+                  17.912,
+                  0.55,
+                  20.047
+                ],
+                "quat": [
+                  0,
+                  -0.1046898883284557,
+                  0,
+                  0.9945049156649631
+                ],
+                "scale": [
+                  0.72,
+                  1.1,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -619,16 +745,22 @@
                 "value": "Decor_GraveCap_03"
               },
               "Transform": {
-                "posX": 17.912,
-                "posY": 1.18,
-                "posZ": 20.047,
-                "scaleX": 0.5,
-                "scaleY": 0.18,
-                "scaleZ": 0.2,
-                "quatX": 0,
-                "quatY": -0.1046898883284557,
-                "quatZ": 0,
-                "quatW": 0.9945049156649631
+                "pos": [
+                  17.912,
+                  1.18,
+                  20.047
+                ],
+                "quat": [
+                  0,
+                  -0.1046898883284557,
+                  0,
+                  0.9945049156649631
+                ],
+                "scale": [
+                  0.5,
+                  0.18,
+                  0.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -645,16 +777,22 @@
                 "value": "Decor_GraveSoil_03"
               },
               "Transform": {
-                "posX": 17.912,
-                "posY": 0.06,
-                "posZ": 20.597,
-                "scaleX": 0.8,
-                "scaleY": 0.12,
-                "scaleZ": 1.1,
-                "quatX": 0,
-                "quatY": -0.1046898883284557,
-                "quatZ": 0,
-                "quatW": 0.9945049156649631
+                "pos": [
+                  17.912,
+                  0.06,
+                  20.597
+                ],
+                "quat": [
+                  0,
+                  -0.1046898883284557,
+                  0,
+                  0.9945049156649631
+                ],
+                "scale": [
+                  0.8,
+                  0.12,
+                  1.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -671,16 +809,22 @@
                 "value": "Blocker_Grave_04"
               },
               "Transform": {
-                "posX": -5.868,
-                "posY": 0.55,
-                "posZ": 12.787,
-                "scaleX": 0.72,
-                "scaleY": 1.1,
-                "scaleZ": 0.16,
-                "quatX": 0,
-                "quatY": -0.16958429539625386,
-                "quatZ": 0,
-                "quatW": 0.9855156856970649
+                "pos": [
+                  -5.868,
+                  0.55,
+                  12.787
+                ],
+                "quat": [
+                  0,
+                  -0.16958429539625386,
+                  0,
+                  0.9855156856970649
+                ],
+                "scale": [
+                  0.72,
+                  1.1,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -697,16 +841,22 @@
                 "value": "Decor_GraveCap_04"
               },
               "Transform": {
-                "posX": -5.868,
-                "posY": 1.18,
-                "posZ": 12.787,
-                "scaleX": 0.5,
-                "scaleY": 0.18,
-                "scaleZ": 0.2,
-                "quatX": 0,
-                "quatY": -0.16958429539625386,
-                "quatZ": 0,
-                "quatW": 0.9855156856970649
+                "pos": [
+                  -5.868,
+                  1.18,
+                  12.787
+                ],
+                "quat": [
+                  0,
+                  -0.16958429539625386,
+                  0,
+                  0.9855156856970649
+                ],
+                "scale": [
+                  0.5,
+                  0.18,
+                  0.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -723,16 +873,22 @@
                 "value": "Decor_GraveSoil_04"
               },
               "Transform": {
-                "posX": -5.868,
-                "posY": 0.06,
-                "posZ": 13.337,
-                "scaleX": 0.8,
-                "scaleY": 0.12,
-                "scaleZ": 1.1,
-                "quatX": 0,
-                "quatY": -0.16958429539625386,
-                "quatZ": 0,
-                "quatW": 0.9855156856970649
+                "pos": [
+                  -5.868,
+                  0.06,
+                  13.337
+                ],
+                "quat": [
+                  0,
+                  -0.16958429539625386,
+                  0,
+                  0.9855156856970649
+                ],
+                "scale": [
+                  0.8,
+                  0.12,
+                  1.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -749,16 +905,22 @@
                 "value": "Blocker_Grave_05"
               },
               "Transform": {
-                "posX": -3.005,
-                "posY": 0.55,
-                "posZ": 22.238,
-                "scaleX": 0.72,
-                "scaleY": 1.1,
-                "scaleZ": 0.16,
-                "quatX": 0,
-                "quatY": 0.034507034161589005,
-                "quatZ": 0,
-                "quatW": 0.999404454959738
+                "pos": [
+                  -3.005,
+                  0.55,
+                  22.238
+                ],
+                "quat": [
+                  0,
+                  0.034507034161589005,
+                  0,
+                  0.999404454959738
+                ],
+                "scale": [
+                  0.72,
+                  1.1,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -775,16 +937,22 @@
                 "value": "Decor_GraveCap_05"
               },
               "Transform": {
-                "posX": -3.005,
-                "posY": 1.18,
-                "posZ": 22.238,
-                "scaleX": 0.5,
-                "scaleY": 0.18,
-                "scaleZ": 0.2,
-                "quatX": 0,
-                "quatY": 0.034507034161589005,
-                "quatZ": 0,
-                "quatW": 0.999404454959738
+                "pos": [
+                  -3.005,
+                  1.18,
+                  22.238
+                ],
+                "quat": [
+                  0,
+                  0.034507034161589005,
+                  0,
+                  0.999404454959738
+                ],
+                "scale": [
+                  0.5,
+                  0.18,
+                  0.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -801,16 +969,22 @@
                 "value": "Decor_GraveSoil_05"
               },
               "Transform": {
-                "posX": -3.005,
-                "posY": 0.06,
-                "posZ": 22.788,
-                "scaleX": 0.8,
-                "scaleY": 0.12,
-                "scaleZ": 1.1,
-                "quatX": 0,
-                "quatY": 0.034507034161589005,
-                "quatZ": 0,
-                "quatW": 0.999404454959738
+                "pos": [
+                  -3.005,
+                  0.06,
+                  22.788
+                ],
+                "quat": [
+                  0,
+                  0.034507034161589005,
+                  0,
+                  0.999404454959738
+                ],
+                "scale": [
+                  0.8,
+                  0.12,
+                  1.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -827,16 +1001,22 @@
                 "value": "Blocker_Grave_06"
               },
               "Transform": {
-                "posX": -17.882,
-                "posY": 0.55,
-                "posZ": -13.603,
-                "scaleX": 0.72,
-                "scaleY": 1.1,
-                "scaleZ": 0.16,
-                "quatX": 0,
-                "quatY": 0.14945854910091946,
-                "quatZ": 0,
-                "quatW": 0.9887679920490186
+                "pos": [
+                  -17.882,
+                  0.55,
+                  -13.603
+                ],
+                "quat": [
+                  0,
+                  0.14945854910091946,
+                  0,
+                  0.9887679920490186
+                ],
+                "scale": [
+                  0.72,
+                  1.1,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -853,16 +1033,22 @@
                 "value": "Decor_GraveCap_06"
               },
               "Transform": {
-                "posX": -17.882,
-                "posY": 1.18,
-                "posZ": -13.603,
-                "scaleX": 0.5,
-                "scaleY": 0.18,
-                "scaleZ": 0.2,
-                "quatX": 0,
-                "quatY": 0.14945854910091946,
-                "quatZ": 0,
-                "quatW": 0.9887679920490186
+                "pos": [
+                  -17.882,
+                  1.18,
+                  -13.603
+                ],
+                "quat": [
+                  0,
+                  0.14945854910091946,
+                  0,
+                  0.9887679920490186
+                ],
+                "scale": [
+                  0.5,
+                  0.18,
+                  0.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -879,16 +1065,22 @@
                 "value": "Decor_GraveSoil_06"
               },
               "Transform": {
-                "posX": -17.882,
-                "posY": 0.06,
-                "posZ": -13.053,
-                "scaleX": 0.8,
-                "scaleY": 0.12,
-                "scaleZ": 1.1,
-                "quatX": 0,
-                "quatY": 0.14945854910091946,
-                "quatZ": 0,
-                "quatW": 0.9887679920490186
+                "pos": [
+                  -17.882,
+                  0.06,
+                  -13.053
+                ],
+                "quat": [
+                  0,
+                  0.14945854910091946,
+                  0,
+                  0.9887679920490186
+                ],
+                "scale": [
+                  0.8,
+                  0.12,
+                  1.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -905,16 +1097,22 @@
                 "value": "Blocker_Grave_07"
               },
               "Transform": {
-                "posX": -14.913,
-                "posY": 0.55,
-                "posZ": 3.625,
-                "scaleX": 0.72,
-                "scaleY": 1.1,
-                "scaleZ": 0.16,
-                "quatX": 0,
-                "quatY": 0.08768081431607112,
-                "quatZ": 0,
-                "quatW": 0.9961486208397172
+                "pos": [
+                  -14.913,
+                  0.55,
+                  3.625
+                ],
+                "quat": [
+                  0,
+                  0.08768081431607112,
+                  0,
+                  0.9961486208397172
+                ],
+                "scale": [
+                  0.72,
+                  1.1,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -931,16 +1129,22 @@
                 "value": "Decor_GraveCap_07"
               },
               "Transform": {
-                "posX": -14.913,
-                "posY": 1.18,
-                "posZ": 3.625,
-                "scaleX": 0.5,
-                "scaleY": 0.18,
-                "scaleZ": 0.2,
-                "quatX": 0,
-                "quatY": 0.08768081431607112,
-                "quatZ": 0,
-                "quatW": 0.9961486208397172
+                "pos": [
+                  -14.913,
+                  1.18,
+                  3.625
+                ],
+                "quat": [
+                  0,
+                  0.08768081431607112,
+                  0,
+                  0.9961486208397172
+                ],
+                "scale": [
+                  0.5,
+                  0.18,
+                  0.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -957,16 +1161,22 @@
                 "value": "Decor_GraveSoil_07"
               },
               "Transform": {
-                "posX": -14.913,
-                "posY": 0.06,
-                "posZ": 4.175,
-                "scaleX": 0.8,
-                "scaleY": 0.12,
-                "scaleZ": 1.1,
-                "quatX": 0,
-                "quatY": 0.08768081431607112,
-                "quatZ": 0,
-                "quatW": 0.9961486208397172
+                "pos": [
+                  -14.913,
+                  0.06,
+                  4.175
+                ],
+                "quat": [
+                  0,
+                  0.08768081431607112,
+                  0,
+                  0.9961486208397172
+                ],
+                "scale": [
+                  0.8,
+                  0.12,
+                  1.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -983,16 +1193,22 @@
                 "value": "Blocker_Grave_08"
               },
               "Transform": {
-                "posX": 9.002,
-                "posY": 0.55,
-                "posZ": 24.761,
-                "scaleX": 0.72,
-                "scaleY": 1.1,
-                "scaleZ": 0.16,
-                "quatX": 0,
-                "quatY": -0.04484340931496598,
-                "quatZ": 0,
-                "quatW": 0.9989940283310058
+                "pos": [
+                  9.002,
+                  0.55,
+                  24.761
+                ],
+                "quat": [
+                  0,
+                  -0.04484340931496598,
+                  0,
+                  0.9989940283310058
+                ],
+                "scale": [
+                  0.72,
+                  1.1,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1009,16 +1225,22 @@
                 "value": "Decor_GraveCap_08"
               },
               "Transform": {
-                "posX": 9.002,
-                "posY": 1.18,
-                "posZ": 24.761,
-                "scaleX": 0.5,
-                "scaleY": 0.18,
-                "scaleZ": 0.2,
-                "quatX": 0,
-                "quatY": -0.04484340931496598,
-                "quatZ": 0,
-                "quatW": 0.9989940283310058
+                "pos": [
+                  9.002,
+                  1.18,
+                  24.761
+                ],
+                "quat": [
+                  0,
+                  -0.04484340931496598,
+                  0,
+                  0.9989940283310058
+                ],
+                "scale": [
+                  0.5,
+                  0.18,
+                  0.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1035,16 +1257,22 @@
                 "value": "Decor_GraveSoil_08"
               },
               "Transform": {
-                "posX": 9.002,
-                "posY": 0.06,
-                "posZ": 25.311,
-                "scaleX": 0.8,
-                "scaleY": 0.12,
-                "scaleZ": 1.1,
-                "quatX": 0,
-                "quatY": -0.04484340931496598,
-                "quatZ": 0,
-                "quatW": 0.9989940283310058
+                "pos": [
+                  9.002,
+                  0.06,
+                  25.311
+                ],
+                "quat": [
+                  0,
+                  -0.04484340931496598,
+                  0,
+                  0.9989940283310058
+                ],
+                "scale": [
+                  0.8,
+                  0.12,
+                  1.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1061,16 +1289,22 @@
                 "value": "Blocker_Grave_09"
               },
               "Transform": {
-                "posX": -22.083,
-                "posY": 0.55,
-                "posZ": 0.718,
-                "scaleX": 0.72,
-                "scaleY": 1.1,
-                "scaleZ": 0.16,
-                "quatX": 0,
-                "quatY": -0.16406546943570557,
-                "quatZ": 0,
-                "quatW": 0.9864494521965338
+                "pos": [
+                  -22.083,
+                  0.55,
+                  0.718
+                ],
+                "quat": [
+                  0,
+                  -0.16406546943570557,
+                  0,
+                  0.9864494521965338
+                ],
+                "scale": [
+                  0.72,
+                  1.1,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1087,16 +1321,22 @@
                 "value": "Decor_GraveCap_09"
               },
               "Transform": {
-                "posX": -22.083,
-                "posY": 1.18,
-                "posZ": 0.718,
-                "scaleX": 0.5,
-                "scaleY": 0.18,
-                "scaleZ": 0.2,
-                "quatX": 0,
-                "quatY": -0.16406546943570557,
-                "quatZ": 0,
-                "quatW": 0.9864494521965338
+                "pos": [
+                  -22.083,
+                  1.18,
+                  0.718
+                ],
+                "quat": [
+                  0,
+                  -0.16406546943570557,
+                  0,
+                  0.9864494521965338
+                ],
+                "scale": [
+                  0.5,
+                  0.18,
+                  0.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1113,16 +1353,22 @@
                 "value": "Decor_GraveSoil_09"
               },
               "Transform": {
-                "posX": -22.083,
-                "posY": 0.06,
-                "posZ": 1.268,
-                "scaleX": 0.8,
-                "scaleY": 0.12,
-                "scaleZ": 1.1,
-                "quatX": 0,
-                "quatY": -0.16406546943570557,
-                "quatZ": 0,
-                "quatW": 0.9864494521965338
+                "pos": [
+                  -22.083,
+                  0.06,
+                  1.268
+                ],
+                "quat": [
+                  0,
+                  -0.16406546943570557,
+                  0,
+                  0.9864494521965338
+                ],
+                "scale": [
+                  0.8,
+                  0.12,
+                  1.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1139,16 +1385,22 @@
                 "value": "Blocker_Grave_10"
               },
               "Transform": {
-                "posX": -12.645,
-                "posY": 0.55,
-                "posZ": 18.908,
-                "scaleX": 0.72,
-                "scaleY": 1.1,
-                "scaleZ": 0.16,
-                "quatX": 0,
-                "quatY": 0.12499903406579406,
-                "quatZ": 0,
-                "quatW": 0.9921568633450148
+                "pos": [
+                  -12.645,
+                  0.55,
+                  18.908
+                ],
+                "quat": [
+                  0,
+                  0.12499903406579406,
+                  0,
+                  0.9921568633450148
+                ],
+                "scale": [
+                  0.72,
+                  1.1,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1165,16 +1417,22 @@
                 "value": "Decor_GraveCap_10"
               },
               "Transform": {
-                "posX": -12.645,
-                "posY": 1.18,
-                "posZ": 18.908,
-                "scaleX": 0.5,
-                "scaleY": 0.18,
-                "scaleZ": 0.2,
-                "quatX": 0,
-                "quatY": 0.12499903406579406,
-                "quatZ": 0,
-                "quatW": 0.9921568633450148
+                "pos": [
+                  -12.645,
+                  1.18,
+                  18.908
+                ],
+                "quat": [
+                  0,
+                  0.12499903406579406,
+                  0,
+                  0.9921568633450148
+                ],
+                "scale": [
+                  0.5,
+                  0.18,
+                  0.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1191,16 +1449,22 @@
                 "value": "Decor_GraveSoil_10"
               },
               "Transform": {
-                "posX": -12.645,
-                "posY": 0.06,
-                "posZ": 19.458,
-                "scaleX": 0.8,
-                "scaleY": 0.12,
-                "scaleZ": 1.1,
-                "quatX": 0,
-                "quatY": 0.12499903406579406,
-                "quatZ": 0,
-                "quatW": 0.9921568633450148
+                "pos": [
+                  -12.645,
+                  0.06,
+                  19.458
+                ],
+                "quat": [
+                  0,
+                  0.12499903406579406,
+                  0,
+                  0.9921568633450148
+                ],
+                "scale": [
+                  0.8,
+                  0.12,
+                  1.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1217,16 +1481,22 @@
                 "value": "Blocker_Grave_11"
               },
               "Transform": {
-                "posX": 24.783,
-                "posY": 0.55,
-                "posZ": -17.379,
-                "scaleX": 0.72,
-                "scaleY": 1.1,
-                "scaleZ": 0.16,
-                "quatX": 0,
-                "quatY": -0.10935872141915455,
-                "quatZ": 0,
-                "quatW": 0.994002349116725
+                "pos": [
+                  24.783,
+                  0.55,
+                  -17.379
+                ],
+                "quat": [
+                  0,
+                  -0.10935872141915455,
+                  0,
+                  0.994002349116725
+                ],
+                "scale": [
+                  0.72,
+                  1.1,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1243,16 +1513,22 @@
                 "value": "Decor_GraveCap_11"
               },
               "Transform": {
-                "posX": 24.783,
-                "posY": 1.18,
-                "posZ": -17.379,
-                "scaleX": 0.5,
-                "scaleY": 0.18,
-                "scaleZ": 0.2,
-                "quatX": 0,
-                "quatY": -0.10935872141915455,
-                "quatZ": 0,
-                "quatW": 0.994002349116725
+                "pos": [
+                  24.783,
+                  1.18,
+                  -17.379
+                ],
+                "quat": [
+                  0,
+                  -0.10935872141915455,
+                  0,
+                  0.994002349116725
+                ],
+                "scale": [
+                  0.5,
+                  0.18,
+                  0.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1269,16 +1545,22 @@
                 "value": "Decor_GraveSoil_11"
               },
               "Transform": {
-                "posX": 24.783,
-                "posY": 0.06,
-                "posZ": -16.829,
-                "scaleX": 0.8,
-                "scaleY": 0.12,
-                "scaleZ": 1.1,
-                "quatX": 0,
-                "quatY": -0.10935872141915455,
-                "quatZ": 0,
-                "quatW": 0.994002349116725
+                "pos": [
+                  24.783,
+                  0.06,
+                  -16.829
+                ],
+                "quat": [
+                  0,
+                  -0.10935872141915455,
+                  0,
+                  0.994002349116725
+                ],
+                "scale": [
+                  0.8,
+                  0.12,
+                  1.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1295,16 +1577,22 @@
                 "value": "Blocker_Grave_12"
               },
               "Transform": {
-                "posX": 20.828,
-                "posY": 0.55,
-                "posZ": -22.514,
-                "scaleX": 0.72,
-                "scaleY": 1.1,
-                "scaleZ": 0.16,
-                "quatX": 0,
-                "quatY": -0.03819945178443284,
-                "quatZ": 0,
-                "quatW": 0.999270134589926
+                "pos": [
+                  20.828,
+                  0.55,
+                  -22.514
+                ],
+                "quat": [
+                  0,
+                  -0.03819945178443284,
+                  0,
+                  0.999270134589926
+                ],
+                "scale": [
+                  0.72,
+                  1.1,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1321,16 +1609,22 @@
                 "value": "Decor_GraveCap_12"
               },
               "Transform": {
-                "posX": 20.828,
-                "posY": 1.18,
-                "posZ": -22.514,
-                "scaleX": 0.5,
-                "scaleY": 0.18,
-                "scaleZ": 0.2,
-                "quatX": 0,
-                "quatY": -0.03819945178443284,
-                "quatZ": 0,
-                "quatW": 0.999270134589926
+                "pos": [
+                  20.828,
+                  1.18,
+                  -22.514
+                ],
+                "quat": [
+                  0,
+                  -0.03819945178443284,
+                  0,
+                  0.999270134589926
+                ],
+                "scale": [
+                  0.5,
+                  0.18,
+                  0.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1347,16 +1641,22 @@
                 "value": "Decor_GraveSoil_12"
               },
               "Transform": {
-                "posX": 20.828,
-                "posY": 0.06,
-                "posZ": -21.964,
-                "scaleX": 0.8,
-                "scaleY": 0.12,
-                "scaleZ": 1.1,
-                "quatX": 0,
-                "quatY": -0.03819945178443284,
-                "quatZ": 0,
-                "quatW": 0.999270134589926
+                "pos": [
+                  20.828,
+                  0.06,
+                  -21.964
+                ],
+                "quat": [
+                  0,
+                  -0.03819945178443284,
+                  0,
+                  0.999270134589926
+                ],
+                "scale": [
+                  0.8,
+                  0.12,
+                  1.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1373,16 +1673,22 @@
                 "value": "Blocker_Grave_13"
               },
               "Transform": {
-                "posX": 9.786,
-                "posY": 0.55,
-                "posZ": 20.101,
-                "scaleX": 0.72,
-                "scaleY": 1.1,
-                "scaleZ": 0.16,
-                "quatX": 0,
-                "quatY": 0.03225507030068174,
-                "quatZ": 0,
-                "quatW": 0.9994796698482156
+                "pos": [
+                  9.786,
+                  0.55,
+                  20.101
+                ],
+                "quat": [
+                  0,
+                  0.03225507030068174,
+                  0,
+                  0.9994796698482156
+                ],
+                "scale": [
+                  0.72,
+                  1.1,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1399,16 +1705,22 @@
                 "value": "Decor_GraveCap_13"
               },
               "Transform": {
-                "posX": 9.786,
-                "posY": 1.18,
-                "posZ": 20.101,
-                "scaleX": 0.5,
-                "scaleY": 0.18,
-                "scaleZ": 0.2,
-                "quatX": 0,
-                "quatY": 0.03225507030068174,
-                "quatZ": 0,
-                "quatW": 0.9994796698482156
+                "pos": [
+                  9.786,
+                  1.18,
+                  20.101
+                ],
+                "quat": [
+                  0,
+                  0.03225507030068174,
+                  0,
+                  0.9994796698482156
+                ],
+                "scale": [
+                  0.5,
+                  0.18,
+                  0.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1425,16 +1737,22 @@
                 "value": "Decor_GraveSoil_13"
               },
               "Transform": {
-                "posX": 9.786,
-                "posY": 0.06,
-                "posZ": 20.651,
-                "scaleX": 0.8,
-                "scaleY": 0.12,
-                "scaleZ": 1.1,
-                "quatX": 0,
-                "quatY": 0.03225507030068174,
-                "quatZ": 0,
-                "quatW": 0.9994796698482156
+                "pos": [
+                  9.786,
+                  0.06,
+                  20.651
+                ],
+                "quat": [
+                  0,
+                  0.03225507030068174,
+                  0,
+                  0.9994796698482156
+                ],
+                "scale": [
+                  0.8,
+                  0.12,
+                  1.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1451,16 +1769,22 @@
                 "value": "Blocker_Grave_14"
               },
               "Transform": {
-                "posX": 20.274,
-                "posY": 0.55,
-                "posZ": 11.467,
-                "scaleX": 0.72,
-                "scaleY": 1.1,
-                "scaleZ": 0.16,
-                "quatX": 0,
-                "quatY": 0.018408693068525963,
-                "quatZ": 0,
-                "quatW": 0.9998305456523664
+                "pos": [
+                  20.274,
+                  0.55,
+                  11.467
+                ],
+                "quat": [
+                  0,
+                  0.018408693068525963,
+                  0,
+                  0.9998305456523664
+                ],
+                "scale": [
+                  0.72,
+                  1.1,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1477,16 +1801,22 @@
                 "value": "Decor_GraveCap_14"
               },
               "Transform": {
-                "posX": 20.274,
-                "posY": 1.18,
-                "posZ": 11.467,
-                "scaleX": 0.5,
-                "scaleY": 0.18,
-                "scaleZ": 0.2,
-                "quatX": 0,
-                "quatY": 0.018408693068525963,
-                "quatZ": 0,
-                "quatW": 0.9998305456523664
+                "pos": [
+                  20.274,
+                  1.18,
+                  11.467
+                ],
+                "quat": [
+                  0,
+                  0.018408693068525963,
+                  0,
+                  0.9998305456523664
+                ],
+                "scale": [
+                  0.5,
+                  0.18,
+                  0.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1503,16 +1833,22 @@
                 "value": "Decor_GraveSoil_14"
               },
               "Transform": {
-                "posX": 20.274,
-                "posY": 0.06,
-                "posZ": 12.017,
-                "scaleX": 0.8,
-                "scaleY": 0.12,
-                "scaleZ": 1.1,
-                "quatX": 0,
-                "quatY": 0.018408693068525963,
-                "quatZ": 0,
-                "quatW": 0.9998305456523664
+                "pos": [
+                  20.274,
+                  0.06,
+                  12.017
+                ],
+                "quat": [
+                  0,
+                  0.018408693068525963,
+                  0,
+                  0.9998305456523664
+                ],
+                "scale": [
+                  0.8,
+                  0.12,
+                  1.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1529,16 +1865,22 @@
                 "value": "Blocker_DeadTree_01"
               },
               "Transform": {
-                "posX": 7.78,
-                "posY": 1.283,
-                "posZ": -22.62,
-                "scaleX": 0.34,
-                "scaleY": 2.566,
-                "scaleZ": 0.34,
-                "quatX": 7.636423545979046e-17,
-                "quatY": -0.956984908970925,
-                "quatZ": 7.636423545979046e-17,
-                "quatW": -0.2901376983466821
+                "pos": [
+                  7.78,
+                  1.283,
+                  -22.62
+                ],
+                "quat": [
+                  7.636423545979046e-17,
+                  -0.956984908970925,
+                  7.636423545979046e-17,
+                  -0.2901376983466821
+                ],
+                "scale": [
+                  0.34,
+                  2.566,
+                  0.34
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1555,16 +1897,22 @@
                 "value": "Decor_DeadBranch_01a"
               },
               "Transform": {
-                "posX": 8.28,
-                "posY": 2.104,
-                "posZ": -22.62,
-                "scaleX": 1.2,
-                "scaleY": 0.12,
-                "scaleZ": 0.12,
-                "quatX": 0,
-                "quatY": 0.4118014593131975,
-                "quatZ": 0,
-                "quatW": 0.9112735912488197
+                "pos": [
+                  8.28,
+                  2.104,
+                  -22.62
+                ],
+                "quat": [
+                  0,
+                  0.4118014593131975,
+                  0,
+                  0.9112735912488197
+                ],
+                "scale": [
+                  1.2,
+                  0.12,
+                  0.12
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1581,16 +1929,22 @@
                 "value": "Decor_DeadBranch_01b"
               },
               "Transform": {
-                "posX": 7.48,
-                "posY": 1.591,
-                "posZ": -22.42,
-                "scaleX": 0.9,
-                "scaleY": 0.1,
-                "scaleZ": 0.1,
-                "quatX": 8.218329369640539e-17,
-                "quatY": -0.8939114538285494,
-                "quatZ": 8.218329369640539e-17,
-                "quatW": -0.4482435863613992
+                "pos": [
+                  7.48,
+                  1.591,
+                  -22.42
+                ],
+                "quat": [
+                  8.218329369640539e-17,
+                  -0.8939114538285494,
+                  8.218329369640539e-17,
+                  -0.4482435863613992
+                ],
+                "scale": [
+                  0.9,
+                  0.1,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1607,16 +1961,22 @@
                 "value": "Blocker_DeadTree_02"
               },
               "Transform": {
-                "posX": 15.614,
-                "posY": 1.354,
-                "posZ": -11.593,
-                "scaleX": 0.34,
-                "scaleY": 2.707,
-                "scaleZ": 0.34,
-                "quatX": 0,
-                "quatY": 0.26122985665313875,
-                "quatZ": 0,
-                "quatW": 0.9652766245967943
+                "pos": [
+                  15.614,
+                  1.354,
+                  -11.593
+                ],
+                "quat": [
+                  0,
+                  0.26122985665313875,
+                  0,
+                  0.9652766245967943
+                ],
+                "scale": [
+                  0.34,
+                  2.707,
+                  0.34
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1633,16 +1993,22 @@
                 "value": "Decor_DeadBranch_02a"
               },
               "Transform": {
-                "posX": 16.114,
-                "posY": 2.22,
-                "posZ": -11.593,
-                "scaleX": 1.2,
-                "scaleY": 0.12,
-                "scaleZ": 0.12,
-                "quatX": 6.29721989771079e-17,
-                "quatY": -0.9995843373279173,
-                "quatZ": 6.29721989771079e-17,
-                "quatW": -0.028829716764276446
+                "pos": [
+                  16.114,
+                  2.22,
+                  -11.593
+                ],
+                "quat": [
+                  6.29721989771079e-17,
+                  -0.9995843373279173,
+                  6.29721989771079e-17,
+                  -0.028829716764276446
+                ],
+                "scale": [
+                  1.2,
+                  0.12,
+                  0.12
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1659,16 +2025,22 @@
                 "value": "Decor_DeadBranch_02b"
               },
               "Transform": {
-                "posX": 15.314,
-                "posY": 1.678,
-                "posZ": -11.393,
-                "scaleX": 0.9,
-                "scaleY": 0.1,
-                "scaleZ": 0.1,
-                "quatX": 0,
-                "quatY": 0.2792131723745775,
-                "quatZ": 0,
-                "quatW": 0.9602291415972151
+                "pos": [
+                  15.314,
+                  1.678,
+                  -11.393
+                ],
+                "quat": [
+                  0,
+                  0.2792131723745775,
+                  0,
+                  0.9602291415972151
+                ],
+                "scale": [
+                  0.9,
+                  0.1,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1685,16 +2057,22 @@
                 "value": "Blocker_DeadTree_03"
               },
               "Transform": {
-                "posX": -8.541,
-                "posY": 1.583,
-                "posZ": -19.629,
-                "scaleX": 0.34,
-                "scaleY": 3.167,
-                "scaleZ": 0.34,
-                "quatX": 7.731954721008817e-17,
-                "quatY": -0.9497674253441865,
-                "quatZ": 7.731954721008817e-17,
-                "quatW": -0.31295660682445287
+                "pos": [
+                  -8.541,
+                  1.583,
+                  -19.629
+                ],
+                "quat": [
+                  7.731954721008817e-17,
+                  -0.9497674253441865,
+                  7.731954721008817e-17,
+                  -0.31295660682445287
+                ],
+                "scale": [
+                  0.34,
+                  3.167,
+                  0.34
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1711,16 +2089,22 @@
                 "value": "Decor_DeadBranch_03a"
               },
               "Transform": {
-                "posX": -8.041,
-                "posY": 2.597,
-                "posZ": -19.629,
-                "scaleX": 1.2,
-                "scaleY": 0.12,
-                "scaleZ": 0.12,
-                "quatX": 8.585564582547561e-17,
-                "quatY": -0.7933060571321908,
-                "quatZ": 8.585564582547561e-17,
-                "quatW": -0.6088230446668204
+                "pos": [
+                  -8.041,
+                  2.597,
+                  -19.629
+                ],
+                "quat": [
+                  8.585564582547561e-17,
+                  -0.7933060571321908,
+                  8.585564582547561e-17,
+                  -0.6088230446668204
+                ],
+                "scale": [
+                  1.2,
+                  0.12,
+                  0.12
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1737,16 +2121,22 @@
                 "value": "Decor_DeadBranch_03b"
               },
               "Transform": {
-                "posX": -8.841,
-                "posY": 1.963,
-                "posZ": -19.429,
-                "scaleX": 0.9,
-                "scaleY": 0.1,
-                "scaleZ": 0.1,
-                "quatX": 8.361573843982331e-17,
-                "quatY": -0.8666743713023143,
-                "quatZ": 8.361573843982331e-17,
-                "quatW": -0.4988742668526191
+                "pos": [
+                  -8.841,
+                  1.963,
+                  -19.429
+                ],
+                "quat": [
+                  8.361573843982331e-17,
+                  -0.8666743713023143,
+                  8.361573843982331e-17,
+                  -0.4988742668526191
+                ],
+                "scale": [
+                  0.9,
+                  0.1,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1763,16 +2153,22 @@
                 "value": "Blocker_DeadTree_04"
               },
               "Transform": {
-                "posX": -10.411,
-                "posY": 1.272,
-                "posZ": -8.515,
-                "scaleX": 0.34,
-                "scaleY": 2.544,
-                "scaleZ": 0.34,
-                "quatX": 0,
-                "quatY": 0.6053502525966523,
-                "quatZ": 0,
-                "quatW": 0.7959592148352636
+                "pos": [
+                  -10.411,
+                  1.272,
+                  -8.515
+                ],
+                "quat": [
+                  0,
+                  0.6053502525966523,
+                  0,
+                  0.7959592148352636
+                ],
+                "scale": [
+                  0.34,
+                  2.544,
+                  0.34
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1789,16 +2185,22 @@
                 "value": "Decor_DeadBranch_04a"
               },
               "Transform": {
-                "posX": -9.911,
-                "posY": 2.086,
-                "posZ": -8.515,
-                "scaleX": 1.2,
-                "scaleY": 0.12,
-                "scaleZ": 0.12,
-                "quatX": 8.524551326608915e-17,
-                "quatY": -0.8204578241778593,
-                "quatZ": 8.524551326608915e-17,
-                "quatW": -0.5717070567566339
+                "pos": [
+                  -9.911,
+                  2.086,
+                  -8.515
+                ],
+                "quat": [
+                  8.524551326608915e-17,
+                  -0.8204578241778593,
+                  8.524551326608915e-17,
+                  -0.5717070567566339
+                ],
+                "scale": [
+                  1.2,
+                  0.12,
+                  0.12
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1815,16 +2217,22 @@
                 "value": "Decor_DeadBranch_04b"
               },
               "Transform": {
-                "posX": -10.711,
-                "posY": 1.577,
-                "posZ": -8.315,
-                "scaleX": 0.9,
-                "scaleY": 0.1,
-                "scaleZ": 0.1,
-                "quatX": 8.525231029733618e-17,
-                "quatY": -0.8202023011259608,
-                "quatZ": 8.525231029733618e-17,
-                "quatW": -0.5720735837527186
+                "pos": [
+                  -10.711,
+                  1.577,
+                  -8.315
+                ],
+                "quat": [
+                  8.525231029733618e-17,
+                  -0.8202023011259608,
+                  8.525231029733618e-17,
+                  -0.5720735837527186
+                ],
+                "scale": [
+                  0.9,
+                  0.1,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1841,16 +2249,22 @@
                 "value": "Blocker_DeadTree_05"
               },
               "Transform": {
-                "posX": -17.71,
-                "posY": 1.202,
-                "posZ": 0.193,
-                "scaleX": 0.34,
-                "scaleY": 2.403,
-                "scaleZ": 0.34,
-                "quatX": 7.016766409836744e-17,
-                "quatY": -0.9873463639678351,
-                "quatZ": 7.016766409836744e-17,
-                "quatW": -0.1585785532772171
+                "pos": [
+                  -17.71,
+                  1.202,
+                  0.193
+                ],
+                "quat": [
+                  7.016766409836744e-17,
+                  -0.9873463639678351,
+                  7.016766409836744e-17,
+                  -0.1585785532772171
+                ],
+                "scale": [
+                  0.34,
+                  2.403,
+                  0.34
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1867,16 +2281,22 @@
                 "value": "Decor_DeadBranch_05a"
               },
               "Transform": {
-                "posX": -17.21,
-                "posY": 1.971,
-                "posZ": 0.193,
-                "scaleX": 1.2,
-                "scaleY": 0.12,
-                "scaleZ": 0.12,
-                "quatX": 8.26087804091906e-17,
-                "quatY": -0.8866361996167454,
-                "quatZ": 8.26087804091906e-17,
-                "quatW": -0.462467565921303
+                "pos": [
+                  -17.21,
+                  1.971,
+                  0.193
+                ],
+                "quat": [
+                  8.26087804091906e-17,
+                  -0.8866361996167454,
+                  8.26087804091906e-17,
+                  -0.462467565921303
+                ],
+                "scale": [
+                  1.2,
+                  0.12,
+                  0.12
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1893,16 +2313,22 @@
                 "value": "Decor_DeadBranch_05b"
               },
               "Transform": {
-                "posX": -18.01,
-                "posY": 1.49,
-                "posZ": 0.393,
-                "scaleX": 0.9,
-                "scaleY": 0.1,
-                "scaleZ": 0.1,
-                "quatX": 0,
-                "quatY": 0.270633209993419,
-                "quatZ": 0,
-                "quatW": 0.9626825362748916
+                "pos": [
+                  -18.01,
+                  1.49,
+                  0.393
+                ],
+                "quat": [
+                  0,
+                  0.270633209993419,
+                  0,
+                  0.9626825362748916
+                ],
+                "scale": [
+                  0.9,
+                  0.1,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1919,16 +2345,22 @@
                 "value": "Blocker_DeadTree_06"
               },
               "Transform": {
-                "posX": -21.204,
-                "posY": 1.106,
-                "posZ": 18.031,
-                "scaleX": 0.34,
-                "scaleY": 2.211,
-                "scaleZ": 0.34,
-                "quatX": 8.62638004199986e-17,
-                "quatY": -0.7662384927474113,
-                "quatZ": 8.62638004199986e-17,
-                "quatW": -0.642556279427861
+                "pos": [
+                  -21.204,
+                  1.106,
+                  18.031
+                ],
+                "quat": [
+                  8.62638004199986e-17,
+                  -0.7662384927474113,
+                  8.62638004199986e-17,
+                  -0.642556279427861
+                ],
+                "scale": [
+                  0.34,
+                  2.211,
+                  0.34
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1945,16 +2377,22 @@
                 "value": "Decor_DeadBranch_06a"
               },
               "Transform": {
-                "posX": -20.704,
-                "posY": 1.813,
-                "posZ": 18.031,
-                "scaleX": 1.2,
-                "scaleY": 0.12,
-                "scaleZ": 0.12,
-                "quatX": 0,
-                "quatY": 0.10543015173446557,
-                "quatZ": 0,
-                "quatW": 0.9944267107762379
+                "pos": [
+                  -20.704,
+                  1.813,
+                  18.031
+                ],
+                "quat": [
+                  0,
+                  0.10543015173446557,
+                  0,
+                  0.9944267107762379
+                ],
+                "scale": [
+                  1.2,
+                  0.12,
+                  0.12
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1971,16 +2409,22 @@
                 "value": "Decor_DeadBranch_06b"
               },
               "Transform": {
-                "posX": -21.504,
-                "posY": 1.371,
-                "posZ": 18.231,
-                "scaleX": 0.9,
-                "scaleY": 0.1,
-                "scaleZ": 0.1,
-                "quatX": 8.32486789230147e-17,
-                "quatY": -0.8744643933189287,
-                "quatZ": 8.32486789230147e-17,
-                "quatW": -0.48508970801013496
+                "pos": [
+                  -21.504,
+                  1.371,
+                  18.231
+                ],
+                "quat": [
+                  8.32486789230147e-17,
+                  -0.8744643933189287,
+                  8.32486789230147e-17,
+                  -0.48508970801013496
+                ],
+                "scale": [
+                  0.9,
+                  0.1,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -1997,12 +2441,16 @@
                 "value": "Blocker_Lantern_01"
               },
               "Transform": {
-                "posX": -20.034,
-                "posY": 0.9,
-                "posZ": 5.152,
-                "scaleX": 0.16,
-                "scaleY": 1.8,
-                "scaleZ": 0.16
+                "pos": [
+                  -20.034,
+                  0.9,
+                  5.152
+                ],
+                "scale": [
+                  0.16,
+                  1.8,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2019,12 +2467,16 @@
                 "value": "Decor_LanternGlow_01"
               },
               "Transform": {
-                "posX": -20.034,
-                "posY": 1.85,
-                "posZ": 5.152,
-                "scaleX": 0.34,
-                "scaleY": 0.34,
-                "scaleZ": 0.34
+                "pos": [
+                  -20.034,
+                  1.85,
+                  5.152
+                ],
+                "scale": [
+                  0.34,
+                  0.34,
+                  0.34
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2041,12 +2493,16 @@
                 "value": "Blocker_Lantern_02"
               },
               "Transform": {
-                "posX": -22.64,
-                "posY": 0.9,
-                "posZ": 22.55,
-                "scaleX": 0.16,
-                "scaleY": 1.8,
-                "scaleZ": 0.16
+                "pos": [
+                  -22.64,
+                  0.9,
+                  22.55
+                ],
+                "scale": [
+                  0.16,
+                  1.8,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2063,12 +2519,16 @@
                 "value": "Decor_LanternGlow_02"
               },
               "Transform": {
-                "posX": -22.64,
-                "posY": 1.85,
-                "posZ": 22.55,
-                "scaleX": 0.34,
-                "scaleY": 0.34,
-                "scaleZ": 0.34
+                "pos": [
+                  -22.64,
+                  1.85,
+                  22.55
+                ],
+                "scale": [
+                  0.34,
+                  0.34,
+                  0.34
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2085,12 +2545,16 @@
                 "value": "Blocker_Lantern_03"
               },
               "Transform": {
-                "posX": -21.219,
-                "posY": 0.9,
-                "posZ": -18.592,
-                "scaleX": 0.16,
-                "scaleY": 1.8,
-                "scaleZ": 0.16
+                "pos": [
+                  -21.219,
+                  0.9,
+                  -18.592
+                ],
+                "scale": [
+                  0.16,
+                  1.8,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2107,12 +2571,16 @@
                 "value": "Decor_LanternGlow_03"
               },
               "Transform": {
-                "posX": -21.219,
-                "posY": 1.85,
-                "posZ": -18.592,
-                "scaleX": 0.34,
-                "scaleY": 0.34,
-                "scaleZ": 0.34
+                "pos": [
+                  -21.219,
+                  1.85,
+                  -18.592
+                ],
+                "scale": [
+                  0.34,
+                  0.34,
+                  0.34
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2129,12 +2597,16 @@
                 "value": "Blocker_Lantern_04"
               },
               "Transform": {
-                "posX": -13.411,
-                "posY": 0.9,
-                "posZ": -18.136,
-                "scaleX": 0.16,
-                "scaleY": 1.8,
-                "scaleZ": 0.16
+                "pos": [
+                  -13.411,
+                  0.9,
+                  -18.136
+                ],
+                "scale": [
+                  0.16,
+                  1.8,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2151,12 +2623,16 @@
                 "value": "Decor_LanternGlow_04"
               },
               "Transform": {
-                "posX": -13.411,
-                "posY": 1.85,
-                "posZ": -18.136,
-                "scaleX": 0.34,
-                "scaleY": 0.34,
-                "scaleZ": 0.34
+                "pos": [
+                  -13.411,
+                  1.85,
+                  -18.136
+                ],
+                "scale": [
+                  0.34,
+                  0.34,
+                  0.34
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2173,12 +2649,16 @@
                 "value": "Blocker_Lantern_05"
               },
               "Transform": {
-                "posX": -15.878,
-                "posY": 0.9,
-                "posZ": 16.363,
-                "scaleX": 0.16,
-                "scaleY": 1.8,
-                "scaleZ": 0.16
+                "pos": [
+                  -15.878,
+                  0.9,
+                  16.363
+                ],
+                "scale": [
+                  0.16,
+                  1.8,
+                  0.16
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2195,12 +2675,16 @@
                 "value": "Decor_LanternGlow_05"
               },
               "Transform": {
-                "posX": -15.878,
-                "posY": 1.85,
-                "posZ": 16.363,
-                "scaleX": 0.34,
-                "scaleY": 0.34,
-                "scaleZ": 0.34
+                "pos": [
+                  -15.878,
+                  1.85,
+                  16.363
+                ],
+                "scale": [
+                  0.34,
+                  0.34,
+                  0.34
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2217,16 +2701,22 @@
                 "value": "Blocker_Crypt_01"
               },
               "Transform": {
-                "posX": 22.449,
-                "posY": 1.1,
-                "posZ": -2.746,
-                "scaleX": 3,
-                "scaleY": 2.2,
-                "scaleZ": 2.2,
-                "quatX": 6.610483191679666e-17,
-                "quatY": -0.9965473403791412,
-                "quatZ": 6.610483191679666e-17,
-                "quatW": -0.0830264920568138
+                "pos": [
+                  22.449,
+                  1.1,
+                  -2.746
+                ],
+                "quat": [
+                  6.610483191679666e-17,
+                  -0.9965473403791412,
+                  6.610483191679666e-17,
+                  -0.0830264920568138
+                ],
+                "scale": [
+                  3,
+                  2.2,
+                  2.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2243,16 +2733,22 @@
                 "value": "Decor_CryptRoof_01"
               },
               "Transform": {
-                "posX": 22.449,
-                "posY": 2.45,
-                "posZ": -2.746,
-                "scaleX": 3.4,
-                "scaleY": 0.5,
-                "scaleZ": 2.6,
-                "quatX": 6.610483191679666e-17,
-                "quatY": -0.9965473403791412,
-                "quatZ": 6.610483191679666e-17,
-                "quatW": -0.0830264920568138
+                "pos": [
+                  22.449,
+                  2.45,
+                  -2.746
+                ],
+                "quat": [
+                  6.610483191679666e-17,
+                  -0.9965473403791412,
+                  6.610483191679666e-17,
+                  -0.0830264920568138
+                ],
+                "scale": [
+                  3.4,
+                  0.5,
+                  2.6
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2269,16 +2765,22 @@
                 "value": "Decor_CryptDoor_01"
               },
               "Transform": {
-                "posX": 22.449,
-                "posY": 0.8,
-                "posZ": -2.746,
-                "scaleX": 0.9,
-                "scaleY": 1.6,
-                "scaleZ": 2.26,
-                "quatX": 6.610483191679666e-17,
-                "quatY": -0.9965473403791412,
-                "quatZ": 6.610483191679666e-17,
-                "quatW": -0.0830264920568138
+                "pos": [
+                  22.449,
+                  0.8,
+                  -2.746
+                ],
+                "quat": [
+                  6.610483191679666e-17,
+                  -0.9965473403791412,
+                  6.610483191679666e-17,
+                  -0.0830264920568138
+                ],
+                "scale": [
+                  0.9,
+                  1.6,
+                  2.26
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2295,16 +2797,22 @@
                 "value": "Blocker_Crypt_02"
               },
               "Transform": {
-                "posX": -24.651,
-                "posY": 1.1,
-                "posZ": -9.283,
-                "scaleX": 3,
-                "scaleY": 2.2,
-                "scaleZ": 2.2,
-                "quatX": 8.178803473041078e-17,
-                "quatY": -0.9001781944828429,
-                "quatZ": 8.178803473041078e-17,
-                "quatW": -0.4355217769269514
+                "pos": [
+                  -24.651,
+                  1.1,
+                  -9.283
+                ],
+                "quat": [
+                  8.178803473041078e-17,
+                  -0.9001781944828429,
+                  8.178803473041078e-17,
+                  -0.4355217769269514
+                ],
+                "scale": [
+                  3,
+                  2.2,
+                  2.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2321,16 +2829,22 @@
                 "value": "Decor_CryptRoof_02"
               },
               "Transform": {
-                "posX": -24.651,
-                "posY": 2.45,
-                "posZ": -9.283,
-                "scaleX": 3.4,
-                "scaleY": 0.5,
-                "scaleZ": 2.6,
-                "quatX": 8.178803473041078e-17,
-                "quatY": -0.9001781944828429,
-                "quatZ": 8.178803473041078e-17,
-                "quatW": -0.4355217769269514
+                "pos": [
+                  -24.651,
+                  2.45,
+                  -9.283
+                ],
+                "quat": [
+                  8.178803473041078e-17,
+                  -0.9001781944828429,
+                  8.178803473041078e-17,
+                  -0.4355217769269514
+                ],
+                "scale": [
+                  3.4,
+                  0.5,
+                  2.6
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2347,16 +2861,22 @@
                 "value": "Decor_CryptDoor_02"
               },
               "Transform": {
-                "posX": -24.651,
-                "posY": 0.8,
-                "posZ": -9.283,
-                "scaleX": 0.9,
-                "scaleY": 1.6,
-                "scaleZ": 2.26,
-                "quatX": 8.178803473041078e-17,
-                "quatY": -0.9001781944828429,
-                "quatZ": 8.178803473041078e-17,
-                "quatW": -0.4355217769269514
+                "pos": [
+                  -24.651,
+                  0.8,
+                  -9.283
+                ],
+                "quat": [
+                  8.178803473041078e-17,
+                  -0.9001781944828429,
+                  8.178803473041078e-17,
+                  -0.4355217769269514
+                ],
+                "scale": [
+                  0.9,
+                  1.6,
+                  2.26
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2373,16 +2893,22 @@
                 "value": "Decor_Fence_01"
               },
               "Transform": {
-                "posX": -24.421,
-                "posY": 0.45,
-                "posZ": 12.145,
-                "scaleX": 2.2,
-                "scaleY": 0.08,
-                "scaleZ": 0.08,
-                "quatX": 7.905415382709551e-17,
-                "quatY": -0.934136591262323,
-                "quatZ": 7.905415382709551e-17,
-                "quatW": -0.35691571675229955
+                "pos": [
+                  -24.421,
+                  0.45,
+                  12.145
+                ],
+                "quat": [
+                  7.905415382709551e-17,
+                  -0.934136591262323,
+                  7.905415382709551e-17,
+                  -0.35691571675229955
+                ],
+                "scale": [
+                  2.2,
+                  0.08,
+                  0.08
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2399,16 +2925,22 @@
                 "value": "Decor_FencePostA_01"
               },
               "Transform": {
-                "posX": -25.321,
-                "posY": 0.35,
-                "posZ": 12.145,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 7.905415382709551e-17,
-                "quatY": -0.934136591262323,
-                "quatZ": 7.905415382709551e-17,
-                "quatW": -0.35691571675229955
+                "pos": [
+                  -25.321,
+                  0.35,
+                  12.145
+                ],
+                "quat": [
+                  7.905415382709551e-17,
+                  -0.934136591262323,
+                  7.905415382709551e-17,
+                  -0.35691571675229955
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2425,16 +2957,22 @@
                 "value": "Decor_FencePostB_01"
               },
               "Transform": {
-                "posX": -23.521,
-                "posY": 0.35,
-                "posZ": 12.145,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 7.905415382709551e-17,
-                "quatY": -0.934136591262323,
-                "quatZ": 7.905415382709551e-17,
-                "quatW": -0.35691571675229955
+                "pos": [
+                  -23.521,
+                  0.35,
+                  12.145
+                ],
+                "quat": [
+                  7.905415382709551e-17,
+                  -0.934136591262323,
+                  7.905415382709551e-17,
+                  -0.35691571675229955
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2451,16 +2989,22 @@
                 "value": "Decor_Fence_02"
               },
               "Transform": {
-                "posX": -12.928,
-                "posY": 0.45,
-                "posZ": 0.842,
-                "scaleX": 2.2,
-                "scaleY": 0.08,
-                "scaleZ": 0.08,
-                "quatX": 7.539445529379615e-17,
-                "quatY": -0.963470532556471,
-                "quatZ": 7.539445529379615e-17,
-                "quatW": -0.26781436275030157
+                "pos": [
+                  -12.928,
+                  0.45,
+                  0.842
+                ],
+                "quat": [
+                  7.539445529379615e-17,
+                  -0.963470532556471,
+                  7.539445529379615e-17,
+                  -0.26781436275030157
+                ],
+                "scale": [
+                  2.2,
+                  0.08,
+                  0.08
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2477,16 +3021,22 @@
                 "value": "Decor_FencePostA_02"
               },
               "Transform": {
-                "posX": -13.828,
-                "posY": 0.35,
-                "posZ": 0.842,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 7.539445529379615e-17,
-                "quatY": -0.963470532556471,
-                "quatZ": 7.539445529379615e-17,
-                "quatW": -0.26781436275030157
+                "pos": [
+                  -13.828,
+                  0.35,
+                  0.842
+                ],
+                "quat": [
+                  7.539445529379615e-17,
+                  -0.963470532556471,
+                  7.539445529379615e-17,
+                  -0.26781436275030157
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2503,16 +3053,22 @@
                 "value": "Decor_FencePostB_02"
               },
               "Transform": {
-                "posX": -12.028,
-                "posY": 0.35,
-                "posZ": 0.842,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 7.539445529379615e-17,
-                "quatY": -0.963470532556471,
-                "quatZ": 7.539445529379615e-17,
-                "quatW": -0.26781436275030157
+                "pos": [
+                  -12.028,
+                  0.35,
+                  0.842
+                ],
+                "quat": [
+                  7.539445529379615e-17,
+                  -0.963470532556471,
+                  7.539445529379615e-17,
+                  -0.26781436275030157
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2529,16 +3085,22 @@
                 "value": "Decor_Fence_03"
               },
               "Transform": {
-                "posX": 18.985,
-                "posY": 0.45,
-                "posZ": -5.755,
-                "scaleX": 2.2,
-                "scaleY": 0.08,
-                "scaleZ": 0.08,
-                "quatX": 7.131876201055623e-17,
-                "quatY": -0.9834287552316703,
-                "quatZ": 7.131876201055623e-17,
-                "quatW": -0.18129501753630062
+                "pos": [
+                  18.985,
+                  0.45,
+                  -5.755
+                ],
+                "quat": [
+                  7.131876201055623e-17,
+                  -0.9834287552316703,
+                  7.131876201055623e-17,
+                  -0.18129501753630062
+                ],
+                "scale": [
+                  2.2,
+                  0.08,
+                  0.08
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2555,16 +3117,22 @@
                 "value": "Decor_FencePostA_03"
               },
               "Transform": {
-                "posX": 18.085,
-                "posY": 0.35,
-                "posZ": -5.755,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 7.131876201055623e-17,
-                "quatY": -0.9834287552316703,
-                "quatZ": 7.131876201055623e-17,
-                "quatW": -0.18129501753630062
+                "pos": [
+                  18.085,
+                  0.35,
+                  -5.755
+                ],
+                "quat": [
+                  7.131876201055623e-17,
+                  -0.9834287552316703,
+                  7.131876201055623e-17,
+                  -0.18129501753630062
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2581,16 +3149,22 @@
                 "value": "Decor_FencePostB_03"
               },
               "Transform": {
-                "posX": 19.885,
-                "posY": 0.35,
-                "posZ": -5.755,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 7.131876201055623e-17,
-                "quatY": -0.9834287552316703,
-                "quatZ": 7.131876201055623e-17,
-                "quatW": -0.18129501753630062
+                "pos": [
+                  19.885,
+                  0.35,
+                  -5.755
+                ],
+                "quat": [
+                  7.131876201055623e-17,
+                  -0.9834287552316703,
+                  7.131876201055623e-17,
+                  -0.18129501753630062
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2607,16 +3181,22 @@
                 "value": "Decor_Fence_04"
               },
               "Transform": {
-                "posX": -7.895,
-                "posY": 0.45,
-                "posZ": -23.416,
-                "scaleX": 2.2,
-                "scaleY": 0.08,
-                "scaleZ": 0.08,
-                "quatX": 0,
-                "quatY": 0.5097525705879417,
-                "quatZ": 0,
-                "quatW": 0.8603210544784927
+                "pos": [
+                  -7.895,
+                  0.45,
+                  -23.416
+                ],
+                "quat": [
+                  0,
+                  0.5097525705879417,
+                  0,
+                  0.8603210544784927
+                ],
+                "scale": [
+                  2.2,
+                  0.08,
+                  0.08
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2633,16 +3213,22 @@
                 "value": "Decor_FencePostA_04"
               },
               "Transform": {
-                "posX": -8.795,
-                "posY": 0.35,
-                "posZ": -23.416,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 0,
-                "quatY": 0.5097525705879417,
-                "quatZ": 0,
-                "quatW": 0.8603210544784927
+                "pos": [
+                  -8.795,
+                  0.35,
+                  -23.416
+                ],
+                "quat": [
+                  0,
+                  0.5097525705879417,
+                  0,
+                  0.8603210544784927
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2659,16 +3245,22 @@
                 "value": "Decor_FencePostB_04"
               },
               "Transform": {
-                "posX": -6.995,
-                "posY": 0.35,
-                "posZ": -23.416,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 0,
-                "quatY": 0.5097525705879417,
-                "quatZ": 0,
-                "quatW": 0.8603210544784927
+                "pos": [
+                  -6.995,
+                  0.35,
+                  -23.416
+                ],
+                "quat": [
+                  0,
+                  0.5097525705879417,
+                  0,
+                  0.8603210544784927
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2685,16 +3277,22 @@
                 "value": "Decor_Fence_05"
               },
               "Transform": {
-                "posX": 23.988,
-                "posY": 0.45,
-                "posZ": 6.158,
-                "scaleX": 2.2,
-                "scaleY": 0.08,
-                "scaleZ": 0.08,
-                "quatX": 0,
-                "quatY": 0.49285263390582984,
-                "quatZ": 0,
-                "quatW": 0.8701127980049977
+                "pos": [
+                  23.988,
+                  0.45,
+                  6.158
+                ],
+                "quat": [
+                  0,
+                  0.49285263390582984,
+                  0,
+                  0.8701127980049977
+                ],
+                "scale": [
+                  2.2,
+                  0.08,
+                  0.08
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2711,16 +3309,22 @@
                 "value": "Decor_FencePostA_05"
               },
               "Transform": {
-                "posX": 23.088,
-                "posY": 0.35,
-                "posZ": 6.158,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 0,
-                "quatY": 0.49285263390582984,
-                "quatZ": 0,
-                "quatW": 0.8701127980049977
+                "pos": [
+                  23.088,
+                  0.35,
+                  6.158
+                ],
+                "quat": [
+                  0,
+                  0.49285263390582984,
+                  0,
+                  0.8701127980049977
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2737,16 +3341,22 @@
                 "value": "Decor_FencePostB_05"
               },
               "Transform": {
-                "posX": 24.888,
-                "posY": 0.35,
-                "posZ": 6.158,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 0,
-                "quatY": 0.49285263390582984,
-                "quatZ": 0,
-                "quatW": 0.8701127980049977
+                "pos": [
+                  24.888,
+                  0.35,
+                  6.158
+                ],
+                "quat": [
+                  0,
+                  0.49285263390582984,
+                  0,
+                  0.8701127980049977
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2763,16 +3373,22 @@
                 "value": "Decor_Fence_06"
               },
               "Transform": {
-                "posX": 16.057,
-                "posY": 0.45,
-                "posZ": -23.959,
-                "scaleX": 2.2,
-                "scaleY": 0.08,
-                "scaleZ": 0.08,
-                "quatX": 7.344300444626215e-17,
-                "quatY": -0.9743417889088022,
-                "quatZ": 7.344300444626215e-17,
-                "quatW": -0.22507349552089667
+                "pos": [
+                  16.057,
+                  0.45,
+                  -23.959
+                ],
+                "quat": [
+                  7.344300444626215e-17,
+                  -0.9743417889088022,
+                  7.344300444626215e-17,
+                  -0.22507349552089667
+                ],
+                "scale": [
+                  2.2,
+                  0.08,
+                  0.08
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2789,16 +3405,22 @@
                 "value": "Decor_FencePostA_06"
               },
               "Transform": {
-                "posX": 15.157,
-                "posY": 0.35,
-                "posZ": -23.959,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 7.344300444626215e-17,
-                "quatY": -0.9743417889088022,
-                "quatZ": 7.344300444626215e-17,
-                "quatW": -0.22507349552089667
+                "pos": [
+                  15.157,
+                  0.35,
+                  -23.959
+                ],
+                "quat": [
+                  7.344300444626215e-17,
+                  -0.9743417889088022,
+                  7.344300444626215e-17,
+                  -0.22507349552089667
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2815,16 +3437,22 @@
                 "value": "Decor_FencePostB_06"
               },
               "Transform": {
-                "posX": 16.957,
-                "posY": 0.35,
-                "posZ": -23.959,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 7.344300444626215e-17,
-                "quatY": -0.9743417889088022,
-                "quatZ": 7.344300444626215e-17,
-                "quatW": -0.22507349552089667
+                "pos": [
+                  16.957,
+                  0.35,
+                  -23.959
+                ],
+                "quat": [
+                  7.344300444626215e-17,
+                  -0.9743417889088022,
+                  7.344300444626215e-17,
+                  -0.22507349552089667
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2841,16 +3469,22 @@
                 "value": "Decor_Fence_07"
               },
               "Transform": {
-                "posX": 0.488,
-                "posY": 0.45,
-                "posZ": -13.157,
-                "scaleX": 2.2,
-                "scaleY": 0.08,
-                "scaleZ": 0.08,
-                "quatX": 0,
-                "quatY": 0.5401823050152236,
-                "quatZ": 0,
-                "quatW": 0.8415480243862735
+                "pos": [
+                  0.488,
+                  0.45,
+                  -13.157
+                ],
+                "quat": [
+                  0,
+                  0.5401823050152236,
+                  0,
+                  0.8415480243862735
+                ],
+                "scale": [
+                  2.2,
+                  0.08,
+                  0.08
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2867,16 +3501,22 @@
                 "value": "Decor_FencePostA_07"
               },
               "Transform": {
-                "posX": -0.412,
-                "posY": 0.35,
-                "posZ": -13.157,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 0,
-                "quatY": 0.5401823050152236,
-                "quatZ": 0,
-                "quatW": 0.8415480243862735
+                "pos": [
+                  -0.412,
+                  0.35,
+                  -13.157
+                ],
+                "quat": [
+                  0,
+                  0.5401823050152236,
+                  0,
+                  0.8415480243862735
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2893,16 +3533,22 @@
                 "value": "Decor_FencePostB_07"
               },
               "Transform": {
-                "posX": 1.388,
-                "posY": 0.35,
-                "posZ": -13.157,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 0,
-                "quatY": 0.5401823050152236,
-                "quatZ": 0,
-                "quatW": 0.8415480243862735
+                "pos": [
+                  1.388,
+                  0.35,
+                  -13.157
+                ],
+                "quat": [
+                  0,
+                  0.5401823050152236,
+                  0,
+                  0.8415480243862735
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2919,16 +3565,22 @@
                 "value": "Decor_Fence_08"
               },
               "Transform": {
-                "posX": -1.652,
-                "posY": 0.45,
-                "posZ": -23.209,
-                "scaleX": 2.2,
-                "scaleY": 0.08,
-                "scaleZ": 0.08,
-                "quatX": 0,
-                "quatY": 0.4630168297106204,
-                "quatZ": 0,
-                "quatW": 0.8863494882972102
+                "pos": [
+                  -1.652,
+                  0.45,
+                  -23.209
+                ],
+                "quat": [
+                  0,
+                  0.4630168297106204,
+                  0,
+                  0.8863494882972102
+                ],
+                "scale": [
+                  2.2,
+                  0.08,
+                  0.08
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2945,16 +3597,22 @@
                 "value": "Decor_FencePostA_08"
               },
               "Transform": {
-                "posX": -2.552,
-                "posY": 0.35,
-                "posZ": -23.209,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 0,
-                "quatY": 0.4630168297106204,
-                "quatZ": 0,
-                "quatW": 0.8863494882972102
+                "pos": [
+                  -2.552,
+                  0.35,
+                  -23.209
+                ],
+                "quat": [
+                  0,
+                  0.4630168297106204,
+                  0,
+                  0.8863494882972102
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2971,16 +3629,22 @@
                 "value": "Decor_FencePostB_08"
               },
               "Transform": {
-                "posX": -0.752,
-                "posY": 0.35,
-                "posZ": -23.209,
-                "scaleX": 0.1,
-                "scaleY": 0.7,
-                "scaleZ": 0.1,
-                "quatX": 0,
-                "quatY": 0.4630168297106204,
-                "quatZ": 0,
-                "quatW": 0.8863494882972102
+                "pos": [
+                  -0.752,
+                  0.35,
+                  -23.209
+                ],
+                "quat": [
+                  0,
+                  0.4630168297106204,
+                  0,
+                  0.8863494882972102
+                ],
+                "scale": [
+                  0.1,
+                  0.7,
+                  0.1
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -2997,16 +3661,22 @@
                 "value": "Decor_Bone_01a"
               },
               "Transform": {
-                "posX": 23.488,
-                "posY": 0.08,
-                "posZ": 22.291,
-                "scaleX": 0.243,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 8.498188248081962e-17,
-                "quatY": -0.8298029351599332,
-                "quatZ": 8.498188248081962e-17,
-                "quatW": -0.5580565283194523
+                "pos": [
+                  23.488,
+                  0.08,
+                  22.291
+                ],
+                "quat": [
+                  8.498188248081962e-17,
+                  -0.8298029351599332,
+                  8.498188248081962e-17,
+                  -0.5580565283194523
+                ],
+                "scale": [
+                  0.243,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3023,16 +3693,22 @@
                 "value": "Decor_Bone_01b"
               },
               "Transform": {
-                "posX": 23.56,
-                "posY": 0.08,
-                "posZ": 22.807,
-                "scaleX": 0.153,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 0,
-                "quatY": 0.1443700173733434,
-                "quatZ": 0,
-                "quatW": 0.9895237733797104
+                "pos": [
+                  23.56,
+                  0.08,
+                  22.807
+                ],
+                "quat": [
+                  0,
+                  0.1443700173733434,
+                  0,
+                  0.9895237733797104
+                ],
+                "scale": [
+                  0.153,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3049,16 +3725,22 @@
                 "value": "Decor_Bone_01c"
               },
               "Transform": {
-                "posX": 23.521,
-                "posY": 0.08,
-                "posZ": 22.523,
-                "scaleX": 0.24,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 8.535515576619457e-17,
-                "quatY": -0.8162338954411635,
-                "quatZ": 8.535515576619457e-17,
-                "quatW": -0.5777215834058338
+                "pos": [
+                  23.521,
+                  0.08,
+                  22.523
+                ],
+                "quat": [
+                  8.535515576619457e-17,
+                  -0.8162338954411635,
+                  8.535515576619457e-17,
+                  -0.5777215834058338
+                ],
+                "scale": [
+                  0.24,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3075,16 +3757,22 @@
                 "value": "Decor_Bone_02a"
               },
               "Transform": {
-                "posX": 6.545,
-                "posY": 0.08,
-                "posZ": 12.77,
-                "scaleX": 0.417,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 0,
-                "quatY": 0.6511730061503698,
-                "quatZ": 0,
-                "quatW": 0.7589293221776916
+                "pos": [
+                  6.545,
+                  0.08,
+                  12.77
+                ],
+                "quat": [
+                  0,
+                  0.6511730061503698,
+                  0,
+                  0.7589293221776916
+                ],
+                "scale": [
+                  0.417,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3101,16 +3789,22 @@
                 "value": "Decor_Bone_02b"
               },
               "Transform": {
-                "posX": 6.51,
-                "posY": 0.08,
-                "posZ": 12.54,
-                "scaleX": 0.389,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 7.4724248697915e-17,
-                "quatY": -0.9675111178603264,
-                "quatZ": 7.4724248697915e-17,
-                "quatW": -0.25282847311302087
+                "pos": [
+                  6.51,
+                  0.08,
+                  12.54
+                ],
+                "quat": [
+                  7.4724248697915e-17,
+                  -0.9675111178603264,
+                  7.4724248697915e-17,
+                  -0.25282847311302087
+                ],
+                "scale": [
+                  0.389,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3127,16 +3821,22 @@
                 "value": "Decor_Bone_02c"
               },
               "Transform": {
-                "posX": 6.433,
-                "posY": 0.08,
-                "posZ": 12.803,
-                "scaleX": 0.198,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 7.855998774117924e-17,
-                "quatY": -0.9389625272344091,
-                "quatZ": 7.855998774117924e-17,
-                "quatW": -0.344019436150883
+                "pos": [
+                  6.433,
+                  0.08,
+                  12.803
+                ],
+                "quat": [
+                  7.855998774117924e-17,
+                  -0.9389625272344091,
+                  7.855998774117924e-17,
+                  -0.344019436150883
+                ],
+                "scale": [
+                  0.198,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3153,16 +3853,22 @@
                 "value": "Decor_Bone_03a"
               },
               "Transform": {
-                "posX": -15.685,
-                "posY": 0.08,
-                "posZ": -6.626,
-                "scaleX": 0.182,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 0,
-                "quatY": 0.5643627323119412,
-                "quatZ": 0,
-                "quatW": 0.8255269265005232
+                "pos": [
+                  -15.685,
+                  0.08,
+                  -6.626
+                ],
+                "quat": [
+                  0,
+                  0.5643627323119412,
+                  0,
+                  0.8255269265005232
+                ],
+                "scale": [
+                  0.182,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3179,16 +3885,22 @@
                 "value": "Decor_Bone_03b"
               },
               "Transform": {
-                "posX": -15.43,
-                "posY": 0.08,
-                "posZ": -6.8,
-                "scaleX": 0.158,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 6.368253496695582e-17,
-                "quatY": -0.9991653146436629,
-                "quatZ": 6.368253496695582e-17,
-                "quatW": -0.04084940651992597
+                "pos": [
+                  -15.43,
+                  0.08,
+                  -6.8
+                ],
+                "quat": [
+                  6.368253496695582e-17,
+                  -0.9991653146436629,
+                  6.368253496695582e-17,
+                  -0.04084940651992597
+                ],
+                "scale": [
+                  0.158,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3205,16 +3917,22 @@
                 "value": "Decor_Bone_03c"
               },
               "Transform": {
-                "posX": -15.26,
-                "posY": 0.08,
-                "posZ": -7.087,
-                "scaleX": 0.324,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 7.741980942212684e-17,
-                "quatY": -0.9489575148891104,
-                "quatZ": 7.741980942212684e-17,
-                "quatW": -0.31540392346241325
+                "pos": [
+                  -15.26,
+                  0.08,
+                  -7.087
+                ],
+                "quat": [
+                  7.741980942212684e-17,
+                  -0.9489575148891104,
+                  7.741980942212684e-17,
+                  -0.31540392346241325
+                ],
+                "scale": [
+                  0.324,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3231,16 +3949,22 @@
                 "value": "Decor_Bone_04a"
               },
               "Transform": {
-                "posX": 12.012,
-                "posY": 0.08,
-                "posZ": -3.834,
-                "scaleX": 0.443,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 7.419572777516615e-17,
-                "quatY": -0.970464593676659,
-                "quatZ": 7.419572777516615e-17,
-                "quatW": -0.24124359560410516
+                "pos": [
+                  12.012,
+                  0.08,
+                  -3.834
+                ],
+                "quat": [
+                  7.419572777516615e-17,
+                  -0.970464593676659,
+                  7.419572777516615e-17,
+                  -0.24124359560410516
+                ],
+                "scale": [
+                  0.443,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3257,16 +3981,22 @@
                 "value": "Decor_Bone_04b"
               },
               "Transform": {
-                "posX": 11.695,
-                "posY": 0.08,
-                "posZ": -3.52,
-                "scaleX": 0.393,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 0,
-                "quatY": 0.2253030631465825,
-                "quatZ": 0,
-                "quatW": 0.9742887301702545
+                "pos": [
+                  11.695,
+                  0.08,
+                  -3.52
+                ],
+                "quat": [
+                  0,
+                  0.2253030631465825,
+                  0,
+                  0.9742887301702545
+                ],
+                "scale": [
+                  0.393,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3283,16 +4013,22 @@
                 "value": "Decor_Bone_04c"
               },
               "Transform": {
-                "posX": 12.439,
-                "posY": 0.08,
-                "posZ": -3.902,
-                "scaleX": 0.273,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 0,
-                "quatY": 0.4735202913965836,
-                "quatZ": 0,
-                "quatW": 0.8807829094820667
+                "pos": [
+                  12.439,
+                  0.08,
+                  -3.902
+                ],
+                "quat": [
+                  0,
+                  0.4735202913965836,
+                  0,
+                  0.8807829094820667
+                ],
+                "scale": [
+                  0.273,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3309,16 +4045,22 @@
                 "value": "Decor_Bone_05a"
               },
               "Transform": {
-                "posX": 5.666,
-                "posY": 0.08,
-                "posZ": 9.435,
-                "scaleX": 0.426,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 7.655870196065057e-17,
-                "quatY": -0.955585959923615,
-                "quatZ": 7.655870196065057e-17,
-                "quatW": -0.29471252636571704
+                "pos": [
+                  5.666,
+                  0.08,
+                  9.435
+                ],
+                "quat": [
+                  7.655870196065057e-17,
+                  -0.955585959923615,
+                  7.655870196065057e-17,
+                  -0.29471252636571704
+                ],
+                "scale": [
+                  0.426,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3335,16 +4077,22 @@
                 "value": "Decor_Bone_05b"
               },
               "Transform": {
-                "posX": 5.108,
-                "posY": 0.08,
-                "posZ": 8.816,
-                "scaleX": 0.229,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 8.141800128124901e-17,
-                "quatY": -0.9056668735107378,
-                "quatZ": 8.141800128124901e-17,
-                "quatW": -0.42398999307210694
+                "pos": [
+                  5.108,
+                  0.08,
+                  8.816
+                ],
+                "quat": [
+                  8.141800128124901e-17,
+                  -0.9056668735107378,
+                  8.141800128124901e-17,
+                  -0.42398999307210694
+                ],
+                "scale": [
+                  0.229,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3361,16 +4109,22 @@
                 "value": "Decor_Bone_05c"
               },
               "Transform": {
-                "posX": 5.133,
-                "posY": 0.08,
-                "posZ": 9.381,
-                "scaleX": 0.373,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 8.627943409164323e-17,
-                "quatY": -0.7648944192598653,
-                "quatZ": 8.627943409164323e-17,
-                "quatW": -0.6441556701490047
+                "pos": [
+                  5.133,
+                  0.08,
+                  9.381
+                ],
+                "quat": [
+                  8.627943409164323e-17,
+                  -0.7648944192598653,
+                  8.627943409164323e-17,
+                  -0.6441556701490047
+                ],
+                "scale": [
+                  0.373,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3387,16 +4141,22 @@
                 "value": "Decor_Bone_06a"
               },
               "Transform": {
-                "posX": -21.616,
-                "posY": 0.08,
-                "posZ": 10.414,
-                "scaleX": 0.381,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 8.555929836512448e-17,
-                "quatY": -0.8077116274492183,
-                "quatZ": 8.555929836512448e-17,
-                "quatW": -0.5895777530430869
+                "pos": [
+                  -21.616,
+                  0.08,
+                  10.414
+                ],
+                "quat": [
+                  8.555929836512448e-17,
+                  -0.8077116274492183,
+                  8.555929836512448e-17,
+                  -0.5895777530430869
+                ],
+                "scale": [
+                  0.381,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3413,16 +4173,22 @@
                 "value": "Decor_Bone_06b"
               },
               "Transform": {
-                "posX": -21.095,
-                "posY": 0.08,
-                "posZ": 9.718,
-                "scaleX": 0.308,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 8.590139894538721e-17,
-                "quatY": -0.7907942772086276,
-                "quatZ": 8.590139894538721e-17,
-                "quatW": -0.612082029742815
+                "pos": [
+                  -21.095,
+                  0.08,
+                  9.718
+                ],
+                "quat": [
+                  8.590139894538721e-17,
+                  -0.7907942772086276,
+                  8.590139894538721e-17,
+                  -0.612082029742815
+                ],
+                "scale": [
+                  0.308,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -3439,16 +4205,22 @@
                 "value": "Decor_Bone_06c"
               },
               "Transform": {
-                "posX": -21.354,
-                "posY": 0.08,
-                "posZ": 10.131,
-                "scaleX": 0.352,
-                "scaleY": 0.12,
-                "scaleZ": 0.14,
-                "quatX": 0,
-                "quatY": 0.6449596468977697,
-                "quatZ": 0,
-                "quatW": 0.7642166275824573
+                "pos": [
+                  -21.354,
+                  0.08,
+                  10.131
+                ],
+                "quat": [
+                  0,
+                  0.6449596468977697,
+                  0,
+                  0.7642166275824573
+                ],
+                "scale": [
+                  0.352,
+                  0.12,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0

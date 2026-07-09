@@ -279,7 +279,7 @@ export class CommandExecutor {
     const entity = b.Entity.self[i] as EntityHandle;
     const movement = new MovementView(b, i);
     const command = new CommandView(entity);
-    const transform: TransformXZ = { x: b.Transform.posX[i], z: b.Transform.posZ[i] };
+    const transform: TransformXZ = { x: b.Transform.pos[i * 3], z: b.Transform.pos[i * 3 + 2] };
 
     // Being pushed by a building -> skip; movement finishes the push first.
     if (movement.isPushed) return;
@@ -387,8 +387,8 @@ export class CommandExecutor {
         const target = targetRaw as unknown as EntityHandle;
         const tt = world.get(target, Transform);
         if (!tt.ok) { command.advanceQueue(); break; }
-        const dxG = tt.value.posX - transform.x;
-        const dzG = tt.value.posZ - transform.z;
+        const dxG = tt.value.pos[0] - transform.x;
+        const dzG = tt.value.pos[2] - transform.z;
         if (dxG * dxG + dzG * dzG <= GARRISON_REACH_DIST * GARRISON_REACH_DIST) {
           movement.clearTarget();
           movement.useFlowField = false;
@@ -401,7 +401,7 @@ export class CommandExecutor {
           command.advanceQueue();
         } else {
           // travel toward the carrier/unit (keep the command current).
-          const moveCmd: UnitCommand = { type: cmd.type, targetX: tt.value.posX, targetZ: tt.value.posZ, targetEntity: targetRaw };
+          const moveCmd: UnitCommand = { type: cmd.type, targetX: tt.value.pos[0], targetZ: tt.value.pos[2], targetEntity: targetRaw };
           this._executeMove(entity, transform, movement, command, moveCmd);
           if (command.current && command.current.type !== cmd.type) command.current.type = cmd.type;
         }

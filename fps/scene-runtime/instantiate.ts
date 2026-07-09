@@ -16,12 +16,11 @@ import {
   DirectionalLight,
   PointLight,
   Materials,
-  HANDLE_CUBE,
-  HANDLE_SPHERE,
   createSphereGeometry,
   createCylinderGeometry,
   quat,
 } from '@forgeax/engine-runtime';
+import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { getLoadedGltf } from './gltf-runtime';
 import type {
   SceneDocument,
@@ -168,7 +167,7 @@ export function instantiateScene(doc: SceneDocument, ctx: InstantiateCtx): Insta
     const gltfRef = comps.GltfRef as { path?: string; nodeCount?: number; meshCount?: number } | undefined;
 
     const px = num(t?.x, 0), py = num(t?.y, 0), pz = num(t?.z, 0);
-    const sx = num(t?.scaleX, 1), sy = num(t?.scaleY, 1), sz = num(t?.scaleZ, 1);
+    const sx = num(t?.scale?.[0], 1), sy = num(t?.scale?.[1], 1), sz = num(t?.scale?.[2], 1);
 
     // Collider projection (XZ): box half-extents from Transform scale; cylinder
     // from radius. Collected for ANY entity with a Transform + Collider — even an
@@ -194,13 +193,13 @@ export function instantiateScene(doc: SceneDocument, ctx: InstantiateCtx): Insta
         let first: Entity | undefined;
         for (const node of loaded.nodes) {
           const nc = node.components;
-          const nt = (nc.Transform ?? {}) as Record<string, number>;
+          const nt = (nc.Transform ?? {}) as { pos?: number[]; quat?: number[]; scale?: number[] };
           // Compose with the ref entity: translate by (px,py,pz), scale by (sx,sy,sz).
           // (Ref rotation is not composed in v1 — imports start at identity.)
-          const data: Record<string, number> = {
-            posX: px + num(nt.posX, 0) * sx, posY: py + num(nt.posY, 0) * sy, posZ: pz + num(nt.posZ, 0) * sz,
-            scaleX: sx * num(nt.scaleX, 1), scaleY: sy * num(nt.scaleY, 1), scaleZ: sz * num(nt.scaleZ, 1),
-            quatX: num(nt.quatX, 0), quatY: num(nt.quatY, 0), quatZ: num(nt.quatZ, 0), quatW: num(nt.quatW, 1),
+          const data: Record<string, number[]> = {
+            pos: [px + num(nt.pos?.[0], 0) * sx, py + num(nt.pos?.[1], 0) * sy, pz + num(nt.pos?.[2], 0) * sz],
+            scale: [sx * num(nt.scale?.[0], 1), sy * num(nt.scale?.[1], 1), sz * num(nt.scale?.[2], 1)],
+            quat: [num(nt.quat?.[0], 0), num(nt.quat?.[1], 0), num(nt.quat?.[2], 0), num(nt.quat?.[3], 1)],
           };
           const parts: unknown[] = [{ component: Transform, data }];
           if (nc.MeshFilter) parts.push({ component: MeshFilter, data: nc.MeshFilter });
@@ -214,7 +213,7 @@ export function instantiateScene(doc: SceneDocument, ctx: InstantiateCtx): Insta
         if (first !== undefined) { entities.set(id, first); continue; }
       }
       // Not loaded yet → placeholder cube (the loader will trigger a resync).
-      const xfData: Record<string, number> = { posX: px, posY: py, posZ: pz, scaleX: sx, scaleY: sy, scaleZ: sz };
+      const xfData: Record<string, number[]> = { pos: [px, py, pz], scale: [sx, sy, sz] };
       const placeholderMat = world.allocSharedRef('MaterialAsset', Materials.standard({ baseColor: [0.4, 0.7, 1, 0.6], roughness: 0.5, metallic: 0.2 }));
       const entity = world.spawn(
         { component: Transform, data: xfData },
@@ -234,14 +233,14 @@ export function instantiateScene(doc: SceneDocument, ctx: InstantiateCtx): Insta
 
     const parts: unknown[] = [];
     if (t || isLight) {
-      const data: Record<string, number> = { posX: px, posY: py, posZ: pz, scaleX: sx, scaleY: sy, scaleZ: sz };
+      const data: Record<string, number[]> = { pos: [px, py, pz], scale: [sx, sy, sz] };
       // rotation: euler degrees (rotX/Y/Z) → quaternion. Identity is omitted so
       // axis-aligned entities (the common case) keep the engine default.
       const rx = num(t?.rotX, 0), ry = num(t?.rotY, 0), rz = num(t?.rotZ, 0);
       if (rx || ry || rz) {
         const q = quat.create();
         quat.fromEuler(q, rx * DEG2RAD, ry * DEG2RAD, rz * DEG2RAD, 'XYZ');
-        data.quatX = q[0]; data.quatY = q[1]; data.quatZ = q[2]; data.quatW = q[3];
+        data.quat = [q[0], q[1], q[2], q[3]];
       }
       parts.push({ component: Transform, data });
     }
@@ -300,7 +299,7 @@ function rgbIntensity(l: LightData): { colorR: number; colorG: number; colorB: n
 // `buildNativeScene` projects a SceneDocument onto the engine's NATIVE scene
 // pipeline: it registers MeshAsset/MaterialAsset handles, builds a `SceneAsset`
 // POD ({kind:'scene', nodes:[{localId, components}]}) using the engine's own
-// component schemas (Transform posX.. / MeshFilter / MeshRenderer / DirectionalLight
+// component schemas (Transform pos/quat/scale / MeshFilter / MeshRenderer / DirectionalLight
 // / PointLight), registers it, and returns the handle.
 // The caller (editor sync / game boot) then uses the ENGINE-NATIVE
 // `assets.instantiate(handle, world)` + `world.sceneInstances` API instead of a
@@ -316,7 +315,7 @@ function rgbIntensity(l: LightData): { colorR: number; colorG: number; colorB: n
 export interface SceneEntity {
   /** doc entity id (the node's localId in the built SceneAsset = its array index). */
   docId: EntityId;
-  /** engine component name → POD data (Transform posX.. / MeshFilter / MeshRenderer /
+  /** engine component name → POD data (Transform pos/quat/scale / MeshFilter / MeshRenderer /
    *  DirectionalLight / PointLight). */
   components: Record<string, Record<string, unknown>>;
 }
@@ -386,13 +385,13 @@ export function sceneEntities(doc: SceneDocument, ctx: InstantiateCtx, caches: S
     return h;
   };
 
-  const transformData = (px: number, py: number, pz: number, sx: number, sy: number, sz: number, t?: TransformData): Record<string, number> => {
-    const data: Record<string, number> = { posX: px, posY: py, posZ: pz, scaleX: sx, scaleY: sy, scaleZ: sz };
+  const transformData = (px: number, py: number, pz: number, sx: number, sy: number, sz: number, t?: TransformData): Record<string, number[]> => {
+    const data: Record<string, number[]> = { pos: [px, py, pz], scale: [sx, sy, sz] };
     const rx = num(t?.rotX, 0), ry = num(t?.rotY, 0), rz = num(t?.rotZ, 0);
     if (rx || ry || rz) {
       const q = quat.create();
       quat.fromEuler(q, rx * DEG2RAD, ry * DEG2RAD, rz * DEG2RAD, 'XYZ');
-      data.quatX = q[0]; data.quatY = q[1]; data.quatZ = q[2]; data.quatW = q[3];
+      data.quat = [q[0], q[1], q[2], q[3]];
     }
     return data;
   };
@@ -418,7 +417,7 @@ export function sceneEntities(doc: SceneDocument, ctx: InstantiateCtx, caches: S
     const gltfRef = comps.GltfRef as { path?: string } | undefined;
 
     const px = num(t?.x, 0), py = num(t?.y, 0), pz = num(t?.z, 0);
-    const sx = num(t?.scaleX, 1), sy = num(t?.scaleY, 1), sz = num(t?.scaleZ, 1);
+    const sx = num(t?.scale?.[0], 1), sy = num(t?.scale?.[1], 1), sz = num(t?.scale?.[2], 1);
 
     if (t) {
       const shape = collider?.shape;

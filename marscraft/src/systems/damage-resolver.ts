@@ -135,7 +135,7 @@ export function resolveDamage(
   if (attackerY !== undefined) {
     const tr = world.get(target, Transform);
     if (tr.ok) {
-      const heightDiff = tr.value.posY - attackerY;
+      const heightDiff = tr.value.pos[1] - attackerY;
       if (heightDiff > 3 && combatRandom() < HIGH_GROUND_MISS_CHANCE) {
         return { actualDamage: 0, missed: true, killed: false };
       }

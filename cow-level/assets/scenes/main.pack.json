@@ -15,12 +15,16 @@
                 "value": "Ground"
               },
               "Transform": {
-                "posX": -0.8463322151667647,
-                "posY": -0.08,
-                "posZ": -0.6926083740117193,
-                "scaleX": 40,
-                "scaleY": 0.16,
-                "scaleZ": 40
+                "pos": [
+                  -0.8463322151667647,
+                  -0.08,
+                  -0.6926083740117193
+                ],
+                "scale": [
+                  40,
+                  0.16,
+                  40
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -39,12 +43,16 @@
                 "value": "Sun"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 8,
-                "posZ": 0,
-                "scaleX": 1,
-                "scaleY": 1,
-                "scaleZ": 1
+                "pos": [
+                  0,
+                  8,
+                  0
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
               },
               "DirectionalLight": {
                 "directionX": -0.35,
@@ -69,12 +77,16 @@
                 "value": "PortalBase"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 0.1,
-                "posZ": -9.5,
-                "scaleX": 3.2,
-                "scaleY": 0.2,
-                "scaleZ": 1.2
+                "pos": [
+                  0,
+                  0.1,
+                  -9.5
+                ],
+                "scale": [
+                  3.2,
+                  0.2,
+                  1.2
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -93,12 +105,16 @@
                 "value": "PortalLeft"
               },
               "Transform": {
-                "posX": -1.35,
-                "posY": 1.35,
-                "posZ": -9.5,
-                "scaleX": 0.28,
-                "scaleY": 2.7,
-                "scaleZ": 0.28
+                "pos": [
+                  -1.35,
+                  1.35,
+                  -9.5
+                ],
+                "scale": [
+                  0.28,
+                  2.7,
+                  0.28
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 3
@@ -117,12 +133,16 @@
                 "value": "PortalRight"
               },
               "Transform": {
-                "posX": 1.35,
-                "posY": 1.35,
-                "posZ": -9.5,
-                "scaleX": 0.28,
-                "scaleY": 2.7,
-                "scaleZ": 0.28
+                "pos": [
+                  1.35,
+                  1.35,
+                  -9.5
+                ],
+                "scale": [
+                  0.28,
+                  2.7,
+                  0.28
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 3
@@ -141,12 +161,16 @@
                 "value": "PortalCore"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 1.45,
-                "posZ": -9.55,
-                "scaleX": 1.45,
-                "scaleY": 1.45,
-                "scaleZ": 0.12
+                "pos": [
+                  0,
+                  1.45,
+                  -9.55
+                ],
+                "scale": [
+                  1.45,
+                  1.45,
+                  0.12
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 5
@@ -165,12 +189,16 @@
                 "value": "FenceNorthA"
               },
               "Transform": {
-                "posX": -8,
-                "posY": 0.42,
-                "posZ": -13.2,
-                "scaleX": 8,
-                "scaleY": 0.35,
-                "scaleZ": 0.22
+                "pos": [
+                  -8,
+                  0.42,
+                  -13.2
+                ],
+                "scale": [
+                  8,
+                  0.35,
+                  0.22
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -189,12 +217,16 @@
                 "value": "FenceNorthB"
               },
               "Transform": {
-                "posX": 8,
-                "posY": 0.42,
-                "posZ": -13.2,
-                "scaleX": 8,
-                "scaleY": 0.35,
-                "scaleZ": 0.22
+                "pos": [
+                  8,
+                  0.42,
+                  -13.2
+                ],
+                "scale": [
+                  8,
+                  0.35,
+                  0.22
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -213,12 +245,16 @@
                 "value": "FenceSouthA"
               },
               "Transform": {
-                "posX": -8,
-                "posY": 0.42,
-                "posZ": 13.2,
-                "scaleX": 8,
-                "scaleY": 0.35,
-                "scaleZ": 0.22
+                "pos": [
+                  -8,
+                  0.42,
+                  13.2
+                ],
+                "scale": [
+                  8,
+                  0.35,
+                  0.22
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -237,12 +273,16 @@
                 "value": "FenceSouthB"
               },
               "Transform": {
-                "posX": 8,
-                "posY": 0.42,
-                "posZ": 13.2,
-                "scaleX": 8,
-                "scaleY": 0.35,
-                "scaleZ": 0.22
+                "pos": [
+                  8,
+                  0.42,
+                  13.2
+                ],
+                "scale": [
+                  8,
+                  0.35,
+                  0.22
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -261,12 +301,16 @@
                 "value": "FenceWestA"
               },
               "Transform": {
-                "posX": -13.2,
-                "posY": 0.42,
-                "posZ": -8,
-                "scaleX": 0.22,
-                "scaleY": 0.35,
-                "scaleZ": 8
+                "pos": [
+                  -13.2,
+                  0.42,
+                  -8
+                ],
+                "scale": [
+                  0.22,
+                  0.35,
+                  8
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -285,12 +329,16 @@
                 "value": "FenceWestB"
               },
               "Transform": {
-                "posX": -13.2,
-                "posY": 0.42,
-                "posZ": 8,
-                "scaleX": 0.22,
-                "scaleY": 0.35,
-                "scaleZ": 8
+                "pos": [
+                  -13.2,
+                  0.42,
+                  8
+                ],
+                "scale": [
+                  0.22,
+                  0.35,
+                  8
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -309,12 +357,16 @@
                 "value": "FenceEastA"
               },
               "Transform": {
-                "posX": 13.2,
-                "posY": 0.42,
-                "posZ": -8,
-                "scaleX": 0.22,
-                "scaleY": 0.35,
-                "scaleZ": 8
+                "pos": [
+                  13.2,
+                  0.42,
+                  -8
+                ],
+                "scale": [
+                  0.22,
+                  0.35,
+                  8
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -333,12 +385,16 @@
                 "value": "FenceEastB"
               },
               "Transform": {
-                "posX": 13.2,
-                "posY": 0.42,
-                "posZ": 8,
-                "scaleX": 0.22,
-                "scaleY": 0.35,
-                "scaleZ": 8
+                "pos": [
+                  13.2,
+                  0.42,
+                  8
+                ],
+                "scale": [
+                  0.22,
+                  0.35,
+                  8
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -357,12 +413,16 @@
                 "value": "StoneObeliskA"
               },
               "Transform": {
-                "posX": -7.2,
-                "posY": 0.9,
-                "posZ": -5.5,
-                "scaleX": 0.9,
-                "scaleY": 1.8,
-                "scaleZ": 0.9
+                "pos": [
+                  -7.2,
+                  0.9,
+                  -5.5
+                ],
+                "scale": [
+                  0.9,
+                  1.8,
+                  0.9
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -381,12 +441,16 @@
                 "value": "StoneObeliskB"
               },
               "Transform": {
-                "posX": 11.641182792019562,
-                "posY": 0.7,
-                "posZ": 11.069981344969246,
-                "scaleX": 1,
-                "scaleY": 1.4,
-                "scaleZ": 0.8
+                "pos": [
+                  11.641182792019562,
+                  0.7,
+                  11.069981344969246
+                ],
+                "scale": [
+                  1,
+                  1.4,
+                  0.8
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -405,12 +469,16 @@
                 "value": "StoneObeliskC"
               },
               "Transform": {
-                "posX": -8.4,
-                "posY": 0.6,
-                "posZ": 6.4,
-                "scaleX": 1.1,
-                "scaleY": 1.2,
-                "scaleZ": 0.7
+                "pos": [
+                  -8.4,
+                  0.6,
+                  6.4
+                ],
+                "scale": [
+                  1.1,
+                  1.2,
+                  0.7
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -429,12 +497,16 @@
                 "value": "BonePileA"
               },
               "Transform": {
-                "posX": 4.2,
-                "posY": 0.24,
-                "posZ": -4.8,
-                "scaleX": 1.1,
-                "scaleY": 0.35,
-                "scaleZ": 0.8
+                "pos": [
+                  4.2,
+                  0.24,
+                  -4.8
+                ],
+                "scale": [
+                  1.1,
+                  0.35,
+                  0.8
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -453,12 +525,16 @@
                 "value": "BonePileB"
               },
               "Transform": {
-                "posX": -5.4,
-                "posY": 0.24,
-                "posZ": 4.4,
-                "scaleX": 1,
-                "scaleY": 0.35,
-                "scaleZ": 0.9
+                "pos": [
+                  -5.4,
+                  0.24,
+                  4.4
+                ],
+                "scale": [
+                  1,
+                  0.35,
+                  0.9
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -477,12 +553,16 @@
                 "value": "BarrelA"
               },
               "Transform": {
-                "posX": 6.8,
-                "posY": 0.48,
-                "posZ": -1.8,
-                "scaleX": 0.7,
-                "scaleY": 0.95,
-                "scaleZ": 0.7
+                "pos": [
+                  6.8,
+                  0.48,
+                  -1.8
+                ],
+                "scale": [
+                  0.7,
+                  0.95,
+                  0.7
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 3
@@ -501,12 +581,16 @@
                 "value": "BarrelB"
               },
               "Transform": {
-                "posX": 7.45,
-                "posY": 0.48,
-                "posZ": -1.2,
-                "scaleX": 0.7,
-                "scaleY": 0.95,
-                "scaleZ": 0.7
+                "pos": [
+                  7.45,
+                  0.48,
+                  -1.2
+                ],
+                "scale": [
+                  0.7,
+                  0.95,
+                  0.7
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 3
@@ -525,12 +609,16 @@
                 "value": "TorchA"
               },
               "Transform": {
-                "posX": -3,
-                "posY": 0.9,
-                "posZ": -7.8,
-                "scaleX": 0.22,
-                "scaleY": 1.8,
-                "scaleZ": 0.22
+                "pos": [
+                  -3,
+                  0.9,
+                  -7.8
+                ],
+                "scale": [
+                  0.22,
+                  1.8,
+                  0.22
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 3
@@ -549,12 +637,16 @@
                 "value": "TorchAFlame"
               },
               "Transform": {
-                "posX": -3,
-                "posY": 1.92,
-                "posZ": -7.8,
-                "scaleX": 0.38,
-                "scaleY": 0.38,
-                "scaleZ": 0.38
+                "pos": [
+                  -3,
+                  1.92,
+                  -7.8
+                ],
+                "scale": [
+                  0.38,
+                  0.38,
+                  0.38
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 5
@@ -573,12 +665,16 @@
                 "value": "TorchB"
               },
               "Transform": {
-                "posX": 3,
-                "posY": 0.9,
-                "posZ": -7.8,
-                "scaleX": 0.22,
-                "scaleY": 1.8,
-                "scaleZ": 0.22
+                "pos": [
+                  3,
+                  0.9,
+                  -7.8
+                ],
+                "scale": [
+                  0.22,
+                  1.8,
+                  0.22
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 3
@@ -597,12 +693,16 @@
                 "value": "TorchBFlame"
               },
               "Transform": {
-                "posX": 3,
-                "posY": 1.92,
-                "posZ": -7.8,
-                "scaleX": 0.38,
-                "scaleY": 0.38,
-                "scaleZ": 0.38
+                "pos": [
+                  3,
+                  1.92,
+                  -7.8
+                ],
+                "scale": [
+                  0.38,
+                  0.38,
+                  0.38
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 5
@@ -621,12 +721,16 @@
                 "value": "Player"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 0.9,
-                "posZ": 1.8,
-                "scaleX": 0.62,
-                "scaleY": 1,
-                "scaleZ": 0.42
+                "pos": [
+                  0,
+                  0.9,
+                  1.8
+                ],
+                "scale": [
+                  0.62,
+                  1,
+                  0.42
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -645,12 +749,16 @@
                 "value": "PlayerTorso"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 0.82,
-                "posZ": 1.8,
-                "scaleX": 0.52,
-                "scaleY": 0.6,
-                "scaleZ": 0.3
+                "pos": [
+                  0,
+                  0.82,
+                  1.8
+                ],
+                "scale": [
+                  0.52,
+                  0.6,
+                  0.3
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -669,12 +777,16 @@
                 "value": "PlayerHead"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 1.36,
-                "posZ": 1.78,
-                "scaleX": 0.34,
-                "scaleY": 0.34,
-                "scaleZ": 0.34
+                "pos": [
+                  0,
+                  1.36,
+                  1.78
+                ],
+                "scale": [
+                  0.34,
+                  0.34,
+                  0.34
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -693,12 +805,16 @@
                 "value": "PlayerArmL"
               },
               "Transform": {
-                "posX": -0.36,
-                "posY": 0.82,
-                "posZ": 1.8,
-                "scaleX": 0.14,
-                "scaleY": 0.48,
-                "scaleZ": 0.14
+                "pos": [
+                  -0.36,
+                  0.82,
+                  1.8
+                ],
+                "scale": [
+                  0.14,
+                  0.48,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -717,12 +833,16 @@
                 "value": "PlayerArmR"
               },
               "Transform": {
-                "posX": 0.36,
-                "posY": 0.82,
-                "posZ": 1.8,
-                "scaleX": 0.14,
-                "scaleY": 0.48,
-                "scaleZ": 0.14
+                "pos": [
+                  0.36,
+                  0.82,
+                  1.8
+                ],
+                "scale": [
+                  0.14,
+                  0.48,
+                  0.14
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -741,12 +861,16 @@
                 "value": "PlayerLegL"
               },
               "Transform": {
-                "posX": -0.13,
-                "posY": 0.3,
-                "posZ": 1.8,
-                "scaleX": 0.18,
-                "scaleY": 0.52,
-                "scaleZ": 0.18
+                "pos": [
+                  -0.13,
+                  0.3,
+                  1.8
+                ],
+                "scale": [
+                  0.18,
+                  0.52,
+                  0.18
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -765,12 +889,16 @@
                 "value": "PlayerLegR"
               },
               "Transform": {
-                "posX": 0.13,
-                "posY": 0.3,
-                "posZ": 1.8,
-                "scaleX": 0.18,
-                "scaleY": 0.52,
-                "scaleZ": 0.18
+                "pos": [
+                  0.13,
+                  0.3,
+                  1.8
+                ],
+                "scale": [
+                  0.18,
+                  0.52,
+                  0.18
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -789,12 +917,16 @@
                 "value": "PlayerHair"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 1.58,
-                "posZ": 1.78,
-                "scaleX": 0.42,
-                "scaleY": 0.16,
-                "scaleZ": 0.42
+                "pos": [
+                  0,
+                  1.58,
+                  1.78
+                ],
+                "scale": [
+                  0.42,
+                  0.16,
+                  0.42
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -813,12 +945,16 @@
                 "value": "PlayerCape"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 0.86,
-                "posZ": 2.02,
-                "scaleX": 0.64,
-                "scaleY": 0.86,
-                "scaleZ": 0.08
+                "pos": [
+                  0,
+                  0.86,
+                  2.02
+                ],
+                "scale": [
+                  0.64,
+                  0.86,
+                  0.08
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -837,12 +973,16 @@
                 "value": "PlayerShoulderL"
               },
               "Transform": {
-                "posX": -0.36,
-                "posY": 1.12,
-                "posZ": 1.76,
-                "scaleX": 0.22,
-                "scaleY": 0.16,
-                "scaleZ": 0.28
+                "pos": [
+                  -0.36,
+                  1.12,
+                  1.76
+                ],
+                "scale": [
+                  0.22,
+                  0.16,
+                  0.28
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -861,12 +1001,16 @@
                 "value": "PlayerShoulderR"
               },
               "Transform": {
-                "posX": 0.36,
-                "posY": 1.12,
-                "posZ": 1.76,
-                "scaleX": 0.22,
-                "scaleY": 0.16,
-                "scaleZ": 0.28
+                "pos": [
+                  0.36,
+                  1.12,
+                  1.76
+                ],
+                "scale": [
+                  0.22,
+                  0.16,
+                  0.28
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 0
@@ -885,16 +1029,22 @@
                 "value": "PlayerWeapon"
               },
               "Transform": {
-                "posX": 0.56,
-                "posY": 0.86,
-                "posZ": 1.46,
-                "scaleX": 0.08,
-                "scaleY": 0.86,
-                "scaleZ": 0.08,
-                "quatX": 0,
-                "quatY": 0,
-                "quatZ": -0.3800035087826377,
-                "quatW": 0.9249850449130969
+                "pos": [
+                  0.56,
+                  0.86,
+                  1.46
+                ],
+                "quat": [
+                  0,
+                  0,
+                  -0.3800035087826377,
+                  0.9249850449130969
+                ],
+                "scale": [
+                  0.08,
+                  0.86,
+                  0.08
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 3
@@ -913,12 +1063,16 @@
                 "value": "PlayerWeaponGlow"
               },
               "Transform": {
-                "posX": 0.7,
-                "posY": 1.24,
-                "posZ": 1.32,
-                "scaleX": 0.18,
-                "scaleY": 0.18,
-                "scaleZ": 0.18
+                "pos": [
+                  0.7,
+                  1.24,
+                  1.32
+                ],
+                "scale": [
+                  0.18,
+                  0.18,
+                  0.18
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 5
@@ -937,12 +1091,16 @@
                 "value": "PlayerAura"
               },
               "Transform": {
-                "posX": 0,
-                "posY": 0.04,
-                "posZ": 1.8,
-                "scaleX": 1.25,
-                "scaleY": 0.06,
-                "scaleZ": 1.25
+                "pos": [
+                  0,
+                  0.04,
+                  1.8
+                ],
+                "scale": [
+                  1.25,
+                  0.06,
+                  1.25
+                ]
               },
               "MeshFilter": {
                 "assetHandle": 3

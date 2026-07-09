@@ -89,9 +89,9 @@ export function snapshotCombatTargets(world: World, batches: Batch[], out: Comba
       let t = out[idx];
       if (t === undefined) { t = {} as CombatTarget; out[idx] = t; }
       t.entity = entity;
-      t.x = b.Transform.posX[i];
-      t.y = b.Transform.posY[i];
-      t.z = b.Transform.posZ[i];
+      t.x = b.Transform.pos[i * 3];
+      t.y = b.Transform.pos[i * 3 + 1];
+      t.z = b.Transform.pos[i * 3 + 2];
       t.playerId = playerId;
       t.radius = radius;
       t.isAir = isAir;

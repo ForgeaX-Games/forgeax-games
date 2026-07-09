@@ -44,7 +44,7 @@ export function spawnExplosion(
     const s = 0.2 + Math.random() * 0.5;
     const life = 0.3 + Math.random() * 0.7;
     const e = world.spawn(
-      { component: Transform, data: { posX: x, posY: Math.random() * 0.5, posZ: z, scaleX: s, scaleY: s, scaleZ: s } },
+      { component: Transform, data: { pos: [x, Math.random() * 0.5, z], scale: [s, s, s] } },
       { component: MeshFilter, data: { assetHandle: geo.particle } },
       { component: MeshRenderer, data: { materials: [mats[Math.floor(Math.random() * mats.length)]!] } },
       { component: Particle, data: { velX: Math.cos(a) * sp, velY: 1 + Math.random() * 4, velZ: Math.sin(a) * sp, life, maxLife: life } },
@@ -61,7 +61,7 @@ export function spawnTrail(
 ) {
   const s = 0.07 + Math.random() * 0.05;
   const e = world.spawn(
-    { component: Transform, data: { posX: x + (Math.random() - 0.5) * 0.1, posY: -0.04, posZ: z, scaleX: s, scaleY: s, scaleZ: s } },
+    { component: Transform, data: { pos: [x + (Math.random() - 0.5) * 0.1, -0.04, z], scale: [s, s, s] } },
     { component: MeshFilter, data: { assetHandle: geo.sphereTiny } },
     { component: MeshRenderer, data: { materials: [Math.random() > 0.4 ? mat.trailA : mat.trailB] } },
     { component: Trail, data: { life: 0.25 + Math.random() * 0.15 } },
@@ -80,7 +80,7 @@ export function spawnBullet(
   const speed = enemy ? 11 : 28;
   const s = enemy ? 1.3 : 0.9;
   const e = world.spawn(
-    { component: Transform, data: { posX: x, posZ: z, scaleX: s, scaleY: s, scaleZ: s * 1.8 } },
+    { component: Transform, data: { pos: [x, 0, z], scale: [s, s, s * 1.8] } },
     { component: MeshFilter, data: { assetHandle: geo.bullet } },
     { component: MeshRenderer, data: { materials: [enemy ? mat.bulletE : mat.bullet] } },
     { component: Bullet, data: { dirX, dirZ, speed, isEnemy: enemy ? 1 : 0, bulletType: 0, homing: 0, pierce: 0, life: 4 } },
@@ -94,7 +94,7 @@ export function spawnHomingMissile(
   x: number, z: number, list: EntityHandle[],
 ) {
   const e = world.spawn(
-    { component: Transform, data: { posX: x, posZ: z, scaleX: 0.7, scaleY: 0.7, scaleZ: 1.4 } },
+    { component: Transform, data: { pos: [x, 0, z], scale: [0.7, 0.7, 1.4] } },
     { component: MeshFilter, data: { assetHandle: geo.coneSm } },
     { component: MeshRenderer, data: { materials: [mat.puShield] } }, // blue glow
     { component: Bullet, data: { dirX: 0, dirZ: -1, speed: 16, isEnemy: 0, bulletType: 1, homing: 1, pierce: 0, life: 3.5 } },
@@ -108,7 +108,7 @@ export function spawnSpreadBullet(
   x: number, z: number, dirX: number, dirZ: number, list: EntityHandle[],
 ) {
   const e = world.spawn(
-    { component: Transform, data: { posX: x, posZ: z, scaleX: 0.7, scaleY: 0.7, scaleZ: 1.2 } },
+    { component: Transform, data: { pos: [x, 0, z], scale: [0.7, 0.7, 1.2] } },
     { component: MeshFilter, data: { assetHandle: geo.bullet } },
     { component: MeshRenderer, data: { materials: [mat.puTriple] } }, // gold
     { component: Bullet, data: { dirX, dirZ, speed: 22, isEnemy: 0, bulletType: 2, homing: 0, pierce: 0, life: 3 } },
@@ -122,7 +122,7 @@ export function spawnLaserShot(
   x: number, z: number, list: EntityHandle[],
 ) {
   const e = world.spawn(
-    { component: Transform, data: { posX: x, posZ: z, scaleX: 0.3, scaleY: 0.3, scaleZ: 2.5 } },
+    { component: Transform, data: { pos: [x, 0, z], scale: [0.3, 0.3, 2.5] } },
     { component: MeshFilter, data: { assetHandle: geo.CUBE } },
     { component: MeshRenderer, data: { materials: [mat.neonCyan] } }, // cyan laser
     { component: Bullet, data: { dirX: 0, dirZ: -1, speed: 45, isEnemy: 0, bulletType: 3, homing: 0, pierce: 1, life: 2 } },
@@ -136,7 +136,7 @@ export function spawnPlasma(
   x: number, z: number, list: EntityHandle[],
 ) {
   const e = world.spawn(
-    { component: Transform, data: { posX: x, posZ: z, scaleX: 1.4, scaleY: 1.4, scaleZ: 1.4 } },
+    { component: Transform, data: { pos: [x, 0, z], scale: [1.4, 1.4, 1.4] } },
     { component: MeshFilter, data: { assetHandle: geo.sphere } },
     { component: MeshRenderer, data: { materials: [mat.neonPurple] } }, // purple plasma
     { component: Bullet, data: { dirX: 0, dirZ: -1, speed: 10, isEnemy: 0, bulletType: 4, homing: 0, pierce: 3, life: 4 } },

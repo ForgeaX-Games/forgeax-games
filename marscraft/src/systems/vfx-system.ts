@@ -297,13 +297,13 @@ export class VfxSystem implements VfxHandle {
     }
     V.velX[i] = vx; V.velY[i] = vy; V.velZ[i] = vz;
 
-    b.Transform.posX[i] = (b.Transform.posX[i] as number) + vx * dt;
-    b.Transform.posY[i] = (b.Transform.posY[i] as number) + vy * dt;
-    b.Transform.posZ[i] = (b.Transform.posZ[i] as number) + vz * dt;
+    b.Transform.pos[i * 3] = (b.Transform.pos[i * 3] as number) + vx * dt;
+    b.Transform.pos[i * 3 + 1] = (b.Transform.pos[i * 3 + 1] as number) + vy * dt;
+    b.Transform.pos[i * 3 + 2] = (b.Transform.pos[i * 3 + 2] as number) + vz * dt;
 
     // fade-by-shrink: lerp uniform scale start->end (replaces source opacity fade)
     const s = (V.startScale[i] as number) + ((V.endScale[i] as number) - (V.startScale[i] as number)) * t;
-    b.Transform.scaleX[i] = s; b.Transform.scaleY[i] = s; b.Transform.scaleZ[i] = s;
+    b.Transform.scale[i * 3] = s; b.Transform.scale[i * 3 + 1] = s; b.Transform.scale[i * 3 + 2] = s;
 
     // optional tumble spin about a fixed axis
     const spinRate = V.spinRate[i] as number;
@@ -313,10 +313,10 @@ export class VfxSystem implements VfxHandle {
       const ax = V.axisX[i] as number, ay = V.axisY[i] as number, az = V.axisZ[i] as number;
       const half = ang * 0.5;
       const sn = Math.sin(half);
-      b.Transform.quatX[i] = ax * sn;
-      b.Transform.quatY[i] = ay * sn;
-      b.Transform.quatZ[i] = az * sn;
-      b.Transform.quatW[i] = Math.cos(half);
+      b.Transform.quat[i * 4] = ax * sn;
+      b.Transform.quat[i * 4 + 1] = ay * sn;
+      b.Transform.quat[i * 4 + 2] = az * sn;
+      b.Transform.quat[i * 4 + 3] = Math.cos(half);
     }
     return false;
   }
@@ -336,8 +336,8 @@ export class VfxSystem implements VfxHandle {
       {
         component: Transform,
         data: {
-          posX: ox + sp.pos[0], posY: oy + sp.pos[1], posZ: oz + sp.pos[2],
-          scaleX: sp.startScale, scaleY: sp.startScale, scaleZ: sp.startScale,
+          pos: [ox + sp.pos[0], oy + sp.pos[1], oz + sp.pos[2]],
+          scale: [sp.startScale, sp.startScale, sp.startScale],
         },
       },
       { component: MeshFilter, data: { assetHandle: mesh } },
@@ -1039,7 +1039,7 @@ export class VfxSystem implements VfxHandle {
     const posOf = (id: number): { x: number; y: number; z: number } | null => {
       const eh = id as unknown as EntityHandle;
       const t = world.get(eh, Transform);
-      return t.ok ? { x: t.value.posX, y: t.value.posY, z: t.value.posZ } : null;
+      return t.ok ? { x: t.value.pos[0], y: t.value.pos[1], z: t.value.pos[2] } : null;
     };
 
     // attack_hit (attacker view): the per-weapon bespoke hit (M11 ch2). Resolve

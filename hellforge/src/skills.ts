@@ -17,9 +17,10 @@
 
 import {
   Transform, MeshFilter, MeshRenderer, ChildOf, Materials,
-  HANDLE_CUBE, HANDLE_SPHERE, quat,
+  quat,
   type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle } from '@forgeax/engine-types';
 
@@ -202,9 +203,9 @@ export class SkillSystem {
     const q = quat.eulerY(yaw);
     const rootRes = this.world.spawn(
       { component: Transform, data: {
-        posX: x, posY: y, posZ: z,
-        quatX: q[0]!, quatY: q[1]!, quatZ: q[2]!, quatW: q[3]!,
-        scaleX: 1, scaleY: 1, scaleZ: 1,
+        pos: [x, y, z],
+        quat: [q[0]!, q[1]!, q[2]!, q[3]!],
+        scale: [1, 1, 1],
       } },
     );
     if (!rootRes.ok) return;
@@ -212,13 +213,13 @@ export class SkillSystem {
     const pair = this.mats.get(def.id)!;
     const parts: EntityHandle[] = [];
     for (const p of VISUALS[def.id] ?? []) {
-      const tform: Record<string, number> = {
-        posX: p.px, posY: p.py, posZ: p.pz,
-        scaleX: p.sx, scaleY: p.sy, scaleZ: p.sz,
+      const tform: { pos: number[]; scale: number[]; quat?: number[] } = {
+        pos: [p.px, p.py, p.pz],
+        scale: [p.sx, p.sy, p.sz],
       };
       if (p.rotY !== undefined) {
         const pq = quat.eulerY(p.rotY);
-        tform.quatX = pq[0]!; tform.quatY = pq[1]!; tform.quatZ = pq[2]!; tform.quatW = pq[3]!;
+        tform.quat = [pq[0]!, pq[1]!, pq[2]!, pq[3]!];
       }
       const partRes = this.world.spawn(
         { component: Transform, data: tform },
@@ -321,9 +322,9 @@ export class SkillSystem {
       const yaw = Math.atan2(p.dx, p.dz);
       const h = yaw * 0.5;
       this.world.set(p.e, Transform, {
-        posX: p.x, posY: p.y, posZ: p.z,
-        quatX: 0, quatY: Math.sin(h), quatZ: 0, quatW: Math.cos(h),
-        scaleX: 1, scaleY: 1, scaleZ: 1,
+        pos: [p.x, p.y, p.z],
+        quat: [0, Math.sin(h), 0, Math.cos(h)],
+        scale: [1, 1, 1],
       });
     }
   }

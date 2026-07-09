@@ -176,8 +176,8 @@ export function installMinimap(world: World, deps: MinimapDeps): MinimapHandle {
           const e = b.Entity.self[i] as EntityHandle;
           if (world.get(e, Garrisoned).ok) continue; // inside a transport
           const playerId = b.Faction.playerId[i] as number;
-          const x = b.Transform.posX[i] as number;
-          const z = b.Transform.posZ[i] as number;
+          const x = b.Transform.pos[i * 3] as number;
+          const z = b.Transform.pos[i * 3 + 2] as number;
           if (z < -1e6) continue; // off-field stash (garrison) — skip
           // enemy blips drawn only where visible/explored + not cloaked-undetected.
           if (playerId !== localPlayerId && playerId !== PLAYER_ID.NEUTRAL) {

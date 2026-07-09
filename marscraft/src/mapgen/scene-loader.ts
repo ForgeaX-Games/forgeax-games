@@ -23,7 +23,8 @@ function num(v: unknown, d = 0): number { return typeof v === 'number' && Number
 
 /** Y-rotation (radians) from a Transform quaternion (facing about +Y). */
 function facingOf(t: Record<string, unknown>): number {
-  const qy = num(t.quatY), qw = num(t.quatW, 1);
+  const q = Array.isArray(t.quat) ? (t.quat as unknown[]) : [];
+  const qy = num(q[1]), qw = num(q[3], 1);
   if (qy === 0 && qw === 1) return 0;
   return 2 * Math.atan2(qy, qw);
 }
@@ -40,7 +41,8 @@ export function parseMapScene(pack: unknown): MapSceneMarkers | null {
     const name = (e.components?.Name as { value?: string } | undefined)?.value;
     if (!name) continue;
     const t = (e.components?.Transform ?? {}) as Record<string, unknown>;
-    const x = num(t.posX), z = num(t.posZ);
+    const pos = Array.isArray(t.pos) ? (t.pos as unknown[]) : [];
+    const x = num(pos[0]), z = num(pos[2]);
     const colon = name.indexOf(':');
     const kind = colon >= 0 ? name.slice(0, colon) : name;
     const suffix = colon >= 0 ? name.slice(colon + 1) : '';

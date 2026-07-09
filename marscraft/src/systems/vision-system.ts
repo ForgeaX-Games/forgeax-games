@@ -156,8 +156,8 @@ export class VisionSystem implements VisionHandle {
             const grid = this._grids.get(playerId);
             if (!grid) continue;
 
-            const x = b.Transform.posX[i] as number;
-            const z = b.Transform.posZ[i] as number;
+            const x = b.Transform.pos[i * 3] as number;
+            const z = b.Transform.pos[i * 3 + 2] as number;
             const range = this._visionRangeOf(world, e);
             const h = this._getTerrainHeight ? this._getTerrainHeight(x, z) : 0;
             this._paintCircle(grid, x, z, range, mw, mh, res, h);
@@ -174,8 +174,8 @@ export class VisionSystem implements VisionHandle {
             if (playerId === PLAYER_ID.NEUTRAL) continue;
             if (!world.get(e, Abilities).ok) continue;
             if (!hasBuff(e, 'detection_revealed')) continue;
-            const x = b.Transform.posX[i] as number;
-            const z = b.Transform.posZ[i] as number;
+            const x = b.Transform.pos[i * 3] as number;
+            const z = b.Transform.pos[i * 3 + 2] as number;
             for (const [pid, grid] of this._grids) {
               if (pid === playerId) continue;
               this._paintCircle(grid, x, z, REVEAL_RANGE, mw, mh, res, 0);

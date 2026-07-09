@@ -14,9 +14,9 @@
 
 import {
   Transform, MeshFilter, MeshRenderer, Materials,
-  HANDLE_CUBE, HANDLE_SPHERE,
   type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle } from '@forgeax/engine-types';
 
@@ -160,7 +160,7 @@ export class FxSystem {
   ): void {
     if (this.particles.length > 320) return;    // hard cap — never flood the world
     const spawned = this.world.spawn(
-      { component: Transform, data: { posX: x, posY: y, posZ: z, scaleX: s, scaleY: s, scaleZ: s } },
+      { component: Transform, data: { pos: [x, y, z], scale: [s, s, s] } },
       { component: MeshFilter, data: { assetHandle: shape === 'cube' ? HANDLE_CUBE : HANDLE_SPHERE } },
       { component: MeshRenderer, data: { materials: [this.mats[color]] } },
     );
@@ -255,8 +255,8 @@ export class FxSystem {
         : p.mode === 'pop' ? p.s0 * (0.5 + t * 2.2)     // rapid expand, dies young
         : p.s0 * (1 - t * t);
       this.world.set(p.e, Transform, {
-        posX: p.x, posY: p.y, posZ: p.z,
-        scaleX: s, scaleY: s, scaleZ: s,
+        pos: [p.x, p.y, p.z],
+        scale: [s, s, s],
       });
     }
   }

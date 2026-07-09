@@ -25,7 +25,7 @@ const packPath = process.argv[2] ?? join(gameRoot, 'assets', 'scenes', 'rogue-en
 // Y-rotation (deg) from a quat, assuming a pure-Y rotation (true for every
 // camp structural entity we touch here).
 const rotYDegFromQuat = (t: Entity['components']['Transform']): number =>
-  (Math.atan2(t.quatY, t.quatW) * 2 * 180) / Math.PI;
+  (Math.atan2(t.quat[1], t.quat[3]) * 2 * 180) / Math.PI;
 
 // Entities → uniform-scaled AI prop (visible from all sides: posts/pillars/trunks).
 const UNIFORM_SWAPS: Record<string, string> = {
@@ -90,8 +90,8 @@ for (const e of ents) {
     const a = readPropAssets(propsDir, 'prop-ground');
     if (a.meshGuid) {
       const t = e.components.Transform!;
-      t.posY = -0.01;
-      t.scaleX = 1; t.scaleY = 1; t.scaleZ = 1;
+      t.pos = [t.pos?.[0] ?? 0, -0.01, t.pos?.[2] ?? 0];
+      t.scale = [1, 1, 1];
       e.components.MeshFilter = { assetHandle: ensureRefGuid(scene, a.meshGuid) };
       e.components.MeshRenderer = {
         materials: [a.materialGuid ? ensureRefGuid(scene, a.materialGuid) : groundMatIdx],
@@ -108,10 +108,10 @@ for (const e of ents) {
     const stem = UNIFORM_SWAPS[name];
     const a = readPropAssets(propsDir, stem);
     if (!a.meshGuid) { missing++; continue; }
-    const us = a.bbox.size[1] > 0 ? t.scaleY / a.bbox.size[1] : 1; // uniform to original height
+    const us = a.bbox.size[1] > 0 ? t.scale[1] / a.bbox.size[1] : 1; // uniform to original height
     e.components.MeshFilter = { assetHandle: ensureRefGuid(scene, a.meshGuid) };
     e.components.MeshRenderer = { materials: [matIdx(stem)] };
-    t.scaleX = +us.toFixed(4); t.scaleY = +us.toFixed(4); t.scaleZ = +us.toFixed(4);
+    t.scale = [+us.toFixed(4), +us.toFixed(4), +us.toFixed(4)];
     uniform++;
     continue;
   }
@@ -122,7 +122,7 @@ for (const e of ents) {
     if (!a.meshGuid) { missing++; continue; }
     const rotYDeg = rotYDegFromQuat(t);
     const segs = tileGrid(
-      { pos: [t.posX, t.posY, t.posZ], size: [t.scaleX, t.scaleY, t.scaleZ], rotYDeg },
+      { pos: [t.pos[0], t.pos[1], t.pos[2]], size: [t.scale[0], t.scale[1], t.scale[2]], rotYDeg },
       a.bbox,
     );
     remove.add(e);
@@ -134,9 +134,9 @@ for (const e of ents) {
         components: {
           Name: { value: `${name}__t${j}` },
           Transform: {
-            posX: s.pos[0], posY: s.pos[1], posZ: s.pos[2],
-            scaleX: s.scale[0], scaleY: s.scale[1], scaleZ: s.scale[2],
-            quatX: +q[0].toFixed(6), quatY: +q[1].toFixed(6), quatZ: +q[2].toFixed(6), quatW: +q[3].toFixed(6),
+            pos: [s.pos[0], s.pos[1], s.pos[2]],
+            scale: [s.scale[0], s.scale[1], s.scale[2]],
+            quat: [+q[0].toFixed(6), +q[1].toFixed(6), +q[2].toFixed(6), +q[3].toFixed(6)],
           },
           MeshFilter: { assetHandle: ensureRefGuid(scene, a.meshGuid) },
           MeshRenderer: { materials: [matIdx(stem)] },
