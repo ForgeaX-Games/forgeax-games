@@ -21,10 +21,11 @@ In Diablo II the **Hellforge** is the prime-evil weapon foundry in Act IV.
 It's iconic, it rhymes with **forgeax**, and it tells you what the engine
 underneath is doing — forging entities + meshes + materials per frame.
 
-## Status (2026-07-03) — Act 1 slice COMPLETE
+## Status (2026-07-09) — Act 1 slice + scene-quality pass
 
-- [x] Witch hero: skinned GLB, 5 clips (idle/move/attack/hit/death), WASD +
-      sprint, 2.5D ⇄ third-person toggle, foot-slide-corrected move clip
+- [x] Hero: **charactery** skinned GLB (`charactery-merged.glb`), 5 clips
+      (idle / Handbag walk / attack / hit / death), WASD + sprint, 2.5D ⇄
+      third-person, foot-slide-corrected move clip
 - [x] **Combat feel (打击感)** — attack swings ROOT monsters (no sliding
       while attacking) with damage landing at the clip's contact frame, so
       side-stepping a wind-up makes it whiff; hits knock monsters back along
@@ -61,17 +62,13 @@ underneath is doing — forging entities + meshes + materials per frame.
       ground (equipment never expires). Magic find shifts rarity weights on
       every kill roll; the boss loot-explodes 3-5 items (no commons, 22%
       legendary weight); legendary drops get a banner + fanfare + fat beam.
-- [x] **PCG dungeon as an EDITABLE SCENE** — `src/dungeon-layout.ts` is a
-      pure seeded generator (rooms + Prim-connected L-corridors on a 44×44
-      grid, torches, decor, boss braziers, per-room monster packs scaled by
-      depth). `bun scripts/bake-dungeon.ts` bakes its geometry into
-      `assets/scenes/slagdeep-hollow.pack.json` — the editor lists it next to
-      rogue-encampment (click to edit; Launcher "Only slagdeep-hollow"
-      starts the run inside the den). Runtime re-runs the SAME fixed seed
-      for the walkability grid + spawns (always matches the baked pack) and
-      instantiates the pack under a root at (300, 300); if the pack is
-      missing it falls back to spawning from the layout. Re-run the bake
-      after ANY dungeon-layout.ts change.
+- [x] **PCG dungeon as an EDITABLE SCENE** — `src/dungeon-layout.ts` +
+      `bun scripts/bake-dungeon.ts` → `assets/scenes/slagdeep-hollow.pack.json`.
+      Walls **vertical-tile** `prop-den-wall` (jagged tops, no vertical texel
+      stretch). Runtime re-runs the SAME fixed seed for walkability + spawns.
+- [x] **Camp scene quality** — closed 4-wall huts via `tiles.json`; cave-mouth
+      stone arch (`prop-gate-column` + lintel) in `main.ts`; pack carries
+      `EditAmbient`/`EditSun` so ✎ Edit can see meshes (Play despawns them).
 - [x] **Quest**: 清剿熔渣深窟 (clear the den) → banner + xp/gold reward.
 - [x] **ARPG HUD** — `src/hud.ts`: HP/mana orbs, 4 skill slots with
       cooldown veils + mana costs + unlock levels, XP strip, quest tracker,
@@ -84,7 +81,7 @@ underneath is doing — forging entities + meshes + materials per frame.
 - [x] Death → R to respawn at camp (small xp toll).
 
 Not yet (post-slice): inventory grid (equipment is auto-equip for now),
-skill tree allocator, town portal scroll, audio, more acts/characters.
+skill tree allocator, town portal scroll, more acts/characters.
 
 ## Controls
 
@@ -118,7 +115,7 @@ engine's scene-switch full-rebuild renderer bug entirely.
 ```
 hellforge/
   forge.json              — game manifest (id, scenes, default scene)
-  main.ts                 — boot, witch rig, camera, input, area/portal/quest glue
+  main.ts                 — boot, hero rig (WITCH→charactery), camera, input, lighting, portal arch
   src/
     state.ts              — hp/mana/xp/level/gold + curves
     items.ts              — equipment slots / rarities / affixes / drop rolls
@@ -130,33 +127,33 @@ hellforge/
     hud.ts                — ARPG DOM overlay (orbs / slots / quest / boss bar)
     fx.ts                 — shader registration + particle pools
     shaders/*.wgsl(.meta.json) — fire-bolt / portal-vortex
-  assets/characters/witch.glb   — 33-joint skinned sorceress + 5 clips
+  assets/characters/charactery-merged.glb — current hero (5 clips; Handbag walk)
+  assets/3d/characters/charactery.*       — wb-gen3d sources + .glb.gen3d-meta.json
   assets/monsters/*.glb(.meta.json) — skinned monster rigs (imported via
                             engine cli-gltf; meta.json carries the GUIDs)
-  assets/scenes/rogue-encampment.pack.json — camp scene pack (editable)
-  assets/scenes/slagdeep-hollow.pack.json  — BAKED dungeon scene (editable; regenerate
-                            via `bun scripts/bake-dungeon.ts`)
-  assets/sky.hdr + assets/3d/sky/sky-dome.glb — hellish HDR (IBL) + visible lava-cloud dome
-  scripts/bake-sky.ts       — regenerate sky.hdr + sky-dome.glb + src/sky-dome.gen.ts
+  assets/scenes/rogue-encampment.pack.json — camp scene pack (+ .tiles / .overrides)
+  assets/scenes/slagdeep-hollow.pack.json  — BAKED dungeon (regenerate via bake-dungeon)
+  assets/sky.hdr              — hellish equirect HDR (IBL + SkyboxBackground)
+  scripts/bake-sky.ts / bake-dungeon.ts / reshape-scene.ts / merge-gen3d-motions.ts
   tsconfig.check.json     — dev typecheck (needs games/node_modules symlink
                             → editor/packages/play-runtime/node_modules)
 ```
 
 ## Scene authoring
 
-The static camp lives in `assets/scenes/rogue-encampment.pack.json` — the engine's
-native scene pack format; ✎ Edit is the WYSIWYG tool for it. External authoring when
-Edit can't save: see `SCENE-AUTHORING.md`. The visible hellish sky is an emissive
-dome (`installSkyDome` in `main.ts`), not the engine SkyboxBackground (broken in
-this build). Regenerate via `bun scripts/bake-sky.ts`. Everything
-dynamic (hero, monsters, projectiles, loot, the whole PCG dungeon) is
-runtime-spawned from `main.ts` + `src/` and never appears in Edit.
+Camp statics live in `assets/scenes/rogue-encampment.pack.json`. Walls/roofs:
+edit `.tiles.json` then `reshape-scene.ts tile-apply`. Cave-mouth arch is
+runtime-spawned in `main.ts`. Edit-viewport lights (`EditAmbient`/`EditSun`)
+live in the pack; Play strips them before the runtime lighting director.
+Full workflow: `SCENE-AUTHORING.md`. Visible sky in Play =
+`Skylight`+`SkyboxBackground` equirect (engine-internal projection; WebKit falls
+back to solid + `SKY_CLEAR`). Regenerate HDR via `bun scripts/bake-sky.ts`.
 
 ## Verify
 
-Play `:15173/preview/?game=hellforge`, Edit `:15280/editor/?game=hellforge`
-— wait ~7 s, console must show only the favicon 404. Gameplay probes hang
-off `window.__hf` (state / player / monsters / skills / loot / dungeon).
+Play `:15173/preview/?game=hellforge` (or studio viewport ▶ Play). Edit:
+`localhost:18920` with hellforge — camp meshes should be lit, not black
+silhouettes. Gameplay probes: `window.__hf`.
 
 ## Roadmap (next)
 

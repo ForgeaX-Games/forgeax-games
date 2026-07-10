@@ -4733,6 +4733,74 @@
                 ]
               }
             }
+          },
+          {
+            "localId": 143,
+            "components": {
+              "Name": {
+                "value": "EditAmbient"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "Skylight": {
+                "colorR": 0.95,
+                "colorG": 0.72,
+                "colorB": 0.58,
+                "intensity": 0.55
+              }
+            }
+          },
+          {
+            "localId": 144,
+            "components": {
+              "Name": {
+                "value": "EditSun"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  8,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "DirectionalLight": {
+                "directionX": -0.45,
+                "directionY": -0.7,
+                "directionZ": -0.5,
+                "colorR": 0.55,
+                "colorG": 0.65,
+                "colorB": 1,
+                "intensity": 2.2,
+                "castShadow": false
+              }
+            }
           }
         ]
       },

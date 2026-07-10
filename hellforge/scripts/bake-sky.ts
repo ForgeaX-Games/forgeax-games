@@ -5,19 +5,16 @@
 //
 // Drop-in: overwrites assets/sky.hdr in place — same path, same GUID
 // (c4061caa via sky.hdr.meta.json), so installHdrSky needs zero changes. The
-// image importer re-cooks the new bytes (equirect → rgba16float → cubemap).
+// engine loads EquirectAsset and projects internally (Skylight + SkyboxBackground).
 //
 // Run from repo root or anywhere:
 //   bun run packages/games/hellforge/scripts/bake-sky.ts
 // Output format matches the previous asset: new-RLE Radiance HDR, -Y 512 +X 1024.
+// (Visible sky-dome GLB bake removed — Play uses native SkyboxBackground.)
 
-import { createHash } from 'node:crypto';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { deflateSync } from 'node:zlib';
-
-import { cookExternalAssetFields } from '../../../marketplace/plugins/wb-ai-asset/server/external-meta-cook.ts';
 
 const W = 1024;
 const H = 512;
@@ -192,171 +189,3 @@ for (let y = 0; y < H; y++) {
 
 writeFileSync(outPath, buf);
 console.log(`[bake-sky] wrote ${outPath} — ${W}×${H} hellish equirect HDR (IBL), ${buf.length} bytes`);
-
-// ══════════════════════════════════════════════════════════════════════════
-// VISIBLE SKY DOME — the engine build doesn't render SkyboxBackground, so the
-// only way to SEE the sky (not just light with it) is a giant inverted sphere
-// with an emissive equirect texture, recentred on the camera each frame. Same
-// skyColor() as the IBL HDR, so the lit sky and the visible sky match.
-// ══════════════════════════════════════════════════════════════════════════
-
-const PNG_W = 2048;
-const PNG_H = 1024;
-const EXPOSURE = 0.5;     // linear→display scale before clamp (tune for punch)
-const skyDir = join(gameRoot, 'assets', '3d', 'sky');
-const domePath = join(skyDir, 'sky-dome.glb');
-mkdirSync(skyDir, { recursive: true });
-
-// ── tonemap sky → sRGB 8-bit RGB (emissive texture is treated as sRGB) ──────
-const srgb = (x: number): number => (x <= 0.0031308 ? x * 12.92 : 1.055 * Math.pow(x, 1 / 2.4) - 0.055);
-const pngRgb = Buffer.alloc(PNG_W * PNG_H * 3);
-for (let y = 0; y < PNG_H; y++) {
-  const v = (y + 0.5) / PNG_H;
-  for (let x = 0; x < PNG_W; x++) {
-    const u = (x + 0.5) / PNG_W;
-    const [r, g, b] = skyColor(u, v);
-    const o = (y * PNG_W + x) * 3;
-    pngRgb[o] = Math.round(255 * clamp01(srgb(clamp01(r * EXPOSURE))));
-    pngRgb[o + 1] = Math.round(255 * clamp01(srgb(clamp01(g * EXPOSURE))));
-    pngRgb[o + 2] = Math.round(255 * clamp01(srgb(clamp01(b * EXPOSURE))));
-  }
-}
-
-// ── minimal PNG encoder (RGB8, single IDAT, zlib) ───────────────────────────
-const CRC_TABLE = ((): Uint32Array => {
-  const t = new Uint32Array(256);
-  for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; }
-  return t;
-})();
-function crc32(b: Buffer): number {
-  let c = 0xffffffff;
-  for (let i = 0; i < b.length; i++) c = CRC_TABLE[(c ^ b[i]!) & 0xff]! ^ (c >>> 8);
-  return (c ^ 0xffffffff) >>> 0;
-}
-function pngChunk(type: string, data: Buffer): Buffer {
-  const len = Buffer.alloc(4); len.writeUInt32BE(data.length, 0);
-  const body = Buffer.concat([Buffer.from(type, 'ascii'), data]);
-  const crc = Buffer.alloc(4); crc.writeUInt32BE(crc32(body), 0);
-  return Buffer.concat([len, body, crc]);
-}
-function encodePng(width: number, height: number, rgb: Buffer): Buffer {
-  const ihdr = Buffer.alloc(13);
-  ihdr.writeUInt32BE(width, 0); ihdr.writeUInt32BE(height, 4);
-  ihdr[8] = 8; ihdr[9] = 2; ihdr[10] = 0; ihdr[11] = 0; ihdr[12] = 0; // 8-bit RGB
-  const stride = width * 3;
-  const raw = Buffer.alloc(height * (stride + 1));
-  for (let y = 0; y < height; y++) { raw[y * (stride + 1)] = 0; rgb.copy(raw, y * (stride + 1) + 1, y * stride, y * stride + stride); }
-  return Buffer.concat([
-    Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
-    pngChunk('IHDR', ihdr),
-    pngChunk('IDAT', deflateSync(raw, { level: 9 })),
-    pngChunk('IEND', Buffer.alloc(0)),
-  ]);
-}
-const png = encodePng(PNG_W, PNG_H, pngRgb);
-
-// ── inverted UV sphere (radius 1; scaled in-engine). Front faces point INWARD
-//    so the engine's back-face cull keeps them visible from the centre. UVs are
-//    equirect (u around, v top→bottom) matching the PNG. ──────────────────────
-const STACKS = 48;
-const SLICES = 96;
-const pos: number[] = [], uv: number[] = [], nrm: number[] = [], idx: number[] = [];
-for (let i = 0; i <= STACKS; i++) {
-  const vv = i / STACKS, phi = Math.PI * vv;
-  const sp = Math.sin(phi), cp = Math.cos(phi);
-  for (let j = 0; j <= SLICES; j++) {
-    const uu = j / SLICES, theta = 2 * Math.PI * uu;
-    const x = sp * Math.cos(theta), y = cp, z = sp * Math.sin(theta);
-    pos.push(x, y, z);
-    nrm.push(-x, -y, -z);
-    uv.push(uu, vv);
-  }
-}
-const rowLen = SLICES + 1;
-for (let i = 0; i < STACKS; i++) {
-  for (let j = 0; j < SLICES; j++) {
-    const a = i * rowLen + j, b = a + 1, c = a + rowLen, d = c + 1;
-    idx.push(a, d, b, a, c, d); // inward-facing winding
-  }
-}
-
-// ── assemble GLB (non-interleaved bufferViews; emissive texture material) ───
-function buildDomeGlb(imagePng: Buffer): Buffer {
-  const posA = new Float32Array(pos), uvA = new Float32Array(uv), nrmA = new Float32Array(nrm), idxA = new Uint32Array(idx);
-  const posB = Buffer.from(posA.buffer, posA.byteOffset, posA.byteLength);
-  const uvB = Buffer.from(uvA.buffer, uvA.byteOffset, uvA.byteLength);
-  const nrmB = Buffer.from(nrmA.buffer, nrmA.byteOffset, nrmA.byteLength);
-  const idxB = Buffer.from(idxA.buffer, idxA.byteOffset, idxA.byteLength);
-  const bin = Buffer.concat([posB, uvB, nrmB, idxB, imagePng]);
-  const posOff = 0, uvOff = posB.length, nrmOff = uvOff + uvB.length, idxOff = nrmOff + nrmB.length, imgOff = idxOff + idxB.length;
-  const gltf = {
-    asset: { version: '2.0', generator: 'hellforge-bake-sky' },
-    buffers: [{ byteLength: bin.length }],
-    bufferViews: [
-      { buffer: 0, byteOffset: posOff, byteLength: posB.length, target: 34962 },
-      { buffer: 0, byteOffset: uvOff, byteLength: uvB.length, target: 34962 },
-      { buffer: 0, byteOffset: nrmOff, byteLength: nrmB.length, target: 34962 },
-      { buffer: 0, byteOffset: idxOff, byteLength: idxB.length, target: 34963 },
-      { buffer: 0, byteOffset: imgOff, byteLength: imagePng.length },
-    ],
-    accessors: [
-      { bufferView: 0, componentType: 5126, count: pos.length / 3, type: 'VEC3', min: [-1, -1, -1], max: [1, 1, 1] },
-      { bufferView: 1, componentType: 5126, count: uv.length / 2, type: 'VEC2' },
-      { bufferView: 2, componentType: 5126, count: nrm.length / 3, type: 'VEC3' },
-      { bufferView: 3, componentType: 5125, count: idx.length, type: 'SCALAR' },
-    ],
-    images: [{ mimeType: 'image/png', bufferView: 4 }],
-    samplers: [{ magFilter: 9729, minFilter: 9987, wrapS: 10497, wrapT: 33071 }],
-    textures: [{ sampler: 0, source: 0 }],
-    materials: [{
-      name: 'sky-dome',
-      // baseColorTexture is the proven path (the ground uses it); emissiveTexture
-      // is a bonus glow where the shader honours it. Both point at the one image.
-      emissiveFactor: [1, 1, 1],
-      emissiveTexture: { index: 0, texCoord: 0 },
-      pbrMetallicRoughness: { baseColorTexture: { index: 0, texCoord: 0 }, baseColorFactor: [1, 1, 1, 1], metallicFactor: 0, roughnessFactor: 1 },
-    }],
-    meshes: [{ name: 'sky-dome', primitives: [{ attributes: { POSITION: 0, TEXCOORD_0: 1, NORMAL: 2 }, indices: 3, material: 0 }] }],
-    nodes: [{ name: 'sky-dome', mesh: 0 }],
-    scenes: [{ name: 'scene', nodes: [0] }],
-    scene: 0,
-  };
-  const jsonStr = JSON.stringify(gltf);
-  const jsonPad = (4 - (jsonStr.length % 4)) % 4;
-  const jsonChunk = Buffer.alloc(jsonStr.length + jsonPad, 0x20); jsonChunk.write(jsonStr, 'utf8');
-  const binPad = (4 - (bin.length % 4)) % 4;
-  const binChunk = binPad === 0 ? bin : Buffer.concat([bin, Buffer.alloc(binPad)]);
-  const totalLen = 12 + 8 + jsonChunk.length + 8 + binChunk.length;
-  const out = Buffer.alloc(totalLen);
-  let o = 0;
-  out.writeUInt32LE(0x46546c67, o); o += 4;
-  out.writeUInt32LE(2, o); o += 4;
-  out.writeUInt32LE(totalLen, o); o += 4;
-  out.writeUInt32LE(jsonChunk.length, o); o += 4;
-  out.write('JSON', o, 4, 'ascii'); o += 4;
-  jsonChunk.copy(out, o); o += jsonChunk.length;
-  out.writeUInt32LE(binChunk.length, o); o += 4;
-  out.write('BIN\x00', o, 4, 'ascii'); o += 4;
-  binChunk.copy(out, o);
-  return out;
-}
-
-const domeGlb = buildDomeGlb(png);
-writeFileSync(domePath, domeGlb);
-
-const contentHash = `sha256:${createHash('sha256').update(domeGlb).digest('hex')}`;
-const meta = await cookExternalAssetFields(new Uint8Array(domeGlb), contentHash, 'sky-dome.glb');
-if (!meta) throw new Error('cookExternalAssetFields returned null for sky-dome.glb');
-writeFileSync(`${domePath}.meta.json`, `${JSON.stringify(meta, null, 2)}\n`, 'utf8');
-
-// GUIDs are content-derived → emit them as a TS constant so main.ts stays in
-// sync across re-bakes without hand-editing.
-const guidOf = (kind: string): string => (meta.subAssets as Array<{ kind: string; guid: string }>).find((s) => s.kind === kind)?.guid ?? '';
-const genTs =
-  '// AUTO-GENERATED by scripts/bake-sky.ts — do not edit by hand.\n' +
-  '// Sub-asset GUIDs of the baked sky-dome GLB (content-derived; re-bake updates).\n' +
-  `export const SKY_DOME_MESH_GUID = '${guidOf('mesh')}';\n` +
-  `export const SKY_DOME_MATERIAL_GUID = '${guidOf('material')}';\n`;
-writeFileSync(join(gameRoot, 'src', 'sky-dome.gen.ts'), genTs, 'utf8');
-console.log(`[bake-sky] wrote ${domePath} — ${STACKS}×${SLICES} inverted dome + ${PNG_W}×${PNG_H} PNG, ${(domeGlb.length / 1e6).toFixed(1)} MB`);
-console.log(`[bake-sky] cooked meta: ${meta.subAssets.map((s: { kind: string }) => s.kind).join(', ')} → src/sky-dome.gen.ts`);

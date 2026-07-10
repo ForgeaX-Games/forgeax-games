@@ -14,6 +14,7 @@
 //    1/2/3/4         select + cast skill (熔火弹/霜牙/电弧涌/影踏)
 //    V               toggle 2.5D ⇄ third-person view
 //    R               respawn after death
+//    F10             toggle render-settings panel (post / lighting / atmosphere)
 //    Esc             release pointer-lock
 //
 //  Areas live in ONE world: the camp scene pack at the origin, the PCG
@@ -38,7 +39,6 @@ import {
   Skylight,
   SkyboxBackground,
   SKYBOX_MODE_CUBEMAP,
-  TONEMAP_ACES_FILMIC,
   Transform,
   perspective,
   quat,
@@ -52,8 +52,7 @@ import { createCylinderGeometry } from '@forgeax/engine-geometry';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
-import type { AnimationClip, Handle, MeshAsset, SceneAsset, TextureAsset } from '@forgeax/engine-types';
-import { SKY_DOME_MESH_GUID, SKY_DOME_MATERIAL_GUID } from './src/sky-dome.gen';
+import type { AnimationClip, EquirectAsset, Handle, MeshAsset, SceneAsset } from '@forgeax/engine-types';
 
 import { createPlayer, damagePlayer, grantXp, respawnPlayer, tickPlayer } from './src/state';
 import { FxSystem } from './src/fx';
@@ -69,6 +68,8 @@ import {
   type EquipBonus, type Item,
 } from './src/items';
 import { installInventory } from './src/inventory-ui';
+import { installRenderSettings, type RenderSettings } from './src/render-settings';
+import { AmbientFx } from './src/ambient-fx';
 
 const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
 
@@ -92,25 +93,19 @@ const WITCH = {
 // the mesh node to identity, so rig scale reaches vertices exactly once via the
 // palette — no double-transform. Tune by eye against the scene tiles.
 const PLAYER_SCALE = 1.3;
-// Fallback background clear. The visible sky is the emissive dome (installSkyDome,
-// a plain textured mesh → works on every platform incl. WebKit), but it loads
-// async; this dark hellish red-orange fills the frame until it pops in and shows
-// through if the dome ever fails to load, instead of clearing to black. Needs no
-// GPU feature. Linear/pre-tonemap (ACES). perspective() carries clearR/G/B=0, so
-// spread SKY_CLEAR AFTER it on every Camera write (spawn + resize re-apply).
+// Fallback background clear while equirect projection is pending / failed /
+// unsupported (WebKit). Linear/pre-tonemap (ACES). Camera writes that spread
+// perspective() must re-apply clear (and, after C2, all post settings) — see
+// installRenderSettings.applyCamera.
 const SKY_CLEAR = { clearR: 0.32, clearG: 0.07, clearB: 0.035 } as const;
 
-// ── HDR sky (code-side — the cow-level / fps pattern) ─────────────────────
-// `SkyboxBackground` and the IBL `Skylight` ONLY accept a runtime `cubemap`
-// handle, produced by `uploadCubemapFromEquirect` — a path that exists solely
-// in the game runtime on Chromium (it needs rgba16float render targets the
-// editor and WebKit/WKWebView lack). So the sky MUST be installed here in code,
-// never declaratively in the pack: a declarative SkyboxBackground has no cubemap
-// to bind and samples uninitialised GPU memory → rainbow static (what broke the
-// editor). We always spawn a solid-color Skylight first (binds the engine's 1×1
-// white irradiance cube → ambient on frame 1, works everywhere), then upgrade
-// to the projected HDR cubemap + a visible skybox only where the projection is
-// available. Everywhere else the Camera's SKY_CLEAR red-orange is the sky.
+// ── HDR sky (Play runtime only — never declare equirect in the pack) ──────
+// Engine pin: Skylight.equirect + SkyboxBackground.equirect (shared EquirectAsset).
+// Projection is internalized (caps-gated; no UA / private upload API). Spawn a
+// solid Skylight first (ambient on frame 1 everywhere), attach equirect to kick
+// lazy projection, then spawn SkyboxBackground ONLY when getCubemapStatus ===
+// 'ready' (spawning earlier samples unready GPU memory → rainbow garbage).
+// Pack must not declare Skylight/SkyboxBackground equirect — Edit≠Play.
 const SKY_HDR_GUID = 'c4061caa-8127-42a8-a1bb-54ef1a83d6d2';
 
 type SkyCtx = {
@@ -119,74 +114,40 @@ type SkyCtx = {
   app?: import('@forgeax/engine-app').App;
 };
 
-// The lighting director (applyAreaLighting) retunes the skylight per area, so
-// installHdrSky reports which entity it owns + whether the IBL upgrade landed.
-type SkyLight = { ent: EntityHandle; ibl: boolean };
+type EquirectHandle = Handle<'EquirectAsset', 'shared'>;
+
+// Lighting director retunes tint/intensity; equirect stays on the entity.
+// `ibl` flips true once cubemap projection reports ready (main-loop poll).
+type SkyLight = { ent: EntityHandle; ibl: boolean; equirect: EquirectHandle | null };
 
 async function installHdrSky(ctx: SkyCtx): Promise<SkyLight> {
-  // Dim warm fill suits the forge; the HDR cubemap overrides it on Chromium.
-  // Slightly less saturated + a touch brighter than the original 0.95/0.6/0.45
-  // @0.28 so character faces keep readable detail in the shade.
+  // Dim warm fill suits the forge until IBL is ready (then applyAreaLighting
+  // switches to a neutral tint so the HDR drives color).
   const skylight = ctx.world.spawn(
     { component: Skylight, data: { colorR: 0.95, colorG: 0.68, colorB: 0.55, intensity: 0.34 } },
   ).unwrap() as EntityHandle;
-  const solid: SkyLight = { ent: skylight, ibl: false };
+  const solid: SkyLight = { ent: skylight, ibl: false, equirect: null };
 
-  // WebKit/WKWebView (desktop app) can't project → keep the solid ambient.
-  const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
-  if (!/Chrome|Chromium|Edg/.test(ua)) {
-    console.info('[hellforge] non-Chromium WebGPU: solid-color skylight only (no IBL/skybox)');
-    return solid;
-  }
-  const store = (ctx.app as unknown as { renderer?: { store?: Record<string, unknown> } })?.renderer?.store;
-  // The projector was renamed to the private `_uploadCubemapFromEquirect` in
-  // this engine build; the old public name is gone. Accept either.
-  const uploadFn = store?.uploadCubemapFromEquirect ?? store?._uploadCubemapFromEquirect;
-  if (!ctx.assets || typeof uploadFn !== 'function') {
-    console.info('[hellforge] no equirect→cubemap projector on the render store — solid ambient + SKY_CLEAR sky');
+  if (!ctx.assets) {
+    console.info('[hellforge] no asset registry — solid-color skylight + SKY_CLEAR');
     return solid;
   }
   const guidRes = AssetGuid.parse(SKY_HDR_GUID);
   if (!guidRes.ok) return solid;
-  const podRes = await ctx.assets.loadByGuid<TextureAsset>(guidRes.value);
-  if (!podRes.ok) { console.warn('[hellforge] sky.hdr loadByGuid failed:', (podRes.error as { code?: string }).code); return solid; }
-  const srcHandle = ctx.world.allocSharedRef<'TextureAsset', TextureAsset>('TextureAsset', podRes.value);
-  const upload = uploadFn as (w: unknown, h: unknown, p: unknown) => Promise<{ ok: boolean; value?: unknown }>;
-  const cubemapRes = await upload.call(store, ctx.world, srcHandle, podRes.value);
-  if (!cubemapRes.ok || cubemapRes.value === undefined) { console.warn('[hellforge] equirect→cubemap projection failed'); return solid; }
-  // Upgrade to image-based lighting (neutral tint lets the HDR drive color).
-  ctx.world.set(skylight, Skylight, { cubemap: cubemapRes.value, colorR: 1, colorG: 1, colorB: 1, intensity: 0.18 });
-  ctx.world.spawn({ component: SkyboxBackground, data: { cubemap: cubemapRes.value, mode: SKYBOX_MODE_CUBEMAP } });
-  console.log('[hellforge] HDR sky installed (cubemap skybox + IBL)');
-  return { ent: skylight, ibl: true };
-}
-
-// ── visible sky dome ──────────────────────────────────────────────────────
-// This engine build doesn't render SkyboxBackground, so the HDR only ever
-// LIGHTS the scene (IBL). To actually SEE the hellish sky we draw a giant
-// inverted sphere with an emissive equirect texture (baked by scripts/bake-sky.ts,
-// GUIDs in src/sky-dome.gen.ts). Emissive → unaffected by scene lighting; radius
-// < camera far (200); recentred on the player each frame so it reads as infinite.
-const SKY_DOME_RADIUS = 160;
-
-async function installSkyDome(ctx: SkyCtx): Promise<EntityHandle | null> {
-  if (!ctx.assets) return null;
-  const meshGuid = AssetGuid.parse(SKY_DOME_MESH_GUID);
-  const matGuid = AssetGuid.parse(SKY_DOME_MATERIAL_GUID);
-  if (!meshGuid.ok || !matGuid.ok) { console.warn('[hellforge] sky-dome GUID parse failed'); return null; }
-  const meshRes = await ctx.assets.loadByGuid<MeshAsset>(meshGuid.value);
-  if (!meshRes.ok) { console.warn('[hellforge] sky-dome mesh load failed:', (meshRes.error as { code?: string }).code); return null; }
-  const matRes = await ctx.assets.loadByGuid<MaterialAsset>(matGuid.value);
-  if (!matRes.ok) { console.warn('[hellforge] sky-dome material load failed:', (matRes.error as { code?: string }).code); return null; }
-  const meshH = ctx.world.allocSharedRef<'MeshAsset', MeshAsset>('MeshAsset', meshRes.value);
-  const matH = ctx.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', matRes.value);
-  const dome = ctx.world.spawn(
-    { component: Transform, data: { pos: [0, 0, 0], scale: [SKY_DOME_RADIUS, SKY_DOME_RADIUS, SKY_DOME_RADIUS] } },
-    { component: MeshFilter, data: { assetHandle: meshH } },
-    { component: MeshRenderer, data: { materials: [matH] } },
-  ).unwrap() as EntityHandle;
-  console.log('[hellforge] sky dome installed (emissive equirect dome)');
-  return dome;
+  const podRes = await ctx.assets.loadByGuid<EquirectAsset>(guidRes.value);
+  if (!podRes.ok) {
+    console.warn('[hellforge] sky.hdr loadByGuid failed:', (podRes.error as { code?: string }).code);
+    return solid;
+  }
+  const equirect = ctx.world.allocSharedRef<'EquirectAsset', EquirectAsset>('EquirectAsset', podRes.value);
+  // Attach equirect → engine lazy-projects (caps permitting). Keep warm solid
+  // tint until status==='ready'; do NOT spawn SkyboxBackground yet.
+  ctx.world.set(skylight, Skylight, {
+    equirect,
+    colorR: 0.95, colorG: 0.68, colorB: 0.55, intensity: 0.34,
+  });
+  console.log('[hellforge] HDR equirect attached (awaiting cubemap projection)');
+  return { ent: skylight, ibl: false, equirect };
 }
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
@@ -209,20 +170,42 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // ── 1. encampment scene (engine-native pack) ──────────────────────────
   // The host resolves + instantiates the defaultScene before entry runs; the
   // encampment root is a side-effect spawn (hellforge never reads its mapping).
+  //
+  // The pack carries EditAmbient (Skylight) + EditSun (DirectionalLight) so the
+  // editor viewport can see authored meshes (editor no longer injects a fill
+  // light — North Star §8). Play owns the real lighting director below, so
+  // strip those edit-only entities first: engine lighting is first-hit-wins,
+  // and a leftover pack Skylight would block installHdrSky / sun retunes.
+  {
+    const root = ctx?.defaultSceneRoot;
+    const sceneAsset = ctx?.defaultScene;
+    if (root !== undefined && sceneAsset?.entities) {
+      const inst = world.get(root, SceneInstance);
+      if (inst.ok) {
+        const mapping = inst.value.mapping as ArrayLike<number>;
+        for (const e of sceneAsset.entities) {
+          const name = (e.components as { Name?: { value?: string } } | undefined)?.Name?.value;
+          if (name !== 'EditAmbient' && name !== 'EditSun') continue;
+          const localId = (e as { localId?: number }).localId;
+          if (typeof localId !== 'number') continue;
+          const raw = mapping[localId];
+          if (raw === undefined || raw === 0) continue;
+          world.despawn(raw as EntityHandle);
+        }
+      }
+    }
+  }
 
-  // ── 2. HDR sky (code-side; see installHdrSky above). Fire-and-forget: the
-  //       sky pops in when the projection completes; the game never blocks. ──
-  // `skyLightDirty` defers the area re-tint to the update loop — the promise
-  // may resolve before or after the lighting director below is initialised.
+  // ── 2. HDR sky (code-side; see installHdrSky above). Fire-and-forget: solid
+  //       Skylight lands immediately; equirect attach kicks lazy projection.
+  // `skyLightDirty` defers area re-tint; main loop polls getCubemapStatus and
+  // spawns SkyboxBackground only when ready (see update loop below).
   let sky: SkyLight | null = null;
   let skyLightDirty = false;
+  let skyboxSpawned = false;
+  let skyPollAccum = 0;
+  let skyPollStopped = false;
   void installHdrSky({ world, assets, app }).then((s) => { sky = s; skyLightDirty = true; });
-
-  // ── 2b. Visible sky dome (emissive equirect sphere; see installSkyDome). The
-  //        engine won't render SkyboxBackground, so this is what you actually
-  //        see. Fire-and-forget; followed by the update loop once loaded. ──
-  let skyDome: EntityHandle | null = null;
-  void installSkyDome({ world, assets }).then((e) => { skyDome = e; });
 
   // ── 3. witch GLB — via gltfImporter sub-assets ────────────────────────
   type ClipHandle = Handle<'AnimationClip', 'shared'>;
@@ -708,8 +691,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // (LIGHT_ARRAY_MAX_SLOTS) and a directional light is global, so per-scene
   // lights can't work — instead the game owns ONE sun + the whole point-light
   // budget and RETUNES them on area change (only one area is ever on screen;
-  // the den sits 300 m out, past the camera far plane). The camp pack carries
-  // no light entities for the same reason — lights live here, geometry there.
+  // the den sits 300 m out, past the camera far plane). The camp pack only
+  // carries EditAmbient/EditSun for the editor viewport; Play strips them
+  // above and owns the real lights here.
   //
   // Sun: cool moonlight outdoors, warm shaft-glow in the den. shadowDistance
   // 42 (not the 200 default) packs the 2048² CSM into the actually-visible
@@ -764,14 +748,38 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     }
     torchBaseA = 9; torchBaseB = 9;
   };
+  // Multipliers from F10 render-settings (updated via onLighting).
+  let lightSettings: Pick<RenderSettings, 'sunMul' | 'ambientMul' | 'fireMul' | 'fillMul' | 'atmoTemp'> = {
+    sunMul: 1, ambientMul: 1, fireMul: 1, fillMul: 1, atmoTemp: 0,
+  };
+  const tempShiftRgb = (r: number, g: number, b: number, t: number) => {
+    const tt = clamp(t, -1, 1);
+    return {
+      colorR: Math.max(0, r * (1 + 0.18 * tt)),
+      colorG: Math.max(0, g),
+      colorB: Math.max(0, b * (1 - 0.22 * tt)),
+    };
+  };
   const applyAreaLighting = (a: Area): void => {
-    world.set(sun, DirectionalLight, SUN_LOOK[a === 'den' ? 'den' : 'camp']);
+    const look = SUN_LOOK[a === 'den' ? 'den' : 'camp'];
+    const sunTint = tempShiftRgb(look.colorR, look.colorG, look.colorB, lightSettings.atmoTemp);
+    world.set(sun, DirectionalLight, {
+      ...look,
+      ...sunTint,
+      intensity: look.intensity * lightSettings.sunMul,
+    });
     if (sky) {
       // Den ambient: dimmer + ember-tinted so torch pools and the sun shaft
-      // carry the read; outdoors: neutral IBL (Chromium) / warm solid fallback.
-      world.set(sky.ent, Skylight, a === 'den'
+      // carry the read; outdoors: neutral IBL (when ready) / warm solid fallback.
+      // Always re-pass equirect so world.set does not drop the IBL source handle.
+      const tint = a === 'den'
         ? (sky.ibl ? { colorR: 1, colorG: 0.72, colorB: 0.5, intensity: 0.11 } : { colorR: 0.9, colorG: 0.55, colorB: 0.4, intensity: 0.24 })
-        : (sky.ibl ? { colorR: 1, colorG: 1, colorB: 1, intensity: 0.18 } : { colorR: 0.95, colorG: 0.68, colorB: 0.55, intensity: 0.34 }));
+        : (sky.ibl ? { colorR: 1, colorG: 1, colorB: 1, intensity: 0.18 } : { colorR: 0.95, colorG: 0.68, colorB: 0.55, intensity: 0.34 });
+      const ambTint = tempShiftRgb(tint.colorR, tint.colorG, tint.colorB, lightSettings.atmoTemp);
+      const amb = { ...ambTint, intensity: tint.intensity * lightSettings.ambientMul };
+      world.set(sky.ent, Skylight, sky.equirect
+        ? { equirect: sky.equirect, ...amb }
+        : amb);
     }
     if (a === 'den') {
       seatDenTorches();
@@ -803,20 +811,61 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     get lookYaw() { return lookYaw; },
     get lookPitch() { return lookPitch; },
     get area() { return area; },
+    get sky() { return sky; },
   };
 
-  // ── camera ────────────────────────────────────────────────────────────
+  // ── camera + runtime render-settings (F10) ────────────────────────────
+  // Camera component fields have a SINGLE writer: rs.applyCamera(). Spawn with
+  // a minimal perspective stub; installRenderSettings immediately overwrites
+  // tonemap/exposure/bloom/clear (and resize must call applyCamera — never
+  // re-spread perspective() alone or slider values reset to engine defaults).
   const FOV = Math.PI / 2.4;
   const camera = world.spawn(
     { component: Transform, data: { pos: [0, 1.6, 0] } },
-    { component: Camera, data: { ...perspective({ fov: FOV, aspect, near: 0.05, far: 200 }), tonemap: TONEMAP_ACES_FILMIC, ...SKY_CLEAR } },
+    { component: Camera, data: perspective({ fov: FOV, aspect, near: 0.05, far: 200 }) },
   ).unwrap();
-  world.set(camera, Camera, { tonemap: TONEMAP_ACES_FILMIC });
+  // Filled in C3 (AmbientFx.configure). Starts as no-op so install's sync
+  // persistAndNotify can call it before AmbientFx exists.
+  let onParticlesHook: (s: RenderSettings) => void = () => {};
+  const rs = installRenderSettings({
+    mount: uiMount,
+    world,
+    camera,
+    getAspect: () => aspect,
+    proj: { fov: FOV, near: 0.05, far: 200 },
+    onLighting: (s) => {
+      lightSettings = {
+        sunMul: s.sunMul,
+        ambientMul: s.ambientMul,
+        fireMul: s.fireMul,
+        fillMul: s.fillMul,
+        atmoTemp: s.atmoTemp,
+      };
+      world.set(playerLight, PointLight, { intensity: 13 * s.fillMul });
+      applyAreaLighting(area);
+    },
+    onParticles: (s) => { onParticlesHook(s); },
+  });
+  onCleanup(() => rs.dispose());
   ((window as unknown as { __hf: Record<string, unknown> }).__hf).camera = camera;
+  ((window as unknown as { __hf: Record<string, unknown> }).__hf).Camera = Camera;
+  ((window as unknown as { __hf: Record<string, unknown> }).__hf).renderSettings = rs;
   ((window as unknown as { __hf: Record<string, unknown> }).__hf).Transform = Transform;
   ((window as unknown as { __hf: Record<string, unknown> }).__hf).AnimationPlayer = AnimationPlayer;
   ((window as unknown as { __hf: Record<string, unknown> }).__hf).Name = Name;
   ((window as unknown as { __hf: Record<string, unknown> }).__hf).world = world;
+
+  // ── ambient particles (ember / ash / snow; zero lights) ────────────────
+  const ambientFx = new AmbientFx(world, app);
+  onCleanup(() => ambientFx.dispose());
+  onParticlesHook = (s) => ambientFx.configure(s.particleDensity, s.particleStyle);
+  // Apply persisted particle knobs now that AmbientFx exists (install ran earlier).
+  {
+    const s = rs.get();
+    ambientFx.configure(s.particleDensity, s.particleStyle);
+    ambientFx.setArea(area);
+  }
+  ((window as unknown as { __hf: Record<string, unknown> }).__hf).ambientFx = ambientFx;
 
   // ── tuning ────────────────────────────────────────────────────────────
   const SPEED = 3.4, SPRINT = 5.4;
@@ -1016,6 +1065,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     if (next === area) return;
     area = next;
     applyAreaLighting(next);
+    ambientFx.setArea(next);
     if (next === 'den') hud.showArea('熔渣深窟', 'Slagdeep Hollow');
     else if (next === 'wild') hud.showArea('灰烬荒原', 'Ashen Reach');
     else hud.showArea('余烬哨站', 'Cinderwatch');
@@ -1106,7 +1156,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const onResize = () => {
     sizeCanvas();
     aspect = canvas.width / canvas.height;
-    world.set(camera, Camera, { ...perspective({ fov: FOV, aspect, near: 0.05, far: 200 }), tonemap: TONEMAP_ACES_FILMIC, ...SKY_CLEAR });
+    rs.applyCamera();
   };
   window.addEventListener('resize', onResize);
   onCleanup(() => window.removeEventListener('resize', onResize));
@@ -1223,6 +1273,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       });
     }
     world.set(playerLight, Transform, { pos: [state.px, 2.4, state.pz + 1.6] });
+    ambientFx.tick(dt, state.px, state.pz);
     world.set(shadowDisc, Transform, {
       pos: [state.px, 0.85, state.pz],
       scale: [0.6 * PLAYER_SCALE, 1.7 * PLAYER_SCALE, 0.45 * PLAYER_SCALE],
@@ -1238,15 +1289,38 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // Ember flicker: two incommensurate sines ≈ organic wobble, no RNG churn.
     flickT += dt;
     const flick = (ph: number): number => 0.86 + 0.14 * Math.sin(flickT * 9.7 + ph) * Math.sin(flickT * 5.3 + ph * 1.7);
-    world.set(campfireLight, PointLight, { intensity: 12 * flick(0) });
-    world.set(torchA, PointLight, { intensity: torchBaseA * flick(2.1) });
-    world.set(torchB, PointLight, { intensity: torchBaseB * flick(4.4) });
-    // Keep the sky dome centred on the player so it reads as an infinite sky.
-    if (skyDome !== null) {
-      world.set(skyDome, Transform, {
-        pos: [state.px, 0, state.pz],
-        scale: [SKY_DOME_RADIUS, SKY_DOME_RADIUS, SKY_DOME_RADIUS],
-      });
+    const fireMul = lightSettings.fireMul;
+    world.set(campfireLight, PointLight, { intensity: 12 * fireMul * flick(0) });
+    world.set(torchA, PointLight, { intensity: torchBaseA * fireMul * flick(2.1) });
+    world.set(torchB, PointLight, { intensity: torchBaseB * fireMul * flick(4.4) });
+    // Poll equirect→cubemap status (throttled). Spawn SkyboxBackground only
+    // after ready — earlier bind samples unready GPU memory (rainbow garbage).
+    if (sky && sky.equirect && !skyPollStopped && !skyboxSpawned) {
+      skyPollAccum += dt;
+      if (skyPollAccum >= 0.25) {
+        skyPollAccum = 0;
+        const store = (app as unknown as { renderer?: { store?: { getCubemapStatus?: (h: EquirectHandle) => string | undefined } } })?.renderer?.store;
+        const status = store?.getCubemapStatus?.(sky.equirect);
+        if (status === 'ready') {
+          sky.ibl = true;
+          skyLightDirty = true;
+          world.spawn({ component: SkyboxBackground, data: { equirect: sky.equirect, mode: SKYBOX_MODE_CUBEMAP } });
+          skyboxSpawned = true;
+          skyPollStopped = true;
+          console.log('[hellforge] HDR sky ready (SkyboxBackground + IBL)');
+        } else if (status === 'failed') {
+          skyPollStopped = true;
+          console.info('[hellforge] equirect projection failed — solid ambient + SKY_CLEAR');
+        } else if (status === undefined && store?.getCubemapStatus === undefined) {
+          // Host path cannot query status → spawn immediately and accept flash risk (R2).
+          sky.ibl = true;
+          skyLightDirty = true;
+          world.spawn({ component: SkyboxBackground, data: { equirect: sky.equirect, mode: SKYBOX_MODE_CUBEMAP } });
+          skyboxSpawned = true;
+          skyPollStopped = true;
+          console.info('[hellforge] getCubemapStatus unreachable — spawned SkyboxBackground immediately');
+        }
+      }
     }
 
     // ── game systems ──
