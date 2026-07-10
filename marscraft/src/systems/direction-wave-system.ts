@@ -187,7 +187,9 @@ export class DirectionWaveSystem implements DirectionWaveHandle {
     const e = b.Entity.self[i] as EntityHandle;
     let hitSet = directionWaveHitSet.get(e);
     if (!hitSet) { hitSet = new Set<number>(); directionWaveHitSet.set(e, hitSet); }
-    const effects = directionWaveHitEffects.get(e);
+    // companion map value type is erased to `unknown` in components.ts (circular-import
+    // avoidance); the concrete element type is known here.
+    const effects = directionWaveHitEffects.get(e) as AbilityEffect[] | undefined;
     const halfWidth = (W.width[i] as number) / 2;
     // perpendicular = (-dirZ, dirX)
     for (const c of this._snapshot) {

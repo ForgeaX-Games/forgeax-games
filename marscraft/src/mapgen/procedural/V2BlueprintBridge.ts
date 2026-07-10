@@ -55,6 +55,7 @@ export function buildMapConfigFromV2(input: V2BridgeInput): MapConfig {
     pathingGrid: terrain.pathingGrid,
     cliffEdges: terrain.cliffEdges,
     spawnPoints: [...bp.spawnPoints],
+    baseLocations: (bp.bases ?? []).map(b => ({ x: b.ccX, z: b.ccZ })),
     minerals,
     geysers,
     maxHeight: bp.maxHeight,

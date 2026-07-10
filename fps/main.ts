@@ -21,92 +21,68 @@ import {
   PointLight,
   Skylight,
   SkyboxBackground,
-  SKYBOX_MODE_CUBEMAP,
   TONEMAP_ACES_FILMIC,
   perspective,
   Materials,
   quat,
-  createSphereGeometry,
-  createCylinderGeometry,
   type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import { createSphereGeometry, createCylinderGeometry } from '@forgeax/engine-geometry';
+import { vec3 } from '@forgeax/engine-math';
 import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
+import type { AssetRegistry } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { TextureAsset } from '@forgeax/engine-types';
-import type { Entity, World } from '@forgeax/engine-ecs';
-import type { BootstrapContext } from '@forgeax/engine-app';
+import type { EquirectAsset } from '@forgeax/engine-types';
+import type { EntityHandle, World } from '@forgeax/engine-ecs';
+import type { BootstrapContext, App } from '@forgeax/engine-app';
 import { instantiateScene, loadGltfRuntime } from './scene-runtime';
 import { buildMeshCollision, type MeshCollision, type Box } from './scene-runtime/mesh-collision';
 
 const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-// HDR sky — same GUID + cubemap upload pipeline as cow-survivor. Spawns
-// SkyboxBackground (visible cubemap) + Skylight (IBL ambient) so the warehouse
-// PBR materials reflect daylight tones instead of going matte under the sun
-// alone. Engine 2026-06-14: loadByGuid returns the PAYLOAD (not a handle);
-// uploadCubemapFromEquirect lives on renderer.store and takes 3 args
-// (world, sourceHandle, pod) — mint the shared source handle via allocSharedRef.
+// HDR sky — declarative equirect IBL (engine feat-20260709: Skylight.equirect +
+// SkyboxBackground.equirect share one EquirectAsset handle; the engine lazily
+// projects equirect->cubemap + runs the IBL precompute inside the render-system
+// record arm — no user upload call). Spawns SkyboxBackground (visible cubemap) +
+// Skylight (IBL ambient) so the warehouse PBR materials reflect daylight tones
+// instead of going matte under the sun alone. loadByGuid returns the PAYLOAD;
+// mint the shared handle via allocSharedRef.
 const SKY_HDR_GUID = '81eec382-392f-5a93-8998-0ecf11ef7990';
 
-// Visible sky background. WebKit/WKWebView (the desktop app) can't render the
-// cubemap SkyboxBackground (the equirect->cubemap precompute needs rgba16float
-// render targets it lacks), so the background would otherwise clear to black
-// ("没天空背景"). The Camera's clear color is a plain render-pass clear value
-// with no GPU-feature requirement, so set it to a daytime-blue tone: on WebKit
-// it IS the sky; on Chromium the cubemap skybox draws over it (harmless).
-// Linear/pre-tonemap (ACES) — values are bright so the sky reads blue after
-// tonemapping. perspective() carries clearR/G/B=0, so SKY_CLEAR must be spread
-// AFTER it on every Camera write (spawn + the per-frame re-apply below).
-const SKY_CLEAR = { clearR: 0.5, clearG: 0.72, clearB: 1.25 } as const;
+// Visible sky background. The Camera's clear color is a plain render-pass clear
+// value with no GPU-feature requirement, so set it to a daytime-blue tone: it
+// shows through where the cubemap skybox is unavailable, and the cubemap draws
+// over it harmlessly where it is. Linear/pre-tonemap (ACES) — values are bright
+// so the sky reads blue after tonemapping. perspective() carries clearColor=[0,
+// 0, 0, 1], so SKY_CLEAR must be spread AFTER it on every Camera write (spawn +
+// the per-frame re-apply below).
+const SKY_CLEAR = { clearColor: [0.5, 0.72, 1.25, 1] } as const;
 /** Narrowed context for helper functions — only the subset used from the host. */
-type FpsCtx = { world: World; assets: import('@forgeax/engine-runtime').AssetRegistry; app: import('@forgeax/engine-app').App };
-async function installHdrSky(ctx: FpsCtx): Promise<Entity | null> {
+type FpsCtx = { world: World; assets?: AssetRegistry; app?: App };
+async function installHdrSky(ctx: FpsCtx): Promise<EntityHandle> {
   // ALWAYS spawn a solid-color Skylight first. The forgeax PBR shader computes
   // ambient=0 without a Skylight, so a lone DirectionalLight leaves every shaded
   // face black ("天光没了"). The engine binds a 1×1 white irradiance cube for a
   // cubemap-less Skylight, so this ambient is live on the very FIRST frame with
-  // zero async GPU work — and crucially it works on WebKit/WKWebView (the
-  // desktop Studio app), whose WebGPU lacks the rgba16float render-attachment
-  // the IBL precompute needs. Cool daylight fill balances the warm sun.
+  // zero async GPU work. Cool daylight fill balances the warm sun.
   const skylight = ctx.world.spawn(
-    { component: Skylight, data: { colorR: 0.82, colorG: 0.88, colorB: 1.0, intensity: 0.45 } },
-  ).unwrap();
+    { component: Skylight, data: { color: [0.82, 0.88, 1.0], intensity: 0.45 } },
+  ).unwrap() as EntityHandle;
 
-  // WebKit/WKWebView guard — calling uploadCubemapFromEquirect there poisons the
-  // WebGPU device → first frame never renders → Play sticks on "Loading game"
-  // forever. So on non-Chromium we keep the solid ambient above and stop here.
-  // Negative allowlist (NOT Chrome/Chromium/Edg) is robust against Playwright's
-  // "HeadlessChrome" UA.
-  const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
-  const isChromium = /Chrome|Chromium|Edg/.test(ua);
-  if (!isChromium) {
-    console.info('[fps] non-Chromium WebGPU (WebKit/WKWebView): solid-color skylight only (no IBL/skybox)');
-    return skylight;
-  }
-  const renderer = (ctx.app as unknown as { renderer?: { store?: { uploadCubemapFromEquirect?: unknown } } })?.renderer;
-  const store = renderer?.store;
-  const upload = (store && typeof store.uploadCubemapFromEquirect === 'function')
-    ? (store.uploadCubemapFromEquirect as (w: unknown, h: unknown, p: unknown) => Promise<{ ok: boolean; value?: unknown; error?: { code: string } }>).bind(store)
-    : null;
-  if (!upload) { console.warn('[fps] HDR sky skipped — uploadCubemapFromEquirect not exposed'); return skylight; }
+  if (!ctx.assets) { console.info('[fps] no asset registry — solid-color skylight only'); return skylight; }
   const guidRes = AssetGuid.parse(SKY_HDR_GUID);
   if (!guidRes.ok) return skylight;
-  const podRes = await ctx.assets.loadByGuid<TextureAsset>(guidRes.value);
+  const podRes = await ctx.assets.loadByGuid<EquirectAsset>(guidRes.value);
   if (!podRes.ok) { console.warn('[fps] sky.hdr loadByGuid failed:', (podRes.error as { code?: string }).code); return skylight; }
-  const srcHandle = ctx.world.allocSharedRef('TextureAsset', podRes.value);
-  const cubemapRes = await upload(ctx.world, srcHandle, podRes.value);
-  if (!cubemapRes.ok || cubemapRes.value === undefined) {
-    console.warn('[fps] sky cubemap upload failed:', (cubemapRes as { error?: { code?: string } }).error?.code);
-    return skylight;
-  }
-  // Upgrade the existing Skylight to full image-based lighting. Daytime
-  // industrial ambient — lower intensity than the solid fill so the directional
-  // sun shadow stays readable (high skylight washes contact-shadow contrast out
-  // under canopies / inside doorways). Reset the tint to neutral so the HDR
-  // drives the color.
-  ctx.world.set(skylight, Skylight, { cubemap: cubemapRes.value, colorR: 1, colorG: 1, colorB: 1, intensity: 0.35 });
-  ctx.world.spawn({ component: SkyboxBackground, data: { cubemap: cubemapRes.value, mode: SKYBOX_MODE_CUBEMAP } });
+  // Attach the equirect → engine lazy-projects the cubemap + IBL (caps
+  // permitting). Daytime industrial ambient — lower intensity than the solid
+  // fill so the directional sun shadow stays readable (high skylight washes
+  // contact-shadow contrast out under canopies / inside doorways). Reset the
+  // tint to neutral so the HDR drives the color.
+  const equirect = ctx.world.allocSharedRef<'EquirectAsset', EquirectAsset>('EquirectAsset', podRes.value);
+  ctx.world.set(skylight, Skylight, { equirect, color: [1, 1, 1], intensity: 0.35 });
+  ctx.world.spawn({ component: SkyboxBackground, data: { equirect } });
   return skylight;
 }
 
@@ -173,7 +149,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     mesh: Mh, material: MatH,
     px: number, py: number, pz: number,
     sx: number, sy: number, sz: number,
-  ): Entity =>
+  ): EntityHandle =>
     world.spawn(
       { component: Transform, data: { pos: [px, py, pz], scale: [sx, sy, sz] } },
       { component: MeshFilter, data: { assetHandle: mesh } },
@@ -297,12 +273,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // fire (both positioned/animated in the update loop).
   const flashlight = world.spawn(
     { component: Transform, data: { pos: [0, EYE_Y, 0] } },
-    { component: PointLight, data: { colorR: 1.0, colorG: 0.93, colorB: 0.78, intensity: 9, range: 18 } },
+    { component: PointLight, data: { color: [1.0, 0.93, 0.78], intensity: 9, range: 18 } },
   ).unwrap();
   // muzzle-flash light (pulsed on fire)
   const muzzleLight = world.spawn(
     { component: Transform, data: { pos: [0, EYE_Y, 0] } },
-    { component: PointLight, data: { colorR: 1.0, colorG: 0.85, colorB: 0.5, intensity: 0, range: 14 } },
+    { component: PointLight, data: { color: [1.0, 0.85, 0.5], intensity: 0, range: 14 } },
   ).unwrap();
 
   // ── camera ────────────────────────────────────────────────────────────────
@@ -347,13 +323,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
   // tracer pool
   const TRACERS = 8;
-  const tracers: { ent: Entity; t: number }[] = [];
+  const tracers: { ent: EntityHandle; t: number }[] = [];
   for (let i = 0; i < TRACERS; i++) tracers.push({ ent: box(matTracer, 0, -50, 0, 0.001, 0.001, 0.001), t: 0 });
   let tracerNext = 0;
 
   // ── enemies (humanoid soldiers) ───────────────────────────────────────────
   type AnimKind = 'static' | 'legL' | 'legR' | 'armL' | 'armR' | 'footL' | 'footR' | 'handL' | 'handR';
-  interface Part { ent: Entity; lx: number; ly: number; lz: number; sx: number; sy: number; sz: number; anim: AnimKind; flashable: boolean; baseMat: MatH; }
+  interface Part { ent: EntityHandle; lx: number; ly: number; lz: number; sx: number; sy: number; sz: number; anim: AnimKind; flashable: boolean; baseMat: MatH; }
   interface Enemy {
     parts: Part[]; x: number; z: number; feetY: number; face: number; hp: number; alive: boolean;
     speed: number; flash: number; matIsFlash: boolean; respawn: number; attackCd: number; phase: number;
@@ -624,7 +600,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const qYaw = quat.create(), qPitch = quat.create(), qCam = quat.create();
   const qBarrel = quat.create();
   const qRotX90 = quat.fromAxisAngle(quat.create(), [1, 0, 0], -Math.PI / 2);
-  const fwd = new Float32Array(3), rgt = new Float32Array(3), upv = new Float32Array(3), off = new Float32Array(3);
+  const fwd = vec3.create(), rgt = vec3.create(), upv = vec3.create(), off = vec3.create();
   const eq = quat.create();
 
   const raySphere = (ox: number, oy: number, oz: number, dx: number, dy: number, dz: number, cx: number, cy: number, cz: number, r: number) => {
@@ -733,7 +709,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   }
 
   // ── frame update ────────────────────────────────────────────────────────
-  registerUpdate((dtRaw) => {
+  registerUpdate?.((dtRaw) => {
     const dt = Math.min(dtRaw, 0.05);
     const w = WEAPONS[state.weapon];
     const a = ammoState[state.weapon];
@@ -848,7 +824,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // so the U notch centre lands on the camera forward ray — no part floats off the gun.
     const adsY = lerp(-0.24, -0.144, state.ads);
     const kick = state.recoil * 0.5;
-    const placeRel = (ent: Entity, lx: number, ly: number, lz: number, sx: number, sy: number, sz: number, q: Float32Array = qCam) => {
+    const placeRel = (ent: EntityHandle, lx: number, ly: number, lz: number, sx: number, sy: number, sz: number, q: Float32Array = qCam) => {
       quat.transformVec3(off, qCam, [lx + sway, ly, lz]);
       world.set(ent, Transform, {
         pos: [state.px + off[0], state.feetY + EYE_Y + bob + off[1], state.pz + off[2]],

@@ -43,18 +43,13 @@
                 "value": "Sun"
               },
               "DirectionalLight": {
-                "directionX": -0.6,
-                "directionY": -0.85,
-                "directionZ": -0.35,
-                "colorR": 1,
-                "colorG": 0.94,
-                "colorB": 0.82,
+                "direction": [-0.6, -0.85, -0.35],
+                "color": [1, 0.94, 0.82],
                 "intensity": 2.1,
                 "castShadow": true,
                 "cascadeCount": 1,
                 "mapSize": 2048,
-                "farPlane": 60,
-                "nearPlane": 0.1
+                "shadowDistance": 60
               }
             }
           },

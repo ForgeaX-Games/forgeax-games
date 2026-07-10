@@ -10,6 +10,10 @@ const Spin = defineComponent('Spin', { axisX: 'f32', axisY: 'f32', axisZ: 'f32',
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const { assets } = ctx ?? {};
+  if (!assets) {
+    console.error('[spin-cube] no asset registry — cannot load base material');
+    return;
+  }
   const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
   const dpr = window.devicePixelRatio || 1;
   canvas.width = canvas.clientWidth * dpr;
@@ -34,9 +38,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
   world.spawn(
     { component: Transform, data: { pos: [0, 0, 8] } },
-    // clearR/G/B = visible sky-ish background on WebKit (no cubemap skybox
+    // clearColor = visible sky-ish background on WebKit (no cubemap skybox
     // there; without this the background is black). Neutral studio blue-grey.
-    { component: Camera, data: { ...perspective({ fov: Math.PI / 3, aspect }), clearR: 0.14, clearG: 0.17, clearB: 0.24 } },
+    { component: Camera, data: { ...perspective({ fov: Math.PI / 3, aspect }), clearColor: [0.14, 0.17, 0.24, 1] } },
   );
 
   // Ambient: standard materials compute ambient=0 without a Skylight, so the
@@ -44,7 +48,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // which can't run the IBL precompute. A cubemap-less Skylight binds the
   // engine's 1×1 white irradiance cube → flat ambient live on the first frame,
   // no async GPU work, renders everywhere.
-  world.spawn({ component: Skylight, data: { colorR: 1, colorG: 1, colorB: 1, intensity: 0.9 } });
+  world.spawn({ component: Skylight, data: { color: [1, 1, 1], intensity: 0.9 } });
 
   for (let i = 0; i < 24; i++) {
     const material: Handle<'MaterialAsset', 'shared'> = world.allocSharedRef('MaterialAsset', {

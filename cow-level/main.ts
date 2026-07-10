@@ -2,7 +2,7 @@ import {
   Transform, Camera, perspective, quat, Materials, MeshFilter, MeshRenderer,
   ChildOf,
   SceneInstance,
-  Skylight, SkyboxBackground, SKYBOX_MODE_CUBEMAP, TONEMAP_ACES_FILMIC,
+  Skylight, SkyboxBackground, TONEMAP_ACES_FILMIC,
   BLOOM_DISABLED, ANTIALIAS_MSAA, PointLight,
   type MaterialAsset, type Handle,
 } from '@forgeax/engine-runtime';
@@ -10,9 +10,9 @@ import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { createCylinderGeometry, createSphereGeometry } from '@forgeax/engine-geometry';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { Entity, EntityHandle, World } from '@forgeax/engine-ecs';
+import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
-import type { SceneAsset, TextureAsset } from '@forgeax/engine-types';
+import type { SceneAsset, EquirectAsset } from '@forgeax/engine-types';
 import { installHud, type UpgradeChoice, type ViewMode } from './src/hud';
 
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
@@ -43,8 +43,8 @@ interface EnemyType {
 }
 
 interface Enemy {
-  e: Entity;
-  parts: Entity[];
+  e: EntityHandle;
+  parts: EntityHandle[];
   type: EnemyType;
   hp: number;
   maxHp: number;
@@ -62,7 +62,7 @@ interface Enemy {
 }
 
 interface Bullet {
-  e: Entity;
+  e: EntityHandle;
   x: number;
   y: number;
   z: number;
@@ -75,11 +75,11 @@ interface Bullet {
   damage: number;
   pierce: number;
   kind: 'stake' | 'bone' | 'fire' | 'ice';
-  hit: Set<Entity>;
+  hit: Set<EntityHandle>;
 }
 
 interface Spark {
-  e: Entity;
+  e: EntityHandle;
   x: number;
   y: number;
   z: number;
@@ -91,7 +91,7 @@ interface Spark {
 }
 
 interface Pickup {
-  e: Entity;
+  e: EntityHandle;
   x: number;
   z: number;
   xp: number;
@@ -109,52 +109,40 @@ const ENEMY_TYPES: EnemyType[] = [
 
 /** Narrowed context for helper functions using only world. */
 type CtxWorld = { world: World };
-async function installHdrSky(ctx: CtxWorld): Promise<void> {
+/** Sky needs world + the optional asset registry (equirect load). */
+type SkyCtx = { world: World; assets?: BootstrapContext['assets'] };
+async function installHdrSky(ctx: SkyCtx): Promise<void> {
   // ALWAYS spawn a solid-color Skylight first. Without a Skylight the forgeax
   // PBR shader computes ambient=0, so a lone DirectionalLight leaves shaded
-  // faces black ("天光没了"). A cubemap-less Skylight binds the engine's 1×1
+  // faces black ("天光没了"). An equirect-less Skylight binds the engine's 1×1
   // white irradiance cube — ambient is live on the first frame with no async GPU
   // work, and it works on WebKit/WKWebView (desktop app) whose WebGPU lacks the
   // rgba16float render-attachment the IBL precompute needs. Dim cool fill keeps
   // the dark mood while still letting surfaces read.
   const skylight = ctx.world.spawn(
-    { component: Skylight, data: { colorR: 0.62, colorG: 0.7, colorB: 0.9, intensity: 0.25 } },
+    { component: Skylight, data: { color: [0.62, 0.7, 0.9], intensity: 0.25 } },
   ).unwrap();
 
-  // WebKit/WKWebView guard — calling uploadCubemapFromEquirect there poisons the
-  // WebGPU device → first frame never renders → Play sticks on "Loading game"
-  // forever. Keep the solid ambient above and stop here. Negative allowlist
-  // (NOT Chrome/Chromium/Edg) is robust against Playwright's "HeadlessChrome" UA.
-  const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
-  const isChromium = /Chrome|Chromium|Edg/.test(ua);
-  if (!isChromium) {
-    console.info('[cow-level] non-Chromium WebGPU (WebKit/WKWebView): solid-color skylight only (no IBL/skybox)');
-    return;
-  }
-  const renderer = (ctx.app as unknown as { renderer?: { store?: { uploadCubemapFromEquirect?: unknown } } })?.renderer;
-  const store = renderer?.store;
-  if (!store || typeof store.uploadCubemapFromEquirect !== 'function') return;
+  // No asset registry → keep the solid-color ambient (still lit, no async).
+  if (!ctx.assets) return;
   const guidRes = AssetGuid.parse(SKY_HDR_GUID);
   if (!guidRes.ok) return;
-  // loadByGuid returns the payload (D-17); mint a source column handle, then
-  // call the 3-arg uploadCubemapFromEquirect(world, sourceHandle, sourcePod).
-  const podRes = await ctx.assets.loadByGuid<TextureAsset>(guidRes.value);
-  if (!podRes.ok) return;
-  const srcHandle = ctx.world.allocSharedRef<'TextureAsset', TextureAsset>('TextureAsset', podRes.value);
-  const upload = store.uploadCubemapFromEquirect as (w: unknown, h: unknown, p: unknown) => Promise<{ ok: boolean; value?: unknown }>;
-  const cubemapRes = await upload.call(store, ctx.world, srcHandle, podRes.value);
-  if (!cubemapRes.ok || cubemapRes.value === undefined) return;
-  // Upgrade the existing Skylight to image-based lighting (neutral tint lets the
-  // HDR drive the color).
-  ctx.world.set(skylight, Skylight, { cubemap: cubemapRes.value, colorR: 1, colorG: 1, colorB: 1, intensity: 0.12 });
-  ctx.world.spawn({ component: SkyboxBackground, data: { cubemap: cubemapRes.value, mode: SKYBOX_MODE_CUBEMAP } });
+  // Declarative equirect: load the HDR pod, mint a shared EquirectAsset handle,
+  // and attach it to the Skylight — the engine lazily projects the cubemap + IBL
+  // internally (caps-gated; no upload call, safe on WebKit). Neutral tint lets
+  // the HDR drive the color.
+  const podRes = await ctx.assets.loadByGuid<EquirectAsset>(guidRes.value);
+  if (!podRes.ok) { console.warn('[cow-level] sky.hdr loadByGuid failed:', (podRes.error as { code?: string }).code); return; }
+  const equirect = ctx.world.allocSharedRef<'EquirectAsset', EquirectAsset>('EquirectAsset', podRes.value);
+  ctx.world.set(skylight, Skylight, { equirect, color: [1, 1, 1], intensity: 0.12 });
+  ctx.world.spawn({ component: SkyboxBackground, data: { equirect } });
 }
 
 function spawnGroundCollider(ctx: CtxWorld): void {
   ctx.world.spawn(
     { component: Transform, data: { pos: [0, -5, 0] } },
     { component: RigidBody, data: { type: RigidBodyTypeValue.static } },
-    { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtentsX: 42, halfExtentsY: 5, halfExtentsZ: 42, friction: 0.95, restitution: 0 } },
+    { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtents: [42, 5, 42], friction: 0.95, restitution: 0 } },
   );
 }
 
@@ -167,12 +155,12 @@ function spawnGroundCollider(ctx: CtxWorld): void {
 // TRS exact). The avatar already renders + moves as a unit; here we only make the
 // root a kinematic body. No runtime re-parenting (that split representation was a
 // SSOT violation + a stale-view bug source).
-function setupPlayer(ctx: CtxWorld, root: Entity): void {
+function setupPlayer(ctx: CtxWorld, root: EntityHandle): void {
   ctx.world.addComponent(root, { component: RigidBody, data: { type: RigidBodyTypeValue.kinematic } });
   ctx.world.addComponent(root, { component: Collider, data: { shape: ColliderShapeValue.capsule, radius: 0.35, halfHeight: 0.48, friction: 0.8 } });
 }
 
-function attachPackPhysics(ctx: CtxWorld, loaded: { mapping: ReadonlyMap<number, Entity>; nodes: PackNode[] }): void {
+function attachPackPhysics(ctx: CtxWorld, loaded: { mapping: ReadonlyMap<number, EntityHandle>; nodes: PackNode[] }): void {
   for (const node of loaded.nodes) {
     const name = (node.components.Name as { value?: string } | undefined)?.value ?? '';
     const e = loaded.mapping.get(node.localId);
@@ -182,11 +170,11 @@ function attachPackPhysics(ctx: CtxWorld, loaded: { mapping: ReadonlyMap<number,
     if (name === 'Ground') continue;
     if (name.startsWith('Fence') || name.startsWith('Stone') || name.startsWith('Portal') || name.startsWith('Torch')) {
       ctx.world.addComponent(e, { component: RigidBody, data: { type: RigidBodyTypeValue.static } });
-      ctx.world.addComponent(e, { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtentsX: sx * 0.5, halfExtentsY: sy * 0.5, halfExtentsZ: sz * 0.5, friction: 0.8, restitution: 0.05 } });
+      ctx.world.addComponent(e, { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtents: [sx * 0.5, sy * 0.5, sz * 0.5], friction: 0.8, restitution: 0.05 } });
     }
     if (name.startsWith('Barrel') || name.startsWith('BonePile')) {
       ctx.world.addComponent(e, { component: RigidBody, data: { type: RigidBodyTypeValue.dynamic, mass: 1.6, linearDamping: 0.35, angularDamping: 0.4, ccdEnabled: true } });
-      ctx.world.addComponent(e, { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtentsX: sx * 0.5, halfExtentsY: sy * 0.5, halfExtentsZ: sz * 0.5, friction: 0.65, restitution: 0.25 } });
+      ctx.world.addComponent(e, { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtents: [sx * 0.5, sy * 0.5, sz * 0.5], friction: 0.65, restitution: 0.25 } });
     }
   }
 }
@@ -215,27 +203,27 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // SceneAsset (ctx.defaultScene). The game no longer fetches + instantiates
   // scene.pack.json itself (no dual-load). Recover the { mapping, nodes } the
   // Player / physics setup below read: mapping from the SceneInstance component
-  // on the host root (localId -> Entity), nodes from the author-side entity
+  // on the host root (localId -> EntityHandle), nodes from the author-side entity
   // list (carries Name components for Name -> localId resolution).
-  let loaded: { mapping: ReadonlyMap<number, Entity>; nodes: PackNode[] } | null = null;
-  const hostCtx = ctx;
-  const hostRoot = hostCtx.defaultSceneRoot;
-  if (hostRoot !== undefined && hostCtx.defaultScene !== undefined) {
+  let loaded: { mapping: ReadonlyMap<number, EntityHandle>; nodes: PackNode[] } | null = null;
+  const hostRoot = ctx?.defaultSceneRoot;
+  const hostScene = ctx?.defaultScene;
+  if (hostRoot !== undefined && hostScene !== undefined) {
     const sceneInst = world.get(hostRoot, SceneInstance);
     if (!sceneInst.ok) {
       console.error('[cowhell] SceneInstance lookup on host root failed', sceneInst.error);
     } else {
       // mapping is a Uint32Array sized totalSlots, indexed by localId:
-      // mapping[localId] = entity. Project into the Map<localId, Entity> the
+      // mapping[localId] = entity. Project into the Map<localId, EntityHandle> the
       // callers read from, skipping unspawned slots (ENTITY_NULL_RAW
       // = 0xffffffff) and 0.
       const mappingArr = sceneInst.value.mapping as unknown as { length: number; [i: number]: number };
-      const mapping = new Map<number, Entity>();
+      const mapping = new Map<number, EntityHandle>();
       for (let localId = 0; localId < mappingArr.length; localId++) {
         const e = mappingArr[localId];
-        if (e !== undefined && e !== 0xffffffff && e !== 0) mapping.set(localId, e as Entity);
+        if (e !== undefined && e !== 0xffffffff && e !== 0) mapping.set(localId, e as EntityHandle);
       }
-      loaded = { mapping, nodes: hostCtx.defaultScene.entities as unknown as PackNode[] };
+      loaded = { mapping, nodes: hostScene.entities as unknown as PackNode[] };
     }
   }
   if (!loaded) {
@@ -243,9 +231,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     spawnFallbackScene({ world });
   }
   spawnGroundCollider({ world });
-  void installHdrSky({ world });
+  void installHdrSky({ world, assets: ctx?.assets });
 
-  let player: Entity | undefined;
+  let player: EntityHandle | undefined;
   let px = 0, pz = 0;
   if (loaded) {
     attachPackPhysics({ world }, loaded);
@@ -276,13 +264,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // flashes on refresh). Match cow-survivor's verified-stable combo: MSAA +
     // bloom off + ACES tonemap, which renders through the engine's default urp
     // pipeline cleanly.
-    // clearR/G/B = visible sky on WebKit (the desktop app can't render the
+    // clearColor = visible sky on WebKit (the desktop app can't render the
     // cubemap skybox; without this the background is black). Dark night-blue;
     // linear/pre-ACES. On Chromium the cubemap skybox draws over it.
-    { component: Camera, data: { ...perspective({ fov: Math.PI / 3, aspect, near: 0.1, far: 220 }), tonemap: TONEMAP_ACES_FILMIC, bloom: BLOOM_DISABLED, antialias: ANTIALIAS_MSAA, clearR: 0.05, clearG: 0.07, clearB: 0.13 } },
+    { component: Camera, data: { ...perspective({ fov: Math.PI / 3, aspect, near: 0.1, far: 220 }), tonemap: TONEMAP_ACES_FILMIC, bloom: BLOOM_DISABLED, antialias: ANTIALIAS_MSAA, clearColor: [0.05, 0.07, 0.13, 1] } },
   ).unwrap();
-  world.spawn({ component: Transform, data: { pos: [-4, 6, 2] } }, { component: PointLight, data: { colorR: 1, colorG: 0.18, colorB: 0.08, intensity: 65, range: 24 } });
-  world.spawn({ component: Transform, data: { pos: [6, 4.5, -5] } }, { component: PointLight, data: { colorR: 0.55, colorG: 0.18, colorB: 1, intensity: 45, range: 18 } });
+  world.spawn({ component: Transform, data: { pos: [-4, 6, 2] } }, { component: PointLight, data: { color: [1, 0.18, 0.08], intensity: 65, range: 24 } });
+  world.spawn({ component: Transform, data: { pos: [6, 4.5, -5] } }, { component: PointLight, data: { color: [0.55, 0.18, 1], intensity: 45, range: 18 } });
 
   const enemyMats = new Map<string, MatHandle>();
   for (const t of ENEMY_TYPES) {
@@ -340,7 +328,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const weapons = {
     stake: { level: 1, cd: 0, interval: 0.34 },
     bones: { level: 1, cd: 0, interval: 1.1 },
-    orbit: { level: 1, t: 0, hitCd: new Map<Entity, number>() },
+    orbit: { level: 1, t: 0, hitCd: new Map<EntityHandle, number>() },
     fire: { level: 0, cd: 0, interval: 1.9 },
     frost: { level: 0, cd: 0, interval: 2.6 },
   };
@@ -498,7 +486,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       { component: RigidBody, data: { type: RigidBodyTypeValue.kinematic } },
       { component: Collider, data: { shape: ColliderShapeValue.sphere, radius: Math.max(0.18, radius * 1.9), friction: 0, restitution: 0.35 } },
     ).unwrap();
-    bullets.push({ e, x, y, z, vx: dx / len * speed, vy: dy / len * speed, vz: dz / len * speed, age: 0, life, radius: Math.max(0.22, radius * 1.8), damage: damage * playerStats.might, pierce, kind, hit: new Set<Entity>() });
+    bullets.push({ e, x, y, z, vx: dx / len * speed, vy: dy / len * speed, vz: dz / len * speed, age: 0, life, radius: Math.max(0.22, radius * 1.8), damage: damage * playerStats.might, pierce, kind, hit: new Set<EntityHandle>() });
   }
 
   function spawnSparks(x: number, y: number, z: number, count: number, mat = sparkMat): void {
@@ -608,7 +596,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     playerStats.fireRate = 1; playerStats.armor = 0;
     weapons.stake = { level: 1, cd: 0, interval: 0.34 };
     weapons.bones = { level: 1, cd: 0, interval: 1.1 };
-    weapons.orbit = { level: 1, t: 0, hitCd: new Map<Entity, number>() };
+    weapons.orbit = { level: 1, t: 0, hitCd: new Map<EntityHandle, number>() };
     weapons.fire = { level: 0, cd: 0, interval: 1.9 };
     weapons.frost = { level: 0, cd: 0, interval: 2.6 };
     hud.hideGameOver();
@@ -719,7 +707,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   hud.banner('Cow Level', 'Survive — harvest the herd');
 
   if (player !== undefined) {
-    registerUpdate((rawDt: number) => {
+    registerUpdate?.((rawDt: number) => {
       const dt = Math.min(0.05, rawDt);
       if (gameOver) return;
       if (paused) {

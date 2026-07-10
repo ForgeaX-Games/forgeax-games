@@ -9,15 +9,15 @@
 
 import {
   Transform, Camera, perspective, quat, ChildOf,
-  Skylight, SkyboxBackground, SKYBOX_MODE_CUBEMAP, TONEMAP_ACES_FILMIC,
+  Skylight, SkyboxBackground, TONEMAP_ACES_FILMIC,
   BLOOM_DISABLED, ANTIALIAS_MSAA, PointLight, SceneInstance,
   type MaterialAsset,
 } from '@forgeax/engine-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { Entity, EntityHandle, World } from '@forgeax/engine-ecs';
-import type { BootstrapContext } from '@forgeax/engine-app';
-import type { SceneAsset, LocalEntityId, TextureAsset } from '@forgeax/engine-types';
+import type { EntityHandle, World } from '@forgeax/engine-ecs';
+import type { BootstrapContext, GameContext } from '@forgeax/engine-app';
+import type { SceneAsset, LocalEntityId, EquirectAsset } from '@forgeax/engine-types';
 
 // The host injects the instantiated defaultScene root + loaded SceneAsset
 // onto the BootstrapContext. HostFedContext is now just an alias.
@@ -51,69 +51,45 @@ interface ScenePack { assets: PackAsset[] }
 
 // ── HDR sky (purple-tinted D2 hell vibe; HDR texture is generic) ─────────
 // Returns the Skylight entity so level transitions can re-mood the ambient
-// (day vs night) with a single intensity write; null when the renderer
-// lacks the cubemap upload path (sky silently skipped).
+// (day vs night) with a single intensity write; null only when the world
+// can't even spawn (never in practice — solid fill always renders).
 //
-// engine e53f4616: `uploadCubemapFromEquirect` lives on `renderer.store` and is
-// now 3-arg `(world, sourceHandle, sourcePod)`. `loadByGuid` returns the
-// PAYLOAD; the source handle is minted via `world.allocSharedRef('TextureAsset',
-// pod)`. Probe the store surface and gracefully skip if not exposed.
-async function installHdrSky(ctx: Sctx): Promise<Entity | null> {
+// engine feat-20260709: the imperative `renderer.store.uploadCubemapFromEquirect`
+// path is gone. Attach a shared `EquirectAsset` to `Skylight.equirect` and the
+// engine lazy-projects the cubemap + IBL itself (caps-gated; degrades to the
+// solid tint on WebKit/WKWebView whose WebGPU lacks the rgba16float attachment).
+async function installHdrSky(ctx: Sctx): Promise<EntityHandle | null> {
   // ALWAYS spawn a solid-color Skylight first. The forgeax PBR shader computes
   // ambient=0 without a Skylight, so a lone DirectionalLight leaves shaded faces
   // black ("天光没了"). A cubemap-less Skylight binds the engine's 1×1 white
   // irradiance cube — ambient is live on the very first frame with no async GPU
-  // work, and it works on WebKit/WKWebView (desktop app) whose WebGPU lacks the
-  // rgba16float render-attachment the IBL precompute needs. Cool, moody fill.
+  // work. Cool, moody fill until the equirect projection reports ready.
   const skylight = ctx.world.spawn(
-    { component: Skylight, data: { colorR: 0.7, colorG: 0.78, colorB: 0.95, intensity: 0.3 } },
-  ).unwrap();
+    { component: Skylight, data: { color: [0.7, 0.78, 0.95], intensity: 0.3 } },
+  ).unwrap() as EntityHandle;
 
-  // WebKit/WKWebView guard — calling uploadCubemapFromEquirect there poisons the
-  // WebGPU device → first frame never renders → Play sticks on "Loading game"
-  // forever. Keep the solid ambient above and stop here. Negative allowlist
-  // (NOT Chrome/Chromium/Edg) is robust against Playwright's "HeadlessChrome" UA.
-  const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
-  const isChromium = /Chrome|Chromium|Edg/.test(ua);
-  if (!isChromium) {
-    console.info('[cow] non-Chromium WebGPU (WebKit/WKWebView): solid-color skylight only (no IBL/skybox)');
-    return skylight;
-  }
-  const renderer = (ctx.app as unknown as { renderer?: { store?: { uploadCubemapFromEquirect?: unknown } } })?.renderer;
-  const store = renderer?.store;
-  const upload = (store && typeof store.uploadCubemapFromEquirect === 'function')
-    ? (store.uploadCubemapFromEquirect as (
-        world: unknown, h: unknown, p: unknown,
-      ) => Promise<{ ok: boolean; value?: unknown; error?: { code: string } }>).bind(store)
-    : null;
-  if (!upload) {
-    console.warn('[cow] HDR sky skipped — uploadCubemapFromEquirect not exposed on renderer.store');
-    return skylight;
-  }
   const guidRes = AssetGuid.parse(SKY_HDR_GUID);
   if (!guidRes.ok) return skylight;
-  const podRes = await ctx.assets.loadByGuid<TextureAsset>(guidRes.value);
-  if (!podRes.ok) return skylight;
-  const srcHandle = ctx.world.allocSharedRef<'TextureAsset', TextureAsset>('TextureAsset', podRes.value);
-  const cubemapRes = await upload(ctx.world, srcHandle, podRes.value);
-  if (!cubemapRes.ok || cubemapRes.value === undefined) {
-    console.warn('[cow] HDR sky cubemap upload failed:', (cubemapRes as { error?: { code?: string } }).error?.code);
+  const podRes = await ctx.assets.loadByGuid<EquirectAsset>(guidRes.value);
+  if (!podRes.ok) {
+    console.warn('[cow] HDR sky loadByGuid failed:', (podRes.error as { code?: string }).code);
     return skylight;
   }
-  // Upgrade the existing Skylight to image-based lighting — lower intensity so
-  // the scene reads moody, not bright daylight. Neutral tint lets the HDR drive.
-  ctx.world.set(skylight, Skylight, { cubemap: cubemapRes.value, colorR: 1, colorG: 1, colorB: 1, intensity: 0.12 });
-  ctx.world.spawn({ component: SkyboxBackground, data: { cubemap: cubemapRes.value, mode: SKYBOX_MODE_CUBEMAP } });
+  const equirect = ctx.world.allocSharedRef<'EquirectAsset', EquirectAsset>('EquirectAsset', podRes.value);
+  // Attach equirect → engine lazy-projects cubemap + IBL (caps permitting).
+  // Lower intensity + neutral tint so the HDR drives color once projected.
+  ctx.world.set(skylight, Skylight, { equirect, color: [1, 1, 1], intensity: 0.12 });
+  ctx.world.spawn({ component: SkyboxBackground, data: { equirect } });
   return skylight;
 }
 
 // ── scene-pack loader (same as the template) ─────────────────────────────
 interface LoadedScene {
-  mapping: ReadonlyMap<number, Entity>;
+  mapping: ReadonlyMap<number, EntityHandle>;
   nodes: PackNode[];
   /** SceneInstance synthetic root — `world.despawnScene(synthRoot)` tears the
    *  whole stage down on level transitions. */
-  synthRoot: Entity;
+  synthRoot: EntityHandle;
 }
 
 async function instantiateScenePack(
@@ -183,9 +159,9 @@ async function instantiateScenePack(
   if (!sceneGuid.ok) return null;
   // Engine 5dfeb0b6 (feat-20260608-scene-nesting-ecs-fication) ECS-fied
   // SceneInstance: `world.sceneInstances` is gone. `assets.instantiate` now
-  // returns the synthetic-root Entity directly (a fresh entity with identity
+  // returns the synthetic-root EntityHandle directly (a fresh entity with identity
   // Transform + a `SceneInstance` component carrying source/mapping/state).
-  // The localId -> Entity map lives on `SceneInstance.mapping` (Uint32Array).
+  // The localId -> EntityHandle map lives on `SceneInstance.mapping` (Uint32Array).
   // setSceneAssetResolver is no longer needed — shared-ref resolution is
   // wired by AssetRegistry.instantiate itself.
   // engine e53f4616: catalog the scene payload (Err on re-enter collision is
@@ -196,16 +172,16 @@ async function instantiateScenePack(
   const sceneHandle = world.allocSharedRef<'SceneAsset', SceneAsset>('SceneAsset', payloadRes.value);
   const instRes = assets.instantiate<SceneAsset>(sceneHandle, world);
   if (!instRes.ok) { console.error('[game] scene instantiate failed:', (instRes.error as { code?: string })?.code); return null; }
-  const synthRoot = instRes.value as Entity;
+  const synthRoot = instRes.value as EntityHandle;
   const sceneInst = world.get(synthRoot, SceneInstance);
   if (!sceneInst.ok) { console.error('[game] SceneInstance lookup failed on synthetic root'); return null; }
   // Project the Uint32Array `mapping[localId] = entity` into the Map<localId,
-  // Entity> shape every cow-survivor caller (setupPlayerRoot / blocker scan /
+  // EntityHandle> shape every cow-survivor caller (setupPlayerRoot / blocker scan /
   // enemy targeting) reads from.
-  const mapping = new Map<number, Entity>();
+  const mapping = new Map<number, EntityHandle>();
   const arr = sceneInst.value.mapping;
   for (let localId = 0; localId < arr.length; localId++) {
-    const e = arr[localId] as Entity;
+    const e = arr[localId] as EntityHandle;
     if (e !== 0) mapping.set(localId, e);
   }
   return { mapping, nodes: packNodes, synthRoot };
@@ -216,7 +192,7 @@ function spawnGroundCollider(ctx: Sctx): void {
   ctx.world.spawn(
     { component: Transform, data: { pos: [0, -5, 0] } },
     { component: RigidBody, data: { type: RigidBodyTypeValue.static } },
-    { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtentsX: 60, halfExtentsY: 5, halfExtentsZ: 60, friction: 0.9, restitution: 0 } },
+    { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtents: [60, 5, 60], friction: 0.9, restitution: 0 } },
   );
 }
 
@@ -231,9 +207,9 @@ function spawnGroundCollider(ctx: Sctx): void {
 function attachBlockerPhysics(
   ctx: Sctx,
   loaded: LoadedScene,
-): { blockers: Array<{ cx: number; cz: number; r: number }>; colliders: Entity[] } {
+): { blockers: Array<{ cx: number; cz: number; r: number }>; colliders: EntityHandle[] } {
   const blockers: Array<{ cx: number; cz: number; r: number }> = [];
-  const colliders: Entity[] = [];
+  const colliders: EntityHandle[] = [];
   for (const n of loaded.nodes) {
     const nm = (n.components.Name as { value?: string } | undefined)?.value;
     if (!nm || !(nm.startsWith('Stele') || nm.startsWith('Blocker_'))) continue;
@@ -252,7 +228,7 @@ function attachBlockerPhysics(
       { component: RigidBody, data: { type: RigidBodyTypeValue.static } },
       { component: Collider, data: {
         shape: ColliderShapeValue.cuboid,
-        halfExtentsX: hx * PAD, halfExtentsY: hy * PAD, halfExtentsZ: hz * PAD,
+        halfExtents: [hx * PAD, hy * PAD, hz * PAD],
         friction: 0.7, restitution: 0.2,
       } },
     ).unwrap();
@@ -268,11 +244,13 @@ const PLAYER_Y = 0.75;
 // character's lowpoly assembly lives in assets/characters/player.pack.json
 // (editable in the Studio editor like any monster asset). Physics goes on the
 // marker root; the visual parts hang off it via ChildOf.
+// Takes the full GameContext (not just Sctx) because spawnPackVisual reads the
+// same legacy GameContext the gameplay systems do.
 function setupPlayerRoot(
-  ctx: Sctx,
-  root: Entity,
+  ctx: GameContext,
+  root: EntityHandle,
   visual: PackVisual | null,
-): Array<{ e: Entity; sx: number; sy: number; sz: number }> {
+): Array<{ e: EntityHandle; sx: number; sy: number; sz: number }> {
   const { world } = ctx;
   world.addComponent(root, { component: RigidBody, data: { type: RigidBodyTypeValue.kinematic } });
   world.addComponent(root, { component: Collider, data: { shape: ColliderShapeValue.capsule, radius: 0.35, halfHeight: 0.4 } });
@@ -280,7 +258,22 @@ function setupPlayerRoot(
 }
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
-  const { registerUpdate } = ctx ?? {};
+  // The engine-app host always supplies a BootstrapContext (renderer, assets,
+  // app, registerUpdate). Bail loudly if a legacy/degenerate host omits it —
+  // every system below needs assets + registerUpdate, so there is nothing
+  // meaningful to run without it.
+  if (!ctx) { console.error('[game] no BootstrapContext — cannot start'); return; }
+  const { assets, app, registerUpdate } = ctx;
+
+  // The gameplay systems (EnemyManager / FxSystem / …) predate the
+  // world-as-first-param bootstrap hook and still take the legacy GameContext
+  // ({ world, assets, app, registerUpdate, … }). Assemble one from the world +
+  // BootstrapContext so those systems (and the Sctx helpers, which only read
+  // world + assets) type-check without `!` casts.
+  const gameCtx: GameContext = {
+    world, assets, app, registerUpdate,
+    uiRoot: ctx.uiRoot, registerCleanup: ctx.registerCleanup,
+  };
 
   // Host-controlled UI container: the host removes it wholesale on ■ Stop so
   // every DOM overlay we mount into it disappears with the run. Fall back to
@@ -312,18 +305,18 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // (vignette + chromatic aberration) — re-enable once render-pipeline.ts ports
   // the urp v18 swap-chain copy pattern (recordFxaaPass-style final write).
   void installCowSurvivorPipeline;
-  spawnGroundCollider({ world, assets: ctx?.assets! });
-  const skylight = await installHdrSky({ world, assets: ctx?.assets! });
+  spawnGroundCollider({ world, assets });
+  const skylight = await installHdrSky({ world, assets });
 
   // ── per-level state (rebound by loadLevel on every stage transition) ───
   let levelIdx = 0;
   let levelElapsed = 0;
   let transitioning = false;
-  let sceneRoot: Entity | null = null;
+  let sceneRoot: EntityHandle | null = null;
   let walkBlockers: Array<{ cx: number; cz: number; r: number }> = [];
-  let blockerColliders: Entity[] = [];
-  let player!: Entity;
-  let bodyParts: Array<{ e: Entity; sx: number; sy: number; sz: number }> = [];
+  let blockerColliders: EntityHandle[] = [];
+  let player!: EntityHandle;
+  let bodyParts: Array<{ e: EntityHandle; sx: number; sy: number; sz: number }> = [];
   let px = 0, pz = 0;
 
   // ── camera (twin-view: top-down ⇄ FPS) ─────────────────────────────────
@@ -341,16 +334,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     //   • MSAA replaces FXAA — low-poly cube edges read crisp instead of fuzzy
     //   • bloom threshold lowered + intensity bumped so emissives genuinely glow
     //     (lightning arcs / boss aura / lanterns / monster eyes)
-    // clearR/G/B = visible sky on WebKit (the desktop app can't render the
+    // clearColor = visible sky on WebKit (the desktop app can't render the
     // cubemap skybox; without this the background is black). Moody dusk-blue;
     // linear/pre-ACES. On Chromium the cubemap skybox draws over it.
-    { component: Camera, data: { ...perspective({ fov: Math.PI / 3, aspect, near: 0.1, far: 220 }), tonemap: TONEMAP_ACES_FILMIC, bloom: BLOOM_DISABLED, antialias: ANTIALIAS_MSAA, clearR: 0.16, clearG: 0.2, clearB: 0.34 } },
+    { component: Camera, data: { ...perspective({ fov: Math.PI / 3, aspect, near: 0.1, far: 220 }), tonemap: TONEMAP_ACES_FILMIC, bloom: BLOOM_DISABLED, antialias: ANTIALIAS_MSAA, clearColor: [0.16, 0.2, 0.34, 1] } },
   ).unwrap();
 
   // ── one warm point light that follows the player (D2 atmospheric spot) ─
   const playerLight = world.spawn(
     { component: Transform, data: { pos: [px, 4, pz] } },
-    { component: PointLight, data: { colorR: 1, colorG: 0.55, colorB: 0.35, intensity: 12, range: 6 } },
+    { component: PointLight, data: { color: [1, 0.55, 0.35], intensity: 12, range: 6 } },
   ).unwrap();
 
   // ── game systems ───────────────────────────────────────────────────────
@@ -364,10 +357,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // initial paramValues + pool sizes + default lifetime/scale from these
   // files so a designer can tweak fx without recompiling.
   const effectAssets = await loadEffectAssets(import.meta.url);
-  const enemies = new EnemyManager(ctx);
-  const fx = new FxSystem(ctx, effectAssets);
-  const weapons = new WeaponSystem(ctx, fx);
-  const gems = new GemSystem(ctx);
+  const enemies = new EnemyManager(gameCtx);
+  const fx = new FxSystem(gameCtx, effectAssets);
+  const weapons = new WeaponSystem(gameCtx, fx);
+  const gems = new GemSystem(gameCtx);
   const sfx = new SfxSystem();
   onCleanup(() => sfx.dispose());
   const picker = installUpgradeUI(uiMount);
@@ -692,15 +685,15 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // the consumers below read from the host-fed root + SceneAsset instead of
       // fetching + instantiating cfg.scenePack ourselves. synthRoot is the host
       // root so unloadLevel can despawnScene it consistently on transition.
-      const hostRoot = hostCtx.defaultSceneRoot as unknown as Entity;
+      const hostRoot = hostCtx.defaultSceneRoot as unknown as EntityHandle;
       const sceneInst = world.get(hostRoot, SceneInstance);
       if (!sceneInst.ok) {
         console.error('[game] SceneInstance lookup failed on host root');
       } else {
-        const mapping = new Map<number, Entity>();
+        const mapping = new Map<number, EntityHandle>();
         const arr = sceneInst.value.mapping;
         for (let localId = 0; localId < arr.length; localId++) {
-          const e = arr[localId] as Entity;
+          const e = arr[localId] as EntityHandle;
           if (e !== 0) mapping.set(localId, e);
         }
         loaded = { mapping, nodes: hostCtx.defaultScene.entities as unknown as PackNode[], synthRoot: hostRoot };
@@ -713,14 +706,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         const res = await fetch(new URL(cfg.scenePack, import.meta.url), { cache: 'no-store' });
         if (!res.ok) throw new Error(`${cfg.scenePack} ${res.status}`);
         const pack = await res.json() as ScenePack;
-        loaded = await instantiateScenePack(pack, { world, assets: ctx?.assets! });
+        loaded = await instantiateScenePack(pack, { world, assets });
       } catch (err) {
         console.error('[game] level scene pack unavailable:', err);
       }
     }
     if (!loaded) return false;
     sceneRoot = loaded.synthRoot;
-    const bp = attachBlockerPhysics(ctx, loaded);
+    const bp = attachBlockerPhysics(gameCtx, loaded);
     walkBlockers = bp.blockers;
     blockerColliders = bp.colliders;
 
@@ -731,7 +724,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       return false;
     }
     player = pe;
-    bodyParts = setupPlayerRoot(ctx, player, playerVisual);
+    bodyParts = setupPlayerRoot(gameCtx, player, playerVisual);
     const pT = (playerNode.components.Transform ?? {}) as { pos?: number[] };
     px = pT.pos?.[0] ?? 0;
     pz = pT.pos?.[2] ?? 0;
@@ -742,7 +735,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // Level mood: ambient skylight + the warm/cold light that follows the player.
     if (skylight !== null) world.set(skylight, Skylight, { intensity: cfg.skylightIntensity });
     const [lr, lg, lb] = cfg.playerLight.color;
-    world.set(playerLight, PointLight, { colorR: lr, colorG: lg, colorB: lb, intensity: cfg.playerLight.intensity, range: cfg.playerLight.range });
+    world.set(playerLight, PointLight, { color: [lr, lg, lb], intensity: cfg.playerLight.intensity, range: cfg.playerLight.range });
     world.set(playerLight, Transform, { pos: [px, 4, pz] });
 
     enemies.setLevel(cfg.spawn);
@@ -837,7 +830,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   if (levelIdx !== 0) {
     const hostRoot0 = ctx.defaultSceneRoot;
     if (hostRoot0 !== undefined) {
-      const dr = world.despawnScene(hostRoot0 as unknown as Entity);
+      const dr = world.despawnScene(hostRoot0 as unknown as EntityHandle);
       if (!dr.ok) console.warn('[game] despawn host defaultScene before non-default level failed:', dr.error);
     }
   }
@@ -1076,7 +1069,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           }
           // CHAIN: jump to up to N other enemies in range
           if (b.onHit === 'chain' && b.chainTargets > 0) {
-            const visited = new Set<Entity>([en.e]);
+            const visited = new Set<EntityHandle>([en.e]);
             let from = en;
             let remaining = b.chainTargets;
             while (remaining > 0) {

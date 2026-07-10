@@ -16,10 +16,9 @@ import {
   DirectionalLight,
   PointLight,
   Materials,
-  createSphereGeometry,
-  createCylinderGeometry,
   quat,
 } from '@forgeax/engine-runtime';
+import { createSphereGeometry, createCylinderGeometry } from '@forgeax/engine-geometry';
 import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { getLoadedGltf } from './gltf-runtime';
 import type {

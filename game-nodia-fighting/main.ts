@@ -23,7 +23,7 @@
 import {
   Transform, Camera, perspective, quat, Materials, MeshFilter, MeshRenderer,
   SceneInstance,
-  Skylight, SkyboxBackground, SKYBOX_MODE_CUBEMAP, TONEMAP_REINHARD_EXTENDED,
+  Skylight, SkyboxBackground, TONEMAP_REINHARD_EXTENDED,
   BLOOM_ENABLED, ANTIALIAS_FXAA, PointLight,
   type MaterialAsset, type Handle,
 } from '@forgeax/engine-runtime';
@@ -34,13 +34,13 @@ import { createCylinderGeometry, createSphereGeometry } from '@forgeax/engine-ge
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
+import { type EntityHandle, type World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
-import type { SceneAsset, TextureAsset } from '@forgeax/engine-types';
+import type { SceneAsset, EquirectAsset } from '@forgeax/engine-types';
 import { installHud, type ViewMode } from './src/hud';
 
 /** Narrowed context for helper functions consuming world + optional assets/app. */
-type Ctx = { world: World; assets?: import('@forgeax/engine-runtime').AssetRegistry; app?: import('@forgeax/engine-app').App };
+type Ctx = { world: World; assets?: import('@forgeax/engine-assets-runtime').AssetRegistry; app?: import('@forgeax/engine-app').App };
 
 // sky.hdr lives in the forgeax-engine-assets submodule (demo-assets/template-
 // game-default/sky.hdr + matching *.meta.json sidecar). pluginPack scans that
@@ -80,46 +80,34 @@ interface PackNode { localId: number; components: Record<string, Record<string, 
 // Then, on Chromium/Dawn only, upgrade that Skylight to full image-based
 // lighting from sky.hdr + add the visible SkyboxBackground.
 async function installHdrSky(ctx: Ctx): Promise<void> {
-  const skylight = ctx.world.spawn(
-    { component: Skylight, data: { colorR: 0.9, colorG: 0.95, colorB: 1.0, intensity: 0.35 } },
-  ).unwrap();
+  const { world, assets } = ctx;
+  // ALWAYS spawn a solid-color Skylight first: ambient is live on frame 1 with
+  // zero async GPU work (and it renders on WebKit/WKWebView whose WebGPU lacks
+  // the rgba16float render-attachment the IBL precompute needs).
+  const skylight = world.spawn(
+    { component: Skylight, data: { color: [0.9, 0.95, 1.0], intensity: 0.35 } },
+  ).unwrap() as EntityHandle;
+  if (!assets) return;
 
-  // WebKit/WKWebView guard -- calling uploadCubemapFromEquirect there poisons
-  // the WebGPU device (first frame never renders -> Play sticks on "Loading
-  // game"). Keep the solid ambient above and stop. Negative allowlist (NOT
-  // Chrome/Chromium/Edg) is robust against Playwright's "HeadlessChrome" UA.
-  const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
-  if (!/Chrome|Chromium|Edg/.test(ua)) {
-    console.info('[game] non-Chromium WebGPU (WebKit/WKWebView): solid-color skylight only (no IBL/skybox)');
-    return;
-  }
-  const renderer = (ctx.app as unknown as { renderer?: { store?: { uploadCubemapFromEquirect?: unknown } } })?.renderer;
-  const store = renderer?.store;
-  if (!store || typeof store.uploadCubemapFromEquirect !== 'function') return;
-
+  // DECLARATIVE equirect: attach the EquirectAsset handle and let the engine
+  // lazy-project it to a cubemap + IBL (caps-gated internally — no UA guard, no
+  // private upload API). Then spawn the visible SkyboxBackground with the same
+  // handle (mode defaults to cubemap).
   const guidRes = AssetGuid.parse(SKY_HDR_GUID);
   if (!guidRes.ok) {
     console.warn(`[game] sky GUID parse failed: ${guidRes.error.code}`);
     return;
   }
-  // loadByGuid returns the payload (D-17); mint a user-tier source handle and
-  // pass world + handle + pod to uploadCubemapFromEquirect.
-  const podRes = await ctx.assets.loadByGuid<TextureAsset>(guidRes.value);
+  const podRes = await assets.loadByGuid<EquirectAsset>(guidRes.value);
   if (!podRes.ok) {
     console.warn(`[game] sky.hdr loadByGuid failed: ${podRes.error.code}`);
     return;
   }
-  const srcHandle = ctx.world.allocSharedRef('TextureAsset', podRes.value);
-  const upload = store.uploadCubemapFromEquirect as (world: unknown, h: unknown, p: unknown) => Promise<{ ok: boolean; value?: unknown; error?: { code: string } }>;
-  const cubemapRes = await upload.call(store, ctx.world, srcHandle, podRes.value);
-  if (!cubemapRes.ok || cubemapRes.value === undefined) {
-    console.warn(`[game] sky.hdr equirect->cubemap upload failed: ${cubemapRes.error?.code ?? '<unknown>'}`);
-    return;
-  }
+  const equirect = world.allocSharedRef<'EquirectAsset', EquirectAsset>('EquirectAsset', podRes.value);
   // Upgrade the existing Skylight to image-based lighting (neutral tint lets the
   // HDR drive the color).
-  ctx.world.set(skylight, Skylight, { cubemap: cubemapRes.value, colorR: 1, colorG: 1, colorB: 1, intensity: 0.2 });
-  ctx.world.spawn({ component: SkyboxBackground, data: { cubemap: cubemapRes.value, mode: SKYBOX_MODE_CUBEMAP } });
+  world.set(skylight, Skylight, { equirect, color: [1, 1, 1], intensity: 0.2 });
+  world.spawn({ component: SkyboxBackground, data: { equirect } });
 }
 
 // Load the authored scene the canonical way -- loadByGuid<SceneAsset> ->
@@ -130,7 +118,7 @@ async function installHdrSky(ctx: Ctx): Promise<void> {
 // and instantiate resolves refs[]->GUID->handle + builds the mapping itself.
 async function loadScene(
   ctx: Ctx,
-): Promise<{ mapping: ReadonlyMap<number, Entity>; nodes: PackNode[] } | null> {
+): Promise<{ mapping: ReadonlyMap<number, EntityHandle>; nodes: PackNode[] } | null> {
   const { world, assets } = ctx;
   if (!assets) return null;
 
@@ -157,8 +145,8 @@ async function loadScene(
   // attachScenePhysics adds its own engine collider), and lift any legacy
   // singular `MeshRenderer.material` into the `materials` array the schema wants.
   const loadedEntities = (loadRes.value.entities ?? []) as unknown as PackNode[];
-  const normalized: SceneAsset = {
-    kind: 'scene',
+  const normalized = {
+    kind: 'scene' as const,
     entities: loadedEntities.map((n) => {
       const components: Record<string, Record<string, unknown>> = {};
       for (const [name, data] of Object.entries(n.components)) {
@@ -182,18 +170,18 @@ async function loadScene(
   // indexed by authored localId. (engine sizes mapping to maxLocalId+1, so sparse
   // localIds from an editor delete no longer drop entities -- the old compaction
   // workaround is gone.)
-  const sceneHandle = world.allocSharedRef('SceneAsset', normalized);
+  const sceneHandle = world.allocSharedRef('SceneAsset', normalized as unknown as SceneAsset);
   const instRes = assets.instantiate<SceneAsset>(sceneHandle, world);
   if (!instRes.ok) { console.error('[game] scene instantiate failed:', (instRes.error as { code?: string })?.code); return null; }
   const root = instRes.value;
   const sceneInst = world.get(root, SceneInstance);
   if (!sceneInst.ok) { console.error('[game] SceneInstance lookup failed:', sceneInst.error); return null; }
   const mappingArr = sceneInst.value.mapping as unknown as ArrayLike<number>;
-  const mapping = new Map<number, Entity>();
+  const mapping = new Map<number, EntityHandle>();
   for (const n of normalized.entities) {
     const localId = n.localId as unknown as number;
     const e = mappingArr[localId];
-    if (e !== undefined) mapping.set(localId, e as Entity);
+    if (e !== undefined) mapping.set(localId, e as EntityHandle);
   }
   return { mapping, nodes: normalized.entities as unknown as PackNode[] };
 }
@@ -217,7 +205,7 @@ function spawnGroundCollider(ctx: Ctx): void {
   ctx.world.spawn(
     { component: Transform, data: { pos: [0, -5, 0] } },
     { component: RigidBody, data: { type: RigidBodyTypeValue.static } },
-    { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtentsX: 60, halfExtentsY: 5, halfExtentsZ: 60, friction: 0.9, restitution: 0 } },
+    { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtents: [60, 5, 60], friction: 0.9, restitution: 0 } },
   );
 }
 
@@ -238,7 +226,7 @@ const PLAYER_Y = 0.75;
 //   Player / Sun                  → skipped (Player becomes the kinematic box-man root)
 function attachScenePhysics(
   ctx: Ctx,
-  loaded: { mapping: ReadonlyMap<number, Entity>; nodes: PackNode[] },
+  loaded: { mapping: ReadonlyMap<number, EntityHandle>; nodes: PackNode[] },
 ): {
   props: Array<{ e: EntityHandle; mat: MatHandle }>;
   walkBlockers: Array<{ cx: number; cz: number; r: number }>;
@@ -274,7 +262,7 @@ function attachScenePhysics(
     const hx = (t.scale?.[0] ?? 1) * 0.5, hy = (t.scale?.[1] ?? 1) * 0.5, hz = (t.scale?.[2] ?? 1) * 0.5;
     const sphereR = t.scale?.[0] ?? 1;
     const box = (restitution: number) =>
-      world.addComponent(e, { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtentsX: hx, halfExtentsY: hy, halfExtentsZ: hz, restitution, friction: 0.7 } });
+      world.addComponent(e, { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtents: [hx, hy, hz], restitution, friction: 0.7 } });
     const sphere = (restitution: number) =>
       world.addComponent(e, { component: Collider, data: { shape: ColliderShapeValue.sphere, radius: sphereR, restitution, friction: 0.6 } });
     const dynamic = () =>
@@ -336,7 +324,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
   // ── load the authored scene (the SAME native asset ✎ Edit writes) — the
   //    canonical loadByGuid<SceneAsset> -> instantiate path. ────────────────────
-  let loaded: { mapping: ReadonlyMap<number, Entity>; nodes: PackNode[] } | null = null;
+  let loaded: { mapping: ReadonlyMap<number, EntityHandle>; nodes: PackNode[] } | null = null;
   try {
     loaded = await loadScene({ world, assets: ctx?.assets });
   } catch (err) {
@@ -373,7 +361,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       if (player !== undefined) setupPlayerRoot({ world }, player);
     }
   }
-  const origMatOf = new Map<EntityHandle, MatHandle>(flashables.map((f) => [f.e, f.mat] as [Entity, MatHandle]));
+  const origMatOf = new Map<EntityHandle, MatHandle>(flashables.map((f) => [f.e, f.mat] as [EntityHandle, MatHandle]));
 
   // ── camera: TWO switchable view modes (top-down 2.5D ⇄ first-person) ─────────
   // Top-down = a high tilted follow cam; FPS = an eye-height cam driven by
@@ -393,14 +381,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // it lacks), so without this the background clears to black. The Camera clear
     // color needs no GPU feature; a daytime blue reads as sky. Linear/pre-tonemap.
     // On Chromium the cubemap skybox draws over it (harmless).
-    { component: Camera, data: { ...perspective({ fov: Math.PI / 3, aspect, near: 0.1, far: 200 }), tonemap: TONEMAP_REINHARD_EXTENDED, bloom: BLOOM_ENABLED, antialias: ANTIALIAS_FXAA, clearR: 0.4, clearG: 0.6, clearB: 1.0 } },
+    { component: Camera, data: { ...perspective({ fov: Math.PI / 3, aspect, near: 0.1, far: 200 }), tonemap: TONEMAP_REINHARD_EXTENDED, bloom: BLOOM_ENABLED, antialias: ANTIALIAS_FXAA, clearColor: [0.4, 0.6, 1.0, 1] } },
   ).unwrap();
 
   // ── one warm accent point light (learn-render §2 multiple-lights; the scene
   //    already has the directional Sun + IBL skylight — keep ≤1 of each). ───────
   world.spawn(
     { component: Transform, data: { pos: [3, 5, 1] } },
-    { component: PointLight, data: { colorR: 1, colorG: 0.72, colorB: 0.42, intensity: 40, range: 22 } },
+    { component: PointLight, data: { color: [1, 0.72, 0.42], intensity: 40, range: 22 } },
   );
 
   // ── on-hit "+N" popup ────────────────────────────────────────────────────
@@ -421,7 +409,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   //   inline using the camera's current Transform + a hardcoded perspective
   //   FOV (matches the Camera spawn above), and hands off to hud.floatScore
   //   which spawns a brief animated div.
-  const targetPoints = new Map<EntityHandle, number>(targets.map((t) => [t.e, t.points] as [Entity, number]));
+  const targetPoints = new Map<EntityHandle, number>(targets.map((t) => [t.e, t.points] as [EntityHandle, number]));
 
   // Box-man body parts (PlayerTorso/Head/Arm*/Leg*): hidden in FPS so they don't
   // occlude the eye-level camera, shown in top-down. Toggled by scaling to 0 (safe
@@ -486,7 +474,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // the gesture's target. The canvas mousedown below requests it instead
     // (same-element gesture; matches packages/games/fps).
   };
-  const hud = installHud({ initialMode: 'topdown', onToggle: () => setMode(mode === 'fps' ? 'topdown' : 'fps') });
+  // Host-controlled UI mount (■ Stop teardown): the HUD must attach to the host-
+  // provided uiRoot (the disposable container the Play host removes WHOLE on Stop)
+  // so no UI is stranded. Falls back to document.body only when the host omits it.
+  const uiMount: HTMLElement = ctx?.uiRoot ?? document.body;
+  const hud = installHud({ initialMode: 'topdown', onToggle: () => setMode(mode === 'fps' ? 'topdown' : 'fps'), mount: uiMount });
 
   // World-space → canvas-CSS-pixel projection for the DOM "+N" popup. Reads
   // the camera's CURRENT Transform (the registerUpdate callback that calls
@@ -691,7 +683,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // sits still.
   const bullets: Array<{ e: EntityHandle; x: number; y: number; z: number; dx: number; dy: number; dz: number; age: number; hits: Set<EntityHandle> }> = [];
 
-  if (player !== undefined) {
+  if (player !== undefined && registerUpdate) {
     const root = player;
     registerUpdate((dt: number) => {
       // — FPS look via arrow keys (keyboard fallback: mouse-look needs pointer

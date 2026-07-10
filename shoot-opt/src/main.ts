@@ -42,12 +42,16 @@ const BOSS_MAX_HP = 200;           // boss 总 HP
 // ─── Entry ───────────────────────────────────────────────────────────────
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
-  const { assets } = ctx ?? {};
+  // Host always supplies a BootstrapContext (assets + registerUpdate live on
+  // it); without it there's no renderer to drive, so bail early. Narrowing ctx
+  // here makes assets/registerUpdate non-optional for the rest of bootstrap.
+  if (!ctx) return;
+  const { assets } = ctx;
   // Play/Stop hygiene: mount UI into the host's controlled container (removed
   // whole on ■ Stop) instead of document.body, and register non-DOM teardown
   // (key listeners) so an embedded-editor Stop returns to a clean initial state.
-  const uiMount: HTMLElement = ctx?.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
-  const onCleanup = ctx?.registerCleanup ?? (() => {});
+  const uiMount: HTMLElement = ctx.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
+  const onCleanup = ctx.registerCleanup ?? (() => {});
 
   // Components self-register globally via defineComponent (feat-20260602); the
   // old per-world world.registerComponent(...) API was removed. Referencing the
@@ -68,9 +72,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // castShadow defaults true, so the 9 shadow fields live on the same component.
   world.spawn(
     { component: DirectionalLight, data: {
-      directionX: 0.15, directionY: -0.85, directionZ: -0.35,
-      colorR: 0.92, colorG: 0.94, colorB: 1.0, intensity: 2.2,
-      cascadeCount: 3, mapSize: 2048, farPlane: 60, nearPlane: 0.1,
+      direction: [0.15, -0.85, -0.35],
+      color: [0.92, 0.94, 1.0], intensity: 2.2,
+      cascadeCount: 3, mapSize: 2048, shadowDistance: 60,
     }},
   );
 
@@ -79,7 +83,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // WebKit/WKWebView (the desktop app), which can't run the IBL precompute. A
   // cubemap-less Skylight binds the engine's 1×1 white irradiance cube → flat
   // ambient live on the first frame, no async GPU work, renders everywhere.
-  world.spawn({ component: Skylight, data: { colorR: 0.78, colorG: 0.85, colorB: 1.0, intensity: 0.4 } });
+  world.spawn({ component: Skylight, data: { color: [0.78, 0.85, 1.0], intensity: 0.4 } });
 
   // ═══════════════════════════════════════════════════════════════════════
   //  CAMERA — top-down with 180° roll (proven working setup)
@@ -94,9 +98,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   quat.multiply(camQ, qDown, qRoll); // pitch then roll
   world.spawn(
     { component: Transform, data: { pos: [0, 18, 2], quat: [camQ[0], camQ[1], camQ[2], camQ[3]] } },
-    // clearR/G/B = visible sky on WebKit (the desktop app can't render a
+    // clearColor = visible sky on WebKit (the desktop app can't render a
     // cubemap skybox; without this the background is black). Deep space-blue.
-    { component: Camera, data: { ...perspective({ fov: 62, aspect: 16 / 9 }), clearR: 0.04, clearG: 0.06, clearB: 0.16 } },
+    { component: Camera, data: { ...perspective({ fov: 62, aspect: 16 / 9 }), clearColor: [0.04, 0.06, 0.16, 1] } },
   );
 
   spawnBackground(world, geo, mat);
@@ -113,7 +117,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // root (carrying SceneInstance). Map the container to its synth so
   // `world.despawnScene(synth)` tears down root + container + body parts in
   // one call. Movement of parts is automatic via propagateTransforms.
-  const enemyInstances: Map<Entity, Entity> = new Map();
+  const enemyInstances: Map<EntityHandle, EntityHandle> = new Map();
   const particles: EntityHandle[] = [];
   const trails: EntityHandle[] = [];
   const powerups: EntityHandle[] = [];
@@ -904,7 +908,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   //  HELPERS
   // ═══════════════════════════════════════════════════════════════════════
 
-  function despawnEnemy(e: Entity) {
+  function despawnEnemy(e: EntityHandle) {
     // Tear down the whole scene instance (synth root + container + parts) in
     // one call. Engine 5dfeb0b6 ECS-fied SceneInstance: `world.despawnScene`
     // walks Children/SceneInstance.mapping starting from the synth root.
@@ -913,7 +917,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     else world.despawn(e);
   }
 
-  function despawnObstacle(e: Entity) {
+  function despawnObstacle(e: EntityHandle) {
     const pts = obstacleParts.get(e);
     if (pts) { for (const p of pts) world.despawn(p); obstacleParts.delete(e); }
     world.despawn(e);

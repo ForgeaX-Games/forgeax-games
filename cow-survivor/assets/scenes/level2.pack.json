@@ -53,18 +53,13 @@
                 ]
               },
               "DirectionalLight": {
-                "directionX": 0.5,
-                "directionY": -0.85,
-                "directionZ": 0.4,
-                "colorR": 0.45098039215686275,
-                "colorG": 0.5490196078431373,
-                "colorB": 1,
+                "direction": [0.5, -0.85, 0.4],
+                "color": [0.45098039215686275, 0.5490196078431373, 1],
                 "intensity": 0.55,
                 "castShadow": true,
                 "cascadeCount": 1,
                 "mapSize": 2048,
-                "farPlane": 60,
-                "nearPlane": 0.1
+                "shadowDistance": 60
               }
             }
           },

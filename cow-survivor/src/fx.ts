@@ -39,7 +39,7 @@ import {
   type MaterialAsset, type Handle,
 } from '@forgeax/engine-runtime';
 import { HANDLE_SPHERE, HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
-import type { Entity } from '@forgeax/engine-ecs';
+import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
 
 import lightningShader from './shaders/lightning.wgsl';
@@ -68,7 +68,7 @@ export type FxColor = 'gold' | 'red' | 'cyan' | 'magenta' | 'green' | 'purple' |
 type ParticleMode = 'uniform-shrink' | 'uniform-hold' | 'bolt' | 'orb-pulse';
 
 interface Particle {
-  e: Entity;
+  e: EntityHandle;
   age: number;
   life: number;
   // motion
@@ -98,7 +98,7 @@ export class FxSystem {
   }> = [];
   private shockwaveCursor = 0;
   /** Active shockwave instances — entity + lifetime tracker. */
-  private shockwaves: Array<{ e: Entity; slot: number; age: number; life: number; baseSx: number; baseSz: number; baseSy: number }> = [];
+  private shockwaves: Array<{ e: EntityHandle; slot: number; age: number; life: number; baseSx: number; baseSz: number; baseSy: number }> = [];
   // Scene-effect materials (torch-flame, rune-glow): one shared material per
   // asset, mutated each frame so `metallic` carries wall-clock time. Used
   // by attachSceneEffects() to swap into scene entities at level load.
@@ -118,7 +118,7 @@ export class FxSystem {
     params: { baseColor: number[]; metallic: number; roughness: number };
   }> = [];
   private fireballCursor = 0;
-  private fireballs: Array<{ e: Entity; slot: number; age: number; life: number }> = [];
+  private fireballs: Array<{ e: EntityHandle; slot: number; age: number; life: number }> = [];
   // Wall-clock fed into the lightning shader's noise/flicker (paramValues
   // are material-level so all bolts share the same time → they all flicker
   // in sync, which reads as ONE storm rather than separate bolts).
@@ -601,7 +601,7 @@ export class FxSystem {
   }
   attachSceneEffects(
     nodes: ReadonlyArray<{ localId: number; components: Record<string, Record<string, unknown>> }>,
-    mapping: ReadonlyMap<number, Entity>,
+    mapping: ReadonlyMap<number, EntityHandle>,
   ): number {
     const { world } = this.ctx;
     let count = 0;

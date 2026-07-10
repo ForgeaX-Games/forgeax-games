@@ -274,20 +274,20 @@ export async function bootstrap(world: World, bctx?: BootstrapContext) {
   quat.fromAxisAngle(camQuat, [1, 0, 0], pitch);
   const cameraEntity = world.spawn(
     { component: Transform, data: { pos: [0, 34, 26], quat: camQuat } },
-    { component: Camera, data: { ...perspective({ fov: Math.PI / 4, aspect, near: 0.5, far: 600 }), clearR: 0.55, clearG: 0.34, clearB: 0.26 } },
+    { component: Camera, data: { ...perspective({ fov: Math.PI / 4, aspect, near: 0.5, far: 600 }), clearColor: [0.55, 0.34, 0.26, 1] } },
   ).unwrap();
 
   // ── lighting ─────────────────────────────────────────────────────────────
   // Skylight (cubemap-less) → flat ambient on first frame everywhere incl.
   // WebKit/WKWebView. Warm Mars dusk tint. Bumped a touch to lift shadowed
   // slopes now that the sun is softer.
-  world.spawn({ component: Skylight, data: { colorR: 1.0, colorG: 0.85, colorB: 0.75, intensity: 0.7 } });
+  world.spawn({ component: Skylight, data: { color: [1.0, 0.85, 0.75], intensity: 0.7 } });
   // Sun. Intensity dropped 2.4 → 1.15: at 2.4 a flat-topped surface facing the
   // sun (N·L≈1) drove baseColor×2.4 past 1.0 → the plateau blew out to WHITE
   // while sloped lowland stayed Mars-red. 1.15 keeps the regolith red-brown
   // (0.52×1.15≈0.6) lit, not clipped, so the terrain reads Mars everywhere.
   // castShadow:false for now (shadows land in a later milestone).
-  world.spawn({ component: DirectionalLight, data: { directionX: -0.4, directionY: -1.0, directionZ: -0.55, colorR: 1.0, colorG: 0.92, colorB: 0.82, intensity: 1.15, castShadow: false } });
+  world.spawn({ component: DirectionalLight, data: { direction: [-0.4, -1.0, -0.55], color: [1.0, 0.92, 0.82], intensity: 1.15, castShadow: false } });
 
   // ── Mars terrain (M1 render) + map selection (M14) ──────────────────────────
   // Pick the map from `?map=<id>` (default red-canyon); all 7 ported presets are
@@ -533,8 +533,9 @@ export async function bootstrap(world: World, bctx?: BootstrapContext) {
         typeId: 'marine', x: playerSpawn.x - 4, z: playerSpawn.z + 6,
         playerId: PLAYER_ID.PLAYER, playerColor: factionColor(PLAYER_ID.PLAYER),
       });
-      if (ally && world.get(ally, Health).ok) {
-        const h = world.get(ally, Health).value;
+      const allyHealth = ally ? world.get(ally, Health) : null;
+      if (ally && allyHealth?.ok) {
+        const h = allyHealth.value;
         world.set(ally, Health, { hp: Math.max(1, Math.floor(h.maxHp * 0.4)) });
       }
       casterAllyRef = ally;
@@ -837,9 +838,12 @@ export async function bootstrap(world: World, bctx?: BootstrapContext) {
         baseLocations: map.baseLocations,
         // player base (from the auto-start above) is the AI's attack target;
         // falls back to the player spawn until the AI observes the real base.
-        enemyBase: playerBase && world.get(playerBase, Transform).ok
-          ? { x: world.get(playerBase, Transform).value.pos[0], z: world.get(playerBase, Transform).value.pos[2] }
-          : { x: playerSpawn.x, z: playerSpawn.z },
+        enemyBase: (() => {
+          const baseTf = playerBase ? world.get(playerBase, Transform) : null;
+          return baseTf?.ok
+            ? { x: baseTf.value.pos[0], z: baseTf.value.pos[2] }
+            : { x: playerSpawn.x, z: playerSpawn.z };
+        })(),
       }).install(world);
     }
 

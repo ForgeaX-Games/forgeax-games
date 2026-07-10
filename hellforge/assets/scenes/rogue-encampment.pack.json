@@ -4759,9 +4759,11 @@
                 ]
               },
               "Skylight": {
-                "colorR": 0.95,
-                "colorG": 0.72,
-                "colorB": 0.58,
+                "color": [
+                  0.95,
+                  0.72,
+                  0.58
+                ],
                 "intensity": 0.55
               }
             }
@@ -4791,12 +4793,16 @@
                 ]
               },
               "DirectionalLight": {
-                "directionX": -0.45,
-                "directionY": -0.7,
-                "directionZ": -0.5,
-                "colorR": 0.55,
-                "colorG": 0.65,
-                "colorB": 1,
+                "direction": [
+                  -0.45,
+                  -0.7,
+                  -0.5
+                ],
+                "color": [
+                  0.55,
+                  0.65,
+                  1
+                ],
                 "intensity": 2.2,
                 "castShadow": false
               }

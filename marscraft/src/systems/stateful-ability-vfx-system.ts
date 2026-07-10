@@ -339,7 +339,7 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
   }
 
   /** earth_shatter: rocks + dust + crack lines laid along the dash path. */
-  private _updateEarth(inst: EffectInstance, tf: { pos: number[] }, dt: number): void {
+  private _updateEarth(inst: EffectInstance, tf: { pos: ArrayLike<number> }, dt: number): void {
     const dx = tf.pos[0] - inst.lastX, dz = tf.pos[2] - inst.lastZ;
     const dist = Math.hypot(dx, dz);
     if (dist >= 0.4) {
@@ -357,7 +357,7 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
   }
 
   /** spine_rush: bone spines (cones) erupt from the ground along the dash path. */
-  private _updateSpine(inst: EffectInstance, tf: { pos: number[] }): void {
+  private _updateSpine(inst: EffectInstance, tf: { pos: ArrayLike<number> }): void {
     // keep the ground-bulge disc under the runner
     if (inst.parts[0]) this._world.set(inst.parts[0], Transform, { pos: [tf.pos[0], tf.pos[1] + 0.04, tf.pos[2]] });
     const dx = tf.pos[0] - inst.lastX, dz = tf.pos[2] - inst.lastZ;
@@ -371,7 +371,7 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
   }
 
   /** lurker_burrow: dirt spray + a settling mound while the unit submerges. */
-  private _updateBurrow(inst: EffectInstance, tf: { pos: number[] }, _dt: number): void {
+  private _updateBurrow(inst: EffectInstance, tf: { pos: ArrayLike<number> }, _dt: number): void {
     inst.particleTimer += _dt;
     if (inst.particleTimer >= 0.05) {
       inst.particleTimer = 0;
@@ -402,7 +402,7 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
   }
 
   /** prismatic_charge: grow head orb, spin the omen ring, converge + rising motes. */
-  private _updatePrismatic(inst: EffectInstance, tf: { pos: number[] }, dt: number): void {
+  private _updatePrismatic(inst: EffectInstance, tf: { pos: ArrayLike<number> }, dt: number): void {
     const world = this._world;
     const headY = tf.pos[1] + 0.8;
     const prog = Math.min(inst.elapsed / 3.0, 1); // ~duration; cosmetic growth
@@ -477,7 +477,7 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
     this._decals.push(...keep);
   }
 
-  private _updateEye(inst: EffectInstance, tf: { pos: number[] }): void {
+  private _updateEye(inst: EffectInstance, tf: { pos: ArrayLike<number> }): void {
     const world = this._world;
     const baseY = tf.pos[1] + EYE_Y;
     const glowPulse = 1 + Math.sin(inst.elapsed * 3.5) * 0.12;
@@ -492,7 +492,7 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
     }
   }
 
-  private _updatePhase(inst: EffectInstance, tf: { pos: number[] }, _dt: number): void {
+  private _updatePhase(inst: EffectInstance, tf: { pos: ArrayLike<number> }, _dt: number): void {
     const world = this._world;
     const f = this._facing(inst.entity);
     const mx = tf.pos[0] + Math.sin(f) * 0.5, my = tf.pos[1] + 0.5, mz = tf.pos[2] + Math.cos(f) * 0.5;
@@ -513,7 +513,7 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
     }
   }
 
-  private _updateFlame(inst: EffectInstance, tf: { pos: number[] }, _dt: number): void {
+  private _updateFlame(inst: EffectInstance, tf: { pos: ArrayLike<number> }, _dt: number): void {
     const world = this._world;
     const pulse = (1.0 + Math.sin(inst.elapsed * 15) * 0.1) * 0.8;
     if (inst.parts[0]) world.set(inst.parts[0], Transform, { pos: [tf.pos[0], tf.pos[1] + 0.3, tf.pos[2]], scale: [pulse, pulse, pulse] });

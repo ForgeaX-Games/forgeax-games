@@ -33,7 +33,7 @@ import {
 } from '@forgeax/engine-runtime';
 import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
-import type { Entity } from '@forgeax/engine-ecs';
+import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
 
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
@@ -147,7 +147,7 @@ export interface WeaponState {
 }
 
 export interface Bullet {
-  e: Entity;
+  e: EntityHandle;
   weapon: WeaponKind;
   x: number; y: number; z: number;
   dx: number; dy: number; dz: number;   // velocity direction (unit)
@@ -155,7 +155,7 @@ export interface Bullet {
   damage: number;
   age: number;
   life: number;
-  hits: Set<Entity>;
+  hits: Set<EntityHandle>;
   onHit: 'aoe' | 'slow' | 'chain' | null;
   aoeRadius: number;
   slowSec: number;
@@ -176,7 +176,7 @@ export interface Bullet {
   // bullets → "bullets stop spawning, old ones float forever" (the user-
   // reported bug). Tracked here, walked in destroyBullet + lifetime-expiry
   // and on-hit non-pierce paths.
-  parts: Entity[];
+  parts: EntityHandle[];
 }
 
 // ── PartSpec for bullet visuals (same shape concept as enemies) ────────────
@@ -432,7 +432,7 @@ export class WeaponSystem {
     // leak 2..5 entities per shot, the world's entity cap fills up, and
     // subsequent `world.spawn` for new bullets silently fails (the user-
     // reported "bullets stop spawning, old ones float forever" symptom).
-    const partEntities: Entity[] = [];
+    const partEntities: EntityHandle[] = [];
     const partsSpec = BULLET_VISUALS[def.kind];
     for (const p of partsSpec) {
       const mat = p.mat === 'main' ? w.mainMat : w.accentMat;
@@ -459,7 +459,7 @@ export class WeaponSystem {
       x: bx, y: by, z: bz,
       dx, dy, dz, speed, damage,
       age: 0, life,
-      hits: new Set<Entity>(),
+      hits: new Set<EntityHandle>(),
       onHit: def.onHit ?? null,
       aoeRadius: def.aoeRadius ?? 0,
       slowSec: def.slowSec ?? 0,

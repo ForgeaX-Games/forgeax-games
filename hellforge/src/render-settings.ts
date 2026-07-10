@@ -72,8 +72,8 @@ const STYLE_ID = 'hf-rs-style';
 const PANEL_ID = 'hf-rs';
 const VIGNETTE_ID = 'hf-rs-vignette';
 
-/** Same RGB as private SKY_CLEAR in main.ts (clearA defaults to 1). */
-const SKY_CLEAR = { clearR: 0.32, clearG: 0.07, clearB: 0.035, clearA: 1 } as const;
+/** Same RGB as private SKY_CLEAR in main.ts (alpha defaults to 1). */
+const SKY_CLEAR = [0.32, 0.07, 0.035, 1] as const;
 
 const DEFAULTS: RenderSettings = {
   tonemap: 'aces',
@@ -168,15 +168,17 @@ function clamp(n: number, lo: number, hi: number): number {
 
 /** Color-temp shift on clear RGB: warmer → more R / less B. */
 function tempShiftClear(
-  base: { clearR: number; clearG: number; clearB: number; clearA: number },
+  base: readonly [number, number, number, number],
   t: number,
-): { clearR: number; clearG: number; clearB: number; clearA: number } {
+): { clearColor: [number, number, number, number] } {
   const tt = clamp(t, -1, 1);
   return {
-    clearR: Math.max(0, base.clearR * (1 + 0.18 * tt)),
-    clearG: Math.max(0, base.clearG),
-    clearB: Math.max(0, base.clearB * (1 - 0.22 * tt)),
-    clearA: base.clearA,
+    clearColor: [
+      Math.max(0, base[0] * (1 + 0.18 * tt)),
+      Math.max(0, base[1]),
+      Math.max(0, base[2] * (1 - 0.22 * tt)),
+      base[3],
+    ],
   };
 }
 

@@ -25,7 +25,7 @@ import {
 } from '@forgeax/engine-runtime';
 import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
-import type { Entity } from '@forgeax/engine-ecs';
+import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
 import type { HudHandle, UpgradeChoice } from './hud';
 
@@ -69,7 +69,7 @@ const ENEMY: Record<EnemyKind, EnemyCfg> = {
 };
 
 interface Enemy {
-  e: Entity; kind: EnemyKind; cfg: EnemyCfg;
+  e: EntityHandle; kind: EnemyKind; cfg: EnemyCfg;
   x: number; z: number; y: number;
   hp: number; maxHp: number;
   kx: number; kz: number;            // knockback velocity (decays)
@@ -104,14 +104,14 @@ const WEAPONS: Record<WeaponId, WeaponCfg> = {
 interface OwnedWeapon { cfg: WeaponCfg; level: number; cd: number; }
 
 interface Bullet {
-  e: Entity; x: number; y: number; z: number; dx: number; dy: number; dz: number;
+  e: EntityHandle; x: number; y: number; z: number; dx: number; dy: number; dz: number;
   speed: number; age: number; life: number; dmg: number; pierce: number; knock: number;
-  radius: number; burn: number; slow: number; hits: Set<Entity>; trail: number; mat: MatHandle;
+  radius: number; burn: number; slow: number; hits: Set<EntityHandle>; trail: number; mat: MatHandle;
 }
-interface OrbitBlade { e: Entity; angle: number; }
-interface Particle { e: Entity; x: number; y: number; z: number; vx: number; vy: number; vz: number; age: number; life: number; s: number; grav: number; }
-interface Beam { e: Entity; age: number; life: number; }
-interface Gem { e: Entity; x: number; z: number; y: number; xp: number; mat: MatHandle; phase: number; }
+interface OrbitBlade { e: EntityHandle; angle: number; }
+interface Particle { e: EntityHandle; x: number; y: number; z: number; vx: number; vy: number; vz: number; age: number; life: number; s: number; grav: number; }
+interface Beam { e: EntityHandle; age: number; life: number; }
+interface Gem { e: EntityHandle; x: number; z: number; y: number; xp: number; mat: MatHandle; phase: number; }
 
 // ── player stats (mutated by roguelike upgrades) ─────────────────────────────
 interface Stats {
@@ -136,7 +136,7 @@ export class Survivor {
   private beams: Beam[] = [];
   private gems: Gem[] = [];
   private weapons = new Map<WeaponId, OwnedWeapon>();
-  private bladeHitCd = new Map<Entity, number>();   // orbit blade per-enemy cooldown
+  private bladeHitCd = new Map<EntityHandle, number>();   // orbit blade per-enemy cooldown
 
   private stats: Stats = {
     maxHp: 100, hp: 100, regen: 0,
@@ -195,7 +195,7 @@ export class Survivor {
   }
 
   // ── spawn helpers ───────────────────────────────────────────────────────────
-  private cube(mat: MatHandle, x: number, y: number, z: number, sx: number, sy: number, sz: number, q?: [number, number, number, number]): Entity {
+  private cube(mat: MatHandle, x: number, y: number, z: number, sx: number, sy: number, sz: number, q?: [number, number, number, number]): EntityHandle {
     return this.w.spawn(
       { component: Transform, data: { pos: [x, y, z], scale: [sx, sy, sz], ...(q ? { quat: [q[0], q[1], q[2], q[3]] } : {}) } },
       { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
@@ -448,7 +448,7 @@ export class Survivor {
   private fireChain(ax: number, az: number, dmg: number, level: number): void {
     let cur = this.nearestEnemy(this.px, this.pz, WEAPONS.chain.range);
     if (!cur) return;
-    const hit = new Set<Entity>();
+    const hit = new Set<EntityHandle>();
     let fromX = this.px, fromZ = this.pz;
     const bounces = (WEAPONS.chain.chains ?? 4) + Math.floor(level / 2);
     const range = WEAPONS.chain.range ?? 6.5;
@@ -602,7 +602,7 @@ export class Survivor {
           { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
           { component: MeshRenderer, data: { materials: [this.mats.debris!] } },
           { component: RigidBody, data: { type: RigidBodyTypeValue.dynamic, mass: 1, linearDamping: 0.1, angularDamping: 0.2 } },
-          { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtentsX: 0.2, halfExtentsY: 0.2, halfExtentsZ: 0.2, restitution: 0.4, friction: 0.8 } },
+          { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtents: [0.2, 0.2, 0.2], restitution: 0.4, friction: 0.8 } },
         );
       }
     }
@@ -642,7 +642,8 @@ export class Survivor {
     if (this.gems.length > 120) { // overflow: just bank the xp
       this.xp += xp; return;
     }
-    const e = this.cube(this.mats.gem!, x, 0.4, z, 0.22, 0.22, 0.22, quat.eulerY(0.7) as [number, number, number, number]);
+    const gq = quat.eulerY(0.7);
+    const e = this.cube(this.mats.gem!, x, 0.4, z, 0.22, 0.22, 0.22, [gq[0]!, gq[1]!, gq[2]!, gq[3]!]);
     this.gems.push({ e, x, z, y: 0.4, xp, mat: this.mats.gem!, phase: Math.random() * 6 });
   }
 

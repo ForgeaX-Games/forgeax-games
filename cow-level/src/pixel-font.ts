@@ -119,8 +119,14 @@ export function registerPixelFont(
   // TextureAsset + SamplerAsset payloads under those GUIDs so the glyph-layout
   // side resolves them via assets.lookup. The registry stores payloads and
   // never mints handles -- the FontAsset column handle is minted on the World.
-  const atlasGuid = AssetGuid.parse(PIXEL_FONT_ATLAS_GUID).unwrap();
-  const samplerGuid = AssetGuid.parse(PIXEL_FONT_SAMPLER_GUID).unwrap();
+  // AssetGuid.parse returns a GuidResult ({ ok, value }); these are compile-time
+  // constant GUIDs, so a parse failure is a programmer error — fail fast.
+  const atlasRes = AssetGuid.parse(PIXEL_FONT_ATLAS_GUID);
+  if (!atlasRes.ok) throw new Error(`[pixel-font] bad atlas GUID: ${PIXEL_FONT_ATLAS_GUID}`);
+  const atlasGuid = atlasRes.value;
+  const samplerRes = AssetGuid.parse(PIXEL_FONT_SAMPLER_GUID);
+  if (!samplerRes.ok) throw new Error(`[pixel-font] bad sampler GUID: ${PIXEL_FONT_SAMPLER_GUID}`);
+  const samplerGuid = samplerRes.value;
 
   assets
     .catalog<TextureAsset>(atlasGuid, {

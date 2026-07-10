@@ -124,7 +124,7 @@ async function installHdrSky(ctx: SkyCtx): Promise<SkyLight> {
   // Dim warm fill suits the forge until IBL is ready (then applyAreaLighting
   // switches to a neutral tint so the HDR drives color).
   const skylight = ctx.world.spawn(
-    { component: Skylight, data: { colorR: 0.95, colorG: 0.68, colorB: 0.55, intensity: 0.34 } },
+    { component: Skylight, data: { color: [0.95, 0.68, 0.55], intensity: 0.34 } },
   ).unwrap() as EntityHandle;
   const solid: SkyLight = { ent: skylight, ibl: false, equirect: null };
 
@@ -144,7 +144,7 @@ async function installHdrSky(ctx: SkyCtx): Promise<SkyLight> {
   // tint until status==='ready'; do NOT spawn SkyboxBackground yet.
   ctx.world.set(skylight, Skylight, {
     equirect,
-    colorR: 0.95, colorG: 0.68, colorB: 0.55, intensity: 0.34,
+    color: [0.95, 0.68, 0.55], intensity: 0.34,
   });
   console.log('[hellforge] HDR equirect attached (awaiting cubemap projection)');
   return { ent: skylight, ibl: false, equirect };
@@ -224,6 +224,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   let witchRoot: EntityHandle | null = null;
   let witchSkinEnt: EntityHandle | null = null;
   try {
+    if (!assets) throw new Error('no asset registry');
     const sceneGuid = AssetGuid.parse(WITCH.scene);
     if (!sceneGuid.ok) throw new Error('witch scene guid parse');
     // engine e53f4616: `loadByGuid` returns the PAYLOAD. `instantiate` wants a
@@ -404,7 +405,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // Skinned GLB monster visuals (assets/monsters/*.glb) — load BEFORE the
   // den pre-spawn so every monster gets the real rig; kinds that fail fall
   // back to the lowpoly parts assemblies.
-  await monsters.loadVisuals(assets);
+  if (assets) await monsters.loadVisuals(assets);
   for (const s of dungeon.monsterSpawns) {
     if (monsters.spawn(s.kind, s.x, s.z, 'den')) denTotal++;
   }
@@ -650,7 +651,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // keeps the ground-shadow contrast.
   const playerLight = world.spawn(
     { component: Transform, data: { pos: [0, 2.4, 6.6] } },
-    { component: PointLight, data: { colorR: 1.0, colorG: 0.78, colorB: 0.62, intensity: 13, range: 5 } },
+    { component: PointLight, data: { color: [1.0, 0.78, 0.62], intensity: 13, range: 5 } },
   ).unwrap();
 
   // Witch shadow proxy: humanoid-sized vertical box at her position.
@@ -701,8 +702,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // silhouette instead of a blur. The direction's horizontal component points
   // AWAY from the camera-side fill light so her shadow lands on unlit floor.
   const SUN_LOOK = {
-    camp: { directionX: -0.45, directionY: -0.7, directionZ: -0.5, colorR: 0.45, colorG: 0.55, colorB: 1, intensity: 2.6 },
-    den:  { directionX: -0.3, directionY: -0.85, directionZ: -0.35, colorR: 1, colorG: 0.58, colorB: 0.32, intensity: 1.9 },
+    camp: { direction: [-0.45, -0.7, -0.5], color: [0.45, 0.55, 1], intensity: 2.6 },
+    den:  { direction: [-0.3, -0.85, -0.35], color: [1, 0.58, 0.32], intensity: 1.9 },
   } as const;
   const sun = world.spawn(
     { component: DirectionalLight, data: { ...SUN_LOOK.camp, castShadow: true, cascadeCount: 1, mapSize: 2048, shadowDistance: 42 } },
@@ -717,17 +718,17 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const GATE_R = { x: 2.5, y: 2.25, z: 13.5 } as const;
   const campfireLight = world.spawn(
     { component: Transform, data: { pos: [0, 1.2, 0] } },
-    { component: PointLight, data: { colorR: 1, colorG: 0.6, colorB: 0.25, intensity: 12, range: 16 } },
+    { component: PointLight, data: { color: [1, 0.6, 0.25], intensity: 12, range: 16 } },
     { component: PointLightShadow, data: { mapSize: 512, farPlane: 18 } },
   ).unwrap();
   const torchA = world.spawn(
     { component: Transform, data: { pos: [GATE_L.x, GATE_L.y, GATE_L.z] } },
-    { component: PointLight, data: { colorR: 1, colorG: 0.55, colorB: 0.18, intensity: 8, range: 12 } },
+    { component: PointLight, data: { color: [1, 0.55, 0.18], intensity: 8, range: 12 } },
     { component: PointLightShadow, data: { mapSize: 512, farPlane: 14 } },
   ).unwrap();
   const torchB = world.spawn(
     { component: Transform, data: { pos: [GATE_R.x, GATE_R.y, GATE_R.z] } },
-    { component: PointLight, data: { colorR: 1, colorG: 0.55, colorB: 0.18, intensity: 8, range: 12 } },
+    { component: PointLight, data: { color: [1, 0.55, 0.18], intensity: 8, range: 12 } },
   ).unwrap();
   let torchBaseA = 8, torchBaseB = 8;   // flicker centre per slot
   let torchSeatTimer = 0;
@@ -752,17 +753,19 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   let lightSettings: Pick<RenderSettings, 'sunMul' | 'ambientMul' | 'fireMul' | 'fillMul' | 'atmoTemp'> = {
     sunMul: 1, ambientMul: 1, fireMul: 1, fillMul: 1, atmoTemp: 0,
   };
-  const tempShiftRgb = (r: number, g: number, b: number, t: number) => {
+  const tempShiftRgb = (c: readonly [number, number, number], t: number): { color: [number, number, number] } => {
     const tt = clamp(t, -1, 1);
     return {
-      colorR: Math.max(0, r * (1 + 0.18 * tt)),
-      colorG: Math.max(0, g),
-      colorB: Math.max(0, b * (1 - 0.22 * tt)),
+      color: [
+        Math.max(0, c[0] * (1 + 0.18 * tt)),
+        Math.max(0, c[1]),
+        Math.max(0, c[2] * (1 - 0.22 * tt)),
+      ],
     };
   };
   const applyAreaLighting = (a: Area): void => {
     const look = SUN_LOOK[a === 'den' ? 'den' : 'camp'];
-    const sunTint = tempShiftRgb(look.colorR, look.colorG, look.colorB, lightSettings.atmoTemp);
+    const sunTint = tempShiftRgb(look.color, lightSettings.atmoTemp);
     world.set(sun, DirectionalLight, {
       ...look,
       ...sunTint,
@@ -773,9 +776,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // carry the read; outdoors: neutral IBL (when ready) / warm solid fallback.
       // Always re-pass equirect so world.set does not drop the IBL source handle.
       const tint = a === 'den'
-        ? (sky.ibl ? { colorR: 1, colorG: 0.72, colorB: 0.5, intensity: 0.11 } : { colorR: 0.9, colorG: 0.55, colorB: 0.4, intensity: 0.24 })
-        : (sky.ibl ? { colorR: 1, colorG: 1, colorB: 1, intensity: 0.18 } : { colorR: 0.95, colorG: 0.68, colorB: 0.55, intensity: 0.34 });
-      const ambTint = tempShiftRgb(tint.colorR, tint.colorG, tint.colorB, lightSettings.atmoTemp);
+        ? (sky.ibl ? { color: [1, 0.72, 0.5] as [number, number, number], intensity: 0.11 } : { color: [0.9, 0.55, 0.4] as [number, number, number], intensity: 0.24 })
+        : (sky.ibl ? { color: [1, 1, 1] as [number, number, number], intensity: 0.18 } : { color: [0.95, 0.68, 0.55] as [number, number, number], intensity: 0.34 });
+      const ambTint = tempShiftRgb(tint.color, lightSettings.atmoTemp);
       const amb = { ...ambTint, intensity: tint.intensity * lightSettings.ambientMul };
       world.set(sky.ent, Skylight, sky.equirect
         ? { equirect: sky.equirect, ...amb }
@@ -1176,7 +1179,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
   // ── main loop ─────────────────────────────────────────────────────────
   let hudTimer = 0;
-  registerUpdate((dt: number) => {
+  registerUpdate?.((dt: number) => {
     // fps compensation rate for AnimationPlayer speeds (see clip helpers).
     // Smoothed so a single hitchy frame doesn't pulse the animations.
     animRate += (clamp(dt * 60, 0.3, 3) - animRate) * Math.min(1, dt * 10);

@@ -27,7 +27,7 @@ import {
   type MaterialAsset, type Handle,
 } from '@forgeax/engine-runtime';
 import { HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
-import type { Entity } from '@forgeax/engine-ecs';
+import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
 
 import type { EnemyKind, Tier } from './enemies';
@@ -37,7 +37,7 @@ type MatHandle = Handle<'MaterialAsset', 'shared'>;
 type Ctx = Parameters<GameEntry>[0];
 
 interface Gem {
-  e: Entity;
+  e: EntityHandle;
   // World pos (we manually integrate; Transform is just the renderer's view).
   x: number; y: number; z: number;
   baseY: number;        // bobbing center

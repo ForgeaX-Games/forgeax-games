@@ -28,7 +28,7 @@ import {
   type MaterialAsset, type Handle,
 } from '@forgeax/engine-runtime';
 import { HANDLE_SPHERE, HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
-import type { Entity } from '@forgeax/engine-ecs';
+import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
 
 // Trigger vite-plugin-shader registration by importing the .wgsl source
@@ -149,7 +149,7 @@ const HIDE_MAT4 = (() => {
 
 export class ParticleEmitter {
   readonly capacity: number;
-  readonly entity: Entity;
+  readonly entity: EntityHandle;
   private particles: ParticleSlot[];
   private transforms: Float32Array;
   private cursor = 0;

@@ -57,7 +57,7 @@ export function placeResources(
     if (zone.type !== 'main_base' && zone.type !== 'expansion') continue
 
     const mineralCount = zone.type === 'main_base' ? MAIN_BASE_MINERALS : EXPANSION_MINERALS
-    const geyserCount = zone.type === 'main_base' ? MAIN_BASE_GEYSERS : EXPANSION_GEYSERS
+    const geyserCount: number = zone.type === 'main_base' ? MAIN_BASE_GEYSERS : EXPANSION_GEYSERS
 
     // 矿线弧心方向：朝向地图中心的反方向（矿在基地外侧）
     const distToCenter = Math.sqrt(zone.cx * zone.cx + zone.cz * zone.cz)

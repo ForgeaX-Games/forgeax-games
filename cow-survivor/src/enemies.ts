@@ -44,7 +44,7 @@ import {
 } from '@forgeax/engine-runtime';
 import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
-import type { Entity } from '@forgeax/engine-ecs';
+import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
 import type { LevelSpawnConfig } from './levels';
 
@@ -741,9 +741,9 @@ export async function loadCharacterVisual(moduleUrl: string, name: string): Prom
  *  the spawned parts with their authored scales (FPS mode hides via scale-0). */
 export function spawnPackVisual(
   ctx: Ctx,
-  root: Entity,
+  root: EntityHandle,
   visual: PackVisual,
-): Array<{ e: Entity; sx: number; sy: number; sz: number }> {
+): Array<{ e: EntityHandle; sx: number; sy: number; sz: number }> {
   const { world } = ctx;
   const mats = new Map<PartMatKey, MatHandle>();
   for (const [key, p] of Object.entries(visual.palette)) {
@@ -758,7 +758,7 @@ export function spawnPackVisual(
       emissiveIntensity: p.emissiveIntensity ?? (p.emissive ? 2 : 0),
     })));
   }
-  const out: Array<{ e: Entity; sx: number; sy: number; sz: number }> = [];
+  const out: Array<{ e: EntityHandle; sx: number; sy: number; sz: number }> = [];
   for (const ps of visual.parts) {
     const m = mats.get(ps.mat) ?? mats.get('body');
     if (!m) continue;
@@ -782,7 +782,7 @@ export function spawnPackVisual(
 }
 
 export interface Enemy {
-  e: Entity;
+  e: EntityHandle;
   kind: EnemyKind;
   hp: number;
   maxHp: number;
@@ -796,7 +796,7 @@ export interface Enemy {
   enraged: boolean;
   /** All visual parts (root included), so we can swap their materials in
    *  bulk for hit-flash / cold-tint without touching the registered POD. */
-  parts: Array<{ e: Entity; matKey: PartMatKey }>;
+  parts: Array<{ e: EntityHandle; matKey: PartMatKey }>;
   /** Per-kind material variants (one set, shared across all instances). */
   matBank: MatBank;
   matState: 'normal' | 'flash' | 'slow';
@@ -895,14 +895,12 @@ export class EnemyManager {
       } },
       { component: Collider, data: {
         shape: ColliderShapeValue.cuboid,
-        halfExtentsX: def.colliderHX,
-        halfExtentsY: def.colliderHY,
-        halfExtentsZ: def.colliderHZ,
+        halfExtents: [def.colliderHX, def.colliderHY, def.colliderHZ],
         friction: 0.6, restitution: 0.05,
       } },
     ).unwrap();
 
-    const parts: Array<{ e: Entity; matKey: PartMatKey }> = [];
+    const parts: Array<{ e: EntityHandle; matKey: PartMatKey }> = [];
     for (const ps of def.parts) {
       const slot = bank.byKey.get(ps.mat);
       if (!slot) continue;

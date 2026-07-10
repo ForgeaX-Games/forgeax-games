@@ -1133,7 +1133,7 @@ export class VfxSystem implements VfxHandle {
       const cp = posOf(d.entity);
       if (!cp) return;
       const spec = getAbilityVfx(d.abilityId);
-      const hex = getAbilityDef(d.abilityId)?.visualColor;
+      const hex = getAbilityDef(d.abilityId)?.projectile?.visualColor;
       const tint = hex !== undefined ? hexRgb(hex) : undefined;
       if (spec) {
         // fire the bespoke effect at the target point (else the caster).

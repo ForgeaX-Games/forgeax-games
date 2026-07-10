@@ -30,13 +30,25 @@ const HUD_ID = 'forgeax-game-hud';
  * score / current mode. Idempotent: a previous overlay (e.g. after HMR) is
  * removed first so HUDs never stack.
  */
-export function installHud(opts: { initialMode: ViewMode; onToggle: () => void }): HudHandle {
+export function installHud(opts: {
+  initialMode: ViewMode;
+  onToggle: () => void;
+  /** Controlled UI container (host `ctx.uiRoot`). Defaults to document.body when omitted. */
+  mount?: HTMLElement;
+}): HudHandle {
+  const mount = opts.mount ?? document.body;
   document.getElementById(HUD_ID)?.remove();
+
+  // `fixed` pins to the window → in single-realm Play the HUD spills onto the
+  // surrounding panels. Mounted into ctx.uiRoot (viewport-scoped disposable,
+  // absolute; inset:0; overflow:hidden) use `absolute` to fill+clip the viewport.
+  // Body fallback keeps `fixed` (window == viewport there).
+  const rootAbsolute = mount !== document.body;
 
   const root = document.createElement('div');
   root.id = HUD_ID;
   Object.assign(root.style, {
-    position: 'fixed', inset: '0', zIndex: '50', pointerEvents: 'none',
+    position: rootAbsolute ? 'absolute' : 'fixed', inset: '0', zIndex: '50', pointerEvents: 'none',
     font: "600 14px ui-sans-serif, system-ui, sans-serif", color: '#fff',
     userSelect: 'none',
   } as CSSStyleDeclaration);
@@ -114,7 +126,7 @@ export function installHud(opts: { initialMode: ViewMode; onToggle: () => void }
   }
 
   root.append(score, btn, cross, hint, lockStatus, popups);
-  document.body.appendChild(root);
+  mount.appendChild(root);
 
   const applyMode = (mode: ViewMode) => {
     btn.textContent = mode === 'fps' ? '视角: 第一人称 ▸ 切顶视角' : '视角: 顶视角 ▸ 切第一人称';

@@ -10,7 +10,7 @@ import {
   createSphereGeometry,
   createConeGeometry,
   createCylinderGeometry,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine-geometry';
 import type { MaterialAsset } from '@forgeax/engine-runtime';
 import type { AssetRegistry, MeshAsset } from '@forgeax/engine-assets-runtime';
 import type { Handle, World } from '@forgeax/engine-ecs';
