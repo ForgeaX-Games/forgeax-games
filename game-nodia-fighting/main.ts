@@ -22,7 +22,6 @@
 
 import {
   Transform, Camera, perspective, quat, Materials, MeshFilter, MeshRenderer,
-  ChildOf,
   SceneInstance,
   Skylight, SkyboxBackground, SKYBOX_MODE_CUBEMAP, TONEMAP_REINHARD_EXTENDED,
   BLOOM_ENABLED, ANTIALIAS_FXAA, PointLight,
@@ -311,31 +310,17 @@ function attachScenePhysics(
 }
 
 // Wire up the low-poly box-man. Its cube parts ("PlayerTorso/Head/ArmL/ArmR/LegL/
-// LegR") are authored FLAT (absolute positions) in scene.pack.json next to an
-// invisible "Player" root — flat so ✎ Edit renders them standing (the editor's scene
-// projection skips empty roots + doesn't apply ChildOf). At ▶ Play we re-parent the
-// parts to the root at runtime (engine runtime ChildOf works) so the avatar moves as
-// a unit, and make the root a kinematic body (driven by its Transform → shoves props).
-function setupPlayerRoot(
-  ctx: Ctx,
-  root: EntityHandle,
-  loaded: { mapping: ReadonlyMap<number, Entity>; nodes: PackNode[] },
-): void {
+// LegR") are authored in scene.pack.json as ChildOf children of the "Player" root
+// with LOCAL coordinates — a single hierarchy representation that both ✎ Edit and
+// ▶ Play consume verbatim (the editor viewport and Play run the same engine +
+// propagateTransforms, so ChildOf resolves in both; scene-pack round-trips ChildOf
+// losslessly). So the avatar already renders + moves as a unit; here we only make
+// the root a kinematic body (driven by its Transform → shoves props). No runtime
+// re-parenting: that split representation (flat pack + Play-time reparent) was a
+// SSOT violation and the source of a stale-view bug (reading a Transform array view
+// across the ChildOf archetype migration scrambled the parts).
+function setupPlayerRoot(ctx: Ctx, root: EntityHandle): void {
   const { world } = ctx;
-  const rt = world.get(root, Transform);
-  const rx = rt.ok ? rt.value.pos[0]! : 0, ry = rt.ok ? rt.value.pos[1]! : PLAYER_Y, rz = rt.ok ? rt.value.pos[2]! : 0;
-  // Re-parent each body part to the root, converting its authored WORLD position to
-  // a LOCAL offset (part − root). The root has uniform scale 1, so parts keep shape.
-  for (const node of loaded.nodes) {
-    const nm = (node.components.Name as { value?: string } | undefined)?.value;
-    if (!nm || nm === 'Player' || !nm.startsWith('Player')) continue;
-    const e = loaded.mapping.get(node.localId);
-    if (e === undefined) continue;
-    const t = world.get(e, Transform);
-    if (!t.ok) continue;
-    world.addComponent(e, { component: ChildOf, data: { parent: root } });
-    world.set(e, Transform, { pos: [t.value.pos[0]! - rx, t.value.pos[1]! - ry, t.value.pos[2]! - rz] });
-  }
   world.addComponent(root, { component: RigidBody, data: { type: RigidBodyTypeValue.kinematic } });
   world.addComponent(root, { component: Collider, data: { shape: ColliderShapeValue.capsule, radius: 0.3, halfHeight: 0.4 } });
 }
@@ -385,7 +370,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const t = (playerNode.components.Transform ?? {}) as Record<string, number[]>;
       initX = t.pos?.[0] ?? 0; initZ = t.pos?.[2] ?? 0;
       player = loaded.mapping.get(playerNode.localId);
-      if (player !== undefined) setupPlayerRoot({ world }, player, loaded);
+      if (player !== undefined) setupPlayerRoot({ world }, player);
     }
   }
   const origMatOf = new Map<EntityHandle, MatHandle>(flashables.map((f) => [f.e, f.mat] as [Entity, MatHandle]));

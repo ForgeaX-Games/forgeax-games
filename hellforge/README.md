@@ -21,7 +21,7 @@ In Diablo II the **Hellforge** is the prime-evil weapon foundry in Act IV.
 It's iconic, it rhymes with **forgeax**, and it tells you what the engine
 underneath is doing — forging entities + meshes + materials per frame.
 
-## Status (2026-07-09) — Act 1 slice + scene-quality pass
+## Status (2026-07-10) — Act 1 slice + scene-quality + visual upgrade
 
 - [x] Hero: **charactery** skinned GLB (`charactery-merged.glb`), 5 clips
       (idle / Handbag walk / attack / hit / death), WASD + sprint, 2.5D ⇄
@@ -79,6 +79,11 @@ underneath is doing — forging entities + meshes + materials per frame.
       system (`src/fx.ts`): hit bursts, death gibs, campfire embers, portal
       motes.
 - [x] Death → R to respawn at camp (small xp toll).
+- [x] **Visual upgrade (2026-07-10, games #22)** — hellish equirect HDR + IBL
+      (`assets/sky.hdr`); **F10** runtime render-settings panel (tonemap /
+      exposure / bloom / AA / lighting / particles); ambient atmosphere
+      particles (`src/ambient-fx.ts`); Transform **array-TRS**
+      (`pos`/`quat`/`scale` arrays — no scalar `posX`…`scaleZ`).
 
 Not yet (post-slice): inventory grid (equipment is auto-equip for now),
 skill tree allocator, town portal scroll, more acts/characters.
@@ -93,6 +98,7 @@ skill tree allocator, town portal scroll, more acts/characters.
 | 1 / 2 / 3 / 4 | select + cast 熔火弹 / 霜牙 / 电弧涌 / 影踏 |
 | V | toggle 2.5D ⇄ third-person |
 | R | respawn after death |
+| F10 | toggle render-settings panel (post / lighting / atmosphere) |
 | Esc | release pointer lock |
 
 ## World layout (ONE engine world, no scene switches)
@@ -126,6 +132,8 @@ hellforge/
     dungeon.ts            — runtime: baked-pack instantiate + walkability
     hud.ts                — ARPG DOM overlay (orbs / slots / quest / boss bar)
     fx.ts                 — shader registration + particle pools
+    render-settings.ts    — F10 runtime post / lighting / atmosphere panel
+    ambient-fx.ts         — ambient atmosphere particles
     shaders/*.wgsl(.meta.json) — fire-bolt / portal-vortex
   assets/characters/charactery-merged.glb — current hero (5 clips; Handbag walk)
   assets/3d/characters/charactery.*       — wb-gen3d sources + .glb.gen3d-meta.json
@@ -153,7 +161,12 @@ back to solid + `SKY_CLEAR`). Regenerate HDR via `bun scripts/bake-sky.ts`.
 
 Play `:15173/preview/?game=hellforge` (or studio viewport ▶ Play). Edit:
 `localhost:18920` with hellforge — camp meshes should be lit, not black
-silhouettes. Gameplay probes: `window.__hf`.
+silhouettes. In Play, press **F10** for the render-settings panel; HDR sky
+should load without rainbow garbage. Gameplay probes: `window.__hf`.
+
+Requires an **array-TRS** engine pin (studio `packages/editor` ≥ `7759819` /
+engine `5b9c0099`). Scalar `posX`… packs will fail-fast or load as identity —
+do not save an old pack under the new engine.
 
 ## Roadmap (next)
 

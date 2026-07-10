@@ -158,40 +158,16 @@ function spawnGroundCollider(ctx: CtxWorld): void {
   );
 }
 
-function setupPlayer(
-  ctx: CtxWorld,
-  root: Entity,
-  loaded: { mapping: ReadonlyMap<number, Entity>; nodes: PackNode[] },
-): void {
-  const rt = ctx.world.get(root, Transform);
-  const rx = rt.ok ? rt.value.pos[0] : 0, ry = rt.ok ? rt.value.pos[1] : 0.8, rz = rt.ok ? rt.value.pos[2] : 0;
-  const rsx = rt.ok ? rt.value.scale[0] || 1 : 1;
-  const rsy = rt.ok ? rt.value.scale[1] || 1 : 1;
-  const rsz = rt.ok ? rt.value.scale[2] || 1 : 1;
-  for (const node of loaded.nodes) {
-    const nm = (node.components.Name as { value?: string } | undefined)?.value;
-    if (!nm || nm === 'Player' || !nm.startsWith('Player')) continue;
-    const e = loaded.mapping.get(node.localId);
-    if (e === undefined) continue;
-    const t = ctx.world.get(e, Transform);
-    if (!t.ok) continue;
-    const alreadyParented = node.components.ChildOf !== undefined;
-    if (!alreadyParented) {
-      ctx.world.addComponent(e, { component: ChildOf, data: { parent: root } });
-      ctx.world.set(e, Transform, {
-        pos: [
-          (t.value.pos[0] - rx) / rsx,
-          (t.value.pos[1] - ry) / rsy,
-          (t.value.pos[2] - rz) / rsz,
-        ],
-        scale: [
-          (t.value.scale[0] || 1) / rsx,
-          (t.value.scale[1] || 1) / rsy,
-          (t.value.scale[2] || 1) / rsz,
-        ],
-      });
-    }
-  }
+// Box-man parts are authored in the scene pack as ChildOf children of the "Player"
+// root with LOCAL coordinates (single hierarchy representation consumed verbatim by
+// both ✎ Edit and ▶ Play — same engine + propagateTransforms; scene-pack round-trips
+// ChildOf losslessly). The Player root is a pure UNIT frame: its original body mesh
+// lives in a "PlayerBody" child (a rotated part like PlayerWeapon under a non-unit,
+// unrotated parent would otherwise shear — a unit frame keeps every child's world
+// TRS exact). The avatar already renders + moves as a unit; here we only make the
+// root a kinematic body. No runtime re-parenting (that split representation was a
+// SSOT violation + a stale-view bug source).
+function setupPlayer(ctx: CtxWorld, root: Entity): void {
   ctx.world.addComponent(root, { component: RigidBody, data: { type: RigidBodyTypeValue.kinematic } });
   ctx.world.addComponent(root, { component: Collider, data: { shape: ColliderShapeValue.capsule, radius: 0.35, halfHeight: 0.48, friction: 0.8 } });
 }
@@ -278,7 +254,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const t = (node.components.Transform ?? {}) as { pos?: number[] };
       px = t.pos?.[0] ?? 0; pz = t.pos?.[2] ?? 0;
       player = loaded.mapping.get(node.localId);
-      if (player !== undefined) setupPlayer({ world }, player, loaded);
+      if (player !== undefined) setupPlayer({ world }, player);
     }
   }
   if (player === undefined) console.error('[cowhell] Player entity not resolved — game loop will not start (check scene.pack.json localIds are dense 0..N-1)');
