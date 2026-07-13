@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "prop-den-floor-a.normal.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "494033cb-f338-45a8-a5a1-d6d1e74e6cb0",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

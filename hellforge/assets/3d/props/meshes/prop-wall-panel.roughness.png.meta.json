@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "prop-wall-panel.roughness.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "3349a965-4c52-4739-bcd7-39f786a07726",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

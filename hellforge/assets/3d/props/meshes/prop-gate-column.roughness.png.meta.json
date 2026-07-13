@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "prop-gate-column.roughness.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "afb34736-89fa-499c-a99a-09a10803e7ff",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

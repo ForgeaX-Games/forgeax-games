@@ -1,0 +1,53 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "Mesh_0"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "characterw.glb",
+  "subAssets": [
+    {
+      "guid": "019f4bc9-8032-746d-b497-8990583831a8",
+      "kind": "mesh",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-8032-746d-b497-89913b734ca0",
+      "kind": "material",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-8032-746d-b497-8992175ad2a0",
+      "kind": "scene",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-8032-746d-b497-8993fb60dfbe",
+      "kind": "texture",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-8032-746d-b497-8994535ed740",
+      "kind": "texture",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019f4bc9-8032-746d-b497-89958d8835c0",
+      "kind": "texture",
+      "sourceIndex": 2
+    },
+    {
+      "guid": "019f4bc9-8032-746d-b497-8996779015bd",
+      "kind": "texture",
+      "sourceIndex": 3
+    }
+  ]
+}

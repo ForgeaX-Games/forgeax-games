@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "prop-deadtree-trunk.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "b90c00e4-6775-493e-9bdd-92bc8827b01f",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

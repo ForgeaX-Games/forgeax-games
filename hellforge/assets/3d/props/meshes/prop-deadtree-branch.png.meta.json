@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "prop-deadtree-branch.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "342ea82e-0ebf-4ce2-81d0-e828e8f56833",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

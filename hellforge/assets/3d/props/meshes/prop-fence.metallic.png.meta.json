@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "prop-fence.metallic.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "5c6606fd-f21c-4ac4-a9fb-8ee005072852",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

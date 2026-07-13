@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "prop-hut-roof-2.roughness.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "4ea1018c-87b9-48fb-a41f-e24ba5f78f87",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

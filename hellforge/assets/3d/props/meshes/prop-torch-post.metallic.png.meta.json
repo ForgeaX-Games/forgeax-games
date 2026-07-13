@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "prop-torch-post.metallic.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "05addb9c-2545-4c8e-9e15-230dc12f75ea",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

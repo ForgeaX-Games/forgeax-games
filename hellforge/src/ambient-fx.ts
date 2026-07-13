@@ -32,15 +32,17 @@ const LOW_END_CAP = 40;
 
 const COLOR: Record<LayerKind, readonly [number, number, number, number]> = {
   ember: [2.0, 0.75, 0.20, 1],
-  ash: [0.32, 0.28, 0.26, 1],
+  // Was [0.32,0.28,0.26] — silhouetted as hard black squares against bright HDR sky.
+  ash: [0.62, 0.52, 0.44, 1],
   snow: [0.85, 0.90, 1.05, 1],
 };
 
 /** Area multipliers for style === 'auto'. */
 const AUTO_MULT: Record<AmbientArea, Record<LayerKind, number>> = {
-  camp: { ember: 0.5, ash: 0.7, snow: 0 },
-  wild: { ember: 1, ash: 1, snow: 0 },
-  den: { ember: 1.4, ash: 0.5, snow: 0 },
+  // Camp: keep embers, cut ash — dark cubes against sunset sky read as a "black matrix".
+  camp: { ember: 0.55, ash: 0.15, snow: 0 },
+  wild: { ember: 1, ash: 0.45, snow: 0 },
+  den: { ember: 1.4, ash: 0.35, snow: 0 },
 };
 
 function detectStorageBuffer(app: unknown): boolean {
@@ -133,7 +135,8 @@ function seedParticle(layer: LayerSoA, i: number, cx: number, cz: number): void 
   layer.px[i] = cx + rand(-HALF_X, HALF_X);
   layer.py[i] = rand(Y_MIN, Y_MAX);
   layer.pz[i] = cz + rand(-HALF_Z, HALF_Z);
-  layer.scale[i] = rand(0.02, 0.05);
+  // Ash used to be 0.02–0.05 — large enough to silhouette as black tiles on HDR sky.
+  layer.scale[i] = layer.kind === 'ash' ? rand(0.006, 0.014) : rand(0.02, 0.05);
   layer.phase[i] = rand(0, Math.PI * 2);
   layer.rot[i] = rand(0, Math.PI * 2);
   layer.vx[i] = 0;

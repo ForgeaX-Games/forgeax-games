@@ -1,0 +1,81 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "LeftToeBase",
+        "LeftFoot",
+        "LeftLeg",
+        "LeftUpLeg",
+        "RightToeBase",
+        "RightFoot",
+        "RightLeg",
+        "RightUpLeg",
+        "LeftHand",
+        "LeftForeArm",
+        "LeftArm",
+        "LeftShoulder",
+        "RightHand",
+        "RightForeArm",
+        "RightArm",
+        "RightShoulder",
+        "head_end",
+        "headfront",
+        "Head",
+        "neck",
+        "Spine",
+        "Spine01",
+        "Spine02",
+        "Hips",
+        "char1",
+        "Armature"
+      ],
+      "unsupportedExtensions": [
+        "KHR_materials_specular",
+        "KHR_materials_ior"
+      ]
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "gta-01.animated_model.motion-meshy-165.glb",
+  "subAssets": [
+    {
+      "guid": "019f4bc9-82c2-7c8f-9c4b-ffa905f29938",
+      "kind": "mesh",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-82c2-7c8f-9c4b-ffaab9f92430",
+      "kind": "material",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-82c2-7c8f-9c4b-ffab13ba97b6",
+      "kind": "scene",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-82c2-7c8f-9c4b-ffac4b225fe5",
+      "kind": "texture",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-82c2-7c8f-9c4b-ffad612d6e96",
+      "kind": "skeleton",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-82c2-7c8f-9c4b-ffaedd2de696",
+      "kind": "skin",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-82c2-7c8f-9c4b-ffafa3f5ebe8",
+      "kind": "animation-clip",
+      "sourceIndex": 0
+    }
+  ]
+}

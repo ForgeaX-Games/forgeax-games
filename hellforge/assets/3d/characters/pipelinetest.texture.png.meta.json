@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "pipelinetest.texture.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "921bd4fb-ba81-4441-8681-3d4696eacb9b",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

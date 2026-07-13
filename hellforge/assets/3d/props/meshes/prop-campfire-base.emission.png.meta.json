@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "prop-campfire-base.emission.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "88e0cb7a-76dc-40de-baaa-fecebf234861",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

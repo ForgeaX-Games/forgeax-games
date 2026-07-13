@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "prop-den-wall.emission.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "f7324904-9b28-4802-80ad-bf90ae0bdd6f",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

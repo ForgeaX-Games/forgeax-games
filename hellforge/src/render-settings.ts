@@ -67,29 +67,30 @@ export type RenderSettingsApi = {
   dispose: () => void;
 };
 
-const LS_KEY = 'hellforge.render.v1';
+// v3: dark hellforge grade — Belfast HDR peaks crushed so sky isn't blown white.
+const LS_KEY = 'hellforge.render.v3';
 const STYLE_ID = 'hf-rs-style';
 const PANEL_ID = 'hf-rs';
 const VIGNETTE_ID = 'hf-rs-vignette';
 
 /** Same RGB as private SKY_CLEAR in main.ts (alpha defaults to 1). */
-const SKY_CLEAR = [0.32, 0.07, 0.035, 1] as const;
+const SKY_CLEAR = [0.18, 0.05, 0.03, 1] as const;
 
 const DEFAULTS: RenderSettings = {
   tonemap: 'aces',
-  exposure: 1,
-  whitePoint: 4,
+  exposure: 0.58,
+  whitePoint: 4.5,
   antialias: 'fxaa',
   bloom: true,
-  bloomThreshold: 1.25,
-  bloomIntensity: 0.55,
+  bloomThreshold: 1.55,
+  bloomIntensity: 0.45,
   bloomBlurRadius: 4,
-  sunMul: 1,
-  ambientMul: 1,
-  fireMul: 1,
-  fillMul: 1,
-  atmoTemp: 0,
-  vignette: 0.22,
+  sunMul: 0.7,
+  ambientMul: 0.65,
+  fireMul: 1.25,
+  fillMul: 0.75,
+  atmoTemp: 0.35,
+  vignette: 0.52,
   particleDensity: 1,
   particleStyle: 'auto',
 };
@@ -139,7 +140,10 @@ const CSS = `
 }
 #${VIGNETTE_ID} {
   position: absolute; inset: 0; z-index: 40; pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,0.92) 100%);
+  /* Dark rim + faint ember wash so sunset HDR reads as forge atmosphere. */
+  background:
+    radial-gradient(ellipse at 50% 70%, rgba(160, 48, 12, 0.14) 0%, transparent 52%),
+    radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.94) 100%);
 }
 `;
 

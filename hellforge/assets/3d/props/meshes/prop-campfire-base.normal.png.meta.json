@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "prop-campfire-base.normal.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "b381036b-bbaa-4c71-bb14-eade72d4b1e0",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

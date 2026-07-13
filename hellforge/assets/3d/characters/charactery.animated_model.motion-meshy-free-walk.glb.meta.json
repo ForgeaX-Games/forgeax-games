@@ -1,0 +1,81 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "LeftToeBase",
+        "LeftFoot",
+        "LeftLeg",
+        "LeftUpLeg",
+        "RightToeBase",
+        "RightFoot",
+        "RightLeg",
+        "RightUpLeg",
+        "LeftHand",
+        "LeftForeArm",
+        "LeftArm",
+        "LeftShoulder",
+        "RightHand",
+        "RightForeArm",
+        "RightArm",
+        "RightShoulder",
+        "head_end",
+        "headfront",
+        "Head",
+        "neck",
+        "Spine",
+        "Spine01",
+        "Spine02",
+        "Hips",
+        "char1",
+        "Armature"
+      ],
+      "unsupportedExtensions": [
+        "KHR_materials_specular",
+        "KHR_materials_ior"
+      ]
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "charactery.animated_model.motion-meshy-free-walk.glb",
+  "subAssets": [
+    {
+      "guid": "019f4bc9-81e8-7c70-9fc2-832813ad222b",
+      "kind": "mesh",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-81e8-7c70-9fc2-8329a212378d",
+      "kind": "material",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-81e8-7c70-9fc2-832aff4a97a7",
+      "kind": "scene",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-81e8-7c70-9fc2-832b12b201d4",
+      "kind": "texture",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-81e8-7c70-9fc2-832c4952ff88",
+      "kind": "skeleton",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-81e8-7c70-9fc2-832d8064b671",
+      "kind": "skin",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f4bc9-81e8-7c70-9fc2-832ee268ec67",
+      "kind": "animation-clip",
+      "sourceIndex": 0
+    }
+  ]
+}

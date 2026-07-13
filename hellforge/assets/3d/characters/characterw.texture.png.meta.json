@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "characterw.texture.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "56b42eba-dcda-44a7-bac4-6d7cd4c684d5",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

@@ -97,7 +97,7 @@ const PLAYER_SCALE = 1.3;
 // unsupported (WebKit). Linear/pre-tonemap (ACES). Camera writes that spread
 // perspective() must re-apply clear (and, after C2, all post settings) — see
 // installRenderSettings.applyCamera.
-const SKY_CLEAR = { clearR: 0.32, clearG: 0.07, clearB: 0.035 } as const;
+const SKY_CLEAR = { clearR: 0.18, clearG: 0.05, clearB: 0.03 } as const;
 
 // ── HDR sky (Play runtime only — never declare equirect in the pack) ──────
 // Engine pin: Skylight.equirect + SkyboxBackground.equirect (shared EquirectAsset).
@@ -701,8 +701,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // frustum → ~5× denser shadow texels, so the witch proxy reads as a crisp
   // silhouette instead of a blur. The direction's horizontal component points
   // AWAY from the camera-side fill light so her shadow lands on unlit floor.
+  // Camp key follows the Belfast-sunset HDR (warm low sun); den stays ember shaft.
   const SUN_LOOK = {
-    camp: { direction: [-0.45, -0.7, -0.5], color: [0.45, 0.55, 1], intensity: 2.6 },
+    camp: { direction: [-0.55, -0.52, -0.42], color: [1.0, 0.48, 0.22], intensity: 1.7 },
     den:  { direction: [-0.3, -0.85, -0.35], color: [1, 0.58, 0.32], intensity: 1.9 },
   } as const;
   const sun = world.spawn(
@@ -775,9 +776,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // Den ambient: dimmer + ember-tinted so torch pools and the sun shaft
       // carry the read; outdoors: neutral IBL (when ready) / warm solid fallback.
       // Always re-pass equirect so world.set does not drop the IBL source handle.
+      // Outdoors: warm, dim IBL — Belfast HDR is hot; don't let sky bleach the camp.
       const tint = a === 'den'
         ? (sky.ibl ? { color: [1, 0.72, 0.5] as [number, number, number], intensity: 0.11 } : { color: [0.9, 0.55, 0.4] as [number, number, number], intensity: 0.24 })
-        : (sky.ibl ? { color: [1, 1, 1] as [number, number, number], intensity: 0.18 } : { color: [0.95, 0.68, 0.55] as [number, number, number], intensity: 0.34 });
+        : (sky.ibl ? { color: [1.0, 0.68, 0.42] as [number, number, number], intensity: 0.1 } : { color: [0.95, 0.68, 0.55] as [number, number, number], intensity: 0.28 });
       const ambTint = tempShiftRgb(tint.color, lightSettings.atmoTemp);
       const amb = { ...ambTint, intensity: tint.intensity * lightSettings.ambientMul };
       world.set(sky.ent, Skylight, sky.equirect
