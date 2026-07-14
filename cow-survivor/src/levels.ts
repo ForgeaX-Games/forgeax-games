@@ -6,9 +6,9 @@
 // spawner used to hardcode against global elapsed time now lives here, so
 // a stage can have a completely different bestiary and pacing.
 //
-// Scene packs live in ./scenes/<id>.pack.json (one file per level — the editor
-// discovers + edits the same files via its scenes/ level scan, and asset-first
-// Play loads them by GUID from the per-game catalog, which scans scenes/ too).
+// Each level is identified by its native SceneAsset GUID. The game never reads
+// pack files directly: the host and AssetRegistry resolve the catalog entry, then
+// runtime instances the SceneAsset through `assets.instantiate()`.
 
 import type { EnemyKind } from './enemies';
 
@@ -44,7 +44,8 @@ export interface LevelConfig {
   /** Big banner shown on level start (and in the HUD stage chip). */
   name: string;
   subtitle: string;
-  scenePack: string;
+  /** Native SceneAsset GUID resolved through the game's pack catalog. */
+  sceneGuid: string;
   /** Survive this long (s) to clear the stage. */
   duration: number;
   /** Skylight intensity for the mood (day vs night). */
@@ -60,7 +61,7 @@ export const LEVELS: LevelConfig[] = [
     id: 'level1',
     name: '奶 牛 关',
     subtitle: '生存吧~',
-    scenePack: './scenes/level1.pack.json',
+    sceneGuid: '5a26929b-d81c-4b6a-a4b3-3124a3a604ed',
     duration: 180,
     skylightIntensity: 0.12,
     playerLight: { color: [1, 0.55, 0.35], intensity: 12, range: 6 },
@@ -83,7 +84,7 @@ export const LEVELS: LevelConfig[] = [
     id: 'level2',
     name: '暗 夜 墓 园',
     subtitle: '黑暗中有什么在动…',
-    scenePack: './scenes/level2.pack.json',
+    sceneGuid: '8ef2103d-5ce1-49c6-9429-73b5c9578a41',
     duration: 240,
     skylightIntensity: 0.04,
     // Cold moonlight follows the player instead of the warm D2 torch.

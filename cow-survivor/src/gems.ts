@@ -209,5 +209,11 @@ export class GemSystem {
     return events;
   }
 
+  /** Despawn every uncollected gem without awarding XP (stage teardown). */
+  clear(): void {
+    for (const gem of this.gems) this.ctx.world.despawn(gem.e);
+    this.gems.length = 0;
+  }
+
   count(): number { return this.gems.length; }
 }

@@ -1,24 +1,13 @@
-// effects.ts — load .fx.json asset files at game start and expose them as
-// runtime EffectAsset records.
-//
-// Three categories share the same JSON shape:
-//
-//   • Skill effects (lightning-bolt, shockwave-ring) — spawned per game
-//     event from fx.ts (chain hit / blast / kill).
-//   • Scene effects (torch-flame, rune-glow) — bound at level-load time to
-//     existing scene entities matched by Name prefix (`attachTo`).
-//     Their material gets swapped from the level pack's plain emissive
-//     standard material to a custom shader that animates the entity.
-//
-// New effect = drop `assets/effects/<name>.fx.json` + the matching WGSL +
-// `.wgsl.meta.json` sidecar in src/shaders/.
+// Effect tuning is game behavior, not a second asset transport. Visual geometry and
+// materials that belong to a scene are native SceneAssets; this table describes
+// runtime-only lifetime, pool, and shader parameter policy for the FxSystem.
 
 export interface EffectAsset {
   /** Match the registered material-shader id (e.g. `cow_survivor::lightning`). */
   readonly shader: string;
   readonly geometry: 'cube' | 'cube-disc' | 'sphere';
-  /** Default lifetime (seconds). Skill effects use this; scene effects
-   *  live as long as the entity they attach to. */
+  /** Default lifetime (seconds). Skill effects use this; scene effects live as
+   * long as the SceneAsset entity they decorate. */
   readonly lifetime: number;
   readonly scale: [number, number, number];
   readonly yPos?: number;
@@ -28,62 +17,68 @@ export interface EffectAsset {
     roughness: number;
   };
   readonly poolSize: number;
-  /** Scene-effect binding: at level load, the FX system swaps materials
-   *  on any scene entity whose Name starts with one of these prefixes. */
+  /** Scene-effect binding rule owned by Cow's gameplay layer. */
   readonly attachTo?: { namePrefix?: string; namePrefixes?: readonly string[] };
 }
 
 export type EffectAssets = Readonly<Record<string, EffectAsset>>;
 
-const ASSET_NAMES = [
-  'lightning-bolt',
-  'shockwave-ring',
-  'torch-flame',
-  'rune-glow',
-  'explosion-fireball',
-  'fire-trail',
-  'ice-shard',
-] as const;
+/**
+ * Runtime-only effect policy. These values used to be duplicated in fetched
+ * `.fx.json` blobs; keeping them here makes the game module the sole source for
+ * behavior while all authored visual assets travel through AssetRegistry GUIDs.
+ */
+export const EFFECT_ASSETS: EffectAssets = {
+  'lightning-bolt': {
+    shader: 'cow_survivor::lightning', geometry: 'cube', lifetime: 0.4,
+    scale: [0.22, 0.22, 1.06],
+    params: { baseColor: [0.95, 0.85, 1.0], metallic: 0, roughness: 1.4 },
+    poolSize: 1,
+  },
+  'shockwave-ring': {
+    shader: 'cow_survivor::shockwave', geometry: 'cube-disc', lifetime: 0.55,
+    scale: [9, 0.12, 9], yPos: 0.06,
+    params: { baseColor: [1, 0.75, 0.25], metallic: 1, roughness: 4 },
+    poolSize: 16,
+  },
+  'torch-flame': {
+    shader: 'cow_survivor::torch_flame', geometry: 'cube', lifetime: 0.5,
+    scale: [1, 1, 1],
+    params: { baseColor: [0.55, 1, 0.45], metallic: 0, roughness: 1.8 },
+    poolSize: 1,
+    attachTo: { namePrefix: 'Decor_LanternGlow_' },
+  },
+  'rune-glow': {
+    shader: 'cow_survivor::rune_glow', geometry: 'cube', lifetime: 0.5,
+    scale: [1, 1, 1],
+    params: { baseColor: [0.55, 0.35, 1], metallic: 0, roughness: 1.4 },
+    poolSize: 1,
+    attachTo: { namePrefixes: ['Decor_SteleRune', 'AltarRune'] },
+  },
+  'explosion-fireball': {
+    shader: 'cow_survivor::explosion_fireball', geometry: 'sphere', lifetime: 0.45,
+    scale: [2.4, 2.4, 2.4], yPos: 0.6,
+    params: { baseColor: [1, 0.45, 0.1], metallic: 0, roughness: 2.2 },
+    poolSize: 8,
+  },
+  'fire-trail': {
+    shader: 'cow_survivor::fire_trail', geometry: 'cube', lifetime: 0.5,
+    scale: [1, 1, 1],
+    params: { baseColor: [1, 0.1, 0.03], metallic: 0, roughness: 1.4 },
+    poolSize: 1,
+  },
+  'ice-shard': {
+    shader: 'cow_survivor::ice_shard', geometry: 'cube', lifetime: 0.5,
+    scale: [1, 1, 1],
+    params: { baseColor: [0.6, 0.85, 1], metallic: 0, roughness: 1.4 },
+    poolSize: 1,
+  },
+};
 
-export async function loadEffectAssets(moduleUrl: string): Promise<EffectAssets> {
-  const out: Record<string, EffectAsset> = {};
-  await Promise.all(ASSET_NAMES.map(async (name) => {
-    try {
-      const res = await fetch(new URL(`./assets/effects/${name}.fx.json`, moduleUrl), { cache: 'no-store' });
-      if (!res.ok) return;
-      const raw = await res.json() as Partial<EffectAsset> & {
-        spawn?: { lifetime?: number; scale?: [number, number, number]; yPos?: number };
-        poolSize?: number;
-        attachTo?: EffectAsset['attachTo'];
-      };
-      const spawn = raw.spawn ?? {};
-      const params = raw.params ?? { baseColor: [1, 1, 1], metallic: 0, roughness: 1 };
-      out[name] = {
-        shader: raw.shader ?? '',
-        geometry: (raw.geometry as EffectAsset['geometry']) ?? 'cube',
-        lifetime: spawn.lifetime ?? raw.lifetime ?? 0.5,
-        scale: spawn.scale ?? raw.scale ?? [1, 1, 1],
-        ...(spawn.yPos !== undefined ? { yPos: spawn.yPos } : {}),
-        params: {
-          baseColor: params.baseColor as [number, number, number],
-          metallic: params.metallic ?? 0,
-          roughness: params.roughness ?? 1,
-        },
-        poolSize: raw.poolSize ?? 1,
-        ...(raw.attachTo ? { attachTo: raw.attachTo } : {}),
-      };
-    } catch (err) {
-      console.warn(`[effects] failed to load ${name}.fx.json:`, (err as Error).message);
-    }
-  }));
-  return out;
-}
-
-/** Walk an effect asset's attachTo prefixes and return the matched name
- *  prefixes (callers iterate scene nodes against these). */
-export function effectAttachPrefixes(a: EffectAsset): readonly string[] {
-  if (!a.attachTo) return [];
-  if (a.attachTo.namePrefixes) return a.attachTo.namePrefixes;
-  if (a.attachTo.namePrefix) return [a.attachTo.namePrefix];
+/** Walk an effect asset's attachTo prefixes. */
+export function effectAttachPrefixes(asset: EffectAsset): readonly string[] {
+  if (!asset.attachTo) return [];
+  if (asset.attachTo.namePrefixes) return asset.attachTo.namePrefixes;
+  if (asset.attachTo.namePrefix) return [asset.attachTo.namePrefix];
   return [];
 }

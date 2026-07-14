@@ -35,7 +35,7 @@
 //   • lightningFork — short side-arc fork branching off the middle of a bolt
 
 import {
-  Transform, MeshFilter, MeshRenderer, Materials,
+  Transform, MeshFilter, MeshRenderer, Materials, Name,
   type MaterialAsset, type Handle,
 } from '@forgeax/engine-runtime';
 import { HANDLE_SPHERE, HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
@@ -599,22 +599,16 @@ export class FxSystem {
     ).unwrap();
     this.fireballs.push({ e, slot, age: 0, life: lifetime });
   }
-  attachSceneEffects(
-    nodes: ReadonlyArray<{ localId: number; components: Record<string, Record<string, unknown>> }>,
-    mapping: ReadonlyMap<number, EntityHandle>,
-  ): number {
+  attachSceneEffects(entities: Iterable<EntityHandle>): number {
     const { world } = this.ctx;
     let count = 0;
-    for (const node of nodes) {
-      const name = (node.components.Name as { value?: string } | undefined)?.value;
-      if (!name) continue;
+    for (const entity of entities) {
+      const named = world.get(entity, Name);
+      if (!named.ok) continue;
       for (const slot of Object.values(this.sceneEffectMats)) {
         const prefixes = effectAttachPrefixes(slot.asset);
-        const hit = prefixes.some((p) => name.startsWith(p));
-        if (!hit) continue;
-        const e = mapping.get(node.localId);
-        if (e === undefined) continue;
-        const setRes = world.set(e, MeshRenderer, { materials: [slot.mat] });
+        if (!prefixes.some((prefix) => named.value.value.startsWith(prefix))) continue;
+        const setRes = world.set(entity, MeshRenderer, { materials: [slot.mat] });
         if (setRes.ok) count += 1;
       }
     }
@@ -964,6 +958,17 @@ export class FxSystem {
       { component: MeshRenderer, data: { materials: [pool.mat] } },
     ).unwrap();
     this.shockwaves.push({ e, slot, age: 0, life: lf, baseSx: sx, baseSy: sy, baseSz: sz });
+  }
+
+  /** Despawn transient scene-local fallback FX during a level transition. */
+  clearTransient(): void {
+    const { world } = this.ctx;
+    for (const fireball of this.fireballs) world.despawn(fireball.e);
+    this.fireballs.length = 0;
+    for (const shockwave of this.shockwaves) world.despawn(shockwave.e);
+    this.shockwaves.length = 0;
+    for (const particle of this.particles) world.despawn(particle.e);
+    this.particles.length = 0;
   }
 
   // ─── per-frame integration ──────────────────────────────────────────────
