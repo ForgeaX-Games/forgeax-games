@@ -38,6 +38,7 @@
     "@forgeax/engine-runtime": "workspace:*",
     "@forgeax/engine-assets-runtime": "workspace:*",
     "@forgeax/engine-ecs": "workspace:*",
+    "@forgeax/engine-input": "workspace:*",
     "@forgeax/engine-geometry": "workspace:*",
     "@forgeax/engine-pack": "workspace:*"
   },

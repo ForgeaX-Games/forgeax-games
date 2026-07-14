@@ -11,6 +11,7 @@ import {
 import { Entity, type EntityHandle } from '@forgeax/engine-ecs';
 import type { World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
+import { createInputSnapshot, INPUT_SNAPSHOT_RESOURCE_KEY, type InputSnapshot } from '@forgeax/engine-input';
 
 import { registerMaterials, registerGeometry, type Geo, type Mat } from './setup';
 import { Player, Thruster, spawnPlayer, type PlayerShip } from './player';
@@ -48,10 +49,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   if (!ctx) return;
   const { assets } = ctx;
   // Play/Stop hygiene: mount UI into the host's controlled container (removed
-  // whole on ■ Stop) instead of document.body, and register non-DOM teardown
-  // (key listeners) so an embedded-editor Stop returns to a clean initial state.
+  // whole on ■ Stop) instead of document.body. Gameplay reads the host-routed
+  // InputSnapshot, never global keyboard listeners.
   const uiMount: HTMLElement = ctx.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
-  const onCleanup = ctx.registerCleanup ?? (() => {});
 
   // Components self-register globally via defineComponent (feat-20260602); the
   // old per-world world.registerComponent(...) API was removed. Referencing the
@@ -144,7 +144,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     started: false, victory: false,
     bossSpawned: false, bossDescending: false, bossShootTimer: 0,
     weapon: 0, // current weapon index (0-4)
-    keys: new Set<string>(),
   };
 
   // 剧情节奏：从只读模板克隆出可变副本（保留 fired 状态）
@@ -160,14 +159,21 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   //  HUD
   // ═══════════════════════════════════════════════════════════════════════
 
-  const onKeyDown = (e: KeyboardEvent) => gs.keys.add(e.code);
-  const onKeyUp = (e: KeyboardEvent) => gs.keys.delete(e.code);
-  globalThis.addEventListener('keydown', onKeyDown);
-  globalThis.addEventListener('keyup', onKeyUp);
-  onCleanup(() => {
-    globalThis.removeEventListener('keydown', onKeyDown);
-    globalThis.removeEventListener('keyup', onKeyUp);
-  });
+  const EMPTY_INPUT = createInputSnapshot();
+  const input = (): InputSnapshot =>
+    world.hasResource(INPUT_SNAPSHOT_RESOURCE_KEY)
+      ? world.getResource<InputSnapshot>(INPUT_SNAPSHOT_RESOURCE_KEY)
+      : EMPTY_INPUT;
+  const down = (code: string): boolean => {
+    const key = code === 'Space'
+      ? ' '
+      : code.startsWith('Key')
+        ? code.slice(3).toLowerCase()
+        : code.startsWith('Digit')
+          ? code.slice(5)
+          : code;
+    return input().keyboard.down(key) || (key.length === 1 && input().keyboard.down(key.toUpperCase()));
+  };
 
   let hud: HTMLDivElement | null = null;
   let hudCombo: HTMLDivElement | null = null;
@@ -480,7 +486,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     // ── 开场门禁：等玩家按空格 ──
     if (!gs.started) {
-      if (gs.keys.has('Space')) {
+      if (down('Space')) {
         gs.started = true;
         storyUi.hideIntro();
       }
@@ -488,7 +494,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     }
 
     if (!gs.alive) {
-      if (gs.keys.has('KeyR')) {
+      if (down('KeyR')) {
         gs.score = 0; gs.alive = true; gs.difficulty = 0;
         gs.spawnInterval = 1.1; gs.shootCd = 0; gs.spawnTimer = 0;
         gs.hp = MAX_HP; gs.hasShield = false; gs.shieldTimer = 0;
@@ -521,10 +527,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     // ── Player Movement ──
     let mx = 0, mz = 0;
-    if (gs.keys.has('KeyA') || gs.keys.has('ArrowLeft'))  mx -= 1;
-    if (gs.keys.has('KeyD') || gs.keys.has('ArrowRight')) mx += 1;
-    if (gs.keys.has('KeyW') || gs.keys.has('ArrowUp'))    mz -= 1; // W = up on screen = -Z
-    if (gs.keys.has('KeyS') || gs.keys.has('ArrowDown'))  mz += 1; // S = down on screen = +Z
+    if (down('KeyA') || down('ArrowLeft'))  mx -= 1;
+    if (down('KeyD') || down('ArrowRight')) mx += 1;
+    if (down('KeyW') || down('ArrowUp'))    mz -= 1; // W = up on screen = -Z
+    if (down('KeyS') || down('ArrowDown'))  mz += 1; // S = down on screen = +Z
     const mLen = Math.hypot(mx, mz) || 1;
     const nx = Math.max(-ARENA_W / 2, Math.min(ARENA_W / 2, pv.pos[0]! + (mx / mLen) * PLAYER_SPEED * dt));
     const nz = Math.max(-4, Math.min(ARENA_H / 2 - 1, pv.pos[2]! + (mz / mLen) * PLAYER_SPEED * dt));
@@ -551,15 +557,15 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     }
 
     // ── Weapon switching (keys 1-5) ──
-    if (gs.keys.has('Digit1')) gs.weapon = 0;
-    else if (gs.keys.has('Digit2')) gs.weapon = 1;
-    else if (gs.keys.has('Digit3')) gs.weapon = 2;
-    else if (gs.keys.has('Digit4')) gs.weapon = 3;
-    else if (gs.keys.has('Digit5')) gs.weapon = 4;
+    if (down('Digit1')) gs.weapon = 0;
+    else if (down('Digit2')) gs.weapon = 1;
+    else if (down('Digit3')) gs.weapon = 2;
+    else if (down('Digit4')) gs.weapon = 3;
+    else if (down('Digit5')) gs.weapon = 4;
 
     // ── Shooting (weapon-based) ──
     gs.shootCd -= dt;
-    if (gs.keys.has('Space') && gs.shootCd <= 0) {
+    if (down('Space') && gs.shootCd <= 0) {
       const w = gs.weapon;
       switch (w) {
         case 0: // Normal — dual straight shots (+ triple if powerup)
