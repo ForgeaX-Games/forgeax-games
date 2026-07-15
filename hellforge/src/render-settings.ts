@@ -25,6 +25,7 @@ import {
   TONEMAP_NEUTRAL,
   TONEMAP_REINHARD_EXTENDED,
 } from '@forgeax/engine-runtime';
+import { FONT_UI } from './ui-theme';
 
 export interface RenderSettings {
   tonemap: 'aces' | 'agx' | 'neutral' | 'cineon' | 'reinhard' | 'linear';
@@ -41,8 +42,18 @@ export interface RenderSettings {
   fillMul: number; // 0..2 default 1
   atmoTemp: number; // -1..1 default 0
   vignette: number; // 0..0.8 default 0.22
+  /** CSS horizon / smoke haze strength (fake distance fog; not engine Fog). */
+  haze: number; // 0..1 default 0.55
   particleDensity: number; // 0..2 default 1
   particleStyle: 'auto' | 'ash' | 'snow' | 'off';
+  /** Backbuffer scale vs CSS size × devicePixelRatio (0.5..1.5). */
+  renderScale: number;
+  /** Cap gameplay update rate; 0 = unlimited. */
+  fpsCap: number;
+  /** Scene BGM gain 0..1 (HTMLAudio; default under SFX so hits stay readable). */
+  bgmVolume: number;
+  /** Synthesized SFX gain 0..1 (scales sfx.ts master). */
+  sfxVolume: number;
 }
 
 export type InstallRenderSettingsArgs = {
@@ -55,6 +66,10 @@ export type InstallRenderSettingsArgs = {
   onLighting: (s: RenderSettings) => void;
   /** Called whenever particleDensity/style change. */
   onParticles: (s: RenderSettings) => void;
+  /** Called whenever renderScale / fpsCap change. */
+  onDisplay?: (s: RenderSettings) => void;
+  /** Called whenever bgmVolume / sfxVolume change. */
+  onAudio?: (s: RenderSettings) => void;
   /** Camera projection params used by applyCamera. */
   proj: { fov: number; near: number; far: number };
 };
@@ -63,6 +78,8 @@ export type RenderSettingsApi = {
   get: () => RenderSettings;
   /** ONLY writer of Camera component fields. */
   applyCamera: () => void;
+  open: () => void;
+  close: () => void;
   toggle: () => void;
   dispose: () => void;
 };
@@ -72,34 +89,41 @@ const LS_KEY = 'hellforge.render.v3';
 const STYLE_ID = 'hf-rs-style';
 const PANEL_ID = 'hf-rs';
 const VIGNETTE_ID = 'hf-rs-vignette';
+const HAZE_ID = 'hf-rs-haze';
 
-/** Same RGB as private SKY_CLEAR in main.ts (alpha defaults to 1). */
-const SKY_CLEAR = [0.18, 0.05, 0.03, 1] as const;
+/** Fallback clear when skybox unavailable — keep in sync with main.ts SKY_CLEAR. */
+const SKY_CLEAR = [0.055, 0.018, 0.012, 1] as const;
 
 const DEFAULTS: RenderSettings = {
   tonemap: 'aces',
-  exposure: 0.58,
+  exposure: 0.42,
   whitePoint: 4.5,
   antialias: 'fxaa',
   bloom: true,
-  bloomThreshold: 1.55,
-  bloomIntensity: 0.45,
-  bloomBlurRadius: 4,
-  sunMul: 0.7,
-  ambientMul: 0.65,
-  fireMul: 1.25,
-  fillMul: 0.75,
-  atmoTemp: 0.35,
-  vignette: 0.52,
-  particleDensity: 1,
+  bloomThreshold: 1.9,
+  bloomIntensity: 0.50,
+  bloomBlurRadius: 4.5,
+  sunMul: 0.55,
+  ambientMul: 0.42,
+  fireMul: 1.4,
+  fillMul: 0.70,
+  atmoTemp: 0.50,
+  vignette: 0.65,
+  haze: 0.70,
+  particleDensity: 1.15,
   particleStyle: 'auto',
+  renderScale: 1,
+  fpsCap: 0,
+  bgmVolume: 0.22,
+  sfxVolume: 1,
 };
 
 const CSS = `
 #${PANEL_ID} {
-  position: absolute; left: 14px; top: 64px; z-index: 58;
+  /* Above shell (z=200) so Title "设置" can open the same panel. */
+  position: absolute; left: 14px; top: 64px; z-index: 220;
   pointer-events: auto; display: none; user-select: none;
-  font: 600 12px ui-monospace, Menlo, Consolas, monospace; color: #e8dcc8;
+  font: 600 12px ${FONT_UI}; color: #e8dcc8;
   max-height: calc(100% - 80px); overflow-y: auto;
   width: 280px; padding: 12px 14px 14px;
   border-radius: 10px;
@@ -108,11 +132,11 @@ const CSS = `
   box-shadow: 0 10px 36px rgba(0,0,0,0.7);
 }
 #${PANEL_ID} .hf-rs-title {
-  font: 800 13px ui-sans-serif, system-ui, sans-serif;
+  font: 800 13px ${FONT_UI};
   color: #e8cf9a; letter-spacing: 2px; margin: 0 0 10px;
 }
 #${PANEL_ID} .hf-rs-sec {
-  font: 700 11px ui-sans-serif, system-ui, sans-serif;
+  font: 700 11px ${FONT_UI};
   color: #c4a878; letter-spacing: 1px;
   margin: 10px 0 4px; padding-top: 6px;
   border-top: 1px solid rgba(120,90,50,0.35);
@@ -136,26 +160,58 @@ const CSS = `
   margin-top: 12px; width: 100%; cursor: pointer;
   background: linear-gradient(180deg, #6a4a2a, #3a2818); color: #f0e0c0;
   border: 1px solid rgba(200,150,80,0.55); border-radius: 6px;
-  padding: 7px; font: 700 12px ui-sans-serif, system-ui, sans-serif;
+  padding: 7px; font: 700 12px ${FONT_UI};
 }
 #${VIGNETTE_ID} {
   position: absolute; inset: 0; z-index: 40; pointer-events: none;
-  /* Dark rim + faint ember wash so sunset HDR reads as forge atmosphere. */
+  /* Stronger dark rim + ember wash for Diablo-dark grade. */
   background:
-    radial-gradient(ellipse at 50% 70%, rgba(160, 48, 12, 0.14) 0%, transparent 52%),
-    radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.94) 100%);
+    radial-gradient(ellipse at 50% 70%, rgba(120, 32, 8, 0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at center, transparent 32%, rgba(0, 0, 0, 0.96) 100%);
+}
+#${HAZE_ID} {
+  position: absolute; inset: 0; z-index: 41; pointer-events: none;
+  /* Fake distance fog: heavier ash vault + horizon wash (Diablo outdoor). */
+  background:
+    linear-gradient(180deg,
+      rgba(12, 5, 4, 0.45) 0%,
+      rgba(20, 8, 5, 0.18) 22%,
+      transparent 34%,
+      rgba(42, 16, 8, 0.38) 50%,
+      rgba(22, 9, 5, 0.55) 66%,
+      rgba(8, 3, 2, 0.35) 100%),
+    radial-gradient(ellipse 130% 60% at 50% 56%,
+      rgba(48, 18, 8, 0.48) 0%,
+      rgba(22, 8, 5, 0.22) 48%,
+      transparent 74%);
 }
 `;
+
+function sanitize(partial: Partial<RenderSettings>): RenderSettings {
+  const s = { ...DEFAULTS, ...partial };
+  const scales = [0.5, 0.75, 1, 1.25, 1.5];
+  if (!scales.includes(s.renderScale)) s.renderScale = DEFAULTS.renderScale;
+  const caps = [0, 30, 60, 120];
+  if (!caps.includes(s.fpsCap)) s.fpsCap = DEFAULTS.fpsCap;
+  s.bgmVolume = clamp(Number.isFinite(s.bgmVolume) ? s.bgmVolume : DEFAULTS.bgmVolume, 0, 1);
+  s.sfxVolume = clamp(Number.isFinite(s.sfxVolume) ? s.sfxVolume : DEFAULTS.sfxVolume, 0, 1);
+  return s;
+}
 
 function load(): RenderSettings {
   try {
     if (typeof localStorage === 'undefined') return { ...DEFAULTS };
     const raw = localStorage.getItem(LS_KEY);
     if (!raw) return { ...DEFAULTS };
-    return { ...DEFAULTS, ...(JSON.parse(raw) as Partial<RenderSettings>) };
+    return sanitize(JSON.parse(raw) as Partial<RenderSettings>);
   } catch {
     return { ...DEFAULTS };
   }
+}
+
+/** Read persisted knobs before the F10 panel is installed (Title canvas sizing). */
+export function loadRenderSettings(): RenderSettings {
+  return load();
 }
 
 function save(s: RenderSettings): void {
@@ -220,7 +276,7 @@ function fmt(n: number, digits = 2): string {
 
 export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSettingsApi {
   const settings = load();
-  const { world, camera, getAspect, onLighting, onParticles, proj } = args;
+  const { world, camera, getAspect, onLighting, onParticles, onDisplay, onAudio, proj } = args;
 
   const applyCamera = (): void => {
     const clear = tempShiftClear(SKY_CLEAR, settings.atmoTemp);
@@ -243,39 +299,56 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
     });
   };
 
-  const applyVignette = (): void => {
+  const applyAtmosphereOverlay = (): void => {
     if (typeof document === 'undefined') return;
-    const el = document.getElementById(VIGNETTE_ID);
-    if (el) el.style.opacity = String(clamp(settings.vignette, 0, 0.8));
+    const v = document.getElementById(VIGNETTE_ID);
+    if (v) v.style.opacity = String(clamp(settings.vignette, 0, 0.8));
+    const h = document.getElementById(HAZE_ID);
+    if (h) h.style.opacity = String(clamp(settings.haze, 0, 1));
   };
 
-  const persistAndNotify = (opts: { lighting?: boolean; particles?: boolean }): void => {
+  const persistAndNotify = (opts: {
+    lighting?: boolean;
+    particles?: boolean;
+    display?: boolean;
+    audio?: boolean;
+  }): void => {
     save(settings);
+    // Display first so renderScale can resize the canvas before applyCamera
+    // reads getAspect().
+    if (opts.display) onDisplay?.(settings);
     applyCamera();
-    applyVignette();
+    applyAtmosphereOverlay();
     if (opts.lighting) onLighting(settings);
     if (opts.particles) onParticles(settings);
+    if (opts.audio) onAudio?.(settings);
   };
 
   if (typeof document === 'undefined') {
-    persistAndNotify({ lighting: true, particles: true });
+    persistAndNotify({ lighting: true, particles: true, display: true, audio: true });
     return {
       get: () => settings,
       applyCamera,
+      open: () => {},
+      close: () => {},
       toggle: () => {},
       dispose: () => {},
     };
   }
 
-  if (!document.getElementById(STYLE_ID)) {
-    const style = document.createElement('style');
-    style.id = STYLE_ID;
+  {
+    let style = document.getElementById(STYLE_ID) as HTMLStyleElement | null;
+    if (!style) {
+      style = document.createElement('style');
+      style.id = STYLE_ID;
+      document.head.appendChild(style);
+    }
     style.textContent = CSS;
-    document.head.appendChild(style);
   }
 
   document.getElementById(PANEL_ID)?.remove();
   document.getElementById(VIGNETTE_ID)?.remove();
+  document.getElementById(HAZE_ID)?.remove();
 
   const scoped = args.mount !== document.body;
   const posKind = scoped ? 'absolute' : 'fixed';
@@ -286,6 +359,12 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
   vignetteEl.style.opacity = String(clamp(settings.vignette, 0, 0.8));
   args.mount.appendChild(vignetteEl);
 
+  const hazeEl = document.createElement('div');
+  hazeEl.id = HAZE_ID;
+  hazeEl.style.position = posKind;
+  hazeEl.style.opacity = String(clamp(settings.haze, 0, 1));
+  args.mount.appendChild(hazeEl);
+
   const panel = document.createElement('div');
   panel.id = PANEL_ID;
   if (!scoped) panel.style.position = 'fixed';
@@ -293,8 +372,10 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
 
   type NumKey =
     | 'exposure' | 'whitePoint' | 'bloomThreshold' | 'bloomIntensity' | 'bloomBlurRadius'
-    | 'sunMul' | 'ambientMul' | 'fireMul' | 'fillMul' | 'atmoTemp' | 'vignette' | 'particleDensity';
-  type SelectKey = 'tonemap' | 'antialias' | 'particleStyle';
+    | 'sunMul' | 'ambientMul' | 'fireMul' | 'fillMul' | 'atmoTemp' | 'vignette' | 'haze'
+    | 'particleDensity' | 'bgmVolume' | 'sfxVolume';
+  type SelectKey = 'tonemap' | 'antialias' | 'particleStyle' | 'renderScale' | 'fpsCap';
+  type RowGroup = 'camera' | 'lighting' | 'particles' | 'display' | 'audio';
   type RowDef =
     | {
         kind: 'range';
@@ -304,14 +385,14 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
         max: number;
         step: number;
         digits?: number;
-        group: 'camera' | 'lighting' | 'particles';
+        group: RowGroup;
       }
     | {
         kind: 'select';
         key: SelectKey;
         label: string;
         options: Array<{ value: string; label: string }>;
-        group: 'camera' | 'lighting' | 'particles';
+        group: RowGroup;
       }
     | {
         kind: 'check';
@@ -321,6 +402,31 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
       };
 
   const rows: Array<{ sec?: string; row: RowDef }> = [
+    { sec: '音频', row: {
+      kind: 'range', key: 'bgmVolume', label: '音乐', min: 0, max: 1, step: 0.02, group: 'audio',
+    } },
+    { row: {
+      kind: 'range', key: 'sfxVolume', label: '音效', min: 0, max: 1, step: 0.02, group: 'audio',
+    } },
+    { sec: '画面', row: {
+      kind: 'select', key: 'renderScale', label: '渲染尺寸', group: 'display',
+      options: [
+        { value: '0.5', label: '50%' },
+        { value: '0.75', label: '75%' },
+        { value: '1', label: '100%' },
+        { value: '1.25', label: '125%' },
+        { value: '1.5', label: '150%' },
+      ],
+    } },
+    { row: {
+      kind: 'select', key: 'fpsCap', label: '帧速率', group: 'display',
+      options: [
+        { value: '0', label: '不限制' },
+        { value: '30', label: '30 FPS' },
+        { value: '60', label: '60 FPS' },
+        { value: '120', label: '120 FPS' },
+      ],
+    } },
     { sec: '后处理', row: {
       kind: 'select', key: 'tonemap', label: 'Tonemap', group: 'camera',
       options: [
@@ -352,6 +458,7 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
     { row: { kind: 'range', key: 'fillMul', label: '补光 ×', min: 0, max: 2, step: 0.05, group: 'lighting' } },
     { sec: '大气', row: { kind: 'range', key: 'atmoTemp', label: '色温', min: -1, max: 1, step: 0.05, group: 'lighting' } },
     { row: { kind: 'range', key: 'vignette', label: '暗角', min: 0, max: 0.8, step: 0.02, group: 'camera' } },
+    { row: { kind: 'range', key: 'haze', label: '雾气', min: 0, max: 1, step: 0.02, group: 'camera' } },
     { sec: '粒子', row: { kind: 'range', key: 'particleDensity', label: '密度', min: 0, max: 2, step: 0.05, group: 'particles' } },
     { row: {
       kind: 'select', key: 'particleStyle', label: '样式', group: 'particles',
@@ -366,7 +473,7 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
 
   const title = document.createElement('div');
   title.className = 'hf-rs-title';
-  title.textContent = '渲染设置 · F10';
+  title.textContent = '设置 · F10';
   panel.appendChild(title);
 
   const valEls = new Map<string, HTMLElement>();
@@ -375,6 +482,8 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
     persistAndNotify({
       lighting: group === 'lighting',
       particles: group === 'particles',
+      display: group === 'display',
+      audio: group === 'audio',
     });
   };
 
@@ -424,8 +533,12 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
           settings.tonemap = sel.value as RenderSettings['tonemap'];
         } else if (key === 'antialias') {
           settings.antialias = sel.value as RenderSettings['antialias'];
-        } else {
+        } else if (key === 'particleStyle') {
           settings.particleStyle = sel.value as RenderSettings['particleStyle'];
+        } else if (key === 'renderScale') {
+          settings.renderScale = parseFloat(sel.value);
+        } else if (key === 'fpsCap') {
+          settings.fpsCap = parseInt(sel.value, 10);
         }
         notifyFor(row.group);
       });
@@ -466,7 +579,7 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
         (el as HTMLInputElement).checked = settings.bloom;
       }
     }
-    persistAndNotify({ lighting: true, particles: true });
+    persistAndNotify({ lighting: true, particles: true, display: true, audio: true });
   });
   panel.appendChild(resetBtn);
 
@@ -489,17 +602,20 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
   };
   window.addEventListener('keydown', onKey);
 
-  // Apply persisted settings on install (camera + lighting + particles + vignette).
-  persistAndNotify({ lighting: true, particles: true });
+  // Apply persisted settings on install (camera + lighting + particles + display + audio).
+  persistAndNotify({ lighting: true, particles: true, display: true, audio: true });
 
   return {
     get: () => settings,
     applyCamera,
+    open,
+    close,
     toggle,
     dispose: () => {
       window.removeEventListener('keydown', onKey);
       panel.remove();
       vignetteEl.remove();
+      hazeEl.remove();
     },
   };
 }

@@ -22,6 +22,7 @@ import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { AnimationClip, Handle, SceneAsset } from '@forgeax/engine-types';
 import type { FxSystem } from './fx';
+import type { ContactShadowKit } from './contact-shadow';
 
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
 
@@ -236,6 +237,8 @@ export interface Monster {
   kbX: number; kbZ: number;
   /** Base playback speed of the current clip (before fps compensation). */
   animBase: number;
+  /** Soft ground contact disc (skinned GLBs cannot cast CSM). */
+  contactShadow: EntityHandle | null;
 }
 
 /** A flamecaller/boss fire bolt in flight (managed by MonsterManager). */
@@ -350,6 +353,13 @@ export class MonsterManager {
     instantiate<T>(h: Handle<'SceneAsset', 'shared'>, w: World, parent?: EntityHandle):
       { ok: boolean; value?: unknown; error?: { code?: string } };
   } | null = null;
+  /** Soft contact shadows for skinned (and fallback) monsters. */
+  private contact: ContactShadowKit | null = null;
+
+  /** Wire after installContactShadows — call before first spawn. */
+  setContactShadows(kit: ContactShadowKit): void {
+    this.contact = kit;
+  }
 
   constructor(private world: World, private fx: FxSystem, private events: MonsterEvents) {
     for (const def of Object.values(MONSTERS)) {
@@ -391,8 +401,9 @@ export class MonsterManager {
     loadByGuid<T>(guid: unknown): Promise<{ ok: boolean; value?: T; error?: { code?: string } }>;
     instantiate<T>(h: Handle<'SceneAsset', 'shared'>, w: World, parent?: EntityHandle):
       { ok: boolean; value?: unknown; error?: { code?: string } };
-  }): Promise<void> {
+  }): Promise<readonly MonsterKind[]> {
     this.assets = assets;
+    const loaded: MonsterKind[] = [];
     for (const [kind, def] of Object.entries(GLB_VISUALS) as [MonsterKind, typeof GLB_VISUALS[MonsterKind]][]) {
       try {
         const sceneGuid = AssetGuid.parse(def.scene);
@@ -422,11 +433,13 @@ export class MonsterManager {
         }
         if (!bank.clips.has('idle')) throw new Error('idle clip missing');
         this.glb.set(kind, bank);
+        loaded.push(kind);
       } catch (err) {
         console.warn(`[hellforge] GLB visual unavailable for ${kind} — parts fallback:`, (err as Error).message);
       }
     }
-    console.log(`[hellforge] monster GLB visuals loaded: ${[...this.glb.keys()].join(', ') || '(none)'}`);
+    console.log(`[hellforge] monster GLB visuals loaded: ${loaded.join(', ') || '(none)'}`);
+    return loaded;
   }
 
   /** Swap a GLB monster's AnimationPlayer clip (looping locomotion). */
@@ -526,6 +539,8 @@ export class MonsterManager {
       }
     }
 
+    const contactR = Math.max(0.35, Math.min(1.2, def.radius * 1.15));
+    const contactShadow = this.contact?.spawn(x, z, contactR) ?? null;
     const m: Monster = {
       e: root, kind, hp: def.hp, maxHp: def.hp, x, z,
       yaw: Math.random() * Math.PI * 2,
@@ -540,6 +555,7 @@ export class MonsterManager {
       strikeAt: 0, strikeRanged: false,
       kbX: 0, kbZ: 0,
       animBase: 1,
+      contactShadow,
     };
     this.monsters.push(m);
     return m;
@@ -584,6 +600,10 @@ export class MonsterManager {
 
   private kill(m: Monster): void {
     this.fx.gibs(m.x, 0.6, m.z, 'blood', m.kind === 'slaglord' ? 22 : 9);
+    if (m.contactShadow !== null) {
+      this.contact?.disposeEntity(m.contactShadow);
+      m.contactShadow = null;
+    }
     const bank = this.glb.get(m.kind);
     const death = m.skinEnt !== null ? bank?.clips.get('death') : undefined;
     if (death) {
@@ -604,6 +624,10 @@ export class MonsterManager {
   }
 
   private despawn(m: Monster): void {
+    if (m.contactShadow !== null) {
+      this.contact?.disposeEntity(m.contactShadow);
+      m.contactShadow = null;
+    }
     this.world.despawn(m.e);
     for (const p of m.parts) this.world.despawn(p.e);
     for (const e of m.instEntities) this.world.despawn(e);
@@ -794,6 +818,10 @@ export class MonsterManager {
         quat: [q[0]!, q[1]!, q[2]!, q[3]!],
         scale: [1, 1, 1],
       });
+      if (m.contactShadow !== null) {
+        const r = Math.max(0.35, Math.min(1.2, def.radius * 1.15));
+        this.contact?.move(m.contactShadow, m.x, m.z, r);
+      }
 
       if (isGlb) {
         // Locomotion state machine: one-shots (attack/hit) own the rig until

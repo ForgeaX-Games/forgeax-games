@@ -286,7 +286,7 @@
       0,
       20
     ],
-    "scale": 1.15,
+    "scale": 0.78,
     "rotYDeg": 17.189,
     "ground": true
   },
@@ -297,7 +297,7 @@
       0,
       26
     ],
-    "scale": 1.15,
+    "scale": 1.2,
     "rotYDeg": 63.025,
     "ground": true
   },
@@ -308,7 +308,7 @@
       0,
       17
     ],
-    "scale": 1.15,
+    "scale": 1.85,
     "rotYDeg": -245.408,
     "ground": true
   },
@@ -319,10 +319,11 @@
       0,
       14
     ],
-    "scale": 1.15,
+    "scale": 1.05,
     "rotYDeg": 40.107,
     "ground": true
   },
+
   "Crate_1": {
     "mesh": "keep",
     "scale": 0.35,

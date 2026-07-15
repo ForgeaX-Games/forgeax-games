@@ -14,6 +14,7 @@ import {
   RARITY_META, SLOT_META, SLOT_ORDER, itemTooltipLines,
   type Equipment, type Item,
 } from './items';
+import { FONT_UI, FONT_DISPLAY, Ui, panelChrome, panelTitleStyle } from './ui-theme';
 
 export interface InventoryCallbacks {
   /** Equip bag[index]; return false to reject (e.g. level requirement). */
@@ -43,19 +44,18 @@ export function installInventory(cb: InventoryCallbacks, mount: HTMLElement = do
   const root = document.createElement('div');
   root.id = PANEL_ID;
   root.style.cssText = `position:${posKind};right:18px;top:50%;transform:translateY(-50%);z-index:60;display:none;` +
-    "font:600 13px ui-sans-serif,system-ui,sans-serif;color:#e8dcc8;user-select:none;pointer-events:auto;";
+    `font:600 13px ${FONT_UI};color:${Ui.text};user-select:none;pointer-events:auto;`;
 
   const panel = document.createElement('div');
-  panel.style.cssText = 'display:flex;gap:14px;padding:14px 16px;border-radius:12px;' +
-    'background:linear-gradient(180deg,rgba(24,16,12,0.96),rgba(14,9,7,0.96));' +
-    'border:1px solid rgba(200,150,80,0.5);box-shadow:0 10px 40px rgba(0,0,0,0.7);';
+  panel.style.cssText = 'display:flex;gap:14px;padding:14px 16px;border-radius:10px;' +
+    panelChrome();
 
   // left: paper doll
   const doll = document.createElement('div');
   doll.style.cssText = 'display:flex;flex-direction:column;gap:6px;min-width:150px;';
   const dollTitle = document.createElement('div');
   dollTitle.textContent = '装备';
-  dollTitle.style.cssText = 'font:800 13px ui-sans-serif;color:#e8cf9a;letter-spacing:3px;margin-bottom:2px;';
+  dollTitle.style.cssText = panelTitleStyle() + 'font-size:13px;margin-bottom:2px;';
   doll.appendChild(dollTitle);
   const dollSlots = document.createElement('div');
   dollSlots.style.cssText = 'display:flex;flex-direction:column;gap:5px;';
@@ -65,11 +65,11 @@ export function installInventory(cb: InventoryCallbacks, mount: HTMLElement = do
   const bagCol = document.createElement('div');
   bagCol.style.cssText = 'display:flex;flex-direction:column;gap:6px;';
   const bagTitle = document.createElement('div');
-  bagTitle.style.cssText = 'font:800 13px ui-sans-serif;color:#e8cf9a;letter-spacing:3px;margin-bottom:2px;';
+  bagTitle.style.cssText = panelTitleStyle() + 'font-size:13px;margin-bottom:2px;';
   const grid = document.createElement('div');
   grid.style.cssText = 'display:grid;grid-template-columns:repeat(6,44px);grid-auto-rows:44px;gap:5px;';
   const footer = document.createElement('div');
-  footer.style.cssText = 'display:flex;justify-content:space-between;font:600 11px ui-sans-serif;color:#b9a888;margin-top:2px;';
+  footer.style.cssText = `display:flex;justify-content:space-between;font:600 11px ${FONT_UI};color:${Ui.textMuted};margin-top:2px;`;
   const goldEl = document.createElement('span');
   const hintEl = document.createElement('span');
   hintEl.textContent = '左键 穿戴 · 右键 熔毁 · B 关闭';
@@ -82,15 +82,14 @@ export function installInventory(cb: InventoryCallbacks, mount: HTMLElement = do
   // tooltip (shared, follows the hovered element)
   const tip = document.createElement('div');
   tip.style.cssText = `position:${posKind};z-index:61;display:none;max-width:460px;pointer-events:none;` +
-    'padding:10px 12px;border-radius:8px;background:rgba(10,7,5,0.96);border:1px solid rgba(200,150,80,0.55);' +
-    'font:600 12px ui-sans-serif,system-ui;line-height:1.65;box-shadow:0 6px 24px rgba(0,0,0,0.7);' +
+    `padding:10px 12px;border-radius:8px;${panelChrome(`font:600 12px ${FONT_UI};line-height:1.65;`)}` +
     'display:none;gap:16px;';
   mount.appendChild(tip);
 
   const renderTipCol = (lines: Array<[string, string]>, header?: string): string => {
     const rows = lines.map(([t, c], i) =>
       `<div style="color:${c};${i === 0 ? 'font-size:13px;font-weight:800;' : ''}">${t}</div>`).join('');
-    return `<div style="min-width:170px;">${header ? `<div style="color:#8f8474;font-size:10px;letter-spacing:2px;margin-bottom:3px;">${header}</div>` : ''}${rows}</div>`;
+    return `<div style="min-width:170px;">${header ? `<div style="color:${Ui.textDim};font-size:10px;letter-spacing:2px;margin-bottom:3px;font-family:${FONT_DISPLAY};">${header}</div>` : ''}${rows}</div>`;
   };
   const showTip = (e: MouseEvent, cols: string[]): void => {
     tip.innerHTML = cols.join('');
@@ -117,13 +116,13 @@ export function installInventory(cb: InventoryCallbacks, mount: HTMLElement = do
 
   const itemBox = (item: Item | null, size: 'slot' | 'cell'): HTMLDivElement => {
     const el = document.createElement('div');
-    const border = item ? RARITY_META[item.rarity].color : 'rgba(90,80,70,0.4)';
+    const border = item ? RARITY_META[item.rarity].color : Ui.goldLineSoft;
     if (size === 'slot') {
       el.style.cssText = `display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:8px;cursor:${item ? 'pointer' : 'default'};` +
-        `background:rgba(30,20,14,0.85);border:2px solid ${border};min-height:30px;`;
+        `background:${Ui.inkWell};border:2px solid ${border};min-height:30px;`;
     } else {
       el.style.cssText = `display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:${item ? 'pointer' : 'default'};` +
-        `background:rgba(30,20,14,0.85);border:2px solid ${border};font-size:19px;` +
+        `background:${Ui.inkWell};border:2px solid ${border};font-size:19px;` +
         (item ? '' : 'opacity:0.45;');
     }
     return el;
@@ -145,7 +144,7 @@ export function installInventory(cb: InventoryCallbacks, mount: HTMLElement = do
         label.style.cssText = `color:${RARITY_META[item.rarity].color};font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px;`;
       } else {
         label.textContent = SLOT_META[slot].label;
-        label.style.cssText = 'color:#6f655a;font-size:12px;';
+        label.style.cssText = `color:${Ui.textDim};font-size:12px;`;
       }
       el.append(icon, label);
       if (item) {

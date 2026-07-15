@@ -2,20 +2,100 @@
   "seed": 20260708,
   "groups": [
     {
-      "name": "DeadBranchL",
-      "pool": ["prop-deadtree-branch"],
-      "count": 3,
-      "area": { "kind": "rect", "x": [-20, -4], "z": [15, 26] },
-      "scale": [0.5, 0.85],
-      "minGap": 3
+      "name": "DeadTrunkHigh",
+      "pool": ["prop-deadtree-trunk"],
+      "count": 2,
+      "area": { "kind": "rect", "x": [-42, -12], "z": [24, 48] },
+      "scale": [1.55, 1.95],
+      "minGap": 6
     },
     {
-      "name": "DeadBranchR",
+      "name": "DeadTrunkHighR",
+      "pool": ["prop-deadtree-trunk"],
+      "count": 2,
+      "area": { "kind": "rect", "x": [12, 42], "z": [24, 48] },
+      "scale": [1.55, 1.95],
+      "minGap": 6
+    },
+    {
+      "name": "DeadTrunkMid",
+      "pool": ["prop-deadtree-trunk"],
+      "count": 2,
+      "area": { "kind": "rect", "x": [-36, -9], "z": [16, 38] },
+      "scale": [1.0, 1.35],
+      "minGap": 5
+    },
+    {
+      "name": "DeadTrunkMidR",
+      "pool": ["prop-deadtree-trunk"],
+      "count": 2,
+      "area": { "kind": "rect", "x": [9, 36], "z": [16, 38] },
+      "scale": [1.0, 1.35],
+      "minGap": 5
+    },
+    {
+      "name": "DeadTrunkLow",
+      "pool": ["prop-deadtree-trunk"],
+      "count": 2,
+      "area": { "kind": "rect", "x": [-32, -7], "z": [14, 30] },
+      "scale": [0.65, 0.9],
+      "minGap": 4
+    },
+    {
+      "name": "DeadTrunkLowR",
+      "pool": ["prop-deadtree-trunk"],
+      "count": 2,
+      "area": { "kind": "rect", "x": [7, 32], "z": [14, 30] },
+      "scale": [0.65, 0.9],
+      "minGap": 4
+    },
+    {
+      "name": "DeadBranchLowL",
       "pool": ["prop-deadtree-branch"],
       "count": 3,
-      "area": { "kind": "rect", "x": [4, 20], "z": [15, 26] },
-      "scale": [0.5, 0.85],
-      "minGap": 3
+      "area": { "kind": "rect", "x": [-34, -5], "z": [14, 34] },
+      "scale": [0.38, 0.55],
+      "minGap": 2.4
+    },
+    {
+      "name": "DeadBranchLowR",
+      "pool": ["prop-deadtree-branch"],
+      "count": 3,
+      "area": { "kind": "rect", "x": [5, 34], "z": [14, 34] },
+      "scale": [0.38, 0.55],
+      "minGap": 2.4
+    },
+    {
+      "name": "DeadBranchMidL",
+      "pool": ["prop-deadtree-branch"],
+      "count": 3,
+      "area": { "kind": "rect", "x": [-32, -4], "z": [16, 38] },
+      "scale": [0.7, 0.95],
+      "minGap": 2.8
+    },
+    {
+      "name": "DeadBranchMidR",
+      "pool": ["prop-deadtree-branch"],
+      "count": 3,
+      "area": { "kind": "rect", "x": [4, 32], "z": [16, 38] },
+      "scale": [0.7, 0.95],
+      "minGap": 2.8
+    },
+    {
+      "name": "DeadBranchHighL",
+      "pool": ["prop-deadtree-branch"],
+      "count": 2,
+      "area": { "kind": "rect", "x": [-38, -8], "z": [20, 44] },
+      "scale": [1.15, 1.5],
+      "minGap": 3.2
+    },
+    {
+      "name": "DeadBranchHighR",
+      "pool": ["prop-deadtree-branch"],
+      "count": 2,
+      "area": { "kind": "rect", "x": [8, 38], "z": [20, 44] },
+      "scale": [1.15, 1.5],
+      "minGap": 3.2
     },
     {
       "name": "WildBoulderL",
@@ -48,6 +128,62 @@
       "area": { "kind": "ring", "center": [0, 0], "rMin": 1.15, "rMax": 1.9 },
       "scale": [0.35, 0.5],
       "minGap": 0.8
+    },
+    {
+      "name": "CampEmberN",
+      "pool": ["prop-embercrack"],
+      "count": 4,
+      "area": { "kind": "rect", "x": [-7, 7], "z": [3.5, 10] },
+      "scale": [0.4, 0.7],
+      "minGap": 2.4
+    },
+    {
+      "name": "CampEmberS",
+      "pool": ["prop-embercrack"],
+      "count": 3,
+      "area": { "kind": "rect", "x": [-7, 7], "z": [-10, -3.5] },
+      "scale": [0.4, 0.65],
+      "minGap": 2.4
+    },
+    {
+      "name": "CampEmberE",
+      "pool": ["prop-embercrack"],
+      "count": 3,
+      "area": { "kind": "rect", "x": [4, 10], "z": [-5, 5] },
+      "scale": [0.35, 0.6],
+      "minGap": 2.2
+    },
+    {
+      "name": "CampEmberW",
+      "pool": ["prop-embercrack"],
+      "count": 3,
+      "area": { "kind": "rect", "x": [-10, -4], "z": [-5, 5] },
+      "scale": [0.35, 0.6],
+      "minGap": 2.2
+    },
+    {
+      "name": "CampBoulderRing",
+      "pool": ["prop-boulder"],
+      "count": 6,
+      "area": { "kind": "ring", "center": [0, 0], "rMin": 4.5, "rMax": 11 },
+      "scale": [0.14, 0.32],
+      "minGap": 2.6
+    },
+    {
+      "name": "CampCrateEdgeW",
+      "pool": ["prop-crate"],
+      "count": 2,
+      "area": { "kind": "rect", "x": [-9.5, -6.5], "z": [-7.5, -4] },
+      "scale": [0.26, 0.36],
+      "minGap": 1.1
+    },
+    {
+      "name": "CampLogEdgeE",
+      "pool": ["prop-campfire-log"],
+      "count": 3,
+      "area": { "kind": "rect", "x": [5.5, 9], "z": [-8, -4.5] },
+      "scale": [0.32, 0.48],
+      "minGap": 1.0
     }
   ]
 }

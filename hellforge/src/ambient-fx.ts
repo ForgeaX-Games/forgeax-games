@@ -31,18 +31,19 @@ const MAX_TOTAL = 900;
 const LOW_END_CAP = 40;
 
 const COLOR: Record<LayerKind, readonly [number, number, number, number]> = {
-  ember: [2.0, 0.75, 0.20, 1],
-  // Was [0.32,0.28,0.26] — silhouetted as hard black squares against bright HDR sky.
-  ash: [0.62, 0.52, 0.44, 1],
+  // Soft ember glow (still blooms) — avoid harsh neon squares on dark vault.
+  ember: [1.35, 0.48, 0.14, 1],
+  // Dim warm ash dust against dark sky (not bright chalk cubes).
+  ash: [0.38, 0.28, 0.22, 1],
   snow: [0.85, 0.90, 1.05, 1],
 };
 
 /** Area multipliers for style === 'auto'. */
 const AUTO_MULT: Record<AmbientArea, Record<LayerKind, number>> = {
-  // Camp: keep embers, cut ash — dark cubes against sunset sky read as a "black matrix".
-  camp: { ember: 0.55, ash: 0.15, snow: 0 },
-  wild: { ember: 1, ash: 0.45, snow: 0 },
-  den: { ember: 1.4, ash: 0.35, snow: 0 },
+  // Fewer bright motes — dark vault must not look like a neon particle field.
+  camp: { ember: 0.35, ash: 0.22, snow: 0 },
+  wild: { ember: 0.55, ash: 0.50, snow: 0 },
+  den: { ember: 1.1, ash: 0.30, snow: 0 },
 };
 
 function detectStorageBuffer(app: unknown): boolean {

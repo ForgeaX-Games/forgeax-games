@@ -135,13 +135,14 @@ export class SkillSystem {
   private projectiles: Projectile[] = [];
   private mats = new Map<SkillId, { main: MatHandle; accent: MatHandle }>();
   /** Cooldown remaining per skill index (HUD reads this). */
-  readonly cooldowns: number[] = SKILLS.map(() => 0);
+  readonly cooldowns: number[];
   /** Equipment-driven modifiers (main.ts recomputes on equip change).
    *  dmgMul is global; fire/frost/arc multiply their own skill only;
    *  critChance/critMul ADD to the base crit numbers. */
   mods = { dmgMul: 1, cdrMul: 1, fireMul: 1, frostMul: 1, arcMul: 1, critChance: 0, critMul: 0 };
 
-  constructor(private world: World, private fx: FxSystem, private hooks: SkillHooks) {
+  constructor(private world: World, private fx: FxSystem, private hooks: SkillHooks, private skills: SkillDef[]) {
+    this.cooldowns = skills.map(() => 0);
     const mk = (color: [number, number, number, number], emissive: [number, number, number], i: number) =>
       world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', Materials.standard({
         baseColor: color, roughness: 0.35, metallic: 0.1,
@@ -156,7 +157,7 @@ export class SkillSystem {
   }
 
   unlocked(idx: number, level: number): boolean {
-    const def = SKILLS[idx];
+    const def = this.skills[idx];
     return !!def && level >= def.unlockLevel;
   }
 
@@ -166,7 +167,7 @@ export class SkillSystem {
    * attack clip and turns the witch.
    */
   cast(idx: number, ox: number, oz: number, aimX: number, aimZ: number, player: PlayerStats): CastResult {
-    const def = SKILLS[idx];
+    const def = this.skills[idx];
     if (!def) return 'locked';
     if (player.dead) return 'dead';
     if (player.level < def.unlockLevel) return 'locked';

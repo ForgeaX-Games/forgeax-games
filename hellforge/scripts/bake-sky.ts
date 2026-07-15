@@ -1,16 +1,16 @@
-// bake-sky.ts — procedural HELLISH equirectangular HDR sky for Hellforge.
-// Dark smoke-ceiling zenith → bright lava-glow horizon band → dark nadir, with a
-// seamless fbm cloud layer and bright HDR lava hotspots (values > 1 so they glow
-// through the game's ACES tonemap and drive a warm IBL key).
+// bake-sky.ts — Diablo / dungeon-exterior equirect sky for Hellforge.
+// Art direction: ash-smoke vault, oxblood dusk, NEVER a bright Belfast sunset.
+// Values stay mostly LDR (< 0.5) so ACES + IBL cannot bleach the camp hills.
+// Blood moon is baked into the equirect (celestial, not camera-glued) — pure
+// red disk + soft 辉光. Matches engine sampleSphericalMap + skybox Y-flip:
+//   uv = atan2(z,x)/(2π)+0.5 , asin(y)/(π)+0.5  on dir=(Wx, -Wy, Wz)
+// Camp DirectionalLight must use -moonWorldDir (see BLOOD_MOON_SUN_DIR).
 //
 // Drop-in: overwrites assets/sky.hdr in place — same path, same GUID
-// (c4061caa via sky.hdr.meta.json), so installHdrSky needs zero changes. The
-// engine loads EquirectAsset and projects internally (Skylight + SkyboxBackground).
+// (c4061caa via sky.hdr.meta.json), so installHdrSky needs zero changes.
 //
-// Run from repo root or anywhere:
-//   bun run packages/games/hellforge/scripts/bake-sky.ts
-// Output format matches the previous asset: new-RLE Radiance HDR, -Y 512 +X 1024.
-// (Visible sky-dome GLB bake removed — Play uses native SkyboxBackground.)
+//   bun run hellforge/scripts/bake-sky.ts   # from packages/games
+// Output: new-RLE Radiance HDR, -Y 512 +X 1024.
 
 import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -66,16 +66,18 @@ function sstep(a: number, b: number, x: number): number {
   return t * t * (3 - 2 * t);
 }
 
-// ── latitude gradient (v: 0 = zenith top … 0.5 = horizon … 1 = nadir) ───────
+// ── latitude gradient (v: 0 = zenith … 0.5 = horizon … 1 = nadir) ───────────
 type RGB = [number, number, number];
+// Art direction (主美): dungeon / Diablo outdoor vault — ash-smoke ceiling and
+// dull blood dusk. NO bright Belfast sunset, NO HDR lava cracks that ACES bleaches.
 const KEYS: Array<[number, RGB]> = [
-  [0.00, [0.07, 0.018, 0.010]],  // zenith — dark ember red (bright enough clouds read)
-  [0.22, [0.22, 0.055, 0.022]],  // upper sky — smoky red-brown
-  [0.40, [0.75, 0.22, 0.06]],    // mid — ember warmth building
-  [0.50, [2.8, 0.78, 0.14]],     // HORIZON lava band — bright HDR glow
-  [0.57, [1.0, 0.27, 0.06]],     // just below horizon
-  [0.72, [0.16, 0.045, 0.02]],   // lower — darkening (ground covers this)
-  [1.00, [0.03, 0.01, 0.006]],   // nadir — near black
+  [0.00, [0.028, 0.012, 0.009]], // zenith — readable ash (not void black)
+  [0.20, [0.06, 0.024, 0.015]],  // upper — dense smoke brown
+  [0.38, [0.11, 0.038, 0.020]],  // mid — murky blood-brown
+  [0.50, [0.18, 0.055, 0.028]],  // horizon — dull ember dusk (still LDR)
+  [0.58, [0.11, 0.032, 0.016]],  // below horizon
+  [0.75, [0.045, 0.016, 0.010]], // lower
+  [1.00, [0.016, 0.007, 0.005]], // nadir
 ];
 function gradient(v: number): RGB {
   for (let i = 0; i < KEYS.length - 1; i++) {
@@ -88,52 +90,70 @@ function gradient(v: number): RGB {
   return KEYS[KEYS.length - 1]![1];
 }
 
+// ── blood moon (celestial UV → world look-dir; keep in sync with main.ts) ──
+// v: 0 = zenith … 0.5 = horizon … 1 = nadir (file / bake space).
+const BLOOD_MOON_U = 0.68;
+const BLOOD_MOON_V = 0.36; // above horizon, in the smoke vault
+const BLOOD_MOON_CORE_RAD = 0.028; // ~1.6°
+const BLOOD_MOON_GLOW_RAD = 0.11;  // soft 辉光
+
+/** World direction the player looks to see bake UV (skybox + sampleSphericalMap). */
+function uvToWorldDir(u: number, v: number): [number, number, number] {
+  const theta = (u - 0.5) * 2 * Math.PI;
+  const elev = (v - 0.5) * Math.PI; // asin(-Wy) in sampleSphericalMap space
+  const cosE = Math.cos(elev);
+  const wy = -Math.sin(elev);
+  const wx = cosE * Math.cos(theta);
+  const wz = cosE * Math.sin(theta);
+  return [wx, wy, wz];
+}
+
+const MOON_DIR = uvToWorldDir(BLOOD_MOON_U, BLOOD_MOON_V);
+/** DirectionalLight.direction = light travel = −moon (copy into main SUN_LOOK.camp). */
+export const BLOOD_MOON_SUN_DIR: [number, number, number] = [
+  -MOON_DIR[0], -MOON_DIR[1], -MOON_DIR[2],
+];
+
+function bloodMoon(u: number, v: number): RGB {
+  const d = uvToWorldDir(u, v);
+  const dot = d[0]! * MOON_DIR[0]! + d[1]! * MOON_DIR[1]! + d[2]! * MOON_DIR[2]!;
+  const ang = Math.acos(Math.max(-1, Math.min(1, dot)));
+  // Solid pure-red core.
+  const core = sstep(BLOOD_MOON_CORE_RAD, BLOOD_MOON_CORE_RAD * 0.55, ang);
+  // Soft red corona (辉光) — no green/blue wash.
+  const glow = Math.exp(-Math.pow(ang / BLOOD_MOON_GLOW_RAD, 2));
+  const r = 2.4 * core + 0.85 * glow * (1 - core * 0.85);
+  return [r, 0.02 * glow, 0.01 * glow];
+}
+
 // ── hell sky color at (u, v) ────────────────────────────────────────────────
 function skyColor(u: number, v: number): RGB {
   const base = gradient(v);
 
-  // Cloud layer: two seamless fbm octave-sets — broad formations + finer wisps —
-  // combined for structure. High = lava-lit breaks (brighten toward gold),
-  // low = dense smoke (darken toward oxblood). Sharp smoothstep = defined edges.
+  // Soft smoke structure — darken into clouds, never blow out bright breaks.
   const broad = fbm(u, v, 5, 2.2, 2.6);
   const fine = fbm(u + 19.4, v, 4, 5.0, 6.5);
-  const cloud = sstep(0.34, 0.72, broad * 0.7 + fine * 0.3);
-  // Pole fade: equirect longitude lines converge at the zenith/nadir, so full-
-  // contrast clouds there pinch into an artificial starburst. Fade the cloud
-  // modulation toward both poles so the caps read as smooth smoke.
+  const cloud = sstep(0.30, 0.68, broad * 0.7 + fine * 0.3);
   const poleFade = sstep(0.02, 0.17, v) * sstep(0.02, 0.17, 1 - v);
-  const cloudMul = 1 + (0.28 + 2.05 * cloud - 1) * poleFade; // →1 (base) at poles
+  // cloudMul ∈ ~[0.55, 1.08] — mostly darkens; tiny lift in thin spots.
+  const cloudMul = 1 + (0.55 + 0.53 * cloud - 1) * poleFade;
 
   let r = base[0] * cloudMul;
   let g = base[1] * cloudMul;
   let b = base[2] * cloudMul;
 
-  // Bright cloud breaks skew warmer (lava light spilling through) — lift G a bit
-  // so the brightest parts read gold-orange, not just brighter red.
-  const breakGlow = sstep(0.62, 0.95, cloud) * poleFade;
-  g += base[1] * breakGlow * 1.4;
+  // Dim oxblood fill around the moon longitude (IBL key, not a second sun).
+  const du = Math.min(Math.abs(u - BLOOD_MOON_U), 1 - Math.abs(u - BLOOD_MOON_U));
+  const key = Math.exp(-Math.pow(du / 0.28, 2)) * Math.exp(-Math.pow((v - 0.48) / 0.16, 2));
+  r += 0.10 * key;
+  g += 0.015 * key;
+  b += 0.008 * key;
 
-  // Lava hotspots: finer noise, gated to a wide band around the horizon, squared
-  // for sparse bright cracks. Additive warm HDR → bloom + strong warm IBL key.
-  const horizonMask = Math.exp(-Math.pow((v - 0.5) / 0.20, 2)); // peak at horizon, wide
-  const hotN = sstep(0.60, 0.90, fbm(u + 5.2, v, 5, 5.0, 6.0));
-  const hot = Math.pow(hotN, 2) * horizonMask;
-  r += 5.0 * hot;
-  g += 1.5 * hot;
-  b += 0.22 * hot;
+  const moon = bloodMoon(u, v);
+  r += moon[0]; g += moon[1]; b += moon[2];
 
-  // Distant eruption glow — a soft broad warm light source at one longitude
-  // near the horizon, so the IBL has a clear directional key (not flat ambient).
-  const du = Math.min(Math.abs(u - 0.62), 1 - Math.abs(u - 0.62)); // wrapped dist
-  const erupt = Math.exp(-Math.pow(du / 0.16, 2)) * Math.exp(-Math.pow((v - 0.52) / 0.10, 2));
-  r += 3.0 * erupt;
-  g += 0.9 * erupt;
-  b += 0.12 * erupt;
-
-  // Faint high-altitude ash haze desaturates the very top a touch (keeps it from
-  // going pure black — reads as smoke, not void).
-  const haze = sstep(0.0, 0.25, 0.25 - v) * 0.012;
-  r += haze; g += haze * 0.5; b += haze * 0.4;
+  const haze = sstep(0.0, 0.22, 0.22 - v) * 0.008;
+  r += haze; g += haze * 0.55; b += haze * 0.4;
 
   return [Math.max(0, r), Math.max(0, g), Math.max(0, b)];
 }
@@ -189,3 +209,7 @@ for (let y = 0; y < H; y++) {
 
 writeFileSync(outPath, buf);
 console.log(`[bake-sky] wrote ${outPath} — ${W}×${H} hellish equirect HDR (IBL), ${buf.length} bytes`);
+console.log(
+  `[bake-sky] blood moon UV=(${BLOOD_MOON_U}, ${BLOOD_MOON_V}) → SUN_LOOK.camp.direction = [`
+    + `${BLOOD_MOON_SUN_DIR.map((x) => x.toFixed(4)).join(', ')}]`,
+);

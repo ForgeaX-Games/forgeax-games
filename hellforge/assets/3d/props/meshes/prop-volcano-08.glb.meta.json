@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-volcano-08.glb",
+  "importSettings": {
+    "defaultSceneIndex": 0
+  },
+  "subAssets": [
+    {
+      "guid": "dbaaa833-3e80-ea76-31bf-a70218a9beb8",
+      "sourceIndex": 0,
+      "kind": "mesh",
+      "name": "volcano"
+    },
+    {
+      "guid": "d2d867c4-ae6b-1b50-1db6-7c5e277c1ce5",
+      "sourceIndex": 0,
+      "kind": "material",
+      "name": "volcano-stub"
+    },
+    {
+      "guid": "f7fadd22-c1c1-edb7-7090-c1189026aa84",
+      "sourceIndex": 0,
+      "kind": "scene",
+      "name": "scene"
+    }
+  ]
+}

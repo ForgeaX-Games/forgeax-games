@@ -162,7 +162,16 @@ const entities = layout.geometry.flatMap((g) => {
   const bb0 = poolBBox(g.kind, 0);  // primary-variant bbox (floorGrid uses variant 0 only)
 
   if (policy === 'floorGrid') {
-    const segs = tileGrid(slot, bb0);
+    // tileGrid bottom-aligns the panel to slot.pos[1]. Layout floors store the
+    // slab CENTRE (top at y=0 → centre = -sy/2); passing that centre made the
+    // mesh top sit ~half-thickness above the walk plane → feet clipped into
+    // stone. Pass the slab bottom so the walk surface lands at y=0.
+    const floorSlot = {
+      pos: [g.x, g.y - g.sy / 2, g.z] as [number, number, number],
+      size: slot.size,
+      rotYDeg: slot.rotYDeg,
+    };
+    const segs = tileGrid(floorSlot, bb0);
     return segs.map((s, j) => {
       // Per-segment 90° rotation: floor-b is a 2×2 square tile, so 90° steps
       // preserve the footprint and only rotate the mesh — breaks the grid look
@@ -313,4 +322,16 @@ const byPolicy: Record<string, number> = {};
 for (const g of layout.geometry) byPolicy[POLICY[g.kind]] = (byPolicy[POLICY[g.kind]] ?? 0) + 1;
 console.log(`baked ${entities.length} entities (${layout.roomCount} rooms, seed ${DUNGEON_SEED}) → ${out}`);
 console.log(`  policies: ${JSON.stringify(byPolicy)}`);
+
+// bake writes flat placeholder mats (MATS.*); without this step walls/floors
+// render clay-smooth (no albedo/normal). Same command the header documents.
+const fix = Bun.spawnSync(['bun', 'scripts/fix-prop-materials.ts', out], {
+  cwd: gameRoot,
+  stdout: 'inherit',
+  stderr: 'inherit',
+});
+if (fix.exitCode !== 0) {
+  throw new Error(`fix-prop-materials failed (exit ${fix.exitCode}) — den will look flat`);
+}
+
 remindReload(out);

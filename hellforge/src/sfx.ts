@@ -19,6 +19,9 @@ export class Sfx {
   private ctx: AudioContext | null = null;
   private master: GainNode | null = null;
   private lastAt = new Map<SfxName, number>();
+  /** User-facing 0..1 (F10 「音效」); scales BASE_GAIN. */
+  private volume = 1;
+  private static readonly BASE_GAIN = 0.42;
 
   /** Arm the context on the first user gesture (autoplay policy). */
   install(): void {
@@ -27,7 +30,7 @@ export class Sfx {
       try {
         this.ctx = new AudioContext();
         this.master = this.ctx.createGain();
-        this.master.gain.value = 0.35;
+        this.master.gain.value = Sfx.BASE_GAIN * this.volume;
         this.master.connect(this.ctx.destination);
       } catch { /* no audio — fine */ }
       window.removeEventListener('pointerdown', arm);
@@ -35,6 +38,12 @@ export class Sfx {
     };
     window.addEventListener('pointerdown', arm);
     window.addEventListener('keydown', arm);
+  }
+
+  /** 0..1 — applied immediately if AudioContext is already armed. */
+  setVolume(v: number): void {
+    this.volume = v < 0 ? 0 : v > 1 ? 1 : v;
+    if (this.master) this.master.gain.value = Sfx.BASE_GAIN * this.volume;
   }
 
   /** Rate-limited play (default ≥45 ms between repeats of the same sfx). */

@@ -1,14 +1,18 @@
-// bake-ground.ts — 50×50m tiled ground plane with AI dirt/path PBR (from prop-path
-// textures). Replaces the plain CUBE Ground with prop-ground.glb + sidecar.
+// bake-ground.ts — tiled ground plane with softened seamless albedo (from
+// prop-ground.base_color.png, derived from prop-path via soften-ground-albedo.py).
+// Replaces the plain CUBE Ground with prop-ground.glb + sidecar.
 //
 // Run from hellforge game root:
 //   cd packages/games/hellforge
+//   python3 scripts/soften-ground-albedo.py   # if albedo missing/stale
 //   bun scripts/bake-ground.ts [scene-pack.json]
 //
-// UV repeat = groundSize / tileSize (~25× for 2m path tiles on 50m field).
+// UV repeat = groundSize / tileSize (~30× for 4m tiles on 120m field).
+// Keep GROUND_SIZE in sync with wild-terrain.ts GROUND_HALF (= size/2) and
+// main.ts WILD_BOUNDS (walkable rim inside the visual apron).
 
 import { createHash } from 'node:crypto';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -19,8 +23,8 @@ import {
 const gameRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const packPath = process.argv[2] ?? join(gameRoot, 'assets', 'scenes', 'rogue-encampment.pack.json');
 
-const GROUND_SIZE = 50;   // metres (matches original Ground scale x/z)
-const TILE_SIZE = 2;      // prop-path natural tile width ≈ 2m
+const GROUND_SIZE = 120;  // metres — wide ashen apron; hills sit past the rim
+const TILE_SIZE = 4;      // larger tiles → fewer repeats; breaks grid repetition
 const UV_REPEAT = GROUND_SIZE / TILE_SIZE;
 
 const meshesDir = join(gameRoot, 'assets', '3d', 'props', 'meshes');
@@ -44,7 +48,11 @@ function buildGroundGlb(outPath: string): Buffer {
   // the top-down camera sees the culled back face → the ground never draws
   // ("地板空白"). [0,2,1,0,3,2] flips it front-up.
   const idx = new Uint32Array([0, 2, 1, 0, 3, 2]);
-  const png = readFileSync(join(meshesDir, 'prop-path.base_color.png'));
+  // Prefer softened seamless ground albedo; fall back to path tile if missing.
+  const groundAlbedo = join(meshesDir, 'prop-ground.base_color.png');
+  const pathAlbedo = join(meshesDir, 'prop-path.base_color.png');
+  const albedoPath = existsSync(groundAlbedo) ? groundAlbedo : pathAlbedo;
+  const png = readFileSync(albedoPath);
 
   const posBytes = Buffer.from(pos.buffer, pos.byteOffset, pos.byteLength);
   const uvBytes = Buffer.from(uv.buffer, uv.byteOffset, uv.byteLength);
@@ -159,7 +167,10 @@ function patchGroundEntity(packPath: string): void {
 
 // ── main ────────────────────────────────────────────────────────────────────
 const glbPath = join(meshesDir, 'prop-ground.glb');
-console.log(`bake-ground: ${GROUND_SIZE}m plane, UV 0–${UV_REPEAT} (≈${TILE_SIZE}m tiles)`);
+const albedoNote = existsSync(join(meshesDir, 'prop-ground.base_color.png'))
+  ? 'prop-ground.base_color.png'
+  : 'prop-path.base_color.png (fallback)';
+console.log(`bake-ground: ${GROUND_SIZE}m plane, UV 0–${UV_REPEAT} (≈${TILE_SIZE}m tiles), albedo=${albedoNote}`);
 
 const glbBytes = buildGroundGlb(glbPath);
 console.log(`  wrote ${glbPath} (${(glbBytes.length / 1e6).toFixed(1)} MB)`);

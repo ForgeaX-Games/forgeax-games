@@ -76,7 +76,7 @@ export class Dungeon {
     loadByGuid<T>(guid: unknown): Promise<{ ok: boolean; value?: T; error?: { code?: string } }>;
     instantiate<T>(h: Handle<'SceneAsset', 'shared'>, w: World, parent?: EntityHandle):
       { ok: boolean; value?: unknown; error?: { code?: string } };
-  }): Promise<void> {
+  }): Promise<'pack' | 'fallback'> {
     if (assets) {
       try {
         const g = AssetGuid.parse(DUNGEON_SCENE_GUID);
@@ -91,7 +91,7 @@ export class Dungeon {
               const inst = assets.instantiate<SceneAsset>(handle, this.world, rootRes.value as EntityHandle);
               if (inst.ok) {
                 console.log('[hellforge] den geometry: baked scene pack (slagdeep-hollow)');
-                return;
+                return 'pack';
               }
             }
           }
@@ -102,6 +102,7 @@ export class Dungeon {
     }
     this.spawnGeometryFallback();
     console.log('[hellforge] den geometry: runtime fallback spawn');
+    return 'fallback';
   }
 
   /** World-space walkability (small square footprint so hugging walls works). */
@@ -119,6 +120,25 @@ export class Dungeon {
   contains(wx: number, wz: number): boolean {
     return Math.abs(wx - DUNGEON_ORIGIN.x) < (CELLS / 2 + 2) * CELL
         && Math.abs(wz - DUNGEON_ORIGIN.z) < (CELLS / 2 + 2) * CELL;
+  }
+
+  /** Grid cell for a world point, or null if outside the den grid. */
+  worldToCell(wx: number, wz: number): { cx: number; cy: number } | null {
+    const cx = Math.floor((wx - DUNGEON_ORIGIN.x) / CELL + CELLS / 2);
+    const cy = Math.floor((wz - DUNGEON_ORIGIN.z) / CELL + CELLS / 2);
+    if (cx < 0 || cy < 0 || cx >= CELLS || cy >= CELLS) return null;
+    return { cx, cy };
+  }
+
+  /** Walkability of a single grid cell (no footprint pad). */
+  isWalkCell(cx: number, cy: number): boolean {
+    if (cx < 0 || cy < 0 || cx >= CELLS || cy >= CELLS) return false;
+    return !!this.layout.walk[cy * CELLS + cx];
+  }
+
+  /** Raw walk grid (CELLS×CELLS) — automap reads this read-only. */
+  getWalkGrid(): Uint8Array {
+    return this.layout.walk;
   }
 
   /** Runtime geometry spawn from the layout (same primitives the bake writes). */

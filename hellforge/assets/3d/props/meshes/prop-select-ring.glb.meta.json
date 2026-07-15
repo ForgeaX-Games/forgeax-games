@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "prop-select-ring.glb",
+  "importSettings": {
+    "defaultSceneIndex": 0
+  },
+  "subAssets": [
+    {
+      "guid": "1ada3896-0ee6-3468-d185-6ba3161bf8e2",
+      "sourceIndex": 0,
+      "kind": "mesh",
+      "name": "select-ring"
+    },
+    {
+      "guid": "fe3600bf-4c3c-15ad-7aa5-517384e7c7a8",
+      "sourceIndex": 0,
+      "kind": "material",
+      "name": "select-ring-gold"
+    },
+    {
+      "guid": "eed56d05-a3c9-d347-1513-8aaab21ac029",
+      "sourceIndex": 0,
+      "kind": "scene",
+      "name": "scene"
+    }
+  ]
+}

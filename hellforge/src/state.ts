@@ -4,7 +4,12 @@
 // (damage → hp), loot (xp/gold/potions) and hud (render). Pure data + a few
 // curve helpers; no ECS access so it stays trivially testable.
 
+import type { ClassId } from './classes';
+import { growthForLevel } from './classes';
+import { getHeroDef } from './heroes';
+
 export interface PlayerStats {
+  heroId: ClassId;
   hp: number;
   maxHp: number;
   mana: number;
@@ -26,10 +31,12 @@ export function xpForLevel(level: number): number {
   return Math.floor(60 * Math.pow(1.45, level - 1));
 }
 
-export function createPlayer(): PlayerStats {
+export function createPlayer(heroId: ClassId): PlayerStats {
+  const hero = getHeroDef(heroId);
   return {
-    hp: 80, maxHp: 80,
-    mana: 50, maxMana: 50, manaRegen: 5,
+    heroId,
+    hp: hero.baseStats.hp, maxHp: hero.baseStats.hp,
+    mana: hero.baseStats.mp, maxMana: hero.baseStats.mp, manaRegen: 5,
     hpRegen: 0,
     xp: 0, xpMax: xpForLevel(1),
     level: 1, gold: 0, kills: 0,
@@ -38,17 +45,39 @@ export function createPlayer(): PlayerStats {
   };
 }
 
+/**
+ * Seeds a PlayerStats at a saved level by walking the same per-level growth
+ * grantXp applies internally, without requiring the XP grind. Used by
+ * CharList's "continue" flow — createPlayer alone always starts at level 1.
+ */
+export function createPlayerAtLevel(heroId: ClassId, level: number): PlayerStats {
+  const p = createPlayer(heroId);
+  if (level <= 1) return p;
+  const growth = getHeroDef(heroId).growth;
+  for (let lv = 2; lv <= level; lv++) {
+    const { hp, mp } = growthForLevel(lv, growth);
+    p.maxHp += hp;
+    p.maxMana += mp;
+  }
+  p.level = level;
+  p.xpMax = xpForLevel(level);
+  p.hp = p.maxHp;
+  p.mana = p.maxMana;
+  return p;
+}
+
 export interface LevelUpResult { level: number; hpGain: number; manaGain: number }
 
 /** Add xp; apply any level-ups (possibly several). Returns them for HUD FX. */
 export function grantXp(p: PlayerStats, xp: number): LevelUpResult[] {
   const ups: LevelUpResult[] = [];
+  const growth = getHeroDef(p.heroId).growth;
   p.xp += xp;
   while (p.xp >= p.xpMax) {
     p.xp -= p.xpMax;
     p.level += 1;
     p.xpMax = xpForLevel(p.level);
-    const hpGain = 14, manaGain = 9;
+    const { hp: hpGain, mp: manaGain } = growthForLevel(p.level, growth);
     p.maxHp += hpGain;
     p.maxMana += manaGain;
     p.hp = p.maxHp;          // D2 ding = full heal, feels great
