@@ -3,6 +3,7 @@
 // 360° yaw) shows through on the WebGPU canvas beneath.
 
 import { getClassDef, SELECTABLE_CLASS_IDS, type CharacterRecord, type ClassId } from './classes';
+import { isPlayableClass } from './character-domain';
 import { DEFAULT_HERO_ID } from './heroes';
 import { createCharacter, listCharacters, MAX_CHARACTERS } from './save';
 import { FONT_UI } from './ui-theme';
@@ -88,15 +89,23 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
   const classBtns = new Map<ClassId, HTMLButtonElement>();
   const styleClassBtn = (btn: HTMLButtonElement, id: ClassId, active: boolean): void => {
     const def = getClassDef(id);
-    btn.innerHTML = `<div style="font-size:28px;line-height:1">${def.icon}</div>` +
-      `<div style="font:700 13px inherit;letter-spacing:2px;margin-top:6px">${def.name}</div>`;
-    btn.style.cssText = 'flex:1;min-width:0;padding:12px 8px;cursor:pointer;border-radius:8px;' +
-      `color:${active ? '#ffe8a0' : '#b0a090'};text-align:center;transition:all 0.2s;` +
-      `background:${active
+    const playable = isPlayableClass(id);
+    btn.innerHTML = `<div style="font-size:28px;line-height:1;opacity:${playable ? '1' : '0.45'}">${def.icon}</div>` +
+      `<div style="font:700 13px inherit;letter-spacing:2px;margin-top:6px;opacity:${playable ? '1' : '0.55'}">${def.name}</div>` +
+      (playable
+        ? ''
+        : `<div style="font:600 10px inherit;letter-spacing:1px;margin-top:6px;color:#8a7060">开发中</div>`);
+    btn.disabled = !playable;
+    btn.title = playable ? '' : 'In development';
+    btn.style.cssText = 'flex:1;min-width:0;padding:12px 8px;border-radius:8px;' +
+      `cursor:${playable ? 'pointer' : 'not-allowed'};` +
+      `color:${active && playable ? '#ffe8a0' : '#b0a090'};text-align:center;transition:all 0.2s;` +
+      `background:${active && playable
         ? 'linear-gradient(180deg,rgba(70,48,22,0.95),rgba(40,28,14,0.98))'
         : 'linear-gradient(180deg,rgba(35,28,22,0.85),rgba(18,14,12,0.9))'};` +
-      `border:2px solid ${active ? 'rgba(220,170,70,0.85)' : 'rgba(120,95,60,0.45)'};` +
-      `box-shadow:${active ? '0 0 18px rgba(200,140,50,0.35)' : 'none'};`;
+      `border:2px solid ${active && playable ? 'rgba(220,170,70,0.85)' : 'rgba(120,95,60,0.45)'};` +
+      `box-shadow:${active && playable ? '0 0 18px rgba(200,140,50,0.35)' : 'none'};` +
+      `opacity:${playable ? '1' : '0.72'};`;
   };
 
   for (const id of SELECTABLE_CLASS_IDS) {
@@ -104,6 +113,7 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
     btn.type = 'button';
     styleClassBtn(btn, id, id === selectedId);
     btn.addEventListener('click', () => {
+      if (!isPlayableClass(id)) return;
       if (selectedId === id) return;
       selectedId = id;
       for (const [cid, b] of classBtns) styleClassBtn(b, cid, cid === selectedId);
@@ -192,6 +202,10 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
   let submitted = false;
   confirmBtn.addEventListener('click', () => {
     if (submitted) return;
+    if (!isPlayableClass(selectedId)) {
+      showError('该职业尚在开发中，请选择法师');
+      return;
+    }
     const name = nameInput.value.trim() || characterName;
     if (name.length < 2) {
       showError('姓名至少需要 2 个字符');
@@ -208,8 +222,9 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
       confirmBtn.disabled = true;
       confirmBtn.textContent = '正在进入…';
       cb.onConfirm(rec);
-    } catch {
-      showError(`角色数量已达上限（${MAX_CHARACTERS}）`);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : '';
+      showError(msg.includes('not playable') ? '该职业尚在开发中，请选择法师' : `角色数量已达上限（${MAX_CHARACTERS}）`);
     }
   });
 

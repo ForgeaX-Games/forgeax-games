@@ -4,15 +4,25 @@
 // give you" — main.ts / state.ts / skills.ts all read through it instead of
 // hardcoding one witch's data.
 //
-// CharSelect exposes barbarian / sorceress / necromancer. Only sorceress has
-// its dedicated merged pack today; the other two use stand-in GLBs until
-// characterd / charactern land (SPEC §4.3).
+// CharSelect exposes barbarian / sorceress / necromancer cards. Only sorceress
+// is playable (CharacterDomain seam); the other two use stand-in GLBs and are
+// shown as disabled “开发中” until a later slice.
 
 import { computeBaseStats, getClassDef, type ClassId, type GrowthMods, type PlayerStatsInit } from './classes';
 import { SKILLS, type SkillDef } from './skills';
 
+/** Hero GLB clip slots — sorceress is 6-clip; stand-ins may still use `move`. */
+export type HeroGltfClipName =
+  | 'idle'
+  | 'walk'
+  | 'run'
+  | 'move'
+  | 'attack'
+  | 'hit'
+  | 'death';
+
 export interface HeroGltfClip {
-  name: 'idle' | 'move' | 'attack' | 'hit' | 'death';
+  name: HeroGltfClipName;
   guid: string;
 }
 
@@ -45,11 +55,13 @@ function heroFrom(
 }
 
 // GUIDs mirror assets/characters/charactery-merged.glb.meta.json subAssets[].
+// Clip sourceIndex order after 6-clip merge: idle/walk/run/attack/hit/death.
 const sorceressGltf = {
   scene: '019f439f-a25e-7fd4-a8b4-595783b0359f',
   clips: [
     { name: 'idle' as const, guid: '019f439f-a25e-7fd4-a8b4-595b8b491fe9' },
-    { name: 'move' as const, guid: '019f439f-a25e-7fd4-a8b4-595c34224d6c' },
+    { name: 'walk' as const, guid: '019f439f-a25e-7fd4-a8b4-595c34224d6c' },
+    { name: 'run' as const, guid: '019f439f-a25e-7fd4-a8b4-59601eb96021' },
     { name: 'attack' as const, guid: '019f439f-a25e-7fd4-a8b4-595d1fd0ce06' },
     { name: 'hit' as const, guid: '019f439f-a25e-7fd4-a8b4-595ef92b9f86' },
     { name: 'death' as const, guid: '019f439f-a25e-7fd4-a8b4-595f1eb96020' },

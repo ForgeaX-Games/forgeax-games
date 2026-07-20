@@ -1,65 +1,92 @@
-// Hellforge inventory panel — paper doll + 24-slot bag (B key).
+// Hellforge inventory panel — D2R-inspired paper doll + 24 single-cell bag (B/I).
 //
-// DOM overlay in the hud.ts style: dark parchment panel, pointer-events
-// enabled (the ONLY large interactive HUD surface). Interactions:
+// DOM overlay: dark parchment panel, pointer-events enabled.
+// Interactions:
 //   • click a bag item  → equip (swaps the current piece back into the bag)
 //   • click an equipped slot → unequip into the bag
-//   • right-click a bag item → melt to gold (熔毁)
-//   • hover anything → tooltip; when hovering a bag item the tooltip shows
-//     the equipped piece beside it for comparison
-// All state mutations happen in main.ts via the callbacks — this file only
-// renders and reports clicks.
+//   • right-click a bag item → melt confirm → melt to gold
+//   • hover bag item → tooltip + equipped-vs-candidate StatDelta comparison
+// Mutations stay in main.ts via callbacks — this file only renders and reports.
 
 import {
-  RARITY_META, SLOT_META, SLOT_ORDER, itemTooltipLines,
-  type Equipment, type Item,
+  RARITY_META, SLOT_META, SLOT_ORDER, compareItems, itemTooltipLines, meltGoldValue,
+  type Equipment, type Item, type ItemInstance, type ItemSlot, type StatDelta,
 } from './items';
-import { FONT_UI, FONT_DISPLAY, Ui, panelChrome, panelTitleStyle } from './ui-theme';
+import {
+  FONT_UI, FONT_DISPLAY, Ui, deltaColor, panelChrome, panelScrollShellCss, panelTitleStyle,
+} from './ui-theme';
 
 export interface InventoryCallbacks {
   /** Equip bag[index]; return false to reject (e.g. level requirement). */
   onEquipFromBag(index: number): boolean;
-  onUnequip(slot: (typeof SLOT_ORDER)[number]): boolean;
+  onUnequip(slot: ItemSlot): boolean;
   onMelt(index: number): void;
 }
 
+/** Display-only inventory snapshot — never feed mutated copies back as authority. */
+export type InventoryEquipmentView = Readonly<Equipment>;
+export type InventoryBagView = readonly (Readonly<ItemInstance> | null)[];
+
 export interface InventoryHandle {
-  /** Re-render with the current state (cheap full rebuild — 30 nodes). */
-  update(eq: Equipment, bag: Array<Item | null>, playerLevel: number, gold: number): void;
+  /** Re-render from a deep-readonly domain snapshot (cheap full rebuild — 30 nodes). */
+  update(eq: InventoryEquipmentView, bag: InventoryBagView, playerLevel: number, gold: number): void;
+  /** Surface API for UiLayerManager.register — prefer manager.open/close in main. */
+  show(): void;
+  hide(): void;
   toggle(): void;
   isOpen(): boolean;
-  hide(): void;
   dispose(): void;
 }
 
 const PANEL_ID = 'hellforge-inventory';
 
+/** Paper-doll grid areas — silhouette body, not a flat list. */
+const DOLL_LAYOUT: ReadonlyArray<{ slot: ItemSlot; area: string }> = [
+  { slot: 'helm', area: 'helm' },
+  { slot: 'weapon', area: 'weapon' },
+  { slot: 'armor', area: 'armor' },
+  { slot: 'amulet', area: 'amulet' },
+  { slot: 'boots', area: 'boots' },
+  { slot: 'ring', area: 'ring' },
+];
+
 export function installInventory(cb: InventoryCallbacks, mount: HTMLElement = document.body): InventoryHandle {
   document.getElementById(PANEL_ID)?.remove();
-  // Position within `mount` when the host scopes a viewport container (in-process
-  // editor), absolute so the panel + tooltip stay inside the viewport rect; keep
-  // fixed only for a bare document.body host (window == play surface).
   const scoped = mount !== document.body;
   const posKind = scoped ? 'absolute' : 'fixed';
   const root = document.createElement('div');
   root.id = PANEL_ID;
-  root.style.cssText = `position:${posKind};right:18px;top:50%;transform:translateY(-50%);z-index:60;display:none;` +
-    `font:600 13px ${FONT_UI};color:${Ui.text};user-select:none;pointer-events:auto;`;
+  root.style.cssText = `position:${posKind};right:14px;top:50%;transform:translateY(-50%);z-index:60;display:none;` +
+    `font:600 13px ${FONT_UI};color:${Ui.text};user-select:none;pointer-events:auto;` +
+    panelScrollShellCss(620, 40);
 
   const panel = document.createElement('div');
-  panel.style.cssText = 'display:flex;gap:14px;padding:14px 16px;border-radius:10px;' +
+  panel.style.cssText = 'display:flex;gap:16px;padding:14px 16px;border-radius:10px;' +
     panelChrome();
 
   // left: paper doll
   const doll = document.createElement('div');
-  doll.style.cssText = 'display:flex;flex-direction:column;gap:6px;min-width:150px;';
+  doll.style.cssText = 'display:flex;flex-direction:column;gap:8px;width:168px;';
   const dollTitle = document.createElement('div');
   dollTitle.textContent = '装备';
-  dollTitle.style.cssText = panelTitleStyle() + 'font-size:13px;margin-bottom:2px;';
-  doll.appendChild(dollTitle);
-  const dollSlots = document.createElement('div');
-  dollSlots.style.cssText = 'display:flex;flex-direction:column;gap:5px;';
-  doll.appendChild(dollSlots);
+  dollTitle.style.cssText = panelTitleStyle() + 'font-size:13px;margin-bottom:0;';
+  const dollBody = document.createElement('div');
+  dollBody.style.cssText =
+    'position:relative;display:grid;' +
+    'grid-template-columns:48px 48px 48px;grid-template-rows:48px 48px 48px 48px;gap:6px;' +
+    'justify-content:center;padding:10px 6px 8px;' +
+    `background:radial-gradient(ellipse at 50% 42%,rgba(60,40,20,0.35) 0%,${Ui.inkWell} 72%);` +
+    `border:1px solid ${Ui.goldLineSoft};border-radius:8px;` +
+    "grid-template-areas:'. helm .' 'weapon armor amulet' '. boots .' '. ring .';";
+  // faint body silhouette behind slots
+  const silhouette = document.createElement('div');
+  silhouette.setAttribute('aria-hidden', 'true');
+  silhouette.style.cssText =
+    'position:absolute;inset:14px 28px 18px;pointer-events:none;opacity:0.22;' +
+    'background:linear-gradient(180deg,rgba(224,184,74,0.35) 0%,rgba(80,50,20,0.15) 100%);' +
+    'clip-path:polygon(50% 0%,68% 14%,72% 38%,88% 52%,78% 100%,22% 100%,12% 52%,28% 38%,32% 14%);';
+  dollBody.appendChild(silhouette);
+  doll.append(dollTitle, dollBody);
 
   // right: bag grid + footer
   const bagCol = document.createElement('div');
@@ -79,29 +106,88 @@ export function installInventory(cb: InventoryCallbacks, mount: HTMLElement = do
   panel.append(doll, bagCol);
   root.appendChild(panel);
 
-  // tooltip (shared, follows the hovered element)
+  // tooltip
   const tip = document.createElement('div');
-  tip.style.cssText = `position:${posKind};z-index:61;display:none;max-width:460px;pointer-events:none;` +
+  tip.style.cssText = `position:${posKind};z-index:61;display:none;max-width:520px;pointer-events:none;` +
     `padding:10px 12px;border-radius:8px;${panelChrome(`font:600 12px ${FONT_UI};line-height:1.65;`)}` +
     'display:none;gap:16px;';
   mount.appendChild(tip);
 
+  // melt confirmation overlay (panel-local)
+  const confirm = document.createElement('div');
+  confirm.style.cssText =
+    `position:absolute;inset:0;display:none;align-items:center;justify-content:center;` +
+    `background:rgba(6,4,3,0.72);border-radius:10px;z-index:2;`;
+  const confirmBox = document.createElement('div');
+  confirmBox.style.cssText =
+    'min-width:220px;max-width:280px;padding:14px 16px;border-radius:8px;text-align:center;' +
+    panelChrome();
+  const confirmText = document.createElement('div');
+  confirmText.style.cssText = `font:700 13px ${FONT_UI};color:${Ui.text};margin-bottom:6px;line-height:1.5;`;
+  const confirmSub = document.createElement('div');
+  confirmSub.style.cssText = `font:600 11px ${FONT_UI};color:${Ui.textMuted};margin-bottom:12px;`;
+  const confirmRow = document.createElement('div');
+  confirmRow.style.cssText = 'display:flex;gap:8px;justify-content:center;';
+  const btnCancel = document.createElement('button');
+  btnCancel.type = 'button';
+  btnCancel.textContent = '取消';
+  btnCancel.style.cssText =
+    `cursor:pointer;padding:6px 14px;border-radius:6px;font:700 12px ${FONT_UI};` +
+    `color:${Ui.text};background:${Ui.inkWell};border:1px solid ${Ui.goldLineSoft};`;
+  const btnOk = document.createElement('button');
+  btnOk.type = 'button';
+  btnOk.textContent = '熔毁';
+  btnOk.style.cssText =
+    `cursor:pointer;padding:6px 14px;border-radius:6px;font:700 12px ${FONT_UI};` +
+    `color:${Ui.ink};background:${Ui.gold};border:1px solid ${Ui.goldBright};`;
+  confirmRow.append(btnCancel, btnOk);
+  confirmBox.append(confirmText, confirmSub, confirmRow);
+  confirm.appendChild(confirmBox);
+  panel.style.position = 'relative';
+  panel.appendChild(confirm);
+
+  let pendingMeltIndex: number | null = null;
+  const hideConfirm = (): void => {
+    pendingMeltIndex = null;
+    confirm.style.display = 'none';
+  };
+  const showConfirm = (index: number, item: Readonly<Item>): void => {
+    pendingMeltIndex = index;
+    confirmText.textContent = `确定熔毁「${item.name}」？`;
+    confirmSub.textContent = `获得 ${meltGoldValue(item)} 金币 · 不可撤销`;
+    confirm.style.display = 'flex';
+  };
+  btnCancel.addEventListener('click', hideConfirm);
+  btnOk.addEventListener('click', () => {
+    const idx = pendingMeltIndex;
+    hideConfirm();
+    if (idx !== null) cb.onMelt(idx);
+  });
+
   const renderTipCol = (lines: Array<[string, string]>, header?: string): string => {
     const rows = lines.map(([t, c], i) =>
-      `<div style="color:${c};${i === 0 ? 'font-size:13px;font-weight:800;' : ''}">${t}</div>`).join('');
+      `<div style="color:${c};${i === 0 ? 'font-size:13px;font-weight:800;' : ''}">${escapeHtml(t)}</div>`).join('');
     return `<div style="min-width:170px;">${header ? `<div style="color:${Ui.textDim};font-size:10px;letter-spacing:2px;margin-bottom:3px;font-family:${FONT_DISPLAY};">${header}</div>` : ''}${rows}</div>`;
   };
+
+  const renderDeltaCol = (deltas: readonly StatDelta[]): string => {
+    if (deltas.length === 0) {
+      return `<div style="min-width:140px;"><div style="color:${Ui.textDim};font-size:10px;letter-spacing:2px;margin-bottom:3px;font-family:${FONT_DISPLAY};">对比</div>` +
+        `<div style="color:${Ui.deltaFlat};">无属性变化</div></div>`;
+    }
+    const rows = deltas.map((d) =>
+      `<div style="color:${deltaColor(d.polarity)};">${escapeHtml(d.label)}</div>`).join('');
+    return `<div style="min-width:140px;"><div style="color:${Ui.textDim};font-size:10px;letter-spacing:2px;margin-bottom:3px;font-family:${FONT_DISPLAY};">对比</div>${rows}</div>`;
+  };
+
   const showTip = (e: MouseEvent, cols: string[]): void => {
     tip.innerHTML = cols.join('');
     tip.style.display = 'flex';
     const pad = 14;
     const w = tip.offsetWidth, h = tip.offsetHeight;
-    // clientX/Y are window coords; when the tip is position:absolute inside a
-    // scoped mount, offset by the mount rect so it lands mount-local (and clamps
-    // to the mount's height, not the whole window).
     const m = scoped ? mount.getBoundingClientRect() : { left: 0, top: 0, height: window.innerHeight };
     const localX = e.clientX - m.left, localY = e.clientY - m.top;
-    let x = localX - w - pad;                // panel is on the right → tip left
+    let x = localX - w - pad;
     if (x < 8) x = localX + pad;
     const y = Math.min(localY, m.height - h - 8);
     tip.style.left = `${x}px`;
@@ -109,66 +195,82 @@ export function installInventory(cb: InventoryCallbacks, mount: HTMLElement = do
   };
   const hideTip = (): void => { tip.style.display = 'none'; };
 
-  // state snapshot for rendering
-  let curEq: Equipment | null = null;
-  let curBag: Array<Item | null> = [];
+  let curEq: InventoryEquipmentView | null = null;
+  let curBag: InventoryBagView = [];
   let curLevel = 1;
 
-  const itemBox = (item: Item | null, size: 'slot' | 'cell'): HTMLDivElement => {
+  const slotCell = (item: Readonly<ItemInstance> | null, slot: ItemSlot): HTMLDivElement => {
     const el = document.createElement('div');
     const border = item ? RARITY_META[item.rarity].color : Ui.goldLineSoft;
-    if (size === 'slot') {
-      el.style.cssText = `display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:8px;cursor:${item ? 'pointer' : 'default'};` +
-        `background:${Ui.inkWell};border:2px solid ${border};min-height:30px;`;
+    el.style.cssText =
+      `grid-area:${slot};position:relative;z-index:1;display:flex;flex-direction:column;` +
+      `align-items:center;justify-content:center;border-radius:6px;cursor:${item ? 'pointer' : 'default'};` +
+      `background:${Ui.inkWell};border:2px solid ${border};width:48px;height:48px;` +
+      (item ? '' : 'opacity:0.72;');
+    const icon = document.createElement('span');
+    icon.textContent = SLOT_META[slot].icon;
+    icon.style.cssText = `font-size:${item ? '20px' : '16px'};line-height:1;` +
+      (item ? '' : 'filter:grayscale(1) brightness(0.65);');
+    el.appendChild(icon);
+    if (!item) {
+      const lab = document.createElement('span');
+      lab.textContent = SLOT_META[slot].label;
+      lab.style.cssText = `font-size:9px;color:${Ui.textDim};margin-top:2px;letter-spacing:0.5px;`;
+      el.appendChild(lab);
     } else {
-      el.style.cssText = `display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:${item ? 'pointer' : 'default'};` +
-        `background:${Ui.inkWell};border:2px solid ${border};font-size:19px;` +
-        (item ? '' : 'opacity:0.45;');
+      el.title = item.name;
     }
+    return el;
+  };
+
+  const bagCell = (item: Readonly<ItemInstance> | null): HTMLDivElement => {
+    const el = document.createElement('div');
+    const border = item ? RARITY_META[item.rarity].color : Ui.goldLineSoft;
+    el.style.cssText =
+      `display:flex;align-items:center;justify-content:center;border-radius:6px;` +
+      `cursor:${item ? 'pointer' : 'default'};background:${Ui.inkWell};border:2px solid ${border};` +
+      `font-size:19px;width:44px;height:44px;` +
+      (item ? '' : 'opacity:0.4;');
     return el;
   };
 
   const render = (): void => {
     if (!curEq) return;
     // paper doll
-    dollSlots.innerHTML = '';
-    for (const slot of SLOT_ORDER) {
+    dollBody.querySelectorAll('[data-slot]').forEach((n) => n.remove());
+    for (const { slot } of DOLL_LAYOUT) {
       const item = curEq[slot];
-      const el = itemBox(item, 'slot');
-      const icon = document.createElement('span');
-      icon.textContent = SLOT_META[slot].icon;
-      icon.style.cssText = 'font-size:17px;';
-      const label = document.createElement('span');
-      if (item) {
-        label.textContent = item.name;
-        label.style.cssText = `color:${RARITY_META[item.rarity].color};font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px;`;
-      } else {
-        label.textContent = SLOT_META[slot].label;
-        label.style.cssText = `color:${Ui.textDim};font-size:12px;`;
-      }
-      el.append(icon, label);
+      const el = slotCell(item, slot);
+      el.dataset.slot = slot;
       if (item) {
         el.addEventListener('mousemove', (e) => showTip(e, [renderTipCol(itemTooltipLines(item, curLevel), '已装备')]));
         el.addEventListener('mouseleave', hideTip);
-        el.addEventListener('click', () => { hideTip(); cb.onUnequip(slot); });
+        el.addEventListener('click', () => { hideTip(); hideConfirm(); cb.onUnequip(slot); });
       }
-      dollSlots.appendChild(el);
+      dollBody.appendChild(el);
     }
-    // bag
+    // bag — single-cell only (no item dimensions)
     grid.innerHTML = '';
     curBag.forEach((item, i) => {
-      const el = itemBox(item, 'cell');
+      const el = bagCell(item);
       if (item) {
         el.textContent = SLOT_META[item.slot].icon;
         el.addEventListener('mousemove', (e) => {
-          const cols = [renderTipCol(itemTooltipLines(item, curLevel), '背包')];
           const worn = curEq![item.slot];
-          if (worn) cols.push(renderTipCol(itemTooltipLines(worn, curLevel), '已装备'));
+          const cols = [
+            renderTipCol(itemTooltipLines(item, curLevel), '背包'),
+            renderDeltaCol(compareItems(item, worn ?? null)),
+          ];
+          if (worn) cols.splice(1, 0, renderTipCol(itemTooltipLines(worn, curLevel), '已装备'));
           showTip(e, cols);
         });
         el.addEventListener('mouseleave', hideTip);
-        el.addEventListener('click', () => { hideTip(); cb.onEquipFromBag(i); });
-        el.addEventListener('contextmenu', (e) => { e.preventDefault(); hideTip(); cb.onMelt(i); });
+        el.addEventListener('click', () => { hideTip(); hideConfirm(); cb.onEquipFromBag(i); });
+        el.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+          hideTip();
+          showConfirm(i, item);
+        });
       }
       grid.appendChild(el);
     });
@@ -180,18 +282,34 @@ export function installInventory(cb: InventoryCallbacks, mount: HTMLElement = do
     update(eq, bag, playerLevel, gold) {
       curEq = eq; curBag = bag; curLevel = playerLevel;
       const used = bag.filter(Boolean).length;
-      bagTitle.textContent = `背包 ${used}/${bag.length}`;
+      const full = used >= bag.length && bag.length > 0;
+      bagTitle.textContent = full ? `背包 ${used}/${bag.length} · 已满` : `背包 ${used}/${bag.length}`;
+      bagTitle.style.color = full ? Ui.danger : Ui.goldBright;
       goldEl.textContent = `💰 ${gold}`;
       if (root.style.display !== 'none') render();
     },
+    show() {
+      root.style.display = 'block';
+      render();
+    },
+    hide() {
+      root.style.display = 'none';
+      hideTip();
+      hideConfirm();
+    },
     toggle() {
-      const open = root.style.display !== 'none';
-      root.style.display = open ? 'none' : 'block';
-      if (!open) render();
-      else hideTip();
+      if (root.style.display !== 'none') this.hide();
+      else this.show();
     },
     isOpen: () => root.style.display !== 'none',
-    hide() { root.style.display = 'none'; hideTip(); },
     dispose() { root.remove(); tip.remove(); },
   };
+}
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }

@@ -19,9 +19,17 @@ export type ClassId =
 export interface StatMods {
   hp?: number;
   mp?: number;
+  /**
+   * Deferred — no weapon auto-attack in this slice; skill damage comes from
+   * SkillResolver. Kept so ClassDef data stays complete for a future melee kit.
+   */
   damageMin?: number;
+  /** Deferred — see damageMin. */
   damageMax?: number;
   defense?: number;
+  /**
+   * Deferred — no weapon swing cadence; skills use cooldownMul from CombatStats.
+   */
   attackSpeed?: number;
   critChance?: number;
 }
@@ -48,12 +56,15 @@ export interface ClassDef {
 }
 
 /**
- * CharSelect shows these three (aidiablo HIDDEN_CLASSES filter). Models may be
- * temporary stand-ins until characterd / charactern packs land — see heroes.ts.
+ * CharSelect shows these three cards. Only Sorceress is playable in this slice;
+ * Barbarian / Necromancer remain visible but disabled (“开发中”).
  */
 export const SELECTABLE_CLASS_IDS: readonly ClassId[] = [
   'barbarian', 'sorceress', 'necromancer',
 ];
+
+/** Classes that may create / enter a CharacterDomain. */
+export const PLAYABLE_CLASS_IDS: readonly ClassId[] = ['sorceress'];
 
 /** Only classes with a hero GLB (or preview stand-in) get an entry. */
 export const CLASS_DEFS: Partial<Record<ClassId, ClassDef>> = {
@@ -73,7 +84,7 @@ export const CLASS_DEFS: Partial<Record<ClassId, ClassDef>> = {
     name: '法师',
     icon: '🔮',
     description: '掌握元素魔法的奥术大师，精通火冰电三系魔法',
-    lore: '来自扎卡拉姆东方魔法学院的奥术师，精通元素魔法的奥秘',
+    lore: '来自余烬哨站东侧奥术学院的元素法师，以熔炉余烬与霜纹研习三系奥秘',
     coreMechanic: '元素精通',
     coreMechanicDesc: '连续使用同一元素的技能时伤害逐步提升，满层时+60%伤害，切换元素重置层数',
     baseStatMods: { hp: -20, mp: 40, damageMin: -1, damageMax: -2, defense: -1, attackSpeed: -0.2 },
@@ -100,13 +111,22 @@ export function getClassDef(id: ClassId): ClassDef {
 
 // ── stat-calc formulas (aidiablo config.ts:171/:192 direct port) ───────────
 
+/**
+ * Class baseline used by computeBaseStats / HeroDef.
+ * Weapon fields (damageMin/Max, attackSpeed, attackRange) are deferred — the
+ * slice has no auto-attack; CombatStats + SkillResolver own live combat numbers.
+ */
 export interface PlayerStatsInit {
   hp: number;
   mp: number;
+  /** Deferred — unused by CombatStats / skills. */
   damageMin: number;
+  /** Deferred — unused by CombatStats / skills. */
   damageMax: number;
   defense: number;
+  /** Deferred — unused by CombatStats / skills. */
   attackSpeed: number;
+  /** Deferred — unused by CombatStats / skills. */
   attackRange: number;
   critChance: number;
   critMultiplier: number;
@@ -159,8 +179,9 @@ export function growthForLevel(level: number, growthMods: GrowthMods): LevelGrow
   };
 }
 
-// ── save-slot shape (aidiablo main.ts:60 direct port, minus multiplayer
-// reconnect fields — lastRoomId/lastPlayerId/mapSeed don't apply single-player) ─
+// ── title-list card shape (legacy hellforge.characters.v1 + envelope projection).
+// Full progression lives in CharacterSaveEnvelope (save-schema.ts); this record
+// is display/selection only and must never become a second gameplay store.
 
 export interface CharacterRecord {
   id: string;

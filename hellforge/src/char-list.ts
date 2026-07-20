@@ -23,6 +23,7 @@
 // - No audiobus click sfx (see shell.ts/char-select.ts's same note).
 
 import { CLASS_DEFS, getClassDef, type CharacterRecord } from './classes';
+import { isPlayableClass } from './character-domain';
 import { listCharacters, deleteCharacter, MAX_CHARACTERS } from './save';
 import { FONT_UI } from './ui-theme';
 
@@ -104,6 +105,10 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
     if (submitted) return;
     const rec = characters[selectedIndex];
     if (!rec) return;
+    if (!isPlayableClass(rec.classId)) {
+      enterBtn.title = 'In development';
+      return;
+    }
     submitted = true;
     enterBtn.disabled = true;
     enterBtn.textContent = '正在进入…';
@@ -281,9 +286,17 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
     deleteBtn.disabled = !hasChars;
     deleteBtn.style.opacity = hasChars ? '1' : '0.35';
     deleteBtn.style.cursor = hasChars ? 'pointer' : 'not-allowed';
-    enterBtn.disabled = !hasChars;
-    enterBtn.style.opacity = hasChars ? '1' : '0.35';
-    enterBtn.style.cursor = hasChars ? 'pointer' : 'not-allowed';
+    const rec = characters[selectedIndex];
+    const canEnter = hasChars && !!rec && isPlayableClass(rec.classId);
+    enterBtn.disabled = !canEnter;
+    enterBtn.style.opacity = canEnter ? '1' : '0.35';
+    enterBtn.style.cursor = canEnter ? 'pointer' : 'not-allowed';
+    enterBtn.title = hasChars && rec && !isPlayableClass(rec.classId)
+      ? 'In development'
+      : '';
+    enterBtn.textContent = hasChars && rec && !isPlayableClass(rec.classId)
+      ? '开发中'
+      : '进入游戏';
   }
 
   function updateCreateBtnState(): void {
@@ -322,10 +335,14 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
       `overflow:hidden;text-overflow:ellipsis;color:${isSelected ? '#ffd700' : '#b08a40'};` +
       (isSelected ? 'text-shadow:0 0 10px rgba(255,200,0,0.3);' : '');
     const metaEl = document.createElement('div');
-    metaEl.textContent = `${classDef.name} · Lv.${rec.level}`;
+    const playable = isPlayableClass(rec.classId);
+    metaEl.textContent = playable
+      ? `${classDef.name} · Lv.${rec.level}`
+      : `${classDef.name} · Lv.${rec.level} · 开发中`;
     metaEl.style.cssText = `font:400 11px ${FONT_UI};margin-top:3px;letter-spacing:1px;` +
-      `color:${isSelected ? '#907840' : '#4a3a20'};`;
+      `color:${!playable ? '#6a5040' : isSelected ? '#907840' : '#4a3a20'};`;
     textArea.append(nameEl, metaEl);
+    if (!playable) item.title = 'In development';
     item.append(dot, textArea);
 
     item.addEventListener('mouseenter', () => {

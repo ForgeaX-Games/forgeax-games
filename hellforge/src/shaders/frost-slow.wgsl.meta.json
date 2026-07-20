@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "shader",
+  "source": "frost-slow.wgsl",
+  "importSettings": { "materialShaderIdentifier": "hellforge::frost_slow" },
+  "subAssets": [
+    { "guid": "5c8176bc-9646-4b09-a61a-fd8f46e062ed", "sourceIndex": 0, "kind": "material-shader" }
+  ],
+  "paramSchema": [
+    { "name": "baseColor", "type": "color" },
+    { "name": "metallic",  "type": "f32" },
+    { "name": "roughness", "type": "f32" }
+  ]
+}

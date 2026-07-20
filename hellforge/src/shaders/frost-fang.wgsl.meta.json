@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "shader",
+  "source": "frost-fang.wgsl",
+  "importSettings": { "materialShaderIdentifier": "hellforge::frost_fang" },
+  "subAssets": [
+    { "guid": "ac5da1cc-9a15-41bf-be17-487aff00ef87", "sourceIndex": 0, "kind": "material-shader" }
+  ],
+  "paramSchema": [
+    { "name": "baseColor", "type": "color" },
+    { "name": "metallic",  "type": "f32" },
+    { "name": "roughness", "type": "f32" }
+  ]
+}

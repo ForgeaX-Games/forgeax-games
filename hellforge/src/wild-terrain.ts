@@ -15,21 +15,21 @@ import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle, MeshAsset } from '@forgeax/engine-types';
 
+import { mulberry32 } from './dungeon-layout';
 import { SLAG_MATERIAL_GUID, VOLCANO_VARIANTS } from './volcano-assets';
+
+/** Re-export seeded PRNG — wilderness generation never uses Math.random(). */
+export { mulberry32 };
 
 /** Matches bake-ground.ts GROUND_SIZE / 2 (camp apron). */
 export const GROUND_HALF = 60;
 
-function mulberry32(seed: number): () => number {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+/**
+ * Playable wild / camp rim used by NavigationQuery.
+ * Keep in sync with `assets/scenes/ashen-reach.layout.json` + main walk bounds
+ * (authored 2D blockers — not inferred from volcano meshes).
+ */
+export const ASHEN_REACH_BOUNDS = { x0: -52, x1: 52, z0: -48, z1: 58 } as const;
 
 /** Yaw + lean (tilt away from vertical) as a single quaternion. */
 function mountainQuat(yaw: number, lean: number, leanHeading: number): [number, number, number, number] {

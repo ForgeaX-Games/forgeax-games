@@ -1,5 +1,5 @@
 // merge-gen3d-motions.ts — merge a wb-gen3d character's per-motion GLBs into a
-// single multi-clip GLB that matches hellforge's 5-clip contract.
+// single multi-clip GLB that matches hellforge's 6-clip contract.
 //
 //   bun scripts/merge-gen3d-motions.ts <gen3d-meta.json> <output.glb>
 //
@@ -7,12 +7,12 @@
 // no useful clip) + N × <base>.animated_model.motion-meshy-<id>.glb (each carries
 // a FULL mesh copy + one clip ≈ 8k faces × N). Loading/switching N GLBs is slow.
 // This script merges the clips into the rigged base (mesh kept once) and renames
-// each clip to its contract slot (idle/move/attack/hit/death), producing one GLB
-// the engine imports as mesh + skeleton + 5 animation-clip sub-assets.
+// each clip to its contract slot (idle/walk/run/attack/hit/death), producing one
+// GLB the engine imports as mesh + skeleton + 6 animation-clip sub-assets.
 //
 // Run AFTER you've generated the character + motions. Then:
 //   forgeax-engine-remote-gltf import <output.glb>   # → <output.glb>.meta.json
-//   # copy the scene + 5 clip GUIDs into main.ts WITCH/HERO block
+//   # copy the scene + 6 clip GUIDs into heroes.ts / main.ts
 //
 // ── deps (not in hellforge by default; install in the package you run this from) ──
 //   bun add -d @gltf-transform/core @gltf-transform/functions
@@ -28,11 +28,13 @@ import { mergeDocuments, unpartition, prune } from '@gltf-transform/functions';
 // For each slot, an ordered list of keyword regexes. The first motion whose
 // motionRef.label matches any keyword is used for that slot. Unmapped motions
 // are listed at the end so you can refine. Missing slots are warned.
+//
+// walk vs run must stay distinct — never fall back run→walk (or vice versa).
+// charactery (2026-07-17): free-walk / free-run Meshy clips are preferred.
 const MOTION_MAP: Record<string, RegExp[]> = {
   idle:   [/idle|stand|breath|待机|呼吸/i],
-  // charactery (2026-07-09): user picked Handbag_Walk_inplace as the move clip;
-  // run/walk keywords stay as fallbacks for the next character delivery.
-  move:   [/handbag/i, /run|跑|dash|冲刺/i, /walk|走|move/i],
+  walk:   [/free-walk|走路/i, /handbag/i, /walk|走|move/i],
+  run:    [/free-run|跑步/i, /run|跑|dash|冲刺/i],
   attack: [/punch|kick|shot|combo|attack|slash|cast|挥|踢|打|施法/i],
   hit:    [/hit|hurt|damage|stagger|受击|被打|后仰/i],
   death:  [/dead|death|die|死亡|倒地|倒下/i],

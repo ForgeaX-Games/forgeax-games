@@ -12,18 +12,20 @@ import type { Handle } from '@forgeax/engine-types';
 
 import type { Monster } from './monsters';
 import { MONSTERS } from './monsters';
-import { RARITY_META, type Item, type Rarity } from './items';
+import { RARITY_META, type ItemInstance, type Rarity } from './items';
 
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
 
 export type DropKind = 'xp' | 'gold' | 'healPotion' | 'manaPotion' | 'item';
 
 interface Drop {
+  /** Stable InteractionRef id — never an ECS EntityHandle. */
+  id: string;
   e: EntityHandle;
   kind: DropKind;
   amount: number;
   /** Equipment payload (kind === 'item' only). */
-  item?: Item;
+  item?: ItemInstance;
   x: number; y: number; z: number;
   baseY: number;
   /** Render scale (item beams are tall pillars, orbs are small). */
@@ -38,7 +40,7 @@ interface Drop {
 export interface PickupEvent {
   kind: DropKind;
   amount: number;
-  item?: Item;
+  item?: ItemInstance;
   x: number; y: number; z: number;
 }
 
@@ -46,6 +48,7 @@ export class LootSystem {
   private drops: Drop[] = [];
   private mats: Record<Exclude<DropKind, 'item'>, MatHandle>;
   private beamMats: Record<Rarity, MatHandle>;
+  private nextStableId = 1;
   readonly attractR = 3.2;
   readonly collectR = 0.7;
   readonly lifeSec = 30;
@@ -107,6 +110,7 @@ export class LootSystem {
     );
     if (!res.ok) return;
     this.drops.push({
+      id: `l-${this.nextStableId++}`,
       e: res.value as EntityHandle, kind, amount,
       x, y: baseY, z, baseY,
       sx: s, sy, sz: s,
@@ -118,7 +122,7 @@ export class LootSystem {
 
   /** Equipment drop — a D2-style rarity-coloured beam pillar. Legendary
    *  beams are visibly fatter + taller (the across-the-room "orange!"). */
-  spawnItem(item: Item, x: number, z: number): void {
+  spawnItem(item: ItemInstance, x: number, z: number): void {
     const ang = Math.random() * Math.PI * 2;
     x += Math.cos(ang) * 0.6;
     z += Math.sin(ang) * 0.6;
@@ -132,6 +136,7 @@ export class LootSystem {
     );
     if (!res.ok) return;
     this.drops.push({
+      id: `l-${this.nextStableId++}`,
       e: res.value as EntityHandle, kind: 'item', amount: 0, item,
       x, y: baseY, z, baseY,
       sx: fat, sy: tall, sz: fat,
@@ -139,6 +144,30 @@ export class LootSystem {
       bobPhase: Math.random() * Math.PI * 2,
       spinPhase: Math.random() * Math.PI * 2,
     });
+  }
+
+  byId(id: string): { id: string; x: number; z: number; kind: DropKind; item?: ItemInstance; amount: number } | null {
+    for (const g of this.drops) {
+      if (g.id === id) return { id: g.id, x: g.x, z: g.z, kind: g.kind, item: g.item, amount: g.amount };
+    }
+    return null;
+  }
+
+  /** Snapshot for InteractionRegistry click picks. */
+  listForPick(): ReadonlyArray<{ id: string; x: number; z: number }> {
+    return this.drops.map((g) => ({ id: g.id, x: g.x, z: g.z }));
+  }
+
+  /** Force-collect one drop by stable id (click-interact). Returns event or null. */
+  collectById(id: string, canTakeItem: () => boolean = () => true): PickupEvent | null {
+    const i = this.drops.findIndex((g) => g.id === id);
+    if (i < 0) return null;
+    const g = this.drops[i]!;
+    if (g.kind === 'item' && !canTakeItem()) return null;
+    const ev: PickupEvent = { kind: g.kind, amount: g.amount, item: g.item, x: g.x, y: g.y, z: g.z };
+    this.world.despawn(g.e);
+    this.drops.splice(i, 1);
+    return ev;
   }
 
   /**
@@ -196,4 +225,10 @@ export class LootSystem {
   }
 
   count(): number { return this.drops.length; }
+
+  /** Remove all ground drops (combat-run reset). */
+  clearGroundDrops(): void {
+    for (const g of this.drops) this.world.despawn(g.e);
+    this.drops.length = 0;
+  }
 }

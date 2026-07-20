@@ -5,15 +5,10 @@
 // explicit cast — no auto-attack. press key → instant projectile → attack
 // clip plays once → cooldown → ready. Mana gates slot variety.
 //
-// Slots (unlock by level so early play stays readable):
-//   1 熔火弹 Magma Bolt L1 — mid damage + small AoE splash
-//   2 霜牙   Frost Fang L2 — pierces, slows
-//   3 电弧涌 Arc Surge  L3 — 3 erratic lightning bolts
-//   4 影踏   Shadowstep L4 — short blink toward the aim point
-//
-// Projectiles are cow-survivor-style: invisible root entity + lowpoly
-// ChildOf parts, integrated manually, distance hit-tests vs monsters (no
-// physics). Every despawn walks root + parts — ChildOf does NOT cascade.
+// Combat numbers come ONLY from SkillResolver (Spec §5.2). Active identity
+// (magma/frost/arc/blink) is stable; ranks/prereqs live in skill-tree.ts.
+// Display metadata (name/icon/desc/unlockLevel) lives here; unlockLevel is
+// legacy HUD copy only — cast rights use learned active-node ranks.
 
 import {
   Transform, MeshFilter, MeshRenderer, ChildOf, Materials,
@@ -24,72 +19,135 @@ import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle } from '@forgeax/engine-types';
 
+import type { ActiveSkillId, SkillNodeId } from './content-ids';
+import { isSkillAvailable } from './skill-availability';
 import type { FxSystem, MatHandle } from './fx';
 import type { Monster, MonsterManager } from './monsters';
 import { MONSTERS } from './monsters';
+import type { CombatStats } from './combat-stats';
 import type { PlayerStats } from './state';
+import {
+  resolveSkill,
+  shatterShardCount,
+  type ResolvedSkill,
+} from './skill-resolver';
 
-export type SkillId = 'magma' | 'frost' | 'arc' | 'blink';
+import type { ActiveKitSkillId } from './skill-availability';
+export type SkillId = ActiveKitSkillId;
+export { SKILL_NODE_BY_ACTIVE, isSkillAvailable } from './skill-availability';
+export { ACTIVE_BY_SKILL_NODE } from './skill-tree';
 
 export interface SkillDef {
   id: SkillId;
   name: string;
   icon: string;
   desc: string;
+  /**
+   * @deprecated Cast rights use learned active-node ranks via isSkillAvailable.
+   * Kept for HUD layout slots only — do not gate casts on this field.
+   */
+  unlockLevel: number;
+  /** Derived from resolveSkill() for HUD / tooling; runtime cast re-resolves. */
   manaCost: number;
   cooldown: number;
-  unlockLevel: number;
-  // projectile stats (teleport has none)
   damage?: number;
   speed?: number;
   life?: number;
-  count?: number;          // bolts per cast (charged bolt = 3)
-  aoeRadius?: number;      // splash on hit
+  count?: number;
+  aoeRadius?: number;
+  splashRatio?: number;
   slowSec?: number;
-  knockback?: number;      // impulse (m/s) applied along the flight direction
-  pierce?: boolean;
-  erratic?: boolean;       // charged-bolt wander
-  blinkRange?: number;     // teleport
+  slowMagnitude?: number;
+  knockback?: number;
+  pierceCount?: number;
+  erratic?: boolean;
+  blinkRange?: number;
+  /** Same resolved tooltip lines gameplay numbers use. */
+  tooltipLines?: readonly string[];
 }
 
-export const SKILLS: SkillDef[] = [
-  {
+type DisplayMeta = Pick<SkillDef, 'id' | 'name' | 'icon' | 'desc' | 'unlockLevel'>;
+
+const DISPLAY: Record<SkillId, DisplayMeta> = {
+  magma: {
     id: 'magma', name: '熔火弹', icon: '🔥',
     desc: '发射一枚熔火弹，命中小范围溅射',
-    manaCost: 6, cooldown: 0.45, unlockLevel: 1,
-    damage: 16, speed: 15, life: 1.5, aoeRadius: 1.7, knockback: 4.5,
+    unlockLevel: 0,
   },
-  {
+  frost: {
     id: 'frost', name: '霜牙', icon: '❄️',
-    desc: '穿透冰箭，命中减速 2.2 秒',
-    manaCost: 7, cooldown: 0.6, unlockLevel: 2,
-    damage: 11, speed: 19, life: 1.2, slowSec: 2.2, pierce: true, knockback: 2.4,
+    desc: '冰箭，命中减速',
+    unlockLevel: 0,
   },
-  {
+  arc: {
     id: 'arc', name: '电弧涌', icon: '⚡',
-    desc: '释放 3 道游走的闪电',
-    manaCost: 9, cooldown: 0.8, unlockLevel: 3,
-    damage: 8, speed: 10, life: 1.6, count: 3, erratic: true, knockback: 3.0,
+    desc: '释放游走的闪电',
+    unlockLevel: 0,
   },
-  {
+  blink: {
     id: 'blink', name: '影踏', icon: '🌀',
     desc: '向目标方向瞬移（影踏步）',
-    manaCost: 12, cooldown: 3.0, unlockLevel: 4,
-    blinkRange: 6.5,
+    unlockLevel: 0,
   },
-];
+};
+
+function defFromResolved(id: SkillId, r: ResolvedSkill): SkillDef {
+  return {
+    ...DISPLAY[id],
+    manaCost: r.manaCost,
+    cooldown: r.cooldown,
+    damage: r.damage || undefined,
+    speed: r.projectileSpeed || undefined,
+    life: r.projectileLifetime || undefined,
+    count: r.projectileCount || undefined,
+    aoeRadius: r.splashRadius || undefined,
+    splashRatio: r.splashRatio || undefined,
+    slowSec: r.slowDuration || undefined,
+    slowMagnitude: r.slowMagnitude || undefined,
+    knockback: r.knockback || undefined,
+    pierceCount: r.pierceCount,
+    erratic: r.erratic || undefined,
+    blinkRange: r.blinkRange || undefined,
+    tooltipLines: r.tooltipLines,
+  };
+}
+
+/** Kit sheet at base ranks — prefer skillDefForRanks() for live tooltips. */
+export const SKILLS: SkillDef[] = (['magma', 'frost', 'arc', 'blink'] as const).map((id) =>
+  defFromResolved(id, resolveSkill(id)),
+);
+
+/** Build a SkillDef from the same resolveSkill() data used by combat. */
+export function skillDefForRanks(
+  id: SkillId,
+  skillRanks: Readonly<Partial<Record<SkillNodeId, number>>>,
+): SkillDef {
+  return defFromResolved(id, resolveSkill(id, { skillRanks }));
+}
+
+interface CastRuntime {
+  /** Overcharge CDR already applied this cast (seconds). */
+  overchargeReduced: number;
+  /** True once Phase Echo charge was consumed for this cast. */
+  phaseEchoConsumed: boolean;
+}
 
 interface Projectile {
   e: EntityHandle;
-  skill: SkillDef;
-  /** Rolled damage (base × equipment dmgMul, frozen at cast time). */
+  resolved: ResolvedSkill;
+  skillId: SkillId;
+  /** Rolled damage (resolver × equipment dmgMul, frozen at cast time). */
   damage: number;
   x: number; y: number; z: number;
   dx: number; dz: number;
   age: number;
-  jitterT: number;         // next erratic-steer time
+  jitterT: number;
+  pierceLeft: number;
   hits: Set<Monster>;
   parts: EntityHandle[];
+  cast: CastRuntime;
+  /** First valid hit on this projectile already applied Overcharge. */
+  overchargeHitDone: boolean;
 }
 
 type PartBlueprint = {
@@ -100,7 +158,6 @@ type PartBlueprint = {
   mat: 'main' | 'accent';
 };
 
-// Local +Z = flight direction (root yaw carries it).
 const VISUALS: Partial<Record<SkillId, PartBlueprint[]>> = {
   magma: [
     { shape: 'sphere', px: 0, py: 0, pz: 0, sx: 0.5, sy: 0.5, sz: 0.5, mat: 'main' },
@@ -121,25 +178,45 @@ const VISUALS: Partial<Record<SkillId, PartBlueprint[]>> = {
 export type CastResult = 'ok' | 'cooldown' | 'mana' | 'locked' | 'dead';
 
 export interface SkillHooks {
-  /** Teleport asks main.ts to move the player (main owns walkability). */
   tryBlink(dirX: number, dirZ: number, range: number): boolean;
-  /** A projectile damaged a monster (for float text / shake / sfx). */
   onHit(x: number, y: number, z: number, damage: number, killed: boolean, crit: boolean): void;
 }
 
-/** Base crit — equipment affixes add on top (skills.mods). */
-const CRIT_CHANCE = 0.08;
-const CRIT_MUL = 1.6;
+/** Combat multipliers supplied from CombatStats — not an independent authority. */
+export interface SkillCombatMods {
+  dmgMul: number;
+  cdrMul: number;
+  fireMul: number;
+  frostMul: number;
+  arcMul: number;
+  /** Absolute crit chance (already includes class base + equipment, capped). */
+  critChance: number;
+  /** Absolute crit damage multiplier. */
+  critMultiplier: number;
+}
+
+const DEFAULT_COMBAT_MODS: Readonly<SkillCombatMods> = Object.freeze({
+  dmgMul: 1,
+  cdrMul: 1,
+  fireMul: 1,
+  frostMul: 1,
+  arcMul: 1,
+  critChance: 0.05,
+  critMultiplier: 1.5,
+});
+
+export interface SkillCaster {
+  cast(skillId: ActiveSkillId, aim: readonly [number, number]): CastResult;
+}
 
 export class SkillSystem {
   private projectiles: Projectile[] = [];
   private mats = new Map<SkillId, { main: MatHandle; accent: MatHandle }>();
-  /** Cooldown remaining per skill index (HUD reads this). */
   readonly cooldowns: number[];
-  /** Equipment-driven modifiers (main.ts recomputes on equip change).
-   *  dmgMul is global; fire/frost/arc multiply their own skill only;
-   *  critChance/critMul ADD to the base crit numbers. */
-  mods = { dmgMul: 1, cdrMul: 1, fireMul: 1, frostMul: 1, arcMul: 1, critChance: 0, critMul: 0 };
+  /** Frozen snapshot from last applyCombatStats(); not an independent authority. */
+  #mods: Readonly<SkillCombatMods> = DEFAULT_COMBAT_MODS;
+  /** Phase Echo charge window (performance.now()/1000). */
+  #phaseEchoUntil = 0;
 
   constructor(private world: World, private fx: FxSystem, private hooks: SkillHooks, private skills: SkillDef[]) {
     this.cooldowns = skills.map(() => 0);
@@ -148,57 +225,133 @@ export class SkillSystem {
         baseColor: color, roughness: 0.35, metallic: 0.1,
         emissive, emissiveIntensity: i,
       }));
-    // Fire Bolt body prefers the custom living-flame shader; falls back to
-    // plain emissive when the shader registry is unavailable (Edit runtime).
     const fireMain = fx.fireBoltMaterial() ?? mk([1, 0.30, 0.06, 1], [1, 0.28, 0.05], 1.2);
     this.mats.set('magma', { main: fireMain, accent: mk([1, 0.45, 0.10, 1], [1, 0.40, 0.08], 0.8) });
-    this.mats.set('frost', { main: mk([0.40, 0.75, 1, 1], [0.30, 0.60, 1], 1.2), accent: mk([0.55, 0.85, 1, 1], [0.45, 0.78, 1], 0.9) });
+    // Frost Fang: custom crystal shaders when registered; Edit-runtime falls
+    // back to the same emissive ice mats used before the quality slice.
+    const frost = fx.frostVfx();
+    const frostMain = frost?.projectile ?? mk([0.40, 0.75, 1, 1], [0.30, 0.60, 1], 1.2);
+    const frostAccent = frost?.impact ?? mk([0.55, 0.85, 1, 1], [0.45, 0.78, 1], 0.9);
+    this.mats.set('frost', { main: frostMain, accent: frostAccent });
     this.mats.set('arc', { main: mk([0.85, 0.65, 1, 1], [0.70, 0.50, 1], 1.8), accent: mk([0.60, 0.35, 1, 1], [0.55, 0.30, 1], 1.2) });
   }
 
-  unlocked(idx: number, level: number): boolean {
+  /** Read-only combat multipliers; mutate only via applyCombatStats. */
+  get mods(): Readonly<SkillCombatMods> {
+    return this.#mods;
+  }
+
+  /** Replace cast/hit multipliers from derived CombatStats (sole supplier). */
+  applyCombatStats(stats: CombatStats): void {
+    this.#mods = Object.freeze({
+      dmgMul: stats.globalDamageMul,
+      cdrMul: stats.cooldownMul,
+      fireMul: stats.fireDamageMul,
+      frostMul: stats.frostDamageMul,
+      arcMul: stats.arcDamageMul,
+      critChance: stats.critChance,
+      critMultiplier: stats.critMultiplier,
+    });
+  }
+
+  indexOf(id: SkillId): number {
+    return this.skills.findIndex((s) => s.id === id);
+  }
+
+  unlocked(
+    idx: number,
+    level: number,
+    skillRanks: Readonly<Partial<Record<SkillNodeId, number>>> = {},
+  ): boolean {
     const def = this.skills[idx];
-    return !!def && level >= def.unlockLevel;
+    return !!def && isSkillAvailable(def, level, skillRanks);
   }
 
   /**
-   * Cast slot `idx` from (ox, oz) toward unit aim (aimX, aimZ).
-   * Deducts mana + starts the cooldown on success; the caller plays the
-   * attack clip and turns the witch.
+   * Cast kit index — resolves numbers via SkillResolver then delegates.
+   * Prefer SkillCaster.cast(skillId, aim) from gameplay input.
    */
-  cast(idx: number, ox: number, oz: number, aimX: number, aimZ: number, player: PlayerStats): CastResult {
+  cast(
+    idx: number,
+    ox: number,
+    oz: number,
+    aimX: number,
+    aimZ: number,
+    player: PlayerStats,
+    level: number,
+    skillRanks: Readonly<Partial<Record<SkillNodeId, number>>> = {},
+  ): CastResult {
     const def = this.skills[idx];
     if (!def) return 'locked';
-    if (player.dead) return 'dead';
-    if (player.level < def.unlockLevel) return 'locked';
-    if (this.cooldowns[idx]! > 0) return 'cooldown';
-    if (player.mana < def.manaCost) return 'mana';
+    const phaseEchoActive = this.#phaseEchoUntil > performance.now() / 1000;
+    const resolved = resolveSkill(def.id, { skillRanks, phaseEchoActive });
+    return this.castResolved(def.id, ox, oz, aimX, aimZ, player, level, skillRanks, resolved);
+  }
 
-    if (def.id === 'blink') {
-      if (!this.hooks.tryBlink(aimX, aimZ, def.blinkRange!)) return 'cooldown';
-      player.mana -= def.manaCost;
-      this.cooldowns[idx] = def.cooldown * this.mods.cdrMul;
+  castResolved(
+    skillId: SkillId,
+    ox: number,
+    oz: number,
+    aimX: number,
+    aimZ: number,
+    player: PlayerStats,
+    level: number,
+    skillRanks: Readonly<Partial<Record<SkillNodeId, number>>>,
+    resolved: ResolvedSkill,
+  ): CastResult {
+    const idx = this.indexOf(skillId);
+    if (idx < 0) return 'locked';
+    const def = this.skills[idx]!;
+    if (player.dead) return 'dead';
+    // Cast rights: learned active-node rank only (not unlockLevel).
+    if (!isSkillAvailable(def, level, skillRanks)) return 'locked';
+    if (this.cooldowns[idx]! > 0) return 'cooldown';
+    if (player.mana < resolved.manaCost) return 'mana';
+
+    if (skillId === 'blink') {
+      if (!this.hooks.tryBlink(aimX, aimZ, resolved.blinkRange)) return 'cooldown';
+      player.mana -= resolved.manaCost;
+      this.cooldowns[idx] = resolved.cooldown * this.mods.cdrMul;
+      for (const fx of resolved.onHit) {
+        if (fx.kind === 'phase-echo-grant') {
+          this.#phaseEchoUntil = performance.now() / 1000 + fx.windowSec;
+        }
+      }
       return 'ok';
     }
 
-    player.mana -= def.manaCost;
-    this.cooldowns[idx] = def.cooldown * this.mods.cdrMul;
-    // Muzzle flash at the casting hand.
-    const fxColor = def.id === 'magma' ? 'fire' : def.id === 'frost' ? 'ice' : 'lightning';
-    this.fx.pop(ox + aimX * 0.7, 1.0, oz + aimZ * 0.7, fxColor, 0.22);
-    const count = def.count ?? 1;
+    player.mana -= resolved.manaCost;
+    this.cooldowns[idx] = resolved.cooldown * this.mods.cdrMul;
+    if (resolved.phaseEchoApplied) {
+      this.#phaseEchoUntil = 0;
+    }
+    const fxColor = skillId === 'magma' ? 'fire' : skillId === 'frost' ? 'ice' : 'lightning';
+    if (skillId === 'frost') {
+      this.fx.frostCastCue(ox + aimX * 0.7, 1.0, oz + aimZ * 0.7);
+    } else {
+      this.fx.pop(ox + aimX * 0.7, 1.0, oz + aimZ * 0.7, fxColor, 0.22);
+    }
+    const cast: CastRuntime = { overchargeReduced: 0, phaseEchoConsumed: resolved.phaseEchoApplied };
+    const count = Math.max(1, resolved.projectileCount);
     for (let i = 0; i < count; i++) {
-      // Charged bolt fans out slightly; single bolts fly straight.
       const spread = count > 1 ? (i / (count - 1) - 0.5) * 0.5 : 0;
       const cos = Math.cos(spread), sin = Math.sin(spread);
       const dx = aimX * cos - aimZ * sin;
       const dz = aimX * sin + aimZ * cos;
-      this.spawnProjectile(def, ox + dx * 0.6, oz + dz * 0.6, dx, dz);
+      this.spawnProjectile(skillId, resolved, ox + dx * 0.6, oz + dz * 0.6, dx, dz, cast);
     }
     return 'ok';
   }
 
-  private spawnProjectile(def: SkillDef, x: number, z: number, dx: number, dz: number): void {
+  private spawnProjectile(
+    skillId: SkillId,
+    resolved: ResolvedSkill,
+    x: number,
+    z: number,
+    dx: number,
+    dz: number,
+    cast: CastRuntime,
+  ): void {
     const y = 1.0;
     const yaw = Math.atan2(dx, dz);
     const q = quat.eulerY(yaw);
@@ -211,9 +364,9 @@ export class SkillSystem {
     );
     if (!rootRes.ok) return;
     const root = rootRes.value as EntityHandle;
-    const pair = this.mats.get(def.id)!;
+    const pair = this.mats.get(skillId)!;
     const parts: EntityHandle[] = [];
-    for (const p of VISUALS[def.id] ?? []) {
+    for (const p of VISUALS[skillId] ?? []) {
       const tform: { pos: number[]; scale: number[]; quat?: number[] } = {
         pos: [p.px, p.py, p.pz],
         scale: [p.sx, p.sy, p.sz],
@@ -230,15 +383,79 @@ export class SkillSystem {
       );
       if (partRes.ok) parts.push(partRes.value as EntityHandle);
     }
-    const elemMul = def.id === 'magma' ? this.mods.fireMul : def.id === 'frost' ? this.mods.frostMul : this.mods.arcMul;
+    const elemMul = skillId === 'magma' ? this.mods.fireMul : skillId === 'frost' ? this.mods.frostMul : this.mods.arcMul;
     this.projectiles.push({
-      e: root, skill: def, damage: (def.damage ?? 0) * this.mods.dmgMul * elemMul,
+      e: root, resolved, skillId,
+      damage: resolved.damage * this.mods.dmgMul * elemMul,
       x, y, z, dx, dz,
-      age: 0, jitterT: 0.12, hits: new Set(), parts,
+      age: 0, jitterT: 0.12,
+      pierceLeft: resolved.pierceCount,
+      hits: new Set(), parts,
+      cast,
+      overchargeHitDone: false,
     });
   }
 
-  /** Advance projectiles + hit-test vs monsters. */
+  /** Apply tree onHit effects. Shatter/Hellfire never recurse into skill effects. */
+  private applyOnHit(
+    p: Projectile,
+    m: Monster,
+    directDmg: number,
+    crit: boolean,
+    monsters: MonsterManager,
+  ): void {
+    for (const fx of p.resolved.onHit) {
+      if (fx.kind === 'scorch') {
+        monsters.applyBurn(m, directDmg * fx.fraction, fx.durationSec);
+      } else if (fx.kind === 'hellfire-explosion' && crit) {
+        const boom = directDmg * fx.damageRatio;
+        for (const m2 of [...monsters.monsters]) {
+          if (m2 === m || p.hits.has(m2)) continue;
+          const adx = m2.x - m.x, adz = m2.z - m.z;
+          if (adx * adx + adz * adz > fx.radius * fx.radius) continue;
+          p.hits.add(m2);
+          const ad = Math.hypot(adx, adz) || 1;
+          const k2 = monsters.damage(m2, boom, 0, adx / ad, adz / ad, (p.resolved.knockback ?? 0) * 0.5);
+          this.hooks.onHit(m2.x, 1.0, m2.z, boom, k2, false);
+        }
+        this.fx.pop(m.x, 1.0, m.z, 'fire', 0.8);
+        this.fx.burst(m.x, 1.0, m.z, 'fire', 12, 4.5);
+      } else if (fx.kind === 'shatter-shards') {
+        // Shatter VFX only when the learned node resolved shards (count > 0).
+        const shards = shatterShardCount(p.resolved);
+        if (shards > 0) this.fx.shatterFragments(m.x, 1.0, m.z, shards);
+        const shardDmg = directDmg * fx.damageRatio;
+        const candidates = monsters.monsters
+          .filter((m2) => m2 !== m)
+          .map((m2) => {
+            const dx = m2.x - m.x, dz = m2.z - m.z;
+            return { m2, d2: dx * dx + dz * dz };
+          })
+          .filter((c) => c.d2 <= fx.rangeM * fx.rangeM)
+          .sort((a, b) => a.d2 - b.d2)
+          .slice(0, fx.count);
+        for (const { m2 } of candidates) {
+          const adx = m2.x - m.x, adz = m2.z - m.z;
+          const ad = Math.hypot(adx, adz) || 1;
+          const k2 = monsters.damage(m2, shardDmg, 0, adx / ad, adz / ad, 1.2);
+          this.hooks.onHit(m2.x, 1.0, m2.z, shardDmg, k2, false);
+          this.fx.pop(m2.x, 1.0, m2.z, 'ice', 0.28);
+        }
+      } else if (fx.kind === 'overcharge-cdr' && !p.overchargeHitDone) {
+        p.overchargeHitDone = true;
+        const room = fx.capPerCastSec - p.cast.overchargeReduced;
+        if (room > 0) {
+          const reduce = Math.min(fx.perHitSec, room);
+          p.cast.overchargeReduced += reduce;
+          const blinkIdx = this.indexOf('blink');
+          if (blinkIdx >= 0) {
+            this.cooldowns[blinkIdx] = Math.max(0, this.cooldowns[blinkIdx]! - reduce);
+          }
+        }
+      }
+    }
+  }
+
   tick(dt: number, monsters: MonsterManager): void {
     for (let i = 0; i < this.cooldowns.length; i++) {
       if (this.cooldowns[i]! > 0) this.cooldowns[i] = Math.max(0, this.cooldowns[i]! - dt);
@@ -250,15 +467,14 @@ export class SkillSystem {
     };
     for (let i = this.projectiles.length - 1; i >= 0; i--) {
       const p = this.projectiles[i]!;
-      const def = p.skill;
+      const r = p.resolved;
       p.age += dt;
-      if (p.age > (def.life ?? 1)) {
+      if (p.age > (r.projectileLifetime || 1)) {
         kill(p);
         this.projectiles.splice(i, 1);
         continue;
       }
-      // Charged bolt wanders: random small steering every ~0.12 s.
-      if (def.erratic) {
+      if (r.erratic) {
         p.jitterT -= dt;
         if (p.jitterT <= 0) {
           p.jitterT = 0.10 + Math.random() * 0.08;
@@ -269,57 +485,61 @@ export class SkillSystem {
           p.dx = ndx;
         }
       }
-      p.x += p.dx * (def.speed ?? 10) * dt;
-      p.z += p.dz * (def.speed ?? 10) * dt;
+      p.x += p.dx * (r.projectileSpeed || 10) * dt;
+      p.z += p.dz * (r.projectileSpeed || 10) * dt;
 
-      // Hit-test: nearest monster within its body radius + bolt radius.
       let dead = false;
       for (const m of monsters.monsters) {
         if (p.hits.has(m)) continue;
         const mdx = m.x - p.x, mdz = m.z - p.z;
-        const r = MONSTERS[m.kind].radius + 0.35;
-        if (mdx * mdx + mdz * mdz > r * r) continue;
+        const hitR = MONSTERS[m.kind].radius + 0.35;
+        if (mdx * mdx + mdz * mdz > hitR * hitR) continue;
         p.hits.add(m);
-        // Crit roll per target; knockback rides the flight direction.
-        const crit = Math.random() < CRIT_CHANCE + this.mods.critChance;
-        const dmg = p.damage * (crit ? CRIT_MUL + this.mods.critMul : 1);
-        const kb = (def.knockback ?? 0) * (crit ? 1.4 : 1);
-        const killed = monsters.damage(m, dmg, def.slowSec ?? 0, p.dx, p.dz, kb);
+        // Winter's Grasp: check slow BEFORE this hit's damage/slow resolves.
+        const winterMul = r.slowedTargetMul > 1 && monsters.isSlowed(m) ? r.slowedTargetMul : 1;
+        const crit = Math.random() < this.mods.critChance;
+        const dmg = p.damage * winterMul * (crit ? this.mods.critMultiplier : 1);
+        const kb = (r.knockback ?? 0) * (crit ? 1.4 : 1);
+        const killed = monsters.damage(m, dmg, r.slowDuration, p.dx, p.dz, kb);
         this.hooks.onHit(m.x, 1.0, m.z, dmg, killed, crit);
-        // Impact flash + debris — the pop is the punch, the burst is dressing.
-        if (def.id === 'magma') {
+        this.applyOnHit(p, m, dmg, crit, monsters);
+        if (p.skillId === 'magma') {
           this.fx.pop(p.x, p.y, p.z, 'fire', crit ? 0.65 : 0.5);
           this.fx.burst(p.x, p.y, p.z, 'fire', 8, 3.8);
-        } else if (def.id === 'frost') {
-          this.fx.pop(p.x, p.y, p.z, 'ice', crit ? 0.5 : 0.38);
-          this.fx.burst(p.x, p.y, p.z, 'ice', 5, 2.6);
+        } else if (p.skillId === 'frost') {
+          // Collision-aligned impact (shader mats shared via frostVfx();
+          // particle pop/burst carry the readable flash in Edit fallback).
+          this.fx.frostImpact(p.x, p.y, p.z, crit);
         } else {
           this.fx.pop(p.x, p.y, p.z, 'lightning', crit ? 0.55 : 0.42);
           this.fx.burst(p.x, p.y, p.z, 'lightning', 5, 3.0);
         }
-        // AoE splash (magma bolt) — damage every other monster in radius,
-        // knocked radially away from the impact point.
-        if (def.aoeRadius) {
+        if (r.splashRadius > 0) {
+          const splashMul = r.splashRatio > 0 ? r.splashRatio : 0.5;
           for (const m2 of [...monsters.monsters]) {
             if (m2 === m || p.hits.has(m2)) continue;
             const adx = m2.x - p.x, adz = m2.z - p.z;
             const ad2 = adx * adx + adz * adz;
-            if (ad2 < def.aoeRadius * def.aoeRadius) {
+            if (ad2 < r.splashRadius * r.splashRadius) {
               p.hits.add(m2);
               const ad = Math.sqrt(ad2) || 1;
-              const k2 = monsters.damage(m2, dmg * 0.6, 0, adx / ad, adz / ad, (def.knockback ?? 0) * 0.7);
-              this.hooks.onHit(m2.x, 1.0, m2.z, dmg * 0.6, k2, false);
+              const k2 = monsters.damage(m2, dmg * splashMul, 0, adx / ad, adz / ad, (r.knockback ?? 0) * 0.7);
+              this.hooks.onHit(m2.x, 1.0, m2.z, dmg * splashMul, k2, false);
             }
           }
         }
-        if (!def.pierce) { dead = true; break; }
+        if (p.pierceLeft > 0) {
+          p.pierceLeft -= 1;
+        } else {
+          dead = true;
+          break;
+        }
       }
       if (dead) {
         kill(p);
         this.projectiles.splice(i, 1);
         continue;
       }
-      // Face the (possibly steered) travel direction.
       const yaw = Math.atan2(p.dx, p.dz);
       const h = yaw * 0.5;
       this.world.set(p.e, Transform, {
@@ -328,7 +548,58 @@ export class SkillSystem {
         scale: [1, 1, 1],
       });
     }
+    // Keep __hf / lifecycle projectile count in sync after expiry & hits.
+    this.fx.noteProjectiles(this.projectiles.length);
   }
 
   activeCount(): number { return this.projectiles.length; }
+
+  isPhaseEchoActive(): boolean {
+    return this.#phaseEchoUntil > performance.now() / 1000;
+  }
+
+  /** Clear projectiles + cooldowns + Phase Echo (combat-run reset seam). */
+  clearProjectilesAndCooldowns(): void {
+    for (const p of this.projectiles) {
+      this.world.despawn(p.e);
+      for (const pe of p.parts) this.world.despawn(pe);
+    }
+    this.projectiles.length = 0;
+    this.fx.noteProjectiles(0);
+    for (let i = 0; i < this.cooldowns.length; i++) this.cooldowns[i] = 0;
+    this.#phaseEchoUntil = 0;
+  }
+}
+
+export function createSkillCaster(deps: {
+  skills: SkillSystem;
+  getOrigin: () => readonly [number, number];
+  getPlayer: () => PlayerStats;
+  getLevel: () => number;
+  getSkillRanks: () => Readonly<Partial<Record<SkillNodeId, number>>>;
+}): SkillCaster {
+  return {
+    cast(skillId, aim) {
+      const [ox, oz] = deps.getOrigin();
+      const len = Math.hypot(aim[0], aim[1]);
+      const ax = len > 1e-6 ? aim[0] / len : 0;
+      const az = len > 1e-6 ? aim[1] / len : 1;
+      const ranks = deps.getSkillRanks();
+      const resolved = resolveSkill(skillId, {
+        skillRanks: ranks,
+        phaseEchoActive: deps.skills.isPhaseEchoActive(),
+      });
+      return deps.skills.castResolved(
+        skillId,
+        ox,
+        oz,
+        ax,
+        az,
+        deps.getPlayer(),
+        deps.getLevel(),
+        ranks,
+        resolved,
+      );
+    },
+  };
 }

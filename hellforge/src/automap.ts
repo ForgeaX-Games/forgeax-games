@@ -46,7 +46,9 @@ export function installAutomap(mount: HTMLElement, cb: AutomapCallbacks): Automa
     'width:min(72%,520px);max-height:78%;';
 
   const label = document.createElement('div');
+  // AreaDef.displayName for slagdeep-hollow (Task 4.2) — keep literal for pack-free UI.
   label.textContent = '熔渣深窟 · 自动地图  (Tab 关闭)';
+  label.dataset.areaId = 'slagdeep-hollow';
   label.style.cssText = `font:700 12px ${FONT_UI};color:#c8a84e;` +
     'text-shadow:0 1px 3px #000;letter-spacing:2px;white-space:nowrap;flex:none;';
 

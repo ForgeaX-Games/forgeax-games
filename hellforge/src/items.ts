@@ -39,7 +39,23 @@ export interface Item {
   legendary?: string;      // unique id when rarity === 'legendary'
 }
 
-/** Aggregate bonus of everything equipped — main.ts applies it. */
+/** Rolled loot with a stable instance id — domain/inventory authority. */
+export interface ItemInstance extends Item {
+  instanceId: string;
+}
+
+function mintInstanceId(): string {
+  return crypto.randomUUID();
+}
+
+function withInstanceId(item: Item): ItemInstance {
+  return { ...item, instanceId: mintInstanceId() };
+}
+
+/**
+ * Aggregate equipment affixes. CombatStats (deriveCombatStats) is the consumer;
+ * do not treat EquipBonus as a parallel combat authority.
+ */
 export interface EquipBonus {
   dmgPct: number;
   fireDmg: number; frostDmg: number; arcDmg: number;
@@ -215,7 +231,7 @@ export const LEGENDARIES: LegendaryDef[] = [
 
 // ── rolls ──────────────────────────────────────────────────────────────────
 
-function rollLegendary(ilvl: number): Item {
+function rollLegendary(ilvl: number): ItemInstance {
   const def = LEGENDARIES[Math.floor(Math.random() * LEGENDARIES.length)]!;
   const scale = ilvlScale(ilvl);
   const affixes: Affix[] = def.affixes.map((a) => {
@@ -225,15 +241,15 @@ function rollLegendary(ilvl: number): Item {
   // + one random suffix so two copies of the same unique still differ
   const extra = rollAffixFrom(SUFFIXES, ilvl, new Set(affixes.map((a) => a.stat)));
   if (extra) affixes.push(extra.affix);
-  return {
+  return withInstanceId({
     slot: def.slot, rarity: 'legendary', name: def.name,
     ilvl, reqLevel: Math.max(1, ilvl - 1),
     affixes, score: scoreOf(affixes, 'legendary'), legendary: def.id,
-  };
+  });
 }
 
 /** Roll an item of the given rarity at the given item level. */
-export function rollItem(rarity: Rarity, ilvl: number, slot?: ItemSlot): Item {
+export function rollItem(rarity: Rarity, ilvl: number, slot?: ItemSlot): ItemInstance {
   if (rarity === 'legendary') return rollLegendary(ilvl);
   const s = slot ?? SLOT_ORDER[Math.floor(Math.random() * SLOT_ORDER.length)]!;
   const base = BASE_NAMES[s][Math.min(2, Math.floor((ilvl - 1) / 3))]!;
@@ -277,18 +293,18 @@ export function rollItem(rarity: Rarity, ilvl: number, slot?: ItemSlot): Item {
       if (Math.random() < 0.5) addPrefix(); else addSuffix();
     }
   }
-  return {
+  return withInstanceId({
     slot: s, rarity, name,
     ilvl, reqLevel: Math.max(1, ilvl - 1),
     affixes, score: scoreOf(affixes, rarity),
-  };
+  });
 }
 
 /**
  * Kill-time drop roll. `magicFind` (0.2 = +20%) shifts weight from common
  * toward magic/rare/legendary. Returns null for "no equipment this kill".
  */
-export function rollDrop(monsterLevel: number, isBoss: boolean, magicFind: number): Item | null {
+export function rollDrop(monsterLevel: number, isBoss: boolean, magicFind: number): ItemInstance | null {
   if (!isBoss && Math.random() >= 0.13) return null;
   const ilvl = Math.max(1, Math.min(10, monsterLevel + (Math.random() < 0.35 ? 1 : 0)));
   const mf = 1 + magicFind;
@@ -307,13 +323,13 @@ export function rollDrop(monsterLevel: number, isBoss: boolean, magicFind: numbe
   return rollItem(rarity, isBoss ? Math.min(10, ilvl + 1) : ilvl);
 }
 
-export type Equipment = Record<ItemSlot, Item | null>;
+export type Equipment = Record<ItemSlot, ItemInstance | null>;
 
 export function emptyEquipment(): Equipment {
   return { weapon: null, helm: null, armor: null, boots: null, ring: null, amulet: null };
 }
 
-export function computeBonus(eq: Equipment): EquipBonus {
+export function computeBonus(eq: Readonly<Equipment>): EquipBonus {
   const b: EquipBonus = {
     dmgPct: 0, fireDmg: 0, frostDmg: 0, arcDmg: 0, critChance: 0, critDmg: 0,
     maxHp: 0, maxMana: 0, hpRegen: 0, manaRegen: 0, moveSpd: 0, cdr: 0,
@@ -324,14 +340,15 @@ export function computeBonus(eq: Equipment): EquipBonus {
     if (!item) continue;
     for (const a of item.affixes) b[a.stat] += a.v;
   }
+  // Equipment-only caps (Spec §5.2). Final crit chance (class + equip) is capped
+  // at 50% inside deriveCombatStats.
   b.cdr = Math.min(0.45, b.cdr);
   b.moveSpd = Math.min(0.4, b.moveSpd);
-  b.critChance = Math.min(0.45, b.critChance);
   return b;
 }
 
 /** Tooltip lines: [text, cssColor][] — the inventory UI renders these. */
-export function itemTooltipLines(item: Item, playerLevel: number): Array<[string, string]> {
+export function itemTooltipLines(item: Readonly<Item>, playerLevel: number): Array<[string, string]> {
   const meta = RARITY_META[item.rarity];
   const lines: Array<[string, string]> = [
     [item.name, meta.color],
@@ -346,4 +363,128 @@ export function itemTooltipLines(item: Item, playerLevel: number): Array<[string
     if (def) lines.push([def.flavor, '#c8843c']);
   }
   return lines;
+}
+
+/** Gold from melting a bag item — keep in sync with CharacterDomain melt-bag. */
+export function meltGoldValue(item: Readonly<Item>): number {
+  return Math.round(
+    3 + item.ilvl * 2 +
+      (item.rarity === 'legendary' ? 60 : item.rarity === 'rare' ? 18 : item.rarity === 'magic' ? 7 : 0),
+  );
+}
+
+/** Spec §8 quest-reward recipe — SSOT for 霜铸魔杖; createFrostforgedWand builds from it. */
+export interface QuestRewardDef {
+  readonly contentId: string;
+  readonly name: string;
+  readonly slot: ItemSlot;
+  readonly rarity: Rarity;
+  readonly ilvl: number;
+  readonly reqLevel: number;
+  readonly affixes: readonly { readonly stat: AffixStat; readonly v: number }[];
+}
+
+export const FROSTFORGED_WAND_REWARD: QuestRewardDef = {
+  contentId: 'quest-frostforged-wand',
+  name: '霜铸魔杖',
+  slot: 'weapon',
+  rarity: 'rare',
+  ilvl: 4,
+  reqLevel: 1,
+  affixes: [
+    { stat: 'frostDmg', v: 0.20 },
+    { stat: 'cdr', v: 0.08 },
+  ],
+};
+
+/** Spec §8 quest reward — deterministic affixes; fresh instanceId each call. */
+export function createFrostforgedWand(def: QuestRewardDef = FROSTFORGED_WAND_REWARD): ItemInstance {
+  const affixes: Affix[] = def.affixes.map((a) => ({
+    stat: a.stat,
+    v: a.v,
+    label: fmtAffix(a.stat, a.v),
+  }));
+  return withInstanceId({
+    slot: def.slot,
+    rarity: def.rarity,
+    name: def.name,
+    ilvl: def.ilvl,
+    reqLevel: def.reqLevel,
+    affixes,
+    score: scoreOf(affixes, def.rarity),
+  });
+}
+
+export type StatDeltaPolarity = 'positive' | 'negative' | 'neutral';
+
+/** Candidate vs equipped affix delta (higher is better for every AffixStat). */
+export interface StatDelta {
+  readonly stat: AffixStat;
+  readonly delta: number;
+  readonly polarity: StatDeltaPolarity;
+  readonly label: string;
+}
+
+const STAT_COMPARE_ORDER: readonly AffixStat[] = [
+  'dmgPct', 'fireDmg', 'frostDmg', 'arcDmg', 'critChance', 'critDmg',
+  'maxHp', 'maxMana', 'hpRegen', 'manaRegen', 'moveSpd', 'cdr',
+  'goldFind', 'magicFind', 'xpGain', 'lifeOnKill',
+];
+
+function sumStat(item: Readonly<Item> | null, stat: AffixStat): number {
+  if (!item) return 0;
+  let t = 0;
+  for (const a of item.affixes) if (a.stat === stat) t += a.v;
+  return t;
+}
+
+/** Human-readable signed delta (CDR shown as cooldown reduction, not raw fmtAffix). */
+export function fmtStatDelta(stat: AffixStat, delta: number): string {
+  const abs = Math.abs(delta);
+  const sign = delta > 0 ? '+' : delta < 0 ? '−' : '';
+  switch (stat) {
+    case 'dmgPct':     return `${sign}${Math.round(abs * 100)}% 伤害`;
+    case 'fireDmg':    return `${sign}${Math.round(abs * 100)}% 熔火弹伤害`;
+    case 'frostDmg':   return `${sign}${Math.round(abs * 100)}% 霜牙伤害`;
+    case 'arcDmg':     return `${sign}${Math.round(abs * 100)}% 电弧涌伤害`;
+    case 'critChance': return `${sign}${(abs * 100).toFixed(1)}% 暴击率`;
+    case 'critDmg':    return `${sign}${Math.round(abs * 100)}% 暴击伤害`;
+    case 'maxHp':      return `${sign}${Math.round(abs)} 生命上限`;
+    case 'maxMana':    return `${sign}${Math.round(abs)} 法力上限`;
+    case 'hpRegen':    return `${sign}${abs.toFixed(1)}/秒 生命回复`;
+    case 'manaRegen':  return `${sign}${abs.toFixed(1)}/秒 法力回复`;
+    case 'moveSpd':    return `${sign}${Math.round(abs * 100)}% 移动速度`;
+    case 'cdr':        return `${sign}${Math.round(abs * 100)}% 冷却缩减`;
+    case 'goldFind':   return `${sign}${Math.round(abs * 100)}% 金币获取`;
+    case 'magicFind':  return `${sign}${Math.round(abs * 100)}% 掉宝率`;
+    case 'xpGain':     return `${sign}${Math.round(abs * 100)}% 经验获取`;
+    case 'lifeOnKill': return `${sign}${Math.round(abs)} 击杀回血`;
+  }
+}
+
+/**
+ * Compare a bag/hover candidate to the currently equipped piece in the same slot.
+ * Empty equipped → every candidate affix is a positive gain; stats only on the
+ * equipped piece appear as losses.
+ */
+export function compareItems(
+  candidate: ItemInstance,
+  equipped: ItemInstance | null,
+): readonly StatDelta[] {
+  const out: StatDelta[] = [];
+  for (const stat of STAT_COMPARE_ORDER) {
+    const c = sumStat(candidate, stat);
+    const e = sumStat(equipped, stat);
+    if (c === 0 && e === 0) continue;
+    const delta = c - e;
+    const polarity: StatDeltaPolarity =
+      Math.abs(delta) < 1e-9 ? 'neutral' : delta > 0 ? 'positive' : 'negative';
+    out.push(Object.freeze({
+      stat,
+      delta,
+      polarity,
+      label: fmtStatDelta(stat, delta),
+    }));
+  }
+  return Object.freeze(out);
 }

@@ -70,17 +70,27 @@ export type InstallRenderSettingsArgs = {
   onDisplay?: (s: RenderSettings) => void;
   /** Called whenever bgmVolume / sfxVolume change. */
   onAudio?: (s: RenderSettings) => void;
-  /** Camera projection params used by applyCamera. */
-  proj: { fov: number; near: number; far: number };
+  /**
+   * Camera projection params used by applyCamera.
+   * `getVerticalFovRad` must read from the gameplay CameraRigState (sole FOV SSOT).
+   */
+  proj: { getVerticalFovRad: () => number; near: number; far: number };
+  /**
+   * When false, skip the window F10 listener so a host (UiLayerManager) owns
+   * toggle exclusivity. Default true (Title shell).
+   */
+  bindHotkey?: boolean;
 };
 
 export type RenderSettingsApi = {
   get: () => RenderSettings;
   /** ONLY writer of Camera component fields. */
   applyCamera: () => void;
+  /** Surface API for UiLayerManager.register. */
   open: () => void;
   close: () => void;
   toggle: () => void;
+  isOpen: () => boolean;
   dispose: () => void;
 };
 
@@ -282,7 +292,7 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
     const clear = tempShiftClear(SKY_CLEAR, settings.atmoTemp);
     world.set(camera, Camera, {
       ...perspective({
-        fov: proj.fov,
+        fov: proj.getVerticalFovRad(),
         aspect: getAspect(),
         near: proj.near,
         far: proj.far,
@@ -332,6 +342,7 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
       open: () => {},
       close: () => {},
       toggle: () => {},
+      isOpen: () => false,
       dispose: () => {},
     };
   }
@@ -589,18 +600,21 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
   const close = (): void => {
     panel.style.display = 'none';
   };
+  const isOpen = (): boolean =>
+    panel.style.display !== 'none' && panel.style.display !== '';
   const toggle = (): void => {
-    if (panel.style.display === 'none' || panel.style.display === '') open();
-    else close();
+    if (isOpen()) close();
+    else open();
   };
 
+  const bindHotkey = args.bindHotkey !== false;
   const onKey = (e: KeyboardEvent): void => {
     if (e.code === 'F10') {
       e.preventDefault();
       toggle();
     }
   };
-  window.addEventListener('keydown', onKey);
+  if (bindHotkey) window.addEventListener('keydown', onKey);
 
   // Apply persisted settings on install (camera + lighting + particles + display + audio).
   persistAndNotify({ lighting: true, particles: true, display: true, audio: true });
@@ -611,8 +625,9 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
     open,
     close,
     toggle,
+    isOpen,
     dispose: () => {
-      window.removeEventListener('keydown', onKey);
+      if (bindHotkey) window.removeEventListener('keydown', onKey);
       panel.remove();
       vignetteEl.remove();
       hazeEl.remove();

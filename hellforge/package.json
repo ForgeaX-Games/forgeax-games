@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "license": "Apache-2.0",
-  "description": "ForgeaX: Hellforge — Diablo II-flavoured action RPG sample. Female sorceress hero, encampment hub, switchable 2.5D ⇄ FPS view, skill-based combat, monster grinding + loot. Loaded by apps/preview via loadGame dynamic import.",
+  "description": "ForgeaX: Hellforge — original dark-fantasy ARPG sample. Sorceress Act-1 slice: Cinderwatch hub, isometric arpg combat, camp showcase camera, skill-tree casting, loot and quests. Loaded by apps/preview via loadGame dynamic import.",
   "scripts": {},
   "forgeax": {
     "assets": {
@@ -31,6 +31,7 @@
     "@forgeax/engine-types": "workspace:*"
   },
   "devDependencies": {
-    "@webgpu/types": "^0.1.70"
+    "@webgpu/types": "^0.1.70",
+    "bun-types": "^1.3.14"
   }
 }

@@ -10,6 +10,9 @@
   },
   "devDependencies": {
     "@gltf-transform/core": "^4.4.1",
-    "@gltf-transform/functions": "^4.4.1"
+    "@gltf-transform/functions": "^4.4.1",
+    "@webgpu/types": "^0.1.70",
+    "bun-types": "1.3.14",
+    "mikktspace": "^1.1.1"
   }
 }

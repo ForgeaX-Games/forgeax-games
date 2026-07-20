@@ -80,19 +80,24 @@
       "sourceIndex": 1
     },
     {
-      "guid": "019f439f-a25e-7fd4-a8b4-595d1fd0ce06",
+      "guid": "019f439f-a25e-7fd4-a8b4-59601eb96021",
       "kind": "animation-clip",
       "sourceIndex": 2
     },
     {
-      "guid": "019f439f-a25e-7fd4-a8b4-595ef92b9f86",
+      "guid": "019f439f-a25e-7fd4-a8b4-595d1fd0ce06",
       "kind": "animation-clip",
       "sourceIndex": 3
     },
     {
-      "guid": "019f439f-a25e-7fd4-a8b4-595f1eb96020",
+      "guid": "019f439f-a25e-7fd4-a8b4-595ef92b9f86",
       "kind": "animation-clip",
       "sourceIndex": 4
+    },
+    {
+      "guid": "019f439f-a25e-7fd4-a8b4-595f1eb96020",
+      "kind": "animation-clip",
+      "sourceIndex": 5
     }
   ]
 }

@@ -8,14 +8,17 @@
 //  clips, active-cast skills, monsters, loot, leveling, ARPG HUD.
 //
 //  Controls
-//    WASD            move                Shift          sprint
-//    Mouse           aim (2.5D: ground cursor · 3rd person: look)
-//    Left-click      cast selected skill
-//    1/2/3/4         select + cast skill (熔火弹/霜牙/电弧涌/影踏)
-//    V               toggle 2.5D ⇄ third-person view
+//    WASD            move (vector intent; cancels click path/target)
+//    Mouse           aim (ground cursor unprojection from camera rig)
+//    Wheel           zoom ARPG distance 10–14 m (pitch fixed)
+//    Left-click      ground → path; enemy → pursue + frost; npc/loot/exit → interact
+//    Right-click     cast domain-selected hotbar skill
+//    1/2/3/4         select hotbar slot only (no cast)
+//    C               character / combat-stat sheet
+//    V               toggle arpg ⇄ showcase (camp-only; spring-arm; combat off)
 //    R               respawn after death
 //    F10             toggle render-settings panel (post / lighting / atmosphere)
-//    Esc             release pointer-lock
+//    Esc             close major panels / automap
 //
 //  Areas live in ONE world: the camp scene pack at the origin, the PCG
 //  dungeon offset at (300, 300) — beyond the camera far plane, so neither
@@ -49,25 +52,52 @@ import {
   HANDLE_QUAD,
 } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
+import { createQueryState, queryRun, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
 import type { AnimationClip, EquirectAsset, Handle, MeshAsset, SceneAsset } from '@forgeax/engine-types';
 
-import { createPlayer, createPlayerAtLevel, damagePlayer, grantXp, respawnPlayer, tickPlayer } from './src/state';
+import {
+  createPlayerFromCombatStats,
+  damagePlayer,
+  syncRuntimeFromCombatStats,
+  tickPlayer,
+  xpForLevel,
+} from './src/state';
+import { deriveCombatStats, type CombatStats } from './src/combat-stats';
+import { resolveIncomingDamage } from './src/damage';
 import { FxSystem } from './src/fx';
 import { MonsterManager, MONSTERS, type Monster } from './src/monsters';
-import { SkillSystem } from './src/skills';
-import { DEFAULT_HERO_ID, getHeroDef } from './src/heroes';
+import {
+  createSkillCaster,
+  skillDefForRanks,
+  SkillSystem,
+  type CastResult,
+} from './src/skills';
+import { resolveSkill } from './src/skill-resolver';
+import { buildSkillTreeViewModel, installSkillPanel } from './src/skill-panel';
+import {
+  stateFromProgression,
+  type SkillTreeFailReason,
+  type SkillTreeResult,
+} from './src/skill-tree';
+import { installSkillFixture } from './src/dev-skill-fixture';
+import { getHeroDef } from './src/heroes';
+import { selectLocomotionClip } from './src/locomotion';
 import { createCharacterSelectionGate } from './src/selection-gate';
+import {
+  createSorceressDomain,
+  type CharacterDomain,
+} from './src/character-domain';
 import { LootSystem } from './src/loot';
-import { installHud, type EquipSlotState, type SkillSlotState } from './src/hud';
+import { installHud, type EquipSlotState, type SkillSlotState, type TargetViewModel } from './src/hud';
+import { installCharacterPanel } from './src/character-panel';
 import { Dungeon, DUNGEON_ORIGIN } from './src/dungeon';
 import { CELL, CELLS } from './src/dungeon-layout';
 import { Sfx } from './src/sfx';
 import {
-  computeBonus, emptyEquipment, itemTooltipLines, rollDrop,
+  itemTooltipLines, rollDrop,
   RARITY_META, SLOT_META, SLOT_ORDER,
-  type EquipBonus, type Item,
+  type Equipment, type ItemInstance,
 } from './src/items';
 import { installInventory } from './src/inventory-ui';
 import {
@@ -81,19 +111,86 @@ import { installShell, type ShellHandle } from './src/shell';
 import { installCharSelect, type CharSelectHandle } from './src/char-select';
 import { installCharList, type CharListHandle } from './src/char-list';
 import { installHeroPreview, type HeroPreviewHandle } from './src/hero-preview';
-import { CLASS_DEFS, type CharacterRecord, type ClassId } from './src/classes';
-import { listCharacters, touchCharacter, MAX_CHARACTERS } from './src/save';
+import { CLASS_DEFS, getClassDef, type CharacterRecord, type ClassId } from './src/classes';
+import {
+  ensureCharacterEnvelope,
+  flushCharacterSaves,
+  flushReturnToTitle,
+  hydrateCharacter,
+  installSaveLifecycleHooks,
+  listCharacters,
+  MAX_CHARACTERS,
+  saveSnapshot,
+} from './src/save';
 import { installAutomap } from './src/automap';
-import { installSkillPanel } from './src/skill-panel';
+import { createUiLayerManager, type MajorPanel } from './src/ui-layer-manager';
 import { installFatalOverlay } from './src/fatal-overlay';
-import { installWildTerrain } from './src/wild-terrain';
-import { installBgm, type BgmHandle } from './src/bgm';
+import { ASHEN_REACH_BOUNDS, installWildTerrain } from './src/wild-terrain';
+import { bgmPhaseForMusic, installBgm, type BgmHandle } from './src/bgm';
 import { ensureShadowCasters } from './src/ensure-shadow-casters';
 import { contactRadiusForScale, installContactShadows } from './src/contact-shadow';
+import {
+  CAMERA_MODE_BLEND_S,
+  DEFAULT_ARPG_PRESET,
+  SHOWCASE_DISTANCE,
+  aimOnGround,
+  cameraBlendWeight,
+  cameraQuat,
+  createArpgCamera,
+  lerpCameraRig,
+  snapCameraFocus,
+  updateArpgCamera,
+  updateShowcaseCamera,
+  worldToScreen as projectWorldToScreen,
+  type CameraMode,
+  type CameraRigState,
+} from './src/camera-rig';
+import { createObstacleCameraProbe } from './src/camera-probe';
+import type { ActiveSkillId, AreaExitId } from './src/content-ids';
+import {
+  canEnterSlagdeep,
+  chooseSeededDecor,
+  chooseSeededEncounters,
+  enterArea as resolveAreaTransition,
+  getAreaDef,
+  nextWildSpawn,
+  nextWildSpawnDelay,
+  slagdeepCaveMouth,
+} from './src/areas';
+import {
+  createCombatRunDomain,
+  deriveAreaSeed,
+  resetCombatRun,
+  type CombatTransientResetters,
+} from './src/combat-run';
+import { dialogueFor } from './src/dialogue';
+import { installDialogueUi } from './src/dialogue-ui';
+import { installQuestLog, type QuestViewModel } from './src/quest-log';
+import {
+  acceptQuest,
+  markQuestReady,
+  PURGE_QUEST_ID,
+  QUEST_TITLE,
+  turnInQuest,
+} from './src/quests';
+import {
+  createHellforgeNavigation,
+  type AshenReachLayout,
+  type ObstacleDoc,
+} from './src/navigation';
+import {
+  createInteractionRegistry,
+  LMB_PURSUIT_SKILL,
+  reduceIntent,
+  tickTargetIntent,
+  wasdVectorFromKeys,
+  type InteractionCandidate,
+  type MovementIntent,
+} from './src/movement-intent';
 const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
 
-// Active hero resolves inside initializeRuntime from the selected CharacterRecord
-// (or DEFAULT_HERO_ID for play-config den launch).
+// Active hero resolves inside initializeRuntime from the CharacterDomain
+// (ephemeral Sorceress for play-config den launch).
 // Fallback background clear while equirect projection is pending / failed /
 // unsupported (WebKit). Linear/pre-tonemap (ACES). Camera writes that spread
 // perspective() must re-apply clear (and, after C2, all post settings) — see
@@ -245,9 +342,33 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
   async function initializeRuntime(selectedRecord: CharacterRecord | null): Promise<void> {
     if (stopped) return;
-    const activeCharId = selectedRecord?.id ?? null;
-    const selectedHeroId = selectedRecord?.classId ?? DEFAULT_HERO_ID;
-    const hero = getHeroDef(selectedHeroId);
+    // Den-direct play-config skips title UI but must still construct a Sorceress
+    // domain through the same factory (ephemeral — no localStorage projection).
+    const ephemeral = selectedRecord === null;
+    // Validate→hydrate→discard: migrate legacy Sorceress once, then own progression
+    // in CharacterDomain. Reload always starts at Cinderwatch with full HP/MP
+    // (camp spawn below); position/cooldowns are never restored from the envelope.
+    const character: CharacterDomain = ephemeral
+      ? createSorceressDomain({ playerName: 'Dev', ephemeral: true })
+      : hydrateCharacter(ensureCharacterEnvelope(selectedRecord));
+    const persistCharacter = (): void => {
+      if (ephemeral) return;
+      character.dispatch({ op: 'touch' });
+      saveSnapshot(character.snapshot());
+    };
+    const uninstallSaveHooks = ephemeral
+      ? () => {}
+      : installSaveLifecycleHooks(() => character.snapshot());
+    onCleanup(() => {
+      if (!ephemeral) {
+        character.dispatch({ op: 'touch' });
+        flushReturnToTitle(character.snapshot());
+      } else {
+        flushCharacterSaves();
+      }
+      uninstallSaveHooks();
+    });
+    const hero = getHeroDef(character.snapshot().identity.classId);
     const playerScale = hero.scale;
 
     // ── 1. encampment scene (engine-native pack) ──────────────────────────
@@ -377,13 +498,116 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     }
     if (stopped) return;
 
+    // ── Veyra quest NPC (authored NpcVeyraAnchor + witch.glb) ─────────────
+    const VEYRA_SCENE_GUID = '5e3028dd-ddf6-4104-86d9-318d3e8fb5a6';
+    const VEYRA_IDLE_GUID = 'c530adf2-8de6-486a-afaa-9af3a6e6dfd1';
+    const VEYRA_SCALE = 1.15;
+    const VEYRA_FALLBACK_POS: readonly [number, number, number] = [3.2, 0, 2.0];
+    const VEYRA_YAW_QUAT: readonly [number, number, number, number] = [0, 1, 0, 0]; // yaw π
+    let veyraPos: readonly [number, number] = [VEYRA_FALLBACK_POS[0], VEYRA_FALLBACK_POS[2]];
+    {
+      let anchorEnt: EntityHandle | null = null;
+      let anchorPos = [...VEYRA_FALLBACK_POS] as [number, number, number];
+      let anchorQuat = [...VEYRA_YAW_QUAT] as [number, number, number, number];
+      const qState = createQueryState({ with: [Name, Transform, Entity] as const });
+      queryRun(qState, world, (bundle) => {
+        const ents = bundle.Entity.self;
+        for (let i = 0; i < ents.length; i++) {
+          const e = ents[i] as EntityHandle | undefined;
+          if (e === undefined) continue;
+          const n = world.get(e, Name);
+          if (!n.ok || n.value.value !== 'NpcVeyraAnchor') continue;
+          const t = world.get(e, Transform);
+          if (!t.ok) continue;
+          anchorEnt = e;
+          anchorPos = [t.value.pos[0]!, t.value.pos[1]!, t.value.pos[2]!];
+          if (t.value.quat) {
+            anchorQuat = [t.value.quat[0]!, t.value.quat[1]!, t.value.quat[2]!, t.value.quat[3]!];
+          }
+          break;
+        }
+      });
+      if (anchorEnt === null) {
+        // Anchor missing from loaded scene — still place at authored contract.
+        console.warn('[hellforge] NpcVeyraAnchor not found in world — using authored [3.2,0,2.0]');
+      }
+      veyraPos = [anchorPos[0], anchorPos[2]];
+      try {
+        if (!assets) throw new Error('no asset registry for Veyra');
+        const sceneGuid = AssetGuid.parse(VEYRA_SCENE_GUID);
+        if (!sceneGuid.ok) throw new Error('Veyra scene guid parse');
+        const sceneRes = await assets.loadByGuid<SceneAsset>(sceneGuid.value);
+        if (!sceneRes.ok) {
+          throw new Error('Veyra witch.glb scene load failed: ' + ((sceneRes.error as { code?: string }).code ?? '?'));
+        }
+        const idleGuid = AssetGuid.parse(VEYRA_IDLE_GUID);
+        if (!idleGuid.ok) throw new Error('Veyra idle guid parse');
+        const idleRes = await assets.loadByGuid<AnimationClip>(idleGuid.value);
+        if (!idleRes.ok) {
+          throw new Error('Veyra idle clip load failed: ' + ((idleRes.error as { code?: string }).code ?? '?'));
+        }
+        const idleClip = world.allocSharedRef<'AnimationClip', AnimationClip>('AnimationClip', idleRes.value);
+        const veyraRig = world.spawn({
+          component: Transform,
+          data: {
+            pos: [anchorPos[0], anchorPos[1], anchorPos[2]],
+            quat: [anchorQuat[0], anchorQuat[1], anchorQuat[2], anchorQuat[3]],
+            scale: [VEYRA_SCALE, VEYRA_SCALE, VEYRA_SCALE],
+          },
+        }).unwrap() as EntityHandle;
+        world.addComponent(veyraRig, { component: Name, data: { value: 'NpcVeyraVisual' } });
+        const sceneHandle = world.allocSharedRef<'SceneAsset', SceneAsset>('SceneAsset', sceneRes.value);
+        const instRes = assets.instantiate<SceneAsset>(sceneHandle, world, veyraRig);
+        if (!instRes.ok) throw new Error('Veyra instantiate failed: ' + ((instRes.error as { code?: string }).code ?? '?'));
+        const veyraRoot = instRes.value as EntityHandle;
+        const sceneInst = world.get(veyraRoot, SceneInstance);
+        let veyraSkin: EntityHandle | null = null;
+        if (sceneInst.ok) {
+          for (let i = 0; i < sceneInst.value.mapping.length; i++) {
+            const ent = sceneInst.value.mapping[i];
+            if (ent === undefined || ent === 0) continue;
+            if (world.get(ent as EntityHandle, Skin).ok) {
+              veyraSkin = ent as EntityHandle;
+              break;
+            }
+          }
+        }
+        if (veyraSkin !== null) {
+          world.addComponent(veyraSkin, {
+            component: AnimationPlayer,
+            data: {
+              clips: [idleClip],
+              times: new Float32Array([0]),
+              weights: new Float32Array([1]),
+              speeds: new Float32Array([1]),
+              paused: false,
+              looping: true,
+            },
+          });
+          world.removeComponent(veyraSkin, ChildOf);
+          world.set(veyraSkin, Transform, {
+            pos: [0, 0, 0],
+            quat: [0, 0, 0, 1],
+            scale: [1, 1, 1],
+          });
+        }
+        console.log('[hellforge] Veyra loaded at', veyraPos, 'scale', VEYRA_SCALE);
+      } catch (error) {
+        failBoot('烬守者维拉资产加载失败（witch.glb）', error);
+        return;
+      }
+    }
+    if (stopped) return;
+
     // ── player + game systems ─────────────────────────────────────────────
-    type ViewMode = 'topdown' | 'fps';
     const keys: Record<string, boolean> = {};
 
-    const player = selectedRecord
-      ? createPlayerAtLevel(hero.id, selectedRecord.level)
-      : createPlayer(hero.id);
+    const classDef = getClassDef(hero.id);
+    let combatStats: CombatStats = deriveCombatStats({
+      character: character.snapshot(),
+      classDef,
+    });
+    const player = createPlayerFromCombatStats(combatStats);
     const fx = new FxSystem(world, app);
     fx.setCampfire(0, 0.9, 0);      // pack's CampfireGlow sits at (0, 0.7, 0)
     const hud = installHud(uiMount);
@@ -393,19 +617,24 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     sfxForAudio = sfx;
     applyAudioSettings(loadRenderSettings());
 
-    // Screen shake — one decaying magnitude, random offset per frame, applied
-    // to the camera position in BOTH view modes. Small numbers: 0.1 reads as
-    // a thump, 0.4 as a boss slam.
-    let shakeMag = 0;
-    const addShake = (m: number) => { shakeMag = Math.min(0.55, shakeMag + m); };
+    // Screen shake — directional impulse applied once, then decays inside the
+    // camera rig (no full-amplitude random offset every frame).
+    let pendingShake: readonly [number, number, number] = [0, 0, 0];
+    const addShake = (m: number) => {
+      const mag = Math.min(0.55, Math.abs(m));
+      pendingShake = [
+        pendingShake[0]! + (Math.random() - 0.5) * 2 * mag,
+        pendingShake[1]! + (Math.random() - 0.5) * 1.2 * mag,
+        pendingShake[2]! + (Math.random() - 0.5) * 2 * mag,
+      ];
+    };
 
     // Areas. camp+wild share the encampment map; den = the PCG dungeon.
     type Area = 'camp' | 'wild' | 'den';
     let area: Area = 'camp';
     const CAMP_RECT = { x0: -11.5, x1: 8.5, z0: -14.5, z1: 14.5 };
-    // Walkable rim inside the 120 m prop-ground (half ≈ 60). Leave ~8 m of
-    // visual apron before the seeded mountain ring in wild-terrain.ts.
-    const WILD_BOUNDS = { x0: -52, x1: 52, z0: -48, z1: 58 };
+    // Walkable rim — SSOT with wild-terrain + ashen-reach.layout.json.
+    const WILD_BOUNDS = ASHEN_REACH_BOUNDS;
     const inCamp = (x: number, z: number) =>
       x > CAMP_RECT.x0 && x < CAMP_RECT.x1 && z > CAMP_RECT.z0 && z < CAMP_RECT.z1;
 
@@ -437,18 +666,51 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // Second pass: any late-resolved prop materials from terrain/geometry installs.
     ensureShadowCasters(world);
 
-    // Combined walkability: dungeon grid inside the den, open bounds outside.
-    const walkableAt = (x: number, z: number): boolean => {
-      if (dungeon.contains(x, z)) return dungeon.walkable(x, z);
-      return x > WILD_BOUNDS.x0 && x < WILD_BOUNDS.x1 && z > WILD_BOUNDS.z0 && z < WILD_BOUNDS.z1;
+    // Authored 2D nav blockers (never sampled from render meshes per frame).
+    const emptyObstacles: ObstacleDoc = { version: 1, blockers: [] };
+    const emptyAshen: AshenReachLayout = { version: 1, route: [], blockers: [], landmarks: [] };
+    const loadSceneJson = async <T>(rel: string, fallback: T): Promise<T> => {
+      try {
+        const res = await fetch(new URL(rel, import.meta.url), { cache: 'no-store' });
+        if (!res.ok) return fallback;
+        return await res.json() as T;
+      } catch {
+        return fallback;
+      }
     };
+    const campObstacles = await loadSceneJson<ObstacleDoc>(
+      './assets/scenes/rogue-encampment.obstacles.json', emptyObstacles,
+    );
+    const campCameraProbe = createObstacleCameraProbe(campObstacles.blockers);
+    const ashenLayout = await loadSceneJson<AshenReachLayout>(
+      './assets/scenes/ashen-reach.layout.json', emptyAshen,
+    );
+    const navigation = createHellforgeNavigation({
+      dungeon: {
+        contains: (wx, wz) => dungeon.contains(wx, wz),
+        worldToCell: (wx, wz) => dungeon.worldToCell(wx, wz),
+        cellToWorld: (cx, cy) => dungeon.cellToWorld(cx, cy),
+        isWalkCell: (cx, cy) => dungeon.isWalkCell(cx, cy),
+        walkable: (wx, wz) => dungeon.walkable(wx, wz),
+      },
+      campObstacles,
+      ashenLayout,
+      wildBounds: { x0: WILD_BOUNDS.x0, x1: WILD_BOUNDS.x1, z0: WILD_BOUNDS.z0, z1: WILD_BOUNDS.z1 },
+      openCellSize: 1,
+    });
 
-    // ── monsters ──────────────────────────────────────────────────────────
+    // Combined walkability: dungeon A* grid + authored camp/wild blockers.
+    const walkableAt = (x: number, z: number): boolean => navigation.walkable([x, z], 0.35);
+
+    // ── monsters + combat-run objectives (transient; never saved) ─────────
     let denTotal = 0;
-    let questDone = false;
+    const combatRun = createCombatRunDomain();
+    const questStatus = () => character.snapshot().quests[PURGE_QUEST_ID].status;
+    const questCompleted = (): boolean => questStatus() === 'completed';
     const monsters = new MonsterManager(world, fx, {
-      onPlayerHit: (dmg, source) => {
+      onPlayerHit: (rawDmg, source) => {
         if (area === 'camp') return;                       // camp is sacred
+        const dmg = resolveIncomingDamage(rawDmg, combatStats);
         if (damagePlayer(player, dmg)) {
           hud.damageFlash();
           addShake(source === 'slaglord' ? 0.4 : 0.16);
@@ -469,6 +731,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
             playOnce('death');
             sfx.play('player-die');
             hud.showDeath(true);
+            persistCharacter();
           }
         }
       },
@@ -483,11 +746,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         const isBoss = !!MONSTERS[m.kind].isBoss;
         const rolls = isBoss ? 3 + Math.floor(Math.random() * 3) : 1;
         for (let i = 0; i < rolls; i++) {
-          const drop = rollDrop(mLevel, isBoss, equipBonus.magicFind);
+          const drop = rollDrop(mLevel, isBoss, combatStats.magicFind);
           if (drop) loot.spawnItem(drop, m.x, m.z);
         }
-        if (equipBonus.lifeOnKill > 0) {
-          player.hp = Math.min(player.maxHp, player.hp + equipBonus.lifeOnKill);
+        if (combatStats.lifeOnKill > 0) {
+          player.hp = Math.min(player.maxHp, player.hp + combatStats.lifeOnKill);
         }
         addShake(isBoss ? 0.45 : 0.1);
         sfx.play(isBoss ? 'boss-kill' : 'kill');
@@ -497,6 +760,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         }
       },
     });
+    const denMinionAliveCount = (): number => {
+      let n = 0;
+      for (const m of monsters.monsters) {
+        if (m.zone === 'den' && !MONSTERS[m.kind].isBoss) n++;
+      }
+      return n;
+    };
     // Soft contact discs must exist BEFORE den pre-spawn — skinned GLBs cannot
     // fill the directional shadow atlas (18F vs 12F), and den torch light washes
     // CSM even when static props cast. Wire the shared kit first.
@@ -514,57 +784,54 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       if (monsters.spawn(s.kind, s.x, s.z, 'den')) denTotal++;
     }
 
-    // ── equipment + bag (打宝核心) ────────────────────────────────────────
-    // 6-slot paper doll + 24-slot bag. Pickups go to the BAG (auto-equip only
-    // fills an empty slot); the B-key inventory panel handles swaps and melts.
-    // The aggregate bonus feeds hp/mana (as deltas so damage taken persists),
-    // regen, skill damage/element/crit/cdr, move speed — and the loot stats
-    // (magic find / gold find / xp gain / life-on-kill) close the grind loop.
-    const equipment = emptyEquipment();
-    const bag: Array<Item | null> = new Array(24).fill(null);
-    let equipBonus: EquipBonus = computeBonus(equipment);
+    // ── equipment + bag (打宝核心) — CharacterDomain is the authority ─────
+    // 6-slot paper doll + 24-slot bag. Pickups / swaps / melts dispatch domain
+    // commands; HUD/inventory read deep-frozen snapshots at render time (no
+    // writable bag/equipment mirrors). CombatStats is re-derived; resource
+    // ratios are preserved so re-equip cannot heal.
     let moveMul = 1;
-    const applyEquipment = (): void => {
-      const next = computeBonus(equipment);
-      player.maxHp += next.maxHp - equipBonus.maxHp;
-      player.hp = Math.min(player.maxHp, player.hp + Math.max(0, next.maxHp - equipBonus.maxHp));
-      player.maxMana += next.maxMana - equipBonus.maxMana;
-      player.mana = Math.min(player.maxMana, player.mana);
-      player.manaRegen = 5 + next.manaRegen;
-      player.hpRegen = next.hpRegen;
-      skills.mods = {
-        dmgMul: 1 + next.dmgPct, cdrMul: 1 - next.cdr,
-        fireMul: 1 + next.fireDmg, frostMul: 1 + next.frostDmg, arcMul: 1 + next.arcDmg,
-        critChance: next.critChance, critMul: next.critDmg,
-      };
-      moveMul = 1 + next.moveSpd;
-      equipBonus = next;
+    const applyEquipment = (opts: { refill?: boolean } = {}): void => {
+      const snap = character.snapshot();
+      const { equipment, bag, level, gold } = snap;
+      combatStats = deriveCombatStats({ character: snap, classDef });
+      syncRuntimeFromCombatStats(player, combatStats, { refill: opts.refill });
+      skills.applyCombatStats(combatStats);
+      moveMul = combatStats.moveSpeed;
+      const eq = equipment as Equipment;
       hud.setEquipment(SLOT_ORDER.map((s): EquipSlotState => ({
         icon: SLOT_META[s].icon,
-        color: equipment[s] ? RARITY_META[equipment[s]!.rarity].color : null,
-        tooltip: equipment[s]
-          ? itemTooltipLines(equipment[s]!, player.level).map(([t]) => t).join('\n')
+        color: eq[s] ? RARITY_META[eq[s]!.rarity].color : null,
+        empty: !eq[s],
+        slotLabel: SLOT_META[s].label,
+        tooltip: eq[s]
+          ? itemTooltipLines(eq[s]!, level).map(([t]) => t).join('\n')
           : `${SLOT_META[s].label}（空）`,
       })));
-      inv.update(equipment, bag, player.level, player.gold);
+      inv.update(eq, bag as Array<ItemInstance | null>, level, gold);
+      hud.setGold(gold);
+      refreshCharacterPanel();
     };
 
-    /** Pickup → auto-equip an EMPTY slot (req met), else into the bag. The
-     *  loot tick's canTakeItem gate guarantees there's bag space here. */
-    const takeItem = (item: Item, sx: number | null, sy: number | null): void => {
+    /** Pickup → domain take-item (empty slot or bag). */
+    const takeItem = (item: ItemInstance, sx: number | null, sy: number | null): void => {
+      const before = character.snapshot();
+      const equippedEmpty = !before.equipment[item.slot] && before.level >= item.reqLevel;
+      const res = character.dispatch({ op: 'take-item', item });
+      if (!res.ok) {
+        if (res.reason === 'bag-full') hud.banner('背包已满', '#ff6a6a', 1200);
+        return;
+      }
       const meta = RARITY_META[item.rarity];
-      if (!equipment[item.slot] && player.level >= item.reqLevel) {
-        equipment[item.slot] = item;
+      if (equippedEmpty) {
         sfx.play('equip');
         applyEquipment();
         if (sx !== null && sy !== null) hud.floatText(`装备了 ${item.name}`, sx, sy, { color: meta.color, size: 16 });
       } else {
-        const i = bag.indexOf(null);
-        if (i >= 0) bag[i] = item;
         sfx.play('pickup');
         if (sx !== null && sy !== null) hud.floatText(`${item.name} → 背包`, sx, sy, { color: meta.color, size: 14 });
-        inv.update(equipment, bag, player.level, player.gold);
+        applyEquipment();
       }
+      persistCharacter();
       if (item.rarity === 'legendary') {
         hud.banner(`传奇！ ${item.name}`, meta.color, 2600);
         sfx.play('quest');
@@ -607,52 +874,70 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         if (crit) addShake(0.07);
       },
     }, hero.skills);
-    let selectedSkill = 0;
 
-    // ── inventory panel (B) — paper doll + bag, all mutations land here ────
+    const skillCaster = createSkillCaster({
+      skills,
+      getOrigin: () => [state.px, state.pz],
+      getPlayer: () => player,
+      getLevel: () => character.snapshot().level,
+      getSkillRanks: () => character.snapshot().skillRanks,
+    });
+
+    // ── inventory panel (B) — mutations dispatch through CharacterDomain ──
     const inv = installInventory({
       onEquipFromBag: (idx) => {
-        const item = bag[idx];
+        const item = character.snapshot().bag[idx];
         if (!item) return false;
-        if (player.level < item.reqLevel) {
-          hud.banner(`需要等级 ${item.reqLevel}`, '#ff6a6a', 1200);
+        const res = character.dispatch({ op: 'equip-from-bag', index: idx });
+        if (!res.ok) {
+          if (res.reason === 'level-req') {
+            hud.banner(`需要等级 ${item.reqLevel}`, '#ff6a6a', 1200);
+          }
           return false;
         }
-        const prev = equipment[item.slot];
-        equipment[item.slot] = item;
-        bag[idx] = prev;                      // swap the worn piece into the bag
         sfx.play('equip');
         applyEquipment();
+        persistCharacter();
         return true;
       },
       onUnequip: (slot) => {
-        const item = equipment[slot];
-        if (!item) return false;
-        const i = bag.indexOf(null);
-        if (i < 0) { hud.banner('背包已满', '#ff6a6a', 1100); return false; }
-        bag[i] = item;
-        equipment[slot] = null;
+        const res = character.dispatch({ op: 'unequip', slot });
+        if (!res.ok) {
+          if (res.reason === 'bag-full') hud.banner('背包已满', '#ff6a6a', 1100);
+          return false;
+        }
         sfx.play('pickup');
         applyEquipment();
+        persistCharacter();
         return true;
       },
       onMelt: (idx) => {
-        const item = bag[idx];
-        if (!item) return;
-        const gold = Math.round(3 + item.ilvl * 2 +
-          (item.rarity === 'legendary' ? 60 : item.rarity === 'rare' ? 18 : item.rarity === 'magic' ? 7 : 0));
-        bag[idx] = null;
-        player.gold += gold;
-        hud.setGold(player.gold);
+        const res = character.dispatch({ op: 'melt-bag', index: idx });
+        if (!res.ok) return;
         sfx.play('pickup');
-        inv.update(equipment, bag, player.level, player.gold);
+        if (res.goldGained) hud.banner(`熔毁 +${res.goldGained} 金`, '#e0b84a', 1100);
+        applyEquipment();
+        persistCharacter();
       },
     }, uiMount);
-    onCleanup(() => { hud.dispose(); inv.dispose(); });
+    const charPanel = installCharacterPanel(uiMount);
+    onCleanup(() => { hud.dispose(); inv.dispose(); charPanel.dispose(); });
     onCleanup(() => { document.body.style.cursor = ''; canvas.style.cursor = ''; });
 
-    // ── portals (camp cave-mouth ⇄ den entry) ─────────────────────────────
-    const CAVE_MOUTH = { x: 14, z: 24 };       // out past the camp gate
+    const refreshCharacterPanel = (): void => {
+      const snap = character.snapshot();
+      charPanel.update({
+        playerName: snap.identity.playerName,
+        className: classDef.name,
+        level: snap.level,
+        unspentSkillPoints: snap.unspentSkillPoints,
+        stats: combatStats,
+      });
+    };
+
+    // ── portals (camp cave-mouth ⇄ den entry) — pads from AreaDef ────────
+    const caveMouth = slagdeepCaveMouth();
+    const CAVE_MOUTH = { x: caveMouth[0], z: caveMouth[1] };
     const portalMat = fx.portalMaterial([0.9, 0.25, 0.08]);
     const portalMatBack = fx.portalMaterial([0.3, 0.5, 1.0]);
     const flatQuad = (x: number, z: number, s: number, mat: ReturnType<typeof fx.portalMaterial>): void => {
@@ -722,29 +1007,42 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     let portalArmed = true;
     let portalMoteTimer = 0;
 
-    // ── wilderness spawner (灰烬荒原) ──────────────────────────────────────
+    // ── wilderness spawner (灰烬荒原) — seeded; never Math.random() ───────
     let wildTimer = 2;
+    let wildSpawnTick = 0;
     const WILD_MAX = 8;
+    const ashenAreaSeed = (): number =>
+      deriveAreaSeed(character.snapshot().identity.id, PURGE_QUEST_ID, 'ashen-reach');
+    // Authored encounter/decor markers — deterministic choices from area seed.
+    {
+      const encMarkers = ashenLayout.encounterMarkers ?? [];
+      const decorMarkers = ashenLayout.decorMarkers ?? [];
+      const seed = ashenAreaSeed();
+      const encPicks = chooseSeededEncounters(encMarkers, seed);
+      const decorPicks = chooseSeededDecor(decorMarkers, seed);
+      for (const pick of encPicks) {
+        if (!inCamp(pick.pos[0], pick.pos[1]) && walkableAt(pick.pos[0], pick.pos[1])) {
+          monsters.spawn(pick.kind, pick.pos[0], pick.pos[1], 'wild');
+        }
+      }
+      void decorPicks; // reserved for Task 4.3/6 prop scatter; choices are deterministic
+    }
     const tickWildSpawner = (dt: number): void => {
       if (area !== 'wild') return;
       wildTimer -= dt;
       if (wildTimer > 0) return;
-      wildTimer = 2.2 + Math.random() * 1.6;
+      wildSpawnTick += 1;
+      const seed = ashenAreaSeed();
+      wildTimer = nextWildSpawnDelay(seed, wildSpawnTick);
       let wildAlive = 0;
       for (const m of monsters.monsters) if (m.zone === 'wild') wildAlive++;
       if (wildAlive >= WILD_MAX) return;
-      // ring spawn 10–15 m out, biased away from the camp, never inside it
-      for (let tries = 0; tries < 8; tries++) {
-        const ang = Math.random() * Math.PI * 2;
-        const r = 10 + Math.random() * 5;
-        const x = state.px + Math.cos(ang) * r;
-        const z = state.pz + Math.sin(ang) * r;
-        if (inCamp(x, z) || !walkableAt(x, z) || dungeon.contains(x, z)) continue;
-        const roll = Math.random();
-        const kind = roll < 0.5 ? 'imp' : roll < 0.85 ? 'ashwalker' : 'charred';
-        monsters.spawn(kind, x, z, 'wild');
-        break;
-      }
+      const spawn = nextWildSpawn(seed, wildSpawnTick, [state.px, state.pz], {
+        inCamp,
+        walkable: walkableAt,
+        inDungeon: (x, z) => dungeon.contains(x, z),
+      });
+      if (spawn) monsters.spawn(spawn.kind, spawn.x, spawn.z, 'wild');
     };
 
     // ── player state ──────────────────────────────────────────────────────
@@ -800,7 +1098,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const playerContact = contactShadows.spawn(0, 5, playerContactR);
     const state = {
       px: 0, pz: 5,
-      mode: 'topdown' as ViewMode,
       currentClip: 'idle' as string,
       paused: false,
       moving: false,
@@ -808,6 +1105,25 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // ends. `oneShotUntil` is the performance.now() ms at which it ends.
       oneShotUntil: 0,
     };
+    // Camera rig SSOT (arpg default). Showcase is camp-only with spring-arm probe.
+    let camRig: CameraRigState = createArpgCamera([state.px, 0, state.pz], DEFAULT_ARPG_PRESET);
+    const arpgPreset = DEFAULT_ARPG_PRESET;
+    /** Preserved across showcase toggles so wheel zoom is not lost. */
+    let arpgZoomDistance = arpgPreset.distance;
+    let zoomDelta = 0;
+    /** Active gameplay mode (blend may still be interpolating pose). */
+    let camMode: CameraMode = 'arpg';
+    let camBlend: { from: CameraRigState; toMode: CameraMode; elapsed: number } | null = null;
+    let orbitDragging = false;
+    let orbitYawAcc = 0;
+    let orbitPitchAcc = 0;
+    let lastOrbitMx = 0;
+    let lastOrbitMy = 0;
+    const makeArpgAtPlayer = (): CameraRigState =>
+      createArpgCamera(
+        [state.px, 0, state.pz],
+        { ...arpgPreset, distance: arpgZoomDistance },
+      );
 
     // ── lighting director ─────────────────────────────────────────────────
     // ONE world, TWO looks. The URP forward path renders at most 4 point lights
@@ -929,8 +1245,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       }
     };
 
-    // lookYaw/lookPitch: third-person orbit angles; faceX/faceZ: witch facing.
-    let lookYaw = 0, lookPitch = -0.25;
+    // faceX/faceZ: witch facing on XZ (also drives showcase stub yaw).
     let faceX = 0, faceZ = -1;
     (window as unknown as { __hf?: unknown }).__hf = {
       state,
@@ -941,36 +1256,38 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       loot,
       fx,
       dungeon,
-      equipment,
-      bag,
+      character,
+      get equipment() { return character.snapshot().equipment; },
+      get bag() { return character.snapshot().bag; },
       takeItem,
       inv,
       get witchRoot() { return witchRoot; },
       get witchSkinEnt() { return witchSkinEnt; },
-      get lookYaw() { return lookYaw; },
-      get lookPitch() { return lookPitch; },
-      setLook(yaw: number, pitch: number) {
-        lookYaw = yaw;
-        lookPitch = clamp(pitch, -1.3, 1.3);
-      },
+      get camRig() { return camRig; },
+      get cameraMode() { return camMode; },
       get area() { return area; },
       get sky() { return sky; },
+      /** Active projectile / particle / slow-marker counts (Frost VFX lifecycle). */
+      get fxCounts() { return fx.debugCounts(); },
     };
 
     // ── camera + runtime render-settings (F10) ────────────────────────────
-    // Camera component fields have a SINGLE writer: rs.applyCamera(). Spawn with
-    // a minimal perspective stub; installRenderSettings immediately overwrites
-    // tonemap/exposure/bloom/clear (and resize must call applyCamera — never
+    // Camera *component* fields have a SINGLE writer: rs.applyCamera().
+    // FOV comes from camRig.verticalFovRad; gameplay writes only Transform pose
+    // from the rig. Spawn with a minimal perspective stub; install overwrites
+    // tonemap/exposure/bloom/clear (resize must call applyCamera — never
     // re-spread perspective() alone or slider values reset to engine defaults).
-    const FOV = Math.PI / 2.4;
     // Title panel wrote to BootCamera — tear it down before gameplay install.
     if (titleRs !== null) {
       titleRs.dispose();
       titleRs = null;
     }
     const camera = world.spawn(
-      { component: Transform, data: { pos: [0, 1.6, 0] } },
-      { component: Camera, data: perspective({ fov: FOV, aspect, near: 0.05, far: 200 }) },
+      { component: Transform, data: { pos: [...camRig.eye] } },
+      {
+        component: Camera,
+        data: perspective({ fov: camRig.verticalFovRad, aspect, near: 0.05, far: 200 }),
+      },
     ).unwrap();
     // Drop the Title-era stub only after the gameplay camera exists.
     if (bootCamera !== null) {
@@ -985,7 +1302,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       world,
       camera,
       getAspect: () => aspect,
-      proj: { fov: FOV, near: 0.05, far: 200 },
+      proj: {
+        getVerticalFovRad: () => camRig.verticalFovRad,
+        near: 0.05,
+        far: 200,
+      },
+      // UiLayerManager owns F10 exclusivity with inventory/skills (see below).
+      bindHotkey: false,
       onLighting: (s) => {
         lightSettings = {
           sunMul: s.sunMul,
@@ -1024,87 +1347,28 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     // ── tuning ────────────────────────────────────────────────────────────
     const SPEED = 3.4, SPRINT = 5.4;
-    const TURN = 2.6;
-    const TOP_DY = 6.3, TOP_DZ = 4.2;
-    const CAM_LERP = 8;
-    const TP_DIST = 3.2;
-    const TP_TARGET_Y = 1.35;
     const FACING_SIGN = 1;
-    // ANIM_STRIDE = the ground speed (m/s) the move clip matches at playback
-    // rate 1 — an animator-authored walk reads naturally at a human ~1.5 m/s.
-    // (The old "scale by loop-duration ratio" formula assumed one stride per
-    // loop; Handbag_Walk_inplace is a multi-step 3.733 s loop, so that produced
-    // rate ≈ 9 at run speed — comically fast feet.) SPEED 3.4 → rate ≈ 2.3,
-    // SPRINT 5.4 → ≈ 3.6, both inside the 4.8 cap. Idle/attack/hit/death keep 1.
-    const ANIM_STRIDE = 1.5;
+    // Stride = ground speed (m/s) each locomotion clip matches at playback
+    // rate 1. free-walk ≈ 1.07 s / free-run ≈ 0.67 s loops — calibrate
+    // separately so feet don't slide when selectLocomotionClip swaps clips.
+    // SPEED 3.4 → walk rate ≈ 2.4; SPRINT 5.4 → run rate ≈ 1.5.
+    const ANIM_STRIDE_WALK = 1.4;
+    const ANIM_STRIDE_RUN = 3.6;
     const ANIM_SPEED_MIN = 0.5, ANIM_SPEED_MAX = 4.8;
-    const topPitch = -Math.atan2(TOP_DY, TOP_DZ);
-    const topQ = quat.create();
-    quat.fromAxisAngle(topQ, [1, 0, 0], topPitch);
-    let focusX = state.px;
-    let focusZ = state.pz;
 
-    // ── camera math: world↔screen (aim + floating text) ───────────────────
-    // Reconstructs the SAME camera the render loop writes (mode-dependent) and
-    // projects with the same vertical-FOV perspective. Returns null behind cam.
-    const camPose = (): { x: number; y: number; z: number; yaw: number; pitch: number } => {
-      if (state.mode === 'fps') {
-        const cp = Math.cos(lookPitch), sp = Math.sin(lookPitch);
-        const fwdX = -cp * Math.sin(lookYaw), fwdY = sp, fwdZ = -cp * Math.cos(lookYaw);
-        return {
-          x: state.px - fwdX * TP_DIST, y: TP_TARGET_Y - fwdY * TP_DIST, z: state.pz - fwdZ * TP_DIST,
-          yaw: lookYaw, pitch: lookPitch,
-        };
-      }
-      return { x: focusX, y: TOP_DY, z: focusZ + TOP_DZ, yaw: 0, pitch: topPitch };
-    };
-    const worldToScreen = (wx: number, wy: number, wz: number): { x: number; y: number } | null => {
-      const c = camPose();
-      const rx = wx - c.x, ry = wy - c.y, rz = wz - c.z;
-      const cy = Math.cos(c.yaw), sy = Math.sin(c.yaw);
-      const cp = Math.cos(c.pitch), sp = Math.sin(c.pitch);
-      // camera basis (right-handed): right, up, fwd
-      const rgt = { x: cy, y: 0, z: -sy };
-      const fwd = { x: -cp * sy, y: sp, z: -cp * cy };
-      const up = { x: rgt.y * fwd.z - rgt.z * fwd.y, y: rgt.z * fwd.x - rgt.x * fwd.z, z: rgt.x * fwd.y - rgt.y * fwd.x };
-      const xc = rx * rgt.x + ry * rgt.y + rz * rgt.z;
-      const yc = rx * up.x + ry * up.y + rz * up.z;
-      const zc = rx * fwd.x + ry * fwd.y + rz * fwd.z;
-      if (zc < 0.05) return null;
-      const tanHalf = Math.tan(FOV / 2);
-      const ndcX = xc / (zc * tanHalf * aspect);
-      const ndcY = yc / (zc * tanHalf);
-      return {
-        x: (ndcX * 0.5 + 0.5) * canvas.clientWidth,
-        y: (1 - (ndcY * 0.5 + 0.5)) * canvas.clientHeight,
-      };
-    };
-    // Mouse ground-point aim (both view modes): unproject the cursor onto the
-    // y=0 plane using the current camera pose — no pointer lock anywhere.
+    // ── camera math: world↔screen / aim from CameraRigState only ──────────
+    const worldToScreen = (wx: number, wy: number, wz: number): { x: number; y: number } | null =>
+      projectWorldToScreen(
+        camRig, wx, wy, wz, aspect, canvas.clientWidth, canvas.clientHeight,
+      );
+    // Mouse ground-point aim: unproject via the rig — no pointer lock.
     let mouseX = 0, mouseY = 0;
-    // (0,0) before the first mousemove sits in the edge-push band and would
-    // slam third-person pitch to the sky — ignore edge orbit until we see a move.
-    let mouseSeen = false;
     const aimDir = (): { x: number; z: number } => {
-      const c = camPose();
-      const cy = Math.cos(c.yaw), sy = Math.sin(c.yaw);
-      const cp = Math.cos(c.pitch), sp = Math.sin(c.pitch);
-      const rgt = { x: cy, y: 0, z: -sy };
-      const fwd = { x: -cp * sy, y: sp, z: -cp * cy };
-      const up = { x: rgt.y * fwd.z - rgt.z * fwd.y, y: rgt.z * fwd.x - rgt.x * fwd.z, z: rgt.x * fwd.y - rgt.y * fwd.x };
-      const tanHalf = Math.tan(FOV / 2);
-      const ndcX = (mouseX / Math.max(1, canvas.clientWidth)) * 2 - 1;
-      const ndcY = 1 - (mouseY / Math.max(1, canvas.clientHeight)) * 2;
-      const dir = {
-        x: fwd.x + rgt.x * ndcX * tanHalf * aspect + up.x * ndcY * tanHalf,
-        y: fwd.y + rgt.y * ndcX * tanHalf * aspect + up.y * ndcY * tanHalf,
-        z: fwd.z + rgt.z * ndcX * tanHalf * aspect + up.z * ndcY * tanHalf,
-      };
-      if (Math.abs(dir.y) < 1e-4) return { x: faceX, z: faceZ };
-      const t = -c.y / dir.y;
-      if (t <= 0) return { x: faceX, z: faceZ };
-      const hx = c.x + dir.x * t, hz = c.z + dir.z * t;
-      const dx = hx - state.px, dz = hz - state.pz;
+      const hit = aimOnGround(
+        camRig, mouseX, mouseY, aspect, canvas.clientWidth, canvas.clientHeight,
+      );
+      if (!hit) return { x: faceX, z: faceZ };
+      const dx = hit.x - state.px, dz = hit.z - state.pz;
       const len = Math.hypot(dx, dz);
       if (len < 0.01) return { x: faceX, z: faceZ };
       return { x: dx / len, z: dz / len };
@@ -1113,9 +1377,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // ── mouse policy: NO pointer lock, custom cursor ──────────────────────
     // The cursor stays free and visible (forge.json pointerLock:false keeps
     // the host shell from grabbing it either). Aiming reads the cursor's
-    // ground point in BOTH view modes; the third-person camera orbits with
-    // RIGHT-drag (movementX works without a lock) or the arrow keys. A
-    // custom ember-crosshair cursor brands the whole game window.
+    // ground point from the camera rig. A custom ember-crosshair cursor brands
+    // the whole game window.
     const releaseHostCapture = () => {
       try { window.parent.postMessage({ type: 'fx-pointer-capture', capture: false }, '*'); } catch { /* not embedded */ }
     };
@@ -1173,16 +1436,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       });
     };
 
-    // ── casting ───────────────────────────────────────────────────────────
-    const tryCast = (idx: number): void => {
-      if (player.dead) return;
-      const aim = aimDir();
-      const res = skills.cast(idx, state.px, state.pz, aim.x, aim.z, player);
+    // ── casting — SkillCaster + CharacterDomain hotbar (shared mana/cd/ranks) ─
+    const finishCast = (id: ActiveSkillId, aim: { x: number; z: number }, res: CastResult): void => {
       if (res === 'ok') {
-        selectedSkill = idx;
-        faceX = aim.x; faceZ = aim.z;      // snap facing to the cast direction
-        const id = hero.skills[idx]!.id;
-        if (id !== 'blink') playOnce('attack', ATTACK_SPEED, 0.7); // release at 70% — recovery is cancellable
+        faceX = aim.x; faceZ = aim.z;
+        if (id !== 'blink') playOnce('attack', ATTACK_SPEED, 0.7);
         sfx.play(id === 'magma' ? 'cast-magma' : id === 'frost' ? 'cast-frost' : id === 'arc' ? 'cast-arc' : 'blink');
         refreshSkillBar();
       } else if (res === 'mana') {
@@ -1190,30 +1448,106 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         if (s) hud.floatText('法力不足', s.x, s.y, { color: '#7da2ff', size: 14 });
       } else if (res === 'locked') {
         const s = worldToScreen(state.px, 2.0, state.pz);
-        if (s) hud.floatText(`等级 ${hero.skills[idx]!.unlockLevel} 解锁`, s.x, s.y, { color: '#caa', size: 14 });
+        if (s) {
+          hud.floatText('技能未学习', s.x, s.y, { color: '#caa', size: 14 });
+        }
       }
+    };
+
+    const tryCastSkillId = (id: ActiveSkillId, aimOverride?: { x: number; z: number }): CastResult => {
+      if (player.dead || camMode !== 'arpg') return 'dead';
+      const aim = aimOverride ?? aimDir();
+      const res = skillCaster.cast(id, [aim.x, aim.z]);
+      finishCast(id, aim, res);
+      return res;
+    };
+
+    /** Digit 1–4: select domain hotbar slot only (Spec §5.3 — no cast). */
+    const selectHotbarSlot = (slot: 0 | 1 | 2 | 3): void => {
+      character.dispatch({ op: 'select-hotbar', slot });
+      refreshSkillBar();
+      persistCharacter();
+    };
+
+    /** RMB: cast the skill currently selected on the domain hotbar. */
+    const tryCastSelectedHotbar = (): CastResult => {
+      if (player.dead) return 'dead';
+      const snap = character.snapshot();
+      const skillId = snap.hotbar[snap.selectedHotbarSlot];
+      if (!skillId) return 'locked';
+      return tryCastSkillId(skillId);
     };
 
     // ── HUD wiring ────────────────────────────────────────────────────────
     const refreshSkillBar = (): void => {
-      const slots: SkillSlotState[] = hero.skills.map((def, i) => ({
-        icon: def.icon,
-        name: def.name,
-        key: `${i + 1}`,
-        manaCost: def.manaCost,
-        cooldownPct: def.cooldown > 0 ? skills.cooldowns[i]! / def.cooldown : 0,
-        locked: player.level < def.unlockLevel,
-        unlockLevel: def.unlockLevel,
-        affordable: player.mana >= def.manaCost,
-      }));
+      const snap = character.snapshot();
+      const slots: SkillSlotState[] = ([0, 1, 2, 3] as const).map((slot) => {
+        const skillId = snap.hotbar[slot];
+        const selected = snap.selectedHotbarSlot === slot;
+        if (!skillId) {
+          return {
+            icon: '',
+            name: '空',
+            key: `${slot + 1}`,
+            manaCost: 0,
+            cooldownPct: 0,
+            locked: true,
+            unlockLevel: 0,
+            affordable: false,
+            selected,
+            empty: true,
+          };
+        }
+        const idx = skills.indexOf(skillId);
+        const def = skillDefForRanks(skillId, snap.skillRanks);
+        const resolved = resolveSkill(skillId, {
+          skillRanks: snap.skillRanks,
+          phaseEchoActive: skills.isPhaseEchoActive(),
+        });
+        const unlocked = idx >= 0 && skills.unlocked(idx, snap.level, snap.skillRanks);
+        return {
+          icon: def.icon,
+          name: def.name,
+          key: `${slot + 1}`,
+          manaCost: resolved.manaCost,
+          cooldownPct: resolved.cooldown > 0 && idx >= 0
+            ? skills.cooldowns[idx]! / resolved.cooldown
+            : 0,
+          locked: !unlocked,
+          unlockLevel: 0,
+          affordable: player.mana >= resolved.manaCost,
+          selected,
+          empty: false,
+        };
+      });
       hud.setSkills(slots);
     };
     const refreshQuest = (): void => {
-      if (questDone) { hud.setQuest('✓ 第一幕切片完成 — 熔渣深窟已清剿'); return; }
-      const left = monsters.denAliveCount();
-      hud.setQuest(area === 'den'
-        ? `任务：清剿熔渣深窟 · 剩余 ${left}/${denTotal}`
-        : `任务：清剿熔渣深窟（营地大门外，穿过灰烬荒原）`);
+      const st = questStatus();
+      if (st === 'completed') {
+        hud.setQuest(`✓ ${QUEST_TITLE} — 已完成`);
+        return;
+      }
+      if (st === 'available') {
+        hud.setQuest('与烬守者维拉交谈，接受任务');
+        return;
+      }
+      if (st === 'ready') {
+        hud.setQuest(`任务就绪：返回营地向维拉交还「${QUEST_TITLE}」`);
+        return;
+      }
+      // active
+      const objs = combatRun.snapshot().objectives;
+      if (area === 'den') {
+        const left = denMinionAliveCount() + (monsters.boss() ? 1 : 0);
+        const bits = [
+          objs['den-minions-cleared'] ? '✓爪牙' : `爪牙 ${denMinionAliveCount()}`,
+          objs['slagdeep-boss-defeated'] ? '✓督军' : '督军',
+        ];
+        hud.setQuest(`任务：${QUEST_TITLE} · ${bits.join(' · ')}（${left}/${denTotal}）`);
+      } else {
+        hud.setQuest(`任务：${QUEST_TITLE}（营地大门外，穿过灰烬荒原）`);
+      }
     };
     refreshSkillBar();
     refreshQuest();
@@ -1224,10 +1558,19 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       area = next;
       applyAreaLighting(next);
       ambientFx.setArea(next);
-      bgm.setPhase(next === 'den' ? 'den' : 'camp');
-      if (next === 'den') hud.showArea('熔渣深窟', 'Slagdeep Hollow');
-      else if (next === 'wild') hud.showArea('灰烬荒原', 'Ashen Reach');
-      else hud.showArea('余烬哨站', 'Cinderwatch');
+      const areaId = next === 'camp' ? 'cinderwatch' : next === 'den' ? 'slagdeep-hollow' : 'ashen-reach';
+      const def = getAreaDef(areaId);
+      bgm.setPhase(bgmPhaseForMusic(def.music));
+      hud.showArea(def.displayName, def.displayNameEn);
+      if (next === 'den') {
+        // Fresh combat-run objectives; seed derived (not saved).
+        combatRun.dispatch({
+          op: 'enter',
+          areaId: 'slagdeep-hollow',
+          characterId: character.snapshot().identity.id,
+          questId: PURGE_QUEST_ID,
+        });
+      }
       refreshQuest();
     };
 
@@ -1245,11 +1588,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     if (startedInDen) {
       state.px = dungeon.entry.x;
       state.pz = dungeon.entry.z;
-      focusX = state.px;
-      focusZ = state.pz;
+      camRig = snapCameraFocus(camRig, [state.px, 0, state.pz]);
       enterArea('den');
     } else {
-      touchCharacter(selectedRecord!.id, player.level);
+      persistCharacter();
       charSelect?.hide();
       charList?.hide();
       shell?.goTo('inGame');
@@ -1268,12 +1610,359 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       getPlayerPos: () => ({ x: state.px, z: state.pz }),
       isInDen: () => area === 'den',
     });
+    const treeStateFromDomain = () => {
+      const snap = character.snapshot();
+      return stateFromProgression({
+        level: snap.level,
+        unspentSkillPoints: snap.unspentSkillPoints,
+        skillRanks: snap.skillRanks,
+        hotbar: snap.hotbar,
+        selectedHotbarSlot: snap.selectedHotbarSlot,
+      });
+    };
+    const toTreeResult = (res: { ok: true } | { ok: false; reason: string }): SkillTreeResult => {
+      if (res.ok) return { ok: true, state: treeStateFromDomain() };
+      return { ok: false, reason: res.reason as SkillTreeFailReason };
+    };
     const skillPanel = installSkillPanel(uiMount, {
-      getSkills: () => hero.skills,
-      getLevel: () => player.level,
-      getMana: () => player.mana,
+      getViewModel: () => buildSkillTreeViewModel({
+        treeState: treeStateFromDomain(),
+        inCamp: area === 'camp',
+      }),
+      invest: (nodeId) => {
+        const res = character.dispatch({ op: 'invest-skill', nodeId });
+        if (res.ok) { persistCharacter(); refreshSkillBar(); }
+        return toTreeResult(res);
+      },
+      respec: () => {
+        const res = character.dispatch({
+          op: 'respec-skills',
+          areaId: area === 'camp' ? 'cinderwatch' : area === 'den' ? 'slagdeep-hollow' : 'ashen-reach',
+        });
+        if (res.ok) { persistCharacter(); refreshSkillBar(); }
+        return toTreeResult(res);
+      },
+      assign: (nodeId, slot) => {
+        const res = character.dispatch({ op: 'assign-hotbar', nodeId, slot });
+        if (res.ok) { persistCharacter(); refreshSkillBar(); }
+        return toTreeResult(res);
+      },
     });
-    onCleanup(() => { automap.dispose(); skillPanel.dispose(); });
+    const skillFixture = installSkillFixture(uiMount, {
+      getDomain: () => character,
+      onChange: () => {
+        persistCharacter();
+        refreshSkillBar();
+        if (skillPanel.isOpen()) skillPanel.refresh();
+      },
+    });
+    onCleanup(() => {
+      automap.dispose();
+      skillPanel.dispose();
+      skillFixture.dispose();
+    });
+
+    // ── movement intent + interaction registry (Spec §5.3) ────────────────
+    let moveIntent: MovementIntent = { kind: 'none' };
+    let followPath: readonly (readonly [number, number])[] = [];
+    let followIdx = 0;
+    let targetRepathAcc = 0;
+    const PATH_ARRIVE = 0.45;
+    const CLICK_PICK_R = 1.6;
+
+    const applyPickupEvent = (ev: {
+      kind: string;
+      amount: number;
+      item?: ItemInstance;
+      x: number;
+      y: number;
+      z: number;
+    }): void => {
+      const s = worldToScreen(ev.x, ev.y + 0.4, ev.z);
+      if (ev.kind === 'xp') {
+        const gained = Math.round(ev.amount * (1 + combatStats.xpGain));
+        const xpRes = character.dispatch({ op: 'grant-xp', amount: gained });
+        sfx.play('pickup');
+        if (s) hud.floatText(`+${gained} 经验`, s.x, s.y, { color: '#ffb45e', size: 14 });
+        if (xpRes.ok && xpRes.levelUps?.length) {
+          for (const up of xpRes.levelUps) {
+            hud.banner(`等级提升！ Lv ${up.level}`, '#ffd066', 2000);
+            fx.rise(state.px, 0.2, state.pz, 'gold', 16, 0.9);
+            sfx.play('levelup');
+          }
+          refreshSkillBar();
+          applyEquipment({ refill: true });
+        }
+        persistCharacter();
+      } else if (ev.kind === 'gold') {
+        const gained = Math.round(ev.amount * (1 + combatStats.goldFind));
+        character.dispatch({ op: 'add-gold', amount: gained });
+        hud.setGold(character.snapshot().gold);
+        sfx.play('pickup');
+        if (s) hud.floatText(`+${gained} 金币`, s.x, s.y, { color: '#ffcf40', size: 14 });
+        persistCharacter();
+      } else if (ev.kind === 'healPotion') {
+        player.hp = Math.min(player.maxHp, player.hp + ev.amount);
+        sfx.play('potion');
+        if (s) hud.floatText(`+${ev.amount} 生命`, s.x, s.y, { color: '#ff6a6a', size: 15 });
+        fx.rise(state.px, 0.4, state.pz, 'heal', 6, 0.4);
+      } else if (ev.kind === 'item' && ev.item) {
+        takeItem(ev.item, s?.x ?? null, s?.y ?? null);
+      } else if (ev.kind === 'manaPotion') {
+        player.mana = Math.min(player.maxMana, player.mana + ev.amount);
+        sfx.play('potion');
+        if (s) hud.floatText(`+${ev.amount} 法力`, s.x, s.y, { color: '#7da2ff', size: 15 });
+      }
+    };
+
+    // Filled when UiLayerManager / dialogue UI are installed below.
+    let openDialoguePanel: ((node: ReturnType<typeof dialogueFor>) => void) | null = null;
+    const openVeyraDialogue = (): void => {
+      const node = dialogueFor('npc-cinderwarden-veyra', character.snapshot().quests);
+      openDialoguePanel?.(node);
+    };
+
+    const interactions = createInteractionRegistry({
+      getMonster: (id) => {
+        const m = monsters.byId(id);
+        return m ? { x: m.x, z: m.z, radius: MONSTERS[m.kind].radius } : null;
+      },
+      getNpc: (id) => {
+        if (id !== 'npc-cinderwarden-veyra') return null;
+        if (area === 'den') return null;
+        return { x: veyraPos[0], z: veyraPos[1] };
+      },
+      getLoot: (id) => {
+        const g = loot.byId(id);
+        return g ? { x: g.x, z: g.z } : null;
+      },
+      getExit: (id: AreaExitId) => {
+        if (id === 'reach-to-slagdeep' || id === 'cinderwatch-to-reach') {
+          return { x: CAVE_MOUTH.x, z: CAVE_MOUTH.z };
+        }
+        if (id === 'slagdeep-to-reach' || id === 'reach-to-cinderwatch') {
+          return { x: DEN_EXIT.x, z: DEN_EXIT.z };
+        }
+        return null;
+      },
+      listCandidates: () => {
+        const out: InteractionCandidate[] = [];
+        for (const m of monsters.monsters) {
+          out.push({
+            ref: { kind: 'monster', id: m.id },
+            position: [m.x, m.z],
+            pickRadius: MONSTERS[m.kind].radius + 0.9,
+          });
+        }
+        if (area !== 'den') {
+          out.push({
+            ref: { kind: 'npc', id: 'npc-cinderwarden-veyra' },
+            position: [veyraPos[0], veyraPos[1]],
+            pickRadius: 2.2,
+          });
+        }
+        for (const g of loot.listForPick()) {
+          out.push({ ref: { kind: 'loot', id: g.id }, position: [g.x, g.z], pickRadius: 1.1 });
+        }
+        if (area !== 'den') {
+          out.push({
+            ref: { kind: 'exit', id: 'reach-to-slagdeep' },
+            position: [CAVE_MOUTH.x, CAVE_MOUTH.z],
+            pickRadius: 2.2,
+          });
+        } else {
+          out.push({
+            ref: { kind: 'exit', id: 'slagdeep-to-reach' },
+            position: [DEN_EXIT.x, DEN_EXIT.z],
+            pickRadius: 2.2,
+          });
+        }
+        return out;
+      },
+      onMonsterInRange: (id) => {
+        if (camMode !== 'arpg') return 'failed';
+        const m = monsters.byId(id);
+        if (!m) return 'failed';
+        const dx = m.x - state.px, dz = m.z - state.pz;
+        const len = Math.hypot(dx, dz) || 1;
+        const res = tryCastSkillId(LMB_PURSUIT_SKILL, { x: dx / len, z: dz / len });
+        if (res === 'ok') return 'ok';
+        if (res === 'cooldown' || res === 'mana') return 'failed';
+        return 'failed';
+      },
+      onNpcInteract: (id) => {
+        if (camMode !== 'arpg') return 'failed';
+        if (id !== 'npc-cinderwarden-veyra') return 'failed';
+        openVeyraDialogue();
+        return 'consumed';
+      },
+      onLootInteract: (id) => {
+        if (camMode !== 'arpg') return 'failed';
+        const ev = loot.collectById(id, () => character.snapshot().bag.includes(null));
+        if (!ev) return 'failed';
+        applyPickupEvent(ev);
+        return 'consumed';
+      },
+      onExitInteract: (id) => {
+        if (camMode !== 'arpg') return 'failed';
+        // Walk-into portal pads still work; click-interact nudges the player onto the pad.
+        if (id === 'reach-to-slagdeep' || id === 'cinderwatch-to-reach') {
+          if (area === 'den') return 'failed';
+          if (id === 'reach-to-slagdeep' && !canEnterSlagdeep(character.snapshot().quests)) {
+            hud.banner('深窟封锁 — 先与烬守者维拉交谈', '#ffb070', 2200);
+            return 'failed';
+          }
+          state.px = CAVE_MOUTH.x;
+          state.pz = CAVE_MOUTH.z;
+          return 'ok';
+        }
+        if (id === 'slagdeep-to-reach' || id === 'reach-to-cinderwatch') {
+          if (area !== 'den') return 'failed';
+          state.px = DEN_EXIT.x;
+          state.pz = DEN_EXIT.z;
+          return 'ok';
+        }
+        return 'failed';
+      },
+      npcRange: 2.2,
+    });
+
+    const setMoveIntent = (next: MovementIntent): void => {
+      moveIntent = next;
+      followPath = [];
+      followIdx = 0;
+      targetRepathAcc = 0;
+      if (next.kind === 'point') {
+        followPath = navigation.path([state.px, state.pz], next.world);
+      } else if (next.kind === 'target') {
+        const resolved = interactions.resolve(next.target);
+        if (resolved) followPath = navigation.path([state.px, state.pz], resolved.position);
+      }
+    };
+
+    const clearMoveIntent = (): void => {
+      setMoveIntent({ kind: 'none' });
+    };
+
+    const beginCameraMode = (toMode: CameraMode): void => {
+      if (camMode === toMode && camBlend === null) return;
+      camBlend = { from: { ...camRig }, toMode, elapsed: 0 };
+      camMode = toMode;
+      clearMoveIntent();
+      skills.clearProjectilesAndCooldowns();
+      hud.setShowcaseReduced(toMode === 'showcase');
+      if (toMode === 'showcase') hud.setTarget(null);
+    };
+
+    // ── major UI ownership (inventory / skills / settings; future quests…) ─
+    // Opening a major panel clears MovementIntent and blocks world input.
+    const MOVE_INTENT_KEYS = [
+      'KeyW', 'KeyA', 'KeyS', 'KeyD',
+      'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
+      'ShiftLeft', 'ShiftRight', 'Space',
+    ] as const;
+    let worldInputBlocked = false;
+    const uiLayers = createUiLayerManager({
+      onOwnershipChange: (_prev, next) => {
+        worldInputBlocked = next !== null;
+        clearMoveIntent();
+        for (const code of MOVE_INTENT_KEYS) keys[code] = false;
+      },
+    });
+    const questLog = installQuestLog(uiMount);
+    const refreshQuestLog = (): void => {
+      const st = questStatus();
+      const vm: QuestViewModel = {
+        id: PURGE_QUEST_ID,
+        title: QUEST_TITLE,
+        status: st,
+        summary:
+          st === 'available' ? '与烬守者维拉交谈，接受清剿熔渣深窟的委托。'
+            : st === 'active' ? '穿过灰烬荒原进入熔渣深窟，清剿爪牙并击败熔渣督军。'
+              : st === 'ready' ? '目标已达成 — 返回营地向维拉交还任务领取霜铸魔杖。'
+                : '熔渣深窟已平息。霜铸魔杖已交付。',
+      };
+      questLog.update([vm]);
+    };
+    const dialogueUi = installDialogueUi(uiMount, {
+      onChoice: (choice) => {
+        if (choice.action.kind === 'close' || choice.action.kind === 'continue') {
+          uiLayers.close('dialogue');
+          return;
+        }
+        if (choice.action.kind === 'accept') {
+          const res = acceptQuest(character);
+          if (res.ok) {
+            sfx.play('quest');
+            hud.banner('已接受：清剿熔渣深窟', '#8aff9a', 2200);
+            persistCharacter();
+            refreshQuest();
+            refreshQuestLog();
+          }
+          uiLayers.close('dialogue');
+          return;
+        }
+        if (choice.action.kind === 'turn-in') {
+          const res = turnInQuest(character);
+          if (!res.ok) {
+            if (res.reason === 'inventory-full') {
+              hud.banner('背包已满 — 腾出空位后再交还', '#ffb070', 2800);
+              // Stay ready; keep dialogue open so player can retry after melting.
+              dialogueUi.show(dialogueFor('npc-cinderwarden-veyra', character.snapshot().quests));
+              return;
+            }
+            uiLayers.close('dialogue');
+            return;
+          }
+          sfx.play('quest');
+          hud.banner('任务完成：获得霜铸魔杖', '#ffd066', 2800);
+          hud.setGold(character.snapshot().gold);
+          applyEquipment();
+          persistCharacter();
+          refreshQuest();
+          refreshQuestLog();
+          refreshSkillBar();
+          uiLayers.close('dialogue');
+        }
+      },
+    });
+    openDialoguePanel = (node) => {
+      uiLayers.open('dialogue');
+      dialogueUi.show(node);
+    };
+
+    uiLayers.register('inventory', { show: () => inv.show(), hide: () => inv.hide() });
+    uiLayers.register('skills', { show: () => skillPanel.show(), hide: () => skillPanel.hide() });
+    uiLayers.register('settings', { show: () => rs.open(), hide: () => rs.close() });
+    uiLayers.register('character', {
+      show: () => { refreshCharacterPanel(); charPanel.show(); },
+      hide: () => charPanel.hide(),
+    });
+    uiLayers.register('dialogue', {
+      show: () => { /* show() via dialogueUi.show(node) */ },
+      hide: () => dialogueUi.close(),
+    });
+    uiLayers.register('quests', {
+      show: () => questLog.setOpen(true),
+      hide: () => questLog.setOpen(false),
+    });
+    refreshQuestLog();
+    refreshCharacterPanel();
+    onCleanup(() => {
+      uiLayers.closeAll();
+      dialogueUi.dispose();
+      questLog.dispose();
+    });
+    ((window as unknown as { __hf: Record<string, unknown> }).__hf).uiLayers = uiLayers;
+    ((window as unknown as { __hf: Record<string, unknown> }).__hf).moveIntent = {
+      get: () => moveIntent,
+      clear: clearMoveIntent,
+    };
+
+    const toggleMajorPanel = (panel: MajorPanel): void => {
+      if (uiLayers.active() === panel) uiLayers.close(panel);
+      else uiLayers.open(panel);
+    };
 
     // ── input ─────────────────────────────────────────────────────────────
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).keys = keys;
@@ -1298,42 +1987,127 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         e.preventDefault();
       }
       if (e.code === 'KeyB' || e.code === 'KeyI') {
-        skillPanel.setOpen(false);
         automap.setOpen(false);
-        inv.update(equipment, bag, player.level, player.gold);
-        inv.toggle();
+        applyEquipment();
+        toggleMajorPanel('inventory');
       }
       if (e.code === 'KeyK') {
-        if (inv.isOpen()) inv.hide();
         automap.setOpen(false);
-        skillPanel.toggle();
+        toggleMajorPanel('skills');
+      }
+      if (e.code === 'KeyQ') {
+        automap.setOpen(false);
+        refreshQuestLog();
+        toggleMajorPanel('quests');
+      }
+      if (e.code === 'KeyC') {
+        automap.setOpen(false);
+        refreshCharacterPanel();
+        toggleMajorPanel('character');
+      }
+      if (e.code === 'F10') {
+        e.preventDefault();
+        automap.setOpen(false);
+        toggleMajorPanel('settings');
       }
       if (e.code === 'Tab') {
         e.preventDefault();
-        if (inv.isOpen()) inv.hide();
-        skillPanel.setOpen(false);
+        uiLayers.closeAll();
         automap.toggle();
       }
       if (e.code === 'KeyV') {
-        state.mode = state.mode === 'topdown' ? 'fps' : 'topdown';
+        // Spec §6.2: showcase only in Cinderwatch; force arpg before leave.
+        if (camMode === 'arpg') {
+          if (area === 'camp') {
+            arpgZoomDistance = camRig.distance;
+            beginCameraMode('showcase');
+            rs.applyCamera();
+          }
+        } else {
+          beginCameraMode('arpg');
+          rs.applyCamera();
+        }
       }
-      if (e.code === 'Digit1') tryCast(0);
-      if (e.code === 'Digit2') tryCast(1);
-      if (e.code === 'Digit3') tryCast(2);
-      if (e.code === 'Digit4') tryCast(3);
+      if (!worldInputBlocked) {
+        if (e.code === 'Digit1') selectHotbarSlot(0);
+        if (e.code === 'Digit2') selectHotbarSlot(1);
+        if (e.code === 'Digit3') selectHotbarSlot(2);
+        if (e.code === 'Digit4') selectHotbarSlot(3);
+      }
       if (e.code === 'KeyR' && player.dead) {
-        respawnPlayer(player);
+        const failedAreaId =
+          area === 'den' ? 'slagdeep-hollow' as const
+            : area === 'wild' ? 'ashen-reach' as const
+              : 'cinderwatch' as const;
+        // Ensure combat-run holds the failed area's derived seed before reset.
+        if (combatRun.snapshot().areaId !== failedAreaId) {
+          combatRun.dispatch({
+            op: 'enter',
+            areaId: failedAreaId,
+            characterId: character.snapshot().identity.id,
+            questId: PURGE_QUEST_ID,
+          });
+        }
+        const encounterResetters: CombatTransientResetters = {
+          encounters: {
+            clear: () => { monsters.clearAll(); },
+            reset: (areaId, seed) => {
+              monsters.clearAll();
+              if (areaId === 'slagdeep-hollow') {
+                denTotal = 0;
+                for (const s of dungeon.monsterSpawns) {
+                  if (monsters.spawn(s.kind, s.x, s.z, 'den')) denTotal++;
+                }
+              } else if (areaId === 'ashen-reach') {
+                const markers = ashenLayout.encounterMarkers ?? [];
+                for (const pick of chooseSeededEncounters(markers, seed)) {
+                  if (!inCamp(pick.pos[0], pick.pos[1]) && walkableAt(pick.pos[0], pick.pos[1])) {
+                    monsters.spawn(pick.kind, pick.pos[0], pick.pos[1], 'wild');
+                  }
+                }
+              }
+            },
+          },
+          enemyAttacks: { clear: () => monsters.clearEnemyAttacks() },
+          playerSkills: { clearProjectilesAndCooldowns: () => skills.clearProjectilesAndCooldowns() },
+          loot: { clearGroundDrops: () => loot.clearGroundDrops() },
+          fx: { clearTransient: () => fx.clearTransient() },
+        };
+        resetCombatRun({
+          failedAreaId,
+          character,
+          run: combatRun,
+          runtime: player,
+          resetters: encounterResetters,
+          returnToCamp: () => {
+            const t = resolveAreaTransition('cinderwatch', 'camp-center', {
+              characterId: character.snapshot().identity.id,
+            });
+            state.px = t.playerPos[0];
+            state.pz = t.playerPos[1];
+            enterArea('camp');
+            return {
+              areaId: t.areaId,
+              entryId: t.entryId,
+              playerPos: t.playerPos,
+            };
+          },
+        });
+        persistCharacter();
         hud.showDeath(false);
-        state.px = 0; state.pz = 5;
-        focusX = 0; focusZ = 5;
+        hud.setOrbs(player.hp, player.maxHp, player.mana, player.maxMana);
+        camMode = 'arpg';
+        camBlend = null;
+        camRig = makeArpgAtPlayer();
+        hud.setShowcaseReduced(false);
+        rs.applyCamera();
         state.oneShotUntil = 0;
         swapClip('idle');
-        enterArea('camp');
+        refreshQuest();
       }
       if (e.key === 'Escape') {
         if (automap.isOpen()) { automap.setOpen(false); return; }
-        if (skillPanel.isOpen()) { skillPanel.setOpen(false); return; }
-        if (inv.isOpen()) inv.hide();
+        if (uiLayers.active() !== null) { uiLayers.closeAll(); return; }
       }
     };
     window.addEventListener('keydown', onKeyDown, true);
@@ -1347,29 +2121,51 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     canvas.addEventListener('contextmenu', onContextMenu);
     onCleanup(() => canvas.removeEventListener('contextmenu', onContextMenu));
 
-    // Left = cast at the cursor; RIGHT-drag = orbit the third-person camera.
-    let orbiting = false;
+    // LMB = move / target; RMB = cast (arpg) or orbit drag (showcase).
     const onMouseDown = (e: MouseEvent) => {
       if (!inGame) return;
       focusPlayCanvas();
-      if (e.button === 0 && !player.dead) tryCast(selectedSkill);
-      if (e.button === 2) orbiting = true;
+      if (player.dead || worldInputBlocked) return;
+      if (camMode === 'showcase') {
+        if (e.button === 2) {
+          e.preventDefault();
+          orbitDragging = true;
+          lastOrbitMx = e.clientX;
+          lastOrbitMy = e.clientY;
+        }
+        return; // no combat / loot / entrance clicks in showcase
+      }
+      if (e.button === 2) {
+        e.preventDefault();
+        tryCastSelectedHotbar();
+        return;
+      }
+      if (e.button !== 0) return;
+      const hit = aimOnGround(
+        camRig, mouseX, mouseY, aspect, canvas.clientWidth, canvas.clientHeight,
+      );
+      if (!hit) return;
+      const world: readonly [number, number] = [hit.x, hit.z];
+      const picked = interactions.pickAt(world, CLICK_PICK_R);
+      if (picked) {
+        setMoveIntent(reduceIntent(moveIntent, { op: 'set-target', target: picked }));
+      } else {
+        setMoveIntent(reduceIntent(moveIntent, { op: 'set-point', world }));
+      }
     };
     canvas.addEventListener('mousedown', onMouseDown);
     onCleanup(() => canvas.removeEventListener('mousedown', onMouseDown));
+
+    const onMouseUp = (e: MouseEvent) => {
+      if (e.button === 2) orbitDragging = false;
+    };
+    window.addEventListener('mouseup', onMouseUp);
+    onCleanup(() => window.removeEventListener('mouseup', onMouseUp));
 
     // Claim keyboard after shell hand-off (Enter-game button / chat composer
     // otherwise keep focus and Studio looks like WASD is dead).
     focusPlayCanvas();
     requestAnimationFrame(focusPlayCanvas);
-
-    const onMouseUp = (e: MouseEvent) => { if (e.button === 2) orbiting = false; };
-    window.addEventListener('mouseup', onMouseUp);
-    onCleanup(() => window.removeEventListener('mouseup', onMouseUp));
-
-    const onBlur = () => { orbiting = false; };
-    window.addEventListener('blur', onBlur);
-    onCleanup(() => window.removeEventListener('blur', onBlur));
 
     const onResize = () => {
       sizeCanvas();
@@ -1379,19 +2175,31 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     window.addEventListener('resize', onResize);
     onCleanup(() => window.removeEventListener('resize', onResize));
 
-    // Mouse: aim tracking always; right-drag orbits in third person (movement
-    // deltas work fine without any pointer lock).
+    // Mouse: aim tracking for ground unprojection; showcase RMB orbit (explicit).
     const onMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       mouseX = e.clientX - rect.left;
       mouseY = e.clientY - rect.top;
-      mouseSeen = true;
-      if (state.mode !== 'fps' || !orbiting) return;
-      lookYaw -= e.movementX * 0.0045;
-      lookPitch = clamp(lookPitch - e.movementY * 0.0045, -1.3, 1.3);
+      if (orbitDragging && camMode === 'showcase') {
+        const dx = e.clientX - lastOrbitMx;
+        const dy = e.clientY - lastOrbitMy;
+        lastOrbitMx = e.clientX;
+        lastOrbitMy = e.clientY;
+        orbitYawAcc += dx * 0.005;
+        orbitPitchAcc += dy * 0.0035;
+      }
     };
     window.addEventListener('mousemove', onMouseMove);
     onCleanup(() => window.removeEventListener('mousemove', onMouseMove));
+
+    // Bounded ARPG zoom (10–14 m); pitch unchanged inside the rig.
+    const onWheel = (e: WheelEvent) => {
+      if (!inGame || camMode !== 'arpg' || worldInputBlocked) return;
+      e.preventDefault();
+      zoomDelta += clamp(e.deltaY * 0.01, -1.5, 1.5);
+    };
+    canvas.addEventListener('wheel', onWheel, { passive: false });
+    onCleanup(() => canvas.removeEventListener('wheel', onWheel));
 
     // ── main loop ─────────────────────────────────────────────────────────
     let hudTimer = 0;
@@ -1472,55 +2280,67 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         return;
       }
 
-      // Third-person look: arrow keys + CURSOR EDGE-PUSH (no pointer lock —
-      // shoving the cursor into the outer band of the screen turns the camera,
-      // quadratically faster toward the edge; full 360° by holding it there).
-      // Right-drag (mousemove handler) remains the precise orbit.
-      if (state.mode === 'fps') {
-        if (keys['ArrowLeft']) lookYaw += TURN * dt;
-        if (keys['ArrowRight']) lookYaw -= TURN * dt;
-        if (keys['ArrowUp']) lookPitch = clamp(lookPitch + TURN * dt, -1.3, 1.3);
-        if (keys['ArrowDown']) lookPitch = clamp(lookPitch - TURN * dt, -1.3, 1.3);
-        if (mouseSeen) {
-          const w = Math.max(1, canvas.clientWidth), h = Math.max(1, canvas.clientHeight);
-          const nx = mouseX / w, ny = mouseY / h;
-          const EDGE = 0.14;                     // outer band that turns the camera
-          if (nx >= 0 && nx <= 1 && ny >= 0 && ny <= 1) {   // cursor inside the window
-            if (nx < EDGE) {
-              const f = (EDGE - nx) / EDGE;
-              lookYaw += TURN * 1.6 * f * f * dt;
-            } else if (nx > 1 - EDGE) {
-              const f = (nx - (1 - EDGE)) / EDGE;
-              lookYaw -= TURN * 1.6 * f * f * dt;
-            }
-            if (ny < EDGE) {
-              const f = (EDGE - ny) / EDGE;
-              lookPitch = clamp(lookPitch + TURN * 0.8 * f * f * dt, -1.3, 1.3);
-            } else if (ny > 1 - EDGE) {
-              const f = (ny - (1 - EDGE)) / EDGE;
-              lookPitch = clamp(lookPitch - TURN * 0.8 * f * f * dt, -1.3, 1.3);
-            }
-          }
-        }
+      // Leaving camp forces arpg (Spec §6.2).
+      if (camMode === 'showcase' && area !== 'camp') {
+        beginCameraMode('arpg');
+        camRig = makeArpgAtPlayer();
+        camBlend = null;
+        hud.setShowcaseReduced(false);
+        rs.applyCamera();
       }
 
-      // input → world-space movement vector
-      const sprint = !!keys['ShiftLeft'] || !!keys['ShiftRight'];
+      // MovementIntent authority: WASD vector replaces point/target; panels clear.
+      const allowWorldMove = !worldInputBlocked;
+      const sprint = allowWorldMove && (!!keys['ShiftLeft'] || !!keys['ShiftRight']);
       const spd = (sprint ? SPRINT : SPEED) * moveMul * dt;
-      const am = state.mode !== 'fps';
-      const fwd = ((keys['KeyW'] || (am && keys['ArrowUp'])) ? 1 : 0) -
-                  ((keys['KeyS'] || (am && keys['ArrowDown'])) ? 1 : 0);
-      const strafe = ((keys['KeyD'] || (am && keys['ArrowRight'])) ? 1 : 0) -
-                     ((keys['KeyA'] || (am && keys['ArrowLeft'])) ? 1 : 0);
-      let mvx = 0, mvz = 0;
-      if (state.mode === 'fps') {
-        const fwdX = -Math.sin(lookYaw), fwdZ = -Math.cos(lookYaw);
-        const rgtX = -fwdZ, rgtZ = fwdX;
-        mvx = fwdX * fwd + rgtX * strafe;
-        mvz = fwdZ * fwd + rgtZ * strafe;
-      } else {
-        mvx = strafe;
-        mvz = -fwd;
+      let mvx = 0;
+      let mvz = 0;
+
+      if (allowWorldMove && !player.dead) {
+        const vec = wasdVectorFromKeys(keys);
+        if (vec) {
+          setMoveIntent(reduceIntent(moveIntent, { op: 'set-vector', x: vec.x, z: vec.z }));
+          mvx = vec.x;
+          mvz = vec.z;
+        } else if (moveIntent.kind === 'vector') {
+          setMoveIntent(reduceIntent(moveIntent, { op: 'release-vector' }));
+        } else if (moveIntent.kind === 'point' || moveIntent.kind === 'target') {
+          if (moveIntent.kind === 'target') {
+            targetRepathAcc += dt;
+            if (targetRepathAcc >= 0.25) {
+              targetRepathAcc = 0;
+              const resolved = interactions.resolve(moveIntent.target);
+              if (resolved?.valid) {
+                followPath = navigation.path([state.px, state.pz], resolved.position);
+                followIdx = 0;
+              }
+            }
+            const tick = tickTargetIntent(moveIntent, [state.px, state.pz], interactions);
+            moveIntent = tick.intent;
+            if (moveIntent.kind !== 'target') {
+              followPath = [];
+              followIdx = 0;
+            }
+          }
+          while (followIdx < followPath.length) {
+            const wp = followPath[followIdx]!;
+            const dx = wp[0] - state.px;
+            const dz = wp[1] - state.pz;
+            const dist = Math.hypot(dx, dz);
+            if (dist <= PATH_ARRIVE) {
+              followIdx += 1;
+              continue;
+            }
+            mvx = dx / dist;
+            mvz = dz / dist;
+            break;
+          }
+          if (moveIntent.kind === 'point' && followIdx >= followPath.length) {
+            clearMoveIntent();
+          }
+        }
+      } else if (worldInputBlocked && moveIntent.kind !== 'none') {
+        clearMoveIntent();
       }
 
       // one-shot clip locks locomotion (attack cast roots the witch briefly)
@@ -1529,6 +2349,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // integrate position — per-axis walkability so walls slide, not stick
       const len = Math.hypot(mvx, mvz);
       state.moving = !oneShotActive && !player.dead && len > 0;
+      const prevPx = state.px;
+      const prevPz = state.pz;
       if (state.moving) {
         const nx = mvx / len, nz = mvz / len;
         faceX = nx; faceZ = nz;
@@ -1537,15 +2359,20 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         if (walkableAt(nxp, state.pz)) state.px = nxp;
         if (walkableAt(state.px, nzp)) state.pz = nzp;
       }
+      // Actual ground speed after collision slide (not key/sprint flags).
+      const groundSpeed = Math.hypot(state.px - prevPx, state.pz - prevPz) / Math.max(dt, 1e-6);
+      const isPathDriven = moveIntent.kind === 'point' || moveIntent.kind === 'target';
 
-      // animation state machine
+      // animation state machine — locomotion from velocity; one-shots untouched
       if (!state.paused && !oneShotActive && !player.dead) {
         if (state.oneShotUntil !== 0) state.oneShotUntil = 0;
-        swapClip(state.moving ? 'move' : 'idle');
-        if (state.moving && state.currentClip === 'move') {
-          const ground = (sprint ? SPRINT : SPEED) * moveMul;
-          witchAnimBase = clamp(ground / ANIM_STRIDE, ANIM_SPEED_MIN, ANIM_SPEED_MAX);
-        } else if (state.currentClip === 'idle') {
+        const loco = selectLocomotionClip(groundSpeed, isPathDriven);
+        swapClip(loco);
+        if (loco === 'walk') {
+          witchAnimBase = clamp(groundSpeed / ANIM_STRIDE_WALK, ANIM_SPEED_MIN, ANIM_SPEED_MAX);
+        } else if (loco === 'run') {
+          witchAnimBase = clamp(groundSpeed / ANIM_STRIDE_RUN, ANIM_SPEED_MIN, ANIM_SPEED_MAX);
+        } else {
           witchAnimBase = 1;
         }
       }
@@ -1626,56 +2453,43 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       skills.tick(dt, monsters);
       tickWildSpawner(dt);
 
-      // loot pickups (equipment stays on the ground while the bag is full)
-      for (const ev of loot.tick(dt, state.px, state.pz, () => bag.includes(null))) {
-        const s = worldToScreen(ev.x, ev.y + 0.4, ev.z);
-        if (ev.kind === 'xp') {
-          const gained = Math.round(ev.amount * (1 + equipBonus.xpGain));
-          const ups = grantXp(player, gained);
-          sfx.play('pickup');
-          if (s) hud.floatText(`+${gained} 经验`, s.x, s.y, { color: '#ffb45e', size: 14 });
-          for (const up of ups) {
-            hud.banner(`等级提升！ Lv ${up.level}`, '#ffd066', 2000);
-            fx.rise(state.px, 0.2, state.pz, 'gold', 16, 0.9);
-            sfx.play('levelup');
-            refreshSkillBar();
-            inv.update(equipment, bag, player.level, player.gold);
-            if (activeCharId) touchCharacter(activeCharId, player.level);
-          }
-        } else if (ev.kind === 'gold') {
-          const gained = Math.round(ev.amount * (1 + equipBonus.goldFind));
-          player.gold += gained;
-          hud.setGold(player.gold);
-          sfx.play('pickup');
-          if (s) hud.floatText(`+${gained} 金币`, s.x, s.y, { color: '#ffcf40', size: 14 });
-        } else if (ev.kind === 'healPotion') {
-          player.hp = Math.min(player.maxHp, player.hp + ev.amount);
-          sfx.play('potion');
-          if (s) hud.floatText(`+${ev.amount} 生命`, s.x, s.y, { color: '#ff6a6a', size: 15 });
-          fx.rise(state.px, 0.4, state.pz, 'heal', 6, 0.4);
-        } else if (ev.kind === 'item' && ev.item) {
-          takeItem(ev.item, s?.x ?? null, s?.y ?? null);
-        } else {
-          player.mana = Math.min(player.maxMana, player.mana + ev.amount);
-          sfx.play('potion');
-          if (s) hud.floatText(`+${ev.amount} 法力`, s.x, s.y, { color: '#7da2ff', size: 15 });
+      // loot pickups — disabled in showcase (Spec §6.2)
+      if (camMode === 'arpg') {
+        for (const ev of loot.tick(dt, state.px, state.pz, () => character.snapshot().bag.includes(null))) {
+          applyPickupEvent(ev);
         }
       }
 
-      // ── area transitions (portal pads) ──
+      // ── area transitions (portal pads) — disabled in showcase ──
       const dCave = Math.hypot(state.px - CAVE_MOUTH.x, state.pz - CAVE_MOUTH.z);
       const dExit = Math.hypot(state.px - DEN_EXIT.x, state.pz - DEN_EXIT.z);
-      if (portalArmed && !player.dead) {
+      if (portalArmed && !player.dead && camMode === 'arpg') {
         if (area !== 'den' && dCave < 1.5) {
-          portalArmed = false;
-          state.px = dungeon.entry.x; state.pz = dungeon.entry.z;
-          focusX = state.px; focusZ = state.pz;
-          sfx.play('portal');
-          enterArea('den');
+          if (!canEnterSlagdeep(character.snapshot().quests)) {
+            hud.banner('深窟封锁 — 先与烬守者维拉交谈', '#ffb070', 2200);
+            portalArmed = false;
+          } else {
+            portalArmed = false;
+            const transition = resolveAreaTransition('slagdeep-hollow', 'den-entry', {
+              characterId: character.snapshot().identity.id,
+              den: { entry: dungeon.entry, exitPad: DEN_EXIT },
+            });
+            state.px = transition.playerPos[0];
+            state.pz = transition.playerPos[1];
+            camRig = snapCameraFocus(makeArpgAtPlayer(), [state.px, 0, state.pz]);
+            rs.applyCamera();
+            sfx.play('portal');
+            enterArea('den');
+          }
         } else if (area === 'den' && dExit < 1.5) {
           portalArmed = false;
-          state.px = CAVE_MOUTH.x - 3; state.pz = CAVE_MOUTH.z - 3;
-          focusX = state.px; focusZ = state.pz;
+          const transition = resolveAreaTransition('ashen-reach', 'cave-mouth', {
+            characterId: character.snapshot().identity.id,
+          });
+          state.px = transition.playerPos[0];
+          state.pz = transition.playerPos[1];
+          camRig = snapCameraFocus(makeArpgAtPlayer(), [state.px, 0, state.pz]);
+          rs.applyCamera();
           sfx.play('portal');
           enterArea('wild');
         }
@@ -1695,18 +2509,24 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         else fx.rise(CAVE_MOUTH.x, 0.15, CAVE_MOUTH.z, 'fire', 2, 1.2);
       }
 
-      // ── quest / boss ──
-      if (!questDone && denTotal > 0 && monsters.denAliveCount() === 0) {
-        questDone = true;
-        hud.banner('任务完成：熔渣深窟已清剿！', '#8aff9a', 3000);
-        sfx.play('quest');
-        const ups = grantXp(player, 120);
-        player.gold += 250;
-        hud.setGold(player.gold);
-        for (const up of ups) hud.banner(`等级提升！ Lv ${up.level}`, '#ffd066', 2000);
-        if (activeCharId) touchCharacter(activeCharId, player.level);
-        refreshQuest();
-        refreshSkillBar();
+      // ── quest objectives (ready only; rewards via Veyra turn-in) ──
+      if (area === 'den' && questStatus() === 'active' && denTotal > 0) {
+        if (denMinionAliveCount() === 0) {
+          combatRun.dispatch({ op: 'mark-objective', id: 'den-minions-cleared' });
+        }
+        if (!monsters.boss()) {
+          combatRun.dispatch({ op: 'mark-objective', id: 'slagdeep-boss-defeated' });
+        }
+        if (combatRun.objectivesMet()) {
+          const ready = markQuestReady(character);
+          if (ready.ok && ready.state.status === 'ready') {
+            hud.banner('目标达成：返回营地向维拉交还任务', '#8aff9a', 3000);
+            sfx.play('quest');
+            persistCharacter();
+            refreshQuest();
+            refreshQuestLog();
+          }
+        }
       }
       const boss = monsters.boss();
       if (boss && area === 'den' && Math.hypot(boss.x - state.px, boss.z - state.pz) < 18) {
@@ -1715,54 +2535,82 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         hud.setBoss(null);
       }
 
+      // Target readout: pursue lock, else nearest living monster in range.
+      {
+        let targetVm: TargetViewModel | null = null;
+        if (camMode === 'arpg' && !player.dead) {
+          let m: Monster | null = null;
+          if (moveIntent.kind === 'target' && moveIntent.target.kind === 'monster') {
+            m = monsters.byId(moveIntent.target.id);
+          }
+          if (!m) m = monsters.nearest(state.px, state.pz, 14);
+          if (m) {
+            const def = MONSTERS[m.kind];
+            targetVm = { name: def.name, level: def.level, hp: m.hp, maxHp: m.maxHp };
+          }
+        }
+        hud.setTarget(targetVm);
+      }
+
       // HUD refresh (orbs every frame are cheap; skill bar at 8 Hz)
       hud.setOrbs(player.hp, player.maxHp, player.mana, player.maxMana);
-      hud.setXp(player.level, player.xp, player.xpMax);
+      {
+        const snap = character.snapshot();
+        hud.setXp(snap.level, snap.xp, xpForLevel(snap.level));
+      }
       hudTimer -= dt;
       if (hudTimer <= 0) {
         hudTimer = 0.12;
         refreshSkillBar();
         if (skillPanel.isOpen()) skillPanel.refresh();
+        if (charPanel.isOpen()) refreshCharacterPanel();
         if (area === 'den') refreshQuest();
       }
 
-      // ── camera ──
-      // Screen shake: random offset scaled by the decaying magnitude.
-      let shX = 0, shY = 0, shZ = 0;
-      if (shakeMag > 0.005) {
-        shX = (Math.random() - 0.5) * 2 * shakeMag;
-        shY = (Math.random() - 0.5) * 1.2 * shakeMag;
-        shZ = (Math.random() - 0.5) * 2 * shakeMag;
-        shakeMag *= Math.exp(-7 * dt);
+      // ── camera (rig owns pose + FOV; applyCamera owns Camera component) ──
+      const prevFov = camRig.verticalFovRad;
+      const shakeImpulse = pendingShake;
+      pendingShake = [0, 0, 0];
+      const orbitYaw = orbitYawAcc;
+      const orbitPitch = orbitPitchAcc;
+      orbitYawAcc = 0;
+      orbitPitchAcc = 0;
+      const camInput = {
+        target: [state.px, 0, state.pz] as const,
+        dt,
+        zoomDelta: camMode === 'arpg' ? zoomDelta : 0,
+        shakeImpulse,
+        orbitDeltaYaw: orbitYaw,
+        orbitDeltaPitch: orbitPitch,
+        desiredDistance: SHOWCASE_DISTANCE,
+        probe: camMode === 'showcase' ? campCameraProbe : null,
+      };
+      zoomDelta = 0;
+      let ideal: CameraRigState;
+      if (camMode === 'showcase') {
+        const facingYaw = Math.atan2(-faceX, -faceZ);
+        ideal = updateShowcaseCamera(camRig, camInput, facingYaw);
       } else {
-        shakeMag = 0;
+        ideal = updateArpgCamera(camRig, camInput, arpgPreset);
+        arpgZoomDistance = ideal.distance;
       }
-      if (state.mode === 'fps') {
-        const qy = quat.create(); quat.fromAxisAngle(qy, [0, 1, 0], lookYaw);
-        const qx = quat.create(); quat.fromAxisAngle(qx, [1, 0, 0], lookPitch);
-        const cq = quat.create(); quat.multiply(cq, qy, qx);
-        const cp = Math.cos(lookPitch), sp = Math.sin(lookPitch);
-        const fwdX = -cp * Math.sin(lookYaw);
-        const fwdY = sp;
-        const fwdZ = -cp * Math.cos(lookYaw);
-        const tx = state.px, ty = TP_TARGET_Y, tz = state.pz;
-        world.set(camera, Transform, {
-          pos: [
-            tx - fwdX * TP_DIST + shX,
-            ty - fwdY * TP_DIST + shY,
-            tz - fwdZ * TP_DIST + shZ,
-          ],
-          quat: [cq[0]!, cq[1]!, cq[2]!, cq[3]!],
-        });
+      if (camBlend) {
+        camBlend.elapsed += dt;
+        const w = cameraBlendWeight(camBlend.elapsed, CAMERA_MODE_BLEND_S);
+        camRig = lerpCameraRig(camBlend.from, ideal, w, camBlend.toMode);
+        if (w >= 1) {
+          camRig = { ...ideal, mode: camBlend.toMode };
+          camBlend = null;
+        }
       } else {
-        const a = 1 - Math.exp(-CAM_LERP * dt);
-        focusX += (state.px - focusX) * a;
-        focusZ += (state.pz - focusZ) * a;
-        world.set(camera, Transform, {
-          pos: [focusX + shX, TOP_DY + shY, focusZ + TOP_DZ + shZ],
-          quat: [topQ[0]!, topQ[1]!, topQ[2]!, topQ[3]!],
-        });
+        camRig = ideal;
       }
+      if (camRig.verticalFovRad !== prevFov) rs.applyCamera();
+      const cq = cameraQuat(camRig.yaw, camRig.pitch);
+      world.set(camera, Transform, {
+        pos: [camRig.eye[0]!, camRig.eye[1]!, camRig.eye[2]!],
+        quat: [cq[0]!, cq[1]!, cq[2]!, cq[3]!],
+      });
     });
 
   }
@@ -1776,6 +2624,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   if (!startedInDen) {
     // Title returns before gameplay camera exists — keep a stub so the host
     // renderer does not fault with render-system-no-camera over the shell.
+    // Title/boot stub FOV — gameplay replaces this with CameraRigState FOV.
     const BOOT_FOV = Math.PI / 2.4;
     bootCamera = world.spawn(
       { component: Name, data: { value: 'BootCamera' } },
@@ -1795,7 +2644,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       world,
       camera: bootCamera,
       getAspect: () => aspect,
-      proj: { fov: BOOT_FOV, near: 0.05, far: 200 },
+      proj: { getVerticalFovRad: () => BOOT_FOV, near: 0.05, far: 200 },
       onLighting: () => {},
       onParticles: () => {},
       onDisplay: (s) => { applyDisplaySettings(s); },

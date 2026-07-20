@@ -207,6 +207,8 @@ export const MONSTERS: Record<MonsterKind, MonsterDef> = {
 };
 
 export interface Monster {
+  /** Stable interaction id — never an ECS EntityHandle (handle reuse safe). */
+  id: string;
   e: EntityHandle;
   kind: MonsterKind;
   hp: number;
@@ -217,6 +219,9 @@ export interface Monster {
   rangedCd: number;
   slowUntil: number;         // wall-clock s (performance.now()/1000 based)
   flashUntil: number;
+  /** Scorch DoT — one stack; refresh replaces amount (Spec §7.2). */
+  burnUntil: number;
+  burnDps: number;
   enraged: boolean;
   bobPhase: number;
   matState: 'normal' | 'flash' | 'slow';
@@ -324,7 +329,11 @@ function stripRootMotionXZ(clip: AnimationClip): void {
 }
 
 export interface MonsterEvents {
-  /** Monster melee/bolt landed on the player. */
+  /**
+   * Monster melee/bolt landed on the player.
+   * `damage` is raw (pre–damage-reduction). Callers must run
+   * `resolveIncomingDamage(damage, combatStats)` before applying to HP.
+   */
   onPlayerHit(damage: number, source: MonsterKind): void;
   /** Monster died (already despawned). */
   onDeath(m: Monster): void;
@@ -336,6 +345,7 @@ export class MonsterManager {
   private bolts: HostileBolt[] = [];
   private boltMat: MatHandle;
   private now = 0;
+  private nextStableId = 1;
   /** Loaded GLB visuals by kind — empty until loadVisuals() runs. */
   private glb = new Map<MonsterKind, GlbBank>();
   private corpses: Corpse[] = [];
@@ -542,11 +552,12 @@ export class MonsterManager {
     const contactR = Math.max(0.35, Math.min(1.2, def.radius * 1.15));
     const contactShadow = this.contact?.spawn(x, z, contactR) ?? null;
     const m: Monster = {
+      id: `m-${this.nextStableId++}`,
       e: root, kind, hp: def.hp, maxHp: def.hp, x, z,
       yaw: Math.random() * Math.PI * 2,
       attackCd: 0.5 + Math.random() * 0.5,
       rangedCd: 1 + Math.random(),
-      slowUntil: 0, flashUntil: 0, enraged: false,
+      slowUntil: 0, flashUntil: 0, burnUntil: 0, burnDps: 0, enraged: false,
       bobPhase: Math.random() * Math.PI * 2,
       matState: 'normal',
       zone, parts,
@@ -566,6 +577,21 @@ export class MonsterManager {
    * (kdx, kdz, kbForce) is the knockback impulse direction + strength —
    * bosses take 25% knockback so they keep their menace.
    */
+  /** True while a slow is active (Winter's Grasp checks this before damage). */
+  isSlowed(m: Monster): boolean {
+    return m.slowUntil > this.now;
+  }
+
+  /**
+   * Apply/replace Scorch burn. One stack per target: refresh duration and
+   * replace stored DPS; does not stack (Spec §7.2).
+   */
+  applyBurn(m: Monster, totalDamage: number, durationSec: number): void {
+    if (totalDamage <= 0 || durationSec <= 0) return;
+    m.burnUntil = this.now + durationSec;
+    m.burnDps = totalDamage / durationSec;
+  }
+
   damage(m: Monster, dmg: number, slowSec = 0, kdx = 0, kdz = 0, kbForce = 0): boolean {
     m.hp -= dmg;
     m.flashUntil = this.now + 0.12;
@@ -600,6 +626,8 @@ export class MonsterManager {
 
   private kill(m: Monster): void {
     this.fx.gibs(m.x, 0.6, m.z, 'blood', m.kind === 'slaglord' ? 22 : 9);
+    // Status VFX ends with death even when the corpse clip still plays.
+    this.fx.endSlowStatus(m.id);
     if (m.contactShadow !== null) {
       this.contact?.disposeEntity(m.contactShadow);
       m.contactShadow = null;
@@ -628,6 +656,8 @@ export class MonsterManager {
       this.contact?.disposeEntity(m.contactShadow);
       m.contactShadow = null;
     }
+    // Slow VFX lifetime matches gameplay status — drop on death/despawn.
+    this.fx.endSlowStatus(m.id);
     this.world.despawn(m.e);
     for (const p of m.parts) this.world.despawn(p.e);
     for (const e of m.instEntities) this.world.despawn(e);
@@ -647,6 +677,12 @@ export class MonsterManager {
       if (d2 < bestD2) { bestD2 = d2; best = m; }
     }
     return best;
+  }
+
+  /** Lookup by stable InteractionRef id (not ECS handle). */
+  byId(id: string): Monster | null {
+    for (const m of this.monsters) if (m.id === id) return m;
+    return null;
   }
 
   denAliveCount(): number {
@@ -714,11 +750,25 @@ export class MonsterManager {
       }
     }
 
-    for (const m of this.monsters) {
+    for (let mi = this.monsters.length - 1; mi >= 0; mi--) {
+      const m = this.monsters[mi]!;
+      // Scorch DoT tick (one stack; expires cleanly).
+      if (m.burnUntil > this.now && m.burnDps > 0) {
+        m.hp -= m.burnDps * dt;
+        if (m.hp <= 0) {
+          this.kill(m);
+          continue;
+        }
+      } else if (m.burnUntil <= this.now) {
+        m.burnDps = 0;
+      }
+
       const def = MONSTERS[m.kind];
       const dx = playerX - m.x, dz = playerZ - m.z;
       const dist = Math.hypot(dx, dz);
       const slowed = m.slowUntil > this.now;
+      // Slow marker begins/ends with the same gameplay status clock.
+      this.fx.syncSlowStatus(m.id, slowed, m.x, m.z, m.slowUntil);
       let speed = def.speed * (slowed ? 0.45 : 1) * (m.enraged ? 1.5 : 1);
       // Frost also drags the attack cadence, not just the feet.
       const cdRate = slowed ? 0.55 : 1;
@@ -891,4 +941,22 @@ export class MonsterManager {
 
   /** Wall-clock the manager runs on (skills use it for slow timing). */
   clock(): number { return this.now; }
+
+  /** Despawn every living monster (combat-run reset). */
+  clearAll(): void {
+    while (this.monsters.length > 0) {
+      this.despawn(this.monsters[this.monsters.length - 1]!);
+    }
+    for (const c of this.corpses) {
+      for (const e of c.entities) this.world.despawn(e);
+    }
+    this.corpses.length = 0;
+    this.clearEnemyAttacks();
+  }
+
+  /** Clear hostile bolts / pending attacks without touching living monsters. */
+  clearEnemyAttacks(): void {
+    for (const b of this.bolts) this.world.despawn(b.e);
+    this.bolts.length = 0;
+  }
 }

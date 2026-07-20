@@ -33,7 +33,25 @@ export const Ui = {
   mp: '#4a6ec8',
   ok: '#8aff9a',
   danger: '#ff6a6a',
+
+  // ── equipment comparison deltas ───────────────────────────────────────────
+  deltaUp: '#8aff9a',
+  deltaDown: '#ff6a6a',
+  deltaFlat: '#998f7d',
+
+  // ── skill-tree node states (Spec §7.1) ────────────────────────────────────
+  skillLocked: '#3a3020',
+  skillAvailable: '#e0b84a',
+  skillInvested: '#f5d878',
+  skillMaxed: '#ffe8a0',
 } as const;
+
+/** CSS color for compareItems polarity. */
+export function deltaColor(polarity: 'positive' | 'negative' | 'neutral'): string {
+  if (polarity === 'positive') return Ui.deltaUp;
+  if (polarity === 'negative') return Ui.deltaDown;
+  return Ui.deltaFlat;
+}
 
 export type UiToken = typeof Ui;
 
@@ -66,6 +84,18 @@ export function panelChrome(extra = ''): string {
 export function panelTitleStyle(): string {
   return `font:800 15px ${FONT_DISPLAY};letter-spacing:4px;color:${Ui.goldBright};` +
     `text-shadow:0 1px 0 ${Ui.goldDeep},0 0 12px ${Ui.crimsonGlow};`;
+}
+
+/**
+ * Internal scroll shell for major panels (Spec §11 — 1280×720).
+ * Caps height to the viewport and scrolls content instead of shrinking type.
+ */
+export function panelScrollShellCss(designMaxPx = 560, verticalPadPx = 48): string {
+  return (
+    `max-height:min(${designMaxPx}px,calc(100% - ${verticalPadPx}px));` +
+    'overflow-x:hidden;overflow-y:auto;' +
+    'overscroll-behavior:contain;-webkit-overflow-scrolling:touch;'
+  );
 }
 
 /** Metallic gold fill for large Title wordmarks (no filter required). */

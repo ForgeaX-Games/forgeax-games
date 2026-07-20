@@ -3,6 +3,9 @@
 // Shaders (registered once against the engine ShaderRegistry):
 //   hellforge::fire_bolt     — the Fire Bolt projectile body (living flame)
 //   hellforge::portal_vortex — swirling portal discs (cave / return portal)
+//   hellforge::frost_fang    — Frost Fang crystal core / trail body
+//   hellforge::frost_impact  — collision-aligned frost impact flash
+//   hellforge::frost_slow    — persistent slow-status marker disc
 //
 // Particles: tiny manually-integrated ECS entities (sphere/cube + emissive
 // standard material), pooled in a JS array. Modes:
@@ -22,11 +25,32 @@ import type { Handle } from '@forgeax/engine-types';
 
 import fireBoltShader from './shaders/fire-bolt.wgsl';
 import portalShader from './shaders/portal-vortex.wgsl';
+import frostFangShader from './shaders/frost-fang.wgsl';
+import frostImpactShader from './shaders/frost-impact.wgsl';
+import frostSlowShader from './shaders/frost-slow.wgsl';
+import { FxLifecycleTracker, type FxLifecycleSnapshot } from './fx-lifecycle';
 
 export type MatHandle = Handle<'MaterialAsset', 'shared'>;
+export type { FxLifecycleSnapshot } from './fx-lifecycle';
+
+/** Shared Frost Fang material handles (one set — no per-projectile materials). */
+export interface FrostVfxHandles {
+  projectile: MatHandle;
+  impact: MatHandle;
+  slow: MatHandle;
+}
+
+interface SlowMarkerEntity {
+  e: EntityHandle;
+}
 
 const FIRE_BOLT_SHADER_ID = 'hellforge::fire_bolt';
 const PORTAL_SHADER_ID = 'hellforge::portal_vortex';
+const FROST_FANG_SHADER_ID = 'hellforge::frost_fang';
+const FROST_IMPACT_SHADER_ID = 'hellforge::frost_impact';
+const FROST_SLOW_SHADER_ID = 'hellforge::frost_slow';
+
+type ShaderParams = { baseColor: number[]; metallic: number; roughness: number };
 
 export type FxColor = 'fire' | 'ice' | 'lightning' | 'blood' | 'gold' | 'shadow' | 'heal';
 
@@ -58,8 +82,14 @@ export class FxSystem {
   private elapsed = 0;
   // Custom-shader materials + their live param objects (metallic = time).
   private fireBoltMat: MatHandle | null = null;
-  private fireBoltParams: { baseColor: number[]; metallic: number; roughness: number } | null = null;
-  private portalMats: Array<{ mat: MatHandle; params: { baseColor: number[]; metallic: number; roughness: number } }> = [];
+  private fireBoltParams: ShaderParams | null = null;
+  private frostHandles: FrostVfxHandles | null = null;
+  private frostParams: ShaderParams[] = [];
+  private portalMats: Array<{ mat: MatHandle; params: ShaderParams }> = [];
+  /** Slow-status marker entities keyed by Monster.id. */
+  private slowMarkers = new Map<string, SlowMarkerEntity>();
+  /** Pure counts for __hf / tests (entities stay in this class). */
+  readonly lifecycle = new FxLifecycleTracker();
   // Campfire ember emitter state.
   private emberTimer = 0;
   private emberAt: { x: number; y: number; z: number } | null = null;
@@ -116,15 +146,39 @@ export class FxSystem {
       try {
         safeRegister(FIRE_BOLT_SHADER_ID, fireBoltShader.wgsl);
         safeRegister(PORTAL_SHADER_ID, portalShader.wgsl);
-        const fbParams = { baseColor: [1.0, 0.18, 0.03, 1], metallic: 0, roughness: 1.35 };
+        safeRegister(FROST_FANG_SHADER_ID, frostFangShader.wgsl);
+        safeRegister(FROST_IMPACT_SHADER_ID, frostImpactShader.wgsl);
+        safeRegister(FROST_SLOW_SHADER_ID, frostSlowShader.wgsl);
+        const fbParams: ShaderParams = { baseColor: [1.0, 0.18, 0.03, 1], metallic: 0, roughness: 1.35 };
         this.fireBoltMat = this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
           kind: 'material',
           passes: [{ name: 'Forward', shader: FIRE_BOLT_SHADER_ID, tags: { LightMode: 'Forward' }, queue: 3000, renderState: FX_RENDER_STATE }],
           paramValues: fbParams as never,
         });
         this.fireBoltParams = fbParams;
+
+        const mkFrost = (shader: string, tint: [number, number, number], intensity: number): MatHandle => {
+          const params: ShaderParams = {
+            baseColor: [tint[0], tint[1], tint[2], 1],
+            metallic: 0,
+            roughness: intensity,
+          };
+          this.frostParams.push(params);
+          return this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
+            kind: 'material',
+            passes: [{ name: 'Forward', shader, tags: { LightMode: 'Forward' }, queue: 3000, renderState: FX_RENDER_STATE }],
+            paramValues: params as never,
+          });
+        };
+        this.frostHandles = {
+          projectile: mkFrost(FROST_FANG_SHADER_ID, [0.42, 0.78, 1.0], 1.15),
+          impact: mkFrost(FROST_IMPACT_SHADER_ID, [0.55, 0.88, 1.0], 1.20),
+          slow: mkFrost(FROST_SLOW_SHADER_ID, [0.35, 0.72, 1.0], 0.95),
+        };
       } catch (e) {
         console.warn('[hellforge/fx] custom-shader setup failed; falling back to emissive:', (e as Error).message);
+        this.frostHandles = null;
+        this.frostParams = [];
       }
     }
   }
@@ -132,10 +186,16 @@ export class FxSystem {
   /** Fire Bolt body material (custom shader) — null when unavailable. */
   fireBoltMaterial(): MatHandle | null { return this.fireBoltMat; }
 
+  /**
+   * Frost Fang VFX materials (custom shaders). Null in Edit / when the shader
+   * registry is unavailable — callers must fall back to emissive ice mats.
+   */
+  frostVfx(): FrostVfxHandles | null { return this.frostHandles; }
+
   /** Mint a portal material with its own tint; time is fed by tick(). */
   portalMaterial(tint: [number, number, number]): MatHandle | null {
     if (!this.fireBoltMat) return null;   // shader registry unavailable
-    const params = { baseColor: [tint[0], tint[1], tint[2], 1], metallic: 0, roughness: 1.0 };
+    const params: ShaderParams = { baseColor: [tint[0], tint[1], tint[2], 1], metallic: 0, roughness: 1.0 };
     const mat = this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
       kind: 'material',
       passes: [{ name: 'Forward', shader: PORTAL_SHADER_ID, tags: { LightMode: 'Forward' }, queue: 3000, renderState: FX_RENDER_STATE }],
@@ -217,6 +277,89 @@ export class FxSystem {
     }
   }
 
+  /** Frost Fang cast readability cue at the caster (pop + soft ice motes). */
+  frostCastCue(x: number, y: number, z: number): void {
+    this.pop(x, y, z, 'ice', 0.28);
+    this.rise(x, y, z, 'ice', 3, 0.35);
+  }
+
+  /** Frost Fang impact flash at the collision point. */
+  frostImpact(x: number, y: number, z: number, crit = false): void {
+    this.pop(x, y, z, 'ice', crit ? 0.55 : 0.42);
+    this.burst(x, y, z, 'ice', crit ? 7 : 5, crit ? 3.2 : 2.6);
+  }
+
+  /**
+   * Shatter node shards — call only when resolveSkill emitted shatter-shards.
+   * `count` is the resolver shard count (2/3/4).
+   */
+  shatterFragments(x: number, y: number, z: number, count: number): void {
+    if (count <= 0) return;
+    const n = Math.min(4, count) * 2;
+    this.burst(x, y + 0.2, z, 'ice', n, 3.4);
+    this.pop(x, y + 0.15, z, 'ice', 0.32 + count * 0.04);
+  }
+
+  /**
+   * Sync a slow-status marker to gameplay state for monster `id`.
+   * When `active` is false the marker despawns; when true it follows (x,z).
+   */
+  syncSlowStatus(
+    id: string,
+    active: boolean,
+    x: number,
+    z: number,
+    until: number,
+  ): void {
+    if (!active) {
+      this.endSlowStatus(id);
+      return;
+    }
+    this.lifecycle.beginSlow(id, until);
+    const y = 0.08;
+    const existing = this.slowMarkers.get(id);
+    if (existing) {
+      this.world.set(existing.e, Transform, {
+        pos: [x, y, z],
+        scale: [1.35, 0.08, 1.35],
+      });
+      return;
+    }
+    const mat = this.frostHandles?.slow ?? this.mats.ice;
+    const spawned = this.world.spawn(
+      { component: Transform, data: { pos: [x, y, z], scale: [1.35, 0.08, 1.35] } },
+      { component: MeshFilter, data: { assetHandle: HANDLE_SPHERE } },
+      { component: MeshRenderer, data: { materials: [mat] } },
+    );
+    if (!spawned.ok) return;
+    this.slowMarkers.set(id, { e: spawned.value as EntityHandle });
+  }
+
+  /** Despawn one slow marker (target death). */
+  endSlowStatus(id: string): void {
+    const m = this.slowMarkers.get(id);
+    if (m) {
+      this.world.despawn(m.e);
+      this.slowMarkers.delete(id);
+    }
+    this.lifecycle.endSlow(id);
+  }
+
+  /** Publish projectile count from SkillSystem into the lifecycle snapshot. */
+  noteProjectiles(n: number): void {
+    this.lifecycle.setProjectiles(n);
+  }
+
+  debugCounts(): FxLifecycleSnapshot {
+    this.lifecycle.setParticles(this.particles.length);
+    return {
+      projectiles: this.lifecycle.projectiles,
+      particles: this.particles.length,
+      slowMarkers: this.slowMarkers.size,
+      effects: this.lifecycle.projectiles + this.particles.length + this.slowMarkers.size,
+    };
+  }
+
   // ── per-frame ────────────────────────────────────────────────────────────
 
   tick(dt: number): void {
@@ -225,6 +368,7 @@ export class FxSystem {
     // held BY REFERENCE by the material asset (cow-survivor does the same) —
     // mutating `.metallic` here is what the renderer uploads next frame.
     if (this.fireBoltParams) this.fireBoltParams.metallic = this.elapsed;
+    for (const p of this.frostParams) p.metallic = this.elapsed;
     for (const p of this.portalMats) p.params.metallic = this.elapsed;
 
     // Campfire embers — a steady trickle.
@@ -259,7 +403,18 @@ export class FxSystem {
         scale: [s, s, s],
       });
     }
+    this.lifecycle.setParticles(this.particles.length);
   }
 
   count(): number { return this.particles.length; }
+
+  /** Despawn transient particles + status markers (combat-run / area reset). */
+  clearTransient(): void {
+    for (const p of this.particles) this.world.despawn(p.e);
+    this.particles.length = 0;
+    for (const m of this.slowMarkers.values()) this.world.despawn(m.e);
+    this.slowMarkers.clear();
+    this.lifecycle.clearAll();
+    this.emberTimer = 0;
+  }
 }

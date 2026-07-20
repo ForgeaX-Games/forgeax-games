@@ -36,6 +36,8 @@ export interface MonsterSpawn { kind: MonsterKind; x: number; z: number }
 
 export class Dungeon {
   private layout: DungeonLayout;
+  /** Layout seed — matches AreaDef generated source / baked pack (Task 4.2). */
+  readonly layoutSeed: number;
   /** World-space entry pad (where the player appears when entering). */
   entry = { x: 0, z: 0 };
   /** World-space boss-room centre. */
@@ -45,8 +47,9 @@ export class Dungeon {
   /** World-space fire fixtures (torch flames / braziers) — light-pool seats. */
   firePoints: Array<{ x: number; y: number; z: number }> = [];
 
-  constructor(private world: World) {
-    this.layout = generateLayout(DUNGEON_SEED);
+  constructor(private world: World, layoutSeed: number = DUNGEON_SEED) {
+    this.layoutSeed = layoutSeed;
+    this.layout = generateLayout(layoutSeed);
     this.roomCount = this.layout.roomCount;
     this.entry = { x: this.layout.entry.x + DUNGEON_ORIGIN.x, z: this.layout.entry.z + DUNGEON_ORIGIN.z };
     this.bossAt = { x: this.layout.bossAt.x + DUNGEON_ORIGIN.x, z: this.layout.bossAt.z + DUNGEON_ORIGIN.z };
@@ -134,6 +137,14 @@ export class Dungeon {
   isWalkCell(cx: number, cy: number): boolean {
     if (cx < 0 || cy < 0 || cx >= CELLS || cy >= CELLS) return false;
     return !!this.layout.walk[cy * CELLS + cx];
+  }
+
+  /** World XZ of a grid cell centre (navigation path waypoints). */
+  cellToWorld(cx: number, cy: number): readonly [number, number] {
+    return [
+      (cx - CELLS / 2 + 0.5) * CELL + DUNGEON_ORIGIN.x,
+      (cy - CELLS / 2 + 0.5) * CELL + DUNGEON_ORIGIN.z,
+    ];
   }
 
   /** Raw walk grid (CELLS×CELLS) — automap reads this read-only. */

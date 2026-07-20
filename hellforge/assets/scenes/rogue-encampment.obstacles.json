@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "blockers": [
+    {
+      "type": "aabb",
+      "label": "Hut1",
+      "min": [-8.3, -10.15],
+      "max": [-3.7, -5.55],
+      "probeHeight": 3.5,
+      "probePad": 0.18
+    },
+    {
+      "type": "aabb",
+      "label": "Hut2",
+      "min": [3.7, -10.15],
+      "max": [8.3, -5.55],
+      "probeHeight": 3.5,
+      "probePad": 0.18
+    },
+    {
+      "type": "aabb",
+      "label": "Hut3",
+      "min": [-2.75, -14.7],
+      "max": [2.75, -11.0],
+      "probeHeight": 3.6,
+      "probePad": 0.18
+    },
+    {
+      "type": "aabb",
+      "label": "FenceW",
+      "min": [-11.5, -2.7],
+      "max": [-11.1, 9.3],
+      "probeHeight": 2.4,
+      "probePad": 0.22
+    },
+    {
+      "type": "aabb",
+      "label": "FenceE",
+      "min": [7.85, 0.0],
+      "max": [8.2, 12.0],
+      "probeHeight": 2.4,
+      "probePad": 0.22
+    },
+    {
+      "type": "aabb",
+      "label": "FenceN",
+      "min": [-8.0, -14.2],
+      "max": [8.0, -13.85],
+      "probeHeight": 2.4,
+      "probePad": 0.22
+    },
+    {
+      "type": "aabb",
+      "label": "GateColumns",
+      "min": [-3.1, 13.6],
+      "max": [-2.0, 14.4],
+      "probeHeight": 3.8,
+      "probePad": 0.2
+    },
+    {
+      "type": "aabb",
+      "label": "GateColumnsR",
+      "min": [2.0, 13.6],
+      "max": [3.1, 14.4],
+      "probeHeight": 3.8,
+      "probePad": 0.2
+    },
+    {
+      "type": "aabb",
+      "label": "CampfireRing",
+      "min": [-1.1, -1.1],
+      "max": [1.1, 1.1],
+      "probeHeight": 1.6,
+      "probePad": 0.1
+    }
+  ]
+}

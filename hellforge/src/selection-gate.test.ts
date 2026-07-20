@@ -21,4 +21,15 @@ describe('createCharacterSelectionGate', () => {
     expect(gate.select(second)).toBe(false);
     expect(await gate.promise).toEqual(first);
   });
+
+  test('rejects non-Sorceress at the domain seam', async () => {
+    const gate = createCharacterSelectionGate();
+    const barb: CharacterRecord = {
+      id: 'barb', playerName: 'Rex', classId: 'barbarian',
+      level: 1, createdAt: 1, lastPlayedAt: 1,
+    };
+    expect(gate.select(barb)).toBe(false);
+    expect(gate.select(first)).toBe(true);
+    expect(await gate.promise).toEqual(first);
+  });
 });

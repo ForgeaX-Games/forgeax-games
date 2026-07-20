@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "route": [
+    { "id": "camp-gate", "pos": [0, 14] },
+    { "id": "ashen-mid", "pos": [6, 22] },
+    { "id": "cave-mouth", "pos": [14, 24] }
+  ],
+  "blockers": [
+    {
+      "type": "aabb",
+      "label": "SlagRidgeWest",
+      "min": [-28, 18],
+      "max": [-18, 32]
+    },
+    {
+      "type": "aabb",
+      "label": "SlagRidgeEast",
+      "min": [20, 16],
+      "max": [30, 30]
+    },
+    {
+      "type": "aabb",
+      "label": "DeadTrunkClusterL",
+      "min": [-22, 26],
+      "max": [-16, 34]
+    },
+    {
+      "type": "aabb",
+      "label": "DeadTrunkClusterR",
+      "min": [16, 26],
+      "max": [22, 34]
+    },
+    {
+      "type": "polygon",
+      "label": "LavaFissure",
+      "points": [
+        [2, 28],
+        [8, 30],
+        [7, 36],
+        [1, 34]
+      ]
+    }
+  ],
+  "landmarks": [
+    { "id": "slag-bridge", "pos": [4, 20], "kind": "bridge" },
+    { "id": "fallen-forge", "pos": [-8, 30], "kind": "ruin" }
+  ],
+  "encounterMarkers": [
+    { "id": "enc-ridge-west", "pos": [-12, 22], "table": "ashen-patrol" },
+    { "id": "enc-ridge-east", "pos": [12, 20], "table": "ashen-patrol" },
+    { "id": "enc-mid-route", "pos": [6, 18], "table": "ashen-patrol" },
+    { "id": "enc-near-cave", "pos": [10, 26], "table": "ashen-patrol" },
+    { "id": "enc-forge-flank", "pos": [-6, 28], "table": "ashen-patrol" }
+  ],
+  "decorMarkers": [
+    { "id": "decor-bridge-ash", "pos": [3.5, 19.5], "pool": "ashen-ground" },
+    { "id": "decor-forge-slag", "pos": [-7.5, 29.5], "pool": "ashen-ground" },
+    { "id": "decor-route-stump", "pos": [5, 16], "pool": "ashen-ground" },
+    { "id": "decor-fissure-rock", "pos": [0, 32], "pool": "ashen-ground" },
+    { "id": "decor-camp-approach", "pos": [1, 15], "pool": "ashen-ground" }
+  ]
+}

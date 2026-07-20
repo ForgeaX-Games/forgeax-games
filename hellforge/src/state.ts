@@ -1,90 +1,98 @@
-// Shared player progression state — HP / mana / XP / level / gold.
-//
-// One mutable singleton owned by main.ts and read by skills (mana), monsters
-// (damage → hp), loot (xp/gold/potions) and hud (render). Pure data + a few
-// curve helpers; no ECS access so it stays trivially testable.
+// Runtime-only player combat resources — HP / mana / dead / hurt / kills.
+// Long-term progression (level / XP / gold / inventory / quests / skills) lives
+// in CharacterDomain; this module must not retain a writable copy of those.
+// Max HP/MP / regen are synced from derived CombatStats.
 
 import type { ClassId } from './classes';
-import { growthForLevel } from './classes';
+import { getClassDef } from './classes';
+import {
+  BASE_MANA_REGEN,
+  classProgressionTotals,
+  type CombatStats,
+} from './combat-stats';
+import { preserveResourceRatio } from './damage';
 import { getHeroDef } from './heroes';
+import { xpForLevel } from './xp';
+
+export { xpForLevel };
 
 export interface PlayerStats {
-  heroId: ClassId;
   hp: number;
   maxHp: number;
   mana: number;
   maxMana: number;
   manaRegen: number;   // per second
   hpRegen: number;     // per second (equipment-driven; base 0)
-  xp: number;
-  xpMax: number;       // xp needed for the NEXT level
-  level: number;
-  gold: number;
   kills: number;
   dead: boolean;
   /** i-frame window after taking a hit (seconds remaining). */
   hurtCooldown: number;
 }
 
-/** D2-ish gentle exponential: L1→2 needs 60, then ×1.45 per level. */
-export function xpForLevel(level: number): number {
-  return Math.floor(60 * Math.pow(1.45, level - 1));
+/** Seed runtime orbs at full resources from derived CombatStats. */
+export function createPlayerFromCombatStats(stats: CombatStats): PlayerStats {
+  return {
+    hp: stats.maxHp,
+    maxHp: stats.maxHp,
+    mana: stats.maxMana,
+    maxMana: stats.maxMana,
+    manaRegen: stats.manaRegen,
+    hpRegen: stats.hpRegen,
+    kills: 0,
+    dead: false,
+    hurtCooldown: 0,
+  };
 }
 
+/** Runtime orbs at class baseline (level 1, empty equipment). */
 export function createPlayer(heroId: ClassId): PlayerStats {
-  const hero = getHeroDef(heroId);
+  return createPlayerAtLevel(heroId, 1);
+}
+
+/**
+ * Seeds runtime HP/MP at a saved level with empty equipment using the same
+ * class+level progression formulas as deriveCombatStats.
+ */
+export function createPlayerAtLevel(heroId: ClassId, level: number): PlayerStats {
+  void getHeroDef(heroId); // validate hero exists
+  const prog = classProgressionTotals(getClassDef(heroId), Math.max(1, level));
   return {
-    heroId,
-    hp: hero.baseStats.hp, maxHp: hero.baseStats.hp,
-    mana: hero.baseStats.mp, maxMana: hero.baseStats.mp, manaRegen: 5,
+    hp: prog.maxHp,
+    maxHp: prog.maxHp,
+    mana: prog.maxMana,
+    maxMana: prog.maxMana,
+    manaRegen: BASE_MANA_REGEN,
     hpRegen: 0,
-    xp: 0, xpMax: xpForLevel(1),
-    level: 1, gold: 0, kills: 0,
+    kills: 0,
     dead: false,
     hurtCooldown: 0,
   };
 }
 
 /**
- * Seeds a PlayerStats at a saved level by walking the same per-level growth
- * grantXp applies internally, without requiring the XP grind. Used by
- * CharList's "continue" flow — createPlayer alone always starts at level 1.
+ * Sync max/regen from CombatStats. Resource ratios preserved unless
+ * `refill` is true (level-up / respawn / reload).
  */
-export function createPlayerAtLevel(heroId: ClassId, level: number): PlayerStats {
-  const p = createPlayer(heroId);
-  if (level <= 1) return p;
-  const growth = getHeroDef(heroId).growth;
-  for (let lv = 2; lv <= level; lv++) {
-    const { hp, mp } = growthForLevel(lv, growth);
-    p.maxHp += hp;
-    p.maxMana += mp;
+export function syncRuntimeFromCombatStats(
+  p: PlayerStats,
+  stats: CombatStats,
+  opts: { refill?: boolean } = {},
+): void {
+  const prevMaxHp = p.maxHp;
+  const prevMaxMana = p.maxMana;
+  if (opts.refill) {
+    p.maxHp = stats.maxHp;
+    p.maxMana = stats.maxMana;
+    p.hp = stats.maxHp;
+    p.mana = stats.maxMana;
+  } else {
+    p.hp = preserveResourceRatio(p.hp, prevMaxHp, stats.maxHp);
+    p.mana = preserveResourceRatio(p.mana, prevMaxMana, stats.maxMana);
+    p.maxHp = stats.maxHp;
+    p.maxMana = stats.maxMana;
   }
-  p.level = level;
-  p.xpMax = xpForLevel(level);
-  p.hp = p.maxHp;
-  p.mana = p.maxMana;
-  return p;
-}
-
-export interface LevelUpResult { level: number; hpGain: number; manaGain: number }
-
-/** Add xp; apply any level-ups (possibly several). Returns them for HUD FX. */
-export function grantXp(p: PlayerStats, xp: number): LevelUpResult[] {
-  const ups: LevelUpResult[] = [];
-  const growth = getHeroDef(p.heroId).growth;
-  p.xp += xp;
-  while (p.xp >= p.xpMax) {
-    p.xp -= p.xpMax;
-    p.level += 1;
-    p.xpMax = xpForLevel(p.level);
-    const { hp: hpGain, mp: manaGain } = growthForLevel(p.level, growth);
-    p.maxHp += hpGain;
-    p.maxMana += manaGain;
-    p.hp = p.maxHp;          // D2 ding = full heal, feels great
-    p.mana = p.maxMana;
-    ups.push({ level: p.level, hpGain, manaGain });
-  }
-  return ups;
+  p.hpRegen = stats.hpRegen;
+  p.manaRegen = stats.manaRegen;
 }
 
 /** Apply damage with a 0.5s i-frame window. Returns true if it landed. */
@@ -104,11 +112,10 @@ export function tickPlayer(p: PlayerStats, dt: number): void {
   }
 }
 
-/** Respawn at camp after death: keep level/gold, refill orbs, small xp toll. */
+/** Respawn at camp after death: refill orbs. No XP penalty (Spec §12). */
 export function respawnPlayer(p: PlayerStats): void {
   p.dead = false;
   p.hp = p.maxHp;
   p.mana = p.maxMana;
-  p.xp = Math.floor(p.xp * 0.9);
   p.hurtCooldown = 1.5;
 }

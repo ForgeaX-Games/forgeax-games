@@ -17,6 +17,11 @@
 
 export type BgmPhase = 'camp' | 'den';
 
+/** Map AreaDef.music → BGM phase (Task 4.2). */
+export function bgmPhaseForMusic(music: BgmPhase): BgmPhase {
+  return music;
+}
+
 export type BgmHandle = {
   /** Switch looping track for the phase (no-op if already active). */
   setPhase(phase: BgmPhase): void;

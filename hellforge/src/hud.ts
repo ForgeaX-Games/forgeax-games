@@ -12,10 +12,10 @@
 // FX (banner / floatText / death) and stay incremental (no per-frame
 // innerHTML rebuild of the skill bar — SPEC §5.3 CAUTION).
 
-import type { EquipSlotState, HudViewModel, SkillSlotState } from './hud-view-model';
+import type { EquipSlotState, HudViewModel, SkillSlotState, TargetViewModel } from './hud-view-model';
 import { FONT_UI, FONT_MONO, Ui } from './ui-theme';
 
-export type { EquipSlotState, HudViewModel, SkillSlotState } from './hud-view-model';
+export type { EquipSlotState, HudViewModel, SkillSlotState, TargetViewModel } from './hud-view-model';
 
 export interface HudHandle {
   /** Batch-apply the engine-agnostic snapshot (optional).
@@ -31,6 +31,9 @@ export interface HudHandle {
   setEquipment(slots: EquipSlotState[]): void;
   setQuest(text: string): void;
   setBoss(name: string | null, cur?: number, max?: number): void;
+  setTarget(target: TargetViewModel | null): void;
+  /** Camp showcase: hide/reduce combat chrome (Spec §6.2 / §11). */
+  setShowcaseReduced(reduced: boolean): void;
   setAreaLabel(name: string): void;
   showArea(name: string, sub?: string): void;
   banner(text: string, color?: string, ms?: number): void;
@@ -285,7 +288,7 @@ export function installHud(mount: HTMLElement = document.body): HudHandle {
   mid.append(xpBar, orbReadout, slotsRow, metaRow);
 
   const equipCol = document.createElement('div');
-  equipCol.style.cssText = 'display:flex;flex-direction:column;gap:4px;margin-bottom:8px;flex:none;';
+  equipCol.style.cssText = 'display:grid;grid-template-columns:repeat(2,30px);gap:4px;margin-bottom:8px;flex:none;';
 
   const leftCluster = document.createElement('div');
   leftCluster.style.cssText = 'display:flex;align-items:flex-end;flex:none;';
@@ -305,8 +308,28 @@ export function installHud(mount: HTMLElement = document.body): HudHandle {
     `font:600 12px ${FONT_MONO};color:${Ui.text};text-shadow:0 1px 2px #000;` +
     'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
 
+  // Current monster target (name / level / HP) — Spec §11.1.
+  const targetWrap = document.createElement('div');
+  targetWrap.style.cssText =
+    'position:absolute;top:44px;left:50%;transform:translateX(-50%);width:min(360px,80%);display:none;' +
+    `padding:6px 12px 8px;border-radius:4px;background:${Ui.inkPanel};` +
+    `border:1px solid ${Ui.goldLineSoft};box-shadow:0 0 0 1px ${Ui.goldDeep};`;
+  const targetTitle = document.createElement('div');
+  targetTitle.style.cssText =
+    `text-align:center;font:800 13px ${FONT_MONO};color:${Ui.goldBright};` +
+    'text-shadow:0 1px 2px #000;letter-spacing:1px;margin-bottom:4px;';
+  const targetBar = document.createElement('div');
+  targetBar.style.cssText =
+    'height:10px;border-radius:2px;overflow:hidden;background:rgba(20,6,6,0.85);' +
+    'border:1px solid rgba(224,184,74,0.45);';
+  const targetFill = document.createElement('div');
+  targetFill.style.cssText =
+    'height:100%;width:100%;background:linear-gradient(90deg,#8a2010,#e05030);transition:width 0.12s;';
+  targetBar.appendChild(targetFill);
+  targetWrap.append(targetTitle, targetBar);
+
   const bossWrap = document.createElement('div');
-  bossWrap.style.cssText = 'position:absolute;top:52px;left:50%;transform:translateX(-50%);width:min(420px,86%);display:none;';
+  bossWrap.style.cssText = 'position:absolute;top:96px;left:50%;transform:translateX(-50%);width:min(420px,86%);display:none;';
   const bossName = document.createElement('div');
   bossName.style.cssText = `text-align:center;font:800 14px ${FONT_MONO};color:#ff6a52;` +
     'text-shadow:0 0 10px rgba(255,60,30,0.6),0 1px 3px #000;letter-spacing:2px;margin-bottom:3px;';
@@ -322,7 +345,9 @@ export function installHud(mount: HTMLElement = document.body): HudHandle {
   hint.style.cssText = 'position:absolute;top:12px;right:14px;padding:5px 12px;border-radius:4px;' +
     `background:rgba(12,8,6,0.55);font:500 11px ${FONT_UI};color:#cbb;opacity:0.9;text-align:right;line-height:1.6;` +
     'max-width:min(280px,42%);';
-  hint.innerHTML = '<b>WASD</b> 移动 · <b>左键/1-4</b> 施法<br><b>B</b> 背包 · <b>K</b> 技能 · <b>Tab</b> 地图 · <b>V</b> 视角';
+  hint.innerHTML =
+    '<b>WASD</b> 移动 · <b>左键</b> 互动 · <b>右键</b> 施法 · <b>1-4</b> 选技<br>' +
+    '<b>B</b> 背包 · <b>K</b> 技能 · <b>C</b> 角色 · <b>Q</b> 任务 · <b>Tab</b> 地图 · <b>V</b> 展示';
 
   const areaEl = document.createElement('div');
   areaEl.style.cssText = 'position:absolute;left:50%;top:26%;transform:translate(-50%,-50%);display:none;text-align:center;';
@@ -347,7 +372,7 @@ export function installHud(mount: HTMLElement = document.body): HudHandle {
   const popups = document.createElement('div');
   popups.style.cssText = 'position:absolute;inset:0;overflow:visible;';
 
-  root.append(bar, questEl, bossWrap, hint, areaEl, bannerEl, dmgFlash, deathEl, popups);
+  root.append(bar, questEl, targetWrap, bossWrap, hint, areaEl, bannerEl, dmgFlash, deathEl, popups);
   mount.appendChild(root);
 
   // ── setters (incremental) ─────────────────────────────────────────────
@@ -400,14 +425,21 @@ export function installHud(mount: HTMLElement = document.body): HudHandle {
     for (let i = 0; i < slots.length; i++) {
       const s = slots[i]!;
       const d = skillDom[i]!;
-      d.icon.textContent = s.icon;
+      d.icon.textContent = s.empty ? '·' : s.icon;
       d.key.textContent = s.key;
       d.root.title = s.name;
-      d.root.style.borderColor = s.locked ? 'rgba(90,80,70,0.5)' : GOLD;
-      d.root.style.filter = s.locked ? 'grayscale(0.9) brightness(0.55)' : '';
-      d.root.style.opacity = s.locked ? '0.75' : (!s.affordable ? '0.85' : '1');
-      if (s.locked) {
-        d.cost.textContent = `L${s.unlockLevel}`;
+      const border = s.selected
+        ? GOLD_BRIGHT
+        : (s.locked || s.empty) ? 'rgba(90,80,70,0.5)' : GOLD;
+      d.root.style.borderColor = border;
+      d.root.style.boxShadow = s.selected ? `0 0 0 1px ${GOLD_BRIGHT}, 0 0 10px rgba(255,200,80,0.35)` : '';
+      d.root.style.filter = (s.locked || s.empty) ? 'grayscale(0.9) brightness(0.55)' : '';
+      d.root.style.opacity = (s.locked || s.empty) ? '0.75' : (!s.affordable ? '0.85' : '1');
+      if (s.empty) {
+        d.cost.textContent = '';
+        d.veil.style.height = '0%';
+      } else if (s.locked) {
+        d.cost.textContent = '未学';
         d.cost.style.color = '#caa';
         d.veil.style.height = '0%';
       } else {
@@ -419,26 +451,71 @@ export function installHud(mount: HTMLElement = document.body): HudHandle {
   };
 
   const setEquipment = (slots: EquipSlotState[]) => {
-    // Cheap rebuild — ≤6 chips (inventory-ui.ts same granularity).
+    // Cheap rebuild — ≤6 silhouette chips (matches inventory paper-doll slots).
     equipCol.innerHTML = '';
     for (const s of slots) {
+      const empty = s.empty ?? !s.color;
       const el = document.createElement('div');
-      el.style.cssText = 'position:relative;width:28px;height:28px;border-radius:4px;' +
-        `background:rgba(16,10,8,0.92);border:2px solid ${s.color ?? 'rgba(90,80,70,0.4)'};` +
+      el.style.cssText = 'position:relative;width:30px;height:30px;border-radius:5px;' +
+        `background:${Ui.inkWell};border:2px solid ${s.color ?? Ui.goldLineSoft};` +
         'display:flex;align-items:center;justify-content:center;font-size:13px;pointer-events:auto;' +
-        (s.color ? '' : 'filter:grayscale(0.9) brightness(0.55);');
+        (empty ? 'filter:grayscale(0.9) brightness(0.55);opacity:0.75;' : '');
       el.textContent = s.icon;
-      if (s.tooltip) el.title = s.tooltip;
+      el.title = s.tooltip || s.slotLabel || '';
       equipCol.appendChild(el);
     }
   };
 
   const setQuest = (text: string) => { questEl.textContent = text; };
+  let showcaseReduced = false;
+  let lastBossKey = '';
+  let lastTargetKey = '';
   const setBoss = (name: string | null, cur = 0, max = 1) => {
-    if (!name) { bossWrap.style.display = 'none'; return; }
+    if (!name) {
+      lastBossKey = '';
+      bossWrap.style.display = 'none';
+      return;
+    }
+    if (showcaseReduced) {
+      bossWrap.style.display = 'none';
+      return;
+    }
     bossWrap.style.display = 'block';
+    const key = `${name}|${cur}|${max}`;
+    if (key === lastBossKey) return;
+    lastBossKey = key;
     bossName.textContent = name;
-    bossFill.style.width = `${Math.max(0, Math.min(100, (cur / max) * 100)).toFixed(1)}%`;
+    bossFill.style.width = `${Math.max(0, Math.min(100, (cur / Math.max(1, max)) * 100)).toFixed(1)}%`;
+  };
+
+  const setTarget = (target: TargetViewModel | null) => {
+    if (!target || showcaseReduced) {
+      lastTargetKey = '';
+      targetWrap.style.display = 'none';
+      return;
+    }
+    const key = `${target.name}|${target.level}|${target.hp}|${target.maxHp}`;
+    if (key === lastTargetKey) return;
+    lastTargetKey = key;
+    targetWrap.style.display = 'block';
+    targetTitle.textContent = `${target.name}  ·  Lv ${target.level}  ·  ${Math.ceil(target.hp)}/${Math.ceil(target.maxHp)}`;
+    targetFill.style.width =
+      `${Math.max(0, Math.min(100, (target.hp / Math.max(1, target.maxHp)) * 100)).toFixed(1)}%`;
+  };
+
+  const setShowcaseReduced = (reduced: boolean) => {
+    showcaseReduced = reduced;
+    // Combat chrome: skill bar + equip chips + kill meta + target/boss. Orbs/XP stay dim.
+    slotsRow.style.display = reduced ? 'none' : 'flex';
+    equipCol.style.display = reduced ? 'none' : 'grid';
+    killsEl.style.display = reduced ? 'none' : '';
+    questEl.style.opacity = reduced ? '0.35' : '1';
+    hint.style.opacity = reduced ? '0.45' : '0.9';
+    bar.style.opacity = reduced ? '0.55' : '1';
+    if (reduced) {
+      targetWrap.style.display = 'none';
+      bossWrap.style.display = 'none';
+    }
   };
 
   const apply = (vm: HudViewModel) => {
@@ -452,6 +529,7 @@ export function installHud(mount: HTMLElement = document.body): HudHandle {
     setAreaLabel(vm.areaName);
     if (vm.boss) setBoss(vm.boss.name, vm.boss.hp, vm.boss.maxHp);
     else setBoss(null);
+    setTarget(vm.target);
   };
 
   let areaTimer: number | undefined;
@@ -509,6 +587,7 @@ export function installHud(mount: HTMLElement = document.body): HudHandle {
 
   return {
     apply, setOrbs, setXp, setGold, setKills, setSkills, setEquipment, setQuest, setBoss,
+    setTarget, setShowcaseReduced,
     setAreaLabel, showArea, banner, floatText, damageFlash, showDeath,
     hide: () => { root.style.display = 'none'; },
     show: () => { root.style.display = ''; },
