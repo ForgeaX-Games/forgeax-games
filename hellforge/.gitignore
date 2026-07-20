@@ -1,0 +1,5 @@
+# Local HDR cook cache (engine assets-runtime); never commit
+assets/*.hdr.*.bin
+assets/*.hdr.*.bin.dims.json
+assets/**/*.hdr.*.bin
+assets/**/*.hdr.*.bin.dims.json
