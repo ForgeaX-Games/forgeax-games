@@ -20,7 +20,7 @@
  * here); spawning happens OUTSIDE any query loop (from the cast pipeline).
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import {
   SummonedLifetime, Illusion, Health, Faction, Movement,
@@ -56,7 +56,7 @@ export class SummonSystem implements SummonHandle {
 
   install(world: World): SummonHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [{ with: [Entity, SummonedLifetime, Health] }],
       resources: ['Time'],

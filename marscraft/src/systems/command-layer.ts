@@ -23,7 +23,7 @@
  */
 
 import { Transform, Camera, quat } from '@forgeax/engine-runtime';
-import { type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Renderable, Movement, commandCurrent, commandQueue, type UnitCommand } from '../components';
 import type { MapConfig } from '../mapgen/types';
 import { PathGrid } from '../world/path-grid';
@@ -208,7 +208,7 @@ export function installCommandLayer(world: World, deps: CommandLayerDeps): Comma
 
   // ── right-click handling (edge-triggered) as an ECS system ─────────────────
   let rightWasDown = false;
-  world.addSystem({
+  world.addSystem(Update, {
     name: 'mc-rightclick-move',
     queries: [],
     resources: [],

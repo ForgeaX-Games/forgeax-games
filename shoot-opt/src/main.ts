@@ -8,7 +8,7 @@ import {
   Transform, Camera, perspective, DirectionalLight, Skylight, quat,
   MeshFilter, MeshRenderer,
 } from '@forgeax/engine-runtime';
-import { Entity, type EntityHandle } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle } from '@forgeax/engine-ecs';
 import type { World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
 import { createInputSnapshot, INPUT_SNAPSHOT_RESOURCE_KEY, type InputSnapshot } from '@forgeax/engine-input';
@@ -263,8 +263,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // ═══════════════════════════════════════════════════════════════════════
 
   // Background scrolls in +Z direction (toward player = bottom of screen)
-  world.addSystem({ name: 'star-scroll', queries: [{ with: [Entity, Transform, Star] }], fn: (_w, qr) => {
-    const dt = world.getResource<{dt:number}>('Time').dt;
+  world.addSystem(Update, { name: 'star-scroll', queries: [{ with: [Entity, Transform, Star] }], fn: (_w, qr) => {
+    const dt = world.getResource(Time).delta;
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
       b.Transform.pos[i * 3 + 2]! += b.Star.speed[i]! * dt;
       if (b.Transform.pos[i * 3 + 2]! > ARENA_H / 2 + 8) {
@@ -274,8 +274,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     }
   }});
 
-  world.addSystem({ name: 'particle-tick', queries: [{ with: [Entity, Transform, Particle] }], fn: (_w, qr) => {
-    const dt = world.getResource<{dt:number}>('Time').dt;
+  world.addSystem(Update, { name: 'particle-tick', queries: [{ with: [Entity, Transform, Particle] }], fn: (_w, qr) => {
+    const dt = world.getResource(Time).delta;
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
       b.Transform.pos[i * 3 + 0]! += b.Particle.velX[i]! * dt;
       b.Transform.pos[i * 3 + 1]! += b.Particle.velY[i]! * dt;
@@ -287,8 +287,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     }
   }});
 
-  world.addSystem({ name: 'thruster-pulse', queries: [{ with: [Entity, Transform, Thruster] }], fn: (_w, qr) => {
-    const dt = world.getResource<{dt:number}>('Time').dt;
+  world.addSystem(Update, { name: 'thruster-pulse', queries: [{ with: [Entity, Transform, Thruster] }], fn: (_w, qr) => {
+    const dt = world.getResource(Time).delta;
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
       b.Thruster.phase[i]! += dt * 14;
       const p = 0.85 + 0.15 * Math.sin(b.Thruster.phase[i]!);
@@ -296,8 +296,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     }
   }});
 
-  world.addSystem({ name: 'trail-fade', queries: [{ with: [Entity, Transform, Trail] }], fn: (_w, qr) => {
-    const dt = world.getResource<{dt:number}>('Time').dt;
+  world.addSystem(Update, { name: 'trail-fade', queries: [{ with: [Entity, Transform, Trail] }], fn: (_w, qr) => {
+    const dt = world.getResource(Time).delta;
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
       b.Trail.life[i]! -= dt;
       const r = Math.max(0, b.Trail.life[i]! / 0.35) * 0.12;
@@ -306,8 +306,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     }
   }});
 
-  world.addSystem({ name: 'powerup-bob', queries: [{ with: [Entity, Transform, PowerUp] }], fn: (_w, qr) => {
-    const dt = world.getResource<{dt:number}>('Time').dt;
+  world.addSystem(Update, { name: 'powerup-bob', queries: [{ with: [Entity, Transform, PowerUp] }], fn: (_w, qr) => {
+    const dt = world.getResource(Time).delta;
     for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
       b.PowerUp.bobPhase[i]! += dt * 5;
       b.Transform.pos[i * 3 + 1] = 0.3 + Math.sin(b.PowerUp.bobPhase[i]!) * 0.15;
@@ -480,7 +480,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   //  MAIN GAME LOOP
   // ═══════════════════════════════════════════════════════════════════════
 
-  ctx.registerUpdate((dt: number) => {
+  world.addSystem(Update, { name: 'shoot-opt-update', queries: [], fn: () => {
+    const dt = world.getResource(Time).delta;
     gs.time += dt;
     storyUi.tick(dt);
 
@@ -908,7 +909,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       gs.victory = true;
       triggerVictory();
     }
-  });
+  }});
 
   // ═══════════════════════════════════════════════════════════════════════
   //  HELPERS

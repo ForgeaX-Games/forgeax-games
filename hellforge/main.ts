@@ -52,7 +52,7 @@ import {
   HANDLE_QUAD,
 } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import { createQueryState, queryRun, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { createQueryState, queryRun, Entity, Time, Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
 import type { AnimationClip, EquirectAsset, Handle, MeshAsset, SceneAsset } from '@forgeax/engine-types';
 
@@ -267,7 +267,7 @@ async function readLaunchMode(): Promise<'campaign' | 'den'> {
 }
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
-  const { assets, registerUpdate, app } = ctx ?? {};
+  const { assets, app } = ctx ?? {};
   // Host-controlled UI mount + cleanup sink (■ Stop teardown). UI must attach
   // to uiMount (not document.body); non-DOM side effects register via onCleanup.
   const uiMount: HTMLElement = ctx?.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
@@ -354,7 +354,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     sfxForAudio?.setVolume(s.sfxVolume);
   };
   applyAudioSettings(loadRenderSettings());
-  registerUpdate?.((dt: number) => bgm.tick(dt));
+  world.addSystem(Update, {
+    name: 'hellforge-bgm-update', queries: [],
+    fn: () => bgm.tick(world.getResource(Time).delta),
+  });
   onCleanup(() => bgm.dispose());
   let stopped = false;
   onCleanup(() => { stopped = true; });
@@ -2328,7 +2331,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     // ── main loop ─────────────────────────────────────────────────────────
     let hudTimer = 0;
-    registerUpdate?.((dt: number) => {
+    world.addSystem(Update, { name: 'hellforge-runtime-update', queries: [], fn: () => {
+      const dt = world.getResource(Time).delta;
       if (!allowUpdateFrame(dt)) return;
       // fps compensation rate for AnimationPlayer speeds (see clip helpers).
       // Smoothed so a single hitchy frame doesn't pulse the animations.
@@ -2760,7 +2764,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         pos: [camRig.eye[0]!, camRig.eye[1]!, camRig.eye[2]!],
         quat: [cq[0]!, cq[1]!, cq[2]!, cq[3]!],
       });
-    });
+    }});
 
   }
 
@@ -2910,10 +2914,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     });
     charList.hide();
     // Title particles uncapped; CharSelect/CharList drive 360° idle preview yaw.
-    registerUpdate?.((dt: number) => {
+    world.addSystem(Update, { name: 'hellforge-shell-update', queries: [], fn: () => {
+      const dt = world.getResource(Time).delta;
       shell?.tick(dt);
       if (shellPhase === 'charSelect' || shellPhase === 'charList') heroPreview?.tick(dt);
-    });
+    }});
     onCleanup(() => {
       charSelect?.dispose();
       charList?.dispose();

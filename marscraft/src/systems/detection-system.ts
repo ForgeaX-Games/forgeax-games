@@ -16,7 +16,7 @@
  * ⚠️ ECS rules: qr[N] is Batch[]; no spawn/despawn; buffs via the runtime helpers.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import {
   Abilities, Faction, UnitType, Health, Garrisoned, UnitStats, abilityBuffs,
@@ -46,7 +46,7 @@ export class DetectionSystem implements DetectionHandle {
   readonly name = 'DetectionSystem';
 
   install(world: World): DetectionHandle {
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [
         { with: [Entity, Transform, Faction, Abilities] },          // detectors (query 0)

@@ -40,7 +40,7 @@
  * harvest move-command it sets is consumed the same frame.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import {
   Movement, Harvester, Mineral, Geyser, Faction, Building, Health, Motion,
@@ -194,7 +194,7 @@ export class HarvestSystem {
 
   install(world: World): HarvestSystemHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-harvest-system',
       queries: [
         { with: [Entity, Transform, Movement, Harvester, Faction] }, // qr[0] workers
@@ -203,7 +203,7 @@ export class HarvestSystem {
       ],
       resources: ['Time'],
       fn: (_w, qr) => {
-        const dt = world.getResource<{ dt: number }>('Time').dt;
+        const dt = world.getResource(Time).delta;
         this._snapshotMinerals(qr[1] as unknown as Batch[]);
         this._snapshotBases(qr[2] as unknown as Batch[]);
 

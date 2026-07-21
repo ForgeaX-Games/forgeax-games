@@ -27,7 +27,7 @@
  * keys are the registered component name (unprefixed). No spawn/despawn here.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Energy, UnitStats } from '../components';
 
 /** Loose batch type (forgeax query batches are typed-array columns). */
@@ -41,12 +41,12 @@ export class EnergySystem {
   private _seeded = new Set<number>();
 
   install(world: World): this {
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [{ with: [Entity, Energy] }],
       resources: ['Time'],
       fn: (_w, qr) => {
-        const dt = world.getResource<{ dt: number }>('Time').dt;
+        const dt = world.getResource(Time).delta;
         const batches = qr[0] as unknown as Batch[];
         for (const b of batches) {
           const n = b.Entity.self.length as number;

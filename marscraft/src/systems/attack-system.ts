@@ -35,7 +35,7 @@
  *   salvo — all belong to M9/M10/M13. The core attack/chase/leash/fire loop is 1:1.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform, quat } from '@forgeax/engine-runtime';
 import {
   Attack, Health, Faction, Movement, Motion, UnitType,
@@ -96,7 +96,7 @@ export class AttackSystem {
 
   install(world: World): void {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-attack-system',
       queries: [
         { with: [Entity, Transform, Health, Faction, Attack] }, // attackers
@@ -104,7 +104,7 @@ export class AttackSystem {
       ],
       resources: ['Time'],
       fn: (_w, qr) => {
-        const dt = world.getResource<{ dt: number }>('Time').dt;
+        const dt = world.getResource(Time).delta;
         const attackers = qr[0] as unknown as Batch[];
         this._gameTime += dt;
         // Snapshot EVERY combat entity (incl. weaponless buildings) so acquisition
@@ -471,4 +471,3 @@ export class AttackSystem {
     }
   }
 }
-

@@ -27,7 +27,7 @@
 // world.update()). The system declares `resources:['Time']` per the cheatsheet.
 
 import { Transform, quat } from '@forgeax/engine-runtime';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
+import { Time, Update, type EntityHandle, World } from '@forgeax/engine-ecs';
 import type { InputState } from '../input';
 
 /** SC2-style pitch (look down). Matches the scaffold's inline default (-0.92 rad). */
@@ -161,12 +161,12 @@ export function installRtsCamera(
   // Place the camera at the initial framing immediately (before frame 1).
   writeTransform();
 
-  world.addSystem({
+  world.addSystem(Update, {
     name: 'rts-camera',
     queries: [],
     resources: ['Time'],
     fn: () => {
-      const dt = world.getResource<{ dt: number }>('Time').dt;
+      const dt = world.getResource(Time).delta;
       if (!(dt > 0)) { /* paused frame — still allow drag/zoom drains below */ }
 
       // ── 1. pan direction in the ground plane (source `_forward/_right`) ──

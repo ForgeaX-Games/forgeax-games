@@ -30,7 +30,7 @@
  * rebuild + the swap run AFTER the batch loop).
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import {
   UnitType, Health, Movement, Attack, Energy, Faction, UnitStats,
@@ -101,7 +101,7 @@ export class UnitMorphSystem implements UnitMorphHandle {
 
   install(world: World): UnitMorphHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-unit-morph',
       queries: [{ with: [Entity, Transform] }],
       resources: ['Time'],

@@ -32,7 +32,7 @@
  * `CommandView` (reads/writes the Maps), so the ported control flow stays 1:1.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import {
   Movement, Command, Attack, MOVE_TYPE,
@@ -216,12 +216,12 @@ export class CommandExecutor {
 
   /** Register the ECS system. Runs before the movement system. */
   install(world: World): void {
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-command-executor',
       queries: [{ with: [Entity, Transform, Movement, Command] }],
       resources: ['Time'],
       fn: (_w, qr) => {
-        const dt = world.getResource<{ dt: number }>('Time').dt;
+        const dt = world.getResource(Time).delta;
         // qr[0] is an ARRAY of batches (one per archetype) — units span several
         // archetypes (different optional components), so iterate them all.
         const batches = qr[0] as unknown as Batch[];

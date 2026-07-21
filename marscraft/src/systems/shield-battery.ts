@@ -12,7 +12,7 @@
  * shield, decrementing the battery's Energy. In-place column writes only.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import {
   Health, Faction, Building, Energy, buildingTypeId, BUILDING_STATE,
@@ -30,7 +30,7 @@ interface NeedRef { e: EntityHandle; x: number; z: number; playerId: number; shi
 
 export class ShieldBatterySystem {
   install(world: World): void {
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-shield-battery',
       queries: [{ with: [Entity, Transform, Health, Faction] }],
       resources: ['Time'],

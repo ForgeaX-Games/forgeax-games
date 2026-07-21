@@ -10,7 +10,7 @@ import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { createCylinderGeometry, createSphereGeometry } from '@forgeax/engine-geometry';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
+import { Time, Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
 import type { SceneAsset, EquirectAsset } from '@forgeax/engine-types';
 import { installHud, type UpgradeChoice, type ViewMode } from './src/hud';
@@ -189,7 +189,6 @@ function spawnFallbackScene(ctx: CtxWorld): void {
 }
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
-  const { registerUpdate } = ctx ?? {};
   const uiMount: HTMLElement = ctx?.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
   const onCleanup = ctx?.registerCleanup ?? (() => {});
   const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
@@ -707,7 +706,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   hud.banner('Cow Level', 'Survive — harvest the herd');
 
   if (player !== undefined) {
-    registerUpdate?.((rawDt: number) => {
+    world.addSystem(Update, { name: 'cow-level-update', queries: [], fn: () => {
+      const rawDt = world.getResource(Time).delta;
       const dt = Math.min(0.05, rawDt);
       if (gameOver) return;
       if (paused) {
@@ -868,6 +868,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         world.set(camera, Transform, { pos: [camX + sx, 15, camZ + sz], quat: topQ });
       }
       updateHud();
-    });
+    }});
   }
 }

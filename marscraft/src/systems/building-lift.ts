@@ -30,7 +30,7 @@
  */
 
 import { Transform } from '@forgeax/engine-runtime';
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Building, Motion, Movement, BUILDING_STATE, MOVE_TYPE, buildingTypeId,
 } from '../components';
@@ -118,7 +118,7 @@ export function installBuildingLift(world: World, deps: BuildingLiftDeps): Build
     if (world.get(entity, Movement).ok) world.set(entity, Movement, { hasTarget: false, arrived: true, currentSpeed: 0 });
   }
 
-  world.addSystem({
+  world.addSystem(Update, {
     name: 'mc-building-lift',
     queries: [{ with: [Entity, Building, Transform] }],
     resources: ['Time'],

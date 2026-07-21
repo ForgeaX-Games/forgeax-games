@@ -17,7 +17,7 @@
  * CombatTarget[] snapshot from a Health+Faction query (no ad-hoc world.query).
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer, ChildOf,
   type Handle,
@@ -95,7 +95,7 @@ export class HazardSystem implements HazardHandle {
 
   install(world: World): HazardHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [
         { with: [Entity, Transform, Hazard] },           // hazards (query 0)

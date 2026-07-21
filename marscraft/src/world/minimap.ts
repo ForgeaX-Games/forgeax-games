@@ -28,7 +28,7 @@
  * the minimap no-ops and never throws.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import { Faction, Garrisoned, Building, PLAYER_ID } from '../components';
 import type { MapConfig } from '../mapgen/types';
@@ -158,7 +158,7 @@ export function installMinimap(world: World, deps: MinimapDeps): MinimapHandle {
   let redrawTimer = 0;
   const REDRAW_INTERVAL = 1 / 15; // ~15fps
 
-  world.addSystem({
+  world.addSystem(Update, {
     name: 'mc-minimap',
     queries: [{ with: [Entity, Transform, Faction] }],
     resources: ['Time'],

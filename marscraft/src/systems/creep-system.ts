@@ -17,7 +17,7 @@
  * (no ad-hoc world.query); disc spawn/despawn is OUTSIDE the query loop.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer, ChildOf,
   type Handle,
@@ -97,7 +97,7 @@ export class CreepSystem implements CreepHandle {
 
   install(world: World): CreepHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [
         { with: [Entity, Transform, Building, Faction] },   // base sources (query 0)

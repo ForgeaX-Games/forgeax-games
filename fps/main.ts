@@ -33,7 +33,7 @@ import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import type { AssetRegistry } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EquirectAsset } from '@forgeax/engine-types';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
+import { Time, Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import type { BootstrapContext, App } from '@forgeax/engine-app';
 import { instantiateScene, loadGltfRuntime } from './scene-runtime';
 import { buildMeshCollision, type MeshCollision, type Box } from './scene-runtime/mesh-collision';
@@ -87,7 +87,7 @@ async function installHdrSky(ctx: FpsCtx): Promise<EntityHandle> {
 }
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
-  const { assets, registerUpdate, app } = ctx ?? {};
+  const { assets, app } = ctx ?? {};
 
   // Host-controlled UI container + non-DOM side-effect cleanup registry. When
   // embedded in the editor, ■ Stop removes uiRoot wholesale (DOM cleanup) and
@@ -709,7 +709,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   }
 
   // ── frame update ────────────────────────────────────────────────────────
-  registerUpdate?.((dtRaw) => {
+  world.addSystem(Update, { name: 'fps-update', queries: [], fn: () => {
+    const dtRaw = world.getResource(Time).delta;
     const dt = Math.min(dtRaw, 0.05);
     const w = WEAPONS[state.weapon];
     const a = ammoState[state.weapon];
@@ -937,7 +938,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     hud.scope.style.opacity = WEAPONS[state.weapon].scope && state.ads > 0.85 ? '1' : '0';
 
     syncHud();
-  });
+  }});
 
   // ── HUD sync ──────────────────────────────────────────────────────────────
   function syncHud() {

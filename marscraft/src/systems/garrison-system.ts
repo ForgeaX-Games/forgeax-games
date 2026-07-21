@@ -18,7 +18,7 @@
  * after the loop; Transport contents live in the `transportUnits` companion.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import {
   Transport, Garrisoned, Health, Faction, Movement, Attack, Selectable, Building,
@@ -73,7 +73,7 @@ export class GarrisonSystem implements GarrisonHandle {
 
   install(world: World): GarrisonHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [{ with: [Entity, Transport, Transform] }],
       resources: ['Time'],

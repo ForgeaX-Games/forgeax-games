@@ -32,7 +32,7 @@
  * extras (buffs) read via world.get / the runtime helper, never an ad-hoc query.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import {
   Faction, UnitType, UnitStats, Garrisoned, Abilities, PLAYER_ID,
@@ -121,7 +121,7 @@ export class VisionSystem implements VisionHandle {
   }
 
   install(world: World): VisionHandle {
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       // All vision-casting entities carry Transform + Faction (units + buildings).
       queries: [{ with: [Entity, Transform, Faction] }],

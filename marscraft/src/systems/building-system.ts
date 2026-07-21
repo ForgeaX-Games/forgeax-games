@@ -50,7 +50,7 @@
  */
 
 import { Transform, Children, ChildOf } from '@forgeax/engine-runtime';
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Building, Health, Faction, Command, Movement, UnitType, Larva,
   BUILDING_STATE, LARVA_STATE, LARVAE_NATURAL_MAX, LARVAE_SPAWN_INTERVAL,
@@ -204,7 +204,7 @@ export class BuildingSystem {
 
   install(world: World): BuildingSystemHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-building-system',
       queries: [
         { with: [Entity, Building, Health, Faction, Transform] },

@@ -22,7 +22,7 @@
  * cross-archetype gameplay components via world.get/set. No spawn/despawn.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Abilities, Movement, Attack, MOVE_TYPE, NO_ENTITY,
   abilityBuffs, abilityToggleStates, abilityIds,
@@ -43,12 +43,12 @@ export class BuffSystem {
   private _lifted = new Set<number>();
 
   install(world: World): this {
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [{ with: [Entity, Abilities] }],
       resources: ['Time'],
       fn: (_w, qr) => {
-        const dt = world.getResource<{ dt: number }>('Time').dt;
+        const dt = world.getResource(Time).delta;
         const batches = qr[0] as unknown as Batch[];
 
         // pass 1: tick buff/toggle lifecycles

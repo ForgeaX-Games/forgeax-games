@@ -65,7 +65,7 @@
  *     real systems it calls never corrupts this system's batches.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import {
   Faction, UnitType, Building, Health, Attack, Mineral, Geyser, Harvester,
@@ -313,7 +313,7 @@ export class SimpleAI {
 
   install(world: World): SimpleAIHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-simple-ai',
       queries: [
         { with: [Entity, Transform, Faction, UnitType] },            // qr[0] units

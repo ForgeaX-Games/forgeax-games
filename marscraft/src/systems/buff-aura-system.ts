@@ -31,7 +31,7 @@
  * safe-spawn discipline). No despawn mid-iteration of our own tracked set.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer,
   type Handle,
@@ -91,7 +91,7 @@ export class BuffAuraSystem implements BuffAuraHandle {
     this._flat = new FlatMeshCache(world);
     eventBus.on('ability:buff_applied', this._onApplied);
     eventBus.on('ability:buff_removed', this._onRemoved);
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [{ with: [Entity, Transform] }], // unused — we iterate our own tracked set
       resources: ['Time'],

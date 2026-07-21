@@ -1,0 +1,8 @@
+{
+  "id": "cc-terrain",
+  "name": "Character Controller Terrain",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": "3d",
+  "defaultScene": "c7e4a1b2-3d5f-4a8e-9c1b-2f6e8d4a7b30"
+}

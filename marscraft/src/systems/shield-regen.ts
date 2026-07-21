@@ -12,7 +12,7 @@
  * the source constants. qr[0] iterated as Batch[]; in-place column writes only.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Health, UnitStats } from '../components';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,7 +25,7 @@ export class ShieldRegenSystem {
   private _gameTime = 0;
 
   install(world: World): void {
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-shield-regen',
       queries: [{ with: [Entity, Health] }],
       resources: ['Time'],

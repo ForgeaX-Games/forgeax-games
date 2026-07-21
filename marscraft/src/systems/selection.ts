@@ -49,7 +49,7 @@ import {
 } from '@forgeax/engine-runtime';
 import { type MeshAsset } from '@forgeax/engine-assets-runtime';
 import { createTorusGeometry } from '@forgeax/engine-geometry';
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Selectable, Faction, UnitType, PLAYER_ID, UNIT_CATEGORY,
 } from '../components';
@@ -571,7 +571,7 @@ export function installSelection(
   // The query bundle (own + enemy selectable units, with their UnitType) is live
   // only inside this fn, so pointer-up resolution (which needs to iterate units)
   // runs here against the current frame's batches.
-  world.addSystem({
+  world.addSystem(Update, {
     name: 'mc-selection',
     queries: [{ with: [Entity, Transform, Selectable, Faction, UnitType] }],
     resources: [],

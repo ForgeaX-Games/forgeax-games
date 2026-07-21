@@ -35,7 +35,7 @@
  * columns in place (no world.spawn/despawn).
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Faction, UnitType, UnitStats, unitTypeId,
   UNIT_CATEGORY,
@@ -72,7 +72,7 @@ export class UpgradeManager implements UpgradeManagerHandle {
    */
   install(world: World): UpgradeManagerHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [{ with: [Entity, Faction, UnitType, UnitStats] }],
       resources: [],

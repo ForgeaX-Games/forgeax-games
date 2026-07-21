@@ -36,7 +36,7 @@
  * world.get/set. No spawn/despawn.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   UnitStats, Abilities, Health, Energy, Movement, Attack, UnitType,
   attackWeaponId,
@@ -53,7 +53,7 @@ export class StatModifierSystem {
   readonly name = 'StatModifierSystem';
 
   install(world: World): this {
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [{ with: [Entity, UnitStats] }],
       resources: ['Time'],

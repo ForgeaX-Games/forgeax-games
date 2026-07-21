@@ -34,7 +34,7 @@
  * itself reads live positions exactly like the source.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform, quat } from '@forgeax/engine-runtime';
 import { Movement, Motion, Renderable, MOVE_TYPE } from '../components';
 import type { OccupancyGrid } from '../world/occupancy-grid';
@@ -135,12 +135,12 @@ export function installMovement(world: World, deps: MovementDeps): void {
     return true;
   };
 
-  world.addSystem({
+  world.addSystem(Update, {
     name: 'mc-movement',
     queries: [{ with: [Entity, Transform, Movement, Motion, Renderable] }],
     resources: ['Time'],
     fn: (_w, qr) => {
-      const dt = world.getResource<{ dt: number }>('Time').dt;
+      const dt = world.getResource(Time).delta;
       // qr[0] is an ARRAY of batches (one per archetype) — units span several
       // archetypes (different optional components). Separation + occupancy must
       // see EVERY mover across ALL batches, so we do two passes over them.

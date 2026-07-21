@@ -21,7 +21,7 @@
  * query (no ad-hoc world.query).
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer, ChildOf,
   type Handle,
@@ -80,7 +80,7 @@ export class GroundEffectSystem implements GroundEffectHandle {
 
   install(world: World): GroundEffectHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [
         { with: [Entity, Transform, GroundEffect] },          // zones (query 0)

@@ -34,7 +34,7 @@ import { createCylinderGeometry, createSphereGeometry } from '@forgeax/engine-ge
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import { type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
 import type { SceneAsset, EquirectAsset } from '@forgeax/engine-types';
 import { installHud, type ViewMode } from './src/hud';
@@ -314,7 +314,6 @@ function setupPlayerRoot(ctx: Ctx, root: EntityHandle): void {
 }
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
-  const { registerUpdate } = ctx ?? {};
 
   const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
   const dpr = window.devicePixelRatio || 1;
@@ -683,9 +682,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // sits still.
   const bullets: Array<{ e: EntityHandle; x: number; y: number; z: number; dx: number; dy: number; dz: number; age: number; hits: Set<EntityHandle> }> = [];
 
-  if (player !== undefined && registerUpdate) {
+  if (player !== undefined) {
     const root = player;
-    registerUpdate((dt: number) => {
+    world.addSystem(Update, { name: 'nodia-fighting-update', queries: [], fn: () => {
+      const dt = world.getResource(Time).delta;
       // — FPS look via arrow keys (keyboard fallback: mouse-look needs pointer
       //   lock, which the embedded preview iframe disallows). —
       if (mode === 'fps') {
@@ -858,6 +858,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         camZ += (pz + TOP_DZ - camZ) * a;
         world.set(camera, Transform, { pos: [camX, TOP_DY, camZ], quat: [topQ[0]!, topQ[1]!, topQ[2]!, topQ[3]!] });
       }
-    });
+    }});
   }
 }

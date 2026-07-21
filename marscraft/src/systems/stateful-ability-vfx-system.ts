@@ -34,7 +34,7 @@
  * at the top of this system's own tick.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform, MeshFilter, MeshRenderer, type Handle } from '@forgeax/engine-runtime';
 import { Motion } from '../components';
 import { hasBuff } from './abilities-runtime';
@@ -123,7 +123,7 @@ export class StatefulAbilityVfxSystem implements StatefulAbilityVfxHandle {
     eventBus.on('ability:sustained_end', this._onSustainedEnd);
     eventBus.on('ability:sustained_complete', this._onSustainedComplete);
     eventBus.on('ability:toggle_complete', this._onToggleComplete);
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [{ with: [Entity, Transform] }], // unused — we iterate our own set
       resources: ['Time'],

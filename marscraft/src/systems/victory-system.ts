@@ -15,7 +15,7 @@
  * ⚠️ ECS: qr[N] is Batch[]; read-only counting (no spawn/despawn); `world.get().ok`.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Building, Health, Faction, UnitType, PLAYER_ID } from '../components';
 import { eventBus } from '../core/event-bus';
 import type { GameOverHandle, PlayerGameStats } from '../ui/game-over';
@@ -76,7 +76,7 @@ export class VictorySystem implements VictoryHandle {
       if (kf.ok && kf.value.playerId !== 99) this._tallyOf(kf.value.playerId).killed++;
     });
 
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [
         { with: [Entity, Building, Faction, Health] },  // buildings (win condition)

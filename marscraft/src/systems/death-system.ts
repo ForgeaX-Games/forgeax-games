@@ -24,7 +24,7 @@
  * the parent is despawned.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform, Children, ChildOf } from '@forgeax/engine-runtime';
 import {
   Health,
@@ -54,7 +54,7 @@ export class DeathSystem {
 
   install(world: World): void {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-death-system',
       queries: [{ with: [Entity, Health] }],
       resources: [],

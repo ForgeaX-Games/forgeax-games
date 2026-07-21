@@ -1,0 +1,3794 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "c7e4a1b2-3d5f-4a8e-9c1b-2f6e8d4a7b30",
+      "kind": "scene",
+      "payload": {
+        "entities": [
+          {
+            "localId": 0,
+            "components": {
+              "Entity": {
+                "self": 0
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              },
+              "Name": {
+                "value": "Deco_FlatGrass"
+              },
+              "Transform": {
+                "pos": [
+                  -4,
+                  -0.03999999910593033,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  8,
+                  0.11999999731779099,
+                  8
+                ]
+              }
+            }
+          },
+          {
+            "localId": 1,
+            "components": {
+              "Entity": {
+                "self": 1
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FlatTreeL_Trunk"
+              },
+              "Transform": {
+                "pos": [
+                  -7.5,
+                  0.8999999761581421,
+                  -5.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.3499999940395355,
+                  1.7999999523162842,
+                  0.3499999940395355
+                ]
+              }
+            }
+          },
+          {
+            "localId": 2,
+            "components": {
+              "Entity": {
+                "self": 2
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  5
+                ]
+              },
+              "Name": {
+                "value": "FlatTreeL_Canopy"
+              },
+              "Transform": {
+                "pos": [
+                  -7.5,
+                  2.200000047683716,
+                  -5.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1.600000023841858,
+                  1.600000023841858,
+                  1.600000023841858
+                ]
+              }
+            }
+          },
+          {
+            "localId": 3,
+            "components": {
+              "Entity": {
+                "self": 3
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FlatTreeR_Trunk"
+              },
+              "Transform": {
+                "pos": [
+                  6,
+                  0.8999999761581421,
+                  -5.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.3499999940395355,
+                  1.7999999523162842,
+                  0.3499999940395355
+                ]
+              }
+            }
+          },
+          {
+            "localId": 4,
+            "components": {
+              "Entity": {
+                "self": 4
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  5
+                ]
+              },
+              "Name": {
+                "value": "FlatTreeR_Canopy"
+              },
+              "Transform": {
+                "pos": [
+                  6,
+                  2.200000047683716,
+                  -5.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1.600000023841858,
+                  1.600000023841858,
+                  1.600000023841858
+                ]
+              }
+            }
+          },
+          {
+            "localId": 5,
+            "components": {
+              "Entity": {
+                "self": 5
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              },
+              "Name": {
+                "value": "MarkerFlat"
+              },
+              "Transform": {
+                "pos": [
+                  -5,
+                  0.8999999761581421,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.20000000298023224,
+                  1.7999999523162842,
+                  0.20000000298023224
+                ]
+              }
+            }
+          },
+          {
+            "localId": 6,
+            "components": {
+              "Entity": {
+                "self": 6
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  6
+                ]
+              },
+              "Name": {
+                "value": "MarkerFlat_Cap"
+              },
+              "Transform": {
+                "pos": [
+                  -5,
+                  1.850000023841858,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.41999998688697815,
+                  0.18000000715255737,
+                  0.41999998688697815
+                ]
+              }
+            }
+          },
+          {
+            "localId": 7,
+            "components": {
+              "Entity": {
+                "self": 7
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  7
+                ]
+              },
+              "Name": {
+                "value": "MarkerLowStep"
+              },
+              "Transform": {
+                "pos": [
+                  9,
+                  0.8999999761581421,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.20000000298023224,
+                  1.7999999523162842,
+                  0.20000000298023224
+                ]
+              }
+            }
+          },
+          {
+            "localId": 8,
+            "components": {
+              "Entity": {
+                "self": 8
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  6
+                ]
+              },
+              "Name": {
+                "value": "MarkerLowStep_Cap"
+              },
+              "Transform": {
+                "pos": [
+                  9,
+                  1.850000023841858,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.41999998688697815,
+                  0.18000000715255737,
+                  0.41999998688697815
+                ]
+              }
+            }
+          },
+          {
+            "localId": 9,
+            "components": {
+              "Entity": {
+                "self": 9
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              },
+              "Name": {
+                "value": "MarkerHighStep"
+              },
+              "Transform": {
+                "pos": [
+                  21,
+                  0.8999999761581421,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.20000000298023224,
+                  1.7999999523162842,
+                  0.20000000298023224
+                ]
+              }
+            }
+          },
+          {
+            "localId": 10,
+            "components": {
+              "Entity": {
+                "self": 10
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  6
+                ]
+              },
+              "Name": {
+                "value": "MarkerHighStep_Cap"
+              },
+              "Transform": {
+                "pos": [
+                  21,
+                  1.850000023841858,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.41999998688697815,
+                  0.18000000715255737,
+                  0.41999998688697815
+                ]
+              }
+            }
+          },
+          {
+            "localId": 11,
+            "components": {
+              "Entity": {
+                "self": 11
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              },
+              "Name": {
+                "value": "MarkerRamp22"
+              },
+              "Transform": {
+                "pos": [
+                  37,
+                  0.8999999761581421,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.20000000298023224,
+                  1.7999999523162842,
+                  0.20000000298023224
+                ]
+              }
+            }
+          },
+          {
+            "localId": 12,
+            "components": {
+              "Entity": {
+                "self": 12
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  6
+                ]
+              },
+              "Name": {
+                "value": "MarkerRamp22_Cap"
+              },
+              "Transform": {
+                "pos": [
+                  37,
+                  1.850000023841858,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.41999998688697815,
+                  0.18000000715255737,
+                  0.41999998688697815
+                ]
+              }
+            }
+          },
+          {
+            "localId": 13,
+            "components": {
+              "Entity": {
+                "self": 13
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  7
+                ]
+              },
+              "Name": {
+                "value": "MarkerRamp40"
+              },
+              "Transform": {
+                "pos": [
+                  57,
+                  0.8999999761581421,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.20000000298023224,
+                  1.7999999523162842,
+                  0.20000000298023224
+                ]
+              }
+            }
+          },
+          {
+            "localId": 14,
+            "components": {
+              "Entity": {
+                "self": 14
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  6
+                ]
+              },
+              "Name": {
+                "value": "MarkerRamp40_Cap"
+              },
+              "Transform": {
+                "pos": [
+                  57,
+                  1.850000023841858,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.41999998688697815,
+                  0.18000000715255737,
+                  0.41999998688697815
+                ]
+              }
+            }
+          },
+          {
+            "localId": 15,
+            "components": {
+              "Entity": {
+                "self": 15
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              },
+              "Name": {
+                "value": "MarkerRamp58"
+              },
+              "Transform": {
+                "pos": [
+                  75,
+                  0.8999999761581421,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.20000000298023224,
+                  1.7999999523162842,
+                  0.20000000298023224
+                ]
+              }
+            }
+          },
+          {
+            "localId": 16,
+            "components": {
+              "Entity": {
+                "self": 16
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  6
+                ]
+              },
+              "Name": {
+                "value": "MarkerRamp58_Cap"
+              },
+              "Transform": {
+                "pos": [
+                  75,
+                  1.850000023841858,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.41999998688697815,
+                  0.18000000715255737,
+                  0.41999998688697815
+                ]
+              }
+            }
+          },
+          {
+            "localId": 17,
+            "components": {
+              "Entity": {
+                "self": 17
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  10
+                ]
+              },
+              "Name": {
+                "value": "MarkerWall"
+              },
+              "Transform": {
+                "pos": [
+                  82,
+                  0.8999999761581421,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.20000000298023224,
+                  1.7999999523162842,
+                  0.20000000298023224
+                ]
+              }
+            }
+          },
+          {
+            "localId": 18,
+            "components": {
+              "Entity": {
+                "self": 18
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  6
+                ]
+              },
+              "Name": {
+                "value": "MarkerWall_Cap"
+              },
+              "Transform": {
+                "pos": [
+                  82,
+                  1.850000023841858,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.41999998688697815,
+                  0.18000000715255737,
+                  0.41999998688697815
+                ]
+              }
+            }
+          },
+          {
+            "localId": 19,
+            "components": {
+              "Entity": {
+                "self": 19
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "EndTree_Trunk"
+              },
+              "Transform": {
+                "pos": [
+                  102,
+                  0.8999999761581421,
+                  5.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.3499999940395355,
+                  1.7999999523162842,
+                  0.3499999940395355
+                ]
+              }
+            }
+          },
+          {
+            "localId": 20,
+            "components": {
+              "Entity": {
+                "self": 20
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  5
+                ]
+              },
+              "Name": {
+                "value": "EndTree_Canopy"
+              },
+              "Transform": {
+                "pos": [
+                  102,
+                  2.200000047683716,
+                  5.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1.600000023841858,
+                  1.600000023841858,
+                  1.600000023841858
+                ]
+              }
+            }
+          },
+          {
+            "localId": 21,
+            "components": {
+              "Entity": {
+                "self": 21
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              },
+              "Name": {
+                "value": "MarkerDownhill"
+              },
+              "Transform": {
+                "pos": [
+                  97,
+                  0.8999999761581421,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.20000000298023224,
+                  1.7999999523162842,
+                  0.20000000298023224
+                ]
+              }
+            }
+          },
+          {
+            "localId": 22,
+            "components": {
+              "Entity": {
+                "self": 22
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  6
+                ]
+              },
+              "Name": {
+                "value": "MarkerDownhill_Cap"
+              },
+              "Transform": {
+                "pos": [
+                  97,
+                  1.850000023841858,
+                  6.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.41999998688697815,
+                  0.18000000715255737,
+                  0.41999998688697815
+                ]
+              }
+            }
+          },
+          {
+            "localId": 23,
+            "components": {
+              "Entity": {
+                "self": 23
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              },
+              "Name": {
+                "value": "Deco_BermL"
+              },
+              "Transform": {
+                "pos": [
+                  49.5,
+                  -0.019999999552965164,
+                  -7.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  123,
+                  0.11999999731779099,
+                  2.200000047683716
+                ]
+              }
+            }
+          },
+          {
+            "localId": 24,
+            "components": {
+              "Entity": {
+                "self": 24
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              },
+              "Name": {
+                "value": "Deco_BermR"
+              },
+              "Transform": {
+                "pos": [
+                  49.5,
+                  -0.019999999552965164,
+                  7.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  123,
+                  0.11999999731779099,
+                  2.200000047683716
+                ]
+              }
+            }
+          },
+          {
+            "localId": 25,
+            "components": {
+              "Entity": {
+                "self": 25
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceL_-12"
+              },
+              "Transform": {
+                "pos": [
+                  -12,
+                  0.44999998807907104,
+                  -6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 26,
+            "components": {
+              "Entity": {
+                "self": 26
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceR_-12"
+              },
+              "Transform": {
+                "pos": [
+                  -12,
+                  0.44999998807907104,
+                  6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 27,
+            "components": {
+              "Entity": {
+                "self": 27
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceL_-2"
+              },
+              "Transform": {
+                "pos": [
+                  -2,
+                  0.44999998807907104,
+                  -6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 28,
+            "components": {
+              "Entity": {
+                "self": 28
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceR_-2"
+              },
+              "Transform": {
+                "pos": [
+                  -2,
+                  0.44999998807907104,
+                  6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 29,
+            "components": {
+              "Entity": {
+                "self": 29
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceL_8"
+              },
+              "Transform": {
+                "pos": [
+                  8,
+                  0.44999998807907104,
+                  -6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 30,
+            "components": {
+              "Entity": {
+                "self": 30
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceR_8"
+              },
+              "Transform": {
+                "pos": [
+                  8,
+                  0.44999998807907104,
+                  6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 31,
+            "components": {
+              "Entity": {
+                "self": 31
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceL_18"
+              },
+              "Transform": {
+                "pos": [
+                  18,
+                  0.44999998807907104,
+                  -6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 32,
+            "components": {
+              "Entity": {
+                "self": 32
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceR_18"
+              },
+              "Transform": {
+                "pos": [
+                  18,
+                  0.44999998807907104,
+                  6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 33,
+            "components": {
+              "Entity": {
+                "self": 33
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceL_28"
+              },
+              "Transform": {
+                "pos": [
+                  28,
+                  0.44999998807907104,
+                  -6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 34,
+            "components": {
+              "Entity": {
+                "self": 34
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceR_28"
+              },
+              "Transform": {
+                "pos": [
+                  28,
+                  0.44999998807907104,
+                  6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 35,
+            "components": {
+              "Entity": {
+                "self": 35
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceL_38"
+              },
+              "Transform": {
+                "pos": [
+                  38,
+                  0.44999998807907104,
+                  -6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 36,
+            "components": {
+              "Entity": {
+                "self": 36
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceR_38"
+              },
+              "Transform": {
+                "pos": [
+                  38,
+                  0.44999998807907104,
+                  6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 37,
+            "components": {
+              "Entity": {
+                "self": 37
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceL_48"
+              },
+              "Transform": {
+                "pos": [
+                  48,
+                  0.44999998807907104,
+                  -6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 38,
+            "components": {
+              "Entity": {
+                "self": 38
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceR_48"
+              },
+              "Transform": {
+                "pos": [
+                  48,
+                  0.44999998807907104,
+                  6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 39,
+            "components": {
+              "Entity": {
+                "self": 39
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceL_58"
+              },
+              "Transform": {
+                "pos": [
+                  58,
+                  0.44999998807907104,
+                  -6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 40,
+            "components": {
+              "Entity": {
+                "self": 40
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceR_58"
+              },
+              "Transform": {
+                "pos": [
+                  58,
+                  0.44999998807907104,
+                  6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 41,
+            "components": {
+              "Entity": {
+                "self": 41
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceL_68"
+              },
+              "Transform": {
+                "pos": [
+                  68,
+                  0.44999998807907104,
+                  -6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 42,
+            "components": {
+              "Entity": {
+                "self": 42
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceR_68"
+              },
+              "Transform": {
+                "pos": [
+                  68,
+                  0.44999998807907104,
+                  6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 43,
+            "components": {
+              "Entity": {
+                "self": 43
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceL_78"
+              },
+              "Transform": {
+                "pos": [
+                  78,
+                  0.44999998807907104,
+                  -6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 44,
+            "components": {
+              "Entity": {
+                "self": 44
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceR_78"
+              },
+              "Transform": {
+                "pos": [
+                  78,
+                  0.44999998807907104,
+                  6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 45,
+            "components": {
+              "Entity": {
+                "self": 45
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceL_88"
+              },
+              "Transform": {
+                "pos": [
+                  88,
+                  0.44999998807907104,
+                  -6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 46,
+            "components": {
+              "Entity": {
+                "self": 46
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceR_88"
+              },
+              "Transform": {
+                "pos": [
+                  88,
+                  0.44999998807907104,
+                  6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 47,
+            "components": {
+              "Entity": {
+                "self": 47
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceL_98"
+              },
+              "Transform": {
+                "pos": [
+                  98,
+                  0.44999998807907104,
+                  -6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 48,
+            "components": {
+              "Entity": {
+                "self": 48
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceR_98"
+              },
+              "Transform": {
+                "pos": [
+                  98,
+                  0.44999998807907104,
+                  6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 49,
+            "components": {
+              "Entity": {
+                "self": 49
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceL_108"
+              },
+              "Transform": {
+                "pos": [
+                  108,
+                  0.44999998807907104,
+                  -6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 50,
+            "components": {
+              "Entity": {
+                "self": 50
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              },
+              "Name": {
+                "value": "FenceR_108"
+              },
+              "Transform": {
+                "pos": [
+                  108,
+                  0.44999998807907104,
+                  6.199999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.8999999761581421,
+                  0.14000000059604645
+                ]
+              }
+            }
+          },
+          {
+            "localId": 51,
+            "components": {
+              "Entity": {
+                "self": 51
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              },
+              "Name": {
+                "value": "FlatRockA"
+              },
+              "Transform": {
+                "pos": [
+                  -6,
+                  0.4099999964237213,
+                  -4.800000190734863
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "Collider": {
+                "shape": 1,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8999999761581421,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 52,
+            "components": {
+              "Entity": {
+                "self": 52
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              },
+              "Name": {
+                "value": "FlatRockB"
+              },
+              "Transform": {
+                "pos": [
+                  4,
+                  0.36899998784065247,
+                  4.800000190734863
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.8999999761581421,
+                  0.8999999761581421,
+                  0.8999999761581421
+                ]
+              },
+              "Collider": {
+                "shape": 1,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8999999761581421,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 53,
+            "components": {
+              "Entity": {
+                "self": 53
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              },
+              "Name": {
+                "value": "Ramp22Rock"
+              },
+              "Transform": {
+                "pos": [
+                  38,
+                  0.36899998784065247,
+                  4.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.8999999761581421,
+                  0.8999999761581421,
+                  0.8999999761581421
+                ]
+              },
+              "Collider": {
+                "shape": 1,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8999999761581421,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 54,
+            "components": {
+              "Entity": {
+                "self": 54
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              },
+              "Name": {
+                "value": "Ramp58RockA"
+              },
+              "Transform": {
+                "pos": [
+                  76,
+                  0.492000013589859,
+                  5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1.2000000476837158,
+                  1.2000000476837158,
+                  1.2000000476837158
+                ]
+              },
+              "Collider": {
+                "shape": 1,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8999999761581421,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 55,
+            "components": {
+              "Entity": {
+                "self": 55
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              },
+              "Name": {
+                "value": "Ramp58RockB"
+              },
+              "Transform": {
+                "pos": [
+                  78,
+                  0.4099999964237213,
+                  -5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "Collider": {
+                "shape": 1,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8999999761581421,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 56,
+            "components": {
+              "Entity": {
+                "self": 56
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  10
+                ]
+              },
+              "Name": {
+                "value": "Wall"
+              },
+              "Transform": {
+                "pos": [
+                  84,
+                  8.149999618530273,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1.399999976158142,
+                  3.299999952316284,
+                  10
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 57,
+            "components": {
+              "Entity": {
+                "self": 57
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              },
+              "Name": {
+                "value": "Walk_Spawn"
+              },
+              "Transform": {
+                "pos": [
+                  -1,
+                  -0.05999999865889549,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  14,
+                  0.11999999731779099,
+                  10
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 58,
+            "components": {
+              "Entity": {
+                "self": 58
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  10
+                ]
+              },
+              "Name": {
+                "value": "Walk_LowStep"
+              },
+              "Transform": {
+                "pos": [
+                  8,
+                  0.11999999731779099,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0.02497659996151924,
+                  0.9996880292892456
+                ],
+                "scale": [
+                  4.0049967765808105,
+                  0.11999999731779099,
+                  10
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 59,
+            "components": {
+              "Entity": {
+                "self": 59
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  7
+                ]
+              },
+              "Name": {
+                "value": "Walk_Plateau1"
+              },
+              "Transform": {
+                "pos": [
+                  13,
+                  0.1599999964237213,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  6,
+                  0.11999999731779099,
+                  10
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 60,
+            "components": {
+              "Entity": {
+                "self": 60
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  10
+                ]
+              },
+              "Name": {
+                "value": "Walk_HighStep"
+              },
+              "Transform": {
+                "pos": [
+                  19,
+                  0.4690000116825104,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0.04139326512813568,
+                  0.9991429448127747
+                ],
+                "scale": [
+                  6.020631313323975,
+                  0.11999999731779099,
+                  10
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 61,
+            "components": {
+              "Entity": {
+                "self": 61
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  8
+                ]
+              },
+              "Name": {
+                "value": "Walk_Plateau2"
+              },
+              "Transform": {
+                "pos": [
+                  25,
+                  0.6579999923706055,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  6,
+                  0.11999999731779099,
+                  10
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 62,
+            "components": {
+              "Entity": {
+                "self": 62
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              },
+              "Name": {
+                "value": "Walk_Ramp22"
+              },
+              "Transform": {
+                "pos": [
+                  34,
+                  1.3589999675750732,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0.0531897135078907,
+                  0.9985844492912292
+                ],
+                "scale": [
+                  12.068285942077637,
+                  0.11999999731779099,
+                  10
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 63,
+            "components": {
+              "Entity": {
+                "self": 63
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              },
+              "Name": {
+                "value": "Walk_Ramp22Top"
+              },
+              "Transform": {
+                "pos": [
+                  44,
+                  1.940000057220459,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  8,
+                  0.11999999731779099,
+                  10
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 64,
+            "components": {
+              "Entity": {
+                "self": 64
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  7
+                ]
+              },
+              "Name": {
+                "value": "Walk_Ramp40"
+              },
+              "Transform": {
+                "pos": [
+                  53.5,
+                  3.0999999046325684,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0.0985376164317131,
+                  0.9951333403587341
+                ],
+                "scale": [
+                  11.217843055725098,
+                  0.11999999731779099,
+                  10
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 65,
+            "components": {
+              "Entity": {
+                "self": 65
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  7
+                ]
+              },
+              "Name": {
+                "value": "Walk_Ramp40Top"
+              },
+              "Transform": {
+                "pos": [
+                  63,
+                  4.139999866485596,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  8,
+                  0.11999999731779099,
+                  10
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 66,
+            "components": {
+              "Entity": {
+                "self": 66
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              },
+              "Name": {
+                "value": "Walk_Ramp58"
+              },
+              "Transform": {
+                "pos": [
+                  72,
+                  5.349999904632568,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0.11279364675283432,
+                  0.9936184287071228
+                ],
+                "scale": [
+                  10.261091232299805,
+                  0.11999999731779099,
+                  10
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 67,
+            "components": {
+              "Entity": {
+                "self": 67
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  10
+                ]
+              },
+              "Name": {
+                "value": "Walk_WallRun"
+              },
+              "Transform": {
+                "pos": [
+                  82,
+                  6.440000057220459,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  10,
+                  0.11999999731779099,
+                  10
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 68,
+            "components": {
+              "Entity": {
+                "self": 68
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              },
+              "Name": {
+                "value": "Walk_RampDown"
+              },
+              "Transform": {
+                "pos": [
+                  94,
+                  3.3499999046325684,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  -0.20985530316829681,
+                  0.9777324795722961
+                ],
+                "scale": [
+                  15.352198600769043,
+                  0.11999999731779099,
+                  10
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 69,
+            "components": {
+              "Entity": {
+                "self": 69
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              },
+              "Name": {
+                "value": "Walk_End"
+              },
+              "Transform": {
+                "pos": [
+                  106,
+                  0.14000000059604645,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  10,
+                  0.11999999731779099,
+                  10
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 70,
+            "components": {
+              "Entity": {
+                "self": 70
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "Name": {
+                "value": "Col_SafetyNet"
+              },
+              "Transform": {
+                "pos": [
+                  49.5,
+                  -5,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  139,
+                  6,
+                  14
+                ]
+              },
+              "Collider": {
+                "shape": 0,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.5,
+                "halfHeight": 0.5,
+                "friction": 0.8500000238418579,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              }
+            }
+          },
+          {
+            "localId": 71,
+            "components": {
+              "Entity": {
+                "self": 71
+              },
+              "Name": {
+                "value": "Skylight"
+              },
+              "Skylight": {
+                "color": [
+                  0.6200000047683716,
+                  0.6800000071525574,
+                  0.7799999713897705
+                ],
+                "intensity": 0.3499999940395355
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 72,
+            "components": {
+              "Entity": {
+                "self": 72
+              },
+              "DirectionalLight": {
+                "direction": [
+                  -0.3499999940395355,
+                  -1,
+                  -0.25
+                ],
+                "color": [
+                  1,
+                  0.949999988079071,
+                  0.8799999952316284
+                ],
+                "intensity": 1.149999976158142,
+                "castShadow": true,
+                "cascadeCount": 4,
+                "splitLambda": 0.75,
+                "cascadeBlend": 0.20000000298023224,
+                "mapSize": 2048,
+                "depthBias": 0.004999999888241291,
+                "normalBias": 0.05000000074505806,
+                "shadowDistance": 200,
+                "pcfKernelSize": 3
+              },
+              "Name": {
+                "value": "Sun"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 73,
+            "components": {
+              "Entity": {
+                "self": 73
+              },
+              "Name": {
+                "value": "Player"
+              },
+              "Transform": {
+                "pos": [
+                  -4,
+                  0.8700000047683716,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "RigidBody": {
+                "type": 2,
+                "mass": 1,
+                "linearDamping": 0,
+                "angularDamping": 0,
+                "gravityScale": 1,
+                "ccdEnabled": true
+              },
+              "Collider": {
+                "shape": 2,
+                "halfExtents": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "radius": 0.41999998688697815,
+                "halfHeight": 0.44999998807907104,
+                "friction": 0.5,
+                "restitution": 0,
+                "density": 1,
+                "isSensor": false,
+                "collisionGroups": 131071,
+                "solverGroups": 4294967295
+              },
+              "CharacterController": {
+                "offset": 0.009999999776482582,
+                "maxSlopeClimbDeg": 45,
+                "minSlopeSlideDeg": 30,
+                "autoStepMaxHeight": 0.3499999940395355,
+                "autoStepMinWidth": 0.15000000596046448,
+                "snapToGroundDist": 0.11999999731779099
+              }
+            }
+          },
+          {
+            "localId": 74,
+            "components": {
+              "Entity": {
+                "self": 74
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  12
+                ]
+              },
+              "ChildOf": {
+                "parent": 73
+              },
+              "Name": {
+                "value": "PlayerTorso"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0.07999999821186066,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.5199999809265137,
+                  0.6200000047683716,
+                  0.30000001192092896
+                ]
+              }
+            }
+          },
+          {
+            "localId": 75,
+            "components": {
+              "Entity": {
+                "self": 75
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              },
+              "ChildOf": {
+                "parent": 73
+              },
+              "Name": {
+                "value": "PlayerHead"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0.6200000047683716,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.3799999952316284,
+                  0.3799999952316284,
+                  0.3799999952316284
+                ]
+              }
+            }
+          },
+          {
+            "localId": 76,
+            "components": {
+              "Entity": {
+                "self": 76
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              },
+              "ChildOf": {
+                "parent": 73
+              },
+              "Name": {
+                "value": "PlayerArmL"
+              },
+              "Transform": {
+                "pos": [
+                  -0.3799999952316284,
+                  0.05000000074505806,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.1599999964237213,
+                  0.5199999809265137,
+                  0.1599999964237213
+                ]
+              }
+            }
+          },
+          {
+            "localId": 77,
+            "components": {
+              "Entity": {
+                "self": 77
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              },
+              "ChildOf": {
+                "parent": 73
+              },
+              "Name": {
+                "value": "PlayerArmR"
+              },
+              "Transform": {
+                "pos": [
+                  0.3799999952316284,
+                  0.05000000074505806,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.1599999964237213,
+                  0.5199999809265137,
+                  0.1599999964237213
+                ]
+              }
+            }
+          },
+          {
+            "localId": 78,
+            "components": {
+              "Entity": {
+                "self": 78
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  14
+                ]
+              },
+              "ChildOf": {
+                "parent": 73
+              },
+              "Name": {
+                "value": "PlayerLegL"
+              },
+              "Transform": {
+                "pos": [
+                  -0.14000000059604645,
+                  -0.5199999809265137,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.20000000298023224,
+                  0.5199999809265137,
+                  0.20000000298023224
+                ]
+              }
+            }
+          },
+          {
+            "localId": 79,
+            "components": {
+              "Entity": {
+                "self": 79
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  14
+                ]
+              },
+              "ChildOf": {
+                "parent": 73
+              },
+              "Name": {
+                "value": "PlayerLegR"
+              },
+              "Transform": {
+                "pos": [
+                  0.14000000059604645,
+                  -0.5199999809265137,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.20000000298023224,
+                  0.5199999809265137,
+                  0.20000000298023224
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "refs": [
+        "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
+        "6a63356c-ab7d-437c-8d70-31a1d37baa3c",
+        "ab20af21-0764-55be-a7f2-b80ab3d46a0a",
+        "1e58d15a-78d4-41b9-849b-d0dc82fd14eb",
+        "95730fd2-9846-5f84-8658-0b3c971eb263",
+        "fe2e3d65-a71d-481c-8190-92004b679fb1",
+        "1a3d5afe-b7af-4b7c-9c80-f42fec836d10",
+        "2c7f6ab3-46b4-4e1c-828e-8294394a9c0a",
+        "320116be-2b20-46dd-8372-ff58b36aca6a",
+        "318a9b34-9353-4881-b9fd-0aa3906093f6",
+        "c5f83dff-9f52-4911-821c-9e5827e11454",
+        "6896ecc8-f18b-4333-9d24-aee850b07494",
+        "b8915cc0-bee4-46d6-a00b-2ae7ce727e2b",
+        "2195193c-bb6f-4f9f-99ff-fd04716a70f1",
+        "6fad4ed4-9952-4b9c-8330-044fc64c3336"
+      ]
+    },
+    {
+      "guid": "6a63356c-ab7d-437c-8d70-31a1d37baa3c",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.28,
+            0.52,
+            0.22,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.9
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "1e58d15a-78d4-41b9-849b-d0dc82fd14eb",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.34,
+            0.22,
+            0.12,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.92
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "fe2e3d65-a71d-481c-8190-92004b679fb1",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.2,
+            0.48,
+            0.16,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.88
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "1a3d5afe-b7af-4b7c-9c80-f42fec836d10",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.92,
+            0.78,
+            0.18,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.55
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "2c7f6ab3-46b4-4e1c-828e-8294394a9c0a",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.72,
+            0.62,
+            0.4,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.86
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "320116be-2b20-46dd-8372-ff58b36aca6a",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.44,
+            0.3,
+            0.18,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.94
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "318a9b34-9353-4881-b9fd-0aa3906093f6",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.4,
+            0.38,
+            0.35,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.82
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "c5f83dff-9f52-4911-821c-9e5827e11454",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.5,
+            0.5,
+            0.46,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.78
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "6896ecc8-f18b-4333-9d24-aee850b07494",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.52,
+            0.36,
+            0.2,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.88
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "b8915cc0-bee4-46d6-a00b-2ae7ce727e2b",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.12,
+            0.42,
+            0.82,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.62
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "2195193c-bb6f-4f9f-99ff-fd04716a70f1",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.9,
+            0.7,
+            0.55,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.72
+        }
+      },
+      "refs": []
+    },
+    {
+      "guid": "6fad4ed4-9952-4b9c-8330-044fc64c3336",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-standard-pbr",
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [
+            0.18,
+            0.22,
+            0.38,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.7
+        }
+      },
+      "refs": []
+    }
+  ]
+}

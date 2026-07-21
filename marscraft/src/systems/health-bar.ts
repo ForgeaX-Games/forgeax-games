@@ -27,7 +27,7 @@
  *     1 / metallic 0), same approximation the selection rings use.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer, ChildOf,
   quat,
@@ -83,12 +83,12 @@ export class HealthBarSystem {
   install(world: World): void {
     this._world = world;
     quat.fromAxisAngle(this._qPitch, [1, 0, 0], -BAR_PITCH); // tilt to face camera
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-health-bar',
       queries: [{ with: [Entity, Transform, Health] }],
       resources: ['Time'],
       fn: (_w, qr) => {
-        const dt = world.getResource<{ dt: number }>('Time').dt;
+        const dt = world.getResource(Time).delta;
         this._gameTime += dt;
         const assets = this._ensureAssets();
         if (!assets) return;

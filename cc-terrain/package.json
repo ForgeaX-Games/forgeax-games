@@ -1,0 +1,35 @@
+{
+  "name": "@forgeax/game-cc-terrain",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "CharacterController + moveAndSlide terrain showcase — slopes, steps, walls.",
+  "scripts": {},
+  "forgeax": {
+    "assets": {
+      "roots": ["assets"]
+    },
+    "metrics": {
+      "bundle-size": { "enabled": false, "reason": "demo game" },
+      "fps": { "enabled": false, "reason": "demo game" },
+      "bench": { "enabled": false, "reason": "demo game" },
+      "gate": { "enabled": false, "reason": "demo game" },
+      "spike-report": { "enabled": false, "reason": "demo game" }
+    }
+  },
+  "dependencies": {
+    "@forgeax/engine-app": "workspace:*",
+    "@forgeax/engine-assets-runtime": "workspace:*",
+    "@forgeax/engine-ecs": "workspace:*",
+    "@forgeax/engine-input": "workspace:*",
+    "@forgeax/engine-math": "workspace:*",
+    "@forgeax/engine-pack": "workspace:*",
+    "@forgeax/engine-physics": "workspace:*",
+    "@forgeax/engine-runtime": "workspace:*",
+    "@forgeax/engine-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@webgpu/types": "^0.1.71"
+  }
+}

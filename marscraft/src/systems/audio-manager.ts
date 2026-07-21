@@ -37,7 +37,7 @@
  *     until the first `pointerdown`/`keydown`; `.play()` rejections are swallowed.
  */
 
-import type { World, EntityHandle } from '@forgeax/engine-ecs';
+import { Time, Update, type World, EntityHandle } from '@forgeax/engine-ecs';
 import { EventBus } from '../core/event-bus';
 import { Faction, PLAYER_ID, RACE, type RaceCode } from '../components';
 
@@ -187,7 +187,7 @@ export class AudioManager implements AudioManagerHandle {
 
     this._listenForGesture();
 
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-audio-manager',
       queries: [],
       resources: ['Time'],

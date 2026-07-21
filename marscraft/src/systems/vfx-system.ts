@@ -49,7 +49,7 @@
  * here; the framework + the 8 core kinds are complete.
  */
 
-import { defineComponent, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, defineComponent, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer,
   type Handle,
@@ -222,7 +222,7 @@ export class VfxSystem implements VfxHandle {
 
   install(world: World): VfxHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [{ with: [Entity, Transform, Vfx] }],
       resources: ['Time'],

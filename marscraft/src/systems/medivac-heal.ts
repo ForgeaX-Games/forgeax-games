@@ -12,7 +12,7 @@
  * snapshot. Garrisoned units are excluded (Garrisoned component present).
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import {
   Health, Faction, UnitType, Garrisoned, unitTypeId, UNIT_CATEGORY,
@@ -33,7 +33,7 @@ interface Row {
 
 export class MedivacHealSystem {
   install(world: World): void {
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-medivac-heal',
       queries: [{ with: [Entity, Transform, Health, Faction, UnitType] }],
       resources: ['Time'],

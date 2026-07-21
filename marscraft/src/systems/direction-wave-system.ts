@@ -24,7 +24,7 @@
  * corridor scan uses a per-frame CombatTarget[] snapshot (no ad-hoc world.query).
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer, ChildOf, quat,
   type Handle,
@@ -98,7 +98,7 @@ export class DirectionWaveSystem implements DirectionWaveHandle {
 
   install(world: World): DirectionWaveHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [
         { with: [Entity, Transform, DirectionWave] },   // waves (query 0)

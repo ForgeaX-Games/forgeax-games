@@ -16,7 +16,7 @@
  * qr[0] iterated as Batch[]; heals via world.set inside resolveHeal (no spawn).
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import {
   Health, UnitType, Garrisoned, RACE, COMBAT_TYPE,
@@ -47,7 +47,7 @@ export class CreepHealingSystem {
   }
 
   install(world: World): void {
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-creep-healing',
       queries: [{ with: [Entity, Transform, Health, UnitType] }],
       resources: ['Time'],

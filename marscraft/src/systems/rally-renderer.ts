@@ -13,7 +13,7 @@
  * (own throttled tick); dead-pruned via the selection set each rebuild.
  */
 
-import { type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Transform, MeshFilter, MeshRenderer, quat,
   type Handle,
@@ -60,7 +60,7 @@ export class RallyRenderer implements RallyRendererHandle {
 
   install(world: World): RallyRendererHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name, queries: [], resources: ['Time'],
       fn: () => {
         this._timer += world.getResource<{ dt: number }>('Time')?.dt ?? 0;

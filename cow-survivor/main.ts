@@ -14,7 +14,7 @@ import {
 } from '@forgeax/engine-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import { ENTITY_NULL_RAW, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { ENTITY_NULL_RAW, Time, Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import type { BootstrapContext, GameContext } from '@forgeax/engine-app';
 import { INPUT_SNAPSHOT_RESOURCE_KEY, type InputSnapshot } from '@forgeax/engine-input';
 import type { SceneAsset, EquirectAsset } from '@forgeax/engine-types';
@@ -239,7 +239,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // every system below needs assets + registerUpdate, so there is nothing
   // meaningful to run without it.
   if (!ctx) { console.error('[game] no BootstrapContext — cannot start'); return; }
-  const { assets, app, registerUpdate } = ctx;
+  const { assets, app } = ctx;
 
   // The gameplay systems (EnemyManager / FxSystem / …) predate the
   // world-as-first-param bootstrap hook and still take the legacy GameContext
@@ -247,7 +247,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // BootstrapContext so those systems (and the Sctx helpers, which only read
   // world + assets) type-check without `!` casts.
   const gameCtx: GameContext = {
-    world, assets, app, registerUpdate,
+    world, assets, app,
     uiRoot: ctx.uiRoot, registerCleanup: ctx.registerCleanup,
   };
 
@@ -704,7 +704,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     }
   };
 
-  registerUpdate((dt: number) => {
+  world.addSystem(Update, { name: 'cow-survivor-update', queries: [], fn: () => {
+    const dt = world.getResource(Time).delta;
     if (gameOver || transitioning) return;
     if (paused) {
       // While picker is open, keep camera + HUD ticking but skip all gameplay
@@ -1069,7 +1070,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         quat: topQ,
       });
     }
-  });
+  }});
 
   // ── kill side-effects (score, drop xp gems, debris, on-death spawns) ──────
   // XP no longer lands directly — the kill drops gems via GemSystem, and the

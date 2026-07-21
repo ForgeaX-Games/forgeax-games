@@ -14,7 +14,7 @@
  * stops re-fire while held. Recall prunes despawned members (world.get→!ok).
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import type { InputState } from '../input';
 import type { SelectionHandle } from './selection';
@@ -51,7 +51,7 @@ export class ControlGroupSystem implements ControlGroupHandle {
 
   install(world: World): ControlGroupHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [],
       resources: ['Time'],

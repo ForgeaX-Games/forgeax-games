@@ -37,7 +37,7 @@
  *     the END of a per-entity step (after the damage write), not mid batch-mutation.
  */
 
-import { type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Entity } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import {
@@ -140,7 +140,7 @@ export class TriggerSystem implements TriggerSystemHandle {
     eventBus.on('ability:buff_applied', this._onBuffApplied);
     eventBus.on('ability:buff_removed', this._onBuffExpired);
 
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-trigger-system',
       queries: [{ with: [Entity, Abilities] }],
       resources: ['Time'],

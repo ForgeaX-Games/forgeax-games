@@ -1,6 +1,6 @@
 import { Transform, MeshFilter, MeshRenderer, Camera, Skylight, perspective, quat, type Handle, type MaterialAsset } from '@forgeax/engine-runtime';
 import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
-import { defineComponent, Entity, type World } from '@forgeax/engine-ecs';
+import { Time, Update, defineComponent, Entity, type World } from '@forgeax/engine-ecs';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { BootstrapContext } from '@forgeax/engine-app';
 
@@ -69,12 +69,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   }
 
   const dq = quat.create(), cur = quat.create();
-  world.addSystem({
+  world.addSystem(Update, {
     name: 'spin',
     queries: [{ with: [Entity, Transform, Spin] }],
     resources: ['Time'],
     fn: (_w, qr) => {
-      const dt = world.getResource<{ dt: number }>('Time').dt;
+      const dt = world.getResource(Time).delta;
       for (const b of qr[0]) {
         const n = b.Entity.self.length;
         for (let i = 0; i < n; i++) {

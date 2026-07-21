@@ -30,7 +30,7 @@
  */
 
 import { Transform, MeshFilter, MeshRenderer } from '@forgeax/engine-runtime';
-import { type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Building, BUILDING_STATE, buildingTypeId, commandCurrent, commandQueue,
   type UnitCommand,
@@ -257,7 +257,7 @@ export function installPlacement(world: World, deps: PlacementDeps): PlacementHa
     world.set(ghost, MeshRenderer, { materials: [toGreen ? greenMat : redMat] });
   }
 
-  world.addSystem({
+  world.addSystem(Update, {
     name: 'mc-placement',
     queries: [],
     resources: [],

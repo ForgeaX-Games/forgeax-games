@@ -17,7 +17,7 @@ import {
   Skylight, DirectionalLight, ChildOf,
   type Handle, type MaterialAsset,
 } from '@forgeax/engine-runtime';
-import type { World } from '@forgeax/engine-ecs';
+import { Time, Update, type World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import { generateMap } from './src/mapgen/generator';
@@ -1092,12 +1092,12 @@ export async function bootstrap(world: World, bctx?: BootstrapContext) {
       // NOT gate the ECS systems (they still run every frame); it drives the turn
       // buffer + checksum plumbing over the live world. A `window.__marscraft`
       // command helper can queue orders that then execute at the next turn.
-      world.addSystem({
+      world.addSystem(Update, {
         name: 'mc-lockstep-driver',
         queries: [],
         resources: ['Time'],
         fn: () => {
-          const dt = world.getResource<{ dt: number }>('Time').dt;
+          const dt = world.getResource(Time).delta;
           lockstep?.tick(dt * 1000);
         },
       });

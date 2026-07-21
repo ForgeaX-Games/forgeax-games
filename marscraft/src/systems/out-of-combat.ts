@@ -15,7 +15,7 @@
  * system seam.)
  */
 
-import { type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Health } from '../components';
 
 export const DEFAULT_OUT_OF_COMBAT_THRESHOLD = 5;
@@ -33,7 +33,7 @@ export class OutOfCombatSystem implements OutOfCombatHandle {
 
   install(world: World): OutOfCombatHandle {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-out-of-combat',
       queries: [],
       resources: ['Time'],

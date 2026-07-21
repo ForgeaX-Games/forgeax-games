@@ -33,7 +33,7 @@
  *   this direct call adds the projectile-specific blast read.
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import { Projectile, Health, Faction, projectileWeaponId } from '../components';
 import { resolveDamage } from './damage-resolver';
@@ -73,7 +73,7 @@ export class ProjectileSystem {
 
   install(world: World): void {
     this._world = world;
-    world.addSystem({
+    world.addSystem(Update, {
       name: 'mc-projectile-system',
       queries: [
         { with: [Entity, Transform, Projectile] },
@@ -81,7 +81,7 @@ export class ProjectileSystem {
       ],
       resources: ['Time'],
       fn: (_w, qr) => {
-        const dt = world.getResource<{ dt: number }>('Time').dt;
+        const dt = world.getResource(Time).delta;
         this._gameTime += dt;
 
         const projBatches = qr[0] as unknown as Batch[];

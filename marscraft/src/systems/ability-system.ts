@@ -30,7 +30,7 @@
  * then-mutate (no spawn/despawn inside a query fn).
  */
 
-import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Transform } from '@forgeax/engine-runtime';
 import {
   Abilities, Energy, Health, Faction, UnitType, Movement, Motion, Illusion,
@@ -141,7 +141,7 @@ export class AbilitySystem implements AbilitySystemHandle {
     this._world = world;
 
     // ── snapshot + cooldown tick + autocast (single system, source order) ──
-    world.addSystem({
+    world.addSystem(Update, {
       name: this.name,
       queries: [
         { with: [Entity, Abilities] },                       // ability carriers
@@ -149,7 +149,7 @@ export class AbilitySystem implements AbilitySystemHandle {
       ],
       resources: ['Time'],
       fn: (_w, qr) => {
-        const dt = world.getResource<{ dt: number }>('Time').dt;
+        const dt = world.getResource(Time).delta;
         this._gameTime += dt;
 
         // rebuild the per-frame combat-target snapshot (area effects use it)
