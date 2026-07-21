@@ -1,7 +1,9 @@
 // Q quest log panel + persistent top-right tracker (Spec §11).
 
 import type { QuestStatus } from './content-ids';
-import { FONT_UI, Ui, panelScrollShellCss } from './ui-theme';
+import {
+  FONT_UI, Ui, Z, cornerOrnamentsHtml, panelChrome, panelScrollShellCss, panelTitleStyle,
+} from './ui-theme';
 
 export interface QuestViewModel {
   readonly id: string;
@@ -28,24 +30,23 @@ export function installQuestLog(mount: HTMLElement): QuestLogHandle {
   const tracker = document.createElement('div');
   tracker.id = 'hellforge-quest-tracker';
   tracker.style.cssText =
-    'position:absolute;top:48px;right:14px;width:min(260px,38%);z-index:90;' +
+    `position:absolute;top:48px;right:14px;width:min(260px,38%);z-index:${Z.questTracker};` +
     'pointer-events:none;display:flex;flex-direction:column;gap:6px;';
 
   const panel = document.createElement('div');
   panel.id = 'hellforge-quest-log';
   panel.style.cssText =
     'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);' +
-    'width:min(480px,90%);z-index:130;display:none;' +
-    `background:${Ui.inkPanel};border:1px solid ${Ui.goldLine};` +
-    `box-shadow:0 0 0 1px ${Ui.goldDeep},0 16px 40px rgba(0,0,0,0.6);` +
-    'border-radius:4px;padding:16px 18px;pointer-events:auto;' +
-    panelScrollShellCss(520, 64);
+    `width:min(480px,90%);z-index:${Z.questLog};display:none;` +
+    'border-radius:10px;padding:16px 18px;pointer-events:auto;' +
+    panelScrollShellCss(520, 64) +
+    panelChrome();
+  panel.insertAdjacentHTML('beforeend', cornerOrnamentsHtml());
 
   const title = document.createElement('div');
   title.textContent = '任务日志';
-  title.style.cssText =
-    `font:800 16px ${FONT_UI};color:${Ui.goldBright};letter-spacing:3px;` +
-    'margin-bottom:12px;border-bottom:1px solid rgba(224,184,74,0.35);padding-bottom:8px;';
+  title.style.cssText = panelTitleStyle() + 'font-size:16px;margin-bottom:12px;padding-bottom:8px;' +
+    'border-bottom:1px solid rgba(224,184,74,0.35);';
 
   const list = document.createElement('div');
   list.style.cssText = 'display:flex;flex-direction:column;gap:10px;';

@@ -20,7 +20,7 @@
 // until a caller exists" status the SPEC accepts for CubeUI.
 
 import { renderEmojiIcon } from './buff-icons';
-import { FONT_UI } from './ui-theme';
+import { FONT_UI, Ui } from './ui-theme';
 
 const EFFECT_LABELS: Record<string, string> = {
   damagePct: '伤害加成',
@@ -203,7 +203,7 @@ export class BuffDisplay {
     timerEl.className = 'buff-timer';
     Object.assign(timerEl.style, {
       fontSize: '11px',
-      color: '#c8a951',
+      color: Ui.gold,
       textAlign: 'center',
       fontFamily: `${FONT_UI}`,
       fontWeight: 'bold',
@@ -220,8 +220,8 @@ export class BuffDisplay {
       bottom: `${ICON_SIZE + 24}px`,
       left: '50%',
       transform: 'translateX(-50%)',
-      background: 'rgba(8,6,18,0.95)',
-      border: '1px solid #4a3a60',
+      background: Ui.inkPanel,
+      border: `1px solid ${Ui.goldLineSoft}`,
       borderRadius: '6px',
       padding: '10px 14px',
       minWidth: '180px',
@@ -236,8 +236,8 @@ export class BuffDisplay {
 
     const ttName = document.createElement('div');
     Object.assign(ttName.style, {
-      color: '#c8a951', fontSize: '13px', fontWeight: 'bold',
-      marginBottom: '6px', borderBottom: '1px solid #2a2538',
+      color: Ui.gold, fontSize: '13px', fontWeight: 'bold',
+      marginBottom: '6px', borderBottom: `1px solid ${Ui.goldLineSoft}`,
       paddingBottom: '4px',
     });
     tooltip.appendChild(ttName);
@@ -250,8 +250,8 @@ export class BuffDisplay {
     const ttTime = document.createElement('div');
     ttTime.className = 'tt-time';
     Object.assign(ttTime.style, {
-      fontSize: '11px', color: '#888',
-      borderTop: '1px solid #1e1a2a', paddingTop: '4px',
+      fontSize: '11px', color: Ui.textDim,
+      borderTop: `1px solid ${Ui.goldLineSoft}`, paddingTop: '4px',
     });
     tooltip.appendChild(ttTime);
 
@@ -286,15 +286,15 @@ export class BuffDisplay {
         if (val === undefined || val === 0) continue;
         const label = EFFECT_LABELS[key] || key;
         const value = formatEffectValue(key, val);
-        const color = key === 'invulnerable' ? '#ffcc44' : '#88cc88';
+        const color = key === 'invulnerable' ? Ui.goldBright : Ui.ok;
         html += `<div style="display:flex;justify-content:space-between;font-size:11px;padding:1px 0">
-          <span style="color:#aaa">${label}</span>
+          <span style="color:${Ui.textMuted}">${label}</span>
           <span style="color:${color};font-weight:bold">${value}</span>
         </div>`;
       }
     }
     if (!html) {
-      html = '<div style="font-size:11px;color:#666;text-align:center">增益效果</div>';
+      html = `<div style="font-size:11px;color:${Ui.textDim};text-align:center">增益效果</div>`;
     }
     ttEffects.innerHTML = html;
   }
@@ -343,7 +343,7 @@ export class BuffDisplay {
 
       if (pct > 0.02) {
         octx.save();
-        octx.strokeStyle = '#c8a951';
+        octx.strokeStyle = Ui.gold;
         octx.lineWidth = 2.5 * s;
         octx.beginPath();
         octx.moveTo(cx, cy);
@@ -372,7 +372,7 @@ export class BuffDisplay {
       timerEl.textContent = sec >= 60
         ? `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`
         : `${sec}s`;
-      timerEl.style.color = sec <= 5 ? '#ff4444' : '#c8a951';
+      timerEl.style.color = sec <= 5 ? Ui.danger : Ui.gold;
     } else {
       timerEl.textContent = '';
     }
@@ -380,7 +380,7 @@ export class BuffDisplay {
     if (ttTime && buff.remainMs > 0) {
       const sec = Math.ceil(buff.remainMs / 1000);
       const total = Math.ceil(buff.totalMs / 1000);
-      ttTime.innerHTML = `⏱ 剩余 <span style="color:#c8a951">${sec}s</span> / ${total}s`;
+      ttTime.innerHTML = `⏱ 剩余 <span style="color:${Ui.gold}">${sec}s</span> / ${total}s`;
     }
   }
 }

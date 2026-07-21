@@ -10,7 +10,7 @@
 
 import { CELL, CELLS } from './dungeon-layout';
 import type { Dungeon } from './dungeon';
-import { FONT_UI } from './ui-theme';
+import { FONT_UI, Ui, Z, cornerOrnamentsHtml, panelChrome, panelTitleStyle } from './ui-theme';
 
 export interface AutomapCallbacks {
   getDungeon: () => Dungeon;
@@ -37,7 +37,7 @@ export function installAutomap(mount: HTMLElement, cb: AutomapCallbacks): Automa
 
   const root = document.createElement('div');
   root.id = MAP_ID;
-  root.style.cssText = `position:${scoped ? 'absolute' : 'fixed'};inset:0;z-index:110;display:none;` +
+  root.style.cssText = `position:${scoped ? 'absolute' : 'fixed'};inset:0;z-index:${Z.automap};display:none;` +
     'pointer-events:none;overflow:hidden;background:rgba(4,3,2,0.42);';
 
   const frame = document.createElement('div');
@@ -49,20 +49,25 @@ export function installAutomap(mount: HTMLElement, cb: AutomapCallbacks): Automa
   // AreaDef.displayName for slagdeep-hollow (Task 4.2) — keep literal for pack-free UI.
   label.textContent = '熔渣深窟 · 自动地图  (Tab 关闭)';
   label.dataset.areaId = 'slagdeep-hollow';
-  label.style.cssText = `font:700 12px ${FONT_UI};color:#c8a84e;` +
-    'text-shadow:0 1px 3px #000;letter-spacing:2px;white-space:nowrap;flex:none;';
+  label.style.cssText = panelTitleStyle() + 'letter-spacing:3px;white-space:nowrap;flex:none;';
+
+  // Ornate frame around the canvas — same carved rim as every major panel.
+  const mapFrame = document.createElement('div');
+  mapFrame.style.cssText = 'position:relative;padding:6px;width:100%;flex:none;' + panelChrome();
+  mapFrame.insertAdjacentHTML('beforeend', cornerOrnamentsHtml());
 
   const canvas = document.createElement('canvas');
-  canvas.style.cssText = 'width:100%;aspect-ratio:1;max-height:100%;' +
-    'border:2px solid #c8a84e;box-shadow:0 0 24px rgba(0,0,0,0.7);background:rgba(8,6,4,0.88);flex:none;';
+  canvas.style.cssText = `display:block;width:100%;aspect-ratio:1;max-height:100%;` +
+    `background:${Ui.inkWell};flex:none;`;
+  mapFrame.appendChild(canvas);
 
   const emptyHint = document.createElement('div');
   emptyHint.textContent = '营地 / 荒原无地块地图 — 进入熔渣深窟后可用';
   emptyHint.style.cssText = 'display:none;padding:28px 18px;text-align:center;' +
-    `font:600 14px ${FONT_UI};color:#a09070;` +
+    `font:600 14px ${FONT_UI};color:${Ui.textMuted};` +
     'text-shadow:0 1px 3px #000;max-width:100%;box-sizing:border-box;';
 
-  frame.append(label, canvas, emptyHint);
+  frame.append(label, mapFrame, emptyHint);
   root.appendChild(frame);
   mount.appendChild(root);
 
@@ -98,11 +103,12 @@ export function installAutomap(mount: HTMLElement, cb: AutomapCallbacks): Automa
     ctx2d.clearRect(0, 0, w, h);
 
     if (!cb.isInDen()) {
-      canvas.style.display = 'none';
+      mapFrame.style.display = 'none';
       emptyHint.style.display = 'block';
       label.textContent = '自动地图  (Tab 关闭)';
       return;
     }
+    mapFrame.style.display = '';
     canvas.style.display = '';
     emptyHint.style.display = 'none';
     label.textContent = '熔渣深窟 · 自动地图  (Tab 关闭)';

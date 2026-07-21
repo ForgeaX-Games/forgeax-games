@@ -17,8 +17,8 @@
 //   quietly drops out next render. No separate `syncWithInventory` call
 //   needed; aidiablo needed one only because it cached item copies.
 // - Icons: aidiablo's `getItemIconHtml(item, sizePx)` callback existed for
-//   items with a custom `iconImg`; hellforge items have none — every icon is
-//   `SLOT_META[item.slot].icon` (see inventory-ui.ts), inlined directly.
+//   items with a custom `iconImg`; hellforge maps ItemSlot → PNG art via
+//   ui-icons.slotIconUrl (see inventory-ui.ts), inlined as <img> tags.
 // - Audio: aidiablo emitted UI_CUBE_OPEN/CLOSE/TRANSMUTE on its own audio
 //   bus. hellforge's inventory-ui.ts never plays sfx from inside a UI
 //   component — main.ts plays Sfx from inside callback implementations
@@ -41,8 +41,9 @@
 // crafting mechanic yet; this stays unwired until one exists, same status
 // BuffDisplay accepts until a buff-granting source lands.
 
-import { RARITY_META, SLOT_META, type Item } from './items';
-import { FONT_UI } from './ui-theme';
+import { RARITY_META, type Item } from './items';
+import { FONT_UI, Z } from './ui-theme';
+import { slotIconUrl } from './ui-icons';
 
 const CUBE_COLS = 3;
 const CUBE_ROWS = 4;
@@ -92,7 +93,7 @@ export function installCubeUI(cb: CubeUICallbacks, mount: HTMLElement = document
     border: 6px solid;
     border-image: linear-gradient(180deg, #5a4a30 0%, #3a2a18 50%, #5a4a30 100%) 1;
     padding: 16px 20px;
-    font-family: ${FONT_UI}; color: #ddd; z-index: 7000;
+    font-family: ${FONT_UI}; color: #ddd; z-index: ${Z.cube};
     box-shadow: 0 0 60px rgba(0,0,0,0.95), inset 0 0 60px rgba(0,0,0,0.3);
     display: none; flex-direction: column; align-items: center; gap: 10px;
     pointer-events: auto;
@@ -137,7 +138,8 @@ export function installCubeUI(cb: CubeUICallbacks, mount: HTMLElement = document
         border:1px solid ${color}88;background:radial-gradient(ellipse at center,${color}18 0%,rgba(15,10,5,0.7) 80%);
         display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1;box-sizing:border-box;font-size:26px;"
         title="点击移出：${item.name}">
-        ${SLOT_META[item.slot].icon}
+        <img src="${slotIconUrl(item.slot)}" alt="" draggable="false"
+          style="width:${CELL_SIZE - 10}px;height:${CELL_SIZE - 10}px;object-fit:contain;pointer-events:none;">
       </div>`;
     });
     html += `</div>`;
@@ -169,7 +171,8 @@ export function installCubeUI(cb: CubeUICallbacks, mount: HTMLElement = document
           title="${item.name}"
           onmouseover="this.style.borderColor='${color}'"
           onmouseout="this.style.borderColor='${color}44'">
-          ${SLOT_META[item.slot].icon}
+          <img src="${slotIconUrl(item.slot)}" alt="" draggable="false"
+            style="width:${CELL_SIZE - 12}px;height:${CELL_SIZE - 12}px;object-fit:contain;pointer-events:none;">
         </div>`;
       });
       html += `</div>`;

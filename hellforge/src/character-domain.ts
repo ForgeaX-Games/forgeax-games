@@ -47,6 +47,15 @@ type MutableHotbarSlots = [
 
 export const BAG_SIZE = 24;
 
+/** Belt potion stock — domain counters (not bag items), see UI-CUTSCENE-UPGRADE-PLAN §R2. */
+export interface PotionStock {
+  life: number;
+  mana: number;
+}
+export const POTION_CAP = 20;
+/** Instant restore per potion kind (aidiablo small-potion tier; no HoT in this slice). */
+export const POTION_RESTORE: Readonly<Record<'life' | 'mana', number>> = { life: 30, mana: 20 };
+
 export interface CharacterIdentity {
   readonly id: string;
   readonly playerName: string;
@@ -67,6 +76,7 @@ export interface CharacterSnapshot {
   readonly bag: readonly (Readonly<ItemInstance> | null)[];
   readonly equipment: Readonly<Equipment>;
   readonly quests: Readonly<Record<QuestId, QuestSave>>;
+  readonly potions: Readonly<PotionStock>;
 }
 
 export type CharacterCommand =
@@ -79,6 +89,8 @@ export type CharacterCommand =
   | { op: 'equip-from-bag'; index: number }
   | { op: 'unequip'; slot: ItemSlot }
   | { op: 'melt-bag'; index: number }
+  | { op: 'use-potion'; kind: 'life' | 'mana' }
+  | { op: 'add-potion'; kind: 'life' | 'mana'; count?: number }
   | { op: 'select-hotbar'; slot: 0 | 1 | 2 | 3 }
   | { op: 'invest-skill'; nodeId: SkillNodeId }
   | { op: 'respec-skills'; areaId: AreaId }
@@ -101,7 +113,16 @@ export interface LevelUpResult {
 }
 
 export type CharacterResult =
-  | { ok: true; levelUps?: LevelUpResult[]; goldGained?: number; melted?: boolean }
+  | {
+      ok: true;
+      levelUps?: LevelUpResult[];
+      goldGained?: number;
+      melted?: boolean;
+      /** use-potion: instant restore amount for main.ts to apply to runtime hp/mana. */
+      potionUsed?: { kind: 'life' | 'mana'; restore: number };
+      /** add-potion: count actually added (0 when already capped → caller may fallback). */
+      potionAdded?: number;
+    }
   | {
       ok: false;
       reason:
@@ -111,6 +132,7 @@ export type CharacterResult =
         | 'level-req'
         | 'bad-index'
         | 'empty-equip'
+        | 'empty-potion'
         | SkillTreeFailReason;
     };
 
@@ -168,6 +190,8 @@ export interface HydrateSorceressOptions {
   bag: readonly (DeepReadonly<ItemInstance> | null)[];
   equipment: DeepReadonly<Equipment>;
   quests: Readonly<Record<QuestId, QuestSave>>;
+  /** Old saves predate potions — absent means 0/0 (no retroactive stock). */
+  potions?: PotionStock;
 }
 
 class CharacterDomainImpl implements CharacterDomain {
@@ -182,6 +206,7 @@ class CharacterDomainImpl implements CharacterDomain {
   #bag: Array<ItemInstance | null>;
   #equipment: Equipment;
   #quests: Record<QuestId, QuestSave>;
+  #potions: PotionStock;
 
   constructor(opts: CreateSorceressOptions) {
     const now = Date.now();
@@ -204,6 +229,8 @@ class CharacterDomainImpl implements CharacterDomain {
     this.#bag = new Array(BAG_SIZE).fill(null);
     this.#equipment = emptyEquipment();
     this.#quests = emptyQuests();
+    // Starting belt stock (D2 convention: a couple of reds, one blue).
+    this.#potions = { life: 2, mana: 1 };
   }
 
   /** Full restore from a validated save envelope — never retains the envelope. */
@@ -229,6 +256,10 @@ class CharacterDomainImpl implements CharacterDomain {
     domain.#bag = bag.slice(0, BAG_SIZE);
     domain.#equipment = deepClone(opts.equipment as Equipment);
     domain.#quests = deepClone(opts.quests as Record<QuestId, QuestSave>);
+    domain.#potions = {
+      life: Math.max(0, Math.floor(opts.potions?.life ?? 0)),
+      mana: Math.max(0, Math.floor(opts.potions?.mana ?? 0)),
+    };
     return domain;
   }
 
@@ -259,6 +290,18 @@ class CharacterDomainImpl implements CharacterDomain {
         return this.#unequip(command.slot);
       case 'melt-bag':
         return this.#meltBag(command.index);
+      case 'use-potion': {
+        if (this.#potions[command.kind] <= 0) return { ok: false, reason: 'empty-potion' };
+        this.#potions = { ...this.#potions, [command.kind]: this.#potions[command.kind] - 1 };
+        return { ok: true, potionUsed: { kind: command.kind, restore: POTION_RESTORE[command.kind] } };
+      }
+      case 'add-potion': {
+        const want = Math.max(1, command.count ?? 1);
+        const room = POTION_CAP - this.#potions[command.kind];
+        const added = Math.max(0, Math.min(room, want));
+        if (added > 0) this.#potions = { ...this.#potions, [command.kind]: this.#potions[command.kind] + added };
+        return { ok: true, potionAdded: added };
+      }
       case 'select-hotbar':
         this.#selectedHotbarSlot = command.slot;
         return { ok: true };
@@ -331,6 +374,7 @@ class CharacterDomainImpl implements CharacterDomain {
       bag: this.#bag.map((item) => (item ? deepClone(item) : null)),
       equipment: deepClone(this.#equipment),
       quests: deepClone(this.#quests),
+      potions: { ...this.#potions },
     };
     const detached = deepClone(raw);
     return (shouldFreezeSnapshots() ? deepFreeze(detached) : detached) as DeepReadonly<CharacterSnapshot>;

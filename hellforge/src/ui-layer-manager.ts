@@ -9,7 +9,9 @@ export type MajorPanel =
   | 'quests'
   | 'character'
   | 'dialogue'
-  | 'settings';
+  | 'settings'
+  /** Cutscene playback — registering it hijacks the exclusivity/input funnel. */
+  | 'cutscene';
 
 export type PanelSurface = {
   show: () => void;

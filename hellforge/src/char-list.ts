@@ -25,7 +25,8 @@
 import { CLASS_DEFS, getClassDef, type CharacterRecord } from './classes';
 import { isPlayableClass } from './character-domain';
 import { listCharacters, deleteCharacter, MAX_CHARACTERS } from './save';
-import { FONT_UI } from './ui-theme';
+import { FONT_UI, Ui } from './ui-theme';
+import { classEmblemSvg } from './ui-icons';
 
 export interface CharListCallbacks {
   onEnterGame: (rec: CharacterRecord) => void;
@@ -73,15 +74,15 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
   // camera look-at (hero always framed at NDC x≈0).
   const charNameLabel = document.createElement('div');
   charNameLabel.style.cssText = 'position:absolute;top:14%;left:50%;transform:translateX(-50%);z-index:2;' +
-    'font:800 24px inherit;letter-spacing:5px;color:#ffd700;' +
+    `font:800 24px inherit;letter-spacing:5px;color:${Ui.goldBright};` +
     'text-shadow:0 0 18px rgba(255,180,0,0.5),0 2px 4px #000;pointer-events:none;white-space:nowrap;';
 
   const backBtn = document.createElement('button');
   backBtn.textContent = '← 返回';
   backBtn.style.cssText = 'position:absolute;left:24px;bottom:24px;pointer-events:auto;cursor:pointer;' +
-    'background:none;border:none;color:#706050;font:600 13px inherit;letter-spacing:1px;padding:8px 4px;transition:color 0.2s;';
-  backBtn.addEventListener('mouseenter', () => { backBtn.style.color = '#ffd700'; });
-  backBtn.addEventListener('mouseleave', () => { backBtn.style.color = '#706050'; });
+    `background:none;border:none;color:${Ui.textDim};font:600 13px inherit;letter-spacing:1px;padding:8px 4px;transition:color 0.2s;`;
+  backBtn.addEventListener('mouseenter', () => { backBtn.style.color = Ui.goldBright; });
+  backBtn.addEventListener('mouseleave', () => { backBtn.style.color = Ui.textDim; });
   backBtn.addEventListener('click', () => cb.onBack());
   leftArea.appendChild(backBtn);
 
@@ -89,12 +90,12 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
   enterBtn.textContent = '进入游戏';
   enterBtn.style.cssText = 'position:absolute;left:50%;bottom:6%;transform:translateX(-50%);z-index:2;' +
     'pointer-events:auto;cursor:pointer;padding:13px 56px;font:700 16px inherit;letter-spacing:5px;' +
-    'border:2px solid #8a7040;background:linear-gradient(180deg,#3a2a18 0%,#2a1a10 100%);' +
-    'color:#ffd700;text-shadow:0 1px 3px #000;border-radius:4px;transition:all 0.25s ease;';
+    `border:2px solid ${Ui.goldDeep};background:linear-gradient(180deg,#3a2a18 0%,#2a1a10 100%);` +
+    `color:${Ui.goldBright};text-shadow:0 1px 3px #000;border-radius:4px;transition:all 0.25s ease;`;
   function setEnterHover(on: boolean): void {
     if (enterBtn.disabled) return;
     enterBtn.style.background = on ? 'linear-gradient(180deg,#504028 0%,#3a2a18 100%)' : 'linear-gradient(180deg,#3a2a18 0%,#2a1a10 100%)';
-    enterBtn.style.borderColor = on ? '#c0a060' : '#8a7040';
+    enterBtn.style.borderColor = on ? Ui.goldDim : Ui.goldDeep;
     enterBtn.style.boxShadow = on ? '0 0 20px rgba(255,200,0,0.2)' : 'none';
     enterBtn.style.transform = on ? 'translateX(-50%) scale(1.03)' : 'translateX(-50%) scale(1)';
   }
@@ -118,26 +119,26 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
   // ── right: docked list panel ───────────────────────────────────────────
   const rightPanel = document.createElement('div');
   rightPanel.style.cssText = 'flex:0 0 360px;position:relative;display:flex;flex-direction:column;' +
-    'pointer-events:auto;background:rgba(8,6,3,0.9);border-left:1px solid #3a2e1a;padding:0 20px 22px;';
+    `pointer-events:auto;background:${Ui.inkWell};border-left:1px solid #3a2e1a;padding:0 20px 22px;`;
 
   const topDeco = document.createElement('div');
-  topDeco.style.cssText = 'height:2px;background:linear-gradient(90deg,transparent,#6a5030,#c0a060,#6a5030,transparent);';
+  topDeco.style.cssText = `height:2px;background:linear-gradient(90deg,transparent,${Ui.goldDeep},${Ui.goldDim},${Ui.goldDeep},transparent);`;
   rightPanel.appendChild(topDeco);
 
   const header = document.createElement('div');
   header.style.cssText = 'text-align:center;padding:18px 0 14px;';
   const headerText = document.createElement('div');
   headerText.textContent = '选择角色';
-  headerText.style.cssText = 'font:700 16px inherit;letter-spacing:6px;color:#c8922a;' +
+  headerText.style.cssText = `font:700 16px inherit;letter-spacing:6px;color:${Ui.gold};` +
     'text-shadow:0 0 12px rgba(200,140,40,0.4),0 1px 3px #000;';
   const headerLine = document.createElement('div');
-  headerLine.style.cssText = 'margin-top:11px;height:1px;background:linear-gradient(90deg,transparent,#5a4520,#a08040,#5a4520,transparent);';
+  headerLine.style.cssText = `margin-top:11px;height:1px;background:linear-gradient(90deg,transparent,${Ui.goldDeep},${Ui.goldDim},${Ui.goldDeep},transparent);`;
   header.append(headerText, headerLine);
   rightPanel.appendChild(header);
 
   const charCountEl = document.createElement('div');
   charCountEl.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 2px 10px;' +
-    `font:400 11px ${FONT_UI};letter-spacing:2px;color:#6a5228;` +
+    `font:400 11px ${FONT_UI};letter-spacing:2px;color:${Ui.goldDeep};` +
     'border-bottom:1px solid #1e180a;margin-bottom:6px;flex:none;';
   rightPanel.appendChild(charCountEl);
 
@@ -152,28 +153,28 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
   const deleteBtn = document.createElement('button');
   deleteBtn.textContent = '删除角色';
   deleteBtn.style.cssText = `width:100%;padding:10px 0;font:600 13px ${FONT_UI};letter-spacing:3px;` +
-    'background:rgba(55,12,8,0.9);border:1px solid #6a2020;color:#cc4444;cursor:pointer;border-radius:4px;transition:all 0.2s;';
+    `background:rgba(55,12,8,0.9);border:1px solid ${Ui.crimsonSoft};color:${Ui.crimson};cursor:pointer;border-radius:4px;transition:all 0.2s;`;
   deleteBtn.addEventListener('mouseenter', () => {
     if (deleteBtn.disabled) return;
-    deleteBtn.style.background = 'rgba(85,18,12,0.9)'; deleteBtn.style.borderColor = '#aa3030'; deleteBtn.style.color = '#ff6666';
+    deleteBtn.style.background = 'rgba(85,18,12,0.9)'; deleteBtn.style.borderColor = Ui.crimson; deleteBtn.style.color = Ui.danger;
   });
   deleteBtn.addEventListener('mouseleave', () => {
-    deleteBtn.style.background = 'rgba(55,12,8,0.9)'; deleteBtn.style.borderColor = '#6a2020'; deleteBtn.style.color = '#cc4444';
+    deleteBtn.style.background = 'rgba(55,12,8,0.9)'; deleteBtn.style.borderColor = Ui.crimsonSoft; deleteBtn.style.color = Ui.crimson;
   });
   deleteBtn.addEventListener('click', () => showDeleteModal());
   btnArea.appendChild(deleteBtn);
 
   const createBtn = document.createElement('button');
   createBtn.style.cssText = `width:100%;padding:10px 0;font:600 13px ${FONT_UI};letter-spacing:3px;` +
-    'background:rgba(20,16,10,0.9);border:1px solid #4a3820;color:#a09070;cursor:pointer;border-radius:4px;' +
+    `background:rgba(20,16,10,0.9);border:1px solid ${Ui.goldLineSoft};color:${Ui.textMuted};cursor:pointer;border-radius:4px;` +
     'display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;';
-  createBtn.innerHTML = '<span style="font-size:16px;line-height:1;color:#c0a060;">+</span><span>创建新角色</span>';
+  createBtn.innerHTML = `<span style="font-size:16px;line-height:1;color:${Ui.goldDim};">+</span><span>创建新角色</span>`;
   createBtn.addEventListener('mouseenter', () => {
     if (createBtn.disabled) return;
-    createBtn.style.background = 'rgba(32,26,16,0.9)'; createBtn.style.borderColor = '#6a5830'; createBtn.style.color = '#c0a870';
+    createBtn.style.background = 'rgba(32,26,16,0.9)'; createBtn.style.borderColor = Ui.goldDeep; createBtn.style.color = Ui.goldDim;
   });
   createBtn.addEventListener('mouseleave', () => {
-    createBtn.style.background = 'rgba(20,16,10,0.9)'; createBtn.style.borderColor = '#4a3820'; createBtn.style.color = '#a09070';
+    createBtn.style.background = 'rgba(20,16,10,0.9)'; createBtn.style.borderColor = Ui.goldLineSoft; createBtn.style.color = Ui.textMuted;
   });
   createBtn.addEventListener('click', () => cb.onNewChar());
   btnArea.appendChild(createBtn);
@@ -187,30 +188,30 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
     'background:rgba(0,0,0,0.78);align-items:center;justify-content:center;';
 
   const modalBox = document.createElement('div');
-  modalBox.style.cssText = 'width:380px;background:rgba(10,7,3,0.97);border:1px solid #5a3020;' +
-    'border-top:2px solid #8a4030;padding:26px 30px 22px;border-radius:4px;box-shadow:0 0 50px rgba(0,0,0,0.9);';
+  modalBox.style.cssText = `width:380px;background:${Ui.inkPanel};border:1px solid ${Ui.crimsonSoft};` +
+    `border-top:2px solid ${Ui.crimson};padding:26px 30px 22px;border-radius:4px;box-shadow:0 0 50px rgba(0,0,0,0.9);`;
 
   const warnTitle = document.createElement('div');
   warnTitle.textContent = '⚠ 警告';
-  warnTitle.style.cssText = 'font:700 15px inherit;letter-spacing:5px;color:#cc4444;text-align:center;' +
+  warnTitle.style.cssText = `font:700 15px inherit;letter-spacing:5px;color:${Ui.crimson};text-align:center;` +
     'margin-bottom:10px;text-shadow:0 0 12px rgba(200,50,50,0.3);';
   const warnText = document.createElement('div');
   warnText.textContent = '此操作不可撤销，角色数据将永久删除。';
-  warnText.style.cssText = `font:400 13px ${FONT_UI};color:#907060;text-align:center;` +
+  warnText.style.cssText = `font:400 13px ${FONT_UI};color:${Ui.textDim};text-align:center;` +
     'margin-bottom:20px;line-height:1.7;';
   const inputLabel = document.createElement('div');
   inputLabel.textContent = `请输入"${DELETE_WORD}"以确认：`;
-  inputLabel.style.cssText = `font:400 12px ${FONT_UI};color:#806050;margin-bottom:9px;letter-spacing:1px;`;
+  inputLabel.style.cssText = `font:400 12px ${FONT_UI};color:${Ui.textDim};margin-bottom:9px;letter-spacing:1px;`;
 
   const deleteInput = document.createElement('input');
   deleteInput.type = 'text';
   deleteInput.placeholder = DELETE_WORD;
   deleteInput.autocomplete = 'off';
   deleteInput.style.cssText = `width:100%;box-sizing:border-box;padding:10px 14px;font:500 15px ${FONT_UI};` +
-    'background:rgba(18,12,6,0.95);border:1px solid #4a3020;border-bottom:2px solid #5a3820;' +
-    'color:#e0c080;outline:none;letter-spacing:2px;border-radius:3px;transition:border-color 0.2s,box-shadow 0.2s;';
-  deleteInput.addEventListener('focus', () => { deleteInput.style.borderColor = '#7a5030'; deleteInput.style.boxShadow = '0 0 8px rgba(180,80,50,0.15)'; });
-  deleteInput.addEventListener('blur', () => { deleteInput.style.borderColor = '#4a3020'; deleteInput.style.boxShadow = 'none'; });
+    `background:${Ui.inkWell};border:1px solid ${Ui.goldLineSoft};border-bottom:2px solid ${Ui.goldDeep};` +
+    `color:${Ui.text};outline:none;letter-spacing:2px;border-radius:3px;transition:border-color 0.2s,box-shadow 0.2s;`;
+  deleteInput.addEventListener('focus', () => { deleteInput.style.borderColor = Ui.goldDeep; deleteInput.style.boxShadow = '0 0 8px rgba(180,80,50,0.15)'; });
+  deleteInput.addEventListener('blur', () => { deleteInput.style.borderColor = Ui.goldLineSoft; deleteInput.style.boxShadow = 'none'; });
   deleteInput.addEventListener('input', () => updateDeleteConfirmState());
 
   const modalBtnRow = document.createElement('div');
@@ -219,9 +220,9 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
   const cancelBtn = document.createElement('button');
   cancelBtn.textContent = '取消';
   cancelBtn.style.cssText = `flex:1;padding:10px 0;font:600 13px ${FONT_UI};letter-spacing:3px;` +
-    'background:rgba(22,18,10,0.9);border:1px solid #4a3820;color:#907060;cursor:pointer;border-radius:4px;transition:all 0.2s;';
-  cancelBtn.addEventListener('mouseenter', () => { cancelBtn.style.borderColor = '#6a5030'; cancelBtn.style.color = '#c0a080'; });
-  cancelBtn.addEventListener('mouseleave', () => { cancelBtn.style.borderColor = '#4a3820'; cancelBtn.style.color = '#907060'; });
+    `background:rgba(22,18,10,0.9);border:1px solid ${Ui.goldLineSoft};color:${Ui.textDim};cursor:pointer;border-radius:4px;transition:all 0.2s;`;
+  cancelBtn.addEventListener('mouseenter', () => { cancelBtn.style.borderColor = Ui.goldDeep; cancelBtn.style.color = Ui.textMuted; });
+  cancelBtn.addEventListener('mouseleave', () => { cancelBtn.style.borderColor = Ui.goldLineSoft; cancelBtn.style.color = Ui.textDim; });
   cancelBtn.addEventListener('click', () => hideDeleteModal());
 
   const deleteConfirmBtn = document.createElement('button');
@@ -240,8 +241,8 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
   function applyConfirmBtnStyle(active: boolean): void {
     deleteConfirmBtn.style.cssText = `flex:1;padding:10px 0;font:600 13px ${FONT_UI};letter-spacing:3px;border-radius:4px;` +
       `background:${active ? 'rgba(90,12,8,0.95)' : 'rgba(38,8,6,0.9)'};` +
-      `border:1px solid ${active ? '#aa2020' : '#4a1818'};` +
-      `color:${active ? '#ff5555' : '#664444'};` +
+      `border:1px solid ${active ? Ui.crimson : '#4a1818'};` +
+      `color:${active ? Ui.danger : '#664444'};` +
       `cursor:${active ? 'pointer' : 'not-allowed'};transition:all 0.2s;opacity:${active ? '1' : '0.5'};`;
   }
 
@@ -277,9 +278,9 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
   function updateCharCount(): void {
     const count = characters.length;
     const full = count >= MAX_CHARACTERS;
-    charCountEl.innerHTML = `<span style="color:#5a4828">已创建角色</span>` +
+    charCountEl.innerHTML = `<span style="color:${Ui.goldDeep}">已创建角色</span>` +
       `<span style="font:700 13px ${FONT_UI};letter-spacing:1px;` +
-      `color:${full ? '#cc6622' : '#a07840'};${full ? 'text-shadow:0 0 8px rgba(200,80,20,0.3);' : ''}">${count} / ${MAX_CHARACTERS}</span>`;
+      `color:${full ? '#cc6622' : Ui.goldDim};${full ? 'text-shadow:0 0 8px rgba(200,80,20,0.3);' : ''}">${count} / ${MAX_CHARACTERS}</span>`;
   }
 
   function setActionBtnsEnabled(hasChars: boolean): void {
@@ -314,15 +315,15 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
 
     const item = document.createElement('div');
     item.style.cssText = `display:flex;align-items:center;gap:13px;padding:10px 11px;margin-bottom:5px;border-radius:4px;` +
-      `border:1px solid ${isSelected ? '#8a6820' : '#252015'};` +
-      `background:${isSelected ? 'rgba(55,42,12,0.65)' : 'rgba(12,10,5,0.55)'};` +
+      `border:1px solid ${isSelected ? Ui.goldDeep : Ui.goldLineSoft};` +
+      `background:${isSelected ? Ui.goldFill : 'rgba(12,10,5,0.55)'};` +
       `cursor:pointer;transition:all 0.2s;` +
       (isSelected ? 'box-shadow:0 0 14px rgba(180,130,20,0.12) inset,0 0 4px rgba(180,130,20,0.08);' : '');
 
     const dot = document.createElement('div');
-    dot.textContent = classDef.icon;
+    dot.innerHTML = classEmblemSvg(classDef.id, 26);
     dot.style.cssText = 'width:38px;height:38px;border-radius:50%;flex:none;display:flex;' +
-      'align-items:center;justify-content:center;font-size:16px;' +
+      'align-items:center;justify-content:center;' +
       `background:radial-gradient(circle at 38% 35%,rgba(160,120,255,0.5) 0%,rgba(30,20,50,0.65) 65%);` +
       `border:1px solid rgba(160,120,255,${isSelected ? '0.5' : '0.2'});` +
       (isSelected ? 'box-shadow:0 0 10px rgba(160,120,255,0.3);' : '');
@@ -332,7 +333,7 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
     const nameEl = document.createElement('div');
     nameEl.textContent = rec.playerName;
     nameEl.style.cssText = `font:600 14px ${FONT_UI};letter-spacing:1px;white-space:nowrap;` +
-      `overflow:hidden;text-overflow:ellipsis;color:${isSelected ? '#ffd700' : '#b08a40'};` +
+      `overflow:hidden;text-overflow:ellipsis;color:${isSelected ? Ui.goldBright : Ui.goldDim};` +
       (isSelected ? 'text-shadow:0 0 10px rgba(255,200,0,0.3);' : '');
     const metaEl = document.createElement('div');
     const playable = isPlayableClass(rec.classId);
@@ -340,16 +341,16 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
       ? `${classDef.name} · Lv.${rec.level}`
       : `${classDef.name} · Lv.${rec.level} · 开发中`;
     metaEl.style.cssText = `font:400 11px ${FONT_UI};margin-top:3px;letter-spacing:1px;` +
-      `color:${!playable ? '#6a5040' : isSelected ? '#907840' : '#4a3a20'};`;
+      `color:${!playable ? Ui.textDim : isSelected ? Ui.goldDim : Ui.goldDeep};`;
     textArea.append(nameEl, metaEl);
     if (!playable) item.title = 'In development';
     item.append(dot, textArea);
 
     item.addEventListener('mouseenter', () => {
-      if (index !== selectedIndex) { item.style.background = 'rgba(26,20,8,0.65)'; item.style.borderColor = '#3a3018'; }
+      if (index !== selectedIndex) { item.style.background = 'rgba(26,20,8,0.65)'; item.style.borderColor = Ui.goldLine; }
     });
     item.addEventListener('mouseleave', () => {
-      if (index !== selectedIndex) { item.style.background = 'rgba(12,10,5,0.55)'; item.style.borderColor = '#252015'; }
+      if (index !== selectedIndex) { item.style.background = 'rgba(12,10,5,0.55)'; item.style.borderColor = Ui.goldLineSoft; }
     });
     item.addEventListener('click', () => { if (index !== selectedIndex) selectCharacter(index); });
 
@@ -367,7 +368,7 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
 
     if (characters.length === 0) {
       const empty = document.createElement('div');
-      empty.style.cssText = 'text-align:center;padding:44px 14px;color:#5a4a30;' +
+      empty.style.cssText = `text-align:center;padding:44px 14px;color:${Ui.textDim};` +
         `font:400 13px ${FONT_UI};letter-spacing:1px;line-height:2.2;`;
       empty.innerHTML = '暂无角色<div style="font-size:12px;color:#3a3020;margin-top:6px;">请点击下方"创建新角色"</div>';
       listContainer.appendChild(empty);

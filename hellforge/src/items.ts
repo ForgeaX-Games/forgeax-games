@@ -73,13 +73,13 @@ export const RARITY_META: Record<Rarity, { label: string; color: string; beam: [
   legendary: { label: '传奇', color: '#ff8a2a', beam: [1.0, 0.42, 0.08], beamI: 6 },
 };
 
-export const SLOT_META: Record<ItemSlot, { label: string; icon: string }> = {
-  weapon: { label: '武器', icon: '🪄' },
-  helm:   { label: '头盔', icon: '🎩' },
-  armor:  { label: '胸甲', icon: '🧥' },
-  boots:  { label: '靴子', icon: '👢' },
-  ring:   { label: '戒指', icon: '💍' },
-  amulet: { label: '项链', icon: '📿' },
+export const SLOT_META: Record<ItemSlot, { label: string }> = {
+  weapon: { label: '武器' },
+  helm:   { label: '头盔' },
+  armor:  { label: '胸甲' },
+  boots:  { label: '靴子' },
+  ring:   { label: '戒指' },
+  amulet: { label: '项链' },
 };
 
 export const SLOT_ORDER: ItemSlot[] = ['weapon', 'helm', 'armor', 'boots', 'ring', 'amulet'];
@@ -347,22 +347,60 @@ export function computeBonus(eq: Readonly<Equipment>): EquipBonus {
   return b;
 }
 
-/** Tooltip lines: [text, cssColor][] — the inventory UI renders these. */
-export function itemTooltipLines(item: Readonly<Item>, playerLevel: number): Array<[string, string]> {
+/** Tooltip lines: [text, cssColor, dimSuffix?][] — the inventory UI renders these. */
+export function itemTooltipLines(item: Readonly<Item>, playerLevel: number): Array<[string, string, string?]> {
   const meta = RARITY_META[item.rarity];
-  const lines: Array<[string, string]> = [
+  const lines: Array<[string, string, string?]> = [
     [item.name, meta.color],
-    [`${meta.label} · ${SLOT_META[item.slot].label} · 装备等级 ${item.ilvl}`, '#998f7d'],
+    [`${meta.label} · ${SLOT_META[item.slot].label} · 装备等级 ${item.ilvl}`, '#8a7a5a'],
   ];
   if (item.reqLevel > 1) {
     lines.push([`需求等级 ${item.reqLevel}`, playerLevel >= item.reqLevel ? '#998f7d' : '#ff5a5a']);
   }
-  for (const a of item.affixes) lines.push([a.label, '#7da2ff']);
+  for (const [i, a] of item.affixes.entries()) {
+    lines.push([a.label, '#7da2ff', affixRangeFor(item, i) ?? undefined]);
+  }
   if (item.legendary) {
     const def = LEGENDARIES.find((l) => l.id === item.legendary);
     if (def) lines.push([def.flavor, '#c8843c']);
   }
   return lines;
+}
+
+/**
+ * Possible roll range of affix `index` on this item, Exile-UI style
+ * (`6–15%`). Mirrors the generating def's lo/hi at the item's ilvl scale;
+ * commons account for their weaker implicit roll (ilvl-2 pool × 0.45).
+ */
+export function affixRangeFor(item: Readonly<Item>, index: number): string | null {
+  const a = item.affixes[index];
+  if (!a) return null;
+  let def: { lo: number; hi: number } | undefined;
+  let scale = ilvlScale(item.ilvl);
+  if (item.legendary) {
+    const l = LEGENDARIES.find((x) => x.id === item.legendary);
+    if (l && index < l.affixes.length) def = l.affixes[index];
+  }
+  if (!def) {
+    def = [...PREFIXES, ...SUFFIXES].find((p) => p.stat === a.stat);
+    if (!def) return null;
+    if (item.rarity === 'common') scale = ilvlScale(Math.max(1, item.ilvl - 2)) * 0.45;
+  }
+  const lo = def.lo * scale;
+  const hi = def.hi * scale;
+  switch (a.stat) {
+    case 'critChance':
+      return `${(lo * 100).toFixed(1)}–${(hi * 100).toFixed(1)}%`;
+    case 'hpRegen':
+    case 'manaRegen':
+      return `${lo.toFixed(1)}–${hi.toFixed(1)}/秒`;
+    case 'maxHp':
+    case 'maxMana':
+    case 'lifeOnKill':
+      return `${Math.round(lo)}–${Math.round(hi)}`;
+    default:
+      return `${Math.round(lo * 100)}–${Math.round(hi * 100)}%`;
+  }
 }
 
 /** Gold from melting a bag item — keep in sync with CharacterDomain melt-bag. */

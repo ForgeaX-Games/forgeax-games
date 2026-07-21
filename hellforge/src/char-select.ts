@@ -6,7 +6,8 @@ import { getClassDef, SELECTABLE_CLASS_IDS, type CharacterRecord, type ClassId }
 import { isPlayableClass } from './character-domain';
 import { DEFAULT_HERO_ID } from './heroes';
 import { createCharacter, listCharacters, MAX_CHARACTERS } from './save';
-import { FONT_UI } from './ui-theme';
+import { FONT_UI, Ui } from './ui-theme';
+import { classEmblemSvg } from './ui-icons';
 
 export interface CharSelectCallbacks {
   /** Character record persisted (via save.ts) — caller transitions to inGame. */
@@ -59,16 +60,16 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
   const backBtn = document.createElement('button');
   backBtn.textContent = '← 返回';
   backBtn.style.cssText = 'position:absolute;left:20px;top:18px;pointer-events:auto;cursor:pointer;' +
-    'background:rgba(20,15,12,0.7);border:1px solid rgba(160,120,60,0.5);border-radius:6px;' +
-    'color:#c8b088;font:600 13px inherit;padding:7px 14px;letter-spacing:1px;transition:all 0.2s;';
-  backBtn.addEventListener('mouseenter', () => { backBtn.style.color = '#ffe8a0'; backBtn.style.borderColor = 'rgba(200,160,70,0.8)'; });
-  backBtn.addEventListener('mouseleave', () => { backBtn.style.color = '#c8b088'; backBtn.style.borderColor = 'rgba(160,120,60,0.5)'; });
+    `background:rgba(20,15,12,0.7);border:1px solid ${Ui.goldLineSoft};border-radius:6px;` +
+    `color:${Ui.textMuted};font:600 13px inherit;padding:7px 14px;letter-spacing:1px;transition:all 0.2s;`;
+  backBtn.addEventListener('mouseenter', () => { backBtn.style.color = Ui.goldBright; backBtn.style.borderColor = Ui.goldLine; });
+  backBtn.addEventListener('mouseleave', () => { backBtn.style.color = Ui.textMuted; backBtn.style.borderColor = Ui.goldLineSoft; });
   backBtn.addEventListener('click', () => cb.onBack());
 
   const heading = document.createElement('div');
   heading.textContent = '选择你的英雄';
   heading.style.cssText = 'font:900 22px inherit;letter-spacing:8px;' +
-    'background:linear-gradient(180deg,#fff8e0 0%,#ffd700 30%,#c07818 70%,#e8a820 100%);' +
+    `background:linear-gradient(180deg,#fff8e0 0%,${Ui.goldBright} 30%,${Ui.goldDeep} 70%,${Ui.gold} 100%);` +
     '-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;' +
     'filter:drop-shadow(0 2px 4px rgba(0,0,0,0.8));user-select:none;';
 
@@ -78,8 +79,8 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
   const panel = document.createElement('div');
   panel.style.cssText = 'position:absolute;left:50%;bottom:28px;transform:translateX(-50%);' +
     'width:min(720px,94vw);pointer-events:auto;padding:18px 24px;border-radius:10px;' +
-    'background:linear-gradient(180deg,rgba(46,38,30,0.92) 0%,rgba(28,22,18,0.95) 100%);' +
-    'border:2px solid rgba(160,120,50,0.55);box-shadow:0 0 40px rgba(0,0,0,0.7),inset 0 1px 0 rgba(200,160,90,0.25);' +
+    `background:linear-gradient(180deg,${Ui.inkPanelHi} 0%,${Ui.inkPanel} 100%);` +
+    `border:2px solid ${Ui.goldLineSoft};box-shadow:0 0 40px rgba(0,0,0,0.7),inset 0 1px 0 ${Ui.goldLineSoft};` +
     'display:flex;flex-direction:column;gap:12px;';
 
   // ── class strip (3 virtual slots) ────────────────────────────────────
@@ -90,20 +91,20 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
   const styleClassBtn = (btn: HTMLButtonElement, id: ClassId, active: boolean): void => {
     const def = getClassDef(id);
     const playable = isPlayableClass(id);
-    btn.innerHTML = `<div style="font-size:28px;line-height:1;opacity:${playable ? '1' : '0.45'}">${def.icon}</div>` +
+    btn.innerHTML = `<div style="line-height:1;opacity:${playable ? '1' : '0.45'}">${classEmblemSvg(id, 44)}</div>` +
       `<div style="font:700 13px inherit;letter-spacing:2px;margin-top:6px;opacity:${playable ? '1' : '0.55'}">${def.name}</div>` +
       (playable
         ? ''
-        : `<div style="font:600 10px inherit;letter-spacing:1px;margin-top:6px;color:#8a7060">开发中</div>`);
+        : `<div style="font:600 10px inherit;letter-spacing:1px;margin-top:6px;color:${Ui.textDim}">开发中</div>`);
     btn.disabled = !playable;
     btn.title = playable ? '' : 'In development';
     btn.style.cssText = 'flex:1;min-width:0;padding:12px 8px;border-radius:8px;' +
       `cursor:${playable ? 'pointer' : 'not-allowed'};` +
-      `color:${active && playable ? '#ffe8a0' : '#b0a090'};text-align:center;transition:all 0.2s;` +
+      `color:${active && playable ? Ui.goldBright : Ui.textMuted};text-align:center;transition:all 0.2s;` +
       `background:${active && playable
         ? 'linear-gradient(180deg,rgba(70,48,22,0.95),rgba(40,28,14,0.98))'
         : 'linear-gradient(180deg,rgba(35,28,22,0.85),rgba(18,14,12,0.9))'};` +
-      `border:2px solid ${active && playable ? 'rgba(220,170,70,0.85)' : 'rgba(120,95,60,0.45)'};` +
+      `border:2px solid ${active && playable ? Ui.goldLine : Ui.goldLineSoft};` +
       `box-shadow:${active && playable ? '0 0 18px rgba(200,140,50,0.35)' : 'none'};` +
       `opacity:${playable ? '1' : '0.72'};`;
   };
@@ -127,27 +128,27 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
   const detail = document.createElement('div');
   detail.style.cssText = 'display:flex;flex-direction:column;gap:4px;min-height:72px;';
   const descEl = document.createElement('div');
-  descEl.style.cssText = `font:400 13px ${FONT_UI};color:#c8b8a0;line-height:1.5;`;
+  descEl.style.cssText = `font:400 13px ${FONT_UI};color:${Ui.textMuted};line-height:1.5;`;
   const mechanicEl = document.createElement('div');
-  mechanicEl.style.cssText = `font:400 12px ${FONT_UI};color:#8a9bc0;line-height:1.5;`;
+  mechanicEl.style.cssText = `font:400 12px ${FONT_UI};color:${Ui.textDim};line-height:1.5;`;
   detail.append(descEl, mechanicEl);
 
   function refreshDetail(): void {
     const def = getClassDef(selectedId);
     descEl.textContent = def.description;
-    mechanicEl.innerHTML = `<b style="color:#a8bce8">${def.coreMechanic}</b> — ${def.coreMechanicDesc}`;
+    mechanicEl.innerHTML = `<b style="color:${Ui.textMuted}">${def.coreMechanic}</b> — ${def.coreMechanicDesc}`;
   }
   refreshDetail();
 
   const divider = document.createElement('div');
-  divider.style.cssText = 'height:1px;background:linear-gradient(90deg,transparent,rgba(160,120,60,0.5) 20%,rgba(160,120,60,0.5) 80%,transparent);';
+  divider.style.cssText = `height:1px;background:linear-gradient(90deg,transparent,${Ui.goldLineSoft} 20%,${Ui.goldLineSoft} 80%,transparent);`;
 
   const nameRow = document.createElement('div');
   nameRow.style.cssText = 'display:flex;align-items:center;gap:10px;';
 
   const nameLabel = document.createElement('div');
   nameLabel.textContent = '姓名';
-  nameLabel.style.cssText = `font:600 13px ${FONT_UI};color:#c8b088;letter-spacing:2px;flex:none;`;
+  nameLabel.style.cssText = `font:600 13px ${FONT_UI};color:${Ui.textMuted};letter-spacing:2px;flex:none;`;
 
   let characterName = generateRandomName();
   const nameInput = document.createElement('input');
@@ -155,19 +156,19 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
   nameInput.maxLength = 12;
   nameInput.value = characterName;
   nameInput.style.cssText = `flex:1;min-width:0;padding:8px 12px;font:600 14px ${FONT_UI};` +
-    'color:#f0e0c0;background:rgba(10,8,6,0.6);border:1px solid rgba(160,120,60,0.5);border-radius:6px;' +
+    `color:${Ui.text};background:${Ui.inkWell};border:1px solid ${Ui.goldLineSoft};border-radius:6px;` +
     'outline:none;letter-spacing:1px;transition:border-color 0.2s;';
-  nameInput.addEventListener('focus', () => { nameInput.style.borderColor = 'rgba(220,180,90,0.9)'; });
-  nameInput.addEventListener('blur', () => { nameInput.style.borderColor = 'rgba(160,120,60,0.5)'; });
+  nameInput.addEventListener('focus', () => { nameInput.style.borderColor = Ui.gold; });
+  nameInput.addEventListener('blur', () => { nameInput.style.borderColor = Ui.goldLineSoft; });
   nameInput.addEventListener('input', () => { characterName = nameInput.value; clearError(); });
 
   const diceBtn = document.createElement('button');
   diceBtn.textContent = '🎲';
   diceBtn.title = '随机姓名';
   diceBtn.style.cssText = 'flex:none;width:36px;height:36px;font-size:17px;cursor:pointer;border-radius:6px;' +
-    'background:rgba(20,15,12,0.7);border:1px solid rgba(160,120,60,0.5);transition:all 0.2s;';
-  diceBtn.addEventListener('mouseenter', () => { diceBtn.style.borderColor = 'rgba(220,180,90,0.9)'; });
-  diceBtn.addEventListener('mouseleave', () => { diceBtn.style.borderColor = 'rgba(160,120,60,0.5)'; });
+    `background:rgba(20,15,12,0.7);border:1px solid ${Ui.goldLineSoft};transition:all 0.2s;`;
+  diceBtn.addEventListener('mouseenter', () => { diceBtn.style.borderColor = Ui.gold; });
+  diceBtn.addEventListener('mouseleave', () => { diceBtn.style.borderColor = Ui.goldLineSoft; });
   diceBtn.addEventListener('click', () => {
     characterName = generateRandomName();
     nameInput.value = characterName;
@@ -177,7 +178,7 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
   nameRow.append(nameLabel, nameInput, diceBtn);
 
   const errorEl = document.createElement('div');
-  errorEl.style.cssText = `font:600 12px ${FONT_UI};color:#ff6a5a;min-height:16px;` +
+  errorEl.style.cssText = `font:600 12px ${FONT_UI};color:${Ui.danger};min-height:16px;` +
     'text-shadow:0 1px 2px #000;';
   function showError(msg: string): void { errorEl.textContent = msg; }
   function clearError(): void { errorEl.textContent = ''; }
@@ -185,9 +186,9 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
   const confirmBtn = document.createElement('button');
   confirmBtn.textContent = '确认出战';
   confirmBtn.style.cssText = 'position:relative;padding:12px 0;font:700 16px inherit;letter-spacing:4px;' +
-    'cursor:pointer;color:#ffe8a0;text-shadow:0 1px 3px rgba(0,0,0,0.9);border:none;border-radius:6px;' +
+    `cursor:pointer;color:${Ui.goldBright};text-shadow:0 1px 3px rgba(0,0,0,0.9);border:none;border-radius:6px;` +
     'background:linear-gradient(180deg,rgba(60,42,20,0.92) 0%,rgba(40,25,12,0.95) 100%);' +
-    'box-shadow:inset 0 1px 0 rgba(200,160,70,0.5),inset 0 -1px 0 rgba(0,0,0,0.5),0 0 0 1px rgba(160,120,50,0.7),0 4px 12px rgba(0,0,0,0.5);' +
+    `box-shadow:inset 0 1px 0 ${Ui.goldLineSoft},inset 0 -1px 0 rgba(0,0,0,0.5),0 0 0 1px ${Ui.goldLine},0 4px 12px rgba(0,0,0,0.5);` +
     'transition:all 0.2s;';
   confirmBtn.addEventListener('mouseenter', () => {
     confirmBtn.style.color = '#fff';
@@ -195,7 +196,7 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
     confirmBtn.style.transform = 'scale(1.01)';
   });
   confirmBtn.addEventListener('mouseleave', () => {
-    confirmBtn.style.color = '#ffe8a0';
+    confirmBtn.style.color = Ui.goldBright;
     confirmBtn.style.background = 'linear-gradient(180deg,rgba(60,42,20,0.92) 0%,rgba(40,25,12,0.95) 100%)';
     confirmBtn.style.transform = 'scale(1)';
   });

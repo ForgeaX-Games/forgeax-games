@@ -89,14 +89,14 @@ import {
   type CharacterDomain,
 } from './src/character-domain';
 import { LootSystem } from './src/loot';
-import { installHud, type EquipSlotState, type SkillSlotState, type TargetViewModel } from './src/hud';
+import { installHud, type SkillSlotState, type TargetViewModel } from './src/hud';
 import { installCharacterPanel } from './src/character-panel';
 import { Dungeon, DUNGEON_ORIGIN } from './src/dungeon';
 import { CELL, CELLS } from './src/dungeon-layout';
 import { Sfx } from './src/sfx';
 import {
-  itemTooltipLines, rollDrop,
-  RARITY_META, SLOT_META, SLOT_ORDER,
+  rollDrop,
+  RARITY_META,
   type Equipment, type ItemInstance,
 } from './src/items';
 import { installInventory } from './src/inventory-ui';
@@ -125,6 +125,12 @@ import {
 import { installAutomap } from './src/automap';
 import { createUiLayerManager, type MajorPanel } from './src/ui-layer-manager';
 import { installFatalOverlay } from './src/fatal-overlay';
+import { ensureUiStyles } from './src/ui-styles';
+import { installUiCursors } from './src/ui-cursors';
+import { installUiTooltip } from './src/ui-tooltip';
+import { installUiTransition } from './src/ui-transition';
+import { installCutsceneUi } from './src/cutscene-ui';
+import { sampleCutscene, type CutsceneScript } from './src/cutscene';
 import { ASHEN_REACH_BOUNDS, installWildTerrain } from './src/wild-terrain';
 import { bgmPhaseForMusic, installBgm, type BgmHandle } from './src/bgm';
 import { ensureShadowCasters } from './src/ensure-shadow-casters';
@@ -266,6 +272,19 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // to uiMount (not document.body); non-DOM side effects register via onCleanup.
   const uiMount: HTMLElement = ctx?.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
   const onCleanup = ctx?.registerCleanup ?? (() => {});
+
+  // ── shared UI layer (UI-CUTSCENE-UPGRADE-PLAN Phase A1) ─────────────────
+  // Fonts/styles, gauntlet cursors, global tooltip, screen transitions. These
+  // span shell + in-game, so they install before either and die with cleanup.
+  ensureUiStyles();
+  const uiCursors = installUiCursors();
+  const uiTooltip = installUiTooltip(uiMount);
+  const uiTransition = installUiTransition(uiMount);
+  onCleanup(() => {
+    uiCursors.dispose();
+    uiTooltip.dispose();
+    uiTransition.dispose();
+  });
 
   let disposeFatal: (() => void) | null = null;
   onCleanup(() => disposeFatal?.());
@@ -610,7 +629,19 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const player = createPlayerFromCombatStats(combatStats);
     const fx = new FxSystem(world, app);
     fx.setCampfire(0, 0.9, 0);      // pack's CampfireGlow sits at (0, 0.7, 0)
-    const hud = installHud(uiMount);
+    const hud = installHud(uiMount, {
+      tooltip: uiTooltip,
+      onQuickAction: (action) => {
+        if (action === 'map') {
+          uiLayers.closeAll();
+          automap.toggle();
+          return;
+        }
+        toggleMajorPanel(action as MajorPanel);
+      },
+    });
+    const cutsceneUi = installCutsceneUi(uiMount);
+    onCleanup(() => cutsceneUi.dispose());
     const loot = new LootSystem(world);
     const sfx = new Sfx();
     sfx.install();
@@ -798,15 +829,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       skills.applyCombatStats(combatStats);
       moveMul = combatStats.moveSpeed;
       const eq = equipment as Equipment;
-      hud.setEquipment(SLOT_ORDER.map((s): EquipSlotState => ({
-        icon: SLOT_META[s].icon,
-        color: eq[s] ? RARITY_META[eq[s]!.rarity].color : null,
-        empty: !eq[s],
-        slotLabel: SLOT_META[s].label,
-        tooltip: eq[s]
-          ? itemTooltipLines(eq[s]!, level).map(([t]) => t).join('\n')
-          : `${SLOT_META[s].label}（空）`,
-      })));
       inv.update(eq, bag as Array<ItemInstance | null>, level, gold);
       hud.setGold(gold);
       refreshCharacterPanel();
@@ -919,18 +941,23 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         applyEquipment();
         persistCharacter();
       },
-    }, uiMount);
+    }, uiMount, { tooltip: uiTooltip });
     const charPanel = installCharacterPanel(uiMount);
     onCleanup(() => { hud.dispose(); inv.dispose(); charPanel.dispose(); });
-    onCleanup(() => { document.body.style.cursor = ''; canvas.style.cursor = ''; });
 
     const refreshCharacterPanel = (): void => {
       const snap = character.snapshot();
+      const equipScore = Object.values(snap.equipment)
+        .filter((it): it is ItemInstance => !!it)
+        .reduce((sum, it) => sum + it.score, 0);
+      const skillInvested = Object.values(snap.skillRanks).reduce((a, b) => a + Math.max(0, b), 0);
       charPanel.update({
         playerName: snap.identity.playerName,
         className: classDef.name,
         level: snap.level,
         unspentSkillPoints: snap.unspentSkillPoints,
+        equipScore,
+        skillInvested,
         stats: combatStats,
       });
     };
@@ -1124,6 +1151,47 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         [state.px, 0, state.pz],
         { ...arpgPreset, distance: arpgZoomDistance },
       );
+
+    // ── cutscene playback (cutscene.ts timeline + cutscene-ui.ts chrome) ────
+    // Input blocking rides the UiLayerManager funnel (registered below);
+    // camera writes replace the per-frame follow in the update loop while active.
+    // Wall-clock timed (not dt-summed) — a NaN/dropped dt can never wedge it.
+    let cutscene: { script: CutsceneScript; startMs: number } | null = null;
+    const endCutscene = (): void => {
+      if (!cutscene) return;
+      cutscene = null;
+      cutsceneUi.reset();
+      uiLayers.close('cutscene');
+      camBlend = null;
+      camRig = makeArpgAtPlayer();
+      rs.applyCamera();
+    };
+    const playCutscene = (script: CutsceneScript): void => {
+      if (cutscene) return;
+      cutscene = { script, startMs: performance.now() };
+      uiLayers.open('cutscene'); // worldInputBlocked ← onOwnershipChange funnel
+    };
+    /** Camp-arrival cinematic: black → wide push-in → letterbox off (skippable). */
+    const buildCampIntro = (): CutsceneScript => {
+      const arpg = makeArpgAtPlayer();
+      const wide = snapCameraFocus({ ...arpg, distance: 24 }, [state.px, 0, state.pz]);
+      return {
+        id: 'camp-intro',
+        skippable: true,
+        duration: 3.4,
+        initialFade: 1,
+        initialCamera: wide,
+        cameraKeys: [{ at: 0, dur: 3.0, pose: arpg }],
+        fades: [{ at: 0, to: 0, dur: 1.4 }],
+        letterbox: [
+          { at: 0, on: true },
+          { at: 2.7, on: false },
+        ],
+        captions: [
+          { at: 0.7, dur: 2.1, text: '余烬哨站', sub: 'Cinderwatch · 第一幕' },
+        ],
+      };
+    };
 
     // ── lighting director ─────────────────────────────────────────────────
     // ONE world, TWO looks. The URP forward path renders at most 4 point lights
@@ -1374,28 +1442,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       return { x: dx / len, z: dz / len };
     };
 
-    // ── mouse policy: NO pointer lock, custom cursor ──────────────────────
+    // ── mouse policy: NO pointer lock, gauntlet cursor ─────────────────────
     // The cursor stays free and visible (forge.json pointerLock:false keeps
     // the host shell from grabbing it either). Aiming reads the cursor's
-    // ground point from the camera rig. A custom ember-crosshair cursor brands
-    // the whole game window.
+    // ground point from the camera rig. Cursor skin is the ui-cursors.ts
+    // gauntlet stylesheet installed at bootstrap (shell + in-game unified).
     const releaseHostCapture = () => {
       try { window.parent.postMessage({ type: 'fx-pointer-capture', capture: false }, '*'); } catch { /* not embedded */ }
     };
     releaseHostCapture();                    // clear any stale grab from before
     try { document.exitPointerLock?.(); } catch { /* ignore */ }
-    const CURSOR_SVG = encodeURIComponent(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">` +
-      `<g fill="none" stroke="#1a0c06" stroke-width="4" stroke-linecap="round">` +
-      `<path d="M14 3v6M14 19v6M3 14h6M19 14h6"/></g>` +
-      `<g fill="none" stroke="#ffb15e" stroke-width="2" stroke-linecap="round">` +
-      `<path d="M14 3v6M14 19v6M3 14h6M19 14h6"/></g>` +
-      `<circle cx="14" cy="14" r="2.6" fill="#ff5a1f" stroke="#1a0c06" stroke-width="1.2"/>` +
-      `</svg>`,
-    );
-    const GAME_CURSOR = `url("data:image/svg+xml,${CURSOR_SVG}") 14 14, crosshair`;
-    document.body.style.cursor = GAME_CURSOR;
-    canvas.style.cursor = GAME_CURSOR;
 
     // ── clip helpers ──────────────────────────────────────────────────────
     // mage_soell_cast_6 has a long wind-up + follow-through; 2.6× keeps the whole
@@ -1520,7 +1576,23 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           empty: false,
         };
       });
-      hud.setSkills(slots);
+      // Belt continuation — 5 = life potion, 6 = mana potion (domain counters,
+      // NOT hotbar slots; see UI-CUTSCENE-UPGRADE-PLAN §R2).
+      const belt: SkillSlotState[] = (['life', 'mana'] as const).map((kind, i) => ({
+        icon: '',
+        name: kind === 'life' ? '生命药水' : '法力药水',
+        key: `${i + 5}`,
+        manaCost: 0,
+        cooldownPct: 0,
+        locked: false,
+        unlockLevel: 0,
+        affordable: true,
+        selected: false,
+        empty: snap.potions[kind] <= 0,
+        count: snap.potions[kind],
+        potion: kind,
+      }));
+      hud.setSkills([...slots, ...belt]);
     };
     const refreshQuest = (): void => {
       const st = questStatus();
@@ -1581,6 +1653,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     // ── campaign / den handoff ───────────────────────────────────────────
     let inGame = startedInDen;
+    let queuedCampIntro = false;
     if (!startedInDen) {
       hud.hide();
       inv.hide();
@@ -1598,7 +1671,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       shellPhase = 'inGame';
       inGame = true;
       hud.show();
-      hud.showArea('余烬哨站', 'Cinderwatch · 第一幕');
+      queuedCampIntro = true; // area title rides the intro cutscene caption instead
     }
     if (degraded.length > 0) {
       hud.banner(`部分资产降级：${degraded.join('、')}`, '#ffb070', 5000);
@@ -1702,17 +1775,54 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         if (s) hud.floatText(`+${gained} 金币`, s.x, s.y, { color: '#ffcf40', size: 14 });
         persistCharacter();
       } else if (ev.kind === 'healPotion') {
-        player.hp = Math.min(player.maxHp, player.hp + ev.amount);
-        sfx.play('potion');
-        if (s) hud.floatText(`+${ev.amount} 生命`, s.x, s.y, { color: '#ff6a6a', size: 15 });
-        fx.rise(state.px, 0.4, state.pz, 'heal', 6, 0.4);
+        // Storable belt stock first; instant heal only when the belt is full.
+        const res = character.dispatch({ op: 'add-potion', kind: 'life' });
+        if (res.ok && (res.potionAdded ?? 0) > 0) {
+          sfx.play('potion');
+          if (s) hud.floatText('生命药水 +1', s.x, s.y, { color: '#ff6a6a', size: 14 });
+          refreshSkillBar();
+          persistCharacter();
+        } else {
+          player.hp = Math.min(player.maxHp, player.hp + ev.amount);
+          sfx.play('potion');
+          if (s) hud.floatText(`+${ev.amount} 生命`, s.x, s.y, { color: '#ff6a6a', size: 15 });
+          fx.rise(state.px, 0.4, state.pz, 'heal', 6, 0.4);
+        }
       } else if (ev.kind === 'item' && ev.item) {
         takeItem(ev.item, s?.x ?? null, s?.y ?? null);
       } else if (ev.kind === 'manaPotion') {
-        player.mana = Math.min(player.maxMana, player.mana + ev.amount);
-        sfx.play('potion');
-        if (s) hud.floatText(`+${ev.amount} 法力`, s.x, s.y, { color: '#7da2ff', size: 15 });
+        const res = character.dispatch({ op: 'add-potion', kind: 'mana' });
+        if (res.ok && (res.potionAdded ?? 0) > 0) {
+          sfx.play('potion');
+          if (s) hud.floatText('法力药水 +1', s.x, s.y, { color: '#7da2ff', size: 14 });
+          refreshSkillBar();
+          persistCharacter();
+        } else {
+          player.mana = Math.min(player.maxMana, player.mana + ev.amount);
+          sfx.play('potion');
+          if (s) hud.floatText(`+${ev.amount} 法力`, s.x, s.y, { color: '#7da2ff', size: 15 });
+        }
       }
+    };
+
+    /** Belt potion hotkeys (Digit5/6) — domain consumes, runtime heals. */
+    const usePotion = (kind: 'life' | 'mana'): void => {
+      const res = character.dispatch({ op: 'use-potion', kind });
+      if (!res.ok) {
+        hud.banner(kind === 'life' ? '没有生命药水了' : '没有法力药水了', '#ff6a6a', 900);
+        return;
+      }
+      const restore = res.potionUsed?.restore ?? 0;
+      if (kind === 'life') {
+        player.hp = Math.min(player.maxHp, player.hp + restore);
+        fx.rise(state.px, 0.4, state.pz, 'heal', 6, 0.4);
+      } else {
+        player.mana = Math.min(player.maxMana, player.mana + restore);
+      }
+      sfx.play('potion');
+      hud.setOrbs(player.hp, player.maxHp, player.mana, player.maxMana);
+      refreshSkillBar();
+      persistCharacter();
     };
 
     // Filled when UiLayerManager / dialogue UI are installed below.
@@ -1946,6 +2056,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       show: () => questLog.setOpen(true),
       hide: () => questLog.setOpen(false),
     });
+    // Cutscene surface is a no-op — chrome is driven per-frame from the update
+    // loop; registration exists for exclusivity + the input-block funnel.
+    uiLayers.register('cutscene', { show: () => {}, hide: () => {} });
+    if (queuedCampIntro) {
+      queuedCampIntro = false;
+      playCutscene(buildCampIntro());
+    }
     refreshQuestLog();
     refreshCharacterPanel();
     onCleanup(() => {
@@ -1954,6 +2071,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       questLog.dispose();
     });
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).uiLayers = uiLayers;
+    // Dev/QA hook: replay the camp-arrival cinematic (used by browser walkthroughs).
+    ((window as unknown as { __hf: Record<string, unknown> }).__hf).playCampIntro = () => playCutscene(buildCampIntro());
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).moveIntent = {
       get: () => moveIntent,
       clear: clearMoveIntent,
@@ -2033,6 +2152,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         if (e.code === 'Digit2') selectHotbarSlot(1);
         if (e.code === 'Digit3') selectHotbarSlot(2);
         if (e.code === 'Digit4') selectHotbarSlot(3);
+        if (e.code === 'Digit5') usePotion('life');
+        if (e.code === 'Digit6') usePotion('mana');
       }
       if (e.code === 'KeyR' && player.dead) {
         const failedAreaId =
@@ -2106,6 +2227,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         refreshQuest();
       }
       if (e.key === 'Escape') {
+        if (cutscene) {
+          if (cutscene.script.skippable) endCutscene();
+          return;
+        }
         if (automap.isOpen()) { automap.setOpen(false); return; }
         if (uiLayers.active() !== null) { uiLayers.closeAll(); return; }
       }
@@ -2290,7 +2415,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       }
 
       // MovementIntent authority: WASD vector replaces point/target; panels clear.
-      const allowWorldMove = !worldInputBlocked;
+      // Transition cover (zone card / fade) also freezes locomotion while black.
+      const allowWorldMove = !worldInputBlocked && !uiTransition.coverUp();
       const sprint = allowWorldMove && (!!keys['ShiftLeft'] || !!keys['ShiftRight']);
       const spd = (sprint ? SPRINT : SPEED) * moveMul * dt;
       let mvx = 0;
@@ -2479,6 +2605,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
             camRig = snapCameraFocus(makeArpgAtPlayer(), [state.px, 0, state.pz]);
             rs.applyCamera();
             sfx.play('portal');
+            const denDef = getAreaDef('slagdeep-hollow');
+            void uiTransition.zoneCard(denDef.displayName, {
+              sub: denDef.displayNameEn,
+              tip: '净化窟底的污秽',
+            });
             enterArea('den');
           }
         } else if (area === 'den' && dExit < 1.5) {
@@ -2491,6 +2622,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           camRig = snapCameraFocus(makeArpgAtPlayer(), [state.px, 0, state.pz]);
           rs.applyCamera();
           sfx.play('portal');
+          const wildDef = getAreaDef('ashen-reach');
+          void uiTransition.zoneCard(wildDef.displayName, {
+            sub: wildDef.displayNameEn,
+            tip: '返回烬守营地之路',
+          });
           enterArea('wild');
         }
       }
@@ -2569,6 +2705,18 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
       // ── camera (rig owns pose + FOV; applyCamera owns Camera component) ──
       const prevFov = camRig.verticalFovRad;
+      if (cutscene) {
+        // Timeline owns the rig while a cutscene plays (follow/zoom suspended).
+        pendingShake = [0, 0, 0];
+        orbitYawAcc = 0;
+        orbitPitchAcc = 0;
+        const frame = sampleCutscene(cutscene.script, (performance.now() - cutscene.startMs) / 1000);
+        cutsceneUi.setLetterbox(frame.letterbox);
+        cutsceneUi.setFade(frame.fade);
+        cutsceneUi.setCaption(frame.caption);
+        camRig = frame.camera;
+        if (frame.done) endCutscene();
+      } else {
       const shakeImpulse = pendingShake;
       pendingShake = [0, 0, 0];
       const orbitYaw = orbitYawAcc;
@@ -2604,6 +2752,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         }
       } else {
         camRig = ideal;
+      }
       }
       if (camRig.verticalFovRad !== prevFov) rs.applyCamera();
       const cq = cameraQuat(camRig.yaw, camRig.pitch);
@@ -2688,6 +2837,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     };
     const previewClassId = (classId: ClassId): ClassId =>
       (CLASS_DEFS[classId] ? classId : 'sorceress');
+    // Shell navigation fades through black (ui-transition.ts; cover sits above
+    // the shell z-200). Loading cover handles the charSelected→inGame leg.
+    const fadeNav = (fn: () => void): void => {
+      void uiTransition.throughBlack(fn, { fadeMs: 260, holdMs: 60 });
+    };
     const openCharSelect = (): void => {
       charList?.hide();
       titleRs?.close();
@@ -2707,13 +2861,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     shell = installShell(uiMount, {
       onNewGame: () => {
         if (listCharacters().length >= MAX_CHARACTERS) {
-          openCharList();
+          fadeNav(openCharList);
           return;
         }
-        openCharSelect();
+        fadeNav(openCharSelect);
       },
       onContinue: () => {
-        openCharList();
+        fadeNav(openCharList);
       },
       onSettings: () => { titleRs?.open(); },
       hasSave: () => listCharacters().length > 0,
@@ -2721,11 +2875,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     charSelect = installCharSelect(shell.root, {
       onConfirm: acceptSelection,
       onBack: () => {
-        heroPreview?.hide();
-        dimAtmosphereForPreview(false);
-        charSelect!.hide();
-        shell!.goTo('title');
-        shellPhase = 'title';
+        fadeNav(() => {
+          heroPreview?.hide();
+          dimAtmosphereForPreview(false);
+          charSelect!.hide();
+          shell!.goTo('title');
+          shellPhase = 'title';
+        });
       },
       onClassChange: (classId: ClassId) => {
         void heroPreview?.show(previewClassId(classId));
@@ -2734,13 +2890,15 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     charSelect.hide();
     charList = installCharList(shell.root, {
       onEnterGame: acceptSelection,
-      onNewChar: () => { openCharSelect(); },
+      onNewChar: () => { fadeNav(openCharSelect); },
       onBack: () => {
-        heroPreview?.hide();
-        dimAtmosphereForPreview(false);
-        charList!.hide();
-        shell!.goTo('title');
-        shellPhase = 'title';
+        fadeNav(() => {
+          heroPreview?.hide();
+          dimAtmosphereForPreview(false);
+          charList!.hide();
+          shell!.goTo('title');
+          shellPhase = 'title';
+        });
       },
       onSelectionChange: (rec) => {
         if (!rec) {

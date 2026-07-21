@@ -1,5 +1,5 @@
 // Terminal boot failure panel — uiRoot-mounted, covers Title / loading / HUD.
-import { FONT_UI } from './ui-theme';
+import { FONT_UI, Ui, Z } from './ui-theme';
 // Used when camp scene or hero assets are missing; den launcher has no shell
 // so this helper must work with mount === body as well.
 
@@ -14,20 +14,20 @@ export function installFatalOverlay(
   const scoped = mount !== document.body;
   const root = document.createElement('div');
   root.id = FATAL_ID;
-  root.style.cssText = `position:${scoped ? 'absolute' : 'fixed'};inset:0;z-index:260;` +
+  root.style.cssText = `position:${scoped ? 'absolute' : 'fixed'};inset:0;z-index:${Z.fatal};` +
     'display:flex;align-items:center;justify-content:center;padding:24px;' +
-    'box-sizing:border-box;background:rgba(8,5,5,.96);pointer-events:auto;' +
-    `font-family:${FONT_UI};color:#e8d8c0;`;
+    `box-sizing:border-box;background:${Ui.inkPanel};pointer-events:auto;` +
+    `font-family:${FONT_UI};color:${Ui.text};`;
 
   const panel = document.createElement('div');
-  panel.style.cssText = 'width:min(560px,92%);padding:28px;border:1px solid #7b372b;' +
-    'background:#170d0b;box-shadow:0 18px 70px #000;text-align:center;';
+  panel.style.cssText = `width:min(560px,92%);padding:28px;border:1px solid ${Ui.crimsonSoft};` +
+    `background:${Ui.inkWell};box-shadow:0 18px 70px #000;text-align:center;`;
   const heading = document.createElement('h2');
   heading.textContent = title;
-  heading.style.cssText = 'margin:0 0 14px;color:#ff8b70;';
+  heading.style.cssText = `margin:0 0 14px;color:${Ui.danger};`;
   const body = document.createElement('pre');
   body.textContent = detail;
-  body.style.cssText = 'white-space:pre-wrap;word-break:break-word;color:#c9b6aa;text-align:left;';
+  body.style.cssText = `white-space:pre-wrap;word-break:break-word;color:${Ui.textMuted};text-align:left;`;
   const reload = document.createElement('button');
   reload.type = 'button';
   reload.textContent = '重新加载';

@@ -1,4 +1,8 @@
-// Three-branch Sorceress skill tree UI (Spec §7).
+// Three-branch Sorceress skill tree UI (Spec §7) — 1:1 aidiablo D2R look:
+// stone slab with carved grooves, right-side vertical tabs + points box,
+// 54px gradient-framed nodes, right-angle metal-pipe prereq connectors,
+// green learnable pulse, dark-blue hover tooltip, right-click invest.
+// DOM implementation (no canvas) — same visuals, hellforge install* contract.
 // Invest / respec / hotbar assign — exclusive major panel via UiLayerManager.
 
 import type { ActiveSkillId, SkillNodeId } from './content-ids';
@@ -18,7 +22,11 @@ import {
   layoutPixels,
   prereqEdges,
 } from './skill-tree-layout';
-import { FONT_UI, Ui, panelChrome, panelScrollShellCss, panelTitleStyle } from './ui-theme';
+import {
+  FONT_UI, Ui, Z, cornerOrnamentsHtml, d2StonePanelCss, panelScrollShellCss,
+} from './ui-theme';
+import { skillIconImg } from './ui-icons';
+import { ensureUiStyles } from './ui-styles';
 
 export interface SkillNodeViewModel {
   readonly id: SkillNodeId;
@@ -62,14 +70,28 @@ export interface SkillPanelHandle {
 }
 
 const PANEL_ID = 'hellforge-skill-panel';
-const NODE_SIZE = 56;
+const NODE_SIZE = 54;
 
-const STATE_STYLE: Record<NodeAvailability, { border: string; bg: string; opacity: string }> = {
-  locked: { border: Ui.skillLocked, bg: Ui.inkWell, opacity: '0.55' },
-  available: { border: Ui.skillAvailable, bg: Ui.goldFill, opacity: '1' },
-  invested: { border: Ui.skillInvested, bg: 'rgba(60,44,16,0.95)', opacity: '1' },
-  maxed: { border: Ui.skillMaxed, bg: 'rgba(80,56,18,0.98)', opacity: '1' },
+/** aidiablo frame recipes per node state (five-stop gradients). */
+const FRAME_GRADIENT: Record<NodeAvailability, string> = {
+  locked: 'linear-gradient(135deg,#3a3a38,#2a2a28,#333332,#2a2a28,#3a3a38)',
+  available: 'linear-gradient(135deg,#8a7848,#6a5830,#7a6838,#6a5830,#8a7848)',
+  invested: 'linear-gradient(135deg,#6aaa6a,#4a7a4a,#5a905a,#4a7a4a,#6aaa6a)',
+  maxed: 'linear-gradient(135deg,#d4b058,#a88838,#b89848,#a08038,#d4b058)',
 };
+
+function branchGlyphSvg(branch: SkillBranch, sizePx: number, color: string): string {
+  let body = '';
+  if (branch === 'flame') {
+    body = `<path d="M12 2 C12 8 6 11 6 16 a6 6 0 0 0 12 0 c0-5-6-8-6-14z" fill="${color}"/>`;
+  } else if (branch === 'frost') {
+    body = `<g stroke="${color}" stroke-width="1.8" stroke-linecap="round">` +
+      `<path d="M12 3 V21 M4 7.5 L20 16.5 M20 7.5 L4 16.5"/></g>`;
+  } else {
+    body = `<path d="M13 2 L7 13 h4 L10 22 L17 9 h-4 z" fill="${color}"/>`;
+  }
+  return `<svg viewBox="0 0 24 24" width="${sizePx}" height="${sizePx}" aria-hidden="true">${body}</svg>`;
+}
 
 function nextRankHint(nodeId: SkillNodeId, rank: number, maxRank: number): string | null {
   if (rank >= maxRank) return null;
@@ -151,117 +173,150 @@ export function buildSkillTreeViewModel(input: {
 
 export function installSkillPanel(mount: HTMLElement, cb: SkillPanelCallbacks): SkillPanelHandle {
   document.getElementById(PANEL_ID)?.remove();
+  ensureUiStyles();
   const scoped = mount !== document.body;
 
   const root = document.createElement('div');
   root.id = PANEL_ID;
-  root.style.cssText = `position:${scoped ? 'absolute' : 'fixed'};inset:0;z-index:120;display:none;` +
-    `pointer-events:none;overflow:hidden;background:rgba(4,3,2,0.55);`;
+  root.style.cssText = `position:${scoped ? 'absolute' : 'fixed'};inset:0;z-index:${Z.skillPanel};display:none;` +
+    'pointer-events:auto;overflow:hidden;background:rgba(4,3,2,0.6);';
+  // Click empty space closes (aidiablo behavior).
+  root.addEventListener('click', (e) => {
+    if (e.target === root) handle.setOpen(false);
+  });
 
+  // ── stone slab with carved grooves ───────────────────────────────────────
   const panel = document.createElement('div');
   panel.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);' +
-    'width:min(720px,94%);height:min(560px,86%);pointer-events:auto;display:flex;flex-direction:column;' +
-    'box-sizing:border-box;border-radius:10px;overflow:hidden;' +
-    panelScrollShellCss(560, 48) +
-    panelChrome(`font:600 13px ${FONT_UI};`);
+    'width:min(560px,94%);height:min(740px,92%);display:flex;box-sizing:border-box;' +
+    d2StonePanelCss() +
+    'border:6px solid;border-image:linear-gradient(180deg,#c4a868 0%,#a89058 8%,#8a7848 20%,#9a8858 50%,#8a7848 80%,#a89058 92%,#c4a868 100%) 1;' +
+    'box-shadow:inset 0 0 0 2px #121010,inset 0 0 30px rgba(0,0,0,0.6),0 0 20px rgba(0,0,0,0.8);';
+  panel.insertAdjacentHTML('beforeend', cornerOrnamentsHtml(4, 20));
+  panel.addEventListener('click', (e) => e.stopPropagation());
+  // carved horizontal grooves (3-line carve every ~75px)
+  const grooves = document.createElement('div');
+  grooves.style.cssText = 'position:absolute;inset:0;pointer-events:none;' +
+    'background:repeating-linear-gradient(180deg,' +
+    'rgba(8,6,4,0.5) 0px,rgba(8,6,4,0.5) 1px,transparent 1px,transparent 2px,' +
+    '#1a1816 2px,#1a1816 4px,transparent 4px,transparent 5px,' +
+    'rgba(100,92,80,0.25) 5px,rgba(100,92,80,0.25) 6px,transparent 6px,transparent 75px);';
+  panel.appendChild(grooves);
 
-  // Header
-  const header = document.createElement('div');
-  header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;' +
-    'padding:14px 18px 10px;flex:none;gap:12px;';
-  const titleLeft = document.createElement('div');
-  titleLeft.style.cssText = panelTitleStyle();
-  titleLeft.textContent = '技能树';
-  const pointsEl = document.createElement('div');
-  pointsEl.style.cssText = `font:700 12px ${FONT_UI};color:${Ui.goldBright};letter-spacing:1px;`;
-  const closeHint = document.createElement('div');
-  closeHint.textContent = 'K 关闭';
-  closeHint.style.cssText = `font:600 11px ${FONT_UI};color:${Ui.textDim};`;
-  header.append(titleLeft, pointsEl, closeHint);
+  // ── left: tree canvas area ───────────────────────────────────────────────
+  const canvasWrap = document.createElement('div');
+  canvasWrap.style.cssText = 'position:relative;flex:1;min-width:0;margin:14px 0 14px 14px;';
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;';
+  const nodesLayer = document.createElement('div');
+  nodesLayer.style.cssText = 'position:absolute;inset:0;';
+  canvasWrap.append(svg, nodesLayer);
 
-  // Tabs
-  const tabs = document.createElement('div');
-  tabs.style.cssText = 'display:flex;gap:8px;padding:0 18px 10px;flex:none;';
+  // ── right: points box + vertical tabs + actions ──────────────────────────
+  const sideCol = document.createElement('div');
+  sideCol.style.cssText = 'flex:none;width:96px;margin:14px 14px 14px 6px;display:flex;flex-direction:column;gap:8px;';
+
+  const pointsBox = document.createElement('div');
+  pointsBox.style.cssText = 'text-align:center;padding:8px 4px;background:rgba(0,0,0,0.35);' +
+    `border:1px solid #4a4438;border-radius:3px;`;
+  sideCol.appendChild(pointsBox);
+
   const tabBtns = new Map<SkillBranch, HTMLButtonElement>();
   let activeBranch: SkillBranch = 'frost';
-
   for (const tab of BRANCH_TABS) {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.textContent = tab.label;
     btn.dataset.branch = tab.id;
-    btn.style.cssText = 'padding:6px 14px;cursor:pointer;border-radius:4px;' +
-      `font:700 12px ${FONT_UI};letter-spacing:2px;`;
+    btn.style.cssText = 'position:relative;padding:9px 4px;cursor:pointer;border-radius:3px;' +
+      `font:700 13px ${FONT_UI};letter-spacing:2px;`;
     btn.addEventListener('click', () => {
       activeBranch = tab.id;
       refresh();
     });
     tabBtns.set(tab.id, btn);
-    tabs.appendChild(btn);
+    sideCol.appendChild(btn);
   }
 
-  // Canvas
-  const canvasWrap = document.createElement('div');
-  canvasWrap.style.cssText = 'position:relative;flex:1;min-height:0;margin:0 14px;' +
-    `border:1px solid ${Ui.goldLineSoft};border-radius:6px;background:${Ui.ink};overflow:hidden;`;
-
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;';
-  const nodesLayer = document.createElement('div');
-  nodesLayer.style.cssText = 'position:absolute;inset:0;';
-
-  const detail = document.createElement('div');
-  detail.style.cssText = 'flex:none;padding:10px 18px 8px;min-height:88px;' +
-    `border-top:1px solid ${Ui.goldLineSoft};font:500 12px ${FONT_UI};color:${Ui.textMuted};`;
-
-  // Footer actions
-  const footer = document.createElement('div');
-  footer.style.cssText = 'display:flex;justify-content:space-between;align-items:center;' +
-    'gap:10px;padding:8px 18px 14px;flex:none;';
   const assignRow = document.createElement('div');
-  assignRow.style.cssText = 'display:flex;gap:6px;align-items:center;flex-wrap:wrap;';
+  assignRow.style.cssText = 'display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin-top:auto;';
   const respecBtn = document.createElement('button');
   respecBtn.type = 'button';
   respecBtn.textContent = '营地重置';
-  respecBtn.style.cssText = 'padding:7px 14px;cursor:pointer;border-radius:4px;' +
-    `font:700 12px ${FONT_UI};border:1px solid ${Ui.goldDim};background:${Ui.inkWell};color:${Ui.goldBright};`;
+  respecBtn.style.cssText = 'padding:7px 6px;cursor:pointer;border-radius:3px;width:100%;' +
+    `font:700 12px ${FONT_UI};border:1px solid ${Ui.goldDim};background:rgba(18,12,6,0.85);color:${Ui.goldBright};`;
+  sideCol.append(assignRow, respecBtn);
+
+  panel.append(canvasWrap, sideCol);
+  root.appendChild(panel);
+
+  // ── dark-blue hover tooltip (panel-local, aidiablo chrome) ───────────────
+  const tip = document.createElement('div');
+  tip.style.cssText = 'position:absolute;z-index:10;display:none;pointer-events:none;' +
+    'min-width:220px;max-width:320px;padding:12px 16px;' +
+    'background:linear-gradient(180deg,#100e1a 0%,#0a0816 40%,#060410 100%);' +
+    'border:1px solid #2a4878;outline:1px solid #14203a;outline-offset:2px;' +
+    'box-shadow:0 0 24px rgba(0,0,0,0.95),inset 0 0 40px rgba(15,20,50,0.4),inset 0 1px 0 rgba(80,100,160,0.2);' +
+    `font:500 12px ${FONT_UI};color:#c0c0c0;line-height:1.5;`;
+  panel.appendChild(tip);
+  const showTip = (node: SkillNodeViewModel, e: MouseEvent): void => {
+    const sec = (s: string): string => `<div style="border-top:1px solid #2a3a5a;margin-top:6px;padding-top:6px;">${s}</div>`;
+    tip.innerHTML =
+      `<div style="font-size:14px;font-weight:bold;color:#ffc000;border-bottom:1px solid #3a4a6a;padding-bottom:4px;">${node.nameZh} · ${node.name}</div>` +
+      `<div style="font-size:11px;color:#8888ff;margin-top:4px;">${node.grantsActive ? '主动技能' : '被动'}</div>` +
+      (node.requiredLevel > 1
+        ? `<div style="margin-top:4px;color:${node.requiredLevel > (cb.getViewModel().level) ? '#ff4444' : '#aaaaaa'};">需要角色等级 ${node.requiredLevel}</div>`
+        : '') +
+      (node.currentEffect.length ? sec(`<div style="color:#ffc000;margin-bottom:2px;">当前效果</div>` +
+        node.currentEffect.map((l) => `<div style="margin-left:8px;">${escapeHtml(l)}</div>`).join('')) : '') +
+      (node.nextRankDelta
+        ? sec(`<div style="background:rgba(20,30,60,0.4);padding:4px 6px;color:#4488cc;">${escapeHtml(node.nextRankDelta)}</div>`)
+        : sec('<div style="color:#888;">已满级</div>')) +
+      (node.canInvest
+        ? sec('<div style="color:#20e820;font-size:10px;">左键/右键 投入 1 点</div>')
+        : '');
+    tip.style.display = 'block';
+    const rect = panel.getBoundingClientRect();
+    let x = e.clientX - rect.left + 20;
+    let y = e.clientY - rect.top + 10;
+    if (x + tip.offsetWidth > rect.width - 8) x = e.clientX - rect.left - tip.offsetWidth - 12;
+    if (y + tip.offsetHeight > rect.height - 8) y = rect.height - tip.offsetHeight - 8;
+    tip.style.left = `${Math.max(4, x)}px`;
+    tip.style.top = `${Math.max(4, y)}px`;
+  };
+  const hideTip = (): void => { tip.style.display = 'none'; };
 
   let selectedNode: SkillNodeId | null = null;
-
   respecBtn.addEventListener('click', () => {
     const res = cb.respec();
-    if (!res.ok) {
-      detail.textContent = res.reason === 'not-in-camp'
-        ? '只能在烬守营地重置技能点'
-        : `无法重置：${res.reason}`;
-      return;
-    }
+    if (!res.ok) return;
     selectedNode = null;
     refresh();
   });
 
-  footer.append(assignRow, respecBtn);
-  canvasWrap.append(svg, nodesLayer);
-  panel.append(header, tabs, canvasWrap, detail, footer);
-  root.appendChild(panel);
   mount.appendChild(root);
 
   let open = false;
 
-  const paintTabs = (): void => {
+  const paintTabs = (vm: SkillTreeViewModel): void => {
     for (const [id, btn] of tabBtns) {
       const on = id === activeBranch;
-      btn.style.background = on ? Ui.goldFill : Ui.inkWell;
-      btn.style.border = `1px solid ${on ? Ui.gold : Ui.goldLineSoft}`;
-      btn.style.color = on ? Ui.goldBright : Ui.textDim;
+      const label = BRANCH_TABS.find((t) => t.id === id)?.label ?? id;
+      btn.innerHTML =
+        (on ? '<span style="position:absolute;left:-7px;top:50%;transform:translateY(-50%);' +
+          'border-top:5px solid transparent;border-bottom:5px solid transparent;' +
+          'border-right:7px solid #d4b878;"></span>' : '') +
+        `<span style="color:${on ? '#f0c840' : '#9a948e'};">${label}</span>`;
+      btn.style.background = on ? 'linear-gradient(90deg,#5a4830,#4a3a25,#5a4830)' : 'linear-gradient(90deg,#343230,#2a2826,#343230)';
+      btn.style.border = on ? '2px solid #d4b878' : '1px solid #4a4438';
     }
+    void vm;
   };
 
   const renderAssign = (node: SkillNodeViewModel | null, vm: SkillTreeViewModel): void => {
     assignRow.innerHTML = '';
     const label = document.createElement('span');
-    label.textContent = '分配快捷栏';
-    label.style.cssText = `color:${Ui.textDim};font-size:11px;margin-right:4px;`;
+    label.textContent = '快捷';
+    label.style.cssText = 'color:#8a7860;font-size:10px;';
     assignRow.appendChild(label);
     for (const slot of [0, 1, 2, 3] as const) {
       const b = document.createElement('button');
@@ -269,128 +324,161 @@ export function installSkillPanel(mount: HTMLElement, cb: SkillPanelCallbacks): 
       b.textContent = `${slot + 1}`;
       const selected = vm.selectedHotbarSlot === slot;
       const filled = vm.hotbar[slot];
-      b.style.cssText = 'width:28px;height:28px;cursor:pointer;border-radius:4px;' +
-        `font:700 12px ${FONT_UI};` +
-        `border:1px solid ${selected ? Ui.goldBright : Ui.goldLineSoft};` +
-        `background:${filled ? Ui.goldFill : Ui.inkWell};` +
-        `color:${selected ? Ui.goldBright : Ui.text};` +
-        (selected ? `box-shadow:0 0 8px rgba(245,216,120,0.35);` : '');
-      b.title = filled ? `槽 ${slot + 1}: ${filled}` : `槽 ${slot + 1}: 空`;
+      b.style.cssText = 'width:22px;height:22px;cursor:pointer;border-radius:3px;font-size:10px;' +
+        `border:1px solid ${selected ? Ui.goldBright : '#4a4438'};` +
+        `background:${filled ? 'rgba(48,36,14,0.92)' : 'rgba(18,12,6,0.85)'};` +
+        `color:${selected ? Ui.goldBright : '#e0d8cc'};` +
+        (selected ? 'box-shadow:0 0 8px rgba(245,216,120,0.35);' : '');
       b.disabled = !node?.grantsActive || node.rank <= 0;
       b.addEventListener('click', () => {
         if (!node?.grantsActive) return;
         const res = cb.assign(node.id, slot);
-        if (!res.ok) {
-          detail.textContent = `无法分配：${res.reason}`;
-          return;
-        }
+        if (!res.ok) return;
         refresh();
       });
       assignRow.appendChild(b);
     }
   };
 
-  const showDetail = (node: SkillNodeViewModel | null, vm: SkillTreeViewModel): void => {
-    if (!node) {
-      detail.innerHTML = `<span style="color:${Ui.textDim}">选择一个技能节点。数字键仅切换右侧技能栏选中槽（RMB 施放）。</span>`;
-      renderAssign(null, vm);
-      return;
-    }
-    const lines = [
-      `<div style="color:${Ui.goldBright};font-weight:700;margin-bottom:4px;">${node.nameZh} · ${node.name}</div>`,
-      `<div>等级 ${node.rank}/${node.maxRank}` +
-        (node.requiredLevel > 1 ? ` · 需求角色等级 ${node.requiredLevel}` : '') +
-        ` · ${node.state}</div>`,
-      node.currentEffect.length
-        ? `<div style="margin-top:4px;color:${Ui.text};">${node.currentEffect.join(' · ')}</div>`
-        : '',
-      node.nextRankDelta
-        ? `<div style="margin-top:4px;color:${Ui.ok};">${node.nextRankDelta}</div>`
-        : `<div style="margin-top:4px;color:${Ui.textDim};">已满级</div>`,
-      node.canInvest
-        ? `<div style="margin-top:4px;color:${Ui.gold};">点击节点投入 1 点</div>`
-        : '',
-    ];
-    detail.innerHTML = lines.filter(Boolean).join('');
-    renderAssign(node, vm);
-  };
-
   const refresh = (): void => {
     const vm = cb.getViewModel();
-    // Keep branch from local tab state; view model may mirror it.
-    pointsEl.textContent = `未分配 ${vm.unspentSkillPoints} 点 · Lv ${vm.level}` +
-      (vm.inCamp ? ' · 营地' : '');
+    pointsBox.innerHTML =
+      `<div style="font-size:24px;font-weight:bold;color:${vm.unspentSkillPoints > 0 ? '#f0c840' : '#8a8580'};` +
+      `${vm.unspentSkillPoints > 0 ? 'text-shadow:0 0 8px rgba(240,200,64,0.5);' : ''}">${vm.unspentSkillPoints}</div>` +
+      `<div style="font-size:10px;color:#a8a098;letter-spacing:1px;">技能点</div>` +
+      `<div style="font-size:10px;color:#6a6058;margin-top:2px;">Lv ${vm.level}${vm.inCamp ? ' · 营地' : ''}</div>`;
     respecBtn.disabled = !vm.inCamp;
     respecBtn.style.opacity = vm.inCamp ? '1' : '0.45';
     respecBtn.title = vm.inCamp ? '重置已投入点数（保留免费霜牙）' : '仅烬守营地可重置';
-    paintTabs();
+    paintTabs(vm);
 
-    const w = canvasWrap.clientWidth || 640;
-    const h = canvasWrap.clientHeight || 360;
+    const w = canvasWrap.clientWidth || 400;
+    const h = canvasWrap.clientHeight || 600;
     const positions = layoutPixels(activeBranch, w, h, 52);
     const edges = prereqEdges(activeBranch);
 
+    // right-angle metal-pipe connectors (3-pass stroke + arrowhead)
     svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
     svg.innerHTML = '';
     for (const e of edges) {
       const a = positions.get(e.from);
       const b = positions.get(e.to);
       if (!a || !b) continue;
-      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('x1', String(a.x));
-      line.setAttribute('y1', String(a.y));
-      line.setAttribute('x2', String(b.x));
-      line.setAttribute('y2', String(b.y));
-      line.setAttribute('stroke', Ui.goldLineSoft);
-      line.setAttribute('stroke-width', '2');
-      svg.appendChild(line);
+      const midY = (a.y + b.y) / 2;
+      const dAttr = `M ${a.x} ${a.y} L ${a.x} ${midY} L ${b.x} ${midY} L ${b.x} ${b.y}`;
+      const active = vm.nodes.find((n) => n.id === e.to && n.rank > 0) !== undefined;
+      const passes: Array<[string, number]> = active
+        ? [['#2a2825', 6], ['#5a5550', 4], ['#7a7570', 1.5]]
+        : [['#1a1815', 5], ['#3a3530', 3]];
+      for (const [color, width] of passes) {
+        const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        p.setAttribute('d', dAttr);
+        p.setAttribute('fill', 'none');
+        p.setAttribute('stroke', color);
+        p.setAttribute('stroke-width', String(width));
+        p.setAttribute('stroke-linecap', 'round');
+        p.setAttribute('stroke-linejoin', 'round');
+        svg.appendChild(p);
+      }
+      // arrowhead at the target end
+      const tri = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      const dir = Math.sign(b.y - a.y) || 1;
+      tri.setAttribute('d', `M ${b.x - 8} ${b.y - 6 * dir} L ${b.x + 8} ${b.y - 6 * dir} L ${b.x} ${b.y + 3 * dir} Z`);
+      tri.setAttribute('fill', active ? '#5a5550' : '#3a3530');
+      svg.appendChild(tri);
     }
 
     nodesLayer.innerHTML = '';
     const branchNodes = vm.nodes.filter((n) => getSkillNode(n.id).branch === activeBranch);
-    // If caller already filtered by branch, use vm.nodes; else filter.
     const list = branchNodes.length ? branchNodes : vm.nodes;
 
     for (const node of list) {
       if (getSkillNode(node.id).branch !== activeBranch) continue;
       const pos = positions.get(node.id);
       if (!pos) continue;
-      const st = STATE_STYLE[node.state];
       const el = document.createElement('button');
       el.type = 'button';
       el.dataset.nodeId = node.id;
-      el.style.cssText = 'position:absolute;width:' + NODE_SIZE + 'px;height:' + NODE_SIZE + 'px;' +
+      const learned = node.rank > 0;
+      el.style.cssText = `position:absolute;width:${NODE_SIZE}px;height:${NODE_SIZE}px;` +
         `left:${pos.x - NODE_SIZE / 2}px;top:${pos.y - NODE_SIZE / 2}px;` +
-        `border:2px solid ${st.border};background:${st.bg};opacity:${st.opacity};` +
-        'border-radius:8px;cursor:pointer;display:flex;flex-direction:column;' +
-        'align-items:center;justify-content:center;padding:4px;box-sizing:border-box;' +
-        (selectedNode === node.id ? `box-shadow:0 0 0 2px ${Ui.goldBright};` : '');
-      el.innerHTML =
-        `<div style="font-size:10px;color:${Ui.goldBright};line-height:1.1;text-align:center;">${node.nameZh}</div>` +
-        `<div style="font-size:11px;color:${Ui.text};margin-top:2px;">${node.rank}/${node.maxRank}</div>`;
-      el.addEventListener('click', () => {
+        'padding:0;border-radius:5px;cursor:pointer;' +
+        `background:${FRAME_GRADIENT[node.state]};` +
+        'box-shadow:0 0 0 2px #040302,0 0 0 3px #121010,inset 0 0 6px rgba(0,0,0,0.6);' +
+        (selectedNode === node.id ? `outline:2px solid rgba(255,255,255,0.9);outline-offset:2px;` : '') +
+        (node.state === 'locked' ? 'opacity:0.55;' : '');
+      // icon recess
+      const recess = document.createElement('div');
+      recess.style.cssText = 'position:absolute;inset:4px;display:flex;align-items:center;justify-content:center;' +
+        `background:radial-gradient(circle at 50% 40%,${node.state === 'maxed' ? '#6a5838' : learned ? '#3a6838' : '#32323a'} 0%,${learned ? '#122a10' : '#121218'} 100%);` +
+        'border-radius:3px;overflow:hidden;';
+      const icon = node.grantsActive
+        ? skillIconImg(node.grantsActive, 40, { alt: node.nameZh })
+        : null;
+      if (icon) {
+        icon.style.opacity = learned ? '1' : '0.35';
+        recess.appendChild(icon);
+      } else {
+        recess.innerHTML = branchGlyphSvg(
+          getSkillNode(node.id).branch, 26,
+          learned ? '#e8e0d0' : '#6a6a70',
+        );
+      }
+      el.appendChild(recess);
+      // rank badge
+      const badge = document.createElement('div');
+      badge.style.cssText = 'position:absolute;right:-4px;bottom:-4px;min-width:16px;height:14px;padding:0 2px;' +
+        'background:rgba(0,0,0,0.9);border-radius:2px;font-size:9px;font-weight:bold;line-height:14px;text-align:center;' +
+        `border:1px solid ${node.state === 'maxed' ? '#c09838' : learned ? '#38a038' : '#4a4438'};` +
+        `color:${node.state === 'maxed' ? '#f0c840' : learned ? '#20e820' : '#8a8580'};`;
+      badge.textContent = `${node.rank}/${node.maxRank}`;
+      el.appendChild(badge);
+      // learnable green pulse dot
+      if (node.canInvest) {
+        const dot = document.createElement('div');
+        dot.style.cssText = 'position:absolute;top:-4px;right:-4px;width:10px;height:10px;border-radius:50%;' +
+          'background:#20e820;box-shadow:0 0 6px 2px rgba(32,232,32,0.55);' +
+          'animation:hf-skill-pulse 1.6s ease-in-out infinite;';
+        el.appendChild(dot);
+      }
+      // maxed star
+      if (node.state === 'maxed') {
+        const star = document.createElement('div');
+        star.style.cssText = 'position:absolute;top:-6px;left:-4px;font-size:12px;color:#f0c840;' +
+          'text-shadow:0 0 4px rgba(240,200,64,0.6);';
+        star.textContent = '★';
+        el.appendChild(star);
+      }
+      // name under node
+      const name = document.createElement('div');
+      name.style.cssText = 'position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:3px;' +
+        `font-size:11px;font-weight:bold;white-space:nowrap;color:${learned ? '#e8e0d0' : '#9a9490'};` +
+        'text-shadow:0 1px 2px #000;';
+      name.textContent = node.nameZh;
+      el.appendChild(name);
+
+      const investNow = (): void => {
         selectedNode = node.id;
-        if (node.canInvest) {
-          const res = cb.invest(node.id);
-          if (!res.ok) {
-            showDetail(node, cb.getViewModel());
-            detail.innerHTML += `<div style="color:${Ui.danger};margin-top:4px;">无法投入：${res.reason}</div>`;
-            refresh();
-            return;
-          }
-        }
+        if (node.canInvest) cb.invest(node.id);
         refresh();
+      };
+      el.addEventListener('click', investNow);
+      el.addEventListener('contextmenu', (ev) => {
+        ev.preventDefault();
+        investNow();
       });
+      el.addEventListener('mousemove', (ev) => showTip(node, ev));
+      el.addEventListener('mouseleave', hideTip);
       nodesLayer.appendChild(el);
     }
 
-    const selected = selectedNode
-      ? list.find((n) => n.id === selectedNode) ?? null
-      : null;
-    showDetail(selected ?? null, vm);
+    renderAssign(
+      selectedNode ? (list.find((n) => n.id === selectedNode) ?? null) : null,
+      vm,
+    );
   };
 
-  return {
+  const handle: SkillPanelHandle = {
     show() { this.setOpen(true); },
     hide() { this.setOpen(false); },
     toggle() { this.setOpen(!open); },
@@ -400,10 +488,27 @@ export function installSkillPanel(mount: HTMLElement, cb: SkillPanelCallbacks): 
       if (open) {
         // Layout needs measured size.
         requestAnimationFrame(() => refresh());
+      } else {
+        hideTip();
       }
     },
     isOpen: () => open,
     refresh,
     dispose: () => root.remove(),
   };
+
+  // green pulse keyframes (one-off injection; ui-styles owns shared CSS)
+  if (!document.getElementById('hellforge-skill-style')) {
+    const s = document.createElement('style');
+    s.id = 'hellforge-skill-style';
+    s.textContent =
+      '@keyframes hf-skill-pulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.5);opacity:0.45;}}';
+    document.head.appendChild(s);
+  }
+
+  return handle;
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }

@@ -1,0 +1,5 @@
+Cinzel — SIL Open Font License 1.1
+Source: Google Fonts (https://fonts.google.com/specimen/Cinzel), family by Natanael Gama.
+Downloaded 2026-07-20 as woff2 subsets (latin / latin-ext) via the Google Fonts CSS API.
+OFL 1.1 full text: https://openfontlicense.org / https://scripts.sil.org/OFL
+Usage in hellforge: display font for Latin glyphs & numerals in UI titles (CJK falls through to the system serif stack).

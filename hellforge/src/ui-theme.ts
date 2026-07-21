@@ -3,6 +3,10 @@
 // One palette for Title, HUD chrome, inventory, and skill sheet. Layout shapes
 // (D2 bottom bar, orb sizes) stay untouched; only color + border language unify.
 // Prefer these tokens over ad-hoc hex so future recolors are one-file edits.
+//
+// Also owns: Z-index ladder (Z), stone-craft helpers (grain / divider / corner
+// ornaments), and the Cinzel display stack (assets/ui/fonts, OFL — injected by
+// ui-styles.ts). Hardcoded hex outside this file is visual debt.
 
 export const Ui = {
   // ── forged gold ──────────────────────────────────────────────────────────
@@ -62,19 +66,119 @@ export type UiToken = typeof Ui;
 export const FONT_UI =
   "'Times New Roman','Georgia','Songti SC','STSong','SimSun','Noto Serif CJK SC','Source Han Serif SC',serif";
 
-/** Display / titles — same Song + serif language as body (no sans / no Cinzel). */
-export const FONT_DISPLAY = FONT_UI;
+/**
+ * Display / titles — Cinzel (OFL, bundled woff2) for Latin glyphs & numerals,
+ * CJK falls through to Song. Injected by ui-styles.ts `ensureUiStyles()`.
+ */
+export const FONT_DISPLAY =
+  "'Cinzel','Times New Roman','Georgia','Songti SC','STSong','SimSun','Noto Serif CJK SC','Source Han Serif SC',serif";
 
 /** HUD numerals / compact chrome — serif too (no monospace). */
 export const FONT_MONO = FONT_UI;
 
-/** Shared panel chrome: ink fill + double gold rim (ClaudeCraft plaque feel). */
+/**
+ * uiRoot-local z-index ladder — SSOT for the whole UI stack (previously
+ * scattered magic numbers, incl. cube-ui's legacy z-7000). Keep gaps for
+ * future layers; never stack above `fatal`.
+ */
+export const Z = {
+  atmosphere: 40,
+  haze: 41,
+  hud: 50,
+  inventory: 60,
+  questTracker: 90,
+  automap: 110,
+  skillPanel: 120,
+  characterPanel: 125,
+  questLog: 130,
+  cube: 135,
+  dialogue: 140,
+  cutsceneChrome: 170,
+  cutsceneCaption: 175,
+  shell: 200,
+  renderSettings: 220,
+  tooltip: 230,
+  transition: 250,
+  fatal: 260,
+} as const;
+
+/**
+ * aidiablo stone-panel recipe (1:1 from the reference project): three-layer
+ * grain over a warm stone gradient. Used by full-height side panels
+ * (inventory / character / skill) — NOT the carved-rim floating panels
+ * (those stay on panelChrome).
+ */
+export function d2StonePanelCss(): string {
+  return (
+    'background:' +
+    'repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(18,14,8,0.05) 2px,rgba(18,14,8,0.05) 4px),' +
+    'repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(0,0,0,0.04) 3px,rgba(0,0,0,0.04) 6px),' +
+    'linear-gradient(180deg,#3a3430 0%,#302a24 30%,#28221e 60%,#2a2420 100%);'
+  );
+}
+
+/**
+ * aidiablo stone pillar (56px) — sits at the free edge of a full-height panel.
+ * Returns the background/shadow CSS; rivets come from pillarRivetsHtml().
+ */
+export function d2PillarCss(side: 'left' | 'right'): string {
+  const l = side === 'left';
+  return (
+    'background:' +
+    'repeating-linear-gradient(180deg,transparent,transparent 18px,rgba(0,0,0,0.06) 18px,rgba(0,0,0,0.06) 20px),' +
+    `linear-gradient(90deg,#1e1a16 0%,#2e2a24 6%,#3e3830 14%,#4a4238 24%,#4e4840 32%,#423c34 44%,#2e2a24 58%,#282420 68%,#322e28 78%,#3e3830 88%,#2e2a24 95%,#221e1a 100%);` +
+    `box-shadow:inset ${l ? '2px' : '-2px'} 0 0 rgba(90,78,58,0.4),inset ${l ? '-2px' : '2px'} 0 0 rgba(0,0,0,0.4),` +
+    'inset 0 3px 0 rgba(75,65,48,0.3),inset 0 -3px 0 rgba(0,0,0,0.3),' +
+    `${l ? '3px' : '-3px'} 0 12px rgba(0,0,0,0.5),${l ? '-2px' : '2px'} 0 8px rgba(0,0,0,0.35);`
+  );
+}
+
+/** Rivet dots for d2PillarCss — absolutely-positioned at 14px / 25% / 50% / 75% / bottom 14px. */
+export function pillarRivetsHtml(): string {
+  const mk = (pos: string, size: number, big: boolean): string =>
+    `<div style="position:absolute;left:50%;transform:translateX(-50%);${pos};width:${size}px;height:${size}px;border-radius:50%;` +
+    `background:radial-gradient(circle at 38% 35%,${big ? '#7a7065 0%,#6a5e52 30%,#4a4238 70%,#3a3228 100%' : '#5a5045 0%,#4a3e32 30%,#2a2218 70%,#1a1610 100%'});"></div>`;
+  return mk('top:14px', 14, true) + mk('top:25%', 12, false) + mk('top:50%', 12, false) + mk('top:75%', 12, false) + mk('bottom:14px', 14, true);
+}
+
+/**
+ * Panel title band (aidiablo recipe): 20px warm gold, letterspaced, over a
+ * translucent center band. Pair with goldDividerHtml underneath.
+ */
+export function titleBandCss(): string {
+  return (
+    `font:700 20px ${FONT_DISPLAY};color:#d4b05a;letter-spacing:3px;text-align:center;` +
+    'text-shadow:0 0 8px rgba(212,176,90,0.35),0 1px 3px rgba(0,0,0,0.8),0 0 2px rgba(212,176,90,0.2);' +
+    'background:linear-gradient(90deg,transparent 0%,rgba(40,30,18,0.35) 15%,rgba(55,42,25,0.5) 50%,rgba(40,30,18,0.35) 85%,transparent 100%);'
+  );
+}
+
+/**
+ * Subtle stone grain layered over the ink gradient — D2 masonry feel with zero
+ * art assets. Cheap (static gradients), safe on the gameplay HUD path.
+ */
+export function stoneGrainCss(): string {
+  return (
+    'background-image:' +
+    'repeating-linear-gradient(0deg,rgba(255,240,200,0.035) 0 2px,transparent 2px 5px),' +
+    'repeating-linear-gradient(90deg,rgba(0,0,0,0.07) 0 3px,transparent 3px 7px),' +
+    `linear-gradient(180deg,${Ui.inkPanelHi} 0%,${Ui.inkPanel} 100%);`
+  );
+}
+
+/**
+ * Shared panel chrome: stone grain + CARVED METAL RIM (border-image gradient)
+ * + inner bevel. The rim is the Diablo signature — thick bright-to-deep gold
+ * with a dark lower bevel, not a hairline. Note: border-image paints square
+ * corners (border-radius is ignored by design — D2 panels are square).
+ */
 export function panelChrome(extra = ''): string {
   return (
-    `background:linear-gradient(180deg,${Ui.inkPanelHi} 0%,${Ui.inkPanel} 100%);` +
-    `border:2px solid ${Ui.gold};` +
-    `box-shadow:0 0 0 1px ${Ui.goldDeep},0 10px 36px rgba(0,0,0,0.72),` +
-    `inset 0 1px 0 ${Ui.goldLineSoft};` +
+    stoneGrainCss() +
+    'border:3px solid transparent;' +
+    `border-image:linear-gradient(180deg,${Ui.goldBright} 0%,${Ui.gold} 22%,${Ui.goldDeep} 48%,#3a2a12 62%,${Ui.goldDim} 100%) 1;` +
+    `box-shadow:0 0 0 1px ${Ui.goldDeep},0 12px 40px rgba(0,0,0,0.75),` +
+    `inset 0 1px 0 ${Ui.goldLineSoft},inset 0 -2px 5px rgba(0,0,0,0.55),inset 0 0 26px rgba(0,0,0,0.45);` +
     `color:${Ui.text};` +
     extra
   );
@@ -109,6 +213,44 @@ export function metalGoldTextStyle(sizeClamp: string): string {
     `-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;` +
     `filter:drop-shadow(0 2px 3px rgba(0,0,0,0.85)) drop-shadow(0 0 14px ${Ui.crimsonGlow});` +
     `position:relative;user-select:none;`
+  );
+}
+
+/** Gold hairline divider with a centre diamond (aidiablo panel-header recipe). */
+export function goldDividerHtml(marginV = 10): string {
+  return (
+    `<div style="position:relative;height:1px;margin:${marginV}px 8%;` +
+    `background:linear-gradient(90deg,transparent,#4a3a20 15%,#7a6238 50%,#4a3a20 85%,transparent);">` +
+    `<div style="position:absolute;left:50%;top:-4px;width:8px;height:8px;transform:translateX(-50%) rotate(45deg);` +
+    `background:linear-gradient(135deg,#c8a040,#8a6828);border:1px solid #6a5020;` +
+    `box-shadow:0 0 4px rgba(200,160,64,0.3);"></div></div>`
+  );
+}
+
+/**
+ * Four ornate corner brackets with an AMBER gem rivet at each elbow —
+ * aidiablo's panel-corner recipe (layered stone Ls + radial gem + specular).
+ * Parent must be positioned.
+ */
+export function cornerOrnamentsHtml(inset = 5, size = 24): string {
+  const mk = (pos: string, rot: number): string =>
+    `<svg viewBox="0 0 24 24" width="${size}" height="${size}" aria-hidden="true" ` +
+    `style="position:absolute;${pos};pointer-events:none;transform:rotate(${rot}deg);">` +
+    `<defs><radialGradient id="hf-gem" cx="40%" cy="40%" r="60%">` +
+    `<stop offset="0%" stop-color="#e08848"/><stop offset="50%" stop-color="#a06030"/><stop offset="100%" stop-color="#603018"/>` +
+    `</radialGradient></defs>` +
+    `<path d="M4 20 L4 8 Q4 4 8 4 L20 4" fill="none" stroke="#4a4238" stroke-width="3.5"/>` +
+    `<path d="M6 20 L6 9 Q6 6 9 6 L20 6" fill="none" stroke="#5e5448" stroke-width="2.2"/>` +
+    `<path d="M8.5 20 L8.5 10.5 Q8.5 8.5 10.5 8.5 L20 8.5" fill="none" stroke="#6a6058" stroke-width="1.2"/>` +
+    `<circle cx="5" cy="5" r="3" fill="#1a1816"/>` +
+    `<circle cx="5" cy="5" r="2.5" fill="url(#hf-gem)"/>` +
+    `<circle cx="4.2" cy="4.2" r="0.8" fill="rgba(255,200,160,0.7)"/>` +
+    `</svg>`;
+  return (
+    mk(`left:${inset}px;top:${inset}px`, 0) +
+    mk(`right:${inset}px;top:${inset}px`, 90) +
+    mk(`right:${inset}px;bottom:${inset}px`, 180) +
+    mk(`left:${inset}px;bottom:${inset}px`, 270)
   );
 }
 

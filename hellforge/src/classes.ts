@@ -44,7 +44,6 @@ export interface GrowthMods {
 export interface ClassDef {
   id: ClassId;
   name: string;
-  icon: string;
   description: string;
   lore: string;
   coreMechanic: string;
@@ -71,7 +70,6 @@ export const CLASS_DEFS: Partial<Record<ClassId, ClassDef>> = {
   barbarian: {
     id: 'barbarian',
     name: '野蛮人',
-    icon: '🪓',
     description: '以狂怒与蛮力碾碎敌人的近战猛士',
     lore: '北方荒原的部族战士，以热血换取力量',
     coreMechanic: '狂怒',
@@ -82,7 +80,6 @@ export const CLASS_DEFS: Partial<Record<ClassId, ClassDef>> = {
   sorceress: {
     id: 'sorceress',
     name: '法师',
-    icon: '🔮',
     description: '掌握元素魔法的奥术大师，精通火冰电三系魔法',
     lore: '来自余烬哨站东侧奥术学院的元素法师，以熔炉余烬与霜纹研习三系奥秘',
     coreMechanic: '元素精通',
@@ -93,7 +90,6 @@ export const CLASS_DEFS: Partial<Record<ClassId, ClassDef>> = {
   necromancer: {
     id: 'necromancer',
     name: '死灵法师',
-    icon: '💀',
     description: '驱役骸骨与诅咒的暗影施法者',
     lore: '行走于生死边界的祭司，以亡者之力改写战场',
     coreMechanic: '亡灵契约',

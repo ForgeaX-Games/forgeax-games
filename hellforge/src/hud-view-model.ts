@@ -1,9 +1,11 @@
 // Engine-agnostic HUD snapshot (SHELL-AND-UI-PORT-SPEC.md §5.1).
 // ECS / main.ts assembles this each frame (or on change); hud.ts projects it
-// onto the DOM. Hellforge ships a 4-slot domain hotbar; digit keys select only.
+// onto the DOM. Hellforge ships a 4-slot domain hotbar + 2 belt potion cells;
+// digit keys select skills (1-4), 5/6 drink potions.
 // Skill points / tree invest live in the K panel (skill-panel.ts).
 
 export interface SkillSlotState {
+  /** Icon key (skill id) — hud renders ui-icons.skillIconImg, not a text glyph. */
   icon: string;
   name: string;
   key: string;
@@ -17,17 +19,10 @@ export interface SkillSlotState {
   selected?: boolean;
   /** Empty hotbar slot (no ActiveSkillId assigned). */
   empty?: boolean;
-}
-
-export interface EquipSlotState {
-  icon: string;
-  /** Rarity colour when filled; null = empty silhouette. */
-  color: string | null;
-  tooltip: string;
-  /** Empty paper-doll / HUD chip (no ItemInstance in slot). */
-  empty?: boolean;
-  /** Slot label for empty silhouettes (武器 / 头盔 / …). */
-  slotLabel?: string;
+  /** Belt potion slots (5/6): stock count badge. Absent on skill slots. */
+  count?: number;
+  /** Belt potion kind — hud renders the 40px red/blue belt cell instead of a skill cell. */
+  potion?: 'life' | 'mana';
 }
 
 /** Current combat target readout (Spec §11.1) — no elite affixes in this slice. */
@@ -48,9 +43,8 @@ export interface HudViewModel {
   level: number;
   gold: number;
   kills: number;
-  /** Hellforge ships 4 active skills — not aidiablo's 6-slot bar. */
+  /** 4 active skills + 2 belt potion cells (aidiablo bar shape). */
   skills: SkillSlotState[];
-  equipment: EquipSlotState[];
   quest: string;
   areaName: string;
   boss: { name: string; hp: number; maxHp: number } | null;

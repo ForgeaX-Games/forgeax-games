@@ -145,3 +145,30 @@ describe('createSorceressDomain', () => {
     expect(after.hotbar[after.selectedHotbarSlot]).toBe('frost');
   });
 });
+
+describe('potion belt (R2)', () => {
+  test('new character starts with 2 life / 1 mana; use-potion decrements + restores', () => {
+    const domain = createSorceressDomain({ playerName: '药水' });
+    expect(domain.snapshot().potions).toEqual({ life: 2, mana: 1 });
+    const res = domain.dispatch({ op: 'use-potion', kind: 'life' });
+    expect(res.ok).toBe(true);
+    expect(res.ok && res.potionUsed).toEqual({ kind: 'life', restore: 30 });
+    expect(domain.snapshot().potions.life).toBe(1);
+  });
+
+  test('use-potion on empty stock fails with empty-potion', () => {
+    const domain = createSorceressDomain({ playerName: '空瓶' });
+    domain.dispatch({ op: 'use-potion', kind: 'mana' });
+    const res = domain.dispatch({ op: 'use-potion', kind: 'mana' });
+    expect(res.ok).toBe(false);
+    expect(!res.ok && res.reason).toBe('empty-potion');
+  });
+
+  test('add-potion caps at 20 and reports the added count', () => {
+    const domain = createSorceressDomain({ playerName: '囤药' });
+    const res = domain.dispatch({ op: 'add-potion', kind: 'life', count: 25 });
+    expect(res.ok && res.potionAdded).toBe(18); // 2 + 18 = 20
+    expect(domain.snapshot().potions.life).toBe(20);
+    expect(domain.dispatch({ op: 'add-potion', kind: 'life' })).toMatchObject({ ok: true, potionAdded: 0 });
+  });
+});

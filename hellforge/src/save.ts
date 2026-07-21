@@ -186,6 +186,7 @@ export function serializeCharacter(
       skillRanks: deepClone(snapshot.skillRanks as Record<string, number>) as CharacterSaveEnvelope['progression']['skillRanks'],
       hotbar: [...snapshot.hotbar] as CharacterSaveEnvelope['progression']['hotbar'],
       selectedHotbarSlot: snapshot.selectedHotbarSlot,
+      potions: { ...snapshot.potions },
     },
     inventory: {
       bag: deepClone(snapshot.bag as Array<unknown>) as CharacterSaveEnvelope['inventory']['bag'],
@@ -228,6 +229,7 @@ export function hydrateCharacter(
     bag: parsed.inventory.bag,
     equipment: parsed.inventory.equipment,
     quests: parsed.quests,
+    potions: parsed.progression.potions,
   });
 }
 

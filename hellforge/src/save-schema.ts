@@ -34,6 +34,8 @@ export interface ProgressionSave {
   readonly skillRanks: Readonly<Record<SkillNodeId, number>>;
   readonly hotbar: HotbarSlots;
   readonly selectedHotbarSlot: 0 | 1 | 2 | 3;
+  /** Belt stock (R2 potions). Optional on disk — old saves parse as 0/0. */
+  readonly potions?: { life: number; mana: number };
 }
 
 export interface InventorySave {
@@ -222,6 +224,14 @@ function parseSelectedHotbarSlot(raw: unknown): 0 | 1 | 2 | 3 | null {
   return null;
 }
 
+/** Optional belt stock — absent/garbage → 0/0 (never rejects the envelope). */
+function parsePotions(raw: unknown): { life: number; mana: number } {
+  if (!isObject(raw)) return { life: 0, mana: 0 };
+  const n = (v: unknown): number =>
+    isFiniteNumber(v) && v >= 0 ? Math.min(999, Math.floor(v)) : 0;
+  return { life: n(raw.life), mana: n(raw.mana) };
+}
+
 /** Validate unknown JSON → CharacterSaveEnvelope, or null if malformed. */
 export function parseEnvelope(raw: unknown): CharacterSaveEnvelope | null {
   if (!isObject(raw)) return null;
@@ -271,6 +281,7 @@ export function parseEnvelope(raw: unknown): CharacterSaveEnvelope | null {
       skillRanks,
       hotbar,
       selectedHotbarSlot,
+      potions: parsePotions(progression.potions),
     },
     inventory: { bag, equipment },
     quests,

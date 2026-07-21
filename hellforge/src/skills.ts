@@ -40,6 +40,7 @@ export { ACTIVE_BY_SKILL_NODE } from './skill-tree';
 export interface SkillDef {
   id: SkillId;
   name: string;
+  /** Icon key resolved by ui-icons.skillIconImg (PNG art) — not a text glyph. */
   icon: string;
   desc: string;
   /**
@@ -70,22 +71,22 @@ type DisplayMeta = Pick<SkillDef, 'id' | 'name' | 'icon' | 'desc' | 'unlockLevel
 
 const DISPLAY: Record<SkillId, DisplayMeta> = {
   magma: {
-    id: 'magma', name: '熔火弹', icon: '🔥',
+    id: 'magma', name: '熔火弹', icon: 'magma',
     desc: '发射一枚熔火弹，命中小范围溅射',
     unlockLevel: 0,
   },
   frost: {
-    id: 'frost', name: '霜牙', icon: '❄️',
+    id: 'frost', name: '霜牙', icon: 'frost',
     desc: '冰箭，命中减速',
     unlockLevel: 0,
   },
   arc: {
-    id: 'arc', name: '电弧涌', icon: '⚡',
+    id: 'arc', name: '电弧涌', icon: 'arc',
     desc: '释放游走的闪电',
     unlockLevel: 0,
   },
   blink: {
-    id: 'blink', name: '影踏', icon: '🌀',
+    id: 'blink', name: '影踏', icon: 'blink',
     desc: '向目标方向瞬移（影踏步）',
     unlockLevel: 0,
   },

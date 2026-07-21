@@ -16,7 +16,9 @@
 
 import {
   FONT_DISPLAY,
+  FONT_UI,
   Ui,
+  Z,
   forgeEmblemSvg,
   metalGoldTextStyle,
 } from './ui-theme';
@@ -47,8 +49,8 @@ export interface ShellHandle {
 }
 
 const SHELL_ID = 'hellforge-shell';
-/** Above hud.ts's z-index:50 and inventory-ui.ts's tooltip z-index:61 — shell screens fully occlude gameplay UI while shown. */
-const SHELL_Z = 200;
+/** Shell screens fully occlude gameplay UI while shown (ui-theme Z ladder). */
+const SHELL_Z = Z.shell;
 
 /**
  * Mounts the shell root (shown/hidden as a whole) and wires Title's two
@@ -77,12 +79,32 @@ export function installShell(mount: HTMLElement, cb: ShellCallbacks): ShellHandl
     hasSave: cb.hasSave,
   });
 
+  // Loading cover — D2 loading-screen language: gold Cinzel message,
+  // indeterminate sweep bar, quiet tip line (replaces the old bare text).
   const loading = document.createElement('div');
   loading.style.cssText = 'position:absolute;inset:0;display:none;align-items:center;' +
-    `justify-content:center;background:${Ui.ink};color:${Ui.text};pointer-events:auto;` +
-    `font:600 15px/1.5 ${FONT_DISPLAY};letter-spacing:2px;`;
+    `justify-content:center;background:${Ui.ink};color:${Ui.text};pointer-events:auto;`;
+  const loadingCol = document.createElement('div');
+  loadingCol.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:16px;';
   const loadingMessage = document.createElement('div');
-  loading.appendChild(loadingMessage);
+  loadingMessage.style.cssText =
+    `font:700 17px ${FONT_DISPLAY};color:${Ui.goldBright};letter-spacing:6px;` +
+    'text-shadow:0 0 18px rgba(230,180,90,0.45),0 2px 6px #000;';
+  const loadingBar = document.createElement('div');
+  loadingBar.style.cssText =
+    `width:240px;height:6px;border-radius:2px;overflow:hidden;` +
+    `background:${Ui.inkWell};border:1px solid ${Ui.goldLineSoft};`;
+  const loadingFill = document.createElement('div');
+  loadingFill.style.cssText =
+    `width:38%;height:100%;border-radius:2px;` +
+    `background:linear-gradient(90deg,transparent,${Ui.gold} 45%,${Ui.goldBright} 55%,transparent);` +
+    'animation:hf-load-sweep 1.15s linear infinite;';
+  loadingBar.appendChild(loadingFill);
+  const loadingTip = document.createElement('div');
+  loadingTip.style.cssText = `font:500 12px ${FONT_UI};color:${Ui.textDim};letter-spacing:2px;`;
+  loadingTip.textContent = '余烬正在重燃……';
+  loadingCol.append(loadingMessage, loadingBar, loadingTip);
+  loading.appendChild(loadingCol);
   root.appendChild(loading);
 
   function goTo(next: ShellState): void {
@@ -128,9 +150,10 @@ export function installShell(mount: HTMLElement, cb: ShellCallbacks): ShellHandl
 // buttons. Zero THREE.js in the source file — ports verbatim as DOM+Canvas2D.
 //
 // Deviations from source:
-// - No background image (`ui/title_bg.jpg` doesn't exist in hellforge) —
-//   replaced with a plain dark radial-gradient backdrop; vignette/fades/
-//   torch-glow/particles/logo/buttons are unchanged.
+// - Background image: aidiablo's `ui/title_bg.jpg` (user-owned AI art) now
+//   ported to assets/ui/title_bg.jpg and rendered with the same
+//   brightness(0.55)/saturate(0.8) treatment; vignette/fades/torch-glow/
+//   particles/logo/buttons unchanged.
 // - Scene BGM is owned by bgm.ts (HTMLAudio phase player); shell does not
 //   drive music. Button hover/click still has no dedicated click SFX here
 //   (combat/UI pings live in sfx.ts's synthesized WebAudio kit).
@@ -201,6 +224,10 @@ function installTitle(
         from { opacity:0; transform:translateY(20px); }
         to   { opacity:1; transform:translateY(0); }
       }
+      @keyframes hf-load-sweep {
+        0%   { transform:translateX(-110%); }
+        100% { transform:translateX(280%); }
+      }
     `;
     document.head.appendChild(s);
   }
@@ -209,11 +236,20 @@ function installTitle(
   root.id = 'hellforge-title';
   root.style.cssText = `
     position:absolute; inset:0; pointer-events:auto;
-    background:radial-gradient(ellipse at 50% 40%, #1c1210 0%, ${Ui.ink} 55%, #040302 100%);
+    background:#050404;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     font-family:${FONT_DISPLAY};
     overflow:hidden; cursor:default; animation:hf-title-fade-in 1s ease-out;
   `;
+
+  // Painted backdrop (user-owned aidiablo AI art) — was a plain radial gradient.
+  const bgImg = document.createElement('div');
+  bgImg.style.cssText = `
+    position:absolute; inset:0; pointer-events:none;
+    background:url('${new URL('../assets/ui/title_bg.jpg', import.meta.url).href}') center/cover no-repeat;
+    filter:brightness(0.55) saturate(0.8);
+  `;
+  root.appendChild(bgImg);
 
   const vignette = document.createElement('div');
   vignette.style.cssText = `

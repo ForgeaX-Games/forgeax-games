@@ -1,9 +1,11 @@
 import { describe, expect, test } from 'bun:test';
 import { createSorceressDomain } from './character-domain';
 import {
+  affixRangeFor,
   compareItems,
   createFrostforgedWand,
   meltGoldValue,
+  type Item,
   type ItemInstance,
 } from './items';
 import { hydrateCharacter, serializeCharacter } from './save';
@@ -123,5 +125,45 @@ describe('meltGoldValue', () => {
     });
     expect(meltGoldValue(common)).toBe(5);
     expect(meltGoldValue(rare)).toBe(29);
+  });
+});
+
+describe('affixRangeFor (Exile-UI tooltip ranges)', () => {
+  test('magic item range = def lo/hi × ilvlScale(ilvl)', () => {
+    const item: Item = {
+      slot: 'weapon', rarity: 'magic', name: '测试杖', ilvl: 3, reqLevel: 1,
+      affixes: [{ stat: 'dmgPct', v: 0.1, label: '+10% 伤害' }], score: 10,
+    };
+    // dmgPct def 0.06–0.15 × 1.24 → 7–19%
+    expect(affixRangeFor(item, 0)).toBe('7–19%');
+  });
+
+  test('common implicit uses the weaker pool (ilvl-2 × 0.45)', () => {
+    const item: Item = {
+      slot: 'armor', rarity: 'common', name: '灰布袍', ilvl: 3, reqLevel: 1,
+      affixes: [{ stat: 'maxHp', v: 5, label: '+5 生命上限' }], score: 5,
+    };
+    // maxHp def 8–20 × ilvlScale(1)=1 × 0.45 → 4–9
+    expect(affixRangeFor(item, 0)).toBe('4–9');
+  });
+
+  test('legendary curated affix ranges come from LEGENDARIES', () => {
+    const item: Item = {
+      slot: 'weapon', rarity: 'legendary', name: '熔渣之杖', ilvl: 5, reqLevel: 4,
+      affixes: [
+        { stat: 'dmgPct', v: 0.2, label: '+20% 伤害' },
+        { stat: 'fireDmg', v: 0.3, label: '+30% 熔火弹伤害' },
+      ],
+      score: 50, legendary: 'slag-staff',
+    };
+    // slag-staff dmgPct 0.16–0.24 × ilvlScale(5)=1.48 → 24–36%
+    expect(affixRangeFor(item, 0)).toBe('24–36%');
+  });
+
+  test('out-of-range index → null', () => {
+    const item: Item = {
+      slot: 'ring', rarity: 'magic', name: '铜环', ilvl: 1, reqLevel: 1, affixes: [], score: 0,
+    };
+    expect(affixRangeFor(item, 3)).toBeNull();
   });
 });
