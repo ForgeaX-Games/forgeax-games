@@ -23,6 +23,11 @@ import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle, SceneAsset } from '@forgeax/engine-types';
 
 import {
+  ANTECHAMBER_SCENE_GUID,
+  buildAntechamberLayout,
+} from './antechamber-layout';
+import type { ProbeBlocker } from './camera-probe';
+import {
   CELL, CELLS, DUNGEON_SCENE_GUID, DUNGEON_SEED, generateLayout, quatY,
   type DungeonLayout, type GeoKind,
 } from './dungeon-layout';
@@ -47,6 +52,12 @@ export class Dungeon {
   roomCount = 0;
   /** World-space fire fixtures (torch flames / braziers) — light-pool seats. */
   firePoints: Array<{ x: number; y: number; z: number }> = [];
+  /**
+   * World-space camera probe / fade blockers for the boss antechamber
+   * (doorframe + walls / corners / pillars; pack-local AABBs shifted by
+   * DUNGEON_ORIGIN + bossAt).
+   */
+  antechamberProbeBlockers: ProbeBlocker[] = [];
 
   constructor(private world: World, layoutSeed: number = DUNGEON_SEED) {
     this.layoutSeed = layoutSeed;
@@ -69,18 +80,41 @@ export class Dungeon {
         y: g.kind === 'flame' ? g.y + 0.45 : g.y + 0.75,
         z: g.z + DUNGEON_ORIGIN.z,
       }));
+
+    // PR1 quality room — same seed/footprint as bake-antechamber.ts.
+    const ante = buildAntechamberLayout({
+      widthM: this.layout.bossSize.w,
+      depthM: this.layout.bossSize.h,
+      doorTowardX: this.layout.entry.x - this.layout.bossAt.x,
+      doorTowardZ: this.layout.entry.z - this.layout.bossAt.z,
+    });
+    const ox = this.bossAt.x;
+    const oz = this.bossAt.z;
+    for (const s of ante.lightSeats) {
+      this.firePoints.push({ x: s.x + ox, y: s.y, z: s.z + oz });
+    }
+    this.antechamberProbeBlockers = ante.probeBlockers.map((b) => {
+      if (b.type !== 'aabb') return b;
+      return {
+        ...b,
+        min: [b.min[0] + ox, b.min[1] + oz] as const,
+        max: [b.max[0] + ox, b.max[1] + oz] as const,
+      };
+    });
   }
 
   /**
    * Materialize the dungeon visuals: instantiate the baked scene pack under
    * a root at DUNGEON_ORIGIN; fall back to spawning from the layout when
-   * the pack can't be loaded. Call once at boot.
+   * the pack can't be loaded. Also loads the boss antechamber pack at bossAt
+   * (PR1 quality room on the den approach path). Call once at boot.
    */
   async installGeometry(assets?: {
     loadByGuid<T>(guid: unknown): Promise<{ ok: boolean; value?: T; error?: { code?: string } }>;
     instantiate<T>(h: Handle<'SceneAsset', 'shared'>, w: World, parent?: EntityHandle):
       { ok: boolean; value?: unknown; error?: { code?: string } };
   }): Promise<'pack' | 'fallback'> {
+    let denMode: 'pack' | 'fallback' = 'fallback';
     if (assets) {
       try {
         const g = AssetGuid.parse(DUNGEON_SCENE_GUID);
@@ -95,7 +129,7 @@ export class Dungeon {
               const inst = assets.instantiate<SceneAsset>(handle, this.world, rootRes.value as EntityHandle);
               if (inst.ok) {
                 console.log('[hellforge] den geometry: baked scene pack (slagdeep-hollow)');
-                return 'pack';
+                denMode = 'pack';
               }
             }
           }
@@ -104,9 +138,48 @@ export class Dungeon {
         console.warn('[hellforge] baked den pack failed — runtime fallback:', (err as Error).message);
       }
     }
-    this.spawnGeometryFallback();
-    console.log('[hellforge] den geometry: runtime fallback spawn');
-    return 'fallback';
+    if (denMode === 'fallback') {
+      this.spawnGeometryFallback();
+      console.log('[hellforge] den geometry: runtime fallback spawn');
+    }
+    await this.installAntechamber(assets);
+    return denMode;
+  }
+
+  /** Instantiate boss-antechamber.pack.json at world bossAt (slight Y lift vs greybox). */
+  private async installAntechamber(assets?: {
+    loadByGuid<T>(guid: unknown): Promise<{ ok: boolean; value?: T; error?: { code?: string } }>;
+    instantiate<T>(h: Handle<'SceneAsset', 'shared'>, w: World, parent?: EntityHandle):
+      { ok: boolean; value?: unknown; error?: { code?: string } };
+  }): Promise<void> {
+    if (!assets) return;
+    try {
+      const g = AssetGuid.parse(ANTECHAMBER_SCENE_GUID);
+      if (!g.ok) return;
+      const res = await assets.loadByGuid<SceneAsset>(g.value);
+      if (!res.ok || !res.value) {
+        console.warn('[hellforge] antechamber pack missing — quality room skipped');
+        return;
+      }
+      // +0.01 Y: sit kit floors/walls just above slagdeep greybox to avoid z-fight.
+      const rootRes = this.world.spawn({
+        component: Transform,
+        data: {
+          pos: [this.bossAt.x, 0.01, this.bossAt.z],
+          scale: [1, 1, 1],
+        },
+      });
+      if (!rootRes.ok) return;
+      const handle = this.world.allocSharedRef<'SceneAsset', SceneAsset>('SceneAsset', res.value);
+      const inst = assets.instantiate<SceneAsset>(handle, this.world, rootRes.value as EntityHandle);
+      if (inst.ok) {
+        console.log('[hellforge] den geometry: boss antechamber pack at boss approach');
+      } else {
+        console.warn('[hellforge] antechamber instantiate failed');
+      }
+    } catch (err) {
+      console.warn('[hellforge] antechamber pack failed:', (err as Error).message);
+    }
   }
 
   /** World-space walkability (small square footprint so hugging walls works). */

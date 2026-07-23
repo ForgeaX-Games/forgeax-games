@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "kit": "boss-antechamber",
+  "generatedAt": "2026-07-23T07:09:25.553Z",
+  "formula": "density_tri = sqrt((texW*texH*uvArea)/worldArea) px/m; module = area-weighted mean over triangles (albedo size)",
+  "bandPxPerM": {
+    "min": 64,
+    "max": 768
+  },
+  "modules": [
+    {
+      "id": "kit-floor",
+      "path": "modules/kit-floor.glb",
+      "albedoSize": [
+        2048,
+        2048
+      ],
+      "densityPxPerM": 554.491388255361,
+      "triangleCount": 24947,
+      "sampledTriangles": 24945,
+      "worldAreaM2": 6.661065950228462,
+      "hasNormalTexture": true,
+      "hasTangent": true,
+      "inBand": true,
+      "errors": []
+    },
+    {
+      "id": "kit-wall",
+      "path": "modules/kit-wall.glb",
+      "albedoSize": [
+        2048,
+        2048
+      ],
+      "densityPxPerM": 460.4913592386733,
+      "triangleCount": 10801,
+      "sampledTriangles": 10801,
+      "worldAreaM2": 12.987655830764274,
+      "hasNormalTexture": true,
+      "hasTangent": true,
+      "inBand": true,
+      "errors": []
+    },
+    {
+      "id": "kit-corner",
+      "path": "modules/kit-corner.glb",
+      "albedoSize": [
+        2048,
+        2048
+      ],
+      "densityPxPerM": 503.18724090392715,
+      "triangleCount": 14966,
+      "sampledTriangles": 14966,
+      "worldAreaM2": 10.87040427283199,
+      "hasNormalTexture": true,
+      "hasTangent": true,
+      "inBand": true,
+      "errors": []
+    },
+    {
+      "id": "kit-doorframe",
+      "path": "modules/kit-doorframe.glb",
+      "albedoSize": [
+        2048,
+        2048
+      ],
+      "densityPxPerM": 443.23309545022016,
+      "triangleCount": 4532,
+      "sampledTriangles": 4497,
+      "worldAreaM2": 15.989156690863886,
+      "hasNormalTexture": true,
+      "hasTangent": true,
+      "inBand": true,
+      "errors": []
+    },
+    {
+      "id": "kit-pillar",
+      "path": "modules/kit-pillar.glb",
+      "albedoSize": [
+        2048,
+        2048
+      ],
+      "densityPxPerM": 548.092946829955,
+      "triangleCount": 6984,
+      "sampledTriangles": 6984,
+      "worldAreaM2": 7.224732765948326,
+      "hasNormalTexture": true,
+      "hasTangent": true,
+      "inBand": true,
+      "errors": []
+    },
+    {
+      "id": "kit-trim",
+      "path": "modules/kit-trim.glb",
+      "albedoSize": [
+        2048,
+        2048
+      ],
+      "densityPxPerM": 728.9328468445431,
+      "triangleCount": 8805,
+      "sampledTriangles": 8793,
+      "worldAreaM2": 5.873485586189237,
+      "hasNormalTexture": true,
+      "hasTangent": true,
+      "inBand": true,
+      "errors": []
+    },
+    {
+      "id": "kit-rubble",
+      "path": "modules/kit-rubble.glb",
+      "albedoSize": [
+        2048,
+        2048
+      ],
+      "densityPxPerM": 511.10303688904645,
+      "triangleCount": 15713,
+      "sampledTriangles": 15709,
+      "worldAreaM2": 11.312298430255469,
+      "hasNormalTexture": true,
+      "hasTangent": true,
+      "inBand": true,
+      "errors": []
+    }
+  ],
+  "ok": true
+}

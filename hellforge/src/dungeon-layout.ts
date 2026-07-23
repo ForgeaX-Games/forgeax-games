@@ -61,6 +61,8 @@ export interface DungeonLayout {
   /** LOCAL coords — consumers add DUNGEON_ORIGIN for world space. */
   entry: { x: number; z: number };
   bossAt: { x: number; z: number };
+  /** Boss-room footprint in metres (LOCAL) — sizes the PR1 antechamber pack. */
+  bossSize: { w: number; h: number };
   monsterSpawns: Array<{ kind: DenMonsterKind; x: number; z: number }>;
   geometry: GeoItem[];
 }
@@ -311,5 +313,13 @@ export function generateLayout(seed: number): DungeonLayout {
     }
   }
 
-  return { walk, roomCount: rooms.length, entry, bossAt, monsterSpawns, geometry };
+  return {
+    walk,
+    roomCount: rooms.length,
+    entry,
+    bossAt,
+    bossSize: { w: bossRoom.w * CELL, h: bossRoom.h * CELL },
+    monsterSpawns,
+    geometry,
+  };
 }

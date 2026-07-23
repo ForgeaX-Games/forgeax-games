@@ -32,9 +32,11 @@ function fail(msg: string): never {
 }
 
 function main(): void {
-  const packArg = process.argv[2];
+  const args = process.argv.slice(2);
+  const allowMissingVeyra = args.includes('--allow-missing-veyra');
+  const packArg = args.find((a) => !a.startsWith('--'));
   if (!packArg) {
-    fail('usage: bun scripts/validate-scene-pack.ts <pack.json>');
+    fail('usage: bun scripts/validate-scene-pack.ts <pack.json> [--allow-missing-veyra]');
   }
   const packPath = resolve(packArg);
   if (!existsSync(packPath)) fail(`pack not found: ${packPath}`);
@@ -78,34 +80,44 @@ function main(): void {
     }
   }
 
-  // Exactly one NpcVeyraAnchor
+  // Camp packs require exactly one NpcVeyraAnchor. Non-camp packs (boss
+  // antechamber) may pass --allow-missing-veyra — do not weaken camp checks.
   const anchors = entities.filter((e) => e.components?.Name?.value === VEYRA_ANCHOR);
-  if (anchors.length === 0) fail(`missing ${VEYRA_ANCHOR}`);
+  if (!allowMissingVeyra) {
+    if (anchors.length === 0) fail(`missing ${VEYRA_ANCHOR}`);
+    if (anchors.length > 1) fail(`duplicate ${VEYRA_ANCHOR} (count=${anchors.length})`);
+
+    // Veyra scene + idle GUIDs present in witch.glb.meta.json
+    // pack lives at assets/scenes/… → hellforge root is ../..
+    const hellforgeRoot = resolve(dirname(packPath), '../..');
+    const witchMetaPath = join(hellforgeRoot, WITCH_META);
+    if (!existsSync(witchMetaPath)) {
+      fail(`witch meta missing at ${witchMetaPath}`);
+    }
+    const meta = JSON.parse(readFileSync(witchMetaPath, 'utf8')) as {
+      subAssets?: Array<{ guid?: string; kind?: string }>;
+    };
+    const guids = new Set((meta.subAssets ?? []).map((s) => s.guid).filter(Boolean));
+    if (!guids.has(VEYRA_SCENE_GUID)) {
+      fail(`witch.glb.meta.json missing Veyra scene GUID ${VEYRA_SCENE_GUID}`);
+    }
+    if (!guids.has(VEYRA_IDLE_GUID)) {
+      fail(`witch.glb.meta.json missing Veyra idle GUID ${VEYRA_IDLE_GUID}`);
+    }
+    const sceneSub = meta.subAssets?.find((s) => s.guid === VEYRA_SCENE_GUID);
+    const idleSub = meta.subAssets?.find((s) => s.guid === VEYRA_IDLE_GUID);
+    if (sceneSub?.kind !== 'scene') fail(`GUID ${VEYRA_SCENE_GUID} kind is not scene`);
+    if (idleSub?.kind !== 'animation-clip') fail(`GUID ${VEYRA_IDLE_GUID} kind is not animation-clip`);
+
+    console.log(`[validate-scene-pack] OK: ${entities.length} entities, ${VEYRA_ANCHOR} present, Veyra GUIDs verified`);
+    return;
+  }
+
   if (anchors.length > 1) fail(`duplicate ${VEYRA_ANCHOR} (count=${anchors.length})`);
-
-  // Veyra scene + idle GUIDs present in witch.glb.meta.json
-  // pack lives at assets/scenes/… → hellforge root is ../..
-  const hellforgeRoot = resolve(dirname(packPath), '../..');
-  const witchMetaPath = join(hellforgeRoot, WITCH_META);
-  if (!existsSync(witchMetaPath)) {
-    fail(`witch meta missing at ${witchMetaPath}`);
-  }
-  const meta = JSON.parse(readFileSync(witchMetaPath, 'utf8')) as {
-    subAssets?: Array<{ guid?: string; kind?: string }>;
-  };
-  const guids = new Set((meta.subAssets ?? []).map((s) => s.guid).filter(Boolean));
-  if (!guids.has(VEYRA_SCENE_GUID)) {
-    fail(`witch.glb.meta.json missing Veyra scene GUID ${VEYRA_SCENE_GUID}`);
-  }
-  if (!guids.has(VEYRA_IDLE_GUID)) {
-    fail(`witch.glb.meta.json missing Veyra idle GUID ${VEYRA_IDLE_GUID}`);
-  }
-  const sceneSub = meta.subAssets?.find((s) => s.guid === VEYRA_SCENE_GUID);
-  const idleSub = meta.subAssets?.find((s) => s.guid === VEYRA_IDLE_GUID);
-  if (sceneSub?.kind !== 'scene') fail(`GUID ${VEYRA_SCENE_GUID} kind is not scene`);
-  if (idleSub?.kind !== 'animation-clip') fail(`GUID ${VEYRA_IDLE_GUID} kind is not animation-clip`);
-
-  console.log(`[validate-scene-pack] OK: ${entities.length} entities, ${VEYRA_ANCHOR} present, Veyra GUIDs verified`);
+  console.log(
+    `[validate-scene-pack] OK: ${entities.length} entities `
+    + `(--allow-missing-veyra; ${VEYRA_ANCHOR} ${anchors.length === 0 ? 'absent' : 'present'})`,
+  );
 }
 
 main();

@@ -31,9 +31,9 @@ export interface CameraRigInput {
   /** Explicit orbit deltas (radians) — no edge-of-screen rotate. */
   orbitDeltaYaw?: number;
   orbitDeltaPitch?: number;
-  /** Desired showcase arm before collision (defaults to SHOWCASE_DISTANCE). */
+  /** Desired camera arm before collision (ARPG zoom or showcase orbit). */
   desiredDistance?: number;
-  /** Camp obstacle spring-arm probe; omitted = no contraction. */
+  /** Authored obstacle spring-arm probe; omitted = no contraction. */
   probe?: CameraProbe | null;
 }
 
@@ -73,6 +73,15 @@ export const SHOWCASE_FOLLOW_RATE = 10;
 export const SHOWCASE_ARM_SKIN = 0.18;
 /** Smooth recovery toward cleared arm length (1/s). */
 export const SHOWCASE_ARM_RECOVER = 7;
+/** Ray skin for ARPG spring-arm probe (metres) — not a playable floor. */
+export const ARPG_ARM_SKIN = SHOWCASE_ARM_SKIN;
+export const ARPG_ARM_RECOVER = SHOWCASE_ARM_RECOVER;
+/**
+ * Playable ARPG probe floor (metres). Probe may ask for less; we clamp here so
+ * combat stay readable (feet close-up / unclickable ground is a hard fail).
+ * Remaining occlusion is the fade path's job.
+ */
+export const ARPG_PROBE_DISTANCE_MIN = 7.5;
 const SHOWCASE_FOCUS_Y = 1.35;
 
 function clamp(v: number, lo: number, hi: number): number {
@@ -218,8 +227,8 @@ export function updateArpgCamera(
   preset: ArpgCameraPreset,
 ): CameraRigState {
   const dt = Math.max(0, input.dt);
-  const distance = clamp(
-    previous.distance + input.zoomDelta,
+  const desired = clamp(
+    (input.desiredDistance ?? previous.distance) + input.zoomDelta,
     ARPG_DISTANCE_MIN,
     ARPG_DISTANCE_MAX,
   );
@@ -230,6 +239,24 @@ export function updateArpgCamera(
   ];
   const yaw = preset.yawRad;
   const pitch = preset.pitchRad;
+  const idealEye = eyeFromOrbit(focus, yaw, pitch, desired);
+  let allowed = desired;
+  if (input.probe) {
+    allowed = input.probe.maxDistance(focus, idealEye, ARPG_ARM_SKIN);
+    // May pull below zoom-min, but never below the playable ARPG floor.
+    allowed = clamp(allowed, ARPG_PROBE_DISTANCE_MIN, desired);
+  }
+
+  // Zoom updates desired first (above). Probe contracts immediately;
+  // outward recovery always damps — never snap out on wheel.
+  let distance: number;
+  if (allowed < previous.distance) {
+    distance = allowed;
+  } else {
+    distance = dampAxis(previous.distance, allowed, ARPG_ARM_RECOVER, dt);
+  }
+  distance = clamp(distance, ARPG_PROBE_DISTANCE_MIN, ARPG_DISTANCE_MAX);
+
   const shake = decayShake(previous.shake, input.shakeImpulse, dt);
   const baseEye = eyeFromOrbit(focus, yaw, pitch, distance);
   return {

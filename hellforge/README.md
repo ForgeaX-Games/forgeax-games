@@ -66,7 +66,14 @@ acceptance and licensed audio remain open human gates** — see Open gates.
 cd packages/games
 bun test hellforge/src
 bun hellforge/scripts/validate-scene-pack.ts hellforge/assets/scenes/rogue-encampment.pack.json
+bun hellforge/scripts/validate-blocker-prop-consistency.ts
 ```
+
+`validate-blocker-prop-consistency` compares camp obstacle AABBs to pack prop
+footprints (unit-cube × transform) — **camp is the hard L2 gate**. Wild
+(`ashen-reach.layout.json`) is **layout-internal only by design for PR1** (no
+companion pack / prop match). Optional named exceptions live in
+`assets/scenes/blocker-prop-allowlist.json` (empty by default).
 
 Do **not** cite `bun fx check` or `ONLY=hellforge bun scripts/website/build-games.mjs`
 as Hellforge source gates (see SPEC / plan notes).

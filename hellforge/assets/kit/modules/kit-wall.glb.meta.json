@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "kit-wall.glb",
+  "importSettings": {
+    "defaultSceneIndex": 0
+  },
+  "subAssets": [
+    {
+      "guid": "cadebb30-b159-d3a5-7559-a2a7d4562207",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    },
+    {
+      "guid": "4883ca74-4a89-cd3e-2d4a-8374e2b3e1f1",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "0bcfdd1a-c8f3-e330-821e-6258b9b40e5b",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "1d36e245-64be-e031-0614-5b95a09fb1b1",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "6a7752a0-4b76-36f8-b6af-71bb81ea1c12",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "2be02e6d-76bd-b2ca-6f8f-6164d134f1f3",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "75d66025-4506-56ee-2fd4-2dc485b6cea6",
+      "sourceIndex": 3,
+      "kind": "texture"
+    }
+  ]
+}

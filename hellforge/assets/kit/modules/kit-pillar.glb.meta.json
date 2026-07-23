@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "kit-pillar.glb",
+  "importSettings": {
+    "defaultSceneIndex": 0
+  },
+  "subAssets": [
+    {
+      "guid": "e885d18e-162f-0f77-cc4c-1d2271793478",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    },
+    {
+      "guid": "ddb51053-333e-00db-9863-0935f137d741",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "51c716e7-6803-474a-0134-4c3f8d42901f",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "6538f023-fb5b-0bd2-60a1-52db76935c18",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "e8da23ab-232f-af57-54c1-3b9e4c9483b3",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "a034bb60-41d3-e2e1-4680-d5248cf812d6",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "8d10dbc9-0683-fb09-566f-0ee39b9bced0",
+      "sourceIndex": 3,
+      "kind": "texture"
+    }
+  ]
+}

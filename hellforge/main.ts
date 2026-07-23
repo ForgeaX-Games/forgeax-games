@@ -139,6 +139,8 @@ import { bgmPhaseForMusic, installBgm, type BgmHandle } from './src/bgm';
 import { ensureShadowCasters } from './src/ensure-shadow-casters';
 import { contactRadiusForScale, installContactShadows } from './src/contact-shadow';
 import {
+  ARPG_DISTANCE_MAX,
+  ARPG_DISTANCE_MIN,
   CAMERA_MODE_BLEND_S,
   DEFAULT_ARPG_PRESET,
   SHOWCASE_DISTANCE,
@@ -155,6 +157,12 @@ import {
   type CameraRigState,
 } from './src/camera-rig';
 import { createObstacleCameraProbe } from './src/camera-probe';
+import {
+  buildCampFadeRegistry,
+  createFadeDriver,
+  selectBlockersNeedingFade,
+  type FadeBlockerEntry,
+} from './src/camera-fade';
 import type { ActiveSkillId, AreaExitId } from './src/content-ids';
 import {
   canEnterSlagdeep,
@@ -719,7 +727,37 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const campObstacles = await loadSceneJson<ObstacleDoc>(
       './assets/scenes/rogue-encampment.obstacles.json', emptyObstacles,
     );
-    const campCameraProbe = createObstacleCameraProbe(campObstacles.blockers);
+    // Camp + boss-antechamber doorframe proxies (world-space; den install already ran).
+    const cameraProbeBlockers = [
+      ...campObstacles.blockers,
+      ...dungeon.antechamberProbeBlockers,
+    ];
+    const campCameraProbe = createObstacleCameraProbe(cameraProbeBlockers);
+    // Foreground fade registry (diagnostics / future material-alpha). PR1 does
+    // NOT mutate prop Transform — scale squash looked broken. Engine PBR
+    // hardcodes baseColor.a=1 until Track A. Visibility = probe floor only.
+    const fadeNamed: Array<{ localId: number; name: string }> = [];
+    {
+      const qState = createQueryState({ with: [Name, Entity] as const });
+      queryRun(qState, world, (bundle) => {
+        const ents = bundle.Entity.self;
+        for (let i = 0; i < ents.length; i++) {
+          const e = ents[i] as EntityHandle | undefined;
+          if (e === undefined) continue;
+          const n = world.get(e, Name);
+          if (!n.ok || !n.value.value) continue;
+          fadeNamed.push({ localId: e as unknown as number, name: n.value.value });
+        }
+      });
+    }
+    const fadeRegistry = buildCampFadeRegistry(cameraProbeBlockers, fadeNamed);
+    const fadeEntries: FadeBlockerEntry[] = [...fadeRegistry.values()];
+    const campFadeDriver = createFadeDriver({
+      blockerIds: fadeEntries.map((e) => e.blockerId),
+      setAlpha: () => {
+        /* no-op — never scale authored props */
+      },
+    });
     const ashenLayout = await loadSceneJson<AshenReachLayout>(
       './assets/scenes/ashen-reach.layout.json', emptyAshen,
     );
@@ -1340,6 +1378,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       get witchRoot() { return witchRoot; },
       get witchSkinEnt() { return witchSkinEnt; },
       get camRig() { return camRig; },
+      /** Pre-probe desired ARPG arm (zoom); camRig.distance is post-contraction. */
+      get desiredArm() { return arpgZoomDistance; },
       get cameraMode() { return camMode; },
       get area() { return area; },
       get sky() { return sky; },
@@ -1348,6 +1388,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       perf: {
         snapshot: () => perfProbe.snapshot(),
         reset: () => perfProbe.reset(),
+      },
+      campFade: {
+        blockerIds: fadeEntries.map((e) => e.blockerId),
+        entityCounts: Object.fromEntries(
+          fadeEntries.map((e) => [e.blockerId, e.entityLocalIds.length]),
+        ),
       },
     };
 
@@ -2161,7 +2207,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           // Spec §6.2: showcase only in Cinderwatch; force arpg before leave.
           if (camMode === 'arpg') {
             if (area === 'camp') {
-              arpgZoomDistance = camRig.distance;
+              // Keep arpgZoomDistance as the pre-probe desired arm (not contracted).
               beginCameraMode('showcase');
               rs.applyCamera();
             }
@@ -2754,15 +2800,18 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const orbitPitch = orbitPitchAcc;
       orbitYawAcc = 0;
       orbitPitchAcc = 0;
+      const arpgZoom = camMode === 'arpg' ? zoomDelta : 0;
       const camInput = {
         target: [state.px, 0, state.pz] as const,
         dt,
-        zoomDelta: camMode === 'arpg' ? zoomDelta : 0,
+        zoomDelta: arpgZoom,
         shakeImpulse,
         orbitDeltaYaw: orbitYaw,
         orbitDeltaPitch: orbitPitch,
-        desiredDistance: SHOWCASE_DISTANCE,
-        probe: camMode === 'showcase' ? campCameraProbe : null,
+        // Showcase uses fixed arm; ARPG keeps wheel zoom as desired (probe may shorten).
+        desiredDistance: camMode === 'showcase' ? SHOWCASE_DISTANCE : arpgZoomDistance,
+        // Camp + antechamber occluders (ARPG + showcase share one probe).
+        probe: campCameraProbe,
       };
       zoomDelta = 0;
       let ideal: CameraRigState;
@@ -2771,7 +2820,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         ideal = updateShowcaseCamera(camRig, camInput, facingYaw);
       } else {
         ideal = updateArpgCamera(camRig, camInput, arpgPreset);
-        arpgZoomDistance = ideal.distance;
+        arpgZoomDistance = Math.min(
+          ARPG_DISTANCE_MAX,
+          Math.max(ARPG_DISTANCE_MIN, arpgZoomDistance + arpgZoom),
+        );
       }
       if (camBlend) {
         camBlend.elapsed += dt;
@@ -2791,6 +2843,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         pos: [camRig.eye[0]!, camRig.eye[1]!, camRig.eye[2]!],
         quat: [cq[0]!, cq[1]!, cq[2]!, cq[3]!],
       });
+      // Foreground fade when contraction still leaves the player occluded.
+      if (fadeEntries.length > 0) {
+        const needsFade = selectBlockersNeedingFade(fadeEntries, {
+          eye: camRig.eye,
+          playerPos: [state.px, 1.0, state.pz],
+        });
+        campFadeDriver.update(needsFade, dt);
+      }
     }});
 
   }

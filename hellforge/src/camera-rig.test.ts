@@ -1,7 +1,10 @@
 import { describe, expect, test } from 'bun:test';
+import { createObstacleCameraProbe, type ProbeBlocker } from './camera-probe';
 import {
+  ARPG_ARM_SKIN,
   ARPG_DISTANCE_MAX,
   ARPG_DISTANCE_MIN,
+  ARPG_PROBE_DISTANCE_MIN,
   ARPG_PRESETS,
   CAMERA_MODE_BLEND_MS,
   CAMERA_MODE_BLEND_S,
@@ -83,13 +86,154 @@ describe('updateArpgCamera zoom', () => {
     expect(start.distance).toBe(12);
     const pitch = start.pitch;
 
-    let zoomedOut = step(start, [0, 0, 0], 0, 5);
-    expect(zoomedOut.distance).toBe(ARPG_DISTANCE_MAX);
-    expect(zoomedOut.pitch).toBe(pitch);
-
+    // Zoom-in contracts immediately (desired shrinks below previous).
     let zoomedIn = step(start, [0, 0, 0], 0, -5);
     expect(zoomedIn.distance).toBe(ARPG_DISTANCE_MIN);
     expect(zoomedIn.pitch).toBe(pitch);
+
+    // Zoom-out updates desired then recovers with damp (no outward snap).
+    const desiredOut = ARPG_DISTANCE_MAX;
+    let zoomedOut = updateArpgCamera(start, {
+      target: [0, 0, 0],
+      dt: 1 / 60,
+      zoomDelta: 5,
+      shakeImpulse: [0, 0, 0],
+      desiredDistance: start.distance,
+    }, DEFAULT_ARPG_PRESET);
+    expect(zoomedOut.distance).toBeGreaterThan(start.distance);
+    expect(zoomedOut.distance).toBeLessThan(desiredOut);
+    expect(zoomedOut.pitch).toBe(pitch);
+    for (let i = 0; i < 90; i++) {
+      zoomedOut = updateArpgCamera(zoomedOut, {
+        target: [0, 0, 0],
+        dt: 1 / 60,
+        zoomDelta: 0,
+        shakeImpulse: [0, 0, 0],
+        desiredDistance: desiredOut,
+      }, DEFAULT_ARPG_PRESET);
+    }
+    expect(zoomedOut.distance).toBeCloseTo(desiredOut, 1);
+  });
+});
+
+describe('updateArpgCamera obstacle probe', () => {
+  test('contracts to the probe distance in one ARPG step when blocked', () => {
+    const start = createArpgCamera([0, 0, 0], DEFAULT_ARPG_PRESET);
+    const blocker: ProbeBlocker = {
+      type: 'aabb',
+      min: [1.8, 2.4],
+      max: [2.7, 3.5],
+      probeHeight: 8,
+      probePad: 0,
+    };
+    const probe = createObstacleCameraProbe([blocker]);
+    const focus = start.focus;
+    const idealEye = eyeFromOrbit(
+      focus,
+      DEFAULT_ARPG_PRESET.yawRad,
+      DEFAULT_ARPG_PRESET.pitchRad,
+      start.distance,
+    );
+    const raw = probe.maxDistance(focus, idealEye, ARPG_ARM_SKIN);
+    const expected = Math.max(ARPG_PROBE_DISTANCE_MIN, Math.min(start.distance, raw));
+
+    const blocked = updateArpgCamera(start, {
+      target: [0, 0, 0],
+      dt: 1 / 60,
+      zoomDelta: 0,
+      shakeImpulse: [0, 0, 0],
+      desiredDistance: start.distance,
+      probe,
+    }, DEFAULT_ARPG_PRESET);
+
+    expect(raw).toBeLessThan(ARPG_DISTANCE_MIN);
+    expect(blocked.distance).toBeCloseTo(expected, 5);
+    expect(blocked.distance).toBeGreaterThanOrEqual(ARPG_PROBE_DISTANCE_MIN);
+    expect(blocked.distance).toBeLessThan(start.distance);
+    expect(Math.hypot(
+      blocked.eye[0]! - blocked.focus[0]!,
+      blocked.eye[1]! - blocked.focus[1]!,
+      blocked.eye[2]! - blocked.focus[2]!,
+    )).toBeCloseTo(blocked.distance, 5);
+  });
+
+  test('never contracts below the playable ARPG probe floor', () => {
+    const start = createArpgCamera([0, 0, 0], DEFAULT_ARPG_PRESET);
+    // Huge blocker that would resolve to ~skin distance without a floor.
+    const blocker: ProbeBlocker = {
+      type: 'aabb',
+      min: [-2, -2],
+      max: [8, 8],
+      probeHeight: 12,
+      probePad: 0,
+    };
+    const probe = createObstacleCameraProbe([blocker]);
+    const blocked = updateArpgCamera(start, {
+      target: [0, 0, 0],
+      dt: 1 / 60,
+      zoomDelta: 0,
+      shakeImpulse: [0, 0, 0],
+      desiredDistance: start.distance,
+      probe,
+    }, DEFAULT_ARPG_PRESET);
+    expect(blocked.distance).toBe(ARPG_PROBE_DISTANCE_MIN);
+  });
+
+  test('recovers smoothly toward desired ARPG distance when the probe is free', () => {
+    const contracted: CameraRigState = {
+      ...createArpgCamera([0, 0, 0], DEFAULT_ARPG_PRESET),
+      distance: ARPG_PROBE_DISTANCE_MIN,
+      eye: eyeFromOrbit(
+        [0, 0, 0],
+        DEFAULT_ARPG_PRESET.yawRad,
+        DEFAULT_ARPG_PRESET.pitchRad,
+        ARPG_PROBE_DISTANCE_MIN,
+      ),
+    };
+    const probe = createObstacleCameraProbe([]);
+
+    const free = updateArpgCamera(contracted, {
+      target: [0, 0, 0],
+      dt: 1 / 60,
+      zoomDelta: 0,
+      shakeImpulse: [0, 0, 0],
+      desiredDistance: DEFAULT_ARPG_PRESET.distance,
+      probe,
+    }, DEFAULT_ARPG_PRESET);
+
+    expect(free.distance).toBeGreaterThan(contracted.distance);
+    expect(free.distance).toBeLessThan(ARPG_DISTANCE_MIN);
+    expect(free.distance).toBeLessThan(DEFAULT_ARPG_PRESET.distance);
+  });
+
+  test('contracted + clear probe + nonzero zoomDelta does not jump to full desired', () => {
+    const contracted: CameraRigState = {
+      ...createArpgCamera([0, 0, 0], DEFAULT_ARPG_PRESET),
+      distance: ARPG_PROBE_DISTANCE_MIN,
+      eye: eyeFromOrbit(
+        [0, 0, 0],
+        DEFAULT_ARPG_PRESET.yawRad,
+        DEFAULT_ARPG_PRESET.pitchRad,
+        ARPG_PROBE_DISTANCE_MIN,
+      ),
+    };
+    const probe = createObstacleCameraProbe([]);
+    const desiredDistance = DEFAULT_ARPG_PRESET.distance;
+    const zoomDelta = 0.5;
+
+    const frame = updateArpgCamera(contracted, {
+      target: [0, 0, 0],
+      dt: 1 / 60,
+      zoomDelta,
+      shakeImpulse: [0, 0, 0],
+      desiredDistance,
+      probe,
+    }, DEFAULT_ARPG_PRESET);
+
+    const fullDesired = Math.min(ARPG_DISTANCE_MAX, desiredDistance + zoomDelta);
+    expect(frame.distance).toBeGreaterThan(contracted.distance);
+    expect(frame.distance).toBeLessThan(fullDesired);
+    expect(frame.distance).toBeLessThan(ARPG_DISTANCE_MIN);
   });
 });
 

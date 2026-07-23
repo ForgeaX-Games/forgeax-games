@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "kind": "external-asset-package",
+  "importer": "gltf",
+  "source": "kit-doorframe.glb",
+  "importSettings": {
+    "defaultSceneIndex": 0
+  },
+  "subAssets": [
+    {
+      "guid": "0c695086-94d3-db79-232c-571a70bb38e9",
+      "sourceIndex": 0,
+      "kind": "mesh"
+    },
+    {
+      "guid": "8156de7e-3ffa-97be-e121-ac0dfcdc7c4b",
+      "sourceIndex": 0,
+      "kind": "material"
+    },
+    {
+      "guid": "bc5962c9-6179-304d-9897-8ffc10b8df5f",
+      "sourceIndex": 0,
+      "kind": "scene"
+    },
+    {
+      "guid": "c37c33c7-0087-45e9-25fe-799dce782517",
+      "sourceIndex": 0,
+      "kind": "texture"
+    },
+    {
+      "guid": "87a817ab-1f71-f4e2-a657-635fa6d530bd",
+      "sourceIndex": 1,
+      "kind": "texture"
+    },
+    {
+      "guid": "07bc4890-ded8-33aa-a1b8-279d0b9b8077",
+      "sourceIndex": 2,
+      "kind": "texture"
+    },
+    {
+      "guid": "c3958381-b7a3-4102-e490-b6539a2e1c4d",
+      "sourceIndex": 3,
+      "kind": "texture"
+    }
+  ]
+}
