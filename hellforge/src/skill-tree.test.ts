@@ -24,7 +24,7 @@ function baseState(overrides: Partial<SkillTreeState> = {}): SkillTreeState {
     level: overrides.level ?? 10,
     unspentSkillPoints: overrides.unspentSkillPoints ?? 20,
     skillRanks: overrides.skillRanks ?? emptySkillRanks(),
-    hotbar: overrides.hotbar ?? ['frost', null, null, null],
+    hotbar: overrides.hotbar ?? ['frost', 'magma', null, null],
     selectedHotbarSlot: overrides.selectedHotbarSlot ?? 0,
   };
 }
@@ -63,14 +63,18 @@ describe('skill-tree definitions', () => {
     expect(getSkillNode('phase-step').grantsActive).toBe('blink');
   });
 
-  test('emptySkillRanks grants Frost Fang free rank once (not double-init)', () => {
+  test('emptySkillRanks grants Frost Fang + Magma Bolt free ranks once', () => {
     const a = emptySkillRanks();
     const b = emptySkillRanks();
     expect(a['frost-fang']).toBe(1);
+    expect(a['magma-bolt']).toBe(1);
     expect(b['frost-fang']).toBe(1);
+    expect(b['magma-bolt']).toBe(1);
     expect(totalPaidRanks(a)).toBe(0);
     expect(paidRankCount('frost-fang', 1)).toBe(0);
     expect(paidRankCount('frost-fang', 3)).toBe(2);
+    expect(paidRankCount('magma-bolt', 1)).toBe(0);
+    expect(paidRankCount('magma-bolt', 3)).toBe(2);
   });
 
   test('formula caps match Spec §7.2 trigger/stack numbers', () => {
@@ -121,10 +125,10 @@ describe('skill-tree definitions', () => {
 });
 
 describe('nodeAvailability + investPoint', () => {
-  test('Frost Fang starts invested (free rank), not available/locked', () => {
+  test('Frost Fang + Magma Bolt start invested (free ranks), not available/locked', () => {
     const state = baseState({ level: 1, unspentSkillPoints: 0 });
     expect(nodeAvailability(getSkillNode('frost-fang'), state)).toBe('invested');
-    expect(nodeAvailability(getSkillNode('magma-bolt'), state)).toBe('available');
+    expect(nodeAvailability(getSkillNode('magma-bolt'), state)).toBe('invested');
     expect(nodeAvailability(getSkillNode('kindling'), state)).toBe('locked');
   });
 
@@ -239,11 +243,11 @@ describe('respecInCamp', () => {
     expect(respecInCamp(state, 'slagdeep-hollow')).toEqual({ ok: false, reason: 'not-in-camp' });
   });
 
-  test('in camp: keeps free Frost Fang, refunds paid ranks only', () => {
+  test('in camp: keeps free Frost Fang + Magma Bolt, refunds paid ranks only', () => {
     let state = baseState({ unspentSkillPoints: 5 });
     state = investPath(state, [
       'frost-fang', 'frost-fang', // paid 2 → rank 3
-      'magma-bolt',
+      'magma-bolt', // paid 1 → rank 2 (free starter is rank 1)
       'arc-surge',
     ]);
     expect(state.skillRanks['frost-fang']).toBe(3);
@@ -254,13 +258,13 @@ describe('respecInCamp', () => {
     expect(res.ok).toBe(true);
     if (!res.ok) return;
     expect(res.state.skillRanks['frost-fang']).toBe(1);
-    expect(res.state.skillRanks['magma-bolt']).toBe(0);
+    expect(res.state.skillRanks['magma-bolt']).toBe(1);
     expect(res.state.skillRanks['arc-surge']).toBe(0);
     expect(totalPaidRanks(res.state.skillRanks)).toBe(0);
     expect(res.state.unspentSkillPoints).toBe(1 + 4);
   });
 
-  test('clears hotbar slots whose active is now unlearned; selects Frost', () => {
+  test('clears hotbar slots whose active is now unlearned; keeps free starters', () => {
     let state = baseState({ unspentSkillPoints: 5 });
     state = investPath(state, ['magma-bolt', 'arc-surge', 'arc-surge', 'phase-step']);
     const assigned = assignActiveToHotbar(state, 'magma-bolt', 1);
@@ -276,7 +280,7 @@ describe('respecInCamp', () => {
     expect(res.ok).toBe(true);
     if (!res.ok) return;
     expect(res.state.hotbar).toContain('frost');
-    expect(res.state.hotbar).not.toContain('magma');
+    expect(res.state.hotbar).toContain('magma');
     expect(res.state.hotbar).not.toContain('arc');
     expect(res.state.hotbar).not.toContain('blink');
     expect(res.state.hotbar[res.state.selectedHotbarSlot]).toBe('frost');
@@ -286,7 +290,7 @@ describe('respecInCamp', () => {
 describe('assignActiveToHotbar + clamp', () => {
   test('rejects unlearned / non-active nodes', () => {
     const state = baseState();
-    expect(assignActiveToHotbar(state, 'magma-bolt', 1)).toEqual({
+    expect(assignActiveToHotbar(state, 'arc-surge', 1)).toEqual({
       ok: false, reason: 'not-learned',
     });
     expect(assignActiveToHotbar(state, 'kindling', 1)).toEqual({
@@ -294,7 +298,7 @@ describe('assignActiveToHotbar + clamp', () => {
     });
   });
 
-  test('clampSkillRanks enforces free Frost Fang and max ranks', () => {
+  test('clampSkillRanks enforces free starter ranks and max ranks', () => {
     const clamped = clampSkillRanks({
       'frost-fang': 0,
       'magma-bolt': 99,
@@ -303,6 +307,8 @@ describe('assignActiveToHotbar + clamp', () => {
     expect(clamped['frost-fang']).toBe(1);
     expect(clamped['magma-bolt']).toBe(5);
     expect(clamped['kindling']).toBe(0);
+    const zeroMagma = clampSkillRanks({ 'magma-bolt': 0 });
+    expect(zeroMagma['magma-bolt']).toBe(1);
   });
 
   test('stateFromProgression sanitizes hotbar against ranks', () => {
@@ -311,12 +317,33 @@ describe('assignActiveToHotbar + clamp', () => {
       unspentSkillPoints: 2,
       skillRanks: { 'frost-fang': 1 },
       hotbar: ['frost', 'magma', 'blink', null],
-      selectedHotbarSlot: 1,
+      selectedHotbarSlot: 2,
     });
-    expect(state.hotbar[1]).toBeNull();
+    // Free Magma Bolt survives clamp; unlearned blink is cleared.
+    expect(state.hotbar[1]).toBe('magma');
     expect(state.hotbar[2]).toBeNull();
     expect(state.hotbar).toContain('frost');
     expect(state.selectedHotbarSlot).toBeTypeOf('number');
     expect(state.hotbar[state.selectedHotbarSlot]).toBe('frost');
+  });
+
+  test('stateFromProgression keeps inferno-nova at level ≥3 (level-granted)', () => {
+    const unlocked = stateFromProgression({
+      level: 3,
+      unspentSkillPoints: 0,
+      skillRanks: { 'frost-fang': 1, 'magma-bolt': 1 },
+      hotbar: ['frost', 'magma', null, 'inferno-nova'],
+      selectedHotbarSlot: 3,
+    });
+    expect(unlocked.hotbar[3]).toBe('inferno-nova');
+
+    const locked = stateFromProgression({
+      level: 2,
+      unspentSkillPoints: 0,
+      skillRanks: { 'frost-fang': 1, 'magma-bolt': 1 },
+      hotbar: ['frost', 'magma', null, 'inferno-nova'],
+      selectedHotbarSlot: 0,
+    });
+    expect(locked.hotbar[3]).toBeNull();
   });
 });

@@ -9,6 +9,7 @@
 //
 //  Controls
 //    WASD            move (vector intent; cancels click path/target)
+//    Space           dodge roll (free; i-frames during movement phase)
 //    Mouse           aim (ground cursor unprojection from camera rig)
 //    Wheel           zoom ARPG distance 10–14 m (pitch fixed)
 //    Left-click      ground → path; enemy → pursue + frost; npc/loot/exit → interact
@@ -76,6 +77,7 @@ import {
   SkillSystem,
   type CastResult,
 } from './src/skills';
+import { clampFinisherTarget, FINISHER_ID } from './src/finisher';
 import { resolveSkill } from './src/skill-resolver';
 import { buildSkillTreeViewModel, installSkillPanel } from './src/skill-panel';
 import {
@@ -86,6 +88,20 @@ import {
 import { installSkillFixture } from './src/dev-skill-fixture';
 import { getHeroDef } from './src/heroes';
 import { selectLocomotionClip } from './src/locomotion';
+import {
+  abortDodge,
+  cancelDodgeForSkillOrMove,
+  createDodgeState,
+  DODGE_MOVEMENT_S,
+  dodgeAllowsSkillOrMove,
+  dodgeHitReactionAborts,
+  dodgeLocksTranslation,
+  isDodgeInvulnerable,
+  tickDodge,
+  tryStartDodge,
+  type DodgeState,
+} from './src/dodge';
+import { BuffDisplay } from './src/buff-display';
 import { createCharacterSelectionGate } from './src/selection-gate';
 import {
   createSorceressDomain,
@@ -133,7 +149,16 @@ import { installUiCursors } from './src/ui-cursors';
 import { installUiTooltip } from './src/ui-tooltip';
 import { installUiTransition } from './src/ui-transition';
 import { installCutsceneUi } from './src/cutscene-ui';
-import { sampleCutscene, type CutsceneScript } from './src/cutscene';
+import {
+  buildFinisherHeroShot,
+  sampleCutscene,
+  type CutsceneScript,
+} from './src/cutscene';
+import {
+  createSeamRestoreGuard,
+  isFinisherHeroShotActive,
+  type SeamRestoreGuard,
+} from './src/hero-shot-seam';
 import { ASHEN_REACH_BOUNDS, installWildTerrain } from './src/wild-terrain';
 import { bgmPhaseForMusic, installBgm, type BgmHandle } from './src/bgm';
 import { ensureShadowCasters } from './src/ensure-shadow-casters';
@@ -649,6 +674,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const hud = installHud(uiMount, {
       tooltip: uiTooltip,
       onQuickAction: (action) => {
+        if (cutsceneBlocksChromeKey(uiLayers.active())) return;
         if (action === 'map') {
           uiLayers.closeAll();
           automap.toggle();
@@ -657,6 +683,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         toggleMajorPanel(action as MajorPanel);
       },
     });
+    // PR2a L2: invulnerable buff chrome (Movement i-frames).
+    const buffDisplay = new BuffDisplay(uiMount);
+    onCleanup(() => buffDisplay.clear());
     const cutsceneUi = installCutsceneUi(uiMount);
     onCleanup(() => cutsceneUi.dispose());
     const loot = new LootSystem(world);
@@ -777,15 +806,35 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     // Combined walkability: dungeon A* grid + authored camp/wild blockers.
     const walkableAt = (x: number, z: number): boolean => navigation.walkable([x, z], 0.35);
+    /** PR2a Space dodge — code-driven phases (see src/dodge.ts). Declared
+     *  before MonsterManager so onPlayerHit can close over the binding. */
+    let dodgeState: DodgeState = createDodgeState();
 
     // ── monsters + combat-run objectives (transient; never saved) ─────────
     let denTotal = 0;
     const combatRun = createCombatRunDomain();
     const questStatus = () => character.snapshot().quests[PURGE_QUEST_ID].status;
     const questCompleted = (): boolean => questStatus() === 'completed';
+    // Cutscene playback state is mutated by play/endCutscene (defined later).
+    // Hoisted so onPlayerHit / monsters.tick can gate Hero Shot world policy.
+    let cutscene: { script: CutsceneScript; startMs: number } | null = null;
+    let cutsceneSeam: SeamRestoreGuard | null = null;
+    const heroShotActive = (): boolean =>
+      isFinisherHeroShotActive(cutscene?.script ?? null);
+    // Late-bound: playCutscene exists after the camera/cutscene block.
+    let startFinisherHeroShot: (targetXZ: readonly [number, number]) => void =
+      () => { /* filled after cutscene helpers */ };
     const monsters = new MonsterManager(world, fx, {
       onPlayerHit: (rawDmg, source) => {
         if (area === 'camp') return;                       // camp is sacred
+        // PR2a T5/L6: invulnerable for the Hero Shot window (≤1.2 s).
+        if (heroShotActive()) return;
+        // PR2a L2: i-frames only during dodge Movement phase.
+        if (isDodgeInvulnerable(dodgeState)) return;
+        // L3: hit during buildup/recover aborts the roll (no i-frames).
+        if (dodgeHitReactionAborts(dodgeState)) {
+          dodgeState = abortDodge(dodgeState);
+        }
         const dmg = resolveIncomingDamage(rawDmg, combatStats);
         if (damagePlayer(player, dmg)) {
           hud.damageFlash();
@@ -940,7 +989,19 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         if (!killed) sfx.play(crit ? 'crit' : 'hit');
         if (crit) addShake(0.07);
       },
+      // T5: presentation only — damage never waits on Hero Shot playback.
+      onFinisherHeroShot(targetXZ) {
+        startFinisherHeroShot(targetXZ);
+      },
     }, hero.skills);
+
+    const groundAimXZ = (): readonly [number, number] | null => {
+      const hit = aimOnGround(
+        camRig, mouseX, mouseY, aspect, canvas.clientWidth, canvas.clientHeight,
+      );
+      if (!hit) return null;
+      return clampFinisherTarget(hit.x, hit.z, state.px, state.pz, walkableAt);
+    };
 
     const skillCaster = createSkillCaster({
       skills,
@@ -948,6 +1009,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       getPlayer: () => player,
       getLevel: () => character.snapshot().level,
       getSkillRanks: () => character.snapshot().skillRanks,
+      getGroundXZ: groundAimXZ,
     });
 
     // ── inventory panel (B) — mutations dispatch through CharacterDomain ──
@@ -1201,20 +1263,40 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // Input blocking rides the UiLayerManager funnel (registered below);
     // camera writes replace the per-frame follow in the update loop while active.
     // Wall-clock timed (not dt-summed) — a NaN/dropped dt can never wedge it.
-    let cutscene: { script: CutsceneScript; startMs: number } | null = null;
-    const endCutscene = (): void => {
-      if (!cutscene) return;
-      cutscene = null;
+    // cutscene / cutsceneSeam are hoisted above monsters for Hero Shot gates.
+    const restoreCutsceneSeam = (): void => {
       cutsceneUi.reset();
       uiLayers.close('cutscene');
       camBlend = null;
       camRig = makeArpgAtPlayer();
       rs.applyCamera();
     };
+    const endCutscene = (
+      reason: 'complete' | 'skip' | 'error' | 'stop' = 'complete',
+    ): void => {
+      if (!cutscene && !cutsceneSeam) return;
+      cutscene = null;
+      const guard = cutsceneSeam;
+      cutsceneSeam = null;
+      guard?.restoreOnce(reason);
+    };
     const playCutscene = (script: CutsceneScript): void => {
       if (cutscene) return;
+      cutsceneSeam = createSeamRestoreGuard(restoreCutsceneSeam);
       cutscene = { script, startMs: performance.now() };
       uiLayers.open('cutscene'); // worldInputBlocked ← onOwnershipChange funnel
+    };
+    startFinisherHeroShot = (targetXZ) => {
+      try {
+        playCutscene(buildFinisherHeroShot({
+          targetXZ,
+          playerXZ: [state.px, state.pz],
+          camera: camRig,
+        }));
+      } catch (error) {
+        console.error('[hellforge] finisher Hero Shot failed:', error);
+        endCutscene('error');
+      }
     };
     /** Camp-arrival cinematic: black → wide push-in → letterbox off (skippable). */
     const buildCampIntro = (): CutsceneScript => {
@@ -1395,6 +1477,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           fadeEntries.map((e) => [e.blockerId, e.entityLocalIds.length]),
         ),
       },
+      get dodge() { return dodgeState; },
     };
 
     // ── camera + runtime render-settings (F10) ────────────────────────────
@@ -1555,7 +1638,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       if (res === 'ok') {
         faceX = aim.x; faceZ = aim.z;
         if (id !== 'blink') playOnce('attack', ATTACK_SPEED, 0.7);
-        sfx.play(id === 'magma' ? 'cast-magma' : id === 'frost' ? 'cast-frost' : id === 'arc' ? 'cast-arc' : 'blink');
+        sfx.play(
+          id === 'magma' || id === FINISHER_ID ? 'cast-magma'
+            : id === 'frost' ? 'cast-frost'
+            : id === 'arc' ? 'cast-arc'
+            : 'blink',
+        );
         refreshSkillBar();
       } else if (res === 'mana') {
         const s = worldToScreen(state.px, 2.0, state.pz);
@@ -1570,8 +1658,15 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     const tryCastSkillId = (id: ActiveSkillId, aimOverride?: { x: number; z: number }): CastResult => {
       if (player.dead || camMode !== 'arpg') return 'dead';
+      // L3: no cast during dodge buildup/movement (recover cancel window ok).
+      if (!dodgeAllowsSkillOrMove(dodgeState)) return 'cooldown';
+      // L5: finisher windup locks further casts.
+      if (skills.isFinisherInputLocked()) return 'cooldown';
       const aim = aimOverride ?? aimDir();
-      const res = skillCaster.cast(id, [aim.x, aim.z]);
+      const groundXZ = id === FINISHER_ID ? groundAimXZ() ?? undefined : undefined;
+      const res = skillCaster.cast(id, [aim.x, aim.z], groundXZ ? { groundXZ } : undefined);
+      // L3 roll-cancel: successful cast during late recover aborts + arms CD.
+      if (res === 'ok') dodgeState = cancelDodgeForSkillOrMove(dodgeState);
       finishCast(id, aim, res);
       return res;
     };
@@ -2129,6 +2224,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     refreshQuestLog();
     refreshCharacterPanel();
     onCleanup(() => {
+      // ■ Stop mid-shot: restore camera/input/UI/world exactly once (before
+      // closeAll), then tear down panel surfaces.
+      endCutscene('stop');
       uiLayers.closeAll();
       dialogueUi.dispose();
       questLog.dispose();
@@ -2171,6 +2269,34 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       keys[e.code] = true;
       if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
         e.preventDefault();
+      }
+      // PR2a: Space dodge (edge trigger). Cast commit locks start (L3).
+      if (
+        e.code === 'Space'
+        && !player.dead
+        && camMode === 'arpg'
+        && !worldInputBlocked
+        && !cutsceneBlocksChromeKey(uiLayers.active())
+      ) {
+        const castingLocked = performance.now() < state.oneShotUntil || skills.isFinisherInputLocked();
+        const aim = aimDir();
+        const dirX = Math.hypot(aim.x, aim.z) > 0.01 ? aim.x : faceX;
+        const dirZ = Math.hypot(aim.x, aim.z) > 0.01 ? aim.z : faceZ;
+        const next = tryStartDodge({
+          state: dodgeState,
+          x: state.px,
+          z: state.pz,
+          dirX,
+          dirZ,
+          castingLocked,
+        });
+        if (next.phase === 'buildup' && dodgeState.phase === 'idle') {
+          dodgeState = next;
+          clearMoveIntent();
+          faceX = next.dirX;
+          faceZ = next.dirZ;
+          // Roll clip is T2 (merge-gen3d); until then code-driven lunge only (plan §9).
+        }
       }
       // Cutscene owns UI + world input — only Esc (skip) may steal ownership.
       if (!cutsceneBlocksChromeKey(uiLayers.active())) {
@@ -2298,7 +2424,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       }
       if (e.key === 'Escape') {
         if (cutscene) {
-          if (cutscene.script.skippable) endCutscene();
+          if (cutscene.script.skippable) endCutscene('skip');
           return;
         }
         if (automap.isOpen()) { automap.setOpen(false); return; }
@@ -2336,10 +2462,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         return;
       }
       if (e.button !== 0) return;
+      // L3/L5: click-move blocked during dodge buildup/movement or finisher windup.
+      if (!dodgeAllowsSkillOrMove(dodgeState) || skills.isFinisherInputLocked()) return;
       const hit = aimOnGround(
         camRig, mouseX, mouseY, aspect, canvas.clientWidth, canvas.clientHeight,
       );
       if (!hit) return;
+      // L3 roll-cancel: committed click-move during late recover aborts + arms CD.
+      dodgeState = cancelDodgeForSkillOrMove(dodgeState);
       const world: readonly [number, number] = [hit.x, hit.z];
       const picked = interactions.pickAt(world, CLICK_PICK_R);
       if (picked) {
@@ -2494,14 +2624,56 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // MovementIntent authority: WASD vector replaces point/target; panels clear.
       // Transition cover (zone card / fade) also freezes locomotion while black.
       const allowWorldMove = !worldInputBlocked && !uiTransition.coverUp();
-      const sprint = allowWorldMove && (!!keys['ShiftLeft'] || !!keys['ShiftRight']);
+      // PR2a dodge tick (walkability stepper) — before locomotion integrate.
+      {
+        const dodgeWalk = (x: number, z: number, radius: number) =>
+          navigation.walkable([x, z], radius);
+        const dodged = tickDodge({
+          state: dodgeState,
+          dt: state.paused ? 0 : dt,
+          x: state.px,
+          z: state.pz,
+          walkable: dodgeWalk,
+        });
+        dodgeState = dodged.state;
+        state.px = dodged.x;
+        state.pz = dodged.z;
+        // L3: only buildup+movement own facing / clear path intent.
+        if (dodgeLocksTranslation(dodgeState)) {
+          faceX = dodgeState.dirX;
+          faceZ = dodgeState.dirZ;
+          clearMoveIntent();
+        }
+        // L2: show invulnerable buff only during Movement i-frames.
+        if (isDodgeInvulnerable(dodgeState)) {
+          const remainMs = Math.max(
+            50,
+            (DODGE_MOVEMENT_S - dodgeState.phaseElapsed) * 1000,
+          );
+          buffDisplay.addBuff(
+            'dodge-iframes',
+            '★',
+            '无敌',
+            remainMs,
+            '#cc9900',
+            { invulnerable: true },
+          );
+        }
+        buffDisplay.update(dt * 1000);
+      }
+      const allowLoco = allowWorldMove
+        && dodgeAllowsSkillOrMove(dodgeState)
+        && !skills.isFinisherInputLocked();
+      const sprint = allowLoco && (!!keys['ShiftLeft'] || !!keys['ShiftRight']);
       const spd = (sprint ? SPRINT : SPEED) * moveMul * dt;
       let mvx = 0;
       let mvz = 0;
 
-      if (allowWorldMove && !player.dead) {
+      if (allowLoco && !player.dead) {
         const vec = wasdVectorFromKeys(keys);
         if (vec) {
+          // L3 roll-cancel: WASD during late recover aborts the roll.
+          dodgeState = cancelDodgeForSkillOrMove(dodgeState);
           setMoveIntent(reduceIntent(moveIntent, { op: 'set-vector', x: vec.x, z: vec.z }));
           mvx = vec.x;
           mvz = vec.z;
@@ -2542,16 +2714,21 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
             clearMoveIntent();
           }
         }
-      } else if (worldInputBlocked && moveIntent.kind !== 'none') {
+      } else if (
+        (worldInputBlocked || !dodgeAllowsSkillOrMove(dodgeState) || skills.isFinisherInputLocked())
+        && moveIntent.kind !== 'none'
+      ) {
         clearMoveIntent();
       }
 
       // one-shot clip locks locomotion (attack cast roots the witch briefly)
       const oneShotActive = !state.paused && performance.now() < state.oneShotUntil;
+      // Dodge owns translation in buildup+movement only (stepper already integrated).
+      const dodgeOwnsMove = dodgeLocksTranslation(dodgeState);
 
       // integrate position — per-axis walkability so walls slide, not stick
       const len = Math.hypot(mvx, mvz);
-      state.moving = !oneShotActive && !player.dead && len > 0;
+      state.moving = !oneShotActive && !dodgeOwnsMove && !player.dead && len > 0;
       const prevPx = state.px;
       const prevPz = state.pz;
       if (state.moving) {
@@ -2652,7 +2829,23 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       fx.tick(dt);
       const playerSafe = area !== 'den' && inCamp(state.px, state.pz);
       monsters.animRate = animRate;
-      monsters.tick(dt, state.px, state.pz, playerSafe, walkableAt);
+      // PR2a T5/L6: freeze monsters during finisher Hero Shot (camp-safe
+      // cutscene assumption does not hold in the den). skills.tick still runs
+      // so damage at 0.4 s stays independent of the shot.
+      if (!heroShotActive()) {
+        monsters.tick(dt, state.px, state.pz, playerSafe, walkableAt);
+      }
+      // Finisher telegraph: live preview while selected; commit freezes via SkillSystem.
+      if (camMode === 'arpg' && !player.dead) {
+        const snap = character.snapshot();
+        const selected = snap.hotbar[snap.selectedHotbarSlot];
+        if (selected === FINISHER_ID && skills.finisherPhase() === 'idle') {
+          const g = groundAimXZ();
+          if (g) skills.updateFinisherPreview(g[0], g[1]);
+        } else if (skills.finisherPhase() === 'idle') {
+          skills.clearFinisherPreview();
+        }
+      }
       skills.tick(dt, monsters);
       tickWildSpawner(dt);
 
@@ -2787,12 +2980,22 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         pendingShake = [0, 0, 0];
         orbitYawAcc = 0;
         orbitPitchAcc = 0;
-        const frame = sampleCutscene(cutscene.script, (performance.now() - cutscene.startMs) / 1000);
-        cutsceneUi.setLetterbox(frame.letterbox);
-        cutsceneUi.setFade(frame.fade);
-        cutsceneUi.setCaption(frame.caption);
-        camRig = frame.camera;
-        if (frame.done) endCutscene();
+        let frameDone = false;
+        try {
+          const frame = sampleCutscene(
+            cutscene.script,
+            (performance.now() - cutscene.startMs) / 1000,
+          );
+          cutsceneUi.setLetterbox(frame.letterbox);
+          cutsceneUi.setFade(frame.fade);
+          cutsceneUi.setCaption(frame.caption);
+          camRig = frame.camera;
+          frameDone = frame.done;
+        } catch (error) {
+          console.error('[hellforge] cutscene frame failed:', error);
+          endCutscene('error');
+        }
+        if (frameDone) endCutscene('complete');
       } else {
       const shakeImpulse = pendingShake;
       pendingShake = [0, 0, 0];

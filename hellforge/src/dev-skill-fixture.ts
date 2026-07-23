@@ -33,7 +33,7 @@ export function fixtureProgression(): {
     xp: 0,
     unspentSkillPoints: 9,
     skillRanks: emptySkillRanks(),
-    hotbar: ['frost', null, null, null],
+    hotbar: ['frost', 'magma', null, null],
     selectedHotbarSlot: 0,
   };
 }

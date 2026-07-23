@@ -39,6 +39,8 @@ const SKILL_ICON_FILE: Record<string, string> = {
   frost: 'skills/frost.png', // mage_bingdan.png (ice shard — fits 霜牙 ice bolt)
   arc: 'skills/arc.png', // mage_shandian.png
   blink: 'skills/blink.png', // mage_chuansong.png
+  // Finisher reuses magma art until dedicated icon ships (PR 6).
+  'inferno-nova': 'skills/magma.png',
 };
 
 export function slotIconUrl(slot: ItemSlot): string {

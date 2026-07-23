@@ -50,6 +50,7 @@ export function createUiLayerManager(opts: UiLayerManagerOptions = {}): UiLayerM
       surfaces.set(panel, surface);
     },
     open(panel) {
+      if (current === 'cutscene' && panel !== 'cutscene') return;
       setActive(panel);
     },
     close(panel) {
@@ -57,7 +58,7 @@ export function createUiLayerManager(opts: UiLayerManagerOptions = {}): UiLayerM
       setActive(null);
     },
     closeAll() {
-      if (current === null) return;
+      if (current === null || current === 'cutscene') return;
       setActive(null);
     },
     active: () => current,

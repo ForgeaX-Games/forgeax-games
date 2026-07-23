@@ -209,7 +209,7 @@ describe('legacy migration', () => {
     expect(env.character.classId).toBe('sorceress');
     expect(env.progression.level).toBe(7);
     expect(env.progression.skillRanks['frost-fang']).toBe(1);
-    expect(env.progression.hotbar).toEqual(['frost', null, null, null]);
+    expect(env.progression.hotbar).toEqual(['frost', 'magma', 'arc', 'inferno-nova']);
   });
 
   test('refuses to migrate barbarian', () => {

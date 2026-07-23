@@ -282,7 +282,8 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
         }
         if (s.empty) return;
         // Damage-type colors (aidiablo skill tooltip recipe).
-        const typeCol = s.icon === 'magma' ? '#ff8844' : s.icon === 'frost' ? '#44aaff'
+        const typeCol = s.icon === 'magma' || s.icon === 'inferno-nova' ? '#ff8844'
+          : s.icon === 'frost' ? '#44aaff'
           : s.icon === 'arc' ? '#ffee44' : '#cccccc';
         const state = s.locked ? `<div style="color:${Ui.textDim};">未学</div>`
           : `<div style="color:#7da2ff;">法力 ${s.manaCost}</div>`;

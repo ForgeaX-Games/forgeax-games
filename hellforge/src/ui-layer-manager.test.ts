@@ -100,4 +100,26 @@ describe('createUiLayerManager', () => {
     expect(inv.calls).toEqual(['show']);
     expect(changes).toBe(1);
   });
+
+  test('cutscene ownership is released only by explicitly closing cutscene', () => {
+    const cutscene = trackSurface();
+    const inventory = trackSurface();
+    const ui = createUiLayerManager();
+    ui.register('cutscene', cutscene.surface);
+    ui.register('inventory', inventory.surface);
+
+    ui.open('cutscene');
+    ui.open('inventory');
+    ui.closeAll();
+
+    expect(ui.active()).toBe('cutscene');
+    expect(cutscene.calls).toEqual(['show']);
+    expect(inventory.calls).toEqual([]);
+
+    ui.close('cutscene');
+    ui.open('inventory');
+    expect(ui.active()).toBe('inventory');
+    expect(cutscene.calls).toEqual(['show', 'hide']);
+    expect(inventory.calls).toEqual(['show']);
+  });
 });

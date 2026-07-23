@@ -8,9 +8,10 @@ describe('buildSkillTreeViewModel', () => {
       level: 6,
       unspentSkillPoints: 8,
       skillRanks: emptySkillRanks(),
-      hotbar: ['frost', null, null, null],
+      hotbar: ['frost', 'magma', null, null],
       selectedHotbarSlot: 0,
     });
+    // Free Magma Bolt is rank 1; one paid invest → rank 2 unlocks Kindling prereq.
     const invested = investPoint(state, 'magma-bolt');
     expect(invested.ok).toBe(true);
     if (invested.ok) state = invested.state;
@@ -26,10 +27,11 @@ describe('buildSkillTreeViewModel', () => {
 
     const magma = vm.nodes.find((n) => n.id === 'magma-bolt')!;
     expect(magma.state).toBe('invested');
+    expect(magma.rank).toBe(2);
     expect(magma.grantsActive).toBe('magma');
 
     const kindling = vm.nodes.find((n) => n.id === 'kindling')!;
-    expect(kindling.state).toBe('locked');
+    expect(kindling.state).toBe('available');
 
     const hellfire = buildNodeViewModel('hellfire-catalyst', state);
     expect(hellfire.requiredLevel).toBe(6);

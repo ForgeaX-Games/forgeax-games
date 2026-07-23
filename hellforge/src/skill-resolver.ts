@@ -137,6 +137,23 @@ const BASE: Readonly<Record<ActiveSkillId, ResolvedActiveSkill>> = {
     erratic: false,
     knockback: 0,
   },
+  /** PR2a L5 finisher — ground-target fire AOE; no projectile. */
+  'inferno-nova': {
+    damage: 52,
+    manaCost: 25,
+    cooldown: 20,
+    projectileSpeed: 0,
+    projectileLifetime: 0,
+    projectileCount: 0,
+    splashRadius: 4,
+    splashRatio: 1,
+    slowMagnitude: 0,
+    slowDuration: 0,
+    pierceCount: 0,
+    blinkRange: 0,
+    erratic: false,
+    knockback: 5.5,
+  },
 };
 
 function rankOf(
@@ -279,6 +296,13 @@ export function resolveSkill(
       tips.push(`相位回响 +${(echo * 10).toFixed(0)}% · 2 秒`);
     }
     tips.unshift(`蓝耗 ${out.manaCost} · CD ${out.cooldown.toFixed(1)}s · 距离 ${out.blinkRange} m`);
+  } else if (skillId === 'inferno-nova') {
+    // Brief burn via the same scorch path magma uses (skills.applyOnHit).
+    onHit.push({ kind: 'scorch', fraction: 0.3, durationSec: 2 });
+    tips.push(`灼烧 30% / 2 秒`);
+    tips.unshift(
+      `伤害 ${out.damage.toFixed(1)} · 蓝耗 ${out.manaCost} · CD ${out.cooldown.toFixed(0)}s · ${out.splashRadius.toFixed(0)} m`,
+    );
   }
 
   // Phase Echo multiplies the entire damaging cast when charge is active.

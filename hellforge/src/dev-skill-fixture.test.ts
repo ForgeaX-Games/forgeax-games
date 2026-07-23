@@ -12,7 +12,8 @@ describe('dev skill fixture', () => {
     expect(fix.level).toBe(10);
     expect(fix.unspentSkillPoints).toBe(9);
     expect(fix.skillRanks['frost-fang']).toBe(1);
-    expect(fix.hotbar).toEqual(['frost', null, null, null]);
+    expect(fix.hotbar).toEqual(['frost', 'magma', null, null]);
+    expect(fix.skillRanks['magma-bolt']).toBe(1);
   });
 
   test('query param constant is hfSkillFixture', () => {

@@ -2,7 +2,13 @@
 
 import { describe, expect, test } from 'bun:test';
 import { degToRad, type CameraRigState } from './camera-rig';
-import { sampleCutscene, type CutsceneScript } from './cutscene';
+import {
+  buildFinisherHeroShot,
+  FINISHER_HERO_SHOT_ID,
+  FINISHER_HERO_SHOT_MAX_S,
+  sampleCutscene,
+  type CutsceneScript,
+} from './cutscene';
 
 function rig(distance: number, yaw = 0): CameraRigState {
   return {
@@ -101,5 +107,29 @@ describe('sampleCutscene', () => {
     const s = script();
     expect(sampleCutscene(s, 3.999).done).toBe(false);
     expect(sampleCutscene(s, 4).done).toBe(true);
+  });
+});
+
+describe('buildFinisherHeroShot (PR2a T5)', () => {
+  test('builds a skippable ≤1.2 s script aimed at commit-time target XZ', () => {
+    const camera = rig(12);
+    const shot = buildFinisherHeroShot({
+      targetXZ: [4, -2],
+      playerXZ: [0, 0],
+      camera,
+    });
+    expect(shot.id).toBe(FINISHER_HERO_SHOT_ID);
+    expect(shot.skippable).toBe(true);
+    expect(shot.duration).toBeLessThanOrEqual(FINISHER_HERO_SHOT_MAX_S);
+    expect(shot.duration).toBeGreaterThan(0);
+    expect(sampleCutscene(shot, shot.duration).done).toBe(true);
+    // Modest push-in: end distance ≤ start.
+    const startDist = sampleCutscene(shot, 0).camera.distance;
+    const endDist = sampleCutscene(shot, shot.duration).camera.distance;
+    expect(endDist).toBeLessThanOrEqual(startDist);
+    // Focus drifts toward the target (not stuck on the player origin).
+    const endFocus = sampleCutscene(shot, shot.duration).camera.focus;
+    expect(endFocus[0]).toBeCloseTo(4, 1);
+    expect(endFocus[2]).toBeCloseTo(-2, 1);
   });
 });

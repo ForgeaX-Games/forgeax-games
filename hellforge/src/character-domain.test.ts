@@ -22,14 +22,17 @@ function sampleItem(overrides: Partial<ItemInstance> = {}): ItemInstance {
 }
 
 describe('createSorceressDomain', () => {
-  test('new character has Frost Fang rank 1 and frost hotbar', () => {
+  test('new character has Frost + Magma free ranks and creation hotbar', () => {
     const domain = createSorceressDomain({ playerName: '灰烬娅' });
     const snap = domain.snapshot();
     expect(snap.identity.classId).toBe('sorceress');
     expect(snap.skillRanks['frost-fang']).toBe(1);
-    expect(snap.hotbar).toEqual(['frost', null, null, null]);
+    expect(snap.skillRanks['magma-bolt']).toBe(1);
+    expect(snap.hotbar).toEqual(['frost', 'magma', null, null]);
     expect(snap.selectedHotbarSlot).toBe(0);
     expect(snap.level).toBe(1);
+    expect(snap.skillRanks['arc-surge']).toBe(0);
+    expect(snap.skillRanks['phase-step']).toBe(0);
     expect(snap.quests['purge-slagdeep-hollow'].status).toBe('available');
   });
 
@@ -38,7 +41,8 @@ describe('createSorceressDomain', () => {
     const snap = domain.snapshot();
     expect(snap.identity.classId).toBe('sorceress');
     expect(snap.skillRanks['frost-fang']).toBe(1);
-    expect(snap.hotbar).toEqual(['frost', null, null, null]);
+    expect(snap.skillRanks['magma-bolt']).toBe(1);
+    expect(snap.hotbar).toEqual(['frost', 'magma', null, null]);
   });
 
   test('rejects non-Sorceress at domain-from-record seam', () => {
@@ -97,16 +101,49 @@ describe('createSorceressDomain', () => {
     expect(rec.playerName).toBe('升级');
   });
 
+  test('level 2 grants Arc Surge (castable + hotbar) without spending the skill point', () => {
+    const domain = createSorceressDomain({ playerName: '电弧' });
+    const result = domain.dispatch({ op: 'grant-xp', amount: 60 });
+    expect(result.ok).toBe(true);
+    const snap = domain.snapshot();
+    expect(snap.level).toBe(2);
+    expect(snap.unspentSkillPoints).toBe(1);
+    expect(snap.skillRanks['arc-surge']).toBe(1);
+    expect(snap.hotbar).toEqual(['frost', 'magma', 'arc', null]);
+    expect(snap.skillRanks['phase-step']).toBe(0);
+    expect(snap.hotbar).not.toContain('blink');
+  });
+
+  test('level 3 grants Inferno Nova on hotbar slot 4 without Phase Step', () => {
+    const domain = createSorceressDomain({ playerName: '新星' });
+    // L1→2 needs 60; L2→3 needs floor(60 * 1.45) = 87.
+    const result = domain.dispatch({ op: 'grant-xp', amount: 60 + 87 });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.levelUps?.map((u) => u.level)).toEqual([2, 3]);
+    const snap = domain.snapshot();
+    expect(snap.level).toBe(3);
+    expect(snap.unspentSkillPoints).toBe(2);
+    expect(snap.skillRanks['arc-surge']).toBe(1);
+    expect(snap.skillRanks['phase-step']).toBe(0);
+    expect(snap.hotbar).toEqual(['frost', 'magma', 'arc', 'inferno-nova']);
+    expect(snap.hotbar).not.toContain('blink');
+  });
+
   test('starting above level 1 grants one skill point per level after 1', () => {
-    const domain = createSorceressDomain({ playerName: '老点', level: 4 });
+    const domain = createSorceressDomain({ playerName: '起点', level: 4 });
     expect(domain.snapshot().level).toBe(4);
     expect(domain.snapshot().unspentSkillPoints).toBe(3);
+    expect(domain.snapshot().skillRanks['arc-surge']).toBe(1);
+    expect(domain.snapshot().hotbar).toContain('arc');
+    expect(domain.snapshot().hotbar[3]).toBe('inferno-nova');
+    expect(domain.snapshot().skillRanks['phase-step']).toBe(0);
   });
 
   test('hotbar tuple survives DeepReadonly snapshot', () => {
     const snap = createSorceressDomain({ playerName: '热键' }).snapshot();
     expect(snap.hotbar[0]).toBe('frost');
-    expect(snap.hotbar[1]).toBeNull();
+    expect(snap.hotbar[1]).toBe('magma');
     expect(snap.hotbar[2]).toBeNull();
     expect(snap.hotbar[3]).toBeNull();
     expect(snap.hotbar.length).toBe(4);
@@ -123,26 +160,30 @@ describe('createSorceressDomain', () => {
     expect(domain.snapshot().selectedHotbarSlot).toBe(0);
   });
 
-  test('magma starts unlearned (rank 0) while frost-fang is rank 1', () => {
-    const snap = createSorceressDomain({ playerName: '霜优' }).snapshot();
+  test('magma-bolt starts at free rank 1 with frost-fang', () => {
+    const snap = createSorceressDomain({ playerName: '霜火' }).snapshot();
     expect(snap.skillRanks['frost-fang']).toBe(1);
-    expect(snap.skillRanks['magma-bolt']).toBe(0);
-    expect(snap.hotbar[0]).toBe('frost');
+    expect(snap.skillRanks['magma-bolt']).toBe(1);
+    expect(snap.hotbar).toEqual(['frost', 'magma', null, null]);
   });
 
   test('invest-skill / respec-skills / assign-hotbar go through the domain', () => {
     const domain = createSorceressDomain({ playerName: 'Tree', level: 5 });
     expect(domain.snapshot().unspentSkillPoints).toBe(4);
-    expect(domain.dispatch({ op: 'invest-skill', nodeId: 'magma-bolt' }).ok).toBe(true);
     expect(domain.snapshot().skillRanks['magma-bolt']).toBe(1);
+    expect(domain.dispatch({ op: 'invest-skill', nodeId: 'magma-bolt' }).ok).toBe(true);
+    expect(domain.snapshot().skillRanks['magma-bolt']).toBe(2);
     expect(domain.dispatch({ op: 'assign-hotbar', nodeId: 'magma-bolt', slot: 1 }).ok).toBe(true);
     expect(domain.snapshot().hotbar[1]).toBe('magma');
     expect(domain.dispatch({ op: 'respec-skills', areaId: 'ashen-reach' }).ok).toBe(false);
     expect(domain.dispatch({ op: 'respec-skills', areaId: 'cinderwatch' }).ok).toBe(true);
     const after = domain.snapshot();
-    expect(after.skillRanks['magma-bolt']).toBe(0);
+    expect(after.skillRanks['magma-bolt']).toBe(1);
     expect(after.skillRanks['frost-fang']).toBe(1);
-    expect(after.hotbar).not.toContain('magma');
+    expect(after.skillRanks['arc-surge']).toBe(0);
+    expect(after.hotbar).toContain('magma');
+    expect(after.hotbar).toContain('frost');
+    expect(after.hotbar).not.toContain('arc');
     expect(after.hotbar[after.selectedHotbarSlot]).toBe('frost');
   });
 });

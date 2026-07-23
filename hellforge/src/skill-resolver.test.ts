@@ -71,6 +71,17 @@ describe('resolveSkill — Spec §5.2 base table + caps', () => {
     expect(r.blinkRange).toBe(6.5);
   });
 
+  test('Inferno Nova (finisher) 52 / 25 mana / 20 s cd / 4 m AOE + scorch', () => {
+    const r = resolveSkill('inferno-nova');
+    expect(r.damage).toBe(52);
+    expect(r.manaCost).toBe(25);
+    expect(r.cooldown).toBe(20);
+    expect(r.splashRadius).toBe(4);
+    expect(r.splashRatio).toBe(1);
+    expect(r.projectileCount).toBe(0);
+    expect(r.onHit).toContainEqual({ kind: 'scorch', fraction: 0.3, durationSec: 2 });
+  });
+
   test('shared caps: class crit 5%/1.5×, CDR 45%, move 40%', () => {
     expect(COMBAT_CAPS.classCritChance).toBe(0.05);
     expect(COMBAT_CAPS.classCritMultiplier).toBe(1.5);

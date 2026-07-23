@@ -5,12 +5,14 @@ import { resolveSkill } from './skill-resolver';
 describe('isSkillAvailable', () => {
   const frost = { id: 'frost' as const, unlockLevel: 0 };
   const magma = { id: 'magma' as const, unlockLevel: 0 };
+  const nova = { id: 'inferno-nova' as const, unlockLevel: 3 };
 
-  test('maps active skills to skill-tree nodes', () => {
+  test('maps tree-gated active skills to skill-tree nodes', () => {
     expect(SKILL_NODE_BY_ACTIVE.magma).toBe('magma-bolt');
     expect(SKILL_NODE_BY_ACTIVE.frost).toBe('frost-fang');
     expect(SKILL_NODE_BY_ACTIVE.arc).toBe('arc-surge');
     expect(SKILL_NODE_BY_ACTIVE.blink).toBe('phase-step');
+    expect(SKILL_NODE_BY_ACTIVE['inferno-nova']).toBeUndefined();
   });
 
   test('learned active-node ranks grant cast rights (unlockLevel unused)', () => {
@@ -23,6 +25,12 @@ describe('isSkillAvailable', () => {
     expect(isSkillAvailable(magma, 1, {})).toBe(false);
     expect(isSkillAvailable(magma, 99, {})).toBe(false);
     expect(isSkillAvailable(magma, 1, { 'magma-bolt': 1 })).toBe(true);
+  });
+
+  test('inferno-nova unlocks by level 3 (not tree-gated)', () => {
+    expect(isSkillAvailable(nova, 2, {})).toBe(false);
+    expect(isSkillAvailable(nova, 3, {})).toBe(true);
+    expect(isSkillAvailable(nova, 99, {})).toBe(true);
   });
 });
 

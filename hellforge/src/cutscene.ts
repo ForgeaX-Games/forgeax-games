@@ -7,10 +7,23 @@
 // Design notes (UI-CUTSCENE-UPGRADE-PLAN.md Phase B):
 //  • Camera keyframes blend with camera-rig.lerpCameraRig (shortest-yaw path).
 //  • Weights are smoothstepped — same ease as the arpg⇄showcase blend.
-//  • Nothing here pauses the world; scripts are built for safe spaces (camp)
-//    or instantaneous covers (zone travel uses ui-transition.zoneCard).
+//  • Camp intro / zone covers assume a safe space. Finisher Hero Shot does NOT
+//    — main.ts freezes monsters + grants player invuln while that script plays
+//    (see hero-shot-seam.ts). Damage authority never waits on the shot.
 
-import { cameraBlendWeight, lerpCameraRig, type CameraRigState } from './camera-rig';
+import {
+  cameraBlendWeight,
+  lerpCameraRig,
+  snapCameraFocus,
+  type CameraRigState,
+} from './camera-rig';
+
+/** Finisher Hero Shot cutscene id — world-policy predicate keys off this. */
+export const FINISHER_HERO_SHOT_ID = 'finisher-hero-shot';
+/** Hard cap from PR2a L5/L6 (≤1.2 s). */
+export const FINISHER_HERO_SHOT_MAX_S = 1.2;
+/** Authored runtime — keep under the hard cap with a small skip/ease tail. */
+export const FINISHER_HERO_SHOT_DURATION_S = 1.15;
 
 export interface CutsceneCaption {
   readonly text: string;
@@ -106,4 +119,46 @@ export function sampleCutscene(script: CutsceneScript, t: number): CutsceneFrame
   }
 
   return { fade, letterbox, caption, camera, done: t >= script.duration };
+}
+
+export type FinisherHeroShotInput = {
+  /** Commit-time AOE center (gameplay authority; presentation only reads it). */
+  readonly targetXZ: readonly [number, number];
+  readonly playerXZ: readonly [number, number];
+  /** Live rig snapshot at commit — becomes initialCamera. */
+  readonly camera: CameraRigState;
+};
+
+/**
+ * Finisher Hero Shot — special-case wall-clock cutscene (PR2a L6/T5).
+ * Modest push-in + letterbox; skippable; no long captions. Duration ≤ 1.2 s.
+ */
+export function buildFinisherHeroShot(input: FinisherHeroShotInput): CutsceneScript {
+  const duration = FINISHER_HERO_SHOT_DURATION_S;
+  const midFocus: readonly [number, number, number] = [
+    (input.playerXZ[0] + input.targetXZ[0]) * 0.5,
+    0,
+    (input.playerXZ[1] + input.targetXZ[1]) * 0.5,
+  ];
+  const targetFocus: readonly [number, number, number] = [
+    input.targetXZ[0],
+    0,
+    input.targetXZ[1],
+  ];
+  const cleared: CameraRigState = { ...input.camera, shake: [0, 0, 0] };
+  const initialCamera = snapCameraFocus(cleared, midFocus);
+  const pushDist = Math.max(8, cleared.distance * 0.72);
+  const pushIn = snapCameraFocus({ ...cleared, distance: pushDist }, targetFocus);
+  return {
+    id: FINISHER_HERO_SHOT_ID,
+    skippable: true,
+    duration,
+    initialFade: 0,
+    initialCamera,
+    cameraKeys: [{ at: 0, dur: duration * 0.85, pose: pushIn }],
+    letterbox: [
+      { at: 0, on: true },
+      { at: Math.max(0, duration - 0.18), on: false },
+    ],
+  };
 }

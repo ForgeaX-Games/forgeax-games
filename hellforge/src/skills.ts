@@ -6,16 +6,17 @@
 // clip plays once → cooldown → ready. Mana gates slot variety.
 //
 // Combat numbers come ONLY from SkillResolver (Spec §5.2). Active identity
-// (magma/frost/arc/blink) is stable; ranks/prereqs live in skill-tree.ts.
-// Display metadata (name/icon/desc/unlockLevel) lives here; unlockLevel is
-// legacy HUD copy only — cast rights use learned active-node ranks.
+// (magma/frost/arc/blink/inferno-nova) is stable; ranks/prereqs live in
+// skill-tree.ts. Display metadata (name/icon/desc/unlockLevel) lives here;
+// unlockLevel is legacy HUD copy only — cast rights use learned ranks /
+// level unlocks (finisher).
 
 import {
   Transform, MeshFilter, MeshRenderer, ChildOf, Materials,
   quat,
   type MaterialAsset,
 } from '@forgeax/engine-runtime';
-import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
+import { HANDLE_CUBE, HANDLE_QUAD, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle } from '@forgeax/engine-types';
 
@@ -31,11 +32,21 @@ import {
   shatterShardCount,
   type ResolvedSkill,
 } from './skill-resolver';
+import {
+  commitFinisher,
+  createFinisherState,
+  FINISHER_ID,
+  FINISHER_RADIUS_M,
+  isFinisherInputLocked,
+  tickFinisher,
+  type FinisherState,
+} from './finisher';
 
 import type { ActiveKitSkillId } from './skill-availability';
 export type SkillId = ActiveKitSkillId;
 export { SKILL_NODE_BY_ACTIVE, isSkillAvailable } from './skill-availability';
 export { ACTIVE_BY_SKILL_NODE } from './skill-tree';
+export type { FinisherHooks } from './finisher';
 
 export interface SkillDef {
   id: SkillId;
@@ -90,6 +101,11 @@ const DISPLAY: Record<SkillId, DisplayMeta> = {
     desc: '向目标方向瞬移（影踏步）',
     unlockLevel: 0,
   },
+  'inferno-nova': {
+    id: 'inferno-nova', name: '狱火新星', icon: 'inferno-nova',
+    desc: '锁定地面目标，短暂蓄力后引爆狱火新星',
+    unlockLevel: 3,
+  },
 };
 
 function defFromResolved(id: SkillId, r: ResolvedSkill): SkillDef {
@@ -114,9 +130,9 @@ function defFromResolved(id: SkillId, r: ResolvedSkill): SkillDef {
 }
 
 /** Kit sheet at base ranks — prefer skillDefForRanks() for live tooltips. */
-export const SKILLS: SkillDef[] = (['magma', 'frost', 'arc', 'blink'] as const).map((id) =>
-  defFromResolved(id, resolveSkill(id)),
-);
+export const SKILLS: SkillDef[] = (
+  ['magma', 'frost', 'arc', 'blink', 'inferno-nova'] as const
+).map((id) => defFromResolved(id, resolveSkill(id)));
 
 /** Build a SkillDef from the same resolveSkill() data used by combat. */
 export function skillDefForRanks(
@@ -181,6 +197,11 @@ export type CastResult = 'ok' | 'cooldown' | 'mana' | 'locked' | 'dead';
 export interface SkillHooks {
   tryBlink(dirX: number, dirZ: number, range: number): boolean;
   onHit(x: number, y: number, z: number, damage: number, killed: boolean, crit: boolean): void;
+  /**
+   * T5 Hero Shot seam — called at finisher commit with target XZ.
+   * Presentation only; gameplay damage does not wait on this callback.
+   */
+  onFinisherHeroShot?(targetXZ: readonly [number, number]): void;
 }
 
 /** Combat multipliers supplied from CombatStats — not an independent authority. */
@@ -207,7 +228,11 @@ const DEFAULT_COMBAT_MODS: Readonly<SkillCombatMods> = Object.freeze({
 });
 
 export interface SkillCaster {
-  cast(skillId: ActiveSkillId, aim: readonly [number, number]): CastResult;
+  cast(
+    skillId: ActiveSkillId,
+    aim: readonly [number, number],
+    opts?: { groundXZ?: readonly [number, number] },
+  ): CastResult;
 }
 
 export class SkillSystem {
@@ -218,6 +243,11 @@ export class SkillSystem {
   #mods: Readonly<SkillCombatMods> = DEFAULT_COMBAT_MODS;
   /** Phase Echo charge window (performance.now()/1000). */
   #phaseEchoUntil = 0;
+  #finisher: FinisherState = createFinisherState();
+  #finisherResolved: ResolvedSkill | null = null;
+  #telegraph: EntityHandle | null = null;
+  #telegraphMat: MatHandle | null = null;
+  #telegraphFlatQ: [number, number, number, number] | null = null;
 
   constructor(private world: World, private fx: FxSystem, private hooks: SkillHooks, private skills: SkillDef[]) {
     this.cooldowns = skills.map(() => 0);
@@ -235,6 +265,40 @@ export class SkillSystem {
     const frostAccent = frost?.impact ?? mk([0.55, 0.85, 1, 1], [0.45, 0.78, 1], 0.9);
     this.mats.set('frost', { main: frostMain, accent: frostAccent });
     this.mats.set('arc', { main: mk([0.85, 0.65, 1, 1], [0.70, 0.50, 1], 1.8), accent: mk([0.60, 0.35, 1, 1], [0.55, 0.30, 1], 1.2) });
+    // Finisher telegraph — contact-shadow-style flat quad, fire-tinted (L7: 1 decal).
+    const tq = quat.create();
+    quat.fromAxisAngle(tq, [1, 0, 0], -Math.PI / 2);
+    this.#telegraphFlatQ = [tq[0]!, tq[1]!, tq[2]!, tq[3]!];
+    this.#telegraphMat = world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', Materials.standard({
+      baseColor: [1.0, 0.22, 0.05, 0.42],
+      roughness: 0.9,
+      metallic: 0.0,
+      emissive: [1.0, 0.28, 0.06],
+      emissiveIntensity: 0.85,
+    }));
+  }
+
+  /** L5: windup locks move/cast; aftermath does not. */
+  isFinisherInputLocked(): boolean {
+    return isFinisherInputLocked(this.#finisher);
+  }
+
+  finisherPhase(): FinisherState['phase'] {
+    return this.#finisher.phase;
+  }
+
+  /**
+   * Live ground-target preview while finisher is selected (pre-commit).
+   * No-op during an active commit (telegraph stays at the committed point).
+   */
+  updateFinisherPreview(x: number, z: number): void {
+    if (this.#finisher.phase !== 'idle') return;
+    this.#setTelegraph(x, z, FINISHER_RADIUS_M);
+  }
+
+  clearFinisherPreview(): void {
+    if (this.#finisher.phase !== 'idle') return;
+    this.#clearTelegraph();
   }
 
   /** Read-only combat multipliers; mutate only via applyCombatStats. */
@@ -299,15 +363,17 @@ export class SkillSystem {
     level: number,
     skillRanks: Readonly<Partial<Record<SkillNodeId, number>>>,
     resolved: ResolvedSkill,
+    groundXZ?: readonly [number, number],
   ): CastResult {
     const idx = this.indexOf(skillId);
     if (idx < 0) return 'locked';
     const def = this.skills[idx]!;
     if (player.dead) return 'dead';
-    // Cast rights: learned active-node rank only (not unlockLevel).
+    // Cast rights: learned active-node rank / level unlock (not unlockLevel alone).
     if (!isSkillAvailable(def, level, skillRanks)) return 'locked';
     if (this.cooldowns[idx]! > 0) return 'cooldown';
     if (player.mana < resolved.manaCost) return 'mana';
+    if (this.isFinisherInputLocked()) return 'cooldown';
 
     if (skillId === 'blink') {
       if (!this.hooks.tryBlink(aimX, aimZ, resolved.blinkRange)) return 'cooldown';
@@ -318,6 +384,24 @@ export class SkillSystem {
           this.#phaseEchoUntil = performance.now() / 1000 + fx.windowSec;
         }
       }
+      return 'ok';
+    }
+
+    if (skillId === FINISHER_ID) {
+      if (this.#finisher.phase !== 'idle') return 'cooldown';
+      // L5: commit target must be walkable-clamped by the caller (main groundAimXZ).
+      if (!groundXZ) return 'cooldown';
+      const tx = groundXZ[0];
+      const tz = groundXZ[1];
+      player.mana -= resolved.manaCost;
+      this.cooldowns[idx] = resolved.cooldown * this.mods.cdrMul;
+      if (resolved.phaseEchoApplied) this.#phaseEchoUntil = 0;
+      this.#finisherResolved = resolved;
+      this.#finisher = commitFinisher(this.#finisher, [tx, tz], {
+        onFinisherHeroShot: (target) => this.hooks.onFinisherHeroShot?.(target),
+      });
+      this.#setTelegraph(tx, tz, resolved.splashRadius || FINISHER_RADIUS_M);
+      this.fx.pop(ox + aimX * 0.5, 1.0, oz + aimZ * 0.5, 'fire', 0.28);
       return 'ok';
     }
 
@@ -461,6 +545,7 @@ export class SkillSystem {
     for (let i = 0; i < this.cooldowns.length; i++) {
       if (this.cooldowns[i]! > 0) this.cooldowns[i] = Math.max(0, this.cooldowns[i]! - dt);
     }
+    this.#tickFinisher(dt, monsters);
     const kill = (p: Projectile) => {
       this.world.despawn(p.e);
       for (const pe of p.parts) this.world.despawn(pe);
@@ -559,7 +644,7 @@ export class SkillSystem {
     return this.#phaseEchoUntil > performance.now() / 1000;
   }
 
-  /** Clear projectiles + cooldowns + Phase Echo (combat-run reset seam). */
+  /** Clear projectiles + cooldowns + Phase Echo + finisher (combat-run reset seam). */
   clearProjectilesAndCooldowns(): void {
     for (const p of this.projectiles) {
       this.world.despawn(p.e);
@@ -569,6 +654,94 @@ export class SkillSystem {
     this.fx.noteProjectiles(0);
     for (let i = 0; i < this.cooldowns.length; i++) this.cooldowns[i] = 0;
     this.#phaseEchoUntil = 0;
+    this.#finisher = createFinisherState();
+    this.#finisherResolved = null;
+    this.#clearTelegraph();
+  }
+
+  #setTelegraph(x: number, z: number, radius: number): void {
+    if (!this.#telegraphMat || !this.#telegraphFlatQ) return;
+    const scale = radius * 2;
+    const q = this.#telegraphFlatQ;
+    if (this.#telegraph) {
+      this.world.set(this.#telegraph, Transform, {
+        pos: [x, 0.03, z],
+        quat: q,
+        scale: [scale, scale, scale],
+      });
+      return;
+    }
+    const spawned = this.world.spawn(
+      {
+        component: Transform,
+        data: { pos: [x, 0.03, z], quat: q, scale: [scale, scale, scale] },
+      },
+      { component: MeshFilter, data: { assetHandle: HANDLE_QUAD } },
+      { component: MeshRenderer, data: { materials: [this.#telegraphMat] } },
+    );
+    if (spawned.ok) this.#telegraph = spawned.value as EntityHandle;
+  }
+
+  #clearTelegraph(): void {
+    if (!this.#telegraph) return;
+    try { this.world.despawn(this.#telegraph); } catch { /* */ }
+    this.#telegraph = null;
+  }
+
+  #tickFinisher(dt: number, monsters: MonsterManager): void {
+    if (this.#finisher.phase === 'idle') return;
+    this.#finisher = tickFinisher(this.#finisher, dt, {
+      // Apply inside the hook so a large dt that ends the cast still hits the
+      // committed target (state may reset to idle in the same tick).
+      onDamage: (targetXZ) => this.#applyFinisherDamageAt(monsters, targetXZ[0], targetXZ[1]),
+    });
+    if (this.#finisher.phase === 'idle') {
+      this.#finisherResolved = null;
+      this.#clearTelegraph();
+    } else {
+      this.#setTelegraph(
+        this.#finisher.targetX,
+        this.#finisher.targetZ,
+        this.#finisherResolved?.splashRadius || FINISHER_RADIUS_M,
+      );
+    }
+  }
+
+  /** Big fire AOE + scorch burn at the fixed damage timestamp (L5). */
+  #applyFinisherDamageAt(monsters: MonsterManager, tx: number, tz: number): void {
+    const resolved = this.#finisherResolved;
+    if (!resolved) return;
+    const radius = resolved.splashRadius || FINISHER_RADIUS_M;
+    const dmg = resolved.damage * this.mods.dmgMul * this.mods.fireMul;
+    const crit = Math.random() < this.mods.critChance;
+    const hitDmg = dmg * (crit ? this.mods.critMultiplier : 1);
+    // L7 budgets: 1 pop + 1 burst (~10) + 1 rise — ≤3 emitters, modest particles.
+    this.fx.pop(tx, 1.0, tz, 'fire', 1.1);
+    this.fx.burst(tx, 1.0, tz, 'fire', 10, 4.2);
+    this.fx.rise(tx, 0.2, tz, 'fire', 6, radius * 0.35);
+    const proxy: Projectile = {
+      e: 0 as unknown as EntityHandle,
+      resolved,
+      skillId: FINISHER_ID,
+      damage: hitDmg,
+      x: tx, y: 1, z: tz,
+      dx: 0, dz: 0,
+      age: 0, jitterT: 0,
+      pierceLeft: 0,
+      hits: new Set(),
+      parts: [],
+      cast: { overchargeReduced: 0, phaseEchoConsumed: resolved.phaseEchoApplied },
+      overchargeHitDone: false,
+    };
+    for (const m of [...monsters.monsters]) {
+      const adx = m.x - tx;
+      const adz = m.z - tz;
+      if (adx * adx + adz * adz > radius * radius) continue;
+      const ad = Math.hypot(adx, adz) || 1;
+      const killed = monsters.damage(m, hitDmg, 0, adx / ad, adz / ad, resolved.knockback);
+      this.hooks.onHit(m.x, 1.0, m.z, hitDmg, killed, crit);
+      this.applyOnHit(proxy, m, hitDmg, crit, monsters);
+    }
   }
 }
 
@@ -578,9 +751,11 @@ export function createSkillCaster(deps: {
   getPlayer: () => PlayerStats;
   getLevel: () => number;
   getSkillRanks: () => Readonly<Partial<Record<SkillNodeId, number>>>;
+  /** Optional ground aim for ground-target skills (finisher). */
+  getGroundXZ?: () => readonly [number, number] | null;
 }): SkillCaster {
   return {
-    cast(skillId, aim) {
+    cast(skillId, aim, opts) {
       const [ox, oz] = deps.getOrigin();
       const len = Math.hypot(aim[0], aim[1]);
       const ax = len > 1e-6 ? aim[0] / len : 0;
@@ -590,6 +765,10 @@ export function createSkillCaster(deps: {
         skillRanks: ranks,
         phaseEchoActive: deps.skills.isPhaseEchoActive(),
       });
+      let groundXZ = opts?.groundXZ;
+      if (!groundXZ && skillId === FINISHER_ID) {
+        groundXZ = deps.getGroundXZ?.() ?? undefined;
+      }
       return deps.skills.castResolved(
         skillId,
         ox,
@@ -600,6 +779,7 @@ export function createSkillCaster(deps: {
         deps.getLevel(),
         ranks,
         resolved,
+        groundXZ,
       );
     },
   };

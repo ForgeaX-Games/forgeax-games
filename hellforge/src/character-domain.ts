@@ -3,7 +3,6 @@
 
 import {
   PLAYABLE_CLASS_ID,
-  SKILL_NODE_IDS,
   type ActiveSkillId,
   type AreaId,
   type HotbarSlots,
@@ -28,8 +27,10 @@ import {
   type ItemInstance,
   type ItemSlot,
 } from './items';
+import { FINISHER_UNLOCK_LEVEL, grantFinisherHotbar } from './finisher';
 import {
   assignActiveToHotbar,
+  emptySkillRanks,
   investPoint,
   respecInCamp,
   stateFromProgression,
@@ -147,13 +148,6 @@ export function isPlayableClass(classId: ClassId): classId is PlayableClassId {
   return classId === PLAYABLE_CLASS_ID;
 }
 
-function emptySkillRanks(): Record<SkillNodeId, number> {
-  const ranks = {} as Record<SkillNodeId, number>;
-  for (const id of SKILL_NODE_IDS) ranks[id] = 0;
-  ranks['frost-fang'] = 1;
-  return ranks;
-}
-
 function emptyQuests(): Record<QuestId, QuestSave> {
   return { 'purge-slagdeep-hollow': { status: 'available' } };
 }
@@ -226,13 +220,16 @@ class CharacterDomainImpl implements CharacterDomain {
     // One skill point per level after level 1 (grant-xp also increments on ding).
     this.#unspentSkillPoints = this.#level - 1;
     this.#skillRanks = emptySkillRanks();
-    this.#hotbar = ['frost', null, null, null];
+    // PR2a L8: creation hotbar = Frost Fang + Magma Bolt (slots 0–1).
+    this.#hotbar = ['frost', 'magma', null, null];
     this.#selectedHotbarSlot = 0;
     this.#bag = new Array(BAG_SIZE).fill(null);
     this.#equipment = emptyEquipment();
     this.#quests = emptyQuests();
     // Starting belt stock (D2 convention: a couple of reds, one blue).
     this.#potions = { life: 2, mana: 1 };
+    // Catch up level grants when constructed above level 1 (legacy migrate / fixtures).
+    for (let lv = 2; lv <= this.#level; lv++) this.#applyOnboardingLevelGrant(lv);
   }
 
   /** Full restore from a validated save envelope — never retains the envelope. */
@@ -395,11 +392,36 @@ class CharacterDomainImpl implements CharacterDomain {
       this.#xp -= xpMax;
       this.#level += 1;
       this.#unspentSkillPoints += 1;
+      this.#applyOnboardingLevelGrant(this.#level);
       xpMax = xpForLevel(this.#level);
       const { hp, mp } = growthForLevel(this.#level, growthMods);
       levelUps.push({ level: this.#level, hpGain: hp, manaGain: mp });
     }
     return { ok: true, levelUps };
+  }
+
+  /**
+   * PR2a L8 onboarding grants (free; do not spend the level-up skill point).
+   * Phase Step stays tree-gated — never auto-granted here.
+   */
+  #applyOnboardingLevelGrant(level: number): void {
+    if (level === 2) {
+      // Arc Surge: unlock via ranks so castable; place on hotbar if a slot is free.
+      if ((this.#skillRanks['arc-surge'] ?? 0) < 1) this.#skillRanks['arc-surge'] = 1;
+      this.#placeOnHotbarIfFree('arc');
+      return;
+    }
+    if (level === FINISHER_UNLOCK_LEVEL) {
+      // Inferno Nova: level-granted (not tree); T4 helper places slot 4 (index 3).
+      this.#hotbar = [...grantFinisherHotbar(this.#hotbar as HotbarSlots)] as MutableHotbarSlots;
+    }
+  }
+
+  /** Place `skill` on the first empty hotbar slot; no-op if already present or full. */
+  #placeOnHotbarIfFree(skill: ActiveSkillId): void {
+    if (this.#hotbar.some((s) => s === skill)) return;
+    const empty = this.#hotbar.findIndex((s) => s === null);
+    if (empty >= 0) this.#hotbar[empty] = skill;
   }
 
   #takeItem(item: ItemInstance): CharacterResult {

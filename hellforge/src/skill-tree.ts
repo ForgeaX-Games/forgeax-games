@@ -1,6 +1,7 @@
 // Sorceress skill-tree definitions + pure invest/respec transitions (Spec §7).
 // CharacterDomain remains the sole mutable owner; callers apply returned state
-// via domain commands. Active skill ids stay magma/frost/arc/blink.
+// via domain commands. Tree-granted actives: magma/frost/arc/blink;
+// level-granted finisher: inferno-nova (PR2a L5).
 
 import {
   SKILL_NODE_IDS,
@@ -9,7 +10,7 @@ import {
   type HotbarSlots,
   type SkillNodeId,
 } from './content-ids';
-import { SKILL_NODE_BY_ACTIVE } from './skill-availability';
+import { LEVEL_UNLOCK_ACTIVE, SKILL_NODE_BY_ACTIVE } from './skill-availability';
 
 export type SkillBranch = 'flame' | 'frost' | 'arcane';
 export type SkillNodeKind = 'active' | 'passive' | 'modifier' | 'capstone';
@@ -114,6 +115,8 @@ export type SkillTreeResult =
   | { readonly ok: false; readonly reason: SkillTreeFailReason };
 
 const FREE_FROST_FANG_RANK = 1;
+/** PR2a L8 onboarding — Magma Bolt is a free creation grant (survives respec). */
+const FREE_MAGMA_BOLT_RANK = 1;
 
 /** Reverse map: skill-tree node → active kit id (only grant-active nodes). */
 export const ACTIVE_BY_SKILL_NODE: Readonly<Partial<Record<SkillNodeId, ActiveSkillId>>> = {
@@ -346,12 +349,14 @@ export function emptySkillRanks(): Record<SkillNodeId, number> {
   const ranks = {} as Record<SkillNodeId, number>;
   for (const id of SKILL_NODE_IDS) ranks[id] = 0;
   ranks['frost-fang'] = FREE_FROST_FANG_RANK;
+  ranks['magma-bolt'] = FREE_MAGMA_BOLT_RANK;
   return ranks;
 }
 
-/** Paid ranks only — Frost Fang's free starter rank is never refunded. */
+/** Paid ranks only — free starter ranks (Frost Fang / Magma Bolt) are never refunded. */
 export function paidRankCount(nodeId: SkillNodeId, rank: number): number {
   if (nodeId === 'frost-fang') return Math.max(0, rank - FREE_FROST_FANG_RANK);
+  if (nodeId === 'magma-bolt') return Math.max(0, rank - FREE_MAGMA_BOLT_RANK);
   return Math.max(0, rank);
 }
 
@@ -418,11 +423,24 @@ function cloneState(state: SkillTreeState): {
   };
 }
 
-/** Drop hotbar entries whose granting active-node is unlearned; keep Frost. */
+function hotbarSkillLearned(
+  skill: ActiveSkillId,
+  ranks: Readonly<Partial<Record<SkillNodeId, number>>>,
+  level: number,
+): boolean {
+  const levelUnlock = LEVEL_UNLOCK_ACTIVE[skill];
+  if (levelUnlock !== undefined) return level >= levelUnlock;
+  const nodeId = SKILL_NODE_BY_ACTIVE[skill];
+  if (!nodeId) return false;
+  return (ranks[nodeId] ?? 0) > 0;
+}
+
+/** Drop hotbar entries whose granting active is unlearned; keep Frost/Magma starters. */
 export function sanitizeHotbar(
   ranks: Readonly<Partial<Record<SkillNodeId, number>>>,
   hotbar: HotbarSlots,
   selectedHotbarSlot: 0 | 1 | 2 | 3,
+  level: number = 1,
 ): { hotbar: HotbarSlots; selectedHotbarSlot: 0 | 1 | 2 | 3 } {
   const next = [...hotbar] as [
     ActiveSkillId | null,
@@ -433,18 +451,21 @@ export function sanitizeHotbar(
   for (let i = 0; i < 4; i++) {
     const skill = next[i];
     if (!skill) continue;
-    const nodeId = SKILL_NODE_BY_ACTIVE[skill];
-    if ((ranks[nodeId] ?? 0) <= 0) next[i] = null;
+    if (!hotbarSkillLearned(skill, ranks, level)) next[i] = null;
   }
-  // Ensure Frost Fang remains assignable after respec.
+  // Ensure free starter actives remain assignable after respec.
   if ((ranks['frost-fang'] ?? 0) > 0 && !next.some((s) => s === 'frost')) {
     const empty = next.findIndex((s) => s === null);
     if (empty >= 0) next[empty] = 'frost';
     else next[0] = 'frost';
   }
+  if ((ranks['magma-bolt'] ?? 0) > 0 && !next.some((s) => s === 'magma')) {
+    const empty = next.findIndex((s) => s === null);
+    if (empty >= 0) next[empty] = 'magma';
+  }
   let selected = selectedHotbarSlot;
   const selectedSkill = next[selected];
-  if (!selectedSkill || (ranks[SKILL_NODE_BY_ACTIVE[selectedSkill]] ?? 0) <= 0) {
+  if (!selectedSkill || !hotbarSkillLearned(selectedSkill, ranks, level)) {
     const frostSlot = next.findIndex((s) => s === 'frost');
     selected = (frostSlot >= 0 ? frostSlot : 0) as 0 | 1 | 2 | 3;
   }
@@ -470,15 +491,15 @@ export function investPoint(state: SkillTreeState, nodeId: SkillNodeId): SkillTr
 }
 
 /**
- * Camp-only respec: refund paid ranks, keep free Frost Fang rank 1, clear
- * unlearned hotbar actives, select a valid Frost Fang slot.
+ * Camp-only respec: refund paid ranks, keep free Frost Fang + Magma Bolt
+ * starter ranks, clear unlearned hotbar actives, select a valid Frost slot.
  */
 export function respecInCamp(state: SkillTreeState, areaId: AreaId): SkillTreeResult {
   if (areaId !== 'cinderwatch') return { ok: false, reason: 'not-in-camp' };
 
   const refund = totalPaidRanks(state.skillRanks);
   const ranks = emptySkillRanks();
-  const sanitized = sanitizeHotbar(ranks, state.hotbar, state.selectedHotbarSlot);
+  const sanitized = sanitizeHotbar(ranks, state.hotbar, state.selectedHotbarSlot, state.level);
   return {
     ok: true,
     state: {
@@ -509,7 +530,7 @@ export function assignActiveToHotbar(
   return { ok: true, state: next };
 }
 
-/** Clamp persisted ranks to tree max + enforce free Frost Fang rank. */
+/** Clamp persisted ranks to tree max + enforce free starter ranks. */
 export function clampSkillRanks(
   raw: Readonly<Partial<Record<SkillNodeId, number>>>,
 ): Record<SkillNodeId, number> {
@@ -521,6 +542,7 @@ export function clampSkillRanks(
     ranks[id] = Math.max(0, Math.min(node.maxRank, Math.floor(v)));
   }
   ranks['frost-fang'] = Math.max(FREE_FROST_FANG_RANK, ranks['frost-fang']);
+  ranks['magma-bolt'] = Math.max(FREE_MAGMA_BOLT_RANK, ranks['magma-bolt']);
   return ranks;
 }
 
@@ -532,9 +554,10 @@ export function stateFromProgression(input: {
   selectedHotbarSlot: 0 | 1 | 2 | 3;
 }): SkillTreeState {
   const ranks = clampSkillRanks(input.skillRanks);
-  const sanitized = sanitizeHotbar(ranks, input.hotbar, input.selectedHotbarSlot);
+  const level = Math.max(1, input.level);
+  const sanitized = sanitizeHotbar(ranks, input.hotbar, input.selectedHotbarSlot, level);
   return {
-    level: Math.max(1, input.level),
+    level,
     unspentSkillPoints: Math.max(0, input.unspentSkillPoints),
     skillRanks: ranks,
     hotbar: sanitized.hotbar,

@@ -1,7 +1,7 @@
 // Stable content IDs for the Sorceress Act-1 vertical slice.
 // Import these rather than redeclaring string unions in save/skill/quest modules.
 
-export type ActiveSkillId = 'magma' | 'frost' | 'arc' | 'blink';
+export type ActiveSkillId = 'magma' | 'frost' | 'arc' | 'blink' | 'inferno-nova';
 
 /** Four saved RMB hotbar slots (null = empty). */
 export type HotbarSlots = readonly [
