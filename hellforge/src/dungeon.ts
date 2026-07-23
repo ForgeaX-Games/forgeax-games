@@ -2,7 +2,7 @@
 //
 // The dungeon is now an EDITABLE SCENE: its static geometry lives in
 // `assets/scenes/slagdeep-hollow.pack.json` (click it in the editor), baked by
-// `bun scripts/bake-dungeon.ts` from src/dungeon-layout.ts at the fixed
+// `bun scripts/bake-dungeon.ts` from src/dungeon-pipeline.ts at the fixed
 // DUNGEON_SEED. At runtime this class re-runs the same layout for the
 // walkability grid + monster spawns (deterministic — always matches the
 // baked geometry) and instantiates the pack under a root entity placed at
@@ -28,9 +28,17 @@ import {
 } from './antechamber-layout';
 import type { ProbeBlocker } from './camera-probe';
 import {
-  CELL, CELLS, DUNGEON_SCENE_GUID, DUNGEON_SEED, generateLayout, quatY,
+  CELL, CELLS, DUNGEON_SCENE_GUID, DUNGEON_SEED, quatY,
   type DungeonLayout, type GeoKind,
 } from './dungeon-layout';
+import {
+  denCameraBlockerStubs,
+  isModularDungeon,
+  resolveDungeonLayout,
+  type ModularDungeon,
+} from './dungeon-pipeline';
+import { cameraBlockersToProbeBlockers } from './dungeon-corridors';
+import type { EncounterPlan } from './dungeon-encounters';
 import type { MonsterKind } from './monsters';
 
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
@@ -41,7 +49,7 @@ import { DUNGEON_ORIGIN } from './dungeon-origin';
 export interface MonsterSpawn { kind: MonsterKind; x: number; z: number }
 
 export class Dungeon {
-  private layout: DungeonLayout;
+  private layout: DungeonLayout | ModularDungeon;
   /** Layout seed — matches AreaDef generated source / baked pack (Task 4.2). */
   readonly layoutSeed: number;
   /** World-space entry pad (where the player appears when entering). */
@@ -50,8 +58,19 @@ export class Dungeon {
   bossAt = { x: 0, z: 0 };
   monsterSpawns: MonsterSpawn[] = [];
   roomCount = 0;
+  /**
+   * L4 encounter plan from the modular pipeline (undefined under greybox
+   * fallback). Consumed by dungeon-room-events (B1 clear beat / B2 vault).
+   */
+  encounters: EncounterPlan | undefined;
   /** World-space fire fixtures (torch flames / braziers) — light-pool seats. */
   firePoints: Array<{ x: number; y: number; z: number }> = [];
+  /**
+   * World-space camera probe blockers for den walls — via
+   * `denCameraBlockerStubs` + `cameraBlockersToProbeBlockers`. Same PR1
+   * `ProbeBlocker` shape main already feeds the spring-arm.
+   */
+  denProbeBlockers: ProbeBlocker[] = [];
   /**
    * World-space camera probe / fade blockers for the boss antechamber
    * (doorframe + walls / corners / pillars; pack-local AABBs shifted by
@@ -61,8 +80,11 @@ export class Dungeon {
 
   constructor(private world: World, layoutSeed: number = DUNGEON_SEED) {
     this.layoutSeed = layoutSeed;
-    this.layout = generateLayout(layoutSeed);
+    this.layout = resolveDungeonLayout(layoutSeed);
     this.roomCount = this.layout.roomCount;
+    this.encounters = isModularDungeon(this.layout)
+      ? this.layout.encounters
+      : undefined;
     this.entry = { x: this.layout.entry.x + DUNGEON_ORIGIN.x, z: this.layout.entry.z + DUNGEON_ORIGIN.z };
     this.bossAt = { x: this.layout.bossAt.x + DUNGEON_ORIGIN.x, z: this.layout.bossAt.z + DUNGEON_ORIGIN.z };
     this.monsterSpawns = this.layout.monsterSpawns.map((s) => ({
@@ -80,6 +102,12 @@ export class Dungeon {
         y: g.kind === 'flame' ? g.y + 0.45 : g.y + 0.75,
         z: g.z + DUNGEON_ORIGIN.z,
       }));
+
+    // T6: den wall proxies (modular nav.blockers / greybox walk — single helper).
+    this.denProbeBlockers = cameraBlockersToProbeBlockers(
+      denCameraBlockerStubs(this.layout),
+      DUNGEON_ORIGIN,
+    );
 
     // PR1 quality room — same seed/footprint as bake-antechamber.ts.
     const ante = buildAntechamberLayout({
@@ -222,7 +250,7 @@ export class Dungeon {
   }
 
   /** Raw walk grid (CELLS×CELLS) — automap reads this read-only. */
-  getWalkGrid(): Uint8Array {
+  getWalkGrid(): ArrayLike<number> {
     return this.layout.walk;
   }
 

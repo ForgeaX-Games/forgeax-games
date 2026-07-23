@@ -12,7 +12,8 @@ import {
   slagdeepLayoutSeed,
 } from './areas';
 import { deriveAreaSeed } from './combat-run';
-import { generateLayout, DUNGEON_SEED } from './dungeon-layout';
+import { DUNGEON_SEED } from './dungeon-layout';
+import { resolveDungeonLayout } from './dungeon-pipeline';
 
 describe('AreaDef registry', () => {
   test('registers hub, wilderness, and dungeon', () => {
@@ -86,8 +87,9 @@ describe('seeded wilderness + dungeon layout', () => {
   });
 
   test('same dungeon seed reproduces layout rooms and spawns', () => {
-    const a = generateLayout(DUNGEON_SEED);
-    const b = generateLayout(DUNGEON_SEED);
+    // Shipping path = modular pipeline (PR3 T5); greybox remains behind flag.
+    const a = resolveDungeonLayout(DUNGEON_SEED);
+    const b = resolveDungeonLayout(DUNGEON_SEED);
     expect(a.roomCount).toBe(b.roomCount);
     expect(a.monsterSpawns).toEqual(b.monsterSpawns);
     expect(a.entry).toEqual(b.entry);

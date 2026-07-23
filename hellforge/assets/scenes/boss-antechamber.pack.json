@@ -16,9 +16,9 @@
               },
               "Transform": {
                 "pos": [
-                  -6,
+                  -10,
                   0,
-                  -5
+                  -10
                 ],
                 "scale": [
                   1,
@@ -50,9 +50,9 @@
               },
               "Transform": {
                 "pos": [
-                  -4,
+                  -8,
                   0,
-                  -5
+                  -10
                 ],
                 "scale": [
                   1,
@@ -84,9 +84,9 @@
               },
               "Transform": {
                 "pos": [
-                  -2,
+                  -6,
                   0,
-                  -5
+                  -10
                 ],
                 "scale": [
                   1,
@@ -118,9 +118,9 @@
               },
               "Transform": {
                 "pos": [
+                  -4,
                   0,
-                  0,
-                  -5
+                  -10
                 ],
                 "scale": [
                   1,
@@ -152,9 +152,9 @@
               },
               "Transform": {
                 "pos": [
-                  2,
+                  -2,
                   0,
-                  -5
+                  -10
                 ],
                 "scale": [
                   1,
@@ -186,9 +186,9 @@
               },
               "Transform": {
                 "pos": [
-                  4,
                   0,
-                  -5
+                  0,
+                  -10
                 ],
                 "scale": [
                   1,
@@ -220,9 +220,9 @@
               },
               "Transform": {
                 "pos": [
-                  6,
+                  2,
                   0,
-                  -5
+                  -10
                 ],
                 "scale": [
                   1,
@@ -254,9 +254,9 @@
               },
               "Transform": {
                 "pos": [
-                  -6,
+                  4,
                   0,
-                  -3
+                  -10
                 ],
                 "scale": [
                   1,
@@ -288,9 +288,9 @@
               },
               "Transform": {
                 "pos": [
-                  -4,
+                  6,
                   0,
-                  -3
+                  -10
                 ],
                 "scale": [
                   1,
@@ -322,9 +322,9 @@
               },
               "Transform": {
                 "pos": [
-                  -2,
+                  8,
                   0,
-                  -3
+                  -10
                 ],
                 "scale": [
                   1,
@@ -356,9 +356,9 @@
               },
               "Transform": {
                 "pos": [
+                  10,
                   0,
-                  0,
-                  -3
+                  -10
                 ],
                 "scale": [
                   1,
@@ -390,9 +390,9 @@
               },
               "Transform": {
                 "pos": [
-                  2,
+                  -10,
                   0,
-                  -3
+                  -8
                 ],
                 "scale": [
                   1,
@@ -424,9 +424,9 @@
               },
               "Transform": {
                 "pos": [
-                  4,
+                  -8,
                   0,
-                  -3
+                  -8
                 ],
                 "scale": [
                   1,
@@ -458,9 +458,9 @@
               },
               "Transform": {
                 "pos": [
-                  6,
+                  -6,
                   0,
-                  -3
+                  -8
                 ],
                 "scale": [
                   1,
@@ -492,9 +492,9 @@
               },
               "Transform": {
                 "pos": [
-                  -6,
+                  -4,
                   0,
-                  -1
+                  -8
                 ],
                 "scale": [
                   1,
@@ -526,9 +526,9 @@
               },
               "Transform": {
                 "pos": [
-                  -4,
+                  -2,
                   0,
-                  -1
+                  -8
                 ],
                 "scale": [
                   1,
@@ -560,9 +560,9 @@
               },
               "Transform": {
                 "pos": [
-                  -2,
                   0,
-                  -1
+                  0,
+                  -8
                 ],
                 "scale": [
                   1,
@@ -594,9 +594,9 @@
               },
               "Transform": {
                 "pos": [
+                  2,
                   0,
-                  0,
-                  -1
+                  -8
                 ],
                 "scale": [
                   1,
@@ -628,9 +628,9 @@
               },
               "Transform": {
                 "pos": [
-                  2,
+                  4,
                   0,
-                  -1
+                  -8
                 ],
                 "scale": [
                   1,
@@ -662,9 +662,9 @@
               },
               "Transform": {
                 "pos": [
-                  4,
+                  6,
                   0,
-                  -1
+                  -8
                 ],
                 "scale": [
                   1,
@@ -696,9 +696,9 @@
               },
               "Transform": {
                 "pos": [
-                  6,
+                  8,
                   0,
-                  -1
+                  -8
                 ],
                 "scale": [
                   1,
@@ -730,9 +730,9 @@
               },
               "Transform": {
                 "pos": [
-                  -6,
+                  10,
                   0,
-                  1
+                  -8
                 ],
                 "scale": [
                   1,
@@ -764,9 +764,9 @@
               },
               "Transform": {
                 "pos": [
-                  -4,
+                  -10,
                   0,
-                  1
+                  -6
                 ],
                 "scale": [
                   1,
@@ -798,9 +798,9 @@
               },
               "Transform": {
                 "pos": [
-                  -2,
+                  -8,
                   0,
-                  1
+                  -6
                 ],
                 "scale": [
                   1,
@@ -832,9 +832,9 @@
               },
               "Transform": {
                 "pos": [
+                  -6,
                   0,
-                  0,
-                  1
+                  -6
                 ],
                 "scale": [
                   1,
@@ -866,9 +866,9 @@
               },
               "Transform": {
                 "pos": [
-                  2,
+                  -4,
                   0,
-                  1
+                  -6
                 ],
                 "scale": [
                   1,
@@ -900,9 +900,9 @@
               },
               "Transform": {
                 "pos": [
-                  4,
+                  -2,
                   0,
-                  1
+                  -6
                 ],
                 "scale": [
                   1,
@@ -934,9 +934,9 @@
               },
               "Transform": {
                 "pos": [
-                  6,
                   0,
-                  1
+                  0,
+                  -6
                 ],
                 "scale": [
                   1,
@@ -968,9 +968,9 @@
               },
               "Transform": {
                 "pos": [
-                  -6,
+                  2,
                   0,
-                  3
+                  -6
                 ],
                 "scale": [
                   1,
@@ -1002,9 +1002,9 @@
               },
               "Transform": {
                 "pos": [
-                  -4,
+                  4,
                   0,
-                  3
+                  -6
                 ],
                 "scale": [
                   1,
@@ -1036,9 +1036,9 @@
               },
               "Transform": {
                 "pos": [
-                  -2,
+                  6,
                   0,
-                  3
+                  -6
                 ],
                 "scale": [
                   1,
@@ -1070,9 +1070,9 @@
               },
               "Transform": {
                 "pos": [
+                  8,
                   0,
-                  0,
-                  3
+                  -6
                 ],
                 "scale": [
                   1,
@@ -1104,9 +1104,9 @@
               },
               "Transform": {
                 "pos": [
-                  2,
+                  10,
                   0,
-                  3
+                  -6
                 ],
                 "scale": [
                   1,
@@ -1138,9 +1138,9 @@
               },
               "Transform": {
                 "pos": [
-                  4,
+                  -10,
                   0,
-                  3
+                  -4
                 ],
                 "scale": [
                   1,
@@ -1172,9 +1172,9 @@
               },
               "Transform": {
                 "pos": [
-                  6,
+                  -8,
                   0,
-                  3
+                  -4
                 ],
                 "scale": [
                   1,
@@ -1208,7 +1208,7 @@
                 "pos": [
                   -6,
                   0,
-                  5
+                  -4
                 ],
                 "scale": [
                   1,
@@ -1242,7 +1242,7 @@
                 "pos": [
                   -4,
                   0,
-                  5
+                  -4
                 ],
                 "scale": [
                   1,
@@ -1276,7 +1276,7 @@
                 "pos": [
                   -2,
                   0,
-                  5
+                  -4
                 ],
                 "scale": [
                   1,
@@ -1310,7 +1310,7 @@
                 "pos": [
                   0,
                   0,
-                  5
+                  -4
                 ],
                 "scale": [
                   1,
@@ -1344,7 +1344,7 @@
                 "pos": [
                   2,
                   0,
-                  5
+                  -4
                 ],
                 "scale": [
                   1,
@@ -1378,7 +1378,7 @@
                 "pos": [
                   4,
                   0,
-                  5
+                  -4
                 ],
                 "scale": [
                   1,
@@ -1412,7 +1412,7 @@
                 "pos": [
                   6,
                   0,
-                  5
+                  -4
                 ],
                 "scale": [
                   1,
@@ -1440,13 +1440,13 @@
             "localId": 42,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_n_43"
+                "value": "Antechamber_floor_43"
               },
               "Transform": {
                 "pos": [
-                  -6,
-                  0.953,
-                  5.825
+                  8,
+                  0,
+                  -4
                 ],
                 "scale": [
                   1,
@@ -1461,11 +1461,11 @@
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -1474,13 +1474,13 @@
             "localId": 43,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_n_43"
+                "value": "Antechamber_floor_44"
               },
               "Transform": {
                 "pos": [
-                  -6,
-                  3.5647,
-                  5.775
+                  10,
+                  0,
+                  -4
                 ],
                 "scale": [
                   1,
@@ -1495,11 +1495,11 @@
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -1508,13 +1508,13 @@
             "localId": 44,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_n_44"
+                "value": "Antechamber_floor_45"
               },
               "Transform": {
                 "pos": [
-                  -4,
-                  0.953,
-                  5.825
+                  -10,
+                  0,
+                  -2
                 ],
                 "scale": [
                   1,
@@ -1529,11 +1529,11 @@
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -1542,13 +1542,13 @@
             "localId": 45,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_n_44"
+                "value": "Antechamber_floor_46"
               },
               "Transform": {
                 "pos": [
-                  -4,
-                  3.5647,
-                  5.775
+                  -8,
+                  0,
+                  -2
                 ],
                 "scale": [
                   1,
@@ -1563,11 +1563,11 @@
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -1576,13 +1576,13 @@
             "localId": 46,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_n_45"
+                "value": "Antechamber_floor_47"
               },
               "Transform": {
                 "pos": [
-                  -2,
-                  0.953,
-                  5.825
+                  -6,
+                  0,
+                  -2
                 ],
                 "scale": [
                   1,
@@ -1597,11 +1597,11 @@
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -1610,13 +1610,13 @@
             "localId": 47,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_n_45"
+                "value": "Antechamber_floor_48"
               },
               "Transform": {
                 "pos": [
-                  -2,
-                  3.5647,
-                  5.775
+                  -4,
+                  0,
+                  -2
                 ],
                 "scale": [
                   1,
@@ -1631,11 +1631,11 @@
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -1644,13 +1644,13 @@
             "localId": 48,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_n_46"
+                "value": "Antechamber_floor_49"
               },
               "Transform": {
                 "pos": [
-                  2,
-                  0.953,
-                  5.825
+                  -2,
+                  0,
+                  -2
                 ],
                 "scale": [
                   1,
@@ -1665,11 +1665,11 @@
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -1678,13 +1678,13 @@
             "localId": 49,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_n_46"
+                "value": "Antechamber_floor_50"
               },
               "Transform": {
                 "pos": [
-                  2,
-                  3.5647,
-                  5.775
+                  0,
+                  0,
+                  -2
                 ],
                 "scale": [
                   1,
@@ -1699,11 +1699,11 @@
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -1712,13 +1712,13 @@
             "localId": 50,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_n_47"
+                "value": "Antechamber_floor_51"
               },
               "Transform": {
                 "pos": [
-                  4,
-                  0.953,
-                  5.825
+                  2,
+                  0,
+                  -2
                 ],
                 "scale": [
                   1,
@@ -1733,11 +1733,11 @@
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -1746,13 +1746,13 @@
             "localId": 51,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_n_47"
+                "value": "Antechamber_floor_52"
               },
               "Transform": {
                 "pos": [
                   4,
-                  3.5647,
-                  5.775
+                  0,
+                  -2
                 ],
                 "scale": [
                   1,
@@ -1767,11 +1767,11 @@
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -1780,13 +1780,13 @@
             "localId": 52,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_n_48"
+                "value": "Antechamber_floor_53"
               },
               "Transform": {
                 "pos": [
                   6,
-                  0.953,
-                  5.825
+                  0,
+                  -2
                 ],
                 "scale": [
                   1,
@@ -1801,11 +1801,11 @@
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -1814,13 +1814,13 @@
             "localId": 53,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_n_48"
+                "value": "Antechamber_floor_54"
               },
               "Transform": {
                 "pos": [
-                  6,
-                  3.5647,
-                  5.775
+                  8,
+                  0,
+                  -2
                 ],
                 "scale": [
                   1,
@@ -1835,11 +1835,11 @@
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -1848,13 +1848,13 @@
             "localId": 54,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_s_49"
+                "value": "Antechamber_floor_55"
               },
               "Transform": {
                 "pos": [
-                  -6,
-                  0.953,
-                  -5.825
+                  10,
+                  0,
+                  -2
                 ],
                 "scale": [
                   1,
@@ -1863,17 +1863,17 @@
                 ],
                 "quat": [
                   0,
-                  1,
                   0,
-                  0
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -1882,13 +1882,13 @@
             "localId": 55,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_s_49"
+                "value": "Antechamber_floor_56"
               },
               "Transform": {
                 "pos": [
-                  -6,
-                  3.5647,
-                  -5.775
+                  -10,
+                  0,
+                  0
                 ],
                 "scale": [
                   1,
@@ -1897,17 +1897,17 @@
                 ],
                 "quat": [
                   0,
-                  1,
                   0,
-                  0
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -1916,13 +1916,13 @@
             "localId": 56,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_s_50"
+                "value": "Antechamber_floor_57"
               },
               "Transform": {
                 "pos": [
-                  -4,
-                  0.953,
-                  -5.825
+                  -8,
+                  0,
+                  0
                 ],
                 "scale": [
                   1,
@@ -1931,17 +1931,17 @@
                 ],
                 "quat": [
                   0,
-                  1,
                   0,
-                  0
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -1950,13 +1950,13 @@
             "localId": 57,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_s_50"
+                "value": "Antechamber_floor_58"
               },
               "Transform": {
                 "pos": [
-                  -4,
-                  3.5647,
-                  -5.775
+                  -6,
+                  0,
+                  0
                 ],
                 "scale": [
                   1,
@@ -1965,17 +1965,17 @@
                 ],
                 "quat": [
                   0,
-                  1,
                   0,
-                  0
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -1984,13 +1984,13 @@
             "localId": 58,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_s_51"
+                "value": "Antechamber_floor_59"
               },
               "Transform": {
                 "pos": [
-                  -2,
-                  0.953,
-                  -5.825
+                  -4,
+                  0,
+                  0
                 ],
                 "scale": [
                   1,
@@ -1999,17 +1999,17 @@
                 ],
                 "quat": [
                   0,
-                  1,
                   0,
-                  0
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2018,13 +2018,13 @@
             "localId": 59,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_s_51"
+                "value": "Antechamber_floor_60"
               },
               "Transform": {
                 "pos": [
                   -2,
-                  3.5647,
-                  -5.775
+                  0,
+                  0
                 ],
                 "scale": [
                   1,
@@ -2033,17 +2033,17 @@
                 ],
                 "quat": [
                   0,
-                  1,
                   0,
-                  0
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -2052,13 +2052,13 @@
             "localId": 60,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_s_52"
+                "value": "Antechamber_floor_61"
               },
               "Transform": {
                 "pos": [
                   0,
-                  0.953,
-                  -5.825
+                  0,
+                  0
                 ],
                 "scale": [
                   1,
@@ -2067,17 +2067,17 @@
                 ],
                 "quat": [
                   0,
-                  1,
                   0,
-                  0
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2086,13 +2086,13 @@
             "localId": 61,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_s_52"
+                "value": "Antechamber_floor_62"
               },
               "Transform": {
                 "pos": [
+                  2,
                   0,
-                  3.5647,
-                  -5.775
+                  0
                 ],
                 "scale": [
                   1,
@@ -2101,17 +2101,17 @@
                 ],
                 "quat": [
                   0,
-                  1,
                   0,
-                  0
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -2120,13 +2120,13 @@
             "localId": 62,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_s_53"
+                "value": "Antechamber_floor_63"
               },
               "Transform": {
                 "pos": [
-                  2,
-                  0.953,
-                  -5.825
+                  4,
+                  0,
+                  0
                 ],
                 "scale": [
                   1,
@@ -2135,17 +2135,17 @@
                 ],
                 "quat": [
                   0,
-                  1,
                   0,
-                  0
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2154,13 +2154,13 @@
             "localId": 63,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_s_53"
+                "value": "Antechamber_floor_64"
               },
               "Transform": {
                 "pos": [
-                  2,
-                  3.5647,
-                  -5.775
+                  6,
+                  0,
+                  0
                 ],
                 "scale": [
                   1,
@@ -2169,17 +2169,17 @@
                 ],
                 "quat": [
                   0,
-                  1,
                   0,
-                  0
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -2188,13 +2188,13 @@
             "localId": 64,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_s_54"
+                "value": "Antechamber_floor_65"
               },
               "Transform": {
                 "pos": [
-                  4,
-                  0.953,
-                  -5.825
+                  8,
+                  0,
+                  0
                 ],
                 "scale": [
                   1,
@@ -2203,17 +2203,17 @@
                 ],
                 "quat": [
                   0,
-                  1,
                   0,
-                  0
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2222,13 +2222,13 @@
             "localId": 65,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_s_54"
+                "value": "Antechamber_floor_66"
               },
               "Transform": {
                 "pos": [
-                  4,
-                  3.5647,
-                  -5.775
+                  10,
+                  0,
+                  0
                 ],
                 "scale": [
                   1,
@@ -2237,17 +2237,17 @@
                 ],
                 "quat": [
                   0,
-                  1,
                   0,
-                  0
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -2256,13 +2256,13 @@
             "localId": 66,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_s_55"
+                "value": "Antechamber_floor_67"
               },
               "Transform": {
                 "pos": [
-                  6,
-                  0.953,
-                  -5.825
+                  -10,
+                  0,
+                  2
                 ],
                 "scale": [
                   1,
@@ -2271,17 +2271,17 @@
                 ],
                 "quat": [
                   0,
-                  1,
                   0,
-                  0
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2290,13 +2290,13 @@
             "localId": 67,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_s_55"
+                "value": "Antechamber_floor_68"
               },
               "Transform": {
                 "pos": [
-                  6,
-                  3.5647,
-                  -5.775
+                  -8,
+                  0,
+                  2
                 ],
                 "scale": [
                   1,
@@ -2305,17 +2305,17 @@
                 ],
                 "quat": [
                   0,
-                  1,
                   0,
-                  0
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -2324,13 +2324,13 @@
             "localId": 68,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_e_56"
+                "value": "Antechamber_floor_69"
               },
               "Transform": {
                 "pos": [
-                  6.825,
-                  0.953,
-                  -5
+                  -6,
+                  0,
+                  2
                 ],
                 "scale": [
                   1,
@@ -2339,17 +2339,17 @@
                 ],
                 "quat": [
                   0,
-                  -0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2358,13 +2358,13 @@
             "localId": 69,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_e_56"
+                "value": "Antechamber_floor_70"
               },
               "Transform": {
                 "pos": [
-                  6.825,
-                  3.5647,
-                  -5
+                  -4,
+                  0,
+                  2
                 ],
                 "scale": [
                   1,
@@ -2373,17 +2373,17 @@
                 ],
                 "quat": [
                   0,
-                  -0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -2392,13 +2392,13 @@
             "localId": 70,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_e_57"
+                "value": "Antechamber_floor_71"
               },
               "Transform": {
                 "pos": [
-                  6.825,
-                  0.953,
-                  -3
+                  -2,
+                  0,
+                  2
                 ],
                 "scale": [
                   1,
@@ -2407,17 +2407,17 @@
                 ],
                 "quat": [
                   0,
-                  -0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2426,13 +2426,13 @@
             "localId": 71,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_e_57"
+                "value": "Antechamber_floor_72"
               },
               "Transform": {
                 "pos": [
-                  6.825,
-                  3.5647,
-                  -3
+                  0,
+                  0,
+                  2
                 ],
                 "scale": [
                   1,
@@ -2441,17 +2441,17 @@
                 ],
                 "quat": [
                   0,
-                  -0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -2460,13 +2460,13 @@
             "localId": 72,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_e_58"
+                "value": "Antechamber_floor_73"
               },
               "Transform": {
                 "pos": [
-                  6.825,
-                  0.953,
-                  -1
+                  2,
+                  0,
+                  2
                 ],
                 "scale": [
                   1,
@@ -2475,17 +2475,17 @@
                 ],
                 "quat": [
                   0,
-                  -0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2494,13 +2494,13 @@
             "localId": 73,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_e_58"
+                "value": "Antechamber_floor_74"
               },
               "Transform": {
                 "pos": [
-                  6.825,
-                  3.5647,
-                  -1
+                  4,
+                  0,
+                  2
                 ],
                 "scale": [
                   1,
@@ -2509,17 +2509,17 @@
                 ],
                 "quat": [
                   0,
-                  -0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -2528,13 +2528,13 @@
             "localId": 74,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_e_59"
+                "value": "Antechamber_floor_75"
               },
               "Transform": {
                 "pos": [
-                  6.825,
-                  0.953,
-                  1
+                  6,
+                  0,
+                  2
                 ],
                 "scale": [
                   1,
@@ -2543,17 +2543,17 @@
                 ],
                 "quat": [
                   0,
-                  -0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2562,13 +2562,13 @@
             "localId": 75,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_e_59"
+                "value": "Antechamber_floor_76"
               },
               "Transform": {
                 "pos": [
-                  6.825,
-                  3.5647,
-                  1
+                  8,
+                  0,
+                  2
                 ],
                 "scale": [
                   1,
@@ -2577,17 +2577,17 @@
                 ],
                 "quat": [
                   0,
-                  -0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -2596,13 +2596,13 @@
             "localId": 76,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_e_60"
+                "value": "Antechamber_floor_77"
               },
               "Transform": {
                 "pos": [
-                  6.825,
-                  0.953,
-                  3
+                  10,
+                  0,
+                  2
                 ],
                 "scale": [
                   1,
@@ -2611,17 +2611,17 @@
                 ],
                 "quat": [
                   0,
-                  -0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2630,13 +2630,13 @@
             "localId": 77,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_e_60"
+                "value": "Antechamber_floor_78"
               },
               "Transform": {
                 "pos": [
-                  6.825,
-                  3.5647,
-                  3
+                  -10,
+                  0,
+                  4
                 ],
                 "scale": [
                   1,
@@ -2645,17 +2645,17 @@
                 ],
                 "quat": [
                   0,
-                  -0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -2664,13 +2664,13 @@
             "localId": 78,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_e_61"
+                "value": "Antechamber_floor_79"
               },
               "Transform": {
                 "pos": [
-                  6.825,
-                  0.953,
-                  5
+                  -8,
+                  0,
+                  4
                 ],
                 "scale": [
                   1,
@@ -2679,17 +2679,17 @@
                 ],
                 "quat": [
                   0,
-                  -0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2698,13 +2698,13 @@
             "localId": 79,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_e_61"
+                "value": "Antechamber_floor_80"
               },
               "Transform": {
                 "pos": [
-                  6.825,
-                  3.5647,
-                  5
+                  -6,
+                  0,
+                  4
                 ],
                 "scale": [
                   1,
@@ -2713,17 +2713,17 @@
                 ],
                 "quat": [
                   0,
-                  -0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -2732,13 +2732,13 @@
             "localId": 80,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_w_62"
+                "value": "Antechamber_floor_81"
               },
               "Transform": {
                 "pos": [
-                  -6.825,
-                  0.953,
-                  -5
+                  -4,
+                  0,
+                  4
                 ],
                 "scale": [
                   1,
@@ -2747,17 +2747,17 @@
                 ],
                 "quat": [
                   0,
-                  0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2766,13 +2766,13 @@
             "localId": 81,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_w_62"
+                "value": "Antechamber_floor_82"
               },
               "Transform": {
                 "pos": [
-                  -6.825,
-                  3.5647,
-                  -5
+                  -2,
+                  0,
+                  4
                 ],
                 "scale": [
                   1,
@@ -2781,17 +2781,17 @@
                 ],
                 "quat": [
                   0,
-                  0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -2800,13 +2800,13 @@
             "localId": 82,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_w_63"
+                "value": "Antechamber_floor_83"
               },
               "Transform": {
                 "pos": [
-                  -6.825,
-                  0.953,
-                  -3
+                  0,
+                  0,
+                  4
                 ],
                 "scale": [
                   1,
@@ -2815,17 +2815,17 @@
                 ],
                 "quat": [
                   0,
-                  0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2834,13 +2834,13 @@
             "localId": 83,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_w_63"
+                "value": "Antechamber_floor_84"
               },
               "Transform": {
                 "pos": [
-                  -6.825,
-                  3.5647,
-                  -3
+                  2,
+                  0,
+                  4
                 ],
                 "scale": [
                   1,
@@ -2849,17 +2849,17 @@
                 ],
                 "quat": [
                   0,
-                  0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -2868,13 +2868,13 @@
             "localId": 84,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_w_64"
+                "value": "Antechamber_floor_85"
               },
               "Transform": {
                 "pos": [
-                  -6.825,
-                  0.953,
-                  -1
+                  4,
+                  0,
+                  4
                 ],
                 "scale": [
                   1,
@@ -2883,17 +2883,17 @@
                 ],
                 "quat": [
                   0,
-                  0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2902,13 +2902,13 @@
             "localId": 85,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_w_64"
+                "value": "Antechamber_floor_86"
               },
               "Transform": {
                 "pos": [
-                  -6.825,
-                  3.5647,
-                  -1
+                  6,
+                  0,
+                  4
                 ],
                 "scale": [
                   1,
@@ -2917,17 +2917,17 @@
                 ],
                 "quat": [
                   0,
-                  0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -2936,13 +2936,13 @@
             "localId": 86,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_w_65"
+                "value": "Antechamber_floor_87"
               },
               "Transform": {
                 "pos": [
-                  -6.825,
-                  0.953,
-                  1
+                  8,
+                  0,
+                  4
                 ],
                 "scale": [
                   1,
@@ -2951,17 +2951,17 @@
                 ],
                 "quat": [
                   0,
-                  0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -2970,13 +2970,13 @@
             "localId": 87,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_w_65"
+                "value": "Antechamber_floor_88"
               },
               "Transform": {
                 "pos": [
-                  -6.825,
-                  3.5647,
-                  1
+                  10,
+                  0,
+                  4
                 ],
                 "scale": [
                   1,
@@ -2985,17 +2985,17 @@
                 ],
                 "quat": [
                   0,
-                  0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 10
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  11
+                  1
                 ]
               }
             }
@@ -3004,13 +3004,13 @@
             "localId": 88,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_w_66"
+                "value": "Antechamber_floor_89"
               },
               "Transform": {
                 "pos": [
-                  -6.825,
-                  0.953,
-                  3
+                  -10,
+                  0,
+                  6
                 ],
                 "scale": [
                   1,
@@ -3019,17 +3019,17 @@
                 ],
                 "quat": [
                   0,
-                  0.707107,
                   0,
-                  0.707107
+                  0,
+                  1
                 ]
               },
               "MeshFilter": {
-                "assetHandle": 2
+                "assetHandle": 0
               },
               "MeshRenderer": {
                 "materials": [
-                  3
+                  1
                 ]
               }
             }
@@ -3038,13 +3038,13 @@
             "localId": 89,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_w_66"
+                "value": "Antechamber_floor_90"
               },
               "Transform": {
                 "pos": [
-                  -6.825,
-                  3.5647,
-                  3
+                  -8,
+                  0,
+                  6
                 ],
                 "scale": [
                   1,
@@ -3053,7 +3053,2557 @@
                 ],
                 "quat": [
                   0,
-                  0.707107,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 90,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_91"
+              },
+              "Transform": {
+                "pos": [
+                  -6,
+                  0,
+                  6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 91,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_92"
+              },
+              "Transform": {
+                "pos": [
+                  -4,
+                  0,
+                  6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 92,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_93"
+              },
+              "Transform": {
+                "pos": [
+                  -2,
+                  0,
+                  6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 93,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_94"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0,
+                  6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 94,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_95"
+              },
+              "Transform": {
+                "pos": [
+                  2,
+                  0,
+                  6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 95,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_96"
+              },
+              "Transform": {
+                "pos": [
+                  4,
+                  0,
+                  6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 96,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_97"
+              },
+              "Transform": {
+                "pos": [
+                  6,
+                  0,
+                  6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 97,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_98"
+              },
+              "Transform": {
+                "pos": [
+                  8,
+                  0,
+                  6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 98,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_99"
+              },
+              "Transform": {
+                "pos": [
+                  10,
+                  0,
+                  6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 99,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_100"
+              },
+              "Transform": {
+                "pos": [
+                  -10,
+                  0,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 100,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_101"
+              },
+              "Transform": {
+                "pos": [
+                  -8,
+                  0,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 101,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_102"
+              },
+              "Transform": {
+                "pos": [
+                  -6,
+                  0,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 102,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_103"
+              },
+              "Transform": {
+                "pos": [
+                  -4,
+                  0,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 103,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_104"
+              },
+              "Transform": {
+                "pos": [
+                  -2,
+                  0,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 104,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_105"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 105,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_106"
+              },
+              "Transform": {
+                "pos": [
+                  2,
+                  0,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 106,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_107"
+              },
+              "Transform": {
+                "pos": [
+                  4,
+                  0,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 107,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_108"
+              },
+              "Transform": {
+                "pos": [
+                  6,
+                  0,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 108,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_109"
+              },
+              "Transform": {
+                "pos": [
+                  8,
+                  0,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 109,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_110"
+              },
+              "Transform": {
+                "pos": [
+                  10,
+                  0,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 110,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_111"
+              },
+              "Transform": {
+                "pos": [
+                  -10,
+                  0,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 111,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_112"
+              },
+              "Transform": {
+                "pos": [
+                  -8,
+                  0,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 112,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_113"
+              },
+              "Transform": {
+                "pos": [
+                  -6,
+                  0,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 113,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_114"
+              },
+              "Transform": {
+                "pos": [
+                  -4,
+                  0,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 114,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_115"
+              },
+              "Transform": {
+                "pos": [
+                  -2,
+                  0,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 115,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_116"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 116,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_117"
+              },
+              "Transform": {
+                "pos": [
+                  2,
+                  0,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 117,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_118"
+              },
+              "Transform": {
+                "pos": [
+                  4,
+                  0,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 118,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_119"
+              },
+              "Transform": {
+                "pos": [
+                  6,
+                  0,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 119,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_120"
+              },
+              "Transform": {
+                "pos": [
+                  8,
+                  0,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 120,
+            "components": {
+              "Name": {
+                "value": "Antechamber_floor_121"
+              },
+              "Transform": {
+                "pos": [
+                  10,
+                  0,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 121,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_n_122"
+              },
+              "Transform": {
+                "pos": [
+                  -10,
+                  0.953,
+                  10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 122,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_n_122"
+              },
+              "Transform": {
+                "pos": [
+                  -10,
+                  3.5647,
+                  10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 123,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_n_123"
+              },
+              "Transform": {
+                "pos": [
+                  -8,
+                  0.953,
+                  10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 124,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_n_123"
+              },
+              "Transform": {
+                "pos": [
+                  -8,
+                  3.5647,
+                  10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 125,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_n_124"
+              },
+              "Transform": {
+                "pos": [
+                  -6,
+                  0.953,
+                  10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 126,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_n_124"
+              },
+              "Transform": {
+                "pos": [
+                  -6,
+                  3.5647,
+                  10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 127,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_n_125"
+              },
+              "Transform": {
+                "pos": [
+                  -4,
+                  0.953,
+                  10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 128,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_n_125"
+              },
+              "Transform": {
+                "pos": [
+                  -4,
+                  3.5647,
+                  10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 129,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_n_126"
+              },
+              "Transform": {
+                "pos": [
+                  -2,
+                  0.953,
+                  10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 130,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_n_126"
+              },
+              "Transform": {
+                "pos": [
+                  -2,
+                  3.5647,
+                  10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 131,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_n_127"
+              },
+              "Transform": {
+                "pos": [
+                  2,
+                  0.953,
+                  10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 132,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_n_127"
+              },
+              "Transform": {
+                "pos": [
+                  2,
+                  3.5647,
+                  10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 133,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_n_128"
+              },
+              "Transform": {
+                "pos": [
+                  4,
+                  0.953,
+                  10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 134,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_n_128"
+              },
+              "Transform": {
+                "pos": [
+                  4,
+                  3.5647,
+                  10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 135,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_n_129"
+              },
+              "Transform": {
+                "pos": [
+                  6,
+                  0.953,
+                  10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 136,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_n_129"
+              },
+              "Transform": {
+                "pos": [
+                  6,
+                  3.5647,
+                  10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 137,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_n_130"
+              },
+              "Transform": {
+                "pos": [
+                  8,
+                  0.953,
+                  10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 138,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_n_130"
+              },
+              "Transform": {
+                "pos": [
+                  8,
+                  3.5647,
+                  10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 139,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_n_131"
+              },
+              "Transform": {
+                "pos": [
+                  10,
+                  0.953,
+                  10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 140,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_n_131"
+              },
+              "Transform": {
+                "pos": [
+                  10,
+                  3.5647,
+                  10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 141,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_s_132"
+              },
+              "Transform": {
+                "pos": [
+                  -10,
+                  0.953,
+                  -10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 142,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_s_132"
+              },
+              "Transform": {
+                "pos": [
+                  -10,
+                  3.5647,
+                  -10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 143,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_s_133"
+              },
+              "Transform": {
+                "pos": [
+                  -8,
+                  0.953,
+                  -10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 144,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_s_133"
+              },
+              "Transform": {
+                "pos": [
+                  -8,
+                  3.5647,
+                  -10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 145,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_s_134"
+              },
+              "Transform": {
+                "pos": [
+                  -6,
+                  0.953,
+                  -10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 146,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_s_134"
+              },
+              "Transform": {
+                "pos": [
+                  -6,
+                  3.5647,
+                  -10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 147,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_s_135"
+              },
+              "Transform": {
+                "pos": [
+                  -4,
+                  0.953,
+                  -10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 148,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_s_135"
+              },
+              "Transform": {
+                "pos": [
+                  -4,
+                  3.5647,
+                  -10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 149,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_s_136"
+              },
+              "Transform": {
+                "pos": [
+                  -2,
+                  0.953,
+                  -10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 150,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_s_136"
+              },
+              "Transform": {
+                "pos": [
+                  -2,
+                  3.5647,
+                  -10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 151,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_s_137"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0.953,
+                  -10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 152,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_s_137"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  3.5647,
+                  -10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 153,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_s_138"
+              },
+              "Transform": {
+                "pos": [
+                  2,
+                  0.953,
+                  -10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 154,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_s_138"
+              },
+              "Transform": {
+                "pos": [
+                  2,
+                  3.5647,
+                  -10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 155,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_s_139"
+              },
+              "Transform": {
+                "pos": [
+                  4,
+                  0.953,
+                  -10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 156,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_s_139"
+              },
+              "Transform": {
+                "pos": [
+                  4,
+                  3.5647,
+                  -10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 157,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_s_140"
+              },
+              "Transform": {
+                "pos": [
+                  6,
+                  0.953,
+                  -10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 158,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_s_140"
+              },
+              "Transform": {
+                "pos": [
+                  6,
+                  3.5647,
+                  -10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 159,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_s_141"
+              },
+              "Transform": {
+                "pos": [
+                  8,
+                  0.953,
+                  -10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 160,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_s_141"
+              },
+              "Transform": {
+                "pos": [
+                  8,
+                  3.5647,
+                  -10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 161,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_s_142"
+              },
+              "Transform": {
+                "pos": [
+                  10,
+                  0.953,
+                  -10.825
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 162,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_s_142"
+              },
+              "Transform": {
+                "pos": [
+                  10,
+                  3.5647,
+                  -10.775
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  1,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 163,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_e_143"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  0.953,
+                  -10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 164,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_e_143"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  3.5647,
+                  -10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
                   0,
                   0.707107
                 ]
@@ -3069,16 +5619,696 @@
             }
           },
           {
-            "localId": 90,
+            "localId": 165,
             "components": {
               "Name": {
-                "value": "Antechamber_wall_w_67"
+                "value": "Antechamber_wall_e_144"
               },
               "Transform": {
                 "pos": [
-                  -6.825,
+                  10.825,
                   0.953,
-                  5
+                  -8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 166,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_e_144"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  3.5647,
+                  -8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 167,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_e_145"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  0.953,
+                  -6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 168,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_e_145"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  3.5647,
+                  -6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 169,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_e_146"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  0.953,
+                  -4
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 170,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_e_146"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  3.5647,
+                  -4
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 171,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_e_147"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  0.953,
+                  -2
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 172,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_e_147"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  3.5647,
+                  -2
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 173,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_e_148"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  0.953,
+                  0
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 174,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_e_148"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  3.5647,
+                  0
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 175,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_e_149"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  0.953,
+                  2
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 176,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_e_149"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  3.5647,
+                  2
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 177,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_e_150"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  0.953,
+                  4
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 178,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_e_150"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  3.5647,
+                  4
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 179,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_e_151"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  0.953,
+                  6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 180,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_e_151"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  3.5647,
+                  6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 181,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_e_152"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  0.953,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 182,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_e_152"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  3.5647,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 183,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_e_153"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  0.953,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 184,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_e_153"
+              },
+              "Transform": {
+                "pos": [
+                  10.825,
+                  3.5647,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  -0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 185,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_w_154"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  0.953,
+                  -10
                 ],
                 "scale": [
                   1,
@@ -3103,16 +6333,16 @@
             }
           },
           {
-            "localId": 91,
+            "localId": 186,
             "components": {
               "Name": {
-                "value": "Antechamber_trim_w_67"
+                "value": "Antechamber_trim_w_154"
               },
               "Transform": {
                 "pos": [
-                  -6.825,
+                  -10.825,
                   3.5647,
-                  5
+                  -10
                 ],
                 "scale": [
                   1,
@@ -3137,16 +6367,696 @@
             }
           },
           {
-            "localId": 92,
+            "localId": 187,
             "components": {
               "Name": {
-                "value": "Antechamber_corner_68"
+                "value": "Antechamber_wall_w_155"
               },
               "Transform": {
                 "pos": [
-                  -6.6,
+                  -10.825,
+                  0.953,
+                  -8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 188,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_w_155"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  3.5647,
+                  -8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 189,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_w_156"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  0.953,
+                  -6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 190,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_w_156"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  3.5647,
+                  -6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 191,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_w_157"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  0.953,
+                  -4
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 192,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_w_157"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  3.5647,
+                  -4
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 193,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_w_158"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  0.953,
+                  -2
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 194,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_w_158"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  3.5647,
+                  -2
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 195,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_w_159"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  0.953,
+                  0
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 196,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_w_159"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  3.5647,
+                  0
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 197,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_w_160"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  0.953,
+                  2
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 198,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_w_160"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  3.5647,
+                  2
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 199,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_w_161"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  0.953,
+                  4
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 200,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_w_161"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  3.5647,
+                  4
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 201,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_w_162"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  0.953,
+                  6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 202,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_w_162"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  3.5647,
+                  6
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 203,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_w_163"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  0.953,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 204,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_w_163"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  3.5647,
+                  8
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 205,
+            "components": {
+              "Name": {
+                "value": "Antechamber_wall_w_164"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  0.953,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 206,
+            "components": {
+              "Name": {
+                "value": "Antechamber_trim_w_164"
+              },
+              "Transform": {
+                "pos": [
+                  -10.825,
+                  3.5647,
+                  10
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 10
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 207,
+            "components": {
+              "Name": {
+                "value": "Antechamber_corner_165"
+              },
+              "Transform": {
+                "pos": [
+                  -10.6,
                   0.6986,
-                  5.6
+                  10.6
                 ],
                 "scale": [
                   1,
@@ -3171,16 +7081,16 @@
             }
           },
           {
-            "localId": 93,
+            "localId": 208,
             "components": {
               "Name": {
-                "value": "Antechamber_corner_69"
+                "value": "Antechamber_corner_166"
               },
               "Transform": {
                 "pos": [
-                  6.6,
+                  10.6,
                   0.6986,
-                  5.6
+                  10.6
                 ],
                 "scale": [
                   1,
@@ -3205,16 +7115,16 @@
             }
           },
           {
-            "localId": 94,
+            "localId": 209,
             "components": {
               "Name": {
-                "value": "Antechamber_corner_70"
+                "value": "Antechamber_corner_167"
               },
               "Transform": {
                 "pos": [
-                  6.6,
+                  10.6,
                   0.6986,
-                  -5.6
+                  -10.6
                 ],
                 "scale": [
                   1,
@@ -3239,16 +7149,16 @@
             }
           },
           {
-            "localId": 95,
+            "localId": 210,
             "components": {
               "Name": {
-                "value": "Antechamber_corner_71"
+                "value": "Antechamber_corner_168"
               },
               "Transform": {
                 "pos": [
-                  -6.6,
+                  -10.6,
                   0.6986,
-                  -5.6
+                  -10.6
                 ],
                 "scale": [
                   1,
@@ -3273,7 +7183,7 @@
             }
           },
           {
-            "localId": 96,
+            "localId": 211,
             "components": {
               "Name": {
                 "value": "Doorframe1"
@@ -3282,7 +7192,7 @@
                 "pos": [
                   0,
                   0.953,
-                  5.86
+                  10.86
                 ],
                 "scale": [
                   1,
@@ -3291,9 +7201,9 @@
                 ],
                 "quat": [
                   0,
-                  -0.242536,
+                  -0.235611,
                   0,
-                  0.970143
+                  0.971847
                 ]
               },
               "MeshFilter": {
@@ -3307,16 +7217,16 @@
             }
           },
           {
-            "localId": 97,
+            "localId": 212,
             "components": {
               "Name": {
-                "value": "Antechamber_pillar_72"
+                "value": "Antechamber_pillar_169"
               },
               "Transform": {
                 "pos": [
-                  -5.4,
+                  -9.4,
                   0.953,
-                  -4.4
+                  -9.4
                 ],
                 "scale": [
                   1,
@@ -3341,16 +7251,16 @@
             }
           },
           {
-            "localId": 98,
+            "localId": 213,
             "components": {
               "Name": {
-                "value": "Antechamber_pillar_73"
+                "value": "Antechamber_pillar_170"
               },
               "Transform": {
                 "pos": [
-                  5.4,
+                  9.4,
                   0.953,
-                  -4.4
+                  -9.4
                 ],
                 "scale": [
                   1,
@@ -3375,16 +7285,16 @@
             }
           },
           {
-            "localId": 99,
+            "localId": 214,
             "components": {
               "Name": {
-                "value": "Antechamber_pillar_74"
+                "value": "Antechamber_pillar_171"
               },
               "Transform": {
                 "pos": [
-                  -5.4,
+                  -9.4,
                   0.953,
-                  4.4
+                  9.4
                 ],
                 "scale": [
                   1,
@@ -3409,16 +7319,16 @@
             }
           },
           {
-            "localId": 100,
+            "localId": 215,
             "components": {
               "Name": {
-                "value": "Antechamber_pillar_75"
+                "value": "Antechamber_pillar_172"
               },
               "Transform": {
                 "pos": [
-                  5.4,
+                  9.4,
                   0.953,
-                  4.4
+                  9.4
                 ],
                 "scale": [
                   1,
@@ -3443,10 +7353,10 @@
             }
           },
           {
-            "localId": 101,
+            "localId": 216,
             "components": {
               "Name": {
-                "value": "Antechamber_rubble_76"
+                "value": "Antechamber_rubble_173"
               },
               "Transform": {
                 "pos": [
@@ -3477,10 +7387,10 @@
             }
           },
           {
-            "localId": 102,
+            "localId": 217,
             "components": {
               "Name": {
-                "value": "Antechamber_rubble_77"
+                "value": "Antechamber_rubble_174"
               },
               "Transform": {
                 "pos": [
@@ -3511,10 +7421,10 @@
             }
           },
           {
-            "localId": 103,
+            "localId": 218,
             "components": {
               "Name": {
-                "value": "Antechamber_rubble_78"
+                "value": "Antechamber_rubble_175"
               },
               "Transform": {
                 "pos": [
@@ -3545,10 +7455,10 @@
             }
           },
           {
-            "localId": 104,
+            "localId": 219,
             "components": {
               "Name": {
-                "value": "Antechamber_rubble_79"
+                "value": "Antechamber_rubble_176"
               },
               "Transform": {
                 "pos": [

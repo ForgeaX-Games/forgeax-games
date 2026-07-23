@@ -3,7 +3,7 @@
 //   bun scripts/bake-dungeon.ts
 //   bun scripts/fix-prop-materials.ts assets/scenes/slagdeep-hollow.pack.json
 //
-// Re-run after ANY change to dungeon-layout.ts (seed, generator, decor).
+// Re-run after ANY change to the den generator (pipeline stages, seed, decor).
 // writePack() prunes orphan refs[] entries on save.
 
 import { mkdirSync, readFileSync } from 'node:fs';
@@ -13,7 +13,8 @@ import { fileURLToPath } from 'node:url';
 import {
   CUBE_GUID, readPropBBox, remindReload, tileGrid, writePack,
 } from './lib/scene-authoring';
-import { DUNGEON_SCENE_GUID, DUNGEON_SEED, generateLayout, mulberry32, quatY, type GeoKind } from '../src/dungeon-layout';
+import { DUNGEON_SCENE_GUID, DUNGEON_SEED, mulberry32, quatY, type GeoKind } from '../src/dungeon-layout';
+import { resolveDungeonLayout } from '../src/dungeon-pipeline';
 
 const gameRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const propsDir = join(gameRoot, 'assets', '3d', 'props', 'meshes');
@@ -73,7 +74,12 @@ const PROP_POOL: Record<GeoKind, string[]> = {
   crate: ['prop-crate'],
 };
 
-const layout = generateLayout(DUNGEON_SEED);
+const layout = resolveDungeonLayout(DUNGEON_SEED);
+if (layout.roomCount < 1 || layout.geometry.length < 1) {
+  throw new Error(
+    'bake-dungeon: resolveDungeonLayout produced an empty dungeon — refusing silent bake',
+  );
+}
 const kinds = Object.keys(MATS) as GeoKind[];
 
 // Load mesh GUID + bbox for every (kind, variant) in the pools. refs[] is the
@@ -313,6 +319,10 @@ const pack = {
     }),
   ],
 };
+
+if (entities.length < 1) {
+  throw new Error('bake-dungeon: zero entities — refusing silent bake');
+}
 
 const out = join(gameRoot, 'assets', 'scenes', 'slagdeep-hollow.pack.json');
 mkdirSync(dirname(out), { recursive: true });

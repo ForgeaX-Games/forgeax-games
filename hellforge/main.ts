@@ -113,6 +113,14 @@ import { installHud, type SkillSlotState, type TargetViewModel } from './src/hud
 import { installCharacterPanel } from './src/character-panel';
 import { Dungeon, DUNGEON_ORIGIN, denMountainRingOrigin } from './src/dungeon';
 import { CELL, CELLS } from './src/dungeon-layout';
+import {
+  branchCurseDamageMul,
+  createRoomEventState,
+  noteMonsterKill,
+  resetRoomEventState,
+  showVaultCurseCard,
+  tickVaultPresence,
+} from './src/dungeon-room-events';
 import { Sfx } from './src/sfx';
 import {
   rollDrop,
@@ -757,9 +765,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const campObstacles = await loadSceneJson<ObstacleDoc>(
       './assets/scenes/rogue-encampment.obstacles.json', emptyObstacles,
     );
-    // Camp + boss-antechamber doorframe proxies (world-space; den install already ran).
+    // Camp + den wall + antechamber — each source once (no double-register).
     const cameraProbeBlockers = [
       ...campObstacles.blockers,
+      ...dungeon.denProbeBlockers,
       ...dungeon.antechamberProbeBlockers,
     ];
     const campCameraProbe = createObstacleCameraProbe(cameraProbeBlockers);
@@ -814,6 +823,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // ── monsters + combat-run objectives (transient; never saved) ─────────
     let denTotal = 0;
     const combatRun = createCombatRunDomain();
+    /** L4 Option B — room-clear once-fire + cursed-vault enter/exit. */
+    const roomEvents = createRoomEventState();
+    let disposeVaultCard: (() => void) | null = null;
+    onCleanup(() => { disposeVaultCard?.(); disposeVaultCard = null; });
     const questStatus = () => character.snapshot().quests[PURGE_QUEST_ID].status;
     const questCompleted = (): boolean => questStatus() === 'completed';
     // Cutscene playback state is mutated by play/endCutscene (defined later).
@@ -836,7 +849,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         if (dodgeHitReactionAborts(dodgeState)) {
           dodgeState = abortDodge(dodgeState);
         }
-        const dmg = resolveIncomingDamage(rawDmg, combatStats);
+        // L4 B2: temporary taken-damage mul while inside the slag-cursed vault.
+        const curseMul = dungeon.encounters
+          ? branchCurseDamageMul(roomEvents, dungeon.encounters)
+          : 1;
+        const dmg = resolveIncomingDamage(rawDmg * curseMul, combatStats);
         if (damagePlayer(player, dmg)) {
           hud.damageFlash();
           addShake(source === 'slaglord' ? 0.4 : 0.16);
@@ -883,6 +900,21 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         if (isBoss) {
           hud.setBoss(null);
           hud.banner('熔渣督军 已被消灭', '#ffd066', 2400);
+        }
+        // L4 B1 — room-clear beat (once per combat room pack).
+        if (m.zone === 'den' && !isBoss && dungeon.encounters) {
+          const beat = noteMonsterKill(
+            roomEvents,
+            dungeon.encounters,
+            m.x - DUNGEON_ORIGIN.x,
+            m.z - DUNGEON_ORIGIN.z,
+          );
+          if (beat) {
+            hud.banner('房间肃清', '#8aff9a', 1800);
+            sfx.play('quest');
+            loot.spawn('gold', 6 + Math.floor(Math.random() * 8), m.x, m.z);
+            fx.rise(m.x, 0.3, m.z, 'gold', 10, 0.7);
+          }
         }
       },
     });
@@ -2376,6 +2408,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
               monsters.clearAll();
               if (areaId === 'slagdeep-hollow') {
                 denTotal = 0;
+                resetRoomEventState(roomEvents);
+                disposeVaultCard?.();
+                disposeVaultCard = null;
                 for (const s of dungeon.monsterSpawns) {
                   if (monsters.spawn(s.kind, s.x, s.z, 'den')) denTotal++;
                 }
@@ -2888,6 +2923,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           }
         } else if (area === 'den' && dExit < 1.5) {
           portalArmed = false;
+          // Leave den — drop vault curse mul / dismiss card (once-fire state stays).
+          roomEvents.curseActive = false;
+          disposeVaultCard?.();
+          disposeVaultCard = null;
           const transition = resolveAreaTransition('ashen-reach', 'cave-mouth', {
             characterId: character.snapshot().identity.id,
           });
@@ -2917,6 +2956,24 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         portalMoteTimer = 0.5;
         if (area === 'den') fx.rise(DEN_EXIT.x, 0.15, DEN_EXIT.z, 'ice', 2, 1.1);
         else fx.rise(CAVE_MOUTH.x, 0.15, CAVE_MOUTH.z, 'fire', 2, 1.2);
+      }
+
+      // L4 B2 — slag-cursed vault enter/exit (DOM card once; mul while inside).
+      if (area === 'den' && dungeon.encounters && camMode === 'arpg' && !player.dead) {
+        const vaultEv = tickVaultPresence(
+          roomEvents,
+          dungeon.encounters,
+          state.px - DUNGEON_ORIGIN.x,
+          state.pz - DUNGEON_ORIGIN.z,
+        );
+        if (vaultEv?.kind === 'vault-enter' && vaultEv.showCard) {
+          disposeVaultCard?.();
+          disposeVaultCard = showVaultCurseCard(uiMount, {
+            modifierLine: vaultEv.modifierLine,
+            rewardLine: vaultEv.rewardLine,
+          });
+          sfx.play('quest');
+        }
       }
 
       // ── quest objectives (ready only; rewards via Veyra turn-in) ──
@@ -3017,7 +3074,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         orbitDeltaPitch: orbitPitch,
         // Showcase uses fixed arm; ARPG keeps wheel zoom as desired (probe may shorten).
         desiredDistance: camMode === 'showcase' ? SHOWCASE_DISTANCE : arpgZoomDistance,
-        // Camp + antechamber occluders (ARPG + showcase share one probe).
+        // Camp + den + antechamber occluders (ARPG + showcase share one probe).
         probe: campCameraProbe,
       };
       zoomDelta = 0;

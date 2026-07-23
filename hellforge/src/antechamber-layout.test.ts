@@ -7,7 +7,8 @@ import {
   type AntechamberPlacement,
 } from './antechamber-layout';
 import { isCampForegroundFadeLabel } from './camera-fade';
-import { CELL, DUNGEON_SEED, generateLayout } from './dungeon-layout';
+import { CELL, DUNGEON_SEED } from './dungeon-layout';
+import { resolveDungeonLayout } from './dungeon-pipeline';
 
 describe('doorYawToward', () => {
   test('faces -Z when target is south of room', () => {
@@ -76,8 +77,8 @@ describe('buildAntechamberLayout', () => {
     }
   });
 
-  test('sizes to den boss footprint from generateLayout (PR1 placement lock)', () => {
-    const den = generateLayout(DUNGEON_SEED);
+  test('sizes to den boss footprint from resolveDungeonLayout (PR1 placement lock)', () => {
+    const den = resolveDungeonLayout(DUNGEON_SEED);
     expect(den.bossSize.w).toBeGreaterThan(0);
     expect(den.bossSize.h).toBeGreaterThan(0);
     const layout = buildAntechamberLayout({

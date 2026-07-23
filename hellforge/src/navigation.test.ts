@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { CELL, CELLS, DUNGEON_SEED, generateLayout } from './dungeon-layout';
+import { CELL, CELLS, DUNGEON_SEED } from './dungeon-layout';
+import { resolveDungeonLayout } from './dungeon-pipeline';
 import {
   astarGrid,
   createDungeonNavigation,
@@ -35,7 +36,7 @@ const ashenLayout: AshenReachLayout = {
 };
 
 function dungeonSourceFromSeed() {
-  const layout = generateLayout(DUNGEON_SEED);
+  const layout = resolveDungeonLayout(DUNGEON_SEED);
   return {
     contains(wx: number, wz: number) {
       return Math.abs(wx - DUNGEON_ORIGIN.x) < (CELLS / 2 + 2) * CELL
@@ -112,7 +113,7 @@ describe('createOpenAreaNavigation', () => {
 describe('createDungeonNavigation', () => {
   test('paths between walkable dungeon cells on the seeded layout', () => {
     const nav = createDungeonNavigation(dungeonSourceFromSeed());
-    const layout = generateLayout(DUNGEON_SEED);
+    const layout = resolveDungeonLayout(DUNGEON_SEED);
     const entry = [
       layout.entry.x + DUNGEON_ORIGIN.x,
       layout.entry.z + DUNGEON_ORIGIN.z,

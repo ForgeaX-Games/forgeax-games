@@ -13,13 +13,14 @@ import {
   ANTECHAMBER_SCENE_GUID,
   buildAntechamberLayout,
 } from '../src/antechamber-layout';
-import { DUNGEON_SEED, generateLayout, quatY } from '../src/dungeon-layout';
+import { DUNGEON_SEED, quatY } from '../src/dungeon-layout';
+import { resolveDungeonLayout } from '../src/dungeon-pipeline';
 import { readPropAssets, remindReload, writePack } from './lib/scene-authoring';
 
 const gameRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const kitDir = join(gameRoot, 'assets', 'kit', 'modules');
 
-const den = generateLayout(DUNGEON_SEED);
+const den = resolveDungeonLayout(DUNGEON_SEED);
 const layout = buildAntechamberLayout({
   widthM: den.bossSize.w,
   depthM: den.bossSize.h,

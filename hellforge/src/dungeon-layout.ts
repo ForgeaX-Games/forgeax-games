@@ -1,17 +1,12 @@
-// Hellforge dungeon LAYOUT — the pure, engine-free generator.
+// Hellforge dungeon LAYOUT — shared types, seed, PRNG, and greybox generator.
 //
-// One deterministic function of a seed. Both consumers run it with
-// DUNGEON_SEED and therefore agree exactly:
-//   • scripts/bake-dungeon.ts  — turns layout.geometry into the editable
-//     scene pack `assets/scenes/slagdeep-hollow.pack.json` (LOCAL coordinates,
-//     centred near the origin so the editor is pleasant to work in)
-//   • src/dungeon.ts (runtime) — uses walls/entry/boss/monsterSpawns for
-//     walkability + gameplay, and instantiates the baked pack under a root
-//     at DUNGEON_ORIGIN (or, as a fallback, spawns geometry itself)
+// Shipping den path (PR3 T5+): `src/dungeon-pipeline.ts` →
+// `generateModularLayout` / `resolveDungeonLayout`. Bake + runtime both call
+// that adapter so pack geometry and the live walk grid stay single-truth.
 //
-// EVERY random decision (rooms, corridors, torch skips, decor rolls) lives
-// HERE so the baked geometry can never drift from the runtime grid. If you
-// change anything in this file, re-run:  bun scripts/bake-dungeon.ts
+// `generateLayout` below is the legacy rect-room greybox. It remains available
+// as an opt-in fallback (`USE_GREYBOX_DUNGEON_LAYOUT` in dungeon-pipeline.ts).
+// If you change the shipping generator, re-run:  bun scripts/bake-dungeon.ts
 
 export const DUNGEON_SEED = 20260703;
 export const CELLS = 44;
@@ -56,7 +51,7 @@ export interface GeoItem {
 }
 
 export interface DungeonLayout {
-  walk: Uint8Array;                      // CELLS×CELLS walkability
+  walk: ArrayLike<number>;               // CELLS×CELLS walkability (often frozen)
   roomCount: number;
   /** LOCAL coords — consumers add DUNGEON_ORIGIN for world space. */
   entry: { x: number; z: number };
