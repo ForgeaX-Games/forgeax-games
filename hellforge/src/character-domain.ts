@@ -89,7 +89,8 @@ export type CharacterCommand =
   | { op: 'equip-from-bag'; index: number }
   | { op: 'unequip'; slot: ItemSlot }
   | { op: 'melt-bag'; index: number }
-  | { op: 'use-potion'; kind: 'life' | 'mana' }
+  /** current/max let the domain reject full-resource uses without consuming stock. */
+  | { op: 'use-potion'; kind: 'life' | 'mana'; current: number; max: number }
   | { op: 'add-potion'; kind: 'life' | 'mana'; count?: number }
   | { op: 'select-hotbar'; slot: 0 | 1 | 2 | 3 }
   | { op: 'invest-skill'; nodeId: SkillNodeId }
@@ -133,6 +134,7 @@ export type CharacterResult =
         | 'bad-index'
         | 'empty-equip'
         | 'empty-potion'
+        | 'not-needed'
         | SkillTreeFailReason;
     };
 
@@ -257,8 +259,8 @@ class CharacterDomainImpl implements CharacterDomain {
     domain.#equipment = deepClone(opts.equipment as Equipment);
     domain.#quests = deepClone(opts.quests as Record<QuestId, QuestSave>);
     domain.#potions = {
-      life: Math.max(0, Math.floor(opts.potions?.life ?? 0)),
-      mana: Math.max(0, Math.floor(opts.potions?.mana ?? 0)),
+      life: Math.min(POTION_CAP, Math.max(0, Math.floor(opts.potions?.life ?? 0))),
+      mana: Math.min(POTION_CAP, Math.max(0, Math.floor(opts.potions?.mana ?? 0))),
     };
     return domain;
   }
@@ -292,6 +294,9 @@ class CharacterDomainImpl implements CharacterDomain {
         return this.#meltBag(command.index);
       case 'use-potion': {
         if (this.#potions[command.kind] <= 0) return { ok: false, reason: 'empty-potion' };
+        const max = Number.isFinite(command.max) ? command.max : 0;
+        const current = Number.isFinite(command.current) ? command.current : 0;
+        if (max > 0 && current >= max) return { ok: false, reason: 'not-needed' };
         this.#potions = { ...this.#potions, [command.kind]: this.#potions[command.kind] - 1 };
         return { ok: true, potionUsed: { kind: command.kind, restore: POTION_RESTORE[command.kind] } };
       }

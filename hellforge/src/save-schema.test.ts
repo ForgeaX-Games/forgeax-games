@@ -127,6 +127,20 @@ describe('parseEnvelope / parseLegacy', () => {
     expect(parsed!.quests['purge-slagdeep-hollow'].status).toBe('active');
   });
 
+  test('parsePotions clamps belt stock to POTION_CAP (20), not 999', () => {
+    const env = validEnvelope();
+    const raw = {
+      ...env,
+      progression: {
+        ...env.progression,
+        potions: { life: 999, mana: 40 },
+      },
+    };
+    const parsed = parseEnvelope(raw);
+    expect(parsed).not.toBeNull();
+    expect(parsed!.progression.potions).toEqual({ life: 20, mana: 20 });
+  });
+
   test('legacy list keeps barbarian / necromancer rows', () => {
     const list = parseLegacyList([
       {

@@ -417,7 +417,7 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
   deathEl.innerHTML =
     `<div style="font:900 52px ${FONT_UI};color:#c22;letter-spacing:8px;` +
     `text-shadow:0 0 30px rgba(255,0,0,0.5)">你已死亡</div>` +
-    `<div style="font:600 15px ${FONT_UI};color:#daa">按 <b style="color:#fff">R</b> 在余烬哨站复活（损失少量经验）</div>`;
+    `<div style="font:600 15px ${FONT_UI};color:#daa">按 <b style="color:#fff">R</b> 在余烬哨站复活（无经验惩罚）</div>`;
 
   const dmgFlash = document.createElement('div');
   dmgFlash.style.cssText = 'position:absolute;inset:0;opacity:0;pointer-events:none;' +

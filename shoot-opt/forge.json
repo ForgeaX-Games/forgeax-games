@@ -2,5 +2,6 @@
   "id": "shoot-opt",
   "name": "shoot-opt",
   "schemaVersion": "1.0.0",
-  "entry": "src/main.ts"
+  "entry": "src/main.ts",
+  "defaultScene": "75f2285d-0ec8-5ce8-b45d-6285cd4926dc"
 }

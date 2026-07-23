@@ -15,7 +15,7 @@ import type { CharacterRecord, ClassId } from './classes';
 import type { DeepReadonly } from './deep-readonly';
 import type { Affix, AffixStat, Equipment, ItemInstance, ItemSlot, Rarity } from './items';
 import { SLOT_ORDER } from './items';
-import { BAG_SIZE } from './character-domain';
+import { BAG_SIZE, POTION_CAP } from './character-domain';
 import type { HotbarSlots } from './content-ids';
 import { clampSkillRanks } from './skill-tree';
 
@@ -228,7 +228,7 @@ function parseSelectedHotbarSlot(raw: unknown): 0 | 1 | 2 | 3 | null {
 function parsePotions(raw: unknown): { life: number; mana: number } {
   if (!isObject(raw)) return { life: 0, mana: 0 };
   const n = (v: unknown): number =>
-    isFiniteNumber(v) && v >= 0 ? Math.min(999, Math.floor(v)) : 0;
+    isFiniteNumber(v) && v >= 0 ? Math.min(POTION_CAP, Math.floor(v)) : 0;
   return { life: n(raw.life), mana: n(raw.mana) };
 }
 

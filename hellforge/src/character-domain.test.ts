@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import {
   createDomainFromRecord,
   createSorceressDomain,
+  hydrateSorceressDomain,
   projectCharacterRecord,
 } from './character-domain';
 import type { ItemInstance } from './items';
@@ -150,7 +151,7 @@ describe('potion belt (R2)', () => {
   test('new character starts with 2 life / 1 mana; use-potion decrements + restores', () => {
     const domain = createSorceressDomain({ playerName: '药水' });
     expect(domain.snapshot().potions).toEqual({ life: 2, mana: 1 });
-    const res = domain.dispatch({ op: 'use-potion', kind: 'life' });
+    const res = domain.dispatch({ op: 'use-potion', kind: 'life', current: 10, max: 100 });
     expect(res.ok).toBe(true);
     expect(res.ok && res.potionUsed).toEqual({ kind: 'life', restore: 30 });
     expect(domain.snapshot().potions.life).toBe(1);
@@ -158,10 +159,38 @@ describe('potion belt (R2)', () => {
 
   test('use-potion on empty stock fails with empty-potion', () => {
     const domain = createSorceressDomain({ playerName: '空瓶' });
-    domain.dispatch({ op: 'use-potion', kind: 'mana' });
-    const res = domain.dispatch({ op: 'use-potion', kind: 'mana' });
+    domain.dispatch({ op: 'use-potion', kind: 'mana', current: 0, max: 50 });
+    const res = domain.dispatch({ op: 'use-potion', kind: 'mana', current: 0, max: 50 });
     expect(res.ok).toBe(false);
     expect(!res.ok && res.reason).toBe('empty-potion');
+  });
+
+  test('use-potion at full resource rejects with not-needed and does not consume', () => {
+    const domain = createSorceressDomain({ playerName: '满血' });
+    const before = domain.snapshot().potions.life;
+    const res = domain.dispatch({ op: 'use-potion', kind: 'life', current: 100, max: 100 });
+    expect(res.ok).toBe(false);
+    expect(!res.ok && res.reason).toBe('not-needed');
+    expect(domain.snapshot().potions.life).toBe(before);
+  });
+
+  test('hydrate clamps potion counts to POTION_CAP', () => {
+    const base = createSorceressDomain({ playerName: '超量', id: 'pot-cap' }).snapshot();
+    const domain = hydrateSorceressDomain({
+      identity: base.identity,
+      level: base.level,
+      xp: base.xp,
+      gold: base.gold,
+      unspentSkillPoints: base.unspentSkillPoints,
+      skillRanks: base.skillRanks,
+      hotbar: base.hotbar,
+      selectedHotbarSlot: base.selectedHotbarSlot,
+      bag: base.bag,
+      equipment: base.equipment,
+      quests: base.quests,
+      potions: { life: 999, mana: 50 },
+    });
+    expect(domain.snapshot().potions).toEqual({ life: 20, mana: 20 });
   });
 
   test('add-potion caps at 20 and reports the added count', () => {

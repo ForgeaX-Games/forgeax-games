@@ -66,6 +66,9 @@ import {
 import { deriveCombatStats, type CombatStats } from './src/combat-stats';
 import { resolveIncomingDamage } from './src/damage';
 import { FxSystem } from './src/fx';
+import { createPerfProbe, readFoldedDraws } from './src/perf-probe';
+import { createOwnerLedger, HELLFORGE_UPDATE_SYSTEMS } from './src/owner-ledger';
+import { cutsceneBlocksChromeKey } from './src/cutscene-input';
 import { MonsterManager, MONSTERS, type Monster } from './src/monsters';
 import {
   createSkillCaster,
@@ -91,7 +94,7 @@ import {
 import { LootSystem } from './src/loot';
 import { installHud, type SkillSlotState, type TargetViewModel } from './src/hud';
 import { installCharacterPanel } from './src/character-panel';
-import { Dungeon, DUNGEON_ORIGIN } from './src/dungeon';
+import { Dungeon, DUNGEON_ORIGIN, denMountainRingOrigin } from './src/dungeon';
 import { CELL, CELLS } from './src/dungeon-layout';
 import { Sfx } from './src/sfx';
 import {
@@ -349,6 +352,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   bgm.setPhase(startedInDen ? 'den' : 'camp');
   /** Wired when combat Sfx is constructed inside startRuntime. */
   let sfxForAudio: { setVolume(v: number): void } | null = null;
+  const ownerLedger = createOwnerLedger();
+  onCleanup(ownerLedger.trackBgm());
   const applyAudioSettings = (s: RenderSettings): void => {
     bgm.setVolume(1, s.bgmVolume);
     sfxForAudio?.setVolume(s.sfxVolume);
@@ -358,6 +363,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     name: 'hellforge-bgm-update', queries: [],
     fn: () => bgm.tick(world.getResource(Time).delta),
   });
+  onCleanup(ownerLedger.trackSystem('hellforge-bgm-update'));
   onCleanup(() => bgm.dispose());
   let stopped = false;
   onCleanup(() => { stopped = true; });
@@ -647,6 +653,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     onCleanup(() => cutsceneUi.dispose());
     const loot = new LootSystem(world);
     const sfx = new Sfx();
+    onCleanup(ownerLedger.trackSfx());
     sfx.install();
     sfxForAudio = sfx;
     applyAudioSettings(loadRenderSettings());
@@ -688,10 +695,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // so peaks sit outside walls but inside the camera far plane (~200).
       const denHalf = (CELLS * CELL) / 2;
       await installWildTerrain(world, assets, {
-        origin: {
-          x: DUNGEON_ORIGIN.x + denHalf,
-          z: DUNGEON_ORIGIN.z + denHalf,
-        },
+        origin: denMountainRingOrigin(),
         seed: 0x51a9de01,
         half: denHalf,
         label: 'den',
@@ -1318,6 +1322,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     // faceX/faceZ: witch facing on XZ (also drives showcase stub yaw).
     let faceX = 0, faceZ = -1;
+    const perfProbe = createPerfProbe(600);
     (window as unknown as { __hf?: unknown }).__hf = {
       state,
       player,
@@ -1340,6 +1345,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       get sky() { return sky; },
       /** Active projectile / particle / slow-marker counts (Frost VFX lifecycle). */
       get fxCounts() { return fx.debugCounts(); },
+      perf: {
+        snapshot: () => perfProbe.snapshot(),
+        reset: () => perfProbe.reset(),
+      },
     };
 
     // ── camera + runtime render-settings (F10) ────────────────────────────
@@ -1810,9 +1819,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     /** Belt potion hotkeys (Digit5/6) — domain consumes, runtime heals. */
     const usePotion = (kind: 'life' | 'mana'): void => {
-      const res = character.dispatch({ op: 'use-potion', kind });
+      const current = kind === 'life' ? player.hp : player.mana;
+      const max = kind === 'life' ? player.maxHp : player.maxMana;
+      const res = character.dispatch({ op: 'use-potion', kind, current, max });
       if (!res.ok) {
-        hud.banner(kind === 'life' ? '没有生命药水了' : '没有法力药水了', '#ff6a6a', 900);
+        const msg = !res.ok && res.reason === 'not-needed'
+          ? (kind === 'life' ? '生命已满' : '法力已满')
+          : (kind === 'life' ? '没有生命药水了' : '没有法力药水了');
+        hud.banner(msg, '#ff6a6a', 900);
         return;
       }
       const restore = res.potionUsed?.restore ?? 0;
@@ -2074,6 +2088,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       questLog.dispose();
     });
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).uiLayers = uiLayers;
+    ((window as unknown as { __hf: Record<string, unknown> }).__hf).owners = () =>
+      ownerLedger.snapshot(uiLayers.active());
+    ((window as unknown as { __hf: Record<string, unknown> }).__hf).assertSingleOwners = () =>
+      ownerLedger.assertSingleOwners(uiLayers.active(), HELLFORGE_UPDATE_SYSTEMS);
     // Dev/QA hook: replay the camp-arrival cinematic (used by browser walkthroughs).
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).playCampIntro = () => playCutscene(buildCampIntro());
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).moveIntent = {
@@ -2108,46 +2126,49 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
         e.preventDefault();
       }
-      if (e.code === 'KeyB' || e.code === 'KeyI') {
-        automap.setOpen(false);
-        applyEquipment();
-        toggleMajorPanel('inventory');
-      }
-      if (e.code === 'KeyK') {
-        automap.setOpen(false);
-        toggleMajorPanel('skills');
-      }
-      if (e.code === 'KeyQ') {
-        automap.setOpen(false);
-        refreshQuestLog();
-        toggleMajorPanel('quests');
-      }
-      if (e.code === 'KeyC') {
-        automap.setOpen(false);
-        refreshCharacterPanel();
-        toggleMajorPanel('character');
-      }
-      if (e.code === 'F10') {
-        e.preventDefault();
-        automap.setOpen(false);
-        toggleMajorPanel('settings');
-      }
-      if (e.code === 'Tab') {
-        e.preventDefault();
-        uiLayers.closeAll();
-        automap.toggle();
-      }
-      if (e.code === 'KeyV') {
-        // Spec §6.2: showcase only in Cinderwatch; force arpg before leave.
-        if (camMode === 'arpg') {
-          if (area === 'camp') {
-            arpgZoomDistance = camRig.distance;
-            beginCameraMode('showcase');
+      // Cutscene owns UI + world input — only Esc (skip) may steal ownership.
+      if (!cutsceneBlocksChromeKey(uiLayers.active())) {
+        if (e.code === 'KeyB' || e.code === 'KeyI') {
+          automap.setOpen(false);
+          applyEquipment();
+          toggleMajorPanel('inventory');
+        }
+        if (e.code === 'KeyK') {
+          automap.setOpen(false);
+          toggleMajorPanel('skills');
+        }
+        if (e.code === 'KeyQ') {
+          automap.setOpen(false);
+          refreshQuestLog();
+          toggleMajorPanel('quests');
+        }
+        if (e.code === 'KeyC') {
+          automap.setOpen(false);
+          refreshCharacterPanel();
+          toggleMajorPanel('character');
+        }
+        if (e.code === 'F10') {
+          e.preventDefault();
+          automap.setOpen(false);
+          toggleMajorPanel('settings');
+        }
+        if (e.code === 'Tab') {
+          e.preventDefault();
+          uiLayers.closeAll();
+          automap.toggle();
+        }
+        if (e.code === 'KeyV') {
+          // Spec §6.2: showcase only in Cinderwatch; force arpg before leave.
+          if (camMode === 'arpg') {
+            if (area === 'camp') {
+              arpgZoomDistance = camRig.distance;
+              beginCameraMode('showcase');
+              rs.applyCamera();
+            }
+          } else {
+            beginCameraMode('arpg');
             rs.applyCamera();
           }
-        } else {
-          beginCameraMode('arpg');
-          rs.applyCamera();
         }
       }
       if (!worldInputBlocked) {
@@ -2331,8 +2352,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     // ── main loop ─────────────────────────────────────────────────────────
     let hudTimer = 0;
+    onCleanup(ownerLedger.trackSystem('hellforge-runtime-update'));
     world.addSystem(Update, { name: 'hellforge-runtime-update', queries: [], fn: () => {
       const dt = world.getResource(Time).delta;
+      perfProbe.recordFrame(dt);
+      perfProbe.observeFoldedDraws(readFoldedDraws(app));
+      perfProbe.observePools({
+        ...fx.debugCounts(),
+      });
       if (!allowUpdateFrame(dt)) return;
       // fps compensation rate for AnimationPlayer speeds (see clip helpers).
       // Smoothed so a single hitchy frame doesn't pulse the animations.
@@ -2914,6 +2941,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     });
     charList.hide();
     // Title particles uncapped; CharSelect/CharList drive 360° idle preview yaw.
+    onCleanup(ownerLedger.trackSystem('hellforge-shell-update'));
     world.addSystem(Update, { name: 'hellforge-shell-update', queries: [], fn: () => {
       const dt = world.getResource(Time).delta;
       shell?.tick(dt);

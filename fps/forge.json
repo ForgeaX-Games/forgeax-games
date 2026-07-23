@@ -3,5 +3,6 @@
   "name": "Sector Strike",
   "schemaVersion": "1.0.0",
   "entry": "main.ts",
-  "pointerLock": true
+  "pointerLock": true,
+  "defaultScene": "e6f05afd-7388-5090-8d08-7af0cf6f79a8"
 }

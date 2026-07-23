@@ -30,7 +30,8 @@ import type { MonsterKind } from './monsters';
 
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
 
-export const DUNGEON_ORIGIN = { x: 300, z: 300 };
+export { DUNGEON_ORIGIN, denMountainRingOrigin } from './dungeon-origin';
+import { DUNGEON_ORIGIN } from './dungeon-origin';
 
 export interface MonsterSpawn { kind: MonsterKind; x: number; z: number }
 

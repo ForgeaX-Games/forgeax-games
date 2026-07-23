@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "75f2285d-0ec8-5ce8-b45d-6285cd4926dc",
+      "kind": "scene",
+      "refs": [],
+      "payload": { "kind": "scene", "entities": [] }
+    }
+  ]
+}
