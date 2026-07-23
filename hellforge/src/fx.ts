@@ -29,9 +29,17 @@ import frostFangShader from './shaders/frost-fang.wgsl';
 import frostImpactShader from './shaders/frost-impact.wgsl';
 import frostSlowShader from './shaders/frost-slow.wgsl';
 import { FxLifecycleTracker, type FxLifecycleSnapshot } from './fx-lifecycle';
+import {
+  EffectExecutor,
+  type EffectHandle,
+  type FxSpawnLease,
+} from './fx/executor';
+import type { EffectDef } from './fx/effect-def';
+import { combatBeat } from './fx/defs';
 
 export type MatHandle = Handle<'MaterialAsset', 'shared'>;
 export type { FxLifecycleSnapshot } from './fx-lifecycle';
+export type { EffectHandle } from './fx/executor';
 
 /** Shared Frost Fang material handles (one set — no per-projectile materials). */
 export interface FrostVfxHandles {
@@ -90,11 +98,20 @@ export class FxSystem {
   private slowMarkers = new Map<string, SlowMarkerEntity>();
   /** Pure counts for __hf / tests (entities stay in this class). */
   readonly lifecycle = new FxLifecycleTracker();
+  /** Declarative EffectDef runner (PR2b T2). Spawns via burst/pop/rise. */
+  private readonly executor: EffectExecutor;
   // Campfire ember emitter state.
   private emberTimer = 0;
   private emberAt: { x: number; y: number; z: number } | null = null;
 
   constructor(private world: World, app?: unknown) {
+    this.executor = new EffectExecutor({
+      burst: (x, y, z, color, count, speed) => this.burst(x, y, z, color, count, speed),
+      pop: (x, y, z, color, size) => this.pop(x, y, z, color, size),
+      rise: (x, y, z, color, count, spread) => this.rise(x, y, z, color, count, spread),
+    });
+    // Note: burst/pop/rise return FxSpawnLease; executor tracks them for release.
+
     const palette: Record<FxColor, { c: [number, number, number]; i: number }> = {
       fire:      { c: [1.0, 0.32, 0.06], i: 1.4 },
       ice:       { c: [0.45, 0.80, 1.0], i: 1.4 },
@@ -213,34 +230,60 @@ export class FxSystem {
 
   // ── particle spawns ──────────────────────────────────────────────────────
 
+  /** Exactly-once lease that despawns the entities spawned into `owned`. */
+  private makeLease(owned: EntityHandle[]): FxSpawnLease {
+    let disposed = false;
+    return {
+      dispose: () => {
+        if (disposed) return;
+        disposed = true;
+        for (const e of owned) {
+          for (let i = this.particles.length - 1; i >= 0; i--) {
+            if (this.particles[i]!.e !== e) continue;
+            this.world.despawn(this.particles[i]!.e);
+            this.particles.splice(i, 1);
+            break;
+          }
+        }
+        owned.length = 0;
+        this.lifecycle.setParticles(this.particles.length);
+      },
+    };
+  }
+
   private spawnParticle(
     x: number, y: number, z: number, s: number, color: FxColor,
     vx: number, vy: number, vz: number, gy: number, life: number,
     mode: 'shrink' | 'rise' | 'pop', shape: 'cube' | 'sphere' = 'sphere',
-  ): void {
-    if (this.particles.length > 320) return;    // hard cap — never flood the world
+  ): EntityHandle | null {
+    if (this.particles.length > 320) return null;    // hard cap — never flood the world
     const spawned = this.world.spawn(
       { component: Transform, data: { pos: [x, y, z], scale: [s, s, s] } },
       { component: MeshFilter, data: { assetHandle: shape === 'cube' ? HANDLE_CUBE : HANDLE_SPHERE } },
       { component: MeshRenderer, data: { materials: [this.mats[color]] } },
     );
-    if (!spawned.ok) return;
-    this.particles.push({ e: spawned.value as EntityHandle, age: 0, life, vx, vy, vz, gy, mode, s0: s, x, y, z });
+    if (!spawned.ok) return null;
+    const e = spawned.value as EntityHandle;
+    this.particles.push({ e, age: 0, life, vx, vy, vz, gy, mode, s0: s, x, y, z });
+    return e;
   }
 
   /** Radial burst at a hit point (projectile impact, melee hit). */
-  burst(x: number, y: number, z: number, color: FxColor, count = 6, speed = 3.2): void {
+  burst(x: number, y: number, z: number, color: FxColor, count = 6, speed = 3.2): FxSpawnLease {
+    const owned: EntityHandle[] = [];
     for (let i = 0; i < count; i++) {
       const ang = Math.random() * Math.PI * 2;
       const up = 1.0 + Math.random() * 2.2;
-      this.spawnParticle(
+      const e = this.spawnParticle(
         x, y, z, 0.07 + Math.random() * 0.07, color,
         Math.cos(ang) * speed * (0.4 + Math.random() * 0.6),
         up,
         Math.sin(ang) * speed * (0.4 + Math.random() * 0.6),
         -7, 0.4 + Math.random() * 0.3, 'shrink',
       );
+      if (e) owned.push(e);
     }
+    return this.makeLease(owned);
   }
 
   /** Death gibs — chunkier, redder, fall to the ground. */
@@ -259,45 +302,59 @@ export class FxSystem {
   /** Impact flash — one emissive orb that pops (expands + dies in ~0.15 s).
    *  The single-frame-scale punch is what sells a hit; particles alone read
    *  as decoration. Layer this UNDER burst() on every meaningful impact. */
-  pop(x: number, y: number, z: number, color: FxColor, size = 0.4): void {
-    this.spawnParticle(x, y, z, size, color, 0, 0, 0, 0, 0.16, 'pop');
+  pop(x: number, y: number, z: number, color: FxColor, size = 0.4): FxSpawnLease {
+    const owned: EntityHandle[] = [];
+    const e = this.spawnParticle(x, y, z, size, color, 0, 0, 0, 0, 0.16, 'pop');
+    if (e) owned.push(e);
+    return this.makeLease(owned);
   }
 
   /** Soft rising motes (level-up, portal ambience, campfire embers). */
-  rise(x: number, y: number, z: number, color: FxColor, count = 5, spread = 0.5): void {
+  rise(x: number, y: number, z: number, color: FxColor, count = 5, spread = 0.5): FxSpawnLease {
+    const owned: EntityHandle[] = [];
     for (let i = 0; i < count; i++) {
       const ang = Math.random() * Math.PI * 2;
       const r = Math.random() * spread;
-      this.spawnParticle(
+      const e = this.spawnParticle(
         x + Math.cos(ang) * r, y, z + Math.sin(ang) * r,
         0.05 + Math.random() * 0.05, color,
         (Math.random() - 0.5) * 0.4, 1.2 + Math.random() * 1.2, (Math.random() - 0.5) * 0.4,
         0.8, 0.8 + Math.random() * 0.7, 'rise',
       );
+      if (e) owned.push(e);
     }
+    return this.makeLease(owned);
   }
 
-  /** Frost Fang cast readability cue at the caster (pop + soft ice motes). */
+  /**
+   * Play a declarative EffectDef through the pooled executor (PR2b T2/T3).
+   * Returns null when the def exceeds its budget. Existing burst/pop/rise
+   * call sites are unchanged.
+   */
+  playEffect(def: EffectDef, x: number, y: number, z: number): EffectHandle | null {
+    return this.executor.play(def, { x, y, z });
+  }
+
+  /** Frost Fang cast readability cue — thin playEffect wrapper (cast + cast-rise). */
   frostCastCue(x: number, y: number, z: number): void {
-    this.pop(x, y, z, 'ice', 0.28);
-    this.rise(x, y, z, 'ice', 3, 0.35);
+    this.playEffect(combatBeat('frost', ['cast', 'cast-rise']), x, y, z);
   }
 
-  /** Frost Fang impact flash at the collision point. */
-  frostImpact(x: number, y: number, z: number, crit = false): void {
-    this.pop(x, y, z, 'ice', crit ? 0.55 : 0.42);
-    this.burst(x, y, z, 'ice', crit ? 7 : 5, crit ? 3.2 : 2.6);
+  /**
+   * Frost Fang impact flash. `crit` kept for call-site signature; EffectDef owns
+   * non-crit defaults (data-model SSOT).
+   */
+  frostImpact(x: number, y: number, z: number, _crit = false): void {
+    this.playEffect(combatBeat('frost', ['impact', 'impact-burst']), x, y, z);
   }
 
   /**
    * Shatter node shards — call only when resolveSkill emitted shatter-shards.
-   * `count` is the resolver shard count (2/3/4).
+   * `count` gates whether to play; particle counts come from frostDef.
    */
   shatterFragments(x: number, y: number, z: number, count: number): void {
     if (count <= 0) return;
-    const n = Math.min(4, count) * 2;
-    this.burst(x, y + 0.2, z, 'ice', n, 3.4);
-    this.pop(x, y + 0.15, z, 'ice', 0.32 + count * 0.04);
+    this.playEffect(combatBeat('frost', ['shatter-burst', 'shatter-pop']), x, y + 0.2, z);
   }
 
   /**
@@ -360,6 +417,11 @@ export class FxSystem {
     };
   }
 
+  /** PR2b pool / budget counters for `__hf` probe dumps (T5 stress). */
+  executorStats() {
+    return this.executor.stats();
+  }
+
   // ── per-frame ────────────────────────────────────────────────────────────
 
   tick(dt: number): void {
@@ -379,6 +441,9 @@ export class FxSystem {
         this.rise(this.emberAt.x, this.emberAt.y, this.emberAt.z, 'fire', 2, 0.45);
       }
     }
+
+    // EffectDef sub-emitter ages / auto-release (presentation already in particles[]).
+    this.executor.tick(dt);
 
     // Integrate particles.
     for (let i = this.particles.length - 1; i >= 0; i--) {
@@ -403,6 +468,8 @@ export class FxSystem {
         scale: [s, s, s],
       });
     }
+    // Live particle entities remain the lifecycle SSOT; executor bookkeeping
+    // is orthogonal (instance/trail peaks via executor.stats()).
     this.lifecycle.setParticles(this.particles.length);
   }
 
@@ -410,6 +477,7 @@ export class FxSystem {
 
   /** Despawn transient particles + status markers (combat-run / area reset). */
   clearTransient(): void {
+    this.executor.releaseAll();
     for (const p of this.particles) this.world.despawn(p.e);
     this.particles.length = 0;
     for (const m of this.slowMarkers.values()) this.world.despawn(m.e);

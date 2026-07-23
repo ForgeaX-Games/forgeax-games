@@ -67,6 +67,7 @@ import {
 import { deriveCombatStats, type CombatStats } from './src/combat-stats';
 import { resolveIncomingDamage } from './src/damage';
 import { FxSystem } from './src/fx';
+import { COMBAT_EFFECT_DEFS, combatBeat } from './src/fx/defs';
 import { createPerfProbe, readFoldedDraws } from './src/perf-probe';
 import { createOwnerLedger, HELLFORGE_UPDATE_SYSTEMS } from './src/owner-ledger';
 import { cutsceneBlocksChromeKey } from './src/cutscene-input';
@@ -969,9 +970,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         }
         const moved = Math.hypot(bx - state.px, bz - state.pz);
         if (moved < 1) return false;
-        fx.rise(state.px, 0.2, state.pz, 'shadow', 8, 0.5);
+        fx.playEffect(combatBeat('blink', ['depart']), state.px, 0.2, state.pz);
         state.px = bx; state.pz = bz;
-        fx.rise(bx, 0.2, bz, 'shadow', 8, 0.5);
+        fx.playEffect(combatBeat('blink', ['arrive']), bx, 0.2, bz);
         return true;
       },
       onHit: (x, _y, z, dmg, killed, crit) => {
@@ -1467,6 +1468,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       get sky() { return sky; },
       /** Active projectile / particle / slow-marker counts (Frost VFX lifecycle). */
       get fxCounts() { return fx.debugCounts(); },
+      /** EffectExecutor peaks / budgetRejects (PR2b T5 stress vs PR0 baseline). */
+      get fxExecutor() { return fx.executorStats(); },
       perf: {
         snapshot: () => perfProbe.snapshot(),
         reset: () => perfProbe.reset(),
@@ -2295,6 +2298,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           clearMoveIntent();
           faceX = next.dirX;
           faceZ = next.dirZ;
+          fx.playEffect(COMBAT_EFFECT_DEFS.dodge, state.px, 0.2, state.pz);
           // Roll clip is T2 (merge-gen3d); until then code-driven lunge only (plan §9).
         }
       }

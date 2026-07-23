@@ -23,6 +23,7 @@ import type { Handle } from '@forgeax/engine-types';
 import type { ActiveSkillId, SkillNodeId } from './content-ids';
 import { isSkillAvailable } from './skill-availability';
 import type { FxSystem, MatHandle } from './fx';
+import { combatBeat } from './fx/defs';
 import type { Monster, MonsterManager } from './monsters';
 import { MONSTERS } from './monsters';
 import type { CombatStats } from './combat-stats';
@@ -401,6 +402,8 @@ export class SkillSystem {
         onFinisherHeroShot: (target) => this.hooks.onFinisherHeroShot?.(target),
       });
       this.#setTelegraph(tx, tz, resolved.splashRadius || FINISHER_RADIUS_M);
+      // Commit cue — customStep on inferno-nova (telegraph stays procedural).
+      // Small fire pop until executor binds customStep hooks.
       this.fx.pop(ox + aimX * 0.5, 1.0, oz + aimZ * 0.5, 'fire', 0.28);
       return 'ok';
     }
@@ -410,11 +413,14 @@ export class SkillSystem {
     if (resolved.phaseEchoApplied) {
       this.#phaseEchoUntil = 0;
     }
-    const fxColor = skillId === 'magma' ? 'fire' : skillId === 'frost' ? 'ice' : 'lightning';
+    const cx = ox + aimX * 0.7;
+    const cz = oz + aimZ * 0.7;
     if (skillId === 'frost') {
-      this.fx.frostCastCue(ox + aimX * 0.7, 1.0, oz + aimZ * 0.7);
+      this.fx.frostCastCue(cx, 1.0, cz);
+    } else if (skillId === 'magma') {
+      this.fx.playEffect(combatBeat('magma', ['cast']), cx, 1.0, cz);
     } else {
-      this.fx.pop(ox + aimX * 0.7, 1.0, oz + aimZ * 0.7, fxColor, 0.22);
+      this.fx.playEffect(combatBeat('arc', ['cast']), cx, 1.0, cz);
     }
     const cast: CastRuntime = { overchargeReduced: 0, phaseEchoConsumed: resolved.phaseEchoApplied };
     const count = Math.max(1, resolved.projectileCount);
@@ -503,8 +509,10 @@ export class SkillSystem {
           const k2 = monsters.damage(m2, boom, 0, adx / ad, adz / ad, (p.resolved.knockback ?? 0) * 0.5);
           this.hooks.onHit(m2.x, 1.0, m2.z, boom, k2, false);
         }
-        this.fx.pop(m.x, 1.0, m.z, 'fire', 0.8);
-        this.fx.burst(m.x, 1.0, m.z, 'fire', 12, 4.5);
+        this.fx.playEffect(
+          combatBeat('magma', ['hellfire', 'hellfire-burst']),
+          m.x, 1.0, m.z,
+        );
       } else if (fx.kind === 'shatter-shards') {
         // Shatter VFX only when the learned node resolved shards (count > 0).
         const shards = shatterShardCount(p.resolved);
@@ -524,7 +532,7 @@ export class SkillSystem {
           const ad = Math.hypot(adx, adz) || 1;
           const k2 = monsters.damage(m2, shardDmg, 0, adx / ad, adz / ad, 1.2);
           this.hooks.onHit(m2.x, 1.0, m2.z, shardDmg, k2, false);
-          this.fx.pop(m2.x, 1.0, m2.z, 'ice', 0.28);
+          this.fx.playEffect(combatBeat('frost', ['shard-hit']), m2.x, 1.0, m2.z);
         }
       } else if (fx.kind === 'overcharge-cdr' && !p.overchargeHitDone) {
         p.overchargeHitDone = true;
@@ -590,15 +598,19 @@ export class SkillSystem {
         this.hooks.onHit(m.x, 1.0, m.z, dmg, killed, crit);
         this.applyOnHit(p, m, dmg, crit, monsters);
         if (p.skillId === 'magma') {
-          this.fx.pop(p.x, p.y, p.z, 'fire', crit ? 0.65 : 0.5);
-          this.fx.burst(p.x, p.y, p.z, 'fire', 8, 3.8);
+          this.fx.playEffect(
+            combatBeat('magma', ['impact', 'impact-burst']),
+            p.x, p.y, p.z,
+          );
         } else if (p.skillId === 'frost') {
           // Collision-aligned impact (shader mats shared via frostVfx();
-          // particle pop/burst carry the readable flash in Edit fallback).
+          // particle beat via frostDef — crit scale owned by data defaults).
           this.fx.frostImpact(p.x, p.y, p.z, crit);
         } else {
-          this.fx.pop(p.x, p.y, p.z, 'lightning', crit ? 0.55 : 0.42);
-          this.fx.burst(p.x, p.y, p.z, 'lightning', 5, 3.0);
+          this.fx.playEffect(
+            combatBeat('arc', ['impact', 'impact-burst']),
+            p.x, p.y, p.z,
+          );
         }
         if (r.splashRadius > 0) {
           const splashMul = r.splashRatio > 0 ? r.splashRatio : 0.5;
@@ -715,10 +727,16 @@ export class SkillSystem {
     const dmg = resolved.damage * this.mods.dmgMul * this.mods.fireMul;
     const crit = Math.random() < this.mods.critChance;
     const hitDmg = dmg * (crit ? this.mods.critMultiplier : 1);
-    // L7 budgets: 1 pop + 1 burst (~10) + 1 rise — ≤3 emitters, modest particles.
-    this.fx.pop(tx, 1.0, tz, 'fire', 1.1);
-    this.fx.burst(tx, 1.0, tz, 'fire', 10, 4.2);
-    this.fx.rise(tx, 0.2, tz, 'fire', 6, radius * 0.35);
+    // Damage stamp — pop+burst at impact height; rise at ground (legacy y=0.2).
+    // Telegraph / commit pop stay procedural (customStep not bound yet).
+    this.fx.playEffect(
+      combatBeat('inferno-nova', ['damage-pop', 'damage-burst']),
+      tx, 1.0, tz,
+    );
+    this.fx.playEffect(
+      combatBeat('inferno-nova', ['damage-rise']),
+      tx, 0.2, tz,
+    );
     const proxy: Projectile = {
       e: 0 as unknown as EntityHandle,
       resolved,
