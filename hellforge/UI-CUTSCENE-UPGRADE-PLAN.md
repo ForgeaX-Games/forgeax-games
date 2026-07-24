@@ -79,6 +79,7 @@ provenance：以上 PNG 均为用户自有工程的 AI 生成资产（aidiablo v
 - [x] 输入：`UiLayerManager` 新增 `'cutscene'` 面板——复用 worldInputBlocked 漏斗；**Esc=skip**（验收：`active() === 'cutscene'` → Esc → null）
 - [x] 镜头：update loop 内 cutscene 分支接管 rig，播完 `makeArpgAtPlayer()` 交还；不暂停 AI
 - [x] 样例：① 营地入场（黑起 + 24m→arpg 缓推 + letterbox + 「余烬哨站」caption，每次进游戏播一次；`window.__hf.playCampIntro()` 可复播）② 进 den 黑屏 zoneCard（A2 已交付）
+- [x] PR4a 追加（2026-07-24）：`__hf.playFaceCu()` / `__hf.playFinisherClimax()` / `__hf.playerEyeFocus()` — Face CU 跟 `headfront`/`Head` 世界坐标，勿再刷 Boss 验收（详见 `docs/handoff/2026-07-24-hellforge-pr4a-bootstrap.md`）
 - [x] 浏览器验收：caption/letterbox 截图在案；skip/输入阻塞经 `__hf.uiLayers.active()` 断言
 
 ### Phase C — 叙事过场（可选，另立计划）

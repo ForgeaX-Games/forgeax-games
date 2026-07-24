@@ -3,7 +3,16 @@
 import { describe, expect, test } from 'bun:test';
 import { degToRad, type CameraRigState } from './camera-rig';
 import {
+  BEAT_FINISHER_FACE_CU,
+  BEAT_FINISHER_HERO_SHOT,
+  L1_WORLD_POLICY,
+} from './cinematic-policy';
+import {
+  buildFinisherFaceCu,
   buildFinisherHeroShot,
+  FINISHER_FACE_CU_FALLBACK_Y,
+  FINISHER_FACE_CU_ID,
+  FINISHER_FACE_CU_MAX_S,
   FINISHER_HERO_SHOT_ID,
   FINISHER_HERO_SHOT_MAX_S,
   sampleCutscene,
@@ -119,6 +128,8 @@ describe('buildFinisherHeroShot (PR2a T5)', () => {
       camera,
     });
     expect(shot.id).toBe(FINISHER_HERO_SHOT_ID);
+    expect(shot.id).toBe(BEAT_FINISHER_HERO_SHOT);
+    expect(L1_WORLD_POLICY[shot.id]).toBeDefined();
     expect(shot.skippable).toBe(true);
     expect(shot.duration).toBeLessThanOrEqual(FINISHER_HERO_SHOT_MAX_S);
     expect(shot.duration).toBeGreaterThan(0);
@@ -131,5 +142,64 @@ describe('buildFinisherHeroShot (PR2a T5)', () => {
     const endFocus = sampleCutscene(shot, shot.duration).camera.focus;
     expect(endFocus[0]).toBeCloseTo(4, 1);
     expect(endFocus[2]).toBeCloseTo(-2, 1);
+  });
+});
+
+describe('buildFinisherFaceCu (PR4a L4 Option A)', () => {
+  test('skippable short CU; L1 den id; fallback head height above player root', () => {
+    const shot = buildFinisherFaceCu({
+      playerXZ: [1, -3],
+      camera: rig(12),
+      faceXZ: [0, -1],
+    });
+    expect(shot.id).toBe(FINISHER_FACE_CU_ID);
+    expect(shot.id).toBe(BEAT_FINISHER_FACE_CU);
+    expect(L1_WORLD_POLICY[shot.id]!.freezeAi).toBe(true);
+    expect(shot.skippable).toBe(true);
+    expect(shot.duration).toBeLessThanOrEqual(FINISHER_FACE_CU_MAX_S);
+    expect(sampleCutscene(shot, shot.duration).done).toBe(true);
+    const end = sampleCutscene(shot, shot.duration).camera;
+    expect(end.focus[0]).toBeCloseTo(1, 1);
+    expect(end.focus[1]).toBeCloseTo(FINISHER_FACE_CU_FALLBACK_Y, 2);
+    expect(end.focus[2]).toBeCloseTo(-3, 1);
+    expect(end.distance).toBeLessThan(sampleCutscene(shot, 0).camera.distance + 0.01);
+  });
+
+  test('honors explicit headWorld when provided', () => {
+    const shot = buildFinisherFaceCu({
+      playerXZ: [0, 0],
+      camera: rig(10),
+      faceXZ: [1, 0],
+      headWorld: [2, 1.7, -1],
+    });
+    const end = sampleCutscene(shot, shot.duration).camera.focus;
+    expect(end[0]).toBeCloseTo(2, 1);
+    expect(end[1]).toBeCloseTo(1.7, 2);
+    expect(end[2]).toBeCloseTo(-1, 1);
+  });
+
+  test('places eye in front of faceXZ for cardinals (not ARPG/showcase behind)', () => {
+    const arpgYaw = degToRad(37);
+    const cardinals: readonly (readonly [number, number])[] = [
+      [0, -1],
+      [0, 1],
+      [1, 0],
+      [-1, 0],
+    ];
+    for (const face of cardinals) {
+      const shot = buildFinisherFaceCu({
+        playerXZ: [0, 0],
+        camera: rig(12, arpgYaw),
+        faceXZ: face,
+      });
+      const end = sampleCutscene(shot, shot.duration).camera;
+      const dx = end.eye[0]! - end.focus[0]!;
+      const dz = end.eye[2]! - end.focus[2]!;
+      // Eye must sit on the face-forward side of focus.
+      expect(dx * face[0]! + dz * face[1]!).toBeGreaterThan(0.5);
+      // Must not keep ARPG behind-back yaw, nor showcase behind-cam yaw.
+      expect(end.yaw).not.toBeCloseTo(arpgYaw, 2);
+      expect(end.yaw).not.toBeCloseTo(Math.atan2(-face[0]!, -face[1]!), 2);
+    }
   });
 });

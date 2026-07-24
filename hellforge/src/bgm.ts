@@ -3,10 +3,11 @@
 // ── Contract (SSOT) ──────────────────────────────────────────────────────────
 // Assets:     assets/music/bgm-<phase>.mp3
 // Phases:     camp | den   (wild / title / charSelect / charList → camp track)
-// Bus:        separate from sfx.ts (synth WebAudio). master * bgm gain only.
+// Bus:        separate from sfx.ts (synth WebAudio). master * bgm * duck gain.
 // Unlock:     first pointerdown/keydown on the game uiRoot (browser autoplay).
 //             Pre-gesture setPhase is remembered and starts on arm.
 // Switch:     ~1s linear crossfade; faded-out tracks pause + rewind.
+// Duck:       optional relative dB (PR4a L2 cinematic −6 dB); restores on unduck.
 // URL:        new URL('../assets/music/<file>', import.meta.url) (Vite preview).
 // SFX files:  NOT in scope — keep synthesized sfx.ts until a real sfx/ tree exists.
 //
@@ -16,6 +17,35 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type BgmPhase = 'camp' | 'den';
+
+/** PR4a L2 — cinematic owner ducks BGM by this relative amount. */
+export const CINEMATIC_BGM_DUCK_DB = -6;
+
+/** Convert a relative dB gain to a linear multiplier (`10^(dB/20)`). */
+export function dbToLinearGain(db: number): number {
+  return 10 ** (db / 20);
+}
+
+/** Pure duck bus — unit-testable; installBgm mirrors this on the live handle. */
+export type BgmDuckBus = {
+  /** Active duck in dB, or null when unducked. */
+  readonly duckDb: number | null;
+};
+
+/** Apply (or replace) a duck. Idempotent for the same dB. */
+export function duckBgm(bus: BgmDuckBus, db: number): BgmDuckBus {
+  return { duckDb: db };
+}
+
+/** Clear duck. Idempotent when already unducked. */
+export function unduckBgm(_bus: BgmDuckBus): BgmDuckBus {
+  return { duckDb: null };
+}
+
+/** Linear gain from duck state (1 when unducked). */
+export function bgmDuckLinearGain(bus: BgmDuckBus): number {
+  return bus.duckDb == null ? 1 : dbToLinearGain(bus.duckDb);
+}
 
 /** Map AreaDef.music → BGM phase (Task 4.2). */
 export function bgmPhaseForMusic(music: BgmPhase): BgmPhase {
@@ -28,8 +58,14 @@ export type BgmHandle = {
   /** Advance crossfade ramps — call every frame while the game runs. */
   tick(dt: number): void;
   setVolume(master: number, bgm: number): void;
+  /** Duck bus by relative dB (negative). Replaces any prior duck. */
+  duck(db: number): void;
+  /** Restore bus to unducked. Idempotent. */
+  unduck(): void;
   dispose(): void;
   readonly phase: BgmPhase;
+  /** Active duck in dB, or null when unducked. */
+  readonly duckDb: number | null;
 };
 
 const CROSSFADE_SEC = 1.0;
@@ -76,11 +112,13 @@ export function installBgm(uiRoot: HTMLElement): BgmHandle {
   // F10 「音乐」slider writes these via setVolume(1, bgmVolume).
   let masterVolume = 1;
   let bgmVolume = 0.22;
+  let duckBus: BgmDuckBus = { duckDb: null };
   let armed = false;
   const tracks = new Map<BgmPhase, Track>();
   let unlock: (() => void) | null = null;
 
-  const effective = (): number => clamp01(masterVolume * bgmVolume);
+  const effective = (): number =>
+    clamp01(masterVolume * bgmVolume * bgmDuckLinearGain(duckBus));
 
   const startTrack = (track: Track): void => {
     if (track.playRequested && !track.el.paused) return;
@@ -150,6 +188,7 @@ export function installBgm(uiRoot: HTMLElement): BgmHandle {
 
   return {
     get phase() { return phase; },
+    get duckDb() { return duckBus.duckDb; },
     setPhase(next: BgmPhase): void {
       phase = next;
       play(next);
@@ -157,6 +196,12 @@ export function installBgm(uiRoot: HTMLElement): BgmHandle {
     setVolume(master: number, bgm: number): void {
       masterVolume = clamp01(master);
       bgmVolume = clamp01(bgm);
+    },
+    duck(db: number): void {
+      duckBus = duckBgm(duckBus, db);
+    },
+    unduck(): void {
+      duckBus = unduckBgm(duckBus);
     },
     tick(dt: number): void {
       if (!audioAvailable() || dt <= 0) return;

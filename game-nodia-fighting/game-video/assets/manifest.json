@@ -1,225 +1,361 @@
 {
-  "version": 1,
+  "version": 2,
   "assets": [
     {
-      "id": "narr-open",
+      "id": "m-narr-open",
       "kind": "video",
-      "filename": "blobs/narr-open.mp4",
+      "name": "narr-open.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 37997624,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873930581,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/b4d73089-1d93-409e-a954-d033c8ba1055.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-open",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "119e69ce9516012240eb07cefe9d0804507745c8abc3cf546a983e02de71e156"
       }
     },
     {
-      "id": "narr-door",
+      "id": "m-narr-door",
       "kind": "video",
-      "filename": "blobs/narr-door.mp4",
+      "name": "narr-door.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 40808145,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873930620,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/18839779-dca4-4952-90ea-4436ade29f75.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-door",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "fb7dd91e9852f5a6b18a05148590807c3d1c75b325bd421ca2aebdc1570ab7c5"
       }
     },
     {
-      "id": "narr-soul",
+      "id": "m-narr-soul",
       "kind": "video",
-      "filename": "blobs/narr-soul.mp4",
+      "name": "narr-soul.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 15407738,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873930661,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/71b1c107-86a2-4e5d-818a-5c52a17e8a0b.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-soul",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "e0739c393427fd042700e4afd2f0a2a85952ec5467da6298684a56cd418bb5f7"
       }
     },
     {
-      "id": "narr-river",
+      "id": "m-narr-river",
       "kind": "video",
-      "filename": "blobs/narr-river.mp4",
+      "name": "narr-river.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 40002028,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873930712,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/0c88bcb9-f7cd-4c87-b8c7-c983db6a1c2c.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-river",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "dd108b61c9edd437d29f1470cd6dfc42e0f4f2e79b050198bf6e91fb3b67bc56"
       }
     },
     {
-      "id": "narr-child",
+      "id": "m-narr-child",
       "kind": "video",
-      "filename": "blobs/narr-child.mp4",
+      "name": "narr-child.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 32900050,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873930770,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/af0866be-56f8-4fa4-850d-1850b3ef3d43.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-child",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "8181bc224b6f739d62de399e912d65d1124540fa154724e1b2767059aa9d1210"
       }
     },
     {
-      "id": "narr-land",
+      "id": "m-narr-land",
       "kind": "video",
-      "filename": "blobs/narr-land.mp4",
+      "name": "narr-land.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 42432772,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873930803,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/8bc04302-8a8a-42e4-9c71-26c808794f11.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-land",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "dce320d6911a084fab6c8d5be21d29ab91b74a172ed741d8f6ca232132c45e78"
       }
     },
     {
-      "id": "narr-mask",
+      "id": "m-narr-mask",
       "kind": "video",
-      "filename": "blobs/narr-mask.mp4",
+      "name": "narr-mask.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 10135268,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873930856,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/a22716a4-6e00-47c2-8973-ba99b2de5e84.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-mask",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "0e4dc4bd52c123f706577d19e47716a97c040324cdd2df201d35b215a2876409"
       }
     },
     {
-      "id": "narr-mengpo",
+      "id": "m-narr-mengpo",
       "kind": "video",
-      "filename": "blobs/narr-mengpo.mp4",
+      "name": "narr-mengpo.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 31121879,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873930904,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/3e3d7c0a-c50c-4225-9c29-4e9a51e054d3.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-mengpo",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "b77437cfcd2aebce2a051920f300b7770dea5ca0968d95c5fcdb64c51e4ed9cd"
       }
     },
     {
-      "id": "narr-tea",
+      "id": "m-narr-tea",
       "kind": "video",
-      "filename": "blobs/narr-tea.mp4",
+      "name": "narr-tea.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 11264079,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873930946,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/c566b94c-1013-4c51-8970-21740f20abf7.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-tea",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "bd770d24126d1e6789efb0e5e402af324d9bfdffadfd24c56e2d0123565a57f5"
       }
     },
     {
-      "id": "narr-drink",
+      "id": "m-narr-drink",
       "kind": "video",
-      "filename": "blobs/narr-drink.mp4",
+      "name": "narr-drink.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 36006022,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873930989,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/029a3078-3ed6-4812-8a79-81db178850e8.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-drink",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "6dfcfe17cc67f8e6cfd1799162e97235f6b6da2aa06ac020c1f65b43531b743e"
       }
     },
     {
-      "id": "narr-nodrink",
+      "id": "m-narr-nodrink",
       "kind": "video",
-      "filename": "blobs/narr-nodrink.mp4",
+      "name": "narr-nodrink.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 12844333,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873931116,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/088005af-cd4a-4e47-8ea7-d6dc00375165.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-nodrink",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "ca2bf86a7d9152228b7989da06cf9f9b25b7e28970ff7551557447b755d82f37"
       }
     },
     {
-      "id": "narr-follow",
+      "id": "m-narr-follow",
       "kind": "video",
-      "filename": "blobs/narr-follow.mp4",
+      "name": "narr-follow.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 15085460,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873931146,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/6eb63ea3-926c-499c-9ff2-d1298bc0d607.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-follow",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "50083077e56175c895be37ea4e4b331378debfe25400ca71481748c0e9dc8ef3"
       }
     },
     {
-      "id": "narr-getlight",
+      "id": "m-narr-getlight",
       "kind": "video",
-      "filename": "blobs/narr-getlight.mp4",
+      "name": "narr-getlight.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 22285587,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873931180,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/f92e3b2e-9b1e-403a-8a86-2c67d83a1db8.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-getlight",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "54b71323f7f9937ca71bbc011fb16f3a95cd4ca5dc3d28ed2ac83a7bd50ed8aa"
       }
     },
     {
-      "id": "narr-nolight",
+      "id": "m-narr-nolight",
       "kind": "video",
-      "filename": "blobs/narr-nolight.mp4",
+      "name": "narr-nolight.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 18025706,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873931234,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/3a33ed1f-3cf6-45db-ba76-4dd813e49dfb.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-nolight",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "2e078c472dfbeb2a01fee6cd74745b88fa3f2126ba11981c72d8cc888d799414"
       }
     },
     {
-      "id": "narr-nofollow",
+      "id": "m-narr-nofollow",
       "kind": "video",
-      "filename": "blobs/narr-nofollow.mp4",
+      "name": "narr-nofollow.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 17418972,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873931279,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/722abe9d-cec2-4f2a-9262-247c1ec70e95.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-nofollow",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "b51c3b4ce69cf3f53084305481e310118e02685f3897afb105b0964b509d49f0"
       }
     },
     {
-      "id": "narr-lotus",
+      "id": "m-narr-lotus",
       "kind": "video",
-      "filename": "blobs/narr-lotus.mp4",
+      "name": "narr-lotus.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 11723891,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873931319,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/187c6534-c6c9-4c49-ac12-fa25a039865f.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-lotus",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "2377e39a2062888e720c48be1362e5aa89b14ae51e7943f5fc03e9eb68fabecb"
       }
     },
     {
-      "id": "narr-nolotus",
+      "id": "m-narr-nolotus",
       "kind": "video",
-      "filename": "blobs/narr-nolotus.mp4",
+      "name": "narr-nolotus.mp4",
+      "status": "ready",
       "mimeType": "video/mp4",
       "bytes": 37439549,
       "createdAt": 1751500000000,
+      "updatedAt": 1784873931360,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/e69ac56d-92ca-4583-8ab1-d2dc09a12866.mp4"
+      },
       "meta": {
-        "mediaId": "m-narr-nolotus",
         "scenarioId": "nodia-main",
-        "source": "local-import"
+        "source": "migration",
+        "type": "UPLOAD",
+        "sourceMeta": {},
+        "uploadFingerprint": "eb992396304a39e91275a93f8131cf564de5d2d3c5209a3f0bcfd10edda1b208"
       }
     }
   ]

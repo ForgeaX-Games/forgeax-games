@@ -177,17 +177,47 @@ import { installUiTooltip } from './src/ui-tooltip';
 import { installUiTransition } from './src/ui-transition';
 import { installCutsceneUi } from './src/cutscene-ui';
 import {
+  buildBossDefeatBeat,
+  buildBossEntranceBeat,
+  buildCampArrivalBeat,
+  buildQuestAcceptanceBeat,
+} from './src/cinematic-beats';
+import {
+  BEAT_FINISHER_FACE_CU,
+  BEAT_FINISHER_HERO_SHOT,
+  shouldFreezeAi,
+  shouldPlayerBeInvulnerable,
+} from './src/cinematic-policy';
+import {
+  takeBossDefeatTrigger,
+  takeBossEntranceTrigger,
+} from './src/cinematic-triggers';
+import {
+  buildFinisherFaceCu,
   buildFinisherHeroShot,
+  FINISHER_FACE_CU_FALLBACK_Y,
+  FINISHER_FACE_CU_ID,
+  FINISHER_HERO_SHOT_ID,
   sampleCutscene,
   type CutsceneScript,
 } from './src/cutscene';
 import {
   createSeamRestoreGuard,
-  isFinisherHeroShotActive,
   type SeamRestoreGuard,
 } from './src/hero-shot-seam';
+import {
+  eyeBiasForBone,
+  eyeFocusFromHeadWorld,
+  pickBestEyeFocusBone,
+  translationFromWorldMat4,
+} from './src/player-eye-focus';
 import { ASHEN_REACH_BOUNDS, installWildTerrain } from './src/wild-terrain';
-import { bgmPhaseForMusic, installBgm, type BgmHandle } from './src/bgm';
+import {
+  bgmPhaseForMusic,
+  CINEMATIC_BGM_DUCK_DB,
+  installBgm,
+  type BgmHandle,
+} from './src/bgm';
 import { ensureShadowCasters } from './src/ensure-shadow-casters';
 import { contactRadiusForScale, installContactShadows } from './src/contact-shadow';
 import {
@@ -537,6 +567,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     let witchRoot: EntityHandle | null = null;
     let witchSkinEnt: EntityHandle | null = null;
+    /** Face CU eye marker — headfront/Head bone under the hero SceneInstance. */
+    let playerEyeFocusEnt: EntityHandle | null = null;
+    let playerEyeFocusBone = '';
     try {
       if (!assets) throw new Error('no asset registry');
       const sceneGuid = AssetGuid.parse(hero.gltf.scene);
@@ -566,13 +599,25 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       if (sceneInst.ok) {
         // Find the Skin entity in the spawned hierarchy (= same idiom as hello-skin).
         // Only needed to drive the AnimationPlayer clip, never to move her.
+        const namedBones: { ent: number; name: string }[] = [];
         for (let i = 0; i < sceneInst.value.mapping.length; i++) {
           const ent = sceneInst.value.mapping[i];
           if (ent === undefined || ent === 0) continue;
-          if (world.get(ent as EntityHandle, Skin).ok) {
+          if (witchSkinEnt === null && world.get(ent as EntityHandle, Skin).ok) {
             witchSkinEnt = ent as EntityHandle;
-            break;
           }
+          const nm = world.get(ent as EntityHandle, Name);
+          if (nm.ok && typeof nm.value.value === 'string' && nm.value.value.length > 0) {
+            namedBones.push({ ent: ent as number, name: nm.value.value });
+          }
+        }
+        const eyeBone = pickBestEyeFocusBone(namedBones);
+        if (eyeBone !== null) {
+          playerEyeFocusEnt = eyeBone.ent as EntityHandle;
+          playerEyeFocusBone = eyeBone.name;
+          console.log('[hellforge] Face CU eye marker:', playerEyeFocusBone);
+        } else {
+          console.warn('[hellforge] no headfront/Head bone for Face CU — using Y fallback');
         }
       }
       if (witchSkinEnt !== null && clipHandles.has('idle')) {
@@ -870,19 +915,26 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const questStatus = () => character.snapshot().quests[PURGE_QUEST_ID].status;
     const questCompleted = (): boolean => questStatus() === 'completed';
     // Cutscene playback state is mutated by play/endCutscene (defined later).
-    // Hoisted so onPlayerHit / monsters.tick can gate Hero Shot world policy.
+    // Hoisted so onPlayerHit / monsters.tick can gate cinematic world policy.
     let cutscene: { script: CutsceneScript; startMs: number } | null = null;
     let cutsceneSeam: SeamRestoreGuard | null = null;
-    const heroShotActive = (): boolean =>
-      isFinisherHeroShotActive(cutscene?.script ?? null);
+    /** Single freeze/invuln writer: seam → CinematicOwner.policy (null when idle). */
+    const activeWorldPolicy = () => cutsceneSeam?.policy ?? null;
     // Late-bound: playCutscene exists after the camera/cutscene block.
     let startFinisherHeroShot: (targetXZ: readonly [number, number]) => void =
       () => { /* filled after cutscene helpers */ };
+    let playBossDefeatBeat: (bossXZ: readonly [number, number]) => void =
+      () => { /* filled after cutscene helpers */ };
+    /** True while Hero Shot / face CU (or a queued finisher climax) owns the stage. */
+    let isFinisherClimaxBusy: () => boolean = () => false;
+    /** PR4a T3 — Boss entrance / defeat once-fire latches (hoisted for onDeath). */
+    let bossEntrancePlayed = false;
+    let bossDefeatPlayed = false;
     const monsters = new MonsterManager(world, fx, {
       onPlayerHit: (rawDmg, source) => {
         if (area === 'camp') return;                       // camp is sacred
-        // PR2a T5/L6: invulnerable for the Hero Shot window (≤1.2 s).
-        if (heroShotActive()) return;
+        // PR4a T2: den cinematic invuln (Boss / Hero Shot) via owner policy.
+        if (shouldPlayerBeInvulnerable(activeWorldPolicy())) return;
         // PR2a L2: i-frames only during dodge Movement phase.
         if (isDodgeInvulnerable(dodgeState)) return;
         // L3: hit during buildup/recover aborts the roll (no i-frames).
@@ -940,6 +992,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         if (isBoss) {
           hud.setBoss(null);
           hud.banner('熔渣督军 已被消灭', '#ffd066', 2400);
+          // PR4a T3: once-fire defeat sting. Consumed without play when finisher
+          // Hero Shot / face CU owns the climax (face CU follows Hero Shot).
+          const defeat = takeBossDefeatTrigger({
+            alreadyPlayed: bossDefeatPlayed,
+            finisherClimaxBusy: isFinisherClimaxBusy(),
+          });
+          bossDefeatPlayed = defeat.played;
+          if (defeat.shouldPlay) playBossDefeatBeat([m.x, m.z]);
         }
         // L4 B1 — room-clear beat (once per combat room pack).
         if (m.zone === 'den' && !isBoss && dungeon.encounters) {
@@ -1344,53 +1404,119 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       camRig = makeArpgAtPlayer();
       rs.applyCamera();
     };
+    /** Queued beats play only after a clean complete; skip/error/stop drains. */
+    let cutsceneQueue: CutsceneScript[] = [];
     const endCutscene = (
       reason: 'complete' | 'skip' | 'error' | 'stop' = 'complete',
     ): void => {
-      if (!cutscene && !cutsceneSeam) return;
+      if (!cutscene && !cutsceneSeam) {
+        if (reason !== 'complete') cutsceneQueue = [];
+        return;
+      }
       cutscene = null;
       const guard = cutsceneSeam;
       cutsceneSeam = null;
       guard?.restoreOnce(reason);
+      if (reason === 'complete') {
+        const next = cutsceneQueue.shift();
+        if (next) playCutscene(next);
+      } else {
+        cutsceneQueue = [];
+      }
     };
     const playCutscene = (script: CutsceneScript): void => {
-      if (cutscene) return;
-      cutsceneSeam = createSeamRestoreGuard(restoreCutsceneSeam);
+      if (cutscene) {
+        cutsceneQueue.push(script);
+        return;
+      }
+      // Never orphan an active seam — would leak CinematicOwner / strand restore.
+      if (cutsceneSeam) {
+        cutsceneSeam.restoreOnce('error');
+        cutsceneSeam = null;
+      }
+      // Seam acquires CinematicOwner with L1 policy + L2 BGM duck for this beat.
+      cutsceneSeam = createSeamRestoreGuard(restoreCutsceneSeam, script.id, {
+        audio: {
+          acquire: () => bgm.duck(CINEMATIC_BGM_DUCK_DB),
+          release: () => bgm.unduck(),
+        },
+      });
       cutscene = { script, startMs: performance.now() };
       uiLayers.open('cutscene'); // worldInputBlocked ← onOwnershipChange funnel
     };
+    const enqueueCutscene = (script: CutsceneScript): void => {
+      if (cutscene) cutsceneQueue.push(script);
+      else playCutscene(script);
+    };
+    isFinisherClimaxBusy = () => {
+      const id = cutscene?.script.id;
+      if (id === FINISHER_HERO_SHOT_ID || id === FINISHER_FACE_CU_ID) return true;
+      return cutsceneQueue.some(
+        (s) => s.id === FINISHER_HERO_SHOT_ID || s.id === FINISHER_FACE_CU_ID
+          || s.id === BEAT_FINISHER_HERO_SHOT || s.id === BEAT_FINISHER_FACE_CU,
+      );
+    };
+    /** Camp-arrival cinematic: black → wide push-in → letterbox off (skippable). */
+    const buildCampIntro = (): CutsceneScript =>
+      buildCampArrivalBeat({
+        camera: makeArpgAtPlayer(),
+        playerXZ: [state.px, state.pz],
+      });
+    /** Live eye look-at from headfront/Head bone world mat4 (+ face bias). */
+    const resolvePlayerEyeWorld = (): readonly [number, number, number] => {
+      if (playerEyeFocusEnt !== null) {
+        const tr = world.get(playerEyeFocusEnt, Transform);
+        if (tr.ok) {
+          const worldMat = (tr.value as { world?: ArrayLike<number> }).world;
+          if (worldMat !== undefined && worldMat.length >= 15) {
+            const head = translationFromWorldMat4(worldMat);
+            const nearPlayer = Math.hypot(head[0]! - state.px, head[2]! - state.pz) < 2.5;
+            const plausibleY =
+              head[1]! > 0.8 * playerScale && head[1]! < 3.5 * playerScale;
+            if (nearPlayer && plausibleY) {
+              return eyeFocusFromHeadWorld(
+                head,
+                [faceX, faceZ],
+                playerScale,
+                eyeBiasForBone(playerEyeFocusBone || 'Head'),
+              );
+            }
+          }
+        }
+      }
+      return [state.px, FINISHER_FACE_CU_FALLBACK_Y, state.pz];
+    };
     startFinisherHeroShot = (targetXZ) => {
       try {
+        // L4 Option A: Hero Shot, then short face CU (queued; skip drains both).
         playCutscene(buildFinisherHeroShot({
           targetXZ,
           playerXZ: [state.px, state.pz],
           camera: camRig,
+        }));
+        enqueueCutscene(buildFinisherFaceCu({
+          playerXZ: [state.px, state.pz],
+          camera: camRig,
+          // Front-of-face orbit yaw (not ARPG behind-back yaw).
+          faceXZ: [faceX, faceZ],
+          headWorld: resolvePlayerEyeWorld(),
         }));
       } catch (error) {
         console.error('[hellforge] finisher Hero Shot failed:', error);
         endCutscene('error');
       }
     };
-    /** Camp-arrival cinematic: black → wide push-in → letterbox off (skippable). */
-    const buildCampIntro = (): CutsceneScript => {
-      const arpg = makeArpgAtPlayer();
-      const wide = snapCameraFocus({ ...arpg, distance: 24 }, [state.px, 0, state.pz]);
-      return {
-        id: 'camp-intro',
-        skippable: true,
-        duration: 3.4,
-        initialFade: 1,
-        initialCamera: wide,
-        cameraKeys: [{ at: 0, dur: 3.0, pose: arpg }],
-        fades: [{ at: 0, to: 0, dur: 1.4 }],
-        letterbox: [
-          { at: 0, on: true },
-          { at: 2.7, on: false },
-        ],
-        captions: [
-          { at: 0.7, dur: 2.1, text: '余烬哨站', sub: 'Cinderwatch · 第一幕' },
-        ],
-      };
+    playBossDefeatBeat = (bossXZ) => {
+      try {
+        playCutscene(buildBossDefeatBeat({
+          camera: camRig,
+          playerXZ: [state.px, state.pz],
+          bossXZ,
+        }));
+      } catch (error) {
+        console.error('[hellforge] boss-defeat beat failed:', error);
+        endCutscene('error');
+      }
     };
 
     // ── lighting director ─────────────────────────────────────────────────
@@ -2344,14 +2470,20 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         }
         if (choice.action.kind === 'accept') {
           const res = acceptQuest(character);
+          uiLayers.close('dialogue');
           if (res.ok) {
             sfx.play('quest');
             hud.banner('已接受：清剿熔渣深窟', '#8aff9a', 2200);
             persistCharacter();
             refreshQuest();
             refreshQuestLog();
+            // PR4a T3 L3 — short skippable camera beat after dialogue closes.
+            playCutscene(buildQuestAcceptanceBeat({
+              camera: camRig,
+              playerXZ: [state.px, state.pz],
+              veyraXZ: [veyraPos[0], veyraPos[1]],
+            }));
           }
-          uiLayers.close('dialogue');
           return;
         }
         if (choice.action.kind === 'turn-in') {
@@ -2420,8 +2552,27 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       ownerLedger.snapshot(uiLayers.active());
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).assertSingleOwners = () =>
       ownerLedger.assertSingleOwners(uiLayers.active(), HELLFORGE_UPDATE_SYSTEMS);
-    // Dev/QA hook: replay the camp-arrival cinematic (used by browser walkthroughs).
-    ((window as unknown as { __hf: Record<string, unknown> }).__hf).playCampIntro = () => playCutscene(buildCampIntro());
+    // Dev/QA hooks: replay cinematics without replaying combat (browser walkthroughs).
+    const hf = (window as unknown as { __hf: Record<string, unknown> }).__hf;
+    hf.playCampIntro = () => playCutscene(buildCampIntro());
+    /** Face CU only — uses live eye marker + facing. */
+    hf.playFaceCu = () => {
+      playCutscene(buildFinisherFaceCu({
+        playerXZ: [state.px, state.pz],
+        camera: camRig,
+        faceXZ: [faceX, faceZ],
+        headWorld: resolvePlayerEyeWorld(),
+      }));
+    };
+    hf.playerEyeFocus = () => ({
+      bone: playerEyeFocusBone || null,
+      ent: playerEyeFocusEnt,
+      world: resolvePlayerEyeWorld(),
+    });
+    /** Hero Shot → Face CU queue (same path as real finisher commit). */
+    hf.playFinisherClimax = () => {
+      startFinisherHeroShot([state.px + faceX * 4, state.pz + faceZ * 4]);
+    };
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).moveIntent = {
       get: () => moveIntent,
       clear: clearMoveIntent,
@@ -3021,10 +3172,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       fx.tick(dt);
       const playerSafe = area !== 'den' && inCamp(state.px, state.pz);
       monsters.animRate = animRate;
-      // PR2a T5/L6: freeze monsters during finisher Hero Shot (camp-safe
-      // cutscene assumption does not hold in the den). skills.tick still runs
-      // so damage at 0.4 s stays independent of the shot.
-      if (!heroShotActive()) {
+      // PR4a T2: skip monsters.tick when active cinematic policy freezes AI
+      // (Boss entrance/defeat + Hero Shot). Camp beats keep the world running.
+      // skills.tick still runs so finisher damage at 0.4 s stays independent.
+      if (!shouldFreezeAi(activeWorldPolicy())) {
         monsters.tick(dt, state.px, state.pz, playerSafe, walkableAt);
       }
       // Finisher telegraph: live preview while selected; commit freezes via SkillSystem.
@@ -3151,6 +3302,26 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const boss = monsters.boss();
       if (boss && area === 'den' && Math.hypot(boss.x - state.px, boss.z - state.pz) < 18) {
         hud.setBoss(MONSTERS[boss.kind].name, boss.hp, boss.maxHp);
+        // PR4a T3 — Boss entrance once on first threat range. If finisher climax
+        // already owns the stage (skills.tick runs before this check), consume
+        // without play so entrance never queues behind Hero Shot / face CU.
+        const entrance = takeBossEntranceTrigger({
+          alreadyPlayed: bossEntrancePlayed,
+          finisherClimaxBusy: isFinisherClimaxBusy(),
+        });
+        bossEntrancePlayed = entrance.played;
+        if (entrance.shouldPlay) {
+          try {
+            playCutscene(buildBossEntranceBeat({
+              camera: camRig,
+              playerXZ: [state.px, state.pz],
+              bossXZ: [boss.x, boss.z],
+            }));
+          } catch (error) {
+            console.error('[hellforge] boss-entrance beat failed:', error);
+            endCutscene('error');
+          }
+        }
       } else {
         hud.setBoss(null);
       }

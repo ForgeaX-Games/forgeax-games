@@ -49,6 +49,15 @@
 3. Capture ≥30s continuous combat video.
 4. Record paths in `docs/evidence/pr0/INDEX.md`.
 
+## Flow E — PR4a Face CU (no boss grind)
+
+1. In-game, open DevTools on the **Play iframe**.
+2. `__hf.playerEyeFocus()` → `bone` is `headfront` or `Head`; `world[1]` near eyes.
+3. Face the camera / turn with mouse, then `__hf.playFaceCu()` — expect extreme
+   front-of-face CU (not back, not chest/neck).
+4. Optional: `__hf.playFinisherClimax()` for Hero Shot → Face CU queue.
+5. Esc during CU skips; `__hf.uiLayers.active()` returns to non-cutscene.
+
 ## Pass criteria
 
 - Flow A completed **twice** with logs.

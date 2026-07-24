@@ -8,8 +8,9 @@
 //  • Camera keyframes blend with camera-rig.lerpCameraRig (shortest-yaw path).
 //  • Weights are smoothstepped — same ease as the arpg⇄showcase blend.
 //  • Camp intro / zone covers assume a safe space. Finisher Hero Shot does NOT
-//    — main.ts freezes monsters + grants player invuln while that script plays
-//    (see hero-shot-seam.ts). Damage authority never waits on the shot.
+//    — main.ts gates freeze/invuln via cinematic-policy L1 (den) while the seam
+//    owns the world channel (see hero-shot-seam.ts). Damage authority never
+//    waits on the shot.
 
 import {
   cameraBlendWeight,
@@ -18,12 +19,27 @@ import {
   type CameraRigState,
 } from './camera-rig';
 
-/** Finisher Hero Shot cutscene id — world-policy predicate keys off this. */
+/** Finisher Hero Shot cutscene id — L1 den policy in cinematic-policy.ts. */
 export const FINISHER_HERO_SHOT_ID = 'finisher-hero-shot';
 /** Hard cap from PR2a L5/L6 (≤1.2 s). */
 export const FINISHER_HERO_SHOT_MAX_S = 1.2;
 /** Authored runtime — keep under the hard cap with a small skip/ease tail. */
 export const FINISHER_HERO_SHOT_DURATION_S = 1.15;
+
+/**
+ * PR4a L4 Option A — additive finisher face CU (after Hero Shot).
+ * Den-safe L1 policy; skippable; best-effort face/eyes readability.
+ */
+export const FINISHER_FACE_CU_ID = 'finisher-face-cu';
+/** Soft wall-clock cap for the CU sting (Hero Shot remains ≤1.2 s). */
+export const FINISHER_FACE_CU_MAX_S = 0.9;
+/** Authored CU runtime — short push to face/eyes. */
+export const FINISHER_FACE_CU_DURATION_S = 0.75;
+/**
+ * Fallback focus height above player root when no eye bone is resolved.
+ * Prefer live `headfront`/`Head` world pos from player-eye-focus.ts at runtime.
+ */
+export const FINISHER_FACE_CU_FALLBACK_Y = 1.95;
 
 export interface CutsceneCaption {
   readonly text: string;
@@ -159,6 +175,83 @@ export function buildFinisherHeroShot(input: FinisherHeroShotInput): CutsceneScr
     letterbox: [
       { at: 0, on: true },
       { at: Math.max(0, duration - 0.18), on: false },
+    ],
+  };
+}
+
+export type FinisherFaceCuInput = {
+  readonly playerXZ: readonly [number, number];
+  /** Live rig snapshot — becomes initialCamera (mode/fov reused; yaw is replaced). */
+  readonly camera: CameraRigState;
+  /**
+   * Player facing on XZ (same basis as main.ts `faceX`/`faceZ` / mesh yaw).
+   * Camera sits in front of this direction looking back at the head — ARPG
+   * behind-the-back yaw must NOT be reused or the CU frames the spine.
+   */
+  readonly faceXZ: readonly [number, number];
+  /**
+   * Eye look-at world position (prefer live headfront/Head bone via
+   * player-eye-focus). When omitted or null, uses FINISHER_FACE_CU_FALLBACK_Y.
+   */
+  readonly headWorld?: readonly [number, number, number] | null;
+};
+
+/**
+ * Yaw that places the orbit camera in front of `faceXZ`, looking at the face.
+ * Matches mesh yaw basis `atan2(faceX, faceZ)` so forward = -face on XZ.
+ */
+export function faceCuOrbitYaw(faceXZ: readonly [number, number]): number {
+  const fx = faceXZ[0] ?? 0;
+  const fz = faceXZ[1] ?? -1;
+  const len = Math.hypot(fx, fz);
+  if (len < 1e-6) return Math.atan2(0, -1); // default face −Z
+  return Math.atan2(fx / len, fz / len);
+}
+
+/**
+ * Finisher face CU — PR4a L4 Option A.
+ * Plays after Hero Shot (main.ts queues it). Skippable; same Escape/Stop
+ * restore paths as other owner beats. Does not replace the Hero Shot push-in.
+ */
+export function buildFinisherFaceCu(input: FinisherFaceCuInput): CutsceneScript {
+  const duration = FINISHER_FACE_CU_DURATION_S;
+  const cleared: CameraRigState = { ...input.camera, shake: [0, 0, 0] };
+  const head: readonly [number, number, number] = input.headWorld
+    ?? [input.playerXZ[0], FINISHER_FACE_CU_FALLBACK_Y, input.playerXZ[1]];
+  // Front-on: ignore ARPG/Hero-Shot behind yaw — that was framing the back.
+  const yaw = faceCuOrbitYaw(input.faceXZ);
+  const start = snapCameraFocus(
+    {
+      ...cleared,
+      yaw,
+      // Near-level pitch — downward tilt with a low focus reads as chest CU.
+      pitch: -0.02,
+      distance: 1.35,
+      verticalFovRad: Math.min(cleared.verticalFovRad, 0.72),
+    },
+    head,
+  );
+  const cu = snapCameraFocus(
+    {
+      ...start,
+      yaw,
+      // Extreme face CU — fill frame with eyes/forehead.
+      distance: 0.78,
+      pitch: 0.04,
+      verticalFovRad: 0.48,
+    },
+    head,
+  );
+  return {
+    id: FINISHER_FACE_CU_ID,
+    skippable: true,
+    duration,
+    initialFade: 0,
+    initialCamera: start,
+    cameraKeys: [{ at: 0, dur: duration * 0.8, pose: cu }],
+    letterbox: [
+      { at: 0, on: true },
+      { at: Math.max(0, duration - 0.12), on: false },
     ],
   };
 }
