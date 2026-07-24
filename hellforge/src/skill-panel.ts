@@ -22,8 +22,9 @@ import {
   layoutPixels,
   prereqEdges,
 } from './skill-tree-layout';
+import { HudArt } from './hud-art';
 import {
-  FONT_UI, Ui, Z, cornerOrnamentsHtml, d2StonePanelCss, panelScrollShellCss,
+  FONT_UI, Ui, Z, panelScrollShellCss,
 } from './ui-theme';
 import { skillIconImg } from './ui-icons';
 import { ensureUiStyles } from './ui-styles';
@@ -185,27 +186,18 @@ export function installSkillPanel(mount: HTMLElement, cb: SkillPanelCallbacks): 
     if (e.target === root) handle.setOpen(false);
   });
 
-  // ── stone slab with carved grooves ───────────────────────────────────────
+  // ── PR6 painted panel frame (reuse character frame; dedicated skill art deferred) ──
   const panel = document.createElement('div');
   panel.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);' +
     'width:min(560px,94%);height:min(740px,92%);display:flex;box-sizing:border-box;' +
-    d2StonePanelCss() +
-    'border:6px solid;border-image:linear-gradient(180deg,#c4a868 0%,#a89058 8%,#8a7848 20%,#9a8858 50%,#8a7848 80%,#a89058 92%,#c4a868 100%) 1;' +
-    'box-shadow:inset 0 0 0 2px #121010,inset 0 0 30px rgba(0,0,0,0.6),0 0 20px rgba(0,0,0,0.8);';
-  panel.insertAdjacentHTML('beforeend', cornerOrnamentsHtml(4, 20));
+    `background:url('${HudArt.panelSkill()}') center/100% 100% no-repeat,rgba(12,8,4,0.96);` +
+    'border:0;box-shadow:0 0 28px rgba(0,0,0,0.85);padding:36px 28px 40px;';
   panel.addEventListener('click', (e) => e.stopPropagation());
-  // carved horizontal grooves (3-line carve every ~75px)
-  const grooves = document.createElement('div');
-  grooves.style.cssText = 'position:absolute;inset:0;pointer-events:none;' +
-    'background:repeating-linear-gradient(180deg,' +
-    'rgba(8,6,4,0.5) 0px,rgba(8,6,4,0.5) 1px,transparent 1px,transparent 2px,' +
-    '#1a1816 2px,#1a1816 4px,transparent 4px,transparent 5px,' +
-    'rgba(100,92,80,0.25) 5px,rgba(100,92,80,0.25) 6px,transparent 6px,transparent 75px);';
-  panel.appendChild(grooves);
 
   // ── left: tree canvas area ───────────────────────────────────────────────
   const canvasWrap = document.createElement('div');
-  canvasWrap.style.cssText = 'position:relative;flex:1;min-width:0;margin:14px 0 14px 14px;';
+  canvasWrap.style.cssText = 'position:relative;flex:1;min-width:0;margin:8px 0 8px 8px;' +
+    'background:rgba(6,4,3,0.55);border:1px solid rgba(224,184,74,0.12);';
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;';
   const nodesLayer = document.createElement('div');
@@ -227,8 +219,11 @@ export function installSkillPanel(mount: HTMLElement, cb: SkillPanelCallbacks): 
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.dataset.branch = tab.id;
+    btn.textContent = tab.label;
+    // Forged defaults — never flash native white button chrome before paintTabs().
     btn.style.cssText = 'position:relative;padding:9px 4px;cursor:pointer;border-radius:3px;' +
-      `font:700 13px ${FONT_UI};letter-spacing:2px;`;
+      `font:700 13px ${FONT_UI};letter-spacing:2px;color:#9a948e;` +
+      'background:linear-gradient(90deg,#343230,#2a2826,#343230);border:1px solid #4a4438;';
     btn.addEventListener('click', () => {
       activeBranch = tab.id;
       refresh();

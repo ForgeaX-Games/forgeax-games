@@ -13,7 +13,9 @@
 // innerHTML rebuild of the skill bar — SPEC §5.3 CAUTION).
 
 import type { HudViewModel, SkillSlotState, TargetViewModel } from './hud-view-model';
+import { HudArt } from './hud-art';
 import { FONT_DISPLAY, FONT_UI, FONT_MONO, Ui } from './ui-theme';
+import { ensureUiStyles } from './ui-styles';
 import { potionIconSvg, skillIconImg } from './ui-icons';
 import type { UiTooltipHandle } from './ui-tooltip';
 
@@ -69,6 +71,8 @@ function tipTextToHtml(text: string): string {
 }
 
 export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): HudHandle {
+  // Injects .hf-orb-wave* / .hf-orb-glow — required for liquid motion.
+  ensureUiStyles();
   document.getElementById(HUD_ID)?.remove();
   const root = document.createElement('div');
   root.id = HUD_ID;
@@ -77,20 +81,23 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
   root.style.cssText = `position:${rootAbsolute ? 'absolute' : 'fixed'};inset:0;z-index:50;overflow:hidden;pointer-events:none;user-select:none;` +
     `font:600 13px ${FONT_MONO};color:${Ui.text};`;
 
-  if (!document.getElementById('hellforge-hud-style')) {
+  // Rev id so HMR picks up orb/banner CSS after art iterations.
+  document.getElementById('hellforge-hud-style')?.remove();
+  document.getElementById('hellforge-hud-style-v4')?.remove();
+  document.getElementById('hellforge-hud-style-v5')?.remove();
+  if (!document.getElementById('hellforge-hud-style-v5')) {
     const s = document.createElement('style');
-    s.id = 'hellforge-hud-style';
+    s.id = 'hellforge-hud-style-v5';
     s.textContent = `
       @keyframes hf-float-rise {
         0% { opacity:1; transform:translate(-50%,-100%) scale(1.1); }
         100% { opacity:0; transform:translate(-50%,-100%) translateY(-46px) scale(0.9); }
       }
       @keyframes hf-banner {
-        0% { opacity:0; transform:translate(-50%,-50%) scale(0.7); }
-        18% { opacity:1; transform:translate(-50%,-50%) scale(1.08); }
-        32% { opacity:1; transform:translate(-50%,-50%) scale(1); }
-        82% { opacity:1; }
-        100% { opacity:0; transform:translate(-50%,-50%) scale(1.04); }
+        0% { opacity:0; transform:translate(-50%,-50%) scale(0.92); }
+        14% { opacity:1; transform:translate(-50%,-50%) scale(1.02); }
+        78% { opacity:1; }
+        100% { opacity:0; transform:translate(-50%,-50%) scale(1); }
       }
       @keyframes hf-area {
         0% { opacity:0; letter-spacing:14px; }
@@ -101,129 +108,269 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
       @keyframes hf-dmg {
         0% { opacity:0; } 20% { opacity:0.6; } 100% { opacity:0; }
       }
+      @keyframes hf-orb-drain {
+        0% { filter:brightness(1.15); }
+        40% { filter:brightness(1.55); }
+        100% { filter:brightness(1); }
+      }
+      @keyframes hf-metal-sheen {
+        0% { background-position: -80% 0; }
+        100% { background-position: 180% 0; }
+      }
+      @keyframes hf-bubble {
+        0% { transform:translateY(0) scale(0.6); opacity:0; }
+        15% { opacity:0.7; }
+        100% { transform:translateY(-52px) scale(1.1); opacity:0; }
+      }
+      @keyframes hf-caustic {
+        0% { transform:translateX(-8%) rotate(0deg); opacity:0.35; }
+        50% { transform:translateX(6%) rotate(3deg); opacity:0.55; }
+        100% { transform:translateX(-8%) rotate(0deg); opacity:0.35; }
+      }
+      .hf-orb-drain .hf-orb-wave1,.hf-orb-drain .hf-orb-wave2{
+        animation-duration:0.55s !important;
+      }
+      .hf-metal-sheen{
+        position:absolute;inset:0;pointer-events:none;z-index:6;
+        background:linear-gradient(105deg,
+          transparent 38%,rgba(255,230,160,0.0) 42%,
+          rgba(255,240,200,0.22) 49%,rgba(255,255,255,0.35) 50.5%,
+          rgba(255,220,140,0.18) 52%,transparent 58%);
+        background-size:220% 100%;
+        animation:hf-metal-sheen 6.5s ease-in-out infinite;
+        mix-blend-mode:soft-light;border-radius:inherit;
+      }
+      .hf-orb-bubble{
+        position:absolute;border-radius:50%;pointer-events:none;z-index:3;
+        animation:hf-bubble 2.8s ease-in infinite;
+        box-shadow:inset 0 0 2px rgba(255,255,255,0.6);
+      }
+      .hf-orb-caustic{
+        position:absolute;inset:0;pointer-events:none;z-index:2;
+        animation:hf-caustic 3.6s ease-in-out infinite;
+        mix-blend-mode:screen;
+      }
     `;
     document.head.appendChild(s);
   }
 
-  // ── bottom D2 bar — 1:1 aidiablo replica (extracted recipe, see plan §R1) ──
+  // ── bottom D2 bar ──
+  // Layer stack (back→front): continuous plate → wings → orb liquid → orb frames → chrome.
+  // Orbs sit ON the plate ends so no grey rectangle can cut through sphere art.
   const bar = document.createElement('div');
-  bar.style.cssText = 'position:absolute;left:0;right:0;bottom:0;height:150px;' +
-    'display:flex;align-items:flex-end;justify-content:center;overflow:visible;';
-
-  /** aidiablo gargoyle — 55×130 SVG with stoneGrad torso + horns + wings. */
-  const gargoyle = (mirror: boolean): HTMLDivElement => {
-    const wrap = document.createElement('div');
-    wrap.style.cssText = `width:55px;height:130px;flex:none;` +
-      (mirror ? 'transform:scaleX(-1);' : '') +
-      'filter:drop-shadow(2px 2px 4px rgba(0,0,0,0.7));';
-    wrap.innerHTML = `<svg viewBox="0 0 55 130" width="55" height="130">
-      <defs>
-        <linearGradient id="hf-garg-grad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#4a4640"/><stop offset="50%" stop-color="#3a3632"/><stop offset="100%" stop-color="#2e2a28"/>
-        </linearGradient>
-      </defs>
-      <rect x="5" y="110" width="45" height="20" rx="2" fill="#3a3632" stroke="#4a4640"/>
-      <rect x="9" y="114" width="37" height="12" rx="1" fill="#2e2a28"/>
-      <path d="M15 110 L12 70 L8 55 L14 30 L20 20 L27 15 L35 20 L40 30 L46 55 L42 70 L40 110Z" fill="url(#hf-garg-grad)" stroke="#4a4640"/>
-      <path d="M14 50 L2 30 L4 45 L8 55Z" fill="#3a3632" stroke="#2e2a28"/>
-      <path d="M40 50 L52 30 L50 45 L46 55Z" fill="#3a3632" stroke="#2e2a28"/>
-      <ellipse cx="27" cy="15" rx="10" ry="12" fill="url(#hf-garg-grad)" stroke="#4a4640"/>
-      <ellipse cx="23" cy="13" rx="2" ry="1.5" fill="#1a1816"/><ellipse cx="31" cy="13" rx="2" ry="1.5" fill="#1a1816"/>
-      <path d="M20 5 L17 -2 L22 8Z" fill="#4a4640"/><path d="M34 5 L37 -2 L32 8Z" fill="#4a4640"/>
-    </svg>`;
-    return wrap;
-  };
+  bar.style.cssText = 'position:absolute;left:0;right:0;bottom:0;height:172px;' +
+    'overflow:visible;pointer-events:none;';
 
   type OrbParts = {
+    shell: HTMLDivElement;
     wrap: HTMLDivElement;
     fill: HTMLDivElement;
     txt: HTMLDivElement;
     waves: HTMLDivElement[];
     glow: HTMLDivElement;
+    surface: SVGSVGElement;
+    read: HTMLDivElement;
   };
   /**
-   * 130px life/mana orb — aidiablo recipe: 5px rim, liquid + TWO transform-only
-   * waves (compositor-cheap, no filter animations), glass + pulsing inner glow.
-   * setOrbMotion(false) freezes waves+glow for perf triage.
+   * Life/mana orb — glass sphere + volumetric liquid (sphere shading, caustics,
+   * bubbles) + SVG meniscus. Frame PNG sits above liquid. Labels ride the shell
+   * (not the mid plate) so plate art never occludes the readout.
    */
   const makeOrb = (kind: 'hp' | 'mp'): OrbParts => {
     const isHp = kind === 'hp';
-    const rimColor = isHp ? '#5a2a1a' : '#1a2a5a';
-    const shadowCol = isHp ? 'rgba(120,20,10,0.4)' : 'rgba(10,20,120,0.4)';
+    const gid = isHp ? 'hf-liq-hp' : 'hf-liq-mp';
+    const shadowCol = isHp ? 'rgba(90,10,5,0.65)' : 'rgba(5,10,90,0.65)';
+    const glowCol = isHp ? 'rgba(255,60,20,0.4)' : 'rgba(40,100,255,0.4)';
+    // Volumetric fluid (sphere volume shading — not a flat fill):
+    // key light + subsurface bloom + dense core + rim absorption + particulate.
     const liquid = isHp
-      ? 'linear-gradient(0deg,#7a0a0a 0%,#aa1515 30%,#cc2222 60%,#dd3333 100%)'
-      : 'linear-gradient(0deg,#0a0a6a 0%,#1525aa 30%,#2238cc 60%,#3350dd 100%)';
-    const wave1Col = isHp ? 'rgba(220,50,50,0.6)' : 'rgba(50,80,220,0.6)';
-    const wave2Col = isHp ? 'rgba(180,30,30,0.35)' : 'rgba(30,50,180,0.35)';
-    const glowCol = isHp ? 'rgba(180,30,10,0.15)' : 'rgba(10,30,180,0.15)';
+      ? 'radial-gradient(circle at 28% 22%,rgba(255,245,220,0.95) 0%,rgba(255,170,120,0.45) 14%,transparent 36%),' +
+        'radial-gradient(circle at 48% 40%,rgba(255,90,50,0.35) 0%,transparent 42%),' +
+        'radial-gradient(ellipse 90% 70% at 50% 108%,#ff6040 0%,#d02018 34%,#6a0808 62%,#120000 88%),' +
+        'radial-gradient(circle at 78% 58%,rgba(20,0,0,0.72) 0%,transparent 48%),' +
+        'radial-gradient(circle at 18% 70%,rgba(255,80,40,0.22) 0%,transparent 38%),' +
+        'repeating-radial-gradient(circle at 45% 55%,rgba(255,160,100,0.07) 0 2px,transparent 2px 7px),' +
+        'linear-gradient(185deg,#ffd0b0 0%,#ff7a48 12%,#e03020 38%,#8a100c 68%,#2a0202 100%)'
+      : 'radial-gradient(circle at 28% 22%,rgba(235,248,255,0.95) 0%,rgba(140,190,255,0.45) 14%,transparent 36%),' +
+        'radial-gradient(circle at 48% 40%,rgba(80,140,255,0.35) 0%,transparent 42%),' +
+        'radial-gradient(ellipse 90% 70% at 50% 108%,#6090ff 0%,#2048d0 34%,#081868 62%,#000012 88%),' +
+        'radial-gradient(circle at 78% 58%,rgba(0,0,30,0.72) 0%,transparent 48%),' +
+        'radial-gradient(circle at 18% 70%,rgba(60,120,255,0.22) 0%,transparent 38%),' +
+        'repeating-radial-gradient(circle at 45% 55%,rgba(140,190,255,0.07) 0 2px,transparent 2px 7px),' +
+        'linear-gradient(185deg,#d0e8ff 0%,#6090ff 12%,#2850d8 38%,#0c1c70 68%,#020218 100%)';
+    const cHi = isHp ? '#ffe8d0' : '#e8f4ff';
+    const cMid = isHp ? '#ff6040' : '#5090ff';
+    const cDeep = isHp ? '#5a0606' : '#061040';
+    const causticCol = isHp
+      ? 'radial-gradient(ellipse at 38% 36%,rgba(255,220,160,0.55) 0%,transparent 38%),' +
+        'radial-gradient(ellipse at 62% 58%,rgba(255,90,40,0.38) 0%,transparent 32%),' +
+        'radial-gradient(ellipse at 50% 70%,rgba(255,140,80,0.2) 0%,transparent 45%)'
+      : 'radial-gradient(ellipse at 38% 36%,rgba(200,235,255,0.55) 0%,transparent 38%),' +
+        'radial-gradient(ellipse at 62% 58%,rgba(70,130,255,0.38) 0%,transparent 32%),' +
+        'radial-gradient(ellipse at 50% 70%,rgba(100,160,255,0.2) 0%,transparent 45%)';
 
+    const shell = document.createElement('div');
+    shell.style.cssText = 'position:relative;width:150px;height:150px;flex:none;' +
+      'display:flex;align-items:center;justify-content:center;overflow:visible;';
+
+    // Readout above the orb — never sits on the mid plate (avoids grey occlusion).
+    const read = document.createElement('div');
+    read.style.cssText = 'position:absolute;left:50%;bottom:100%;transform:translate(-50%,-2px);' +
+      `font:700 11px ${FONT_UI};white-space:nowrap;padding:2px 9px;z-index:8;` +
+      `color:${isHp ? '#f08070' : '#80a8ff'};` +
+      `background:linear-gradient(180deg,rgba(28,18,12,0.92),rgba(10,8,6,0.92));` +
+      `border:1px solid ${isHp ? 'rgba(200,70,40,0.45)' : 'rgba(70,110,200,0.45)'};` +
+      'box-shadow:0 2px 8px rgba(0,0,0,0.55),inset 0 1px 0 rgba(255,220,160,0.12);' +
+      'text-shadow:0 1px 2px #000;';
+
+    // Liquid vessel must match the punched inner hole of globe-frame-*.png.
+    // Frame is 512² with hole radius ≈151 → at 150px shell ≈ 88px; inset 2px under rim.
     const wrap = document.createElement('div');
-    wrap.style.cssText = 'position:relative;width:130px;height:130px;flex:none;border-radius:50%;overflow:hidden;' +
-      `border:5px solid ${rimColor};background:${isHp ? '#0a0202' : '#02020a'};box-sizing:border-box;` +
-      `box-shadow:inset 0 0 30px rgba(0,0,0,0.9),inset 0 -10px 20px ${shadowCol},` +
-      `0 0 15px rgba(0,0,0,0.7),0 0 4px ${shadowCol},` +
-      `inset 3px 3px 0 rgba(80,65,40,0.15),inset -3px -3px 0 rgba(0,0,0,0.5);`;
+    wrap.style.cssText = 'position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);' +
+      'width:86px;height:86px;border-radius:50%;overflow:hidden;z-index:1;' +
+      'isolation:isolate;contain:paint;' +
+      `background:${isHp ? '#080101' : '#010108'};box-sizing:border-box;` +
+      `box-shadow:inset 0 0 28px rgba(0,0,0,0.96),inset 0 -12px 18px ${shadowCol},` +
+      `inset 6px 8px 14px ${isHp ? 'rgba(60,10,5,0.55)' : 'rgba(5,15,60,0.55)'},` +
+      `inset 0 0 0 1px ${isHp ? 'rgba(80,20,10,0.6)' : 'rgba(10,20,80,0.6)'};`;
 
     const fill = document.createElement('div');
-    fill.style.cssText = 'position:absolute;left:0;bottom:0;width:100%;height:60%;transition:height 0.3s;overflow:hidden;';
+    fill.style.cssText = 'position:absolute;left:0;bottom:0;width:100%;height:60%;' +
+      'transition:height 0.4s cubic-bezier(.2,.8,.2,1);overflow:hidden;border-radius:0;';
+
     const liquidEl = document.createElement('div');
-    liquidEl.style.cssText = `position:absolute;inset:0;background:${liquid};border-radius:0 0 50% 50%;`;
+    liquidEl.className = 'hf-orb-liquid';
+    liquidEl.style.cssText = `position:absolute;left:0;right:0;top:6px;bottom:0;background:${liquid};`;
+
+    const caustic = document.createElement('div');
+    caustic.className = 'hf-orb-caustic';
+    caustic.style.cssText = `inset:0;background:${causticCol};`;
+
+    // Inner wall refraction ring (glass/liquid interface).
+    const meniscusLit = document.createElement('div');
+    meniscusLit.style.cssText = 'position:absolute;left:6%;right:6%;top:0;height:11px;z-index:4;pointer-events:none;' +
+      `background:linear-gradient(180deg,${isHp ? 'rgba(255,230,200,0.55)' : 'rgba(220,240,255,0.55)'} 0%,` +
+      `${isHp ? 'rgba(255,100,60,0.2)' : 'rgba(80,140,255,0.2)'} 45%,transparent 100%);` +
+      'border-radius:50%;';
+
+    // Bubbles rising through fluid volume.
+    const bubbles: HTMLDivElement[] = [];
+    for (let i = 0; i < 4; i++) {
+      const b = document.createElement('div');
+      b.className = 'hf-orb-bubble';
+      const size = 2 + (i % 3);
+      b.style.cssText =
+        `left:${16 + i * 18}%;bottom:${6 + (i % 2) * 5}px;width:${size}px;height:${size}px;` +
+        `background:${isHp ? 'rgba(255,220,180,0.65)' : 'rgba(200,225,255,0.65)'};` +
+        `animation-delay:${(i * 0.48).toFixed(2)}s;animation-duration:${(2.2 + i * 0.32).toFixed(2)}s;`;
+      bubbles.push(b);
+    }
+
+    // Meniscus SVG — kept inside the vessel (no horizontal overflow).
+    const surface = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    surface.setAttribute('class', 'hf-orb-surface');
+    surface.setAttribute('viewBox', '0 0 200 28');
+    surface.setAttribute('preserveAspectRatio', 'none');
+    surface.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:16px;z-index:4;overflow:hidden;';
+    const dA = 'M0 16 C25 6, 50 24, 75 14 S125 4, 150 16 S185 24, 200 14 V28 H0 Z';
+    const dB = 'M0 14 C25 22, 50 6, 75 18 S125 24, 150 10 S185 6, 200 16 V28 H0 Z';
+    const dC = 'M0 18 C25 8, 50 20, 75 10 S125 22, 150 16 S185 8, 200 18 V28 H0 Z';
+    surface.innerHTML =
+      `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">` +
+      `<stop offset="0%" stop-color="${cHi}"/><stop offset="40%" stop-color="${cMid}"/>` +
+      `<stop offset="100%" stop-color="${cDeep}"/></linearGradient>` +
+      `<linearGradient id="${gid}-foam" x1="0" y1="0" x2="0" y2="1">` +
+      `<stop offset="0%" stop-color="rgba(255,255,255,0.55)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/>` +
+      `</linearGradient></defs>` +
+      `<path fill="url(#${gid})" d="${dA}">` +
+      `<animate attributeName="d" dur="2.4s" repeatCount="indefinite" values="${dA};${dB};${dC};${dA}"/>` +
+      `</path>` +
+      `<path fill="url(#${gid}-foam)" opacity="0.55" d="${dA}">` +
+      `<animate attributeName="d" dur="1.8s" repeatCount="indefinite" values="${dB};${dA};${dC};${dB}"/>` +
+      `</path>`;
+
     const wave1 = document.createElement('div');
     wave1.className = 'hf-orb-wave1';
-    wave1.style.cssText = `position:absolute;top:-8px;left:-15%;width:130%;height:18px;border-radius:45% 40% 50% 42%;background:${wave1Col};`;
+    wave1.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:9px;z-index:5;' +
+      `background:radial-gradient(ellipse at center,${isHp ? 'rgba(255,220,180,0.35)' : 'rgba(200,230,255,0.35)'} 0%,transparent 70%);`;
     const wave2 = document.createElement('div');
     wave2.className = 'hf-orb-wave2';
-    wave2.style.cssText = `position:absolute;top:-5px;left:-10%;width:120%;height:14px;border-radius:42% 48% 40% 45%;opacity:0.5;background:${wave2Col};`;
-    fill.append(liquidEl, wave1, wave2);
+    wave2.style.cssText = 'position:absolute;top:3px;left:0;width:100%;height:6px;z-index:5;opacity:0.5;' +
+      `background:radial-gradient(ellipse at center,${isHp ? 'rgba(255,120,80,0.28)' : 'rgba(80,140,255,0.28)'} 0%,transparent 70%);`;
+
+    fill.append(liquidEl, caustic, ...bubbles, meniscusLit, surface, wave1, wave2);
 
     const glow = document.createElement('div');
     glow.className = 'hf-orb-glow';
-    glow.style.cssText = 'position:absolute;inset:0;border-radius:50%;pointer-events:none;' +
-      `background:radial-gradient(circle at 50% 80%,${glowCol} 0%,transparent 60%);`;
+    glow.style.cssText = 'position:absolute;inset:0;border-radius:50%;pointer-events:none;z-index:1;' +
+      `background:radial-gradient(circle at 50% 78%,${glowCol} 0%,transparent 52%);`;
 
+    // Glass sphere: fresnel rim + dual specular + bottom absorption.
     const glass = document.createElement('div');
-    glass.style.cssText = 'position:absolute;inset:0;border-radius:50%;pointer-events:none;' +
-      'background:radial-gradient(ellipse at 35% 25%,rgba(255,255,255,0.12) 0%,transparent 50%),' +
-      'radial-gradient(ellipse at 65% 75%,rgba(0,0,0,0.3) 0%,transparent 50%);';
+    glass.style.cssText = 'position:absolute;inset:0;border-radius:50%;pointer-events:none;z-index:6;' +
+      'background:radial-gradient(circle at 50% 50%,transparent 38%,rgba(0,0,0,0.28) 68%,rgba(0,0,0,0.62) 100%),' +
+      'radial-gradient(ellipse at 28% 20%,rgba(255,255,255,0.55) 0%,rgba(255,255,255,0.12) 22%,transparent 42%),' +
+      'radial-gradient(ellipse at 72% 30%,rgba(255,255,255,0.18) 0%,transparent 28%),' +
+      'radial-gradient(ellipse at 70% 78%,rgba(0,0,0,0.4) 0%,transparent 38%),' +
+      'linear-gradient(160deg,rgba(255,255,255,0.2) 0%,transparent 36%,rgba(0,0,0,0.25) 100%);';
 
     const txt = document.createElement('div');
     txt.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;' +
-      'font-size:18px;font-weight:bold;color:#fff;pointer-events:none;' +
+      'font-size:16px;font-weight:bold;color:#fff;pointer-events:none;z-index:7;' +
       'text-shadow:0 0 6px #000,0 0 12px #000,0 1px 2px #000;';
 
     wrap.append(fill, glow, glass, txt);
-    return { wrap, fill, txt, waves: [wave1, wave2], glow };
+
+    // Frame ABOVE liquid so metal rim always occludes any residual wave bleed.
+    const frame = document.createElement('img');
+    frame.src = isHp ? HudArt.globeHp() : HudArt.globeMp();
+    frame.alt = '';
+    frame.draggable = false;
+    frame.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:contain;' +
+      'pointer-events:none;z-index:5;filter:drop-shadow(0 0 6px rgba(255,200,120,0.15));';
+
+    const sheen = document.createElement('div');
+    sheen.className = 'hf-metal-sheen';
+    sheen.style.cssText += 'border-radius:50%;z-index:6;' +
+      'mask-image:radial-gradient(circle,#000 42%,transparent 68%);' +
+      '-webkit-mask-image:radial-gradient(circle,#000 42%,transparent 68%);';
+
+    shell.append(read, wrap, frame, sheen);
+    return { shell, wrap, fill, txt, waves: [wave1, wave2], glow, surface, read };
   };
 
   const hp = makeOrb('hp');
   const mp = makeOrb('mp');
 
-  // Centre stone plate — aidiablo recipe (grain + top border-image + top XP strip)
+  // Continuous forged plate under the whole chrome — tall/wide enough to cover slots+quick+meta.
   const mid = document.createElement('div');
-  mid.style.cssText = 'position:relative;flex:0 1 600px;max-width:min(600px,56%);min-width:280px;height:132px;' +
-    'display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:10px 12px 6px;box-sizing:border-box;' +
-    'background:repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(40,32,22,0.05) 3px,rgba(40,32,22,0.05) 6px),' +
-    'linear-gradient(0deg,#2e2a26 0%,#383430 40%,#322e2a 70%,rgba(38,34,28,0.95) 90%,transparent 100%);' +
-    'border-top:4px solid;' +
-    'border-image:linear-gradient(90deg,transparent 0%,#5a4e42 10%,#4a4038 30%,#5a4e42 50%,#4a4038 70%,#5a4e42 90%,transparent 100%) 1;' +
-    'box-shadow:inset 0 4px 8px rgba(80,65,45,0.15),inset 0 -2px 0 rgba(0,0,0,0.3),0 -4px 15px rgba(0,0,0,0.4);';
-
+  mid.style.cssText = 'position:absolute;left:50%;bottom:0;transform:translateX(-50%);' +
+    'width:min(700px,72%);height:158px;z-index:1;box-sizing:border-box;' +
+    'display:flex;flex-direction:column;justify-content:flex-end;gap:5px;' +
+    'padding:22px 88px 12px;overflow:hidden;' +
+    `background:url('${HudArt.hotbarBackplate()}') center bottom/100% 100% no-repeat,` +
+    'linear-gradient(180deg,rgba(28,20,12,0.72) 0%,rgba(16,12,8,0.96) 18%,rgba(8,6,5,0.99) 100%);' +
+    'box-shadow:0 -10px 26px rgba(0,0,0,0.65),inset 0 1px 0 rgba(224,184,74,0.22),' +
+    'inset 0 -1px 0 rgba(255,180,80,0.1),inset 0 0 40px rgba(0,0,0,0.35);' +
+    // Soft side falloff so plate ends don't read as a grey rectangle over the orbs.
+    'mask-image:linear-gradient(90deg,transparent 0%,#000 7%,#000 93%,transparent 100%);' +
+    '-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 7%,#000 93%,transparent 100%);';
   const xpBar = document.createElement('div');
-  xpBar.style.cssText = 'position:absolute;top:0;left:0;right:0;height:5px;background:rgba(0,0,0,0.5);border-bottom:1px solid #4a3a2a;';
+  xpBar.style.cssText = 'position:absolute;top:8px;left:14%;right:14%;height:4px;z-index:2;' +
+    'background:rgba(0,0,0,0.55);border:1px solid rgba(120,90,40,0.5);border-radius:1px;' +
+    'box-shadow:0 0 6px rgba(200,160,60,0.15);';
   const xpFill = document.createElement('div');
-  xpFill.style.cssText = 'height:100%;width:0%;background:linear-gradient(90deg,#6633aa,#9955ee);transition:width 0.3s;';
+  xpFill.style.cssText = 'height:100%;width:0%;background:linear-gradient(90deg,#6633aa,#c8a040,#9955ee);transition:width 0.3s;';
   xpBar.appendChild(xpFill);
 
-  const orbReadout = document.createElement('div');
-  orbReadout.style.cssText = 'display:flex;justify-content:space-between;padding:0 12px;margin-top:8px;font-size:11px;font-weight:bold;';
-  const hpRead = document.createElement('span');
-  hpRead.style.cssText = 'color:#cc6666;text-shadow:0 0 4px rgba(200,50,50,0.3);';
-  const mpRead = document.createElement('span');
-  mpRead.style.cssText = 'color:#6666cc;text-shadow:0 0 4px rgba(50,50,200,0.3);';
-  orbReadout.append(hpRead, mpRead);
-
+  // Skill tray — recessed gold-rim well fully inside the plate.
   const slotsRow = document.createElement('div');
-  slotsRow.style.cssText = 'display:flex;gap:7px;justify-content:center;align-items:flex-end;';
+  slotsRow.style.cssText = 'position:relative;z-index:2;display:flex;gap:8px;justify-content:center;align-items:flex-end;' +
+    'padding:7px 12px 5px;margin:0 8px;' +
+    'background:linear-gradient(180deg,rgba(20,14,8,0.7) 0%,rgba(4,3,2,0.9) 100%);' +
+    'border:1px solid rgba(224,184,74,0.32);' +
+    'box-shadow:inset 0 2px 12px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,220,160,0.1),' +
+    '0 0 10px rgba(200,140,40,0.08);';
 
   type SkillDom = {
     root: HTMLDivElement;
@@ -241,14 +388,16 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
       const i = skillDom.length;
       const isPotion = !!slots[i]?.potion;
       const root = document.createElement('div');
+      const emptySlotBg = HudArt.hotbarSlotEmpty();
       root.style.cssText = isPotion
         ? 'position:relative;width:40px;height:40px;border-radius:3px;overflow:hidden;' +
-          `background:${slots[i]!.potion === 'life' ? 'rgba(60,10,10,0.7)' : 'rgba(10,10,60,0.7)'};` +
-          `border:2px solid ${slots[i]!.potion === 'life' ? '#5a2a1a' : '#1a3a6a'};` +
-          'display:flex;align-items:center;justify-content:center;pointer-events:auto;' +
+          `background-image:url('${emptySlotBg}');background-size:100% 100%;background-repeat:no-repeat;` +
+          `background-color:${slots[i]!.potion === 'life' ? 'rgba(60,10,10,0.7)' : 'rgba(10,10,60,0.7)'};` +
+          'border:0;display:flex;align-items:center;justify-content:center;pointer-events:auto;' +
           'box-shadow:inset 0 0 6px rgba(0,0,0,0.5);margin-bottom:6px;'
         : 'position:relative;width:52px;height:52px;border-radius:4px;overflow:hidden;' +
-          'background:rgba(18,12,6,0.85);border:2px solid #c8a84e;' +
+          `background-image:url('${emptySlotBg}');background-size:100% 100%;background-repeat:no-repeat;` +
+          'background-color:rgba(18,12,6,0.85);border:0;' +
           'display:flex;align-items:center;justify-content:center;pointer-events:auto;';
       const d: SkillDom = {
         root,
@@ -316,50 +465,73 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
   for (const q of QUICK) {
     const b = document.createElement('button');
     b.type = 'button';
-    b.style.cssText = 'padding:1px 5px;background:rgba(18,12,6,0.85);border:1px solid #3a2518;border-radius:3px;' +
-      'display:flex;flex-direction:column;align-items:center;gap:0;white-space:nowrap;line-height:1.1;cursor:pointer;';
-    b.innerHTML = `<span style="font-size:10px;color:#8a7a5a;font-weight:bold;">${q.key}</span>` +
-      `<span style="font-size:9px;color:${q.color};">${q.name}</span>`;
+    b.style.cssText = 'padding:2px 7px;min-width:36px;' +
+      'background:linear-gradient(180deg,rgba(36,26,14,0.95) 0%,rgba(14,10,6,0.95) 100%);' +
+      'border:1px solid rgba(224,184,74,0.35);border-radius:2px;' +
+      'display:flex;flex-direction:column;align-items:center;gap:0;white-space:nowrap;line-height:1.15;cursor:pointer;' +
+      'box-shadow:inset 0 1px 0 rgba(224,184,74,0.12),0 1px 3px rgba(0,0,0,0.5);';
+    b.innerHTML = `<span style="font-size:10px;color:#c8b070;font-weight:800;letter-spacing:0.5px;">${q.key}</span>` +
+      `<span style="font-size:9px;color:${q.color};font-weight:700;">${q.name}</span>`;
     b.addEventListener('mouseenter', () => {
-      b.style.borderColor = '#c8a84e';
-      b.style.background = 'rgba(40,30,16,0.9)';
+      b.style.borderColor = '#e0b84a';
+      b.style.background = 'linear-gradient(180deg,rgba(55,40,18,0.98) 0%,rgba(28,20,10,0.98) 100%)';
     });
     b.addEventListener('mouseleave', () => {
-      b.style.borderColor = '#3a2518';
-      b.style.background = 'rgba(18,12,6,0.85)';
+      b.style.borderColor = 'rgba(224,184,74,0.35)';
+      b.style.background = 'linear-gradient(180deg,rgba(36,26,14,0.95) 0%,rgba(14,10,6,0.95) 100%)';
     });
     b.addEventListener('click', () => deps?.onQuickAction?.(q.action));
     quickRow.appendChild(b);
   }
 
   const metaRow = document.createElement('div');
-  metaRow.style.cssText = 'display:flex;gap:12px;justify-content:center;flex-wrap:wrap;font-size:10px;color:#8a7a5a;';
+  metaRow.style.cssText = 'position:relative;z-index:2;display:flex;gap:12px;justify-content:center;' +
+    'flex-wrap:wrap;font-size:10px;color:#c8b890;text-shadow:0 1px 2px #000;';
   const lvlEl = document.createElement('span');
   const xpEl = document.createElement('span');
   const goldEl = document.createElement('span');
-  goldEl.style.color = '#c8a84e';
+  goldEl.style.color = '#e0b84a';
   const killsEl = document.createElement('span');
   const areaMeta = document.createElement('span');
-  areaMeta.style.color = '#5a4a3a';
+  areaMeta.style.color = '#8a7a60';
   metaRow.append(lvlEl, xpEl, goldEl, killsEl, areaMeta);
 
-  mid.append(xpBar, orbReadout, slotsRow, quickRow, metaRow);
+  quickRow.style.cssText += 'position:relative;z-index:2;';
+  mid.append(xpBar, slotsRow, quickRow, metaRow);
 
+  // Ornament wings — medallion only (bar stubs cropped). Sit behind orbs, above plate.
+  const wing = (side: 'left' | 'right'): HTMLImageElement => {
+    const img = document.createElement('img');
+    img.src = side === 'left' ? HudArt.barWingLeft() : HudArt.barWingRight();
+    img.alt = '';
+    img.draggable = false;
+    img.style.cssText = 'width:78px;height:110px;object-fit:contain;object-position:bottom;' +
+      'flex:none;pointer-events:none;position:relative;z-index:1;' +
+      `margin-${side === 'left' ? 'right' : 'left'}:-36px;` +
+      'filter:drop-shadow(0 0 8px rgba(255,180,80,0.18)) drop-shadow(2px 2px 4px rgba(0,0,0,0.8));';
+    return img;
+  };
+
+  // Orbs overhang the plate ends — HP further left, MP further right (wing stays with orb).
   const leftCluster = document.createElement('div');
-  leftCluster.style.cssText = 'display:flex;align-items:flex-end;flex:none;';
-  leftCluster.append(gargoyle(false), hp.wrap);
+  leftCluster.style.cssText = 'position:absolute;left:max(2px,calc(50% - 455px));bottom:2px;' +
+    'display:flex;align-items:flex-end;z-index:4;';
+  leftCluster.append(wing('left'), hp.shell);
 
   const rightCluster = document.createElement('div');
-  rightCluster.style.cssText = 'display:flex;align-items:flex-end;flex:none;';
-  rightCluster.append(mp.wrap, gargoyle(true));
+  rightCluster.style.cssText = 'position:absolute;right:max(2px,calc(50% - 455px));bottom:2px;' +
+    'display:flex;align-items:flex-end;z-index:4;';
+  rightCluster.append(mp.shell, wing('right'));
 
-  bar.append(leftCluster, mid, rightCluster);
+  // Plate first (back), then orb clusters on top of plate ends.
+  bar.append(mid, leftCluster, rightCluster);
 
   // ── top chrome ────────────────────────────────────────────────────────
   const questEl = document.createElement('div');
   questEl.style.cssText = 'position:absolute;top:12px;left:50%;transform:translateX(-50%);max-width:min(520px,90%);' +
-    `padding:5px 16px;border-radius:4px;background:${Ui.inkPanel};` +
-    `border:1px solid ${GOLD};box-shadow:0 0 0 1px ${Ui.goldDeep};` +
+    'padding:10px 28px 12px;border-radius:0;border:0;' +
+    `background:url('${HudArt.automapParchment()}') center/cover no-repeat,${Ui.inkPanel};` +
+    `box-shadow:0 0 0 1px ${Ui.goldDeep},0 4px 16px rgba(0,0,0,0.65);` +
     `font:600 12px ${FONT_MONO};color:${Ui.text};text-shadow:0 1px 2px #000;` +
     'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
 
@@ -408,9 +580,13 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
   areaEl.style.cssText = 'position:absolute;left:50%;top:26%;transform:translate(-50%,-50%);display:none;text-align:center;';
 
   const bannerEl = document.createElement('div');
-  bannerEl.style.cssText = 'position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);display:none;' +
-    `font:900 42px ${FONT_MONO};letter-spacing:4px;white-space:nowrap;` +
-    'text-shadow:0 0 24px rgba(255,150,50,0.8),0 4px 12px rgba(0,0,0,0.7);';
+  bannerEl.style.cssText = 'position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);display:none;' +
+    'padding:14px 36px 16px;border-radius:2px;pointer-events:none;max-width:min(720px,90%);' +
+    `background:url('${HudArt.automapParchment()}') center/cover no-repeat,rgba(12,8,4,0.94);` +
+    `border:1px solid ${Ui.goldLine};box-shadow:0 0 0 1px ${Ui.goldDeep},0 12px 36px rgba(0,0,0,0.75),` +
+    'inset 0 0 28px rgba(0,0,0,0.45);' +
+    `font:800 28px ${FONT_DISPLAY};letter-spacing:3px;white-space:nowrap;text-align:center;` +
+    'text-shadow:0 2px 4px #000,0 0 18px rgba(255,150,50,0.45);';
 
   const deathEl = document.createElement('div');
   deathEl.style.cssText = 'position:absolute;inset:0;display:none;align-items:center;justify-content:center;' +
@@ -436,17 +612,29 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
   let lastKills = -1;
   let lastAreaMeta = '';
 
+  let lastHpV = -1;
+  let lastMpV = -1;
+  const pulseOrbDrain = (parts: OrbParts): void => {
+    parts.wrap.classList.remove('hf-orb-drain');
+    void parts.wrap.offsetWidth;
+    parts.wrap.classList.add('hf-orb-drain');
+    window.setTimeout(() => parts.wrap.classList.remove('hf-orb-drain'), 650);
+  };
   const setOrbs = (hpV: number, maxHp: number, mana: number, maxMana: number) => {
     const hpP = Math.max(0, Math.min(1, maxHp > 0 ? hpV / maxHp : 0));
     const mpP = Math.max(0, Math.min(1, maxMana > 0 ? mana / maxMana : 0));
+    if (lastHpV >= 0 && hpV < lastHpV - 0.05) pulseOrbDrain(hp);
+    if (lastMpV >= 0 && mana < lastMpV - 0.05) pulseOrbDrain(mp);
+    lastHpV = hpV;
+    lastMpV = mana;
     hp.fill.style.height = `${(hpP * 100).toFixed(1)}%`;
     mp.fill.style.height = `${(mpP * 100).toFixed(1)}%`;
     const hpN = Math.max(0, Math.ceil(hpV));
     const mpN = Math.floor(mana);
     hp.txt.textContent = `${hpN}`;
     mp.txt.textContent = `${mpN}`;
-    hpRead.textContent = `生命: ${hpN} / ${Math.ceil(maxHp)}`;
-    mpRead.textContent = `法力: ${mpN} / ${Math.floor(maxMana)}`;
+    hp.read.textContent = `生命 ${hpN}/${Math.ceil(maxHp)}`;
+    mp.read.textContent = `法力 ${mpN}/${Math.floor(maxMana)}`;
   };
 
   const setXp = (level: number, cur: number, max: number) => {
@@ -518,12 +706,9 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
       }
       d.key.textContent = s.key;
       d.badge.style.display = 'none';
-      // aidiablo border states: ready #c8a84e / not-ready #5a3a1a / unlearned #4a3a2a
-      const border = s.selected
-        ? GOLD_BRIGHT
-        : (s.locked || s.empty) ? '#4a3a2a' : (!s.affordable ? '#5a3a1a' : GOLD);
-      d.root.style.borderColor = border;
-      d.root.style.boxShadow = s.selected ? `0 0 0 1px ${GOLD_BRIGHT}, 0 0 10px rgba(255,200,80,0.35)` : '';
+      // PR6 painted rim: empty vs selected/active plate; keep opacity for lock/afford.
+      d.root.style.backgroundImage = `url('${s.selected ? HudArt.hotbarSlotActive() : HudArt.hotbarSlotEmpty()}')`;
+      d.root.style.boxShadow = s.selected ? `0 0 10px rgba(255,80,30,0.35)` : '';
       d.root.style.filter = (s.locked || s.empty) ? 'grayscale(0.9) brightness(0.55)' : '';
       d.root.style.opacity = (s.locked || s.empty) ? '0.3' : (!s.affordable ? '0.5' : '1');
       if (s.empty) {
@@ -658,6 +843,11 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
     for (const w of [...hp.waves, ...mp.waves]) w.style.animation = on ? '' : 'none';
     hp.glow.style.animation = on ? '' : 'none';
     mp.glow.style.animation = on ? '' : 'none';
+    for (const s of [hp.surface, mp.surface]) {
+      for (const anim of s.querySelectorAll('animate')) {
+        (anim as SVGAnimateElement).setAttribute('repeatCount', on ? 'indefinite' : '0');
+      }
+    }
   };
 
   setOrbs(80, 80, 50, 50);

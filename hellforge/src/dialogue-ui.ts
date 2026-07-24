@@ -1,6 +1,9 @@
 // D2R-inspired lower dialogue panel — exclusive major surface via UiLayerManager.
 // Typewriter body (click anywhere on the panel to complete instantly); choice
 // buttons ride the shared .hf-btn chrome.
+//
+// Wide plaque uses CSS carved chrome (panelChrome) — never stretch a portrait
+// panel-frame asset into a short horizontal box (that was the PR6 distortion).
 
 import type { DialogueChoice, DialogueNode } from './dialogue';
 import {
@@ -30,21 +33,22 @@ export function installDialogueUi(
   const root = document.createElement('div');
   root.id = 'hellforge-dialogue';
   root.style.cssText =
-    'position:absolute;left:50%;bottom:18px;transform:translateX(-50%);' +
-    `width:min(720px,92%);z-index:${Z.dialogue};display:none;pointer-events:auto;` +
-    'border-radius:10px;padding:14px 18px 16px;' +
+    'position:absolute;left:50%;bottom:168px;transform:translateX(-50%);' +
+    `width:min(680px,90%);z-index:${Z.dialogue};display:none;pointer-events:auto;` +
+    'border-radius:0;padding:16px 20px 14px;box-sizing:border-box;' +
     panelChrome();
-  root.insertAdjacentHTML('beforeend', cornerOrnamentsHtml());
+  root.insertAdjacentHTML('beforeend', cornerOrnamentsHtml(6, 22));
 
   const speaker = document.createElement('div');
   speaker.style.cssText =
-    `font:800 14px ${FONT_DISPLAY};color:${Ui.goldBright};letter-spacing:3px;` +
-    'margin-bottom:8px;text-shadow:0 1px 2px #000;';
+    `font:800 15px ${FONT_DISPLAY};color:${Ui.goldBright};letter-spacing:3px;` +
+    'margin-bottom:8px;text-shadow:0 1px 2px #000;' +
+    'padding-bottom:6px;border-bottom:1px solid rgba(224,184,74,0.28);';
 
   const body = document.createElement('div');
   body.style.cssText =
     `font:500 15px ${FONT_UI};color:${Ui.text};line-height:1.55;min-height:48px;` +
-    'margin-bottom:14px;' + panelScrollShellCss(160, 0);
+    'margin-bottom:14px;' + panelScrollShellCss(140, 0);
 
   const choices = document.createElement('div');
   choices.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;';
@@ -86,7 +90,7 @@ export function installDialogueUi(
     for (const c of node.choices) {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'hf-btn';
+      btn.className = 'hf-btn hf-btn--primary';
       btn.textContent = c.label;
       btn.style.cssText = 'font-weight:700;font-size:13px;padding:8px 14px;';
       btn.addEventListener('click', (e) => {

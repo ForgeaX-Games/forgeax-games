@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "kit": "hellforge-hud-art",
+  "updatedAt": "2026-07-24T07:00:00.000Z",
+  "modules": [
+    {
+      "id": "t0-globe-frame",
+      "path": "style-lock/t0-globe-frame.png",
+      "sha256": "6fa8f276dde80dd9b4e593e08cf4172f7824fd01241bd58c76e6f5c555f63ab4",
+      "source": "image2/ai-generate",
+      "license": "Hellforge team generated — commercial use intended; record generator ToS in PR",
+      "attribution": "Hellforge team via image2 (T0 style lock)",
+      "intendedUse": "PR6 T0 style lock — circular HP/MP globe sculpted frame reference",
+      "prompt": "Game UI asset, Diablo-like ARPG HUD ornament, sculpted circular frame for a life/mana globe, forged black iron with ember slag veins, subtle forge-gold trim #e0b84a, crimson heat glow accents #c42822, dark ink background #0a0706, hellforge motif (anvil, chain links, slag cracks), not statues, not angels, not gargoyles",
+      "notes": "Human approved 2026-07-24 as T0 style lock A."
+    },
+    {
+      "id": "t0-hotbar-segment",
+      "path": "style-lock/t0-hotbar-segment.png",
+      "sha256": "bc04612ad2002bcc434eaec467d4d72e3b1e31179c721c7e5cedfaa0f21fdfc6",
+      "source": "image2/ai-generate",
+      "license": "Hellforge team generated — commercial use intended; record generator ToS in PR",
+      "attribution": "Hellforge team via image2 (T0 style lock)",
+      "intendedUse": "PR6 T0 style lock — bottom hotbar segment reference",
+      "prompt": "Game UI asset, horizontal bottom HUD bar segment for ARPG skill hotbar, forged iron plate with ember slag texture, forge-gold inlay lines #e0b84a, dark parchment-ink fill #0a0706, 5 empty square skill slots with metal rims",
+      "notes": "Human approved 2026-07-24 as T0 style lock B."
+    },
+    {
+      "id": "t0-panel-frame",
+      "path": "style-lock/t0-panel-frame.png",
+      "sha256": "7825b68a6c5bc0ba6c1af9c11556687c497924e977b7b28277e8a42213a732c0",
+      "source": "image2/ai-generate",
+      "license": "Hellforge team generated — commercial use intended; record generator ToS in PR",
+      "attribution": "Hellforge team via image2 (T0 style lock)",
+      "intendedUse": "PR6 T0 style lock — closed inventory/equipment panel outer frame reference",
+      "prompt": "Game UI asset, COMPLETE closed rectangular inventory panel frame, all four sides present, forged black iron with ember slag cracks, forge-gold trim #e0b84a, Hellforge anvil motif",
+      "notes": "Human approved 2026-07-24 as T0 style lock C (second regen; first incomplete border rejected)."
+    }
+  ]
+}

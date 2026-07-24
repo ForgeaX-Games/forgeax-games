@@ -10,7 +10,8 @@
 
 import { CELL, CELLS } from './dungeon-layout';
 import type { Dungeon } from './dungeon';
-import { FONT_UI, Ui, Z, cornerOrnamentsHtml, panelChrome, panelTitleStyle } from './ui-theme';
+import { HudArt } from './hud-art';
+import { FONT_UI, Ui, Z, panelTitleStyle } from './ui-theme';
 
 export interface AutomapCallbacks {
   getDungeon: () => Dungeon;
@@ -51,14 +52,14 @@ export function installAutomap(mount: HTMLElement, cb: AutomapCallbacks): Automa
   label.dataset.areaId = 'slagdeep-hollow';
   label.style.cssText = panelTitleStyle() + 'letter-spacing:3px;white-space:nowrap;flex:none;';
 
-  // Ornate frame around the canvas — same carved rim as every major panel.
+  // PR6 painted automap frame + parchment backing (glyphs stay code-drawn).
   const mapFrame = document.createElement('div');
-  mapFrame.style.cssText = 'position:relative;padding:6px;width:100%;flex:none;' + panelChrome();
-  mapFrame.insertAdjacentHTML('beforeend', cornerOrnamentsHtml());
+  mapFrame.style.cssText = 'position:relative;padding:18px;width:100%;flex:none;' +
+    `background:url('${HudArt.automapFrame()}') center/100% 100% no-repeat;`;
 
   const canvas = document.createElement('canvas');
   canvas.style.cssText = `display:block;width:100%;aspect-ratio:1;max-height:100%;` +
-    `background:${Ui.inkWell};flex:none;`;
+    `background:url('${HudArt.automapParchment()}') center/cover no-repeat,${Ui.inkWell};flex:none;`;
   mapFrame.appendChild(canvas);
 
   const emptyHint = document.createElement('div');
@@ -145,11 +146,12 @@ export function installAutomap(mount: HTMLElement, cb: AutomapCallbacks): Automa
     // player pip
     const lx = (px - ox) * cellPx + cellPx / 2;
     const ly = (py - oy) * cellPx + cellPx / 2;
-    ctx2d.fillStyle = '#4488ff';
+    // Ember-gold pip (PR6 chalk language); keep white ring for contrast.
+    ctx2d.fillStyle = Ui.gold;
     ctx2d.beginPath();
     ctx2d.arc(lx, ly, Math.max(3, cellPx * 0.35), 0, Math.PI * 2);
     ctx2d.fill();
-    ctx2d.strokeStyle = '#fff';
+    ctx2d.strokeStyle = '#fff8e0';
     ctx2d.lineWidth = 1.5;
     ctx2d.stroke();
   };

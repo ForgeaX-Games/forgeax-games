@@ -118,30 +118,6 @@ export function d2StonePanelCss(): string {
 }
 
 /**
- * aidiablo stone pillar (56px) — sits at the free edge of a full-height panel.
- * Returns the background/shadow CSS; rivets come from pillarRivetsHtml().
- */
-export function d2PillarCss(side: 'left' | 'right'): string {
-  const l = side === 'left';
-  return (
-    'background:' +
-    'repeating-linear-gradient(180deg,transparent,transparent 18px,rgba(0,0,0,0.06) 18px,rgba(0,0,0,0.06) 20px),' +
-    `linear-gradient(90deg,#1e1a16 0%,#2e2a24 6%,#3e3830 14%,#4a4238 24%,#4e4840 32%,#423c34 44%,#2e2a24 58%,#282420 68%,#322e28 78%,#3e3830 88%,#2e2a24 95%,#221e1a 100%);` +
-    `box-shadow:inset ${l ? '2px' : '-2px'} 0 0 rgba(90,78,58,0.4),inset ${l ? '-2px' : '2px'} 0 0 rgba(0,0,0,0.4),` +
-    'inset 0 3px 0 rgba(75,65,48,0.3),inset 0 -3px 0 rgba(0,0,0,0.3),' +
-    `${l ? '3px' : '-3px'} 0 12px rgba(0,0,0,0.5),${l ? '-2px' : '2px'} 0 8px rgba(0,0,0,0.35);`
-  );
-}
-
-/** Rivet dots for d2PillarCss — absolutely-positioned at 14px / 25% / 50% / 75% / bottom 14px. */
-export function pillarRivetsHtml(): string {
-  const mk = (pos: string, size: number, big: boolean): string =>
-    `<div style="position:absolute;left:50%;transform:translateX(-50%);${pos};width:${size}px;height:${size}px;border-radius:50%;` +
-    `background:radial-gradient(circle at 38% 35%,${big ? '#7a7065 0%,#6a5e52 30%,#4a4238 70%,#3a3228 100%' : '#5a5045 0%,#4a3e32 30%,#2a2218 70%,#1a1610 100%'});"></div>`;
-  return mk('top:14px', 14, true) + mk('top:25%', 12, false) + mk('top:50%', 12, false) + mk('top:75%', 12, false) + mk('bottom:14px', 14, true);
-}
-
-/**
  * Panel title band (aidiablo recipe): 20px warm gold, letterspaced, over a
  * translucent center band. Pair with goldDividerHtml underneath.
  */

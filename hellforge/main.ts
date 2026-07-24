@@ -2815,6 +2815,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         setMoveIntent(reduceIntent(moveIntent, { op: 'set-target', target: picked }));
       } else {
         setMoveIntent(reduceIntent(moveIntent, { op: 'set-point', world }));
+        // Forged magma chevron cue (move only — not on unit pick).
+        fx.moveClickCue(hit.x, hit.z);
       }
     };
     canvas.addEventListener('mousedown', onMouseDown);

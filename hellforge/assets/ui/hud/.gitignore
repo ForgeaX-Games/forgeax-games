@@ -1,0 +1,6 @@
+# Keep 2K masters local — ship/ WebP is what runtime + git carry.
+t1/
+t2/
+t3/
+ship/_tmp/
+style-lock/*.png

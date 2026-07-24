@@ -13,9 +13,10 @@ import {
   RARITY_META, SLOT_META, SLOT_ORDER, compareItems, itemTooltipLines, meltGoldValue,
   type Equipment, type Item, type ItemInstance, type ItemSlot, type StatDelta,
 } from './items';
+import { HudArt } from './hud-art';
 import {
-  FONT_UI, FONT_DISPLAY, Ui, Z, cornerOrnamentsHtml, deltaColor,
-  d2PillarCss, d2StonePanelCss, goldDividerHtml, pillarRivetsHtml, titleBandCss,
+  FONT_UI, FONT_DISPLAY, Ui, Z, deltaColor,
+  d2StonePanelCss, goldDividerHtml, titleBandCss,
 } from './ui-theme';
 import { slotIconImg, slotSilhouetteSvg } from './ui-icons';
 import { installUiTooltip, type UiTooltipHandle } from './ui-tooltip';
@@ -64,17 +65,15 @@ const DOLL_LAYOUT: ReadonlyArray<{ slot: ItemSlot; area: string }> = [
 
 const BAG_COLS = 8;
 
-/** aidiablo stone-inset slot recipe (paper doll + bag cells share the language). */
-function stoneInsetCss(): string {
+/** PR6 painted equip-slot plate. Quality color uses inset ring (not border — border:0). */
+function stoneInsetCss(qCol: string | null): string {
+  const rarityRing = qCol
+    ? `box-shadow:inset 0 0 0 2px ${qCol}aa,inset 0 0 12px ${qCol}33,inset 0 0 10px rgba(0,0,0,0.45);`
+    : 'box-shadow:inset 0 0 10px rgba(0,0,0,0.55);';
   return (
-    'background:repeating-linear-gradient(180deg,transparent,transparent 5px,rgba(0,0,0,0.04) 5px,rgba(0,0,0,0.04) 7px),' +
-    'repeating-linear-gradient(90deg,transparent,transparent 7px,rgba(0,0,0,0.03) 7px,rgba(0,0,0,0.03) 9px),' +
-    'radial-gradient(ellipse at 40% 35%,rgba(58,50,40,0.55) 0%,rgba(32,26,20,0.9) 100%);' +
-    'box-shadow:inset 3px 3px 6px rgba(0,0,0,0.75),inset -1px -1px 3px rgba(90,78,58,0.2),' +
-    'inset 0 0 12px rgba(0,0,0,0.55),inset 0 5px 8px rgba(0,0,0,0.35),' +
-    'inset 0 -2px 4px rgba(90,78,58,0.12),inset 1px 1px 0 rgba(0,0,0,0.3);' +
-    'border:2px solid #28221c;border-top-color:#181412;border-left-color:#181412;' +
-    'border-bottom-color:#4e4438;border-right-color:#4e4438;border-radius:2px;'
+    `background-image:url('${HudArt.equipSlot()}');background-size:100% 100%;background-repeat:no-repeat;` +
+    'background-color:rgba(12,8,4,0.85);border:0;border-radius:2px;' +
+    rarityRing
   );
 }
 
@@ -92,22 +91,13 @@ export function installInventory(
     `position:${posKind};right:0;top:0;width:min(560px,94%);height:calc(100% - 150px);` +
     `z-index:${Z.inventory};display:none;pointer-events:auto;user-select:none;` +
     `font:600 13px ${FONT_UI};color:#e0d8cc;` +
-    d2StonePanelCss() +
-    'border-left:10px solid #322c24;border-top:4px solid #4e443a;border-bottom:4px solid #1e1a16;' +
-    'box-shadow:inset 0 4px 0 rgba(90,78,58,0.25),inset 0 -4px 0 rgba(0,0,0,0.45),-10px 0 30px rgba(0,0,0,0.7);' +
+    `background:url('${HudArt.panelInventory()}') center/100% 100% no-repeat,rgba(12,8,4,0.96);` +
+    'border:0;box-shadow:-10px 0 30px rgba(0,0,0,0.7);' +
     'overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;';
 
-  // amber-gem corner ornaments + stone pillar at the free (left) edge
-  root.insertAdjacentHTML('beforeend', cornerOrnamentsHtml(6, 24));
-  const pillar = document.createElement('div');
-  pillar.style.cssText = 'position:absolute;left:-56px;top:0;width:56px;height:100%;pointer-events:none;' +
-    d2PillarCss('left');
-  pillar.insertAdjacentHTML('beforeend', pillarRivetsHtml());
-  root.appendChild(pillar);
-
   const body = document.createElement('div');
-  body.style.cssText = 'display:flex;flex-direction:column;gap:10px;padding:14px 18px 16px 22px;height:100%;box-sizing:border-box;';
-
+  // Extra inset so content sits inside the painted frame bezel.
+  body.style.cssText = 'display:flex;flex-direction:column;gap:10px;padding:28px 28px 24px 32px;height:100%;box-sizing:border-box;';
   const title = document.createElement('div');
   title.textContent = '背包与装备';
   title.style.cssText = titleBandCss() + 'padding:4px 0;';
@@ -131,9 +121,8 @@ export function installInventory(
   grid.dataset.bagGrid = '1';
   grid.style.cssText = `display:grid;grid-template-columns:repeat(${BAG_COLS},52px);grid-auto-rows:52px;gap:5px;` +
     'justify-content:center;padding:6px;' +
-    'border:3px solid;border-color:#1e1a16 #4e4438 #4e4438 #1e1a16;' +
-    'background:repeating-linear-gradient(180deg,transparent,transparent 5px,rgba(0,0,0,0.03) 5px,rgba(0,0,0,0.03) 7px),rgba(30,26,20,0.9);' +
-    'box-shadow:inset 0 0 20px rgba(0,0,0,0.55),inset 3px 3px 6px rgba(0,0,0,0.5),inset -1px -1px 3px rgba(70,58,42,0.12),0 0 8px rgba(0,0,0,0.5);';
+    'border:0;background:rgba(8,6,4,0.35);';
+
   const footer = document.createElement('div');
   footer.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-top:2px;';
   const goldEl = document.createElement('span');
@@ -326,11 +315,13 @@ export function installInventory(
   const slotCell = (item: Readonly<ItemInstance> | null, slot: ItemSlot): HTMLDivElement => {
     const el = document.createElement('div');
     const qCol = item ? RARITY_META[item.rarity].color : null;
+    const baseShadow = qCol
+      ? `inset 0 0 0 2px ${qCol}aa,inset 0 0 12px ${qCol}33,inset 0 0 10px rgba(0,0,0,0.45)`
+      : 'inset 0 0 10px rgba(0,0,0,0.55)';
     el.style.cssText =
       `grid-area:${slot};position:relative;z-index:1;display:flex;flex-direction:column;` +
       'align-items:center;justify-content:center;cursor:pointer;' +
-      stoneInsetCss() +
-      (item ? `border-color:${qCol}66 !important;` : '');
+      stoneInsetCss(qCol);
     if (!item) {
       const sil = document.createElement('div');
       sil.innerHTML = slotSilhouetteSvg(slot, 34);
@@ -349,9 +340,9 @@ export function installInventory(
         'white-space:nowrap;text-overflow:ellipsis;';
       el.appendChild(lab);
       el.addEventListener('mouseenter', () => {
-        el.style.boxShadow = `0 0 10px ${qCol}55,inset 0 0 12px ${qCol}18,inset 2px 2px 4px rgba(0,0,0,0.7)`;
+        el.style.boxShadow = `0 0 10px ${qCol}55,${baseShadow}`;
       });
-      el.addEventListener('mouseleave', () => { el.style.boxShadow = ''; });
+      el.addEventListener('mouseleave', () => { el.style.boxShadow = baseShadow; });
     }
     return el;
   };
@@ -362,11 +353,10 @@ export function installInventory(
     el.style.cssText =
       'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
       `cursor:${item ? 'pointer' : 'default'};` +
+      `background-image:url('${HudArt.bagSlot()}');background-size:100% 100%;background-repeat:no-repeat;` +
       (item
-        ? `border:1px solid ${qCol}66;background:radial-gradient(ellipse at 45% 40%,${qCol}20 0%,rgba(12,8,4,0.75) 70%,rgba(6,4,2,0.85) 100%);`
-        : 'border:1px solid;border-color:#1e1a16 #3a3228 #3a3228 #1e1a16;' +
-          'background:radial-gradient(ellipse at 40% 35%,rgba(44,38,30,0.9) 0%,rgba(28,24,18,0.95) 100%);' +
-          'box-shadow:inset 1px 1px 4px rgba(0,0,0,0.6),inset -1px -1px 2px rgba(75,62,45,0.15),inset 0 0 6px rgba(0,0,0,0.25);') +
+        ? `border:1px solid ${qCol}aa;box-shadow:inset 0 0 10px ${qCol}33;`
+        : 'border:0;') +
       'width:52px;height:52px;box-sizing:border-box;overflow:hidden;';
     return el;
   };

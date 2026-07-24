@@ -42,9 +42,13 @@ function fontFace(file: string, range: string): string {
  *    honouring the hud.ts rasterization warning)
  */
 export function ensureUiStyles(): void {
-  if (document.getElementById(STYLE_ID)) return;
+  // Drop prior sheet so scrollbar / orb animation revisions always land on HMR.
+  const prev = document.getElementById(STYLE_ID);
+  if (prev?.dataset.rev === '5') return;
+  prev?.remove();
   const s = document.createElement('style');
   s.id = STYLE_ID;
+  s.dataset.rev = '5';
   s.textContent =
     fontFace('cinzel-latin-ext.woff2', CINZEL_LATIN_EXT_RANGE) +
     fontFace('cinzel-latin.woff2', CINZEL_LATIN_RANGE) +
@@ -74,26 +78,43 @@ export function ensureUiStyles(): void {
 .hf-icon{image-rendering:auto;user-select:none;}
 
 @keyframes hf-orb-wave1{
-  0%{transform:translateX(0) rotate(0deg);}
-  25%{transform:translateX(-4px) rotate(1.5deg);}
-  50%{transform:translateX(2px) rotate(-1deg);}
-  75%{transform:translateX(-2px) rotate(0.5deg);}
-  100%{transform:translateX(0) rotate(0deg);}
+  0%{transform:translateX(0) translateY(0) scaleX(1);}
+  25%{transform:translateX(-2px) translateY(1px) scaleX(1.02);}
+  50%{transform:translateX(2px) translateY(-1px) scaleX(0.99);}
+  75%{transform:translateX(-1px) translateY(0.5px) scaleX(1.01);}
+  100%{transform:translateX(0) translateY(0) scaleX(1);}
 }
 @keyframes hf-orb-wave2{
-  0%{transform:translateX(0) rotate(0deg);}
-  25%{transform:translateX(3px) rotate(-1deg);}
-  50%{transform:translateX(-3px) rotate(1.5deg);}
-  75%{transform:translateX(2px) rotate(-0.5deg);}
-  100%{transform:translateX(0) rotate(0deg);}
+  0%{transform:translateX(0) translateY(0) scaleX(1);}
+  25%{transform:translateX(2px) translateY(-0.5px) scaleX(1.015);}
+  50%{transform:translateX(-2px) translateY(1px) scaleX(0.985);}
+  75%{transform:translateX(1px) translateY(0) scaleX(1.005);}
+  100%{transform:translateX(0) translateY(0) scaleX(1);}
 }
 @keyframes hf-orb-glow{
-  0%,100%{opacity:0.3;}
-  50%{opacity:0.5;}
+  0%,100%{opacity:0.35;}
+  50%{opacity:0.62;}
 }
-.hf-orb-wave1{animation:hf-orb-wave1 3.5s ease-in-out infinite;will-change:transform;}
-.hf-orb-wave2{animation:hf-orb-wave2 2.8s ease-in-out infinite;will-change:transform;}
-.hf-orb-glow{animation:hf-orb-glow 4s ease-in-out infinite;}
+.hf-orb-wave1{animation:hf-orb-wave1 2.8s ease-in-out infinite;}
+.hf-orb-wave2{animation:hf-orb-wave2 2.1s ease-in-out infinite;}
+.hf-orb-glow{animation:hf-orb-glow 3.2s ease-in-out infinite;}
+.hf-orb-surface{display:block;overflow:hidden;pointer-events:none;}
+.hf-orb-surface path{transform-origin:center;}
+.hf-orb-caustic{inset:0 !important;}
+
+/* Forged scrollbar — replaces native white chrome on panel wells. */
+.hf-scroll{scrollbar-width:thin;scrollbar-color:#8a6828 #14100c;}
+.hf-scroll::-webkit-scrollbar{width:9px;}
+.hf-scroll::-webkit-scrollbar-track{
+  background:linear-gradient(90deg,#0c0907,#16120e);
+  border-left:1px solid rgba(90,70,40,0.4);
+  box-shadow:inset 0 0 6px rgba(0,0,0,0.55);}
+.hf-scroll::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,#c8a040 0%,#8a6828 45%,#5a3a18 100%);
+  border:1px solid #3a2510;border-radius:2px;
+  box-shadow:inset 0 1px 0 rgba(255,220,140,0.25);}
+.hf-scroll::-webkit-scrollbar-thumb:hover{
+  background:linear-gradient(180deg,#e0b84a 0%,#a88440 50%,#6a4218 100%);}
 
 @keyframes hf-zone-card{
   0%{opacity:0;letter-spacing:16px;}

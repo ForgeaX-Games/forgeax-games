@@ -1,13 +1,13 @@
-// C character / combat-stat sheet — 1:1 aidiablo left-dock stone slab (C).
-// 420px full-height: pillar at the free (right) edge, amber-gem corners,
-// combat-power block (装备/等级/技能 contributions), grouped stat sections.
-// Exclusive major surface via UiLayerManager; never mutates domain state.
+// C character / combat-stat sheet — left-dock painted frame (C).
+// Frame as overlay img; content well keeps title/power/footer pinned and only
+// the stat list scrolls (forged .hf-scroll chrome — never native white bars).
 
 import type { CombatStats } from './combat-stats';
+import { HudArt } from './hud-art';
 import {
-  FONT_UI, Ui, Z, cornerOrnamentsHtml, d2PillarCss, d2StonePanelCss,
-  goldDividerHtml, pillarRivetsHtml, titleBandCss,
+  FONT_DISPLAY, FONT_UI, Z, goldDividerHtml, titleBandCss,
 } from './ui-theme';
+import { ensureUiStyles } from './ui-styles';
 
 export interface CharacterPanelViewModel {
   readonly playerName: string;
@@ -25,6 +25,7 @@ export interface CharacterStatRow {
   readonly label: string;
   readonly value: string;
 }
+
 export interface CharacterStatGroup {
   readonly title: string;
   readonly rows: readonly CharacterStatRow[];
@@ -100,7 +101,6 @@ export function buildCharacterStatGroups(stats: CombatStats): readonly Character
 
 /** Flat rows (kept for the existing test surface). */
 export function buildCharacterStatRows(stats: CombatStats): readonly CharacterStatRow[] {
-  // Preserve the historical order (defense-first flat list) for compat.
   const pct = (v: number): string => `${(v * 100).toFixed(1)}%`;
   return [
     { label: '生命上限', value: String(Math.round(stats.maxHp)) },
@@ -124,6 +124,7 @@ export function buildCharacterStatRows(stats: CombatStats): readonly CharacterSt
 }
 
 export function installCharacterPanel(mount: HTMLElement = document.body): CharacterPanelHandle {
+  ensureUiStyles();
   document.getElementById(PANEL_ID)?.remove();
   const scoped = mount !== document.body;
   const posKind = scoped ? 'absolute' : 'fixed';
@@ -131,53 +132,63 @@ export function installCharacterPanel(mount: HTMLElement = document.body): Chara
   const root = document.createElement('div');
   root.id = PANEL_ID;
   root.style.cssText =
-    `position:${posKind};left:0;top:0;width:min(420px,92vw);height:calc(100% - 150px);` +
+    `position:${posKind};left:0;top:0;width:min(400px,90vw);height:calc(100% - 168px);` +
     `z-index:${Z.characterPanel};display:none;pointer-events:auto;user-select:none;` +
     `font:600 13px ${FONT_UI};color:#e0d8cc;` +
-    d2StonePanelCss() +
-    'border-right:8px solid;border-image:linear-gradient(180deg,#5e5245 0%,#4e443a 15%,#3a3228 50%,#4e443a 85%,#5e5245 100%) 1;' +
-    'box-shadow:inset 0 0 80px rgba(0,0,0,0.3),inset 3px 3px 0 rgba(90,75,50,0.2),inset -2px -2px 0 rgba(0,0,0,0.35),' +
-    'inset 8px 0 16px rgba(0,0,0,0.15),inset 0 0 120px rgba(60,48,30,0.08),10px 0 30px rgba(0,0,0,0.7);' +
-    'overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;';
+    'border:0;box-shadow:10px 0 30px rgba(0,0,0,0.7);overflow:hidden;background:rgba(10,7,5,0.96);';
 
-  root.insertAdjacentHTML('beforeend', cornerOrnamentsHtml(6, 24));
-  const pillar = document.createElement('div');
-  pillar.style.cssText = 'position:absolute;right:-56px;top:0;width:56px;height:100%;pointer-events:none;' +
-    d2PillarCss('right');
-  pillar.insertAdjacentHTML('beforeend', pillarRivetsHtml());
-  root.appendChild(pillar);
+  const frame = document.createElement('img');
+  frame.src = HudArt.panelCharacter();
+  frame.alt = '';
+  frame.draggable = false;
+  frame.style.cssText =
+    'position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;z-index:0;';
 
-  const body = document.createElement('div');
-  body.style.cssText = 'display:flex;flex-direction:column;gap:10px;padding:14px 22px 16px 18px;box-sizing:border-box;';
+  // Content well inset clears anvil ornaments — no title/footer clipping.
+  const well = document.createElement('div');
+  well.style.cssText =
+    'position:absolute;inset:44px 30px 46px 28px;z-index:1;display:flex;flex-direction:column;' +
+    'background:rgba(8,6,4,0.9);border:1px solid rgba(224,184,74,0.14);' +
+    'box-shadow:inset 0 0 28px rgba(0,0,0,0.5);min-height:0;';
+
+  const header = document.createElement('div');
+  header.style.cssText = 'flex:none;padding:12px 14px 8px;box-sizing:border-box;';
 
   const title = document.createElement('div');
   title.textContent = '角色属性';
   title.style.cssText = titleBandCss() + 'padding:4px 0;';
   const identity = document.createElement('div');
-  identity.style.cssText = 'text-align:center;font-size:14px;color:#8a8580;margin-top:2px;';
+  identity.style.cssText = `text-align:center;font:500 12px ${FONT_UI};color:#8a8580;margin-top:4px;`;
   const divider = document.createElement('div');
-  divider.innerHTML = goldDividerHtml(4);
-  body.append(title, identity, divider);
+  divider.innerHTML = goldDividerHtml(6);
 
-  // combat-power block
   const power = document.createElement('div');
   power.style.cssText =
-    'margin:0 8px;padding:10px 14px;text-align:center;' +
+    'margin:6px 0 0;padding:8px 12px;text-align:center;' +
     'background:linear-gradient(135deg,rgba(30,22,10,0.7) 0%,rgba(45,33,15,0.6) 50%,rgba(30,22,10,0.7) 100%);' +
-    'border:1px solid rgba(212,176,90,0.25);border-radius:4px;' +
-    'box-shadow:inset 0 0 20px rgba(0,0,0,0.4),0 0 8px rgba(212,176,90,0.08);';
-  body.appendChild(power);
+    'border:1px solid rgba(212,176,90,0.25);border-radius:3px;' +
+    'box-shadow:inset 0 0 16px rgba(0,0,0,0.4);';
+  header.append(title, identity, divider, power);
+
+  const scroll = document.createElement('div');
+  scroll.className = 'hf-scroll';
+  scroll.style.cssText =
+    'flex:1 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;' +
+    'overscroll-behavior:contain;padding:4px 12px 8px;';
 
   const sections = document.createElement('div');
-  sections.style.cssText = 'display:flex;flex-direction:column;gap:8px;';
-  body.appendChild(sections);
+  sections.style.cssText = 'display:flex;flex-direction:column;gap:10px;';
+  scroll.appendChild(sections);
 
   const footer = document.createElement('div');
-  footer.style.cssText = 'text-align:center;font-size:12px;color:#6a6058;margin-top:4px;';
-  footer.innerHTML = goldDividerHtml(6) + '<div style="margin-top:6px;"><span style="color:#d4b05a;">[C]</span> 关闭</div>';
-  body.appendChild(footer);
+  footer.style.cssText =
+    'flex:none;text-align:center;font-size:11px;color:#6a6058;padding:8px 12px 10px;' +
+    'border-top:1px solid rgba(224,184,74,0.2);';
+  footer.innerHTML =
+    '<span style="color:#d4b05a;font-weight:800;letter-spacing:1px;">[C]</span> 关闭';
 
-  root.appendChild(body);
+  well.append(header, scroll, footer);
+  root.append(frame, well);
   mount.appendChild(root);
 
   let open = false;
@@ -190,13 +201,13 @@ export function installCharacterPanel(mount: HTMLElement = document.body): Chara
 
     const p = computeCombatPower(vm.stats, vm.equipScore, vm.level, vm.skillInvested);
     const contrib = (label: string, value: number, color: string): string =>
-      `<div style="background:rgba(0,0,0,0.3);border-radius:3px;padding:4px 2px;">` +
-      `<div style="font-size:10px;color:#8a7860;">${label}</div>` +
-      `<div style="font-size:13px;font-weight:bold;color:${color};">${value}</div></div>`;
+      `<div style="background:rgba(0,0,0,0.3);border-radius:3px;padding:3px 2px;">` +
+      `<div style="font-size:9px;color:#8a7860;">${label}</div>` +
+      `<div style="font-size:12px;font-weight:bold;color:${color};">${value}</div></div>`;
     power.innerHTML =
-      `<div style="font-size:12px;color:#a09070;letter-spacing:2px;">综合战力</div>` +
-      `<div style="font-size:28px;font-weight:bold;color:#d4b05a;text-shadow:0 0 12px rgba(212,176,90,0.4),0 2px 4px rgba(0,0,0,0.8);">${p.total}</div>` +
-      `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px;">` +
+      `<div style="font-size:11px;color:#a09070;letter-spacing:2px;">综合战力</div>` +
+      `<div style="font-size:26px;font-weight:bold;color:#d4b05a;text-shadow:0 0 12px rgba(212,176,90,0.4),0 2px 4px rgba(0,0,0,0.8);">${p.total}</div>` +
+      `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:6px;">` +
       contrib('装备贡献', p.equip, '#d4b05a') +
       contrib('等级贡献', p.level, '#88aacc') +
       contrib('技能贡献', p.skill, '#aa88cc') +
@@ -206,20 +217,22 @@ export function installCharacterPanel(mount: HTMLElement = document.body): Chara
     for (const g of buildCharacterStatGroups(vm.stats)) {
       const sec = document.createElement('div');
       sec.innerHTML =
-        `<div style="color:#d4b05a;font-size:13px;font-weight:bold;padding:4px 8px;letter-spacing:1px;` +
-        `background:linear-gradient(90deg,rgba(55,42,25,0.4) 0%,rgba(40,30,18,0.15) 100%);` +
-        `border-bottom:1px solid;border-image:linear-gradient(90deg,#6a5430,#4a3a20,transparent) 1;">${g.title}</div>`;
+        `<div style="color:#f0c840;font:800 11px ${FONT_DISPLAY};padding:5px 8px;letter-spacing:2px;` +
+        `background:linear-gradient(90deg,rgba(70,50,22,0.55) 0%,rgba(40,30,18,0.2) 70%,transparent 100%);` +
+        `border-left:3px solid #d4b05a;text-shadow:0 1px 2px #000;">${g.title}</div>`;
       const rows = document.createElement('div');
       rows.style.cssText = 'display:flex;flex-direction:column;padding:2px 4px;';
       for (const row of g.rows) {
         const el = document.createElement('div');
-        el.style.cssText = 'display:flex;justify-content:space-between;padding:3px 5px;font-size:13px;';
+        el.style.cssText = 'display:flex;justify-content:space-between;align-items:baseline;' +
+          'padding:3px 5px;gap:10px;border-bottom:1px solid rgba(255,255,255,0.03);';
         const lab = document.createElement('span');
         lab.textContent = row.label;
-        lab.style.color = '#999';
+        lab.style.cssText = `font:500 12px ${FONT_UI};color:#8a8070;`;
         const val = document.createElement('span');
         val.textContent = row.value;
-        val.style.cssText = 'font-weight:bold;color:#e0d8cc;font-variant-numeric:tabular-nums;';
+        val.style.cssText = `font:700 12px ${FONT_UI};color:#f0e2c4;` +
+          'font-variant-numeric:tabular-nums;text-shadow:0 1px 1px #000;';
         el.append(lab, val);
         rows.appendChild(el);
       }

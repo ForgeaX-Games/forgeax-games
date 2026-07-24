@@ -6,6 +6,7 @@
 //   hellforge::frost_fang    — Frost Fang crystal core / trail body
 //   hellforge::frost_impact  — collision-aligned frost impact flash
 //   hellforge::frost_slow    — persistent slow-status marker disc
+//   hellforge::move_click    — short-lived forged magma inward-chevron cue
 //
 // Particles: tiny manually-integrated ECS entities (sphere/cube + emissive
 // standard material), pooled in a JS array. Modes:
@@ -28,6 +29,7 @@ import portalShader from './shaders/portal-vortex.wgsl';
 import frostFangShader from './shaders/frost-fang.wgsl';
 import frostImpactShader from './shaders/frost-impact.wgsl';
 import frostSlowShader from './shaders/frost-slow.wgsl';
+import moveClickShader from './shaders/move-click.wgsl';
 import { FxLifecycleTracker, type FxLifecycleSnapshot } from './fx-lifecycle';
 import {
   EffectExecutor,
@@ -52,11 +54,25 @@ interface SlowMarkerEntity {
   e: EntityHandle;
 }
 
+/** Expanding ground ping for click-to-move (entity scale + intensity fade). */
+interface MoveClickMarker {
+  e: EntityHandle;
+  age: number;
+  life: number;
+  x: number;
+  z: number;
+  slot: number;
+}
+
 const FIRE_BOLT_SHADER_ID = 'hellforge::fire_bolt';
 const PORTAL_SHADER_ID = 'hellforge::portal_vortex';
 const FROST_FANG_SHADER_ID = 'hellforge::frost_fang';
 const FROST_IMPACT_SHADER_ID = 'hellforge::frost_impact';
 const FROST_SLOW_SHADER_ID = 'hellforge::frost_slow';
+const MOVE_CLICK_SHADER_ID = 'hellforge::move_click';
+const MOVE_CLICK_MAX = 6;
+/** Short, quiet ping — forged magma chevrons, not a big expanding ring. */
+const MOVE_CLICK_LIFE = 0.55;
 
 type ShaderParams = { baseColor: number[]; metallic: number; roughness: number };
 
@@ -96,6 +112,11 @@ export class FxSystem {
   private portalMats: Array<{ mat: MatHandle; params: ShaderParams }> = [];
   /** Slow-status marker entities keyed by Monster.id. */
   private slowMarkers = new Map<string, SlowMarkerEntity>();
+  /** Short-lived move-command rings (click ground). */
+  private moveClicks: MoveClickMarker[] = [];
+  /** Pooled materials + params (one slot per concurrent ping). */
+  private moveClickPool: Array<{ mat: MatHandle; params: ShaderParams }> = [];
+  private moveClickFree: number[] = [];
   /** Pure counts for __hf / tests (entities stay in this class). */
   readonly lifecycle = new FxLifecycleTracker();
   /** Declarative EffectDef runner (PR2b T2). Spawns via burst/pop/rise. */
@@ -166,6 +187,7 @@ export class FxSystem {
         safeRegister(FROST_FANG_SHADER_ID, frostFangShader.wgsl);
         safeRegister(FROST_IMPACT_SHADER_ID, frostImpactShader.wgsl);
         safeRegister(FROST_SLOW_SHADER_ID, frostSlowShader.wgsl);
+        safeRegister(MOVE_CLICK_SHADER_ID, moveClickShader.wgsl);
         const fbParams: ShaderParams = { baseColor: [1.0, 0.18, 0.03, 1], metallic: 0, roughness: 1.35 };
         this.fireBoltMat = this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
           kind: 'material',
@@ -192,10 +214,34 @@ export class FxSystem {
           impact: mkFrost(FROST_IMPACT_SHADER_ID, [0.55, 0.88, 1.0], 1.20),
           slow: mkFrost(FROST_SLOW_SHADER_ID, [0.35, 0.72, 1.0], 0.95),
         };
+        // Pooled move-click mats — independent intensity fade per concurrent ping.
+        for (let i = 0; i < MOVE_CLICK_MAX; i++) {
+          const params: ShaderParams = {
+            // Ember / magma — matches Hellforge HUD gold+crimson (not neon green).
+            baseColor: [1.0, 0.42, 0.12, 1],
+            metallic: 0,
+            roughness: 0.9,
+          };
+          const mat = world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
+            kind: 'material',
+            passes: [{
+              name: 'Forward',
+              shader: MOVE_CLICK_SHADER_ID,
+              tags: { LightMode: 'Forward' },
+              queue: 3000,
+              renderState: FX_RENDER_STATE,
+            }],
+            paramValues: params as never,
+          });
+          this.moveClickPool.push({ mat, params });
+          this.moveClickFree.push(i);
+        }
       } catch (e) {
         console.warn('[hellforge/fx] custom-shader setup failed; falling back to emissive:', (e as Error).message);
         this.frostHandles = null;
         this.frostParams = [];
+        this.moveClickPool = [];
+        this.moveClickFree = [];
       }
     }
   }
@@ -402,6 +448,45 @@ export class FxSystem {
     this.lifecycle.endSlow(id);
   }
 
+  /**
+   * Move-command cue: four inward forged chevrons with magma/ember glow.
+   * Flat CUBE decal (local XZ) so arrows stay readable; raised vs ground z-fight.
+   */
+  moveClickCue(x: number, z: number): void {
+    while (this.moveClicks.length >= MOVE_CLICK_MAX || this.moveClickFree.length === 0) {
+      const old = this.moveClicks.shift();
+      if (!old) break;
+      this.world.despawn(old.e);
+      this.moveClickFree.push(old.slot);
+    }
+    const y = 0.14;
+    const slot = this.moveClickFree.pop();
+    const pooled = slot !== undefined ? this.moveClickPool[slot] : undefined;
+    const mat = pooled?.mat ?? this.mats.gold;
+    if (pooled) {
+      pooled.params.metallic = this.elapsed;
+      pooled.params.roughness = 0.9;
+    }
+    // Thin horizontal slab; shader paints chevrons in local XZ.
+    const spawned = this.world.spawn(
+      { component: Transform, data: { pos: [x, y, z], scale: [0.7, 0.02, 0.7] } },
+      { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
+      { component: MeshRenderer, data: { materials: [mat] } },
+    );
+    if (!spawned.ok) {
+      if (slot !== undefined) this.moveClickFree.push(slot);
+      return;
+    }
+    this.moveClicks.push({
+      e: spawned.value as EntityHandle,
+      age: 0,
+      life: MOVE_CLICK_LIFE,
+      x,
+      z,
+      slot: slot ?? -1,
+    });
+  }
+
   /** Publish projectile count from SkillSystem into the lifecycle snapshot. */
   noteProjectiles(n: number): void {
     this.lifecycle.setProjectiles(n);
@@ -445,6 +530,33 @@ export class FxSystem {
     // EffectDef sub-emitter ages / auto-release (presentation already in particles[]).
     this.executor.tick(dt);
 
+    // Move-click chevrons — slight inward settle + fade (quiet command ping).
+    for (let i = this.moveClicks.length - 1; i >= 0; i--) {
+      const m = this.moveClicks[i]!;
+      m.age += dt;
+      if (m.age >= m.life) {
+        this.world.despawn(m.e);
+        if (m.slot >= 0) this.moveClickFree.push(m.slot);
+        this.moveClicks.splice(i, 1);
+        continue;
+      }
+      const t = m.age / m.life;
+      // Start a hair larger, ease slightly inward (arrows "confirm"), then hold.
+      const settle = t < 0.25 ? 1 - t * 0.28 : 0.93;
+      const s = 0.7 * settle;
+      this.world.set(m.e, Transform, {
+        pos: [m.x, 0.14, m.z],
+        scale: [s, 0.02, s],
+      });
+      const pooled = m.slot >= 0 ? this.moveClickPool[m.slot] : undefined;
+      if (pooled) {
+        pooled.params.metallic = this.elapsed;
+        // Hold readable for most of life, then soft fade.
+        const fade = t < 0.55 ? 1 : 1 - (t - 0.55) / 0.45;
+        pooled.params.roughness = 0.9 * Math.max(0, fade);
+      }
+    }
+
     // Integrate particles.
     for (let i = this.particles.length - 1; i >= 0; i--) {
       const p = this.particles[i]!;
@@ -482,6 +594,9 @@ export class FxSystem {
     this.particles.length = 0;
     for (const m of this.slowMarkers.values()) this.world.despawn(m.e);
     this.slowMarkers.clear();
+    for (const m of this.moveClicks) this.world.despawn(m.e);
+    this.moveClicks.length = 0;
+    this.moveClickFree = this.moveClickPool.map((_, i) => i);
     this.lifecycle.clearAll();
     this.emberTimer = 0;
   }

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "shader",
+  "source": "move-click.wgsl",
+  "importSettings": { "materialShaderIdentifier": "hellforge::move_click" },
+  "subAssets": [
+    { "guid": "a7e3c1d0-4b2f-4e9a-9c18-6f0d2b8e5a31", "sourceIndex": 0, "kind": "material-shader" }
+  ],
+  "paramSchema": [
+    { "name": "baseColor", "type": "color" },
+    { "name": "metallic",  "type": "f32" },
+    { "name": "roughness", "type": "f32" }
+  ]
+}
