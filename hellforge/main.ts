@@ -37,12 +37,12 @@ import {
   MeshRenderer,
   Name,
   PointLight,
-  PointLightShadow,
   SceneInstance,
   Skin,
   Skylight,
   SkyboxBackground,
   SKYBOX_MODE_CUBEMAP,
+  SpotLight,
   Transform,
   perspective,
   quat,
@@ -134,6 +134,24 @@ import {
   type RenderSettings,
   type RenderSettingsApi,
 } from './src/render-settings';
+import {
+  installHellforgePipeline,
+  type HellforgeAtmosphereApi,
+} from './src/render-pipeline';
+import {
+  CAMP_CAMPFIRE_BASE,
+  CAMP_MOON_SPOT,
+  CAMP_TORCH_BASE,
+  DEN_FIXTURE_SPOT,
+  PARKED_LIGHT_POS,
+  SPOT_SLOT_BUDGET,
+  ambientForArea,
+  areaLightSeating,
+  campMoonSpotPosition,
+  denPointSeatPositions,
+  denSpotSeatPositions,
+  exposureMulForArea,
+} from './src/light-director';
 import { AmbientFx } from './src/ambient-fx';
 import { installShell, type ShellHandle } from './src/shell';
 import { installCharSelect, type CharSelectHandle } from './src/char-select';
@@ -317,6 +335,28 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // to uiMount (not document.body); non-DOM side effects register via onCleanup.
   const uiMount: HTMLElement = ctx?.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
   const onCleanup = ctx?.registerCleanup ?? (() => {});
+
+  // ── HDR-chain atmosphere pipeline (T1 / PR2c) ───────────────────────────
+  // Clone URP + pre-tonemap hellforge::atmosphere. Must run before first frame
+  // so Title + gameplay share the same graded HDR path. Forbidden: config.postEffects.
+  let atmosphereApi: HellforgeAtmosphereApi | null = null;
+  if (app) {
+    const bootAtmo = loadRenderSettings();
+    const installed = installHellforgePipeline(app as never, world, {
+      vignette: bootAtmo.vignette,
+      haze: bootAtmo.haze,
+      atmoTemp: bootAtmo.atmoTemp,
+    });
+    if (installed.ok) {
+      atmosphereApi = installed;
+      onCleanup(() => atmosphereApi?.dispose());
+      console.log(
+        '[hellforge] pipeline: shadow* → skybox → main → bloom* → atmosphere → tonemap → fxaa',
+      );
+    } else {
+      console.warn('[hellforge] atmosphere pipeline install failed:', installed.error);
+    }
+  }
 
   // ── shared UI layer (UI-CUTSCENE-UPGRADE-PLAN Phase A1) ─────────────────
   // Fonts/styles, gauntlet cursors, global tooltip, screen transitions. These
@@ -1378,46 +1418,121 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const sun = world.spawn(
       { component: DirectionalLight, data: { ...SUN_LOOK.camp, castShadow: true, cascadeCount: 1, mapSize: 2048, shadowDistance: 42 } },
     ).unwrap();
-    // Point pool: campfire (fixed; casts REAL point shadows — logs, props and
-    // the witch proxy throw radial flickering shadows around the fire) + two
-    // roaming torch slots + the player fill light = exactly 4. In camp the
-    // roaming slots sit on the gate torches; in the den they re-seat onto the
-    // two nearest fire fixtures. Seats sit ABOVE the emissive flame meshes —
-    // a shadow-casting light inside its own fixture would be occluded by it.
+    // Point pool (cap 4): campfire + two torch slots + player fill. Camp keeps
+    // campfire fixed + gate torches; den re-seats all three non-fill points onto
+    // the nearest fire fixtures so pools (not ambient) carry the read. Seats sit
+    // ABOVE emissive flame meshes — a caster inside its own fixture occludes.
+    // Spot L5 budget: 2 den fixtures + 1 camp moon (T3) live; combat (PR2a G1)
+    // reserved — see SPOT_SLOT_BUDGET. Point + spot shadows omitted: custom
+    // hellforge::pipeline has no point/spot caster passes (barrel gap) — do not
+    // attach PointLightShadow (would take shadowed PBR path with empty atlas).
     const GATE_L = { x: -2.5, y: 2.25, z: 13.5 } as const;
     const GATE_R = { x: 2.5, y: 2.25, z: 13.5 } as const;
+    const CAMPFIRE_POS = [0, 1.2, 0] as const;
     const campfireLight = world.spawn(
-      { component: Transform, data: { pos: [0, 1.2, 0] } },
-      { component: PointLight, data: { color: [1, 0.58, 0.22], intensity: 13, range: 16 } },
-      { component: PointLightShadow, data: { mapSize: 512, farPlane: 18 } },
+      { component: Transform, data: { pos: [...CAMPFIRE_POS] } },
+      { component: PointLight, data: { color: [1, 0.58, 0.22], intensity: CAMP_CAMPFIRE_BASE, range: 16 } },
     ).unwrap();
     const torchA = world.spawn(
       { component: Transform, data: { pos: [GATE_L.x, GATE_L.y, GATE_L.z] } },
-      { component: PointLight, data: { color: [1, 0.52, 0.16], intensity: 9.5, range: 12 } },
-      { component: PointLightShadow, data: { mapSize: 512, farPlane: 14 } },
+      { component: PointLight, data: { color: [1, 0.52, 0.16], intensity: CAMP_TORCH_BASE, range: 12 } },
     ).unwrap();
     const torchB = world.spawn(
       { component: Transform, data: { pos: [GATE_R.x, GATE_R.y, GATE_R.z] } },
-      { component: PointLight, data: { color: [1, 0.52, 0.16], intensity: 9.5, range: 12 } },
+      { component: PointLight, data: { color: [1, 0.52, 0.16], intensity: CAMP_TORCH_BASE, range: 12 } },
     ).unwrap();
-    let torchBaseA = 9.5, torchBaseB = 9.5;   // flicker centre per slot
+    // 2 den fixture spots + 1 camp moon (L5). Combat slot NOT spawned — reserved
+    // in SPOT_SLOT_BUDGET (exposed on __hf.lighting).
+    const denSpotA = world.spawn(
+      { component: Transform, data: { pos: [...PARKED_LIGHT_POS] } },
+      {
+        component: SpotLight,
+        data: {
+          direction: [...DEN_FIXTURE_SPOT.direction],
+          color: [...DEN_FIXTURE_SPOT.color],
+          intensity: 0,
+          range: DEN_FIXTURE_SPOT.range,
+          innerConeDeg: DEN_FIXTURE_SPOT.innerConeDeg,
+          outerConeDeg: DEN_FIXTURE_SPOT.outerConeDeg,
+          castShadow: DEN_FIXTURE_SPOT.castShadow,
+        },
+      },
+    ).unwrap();
+    const denSpotB = world.spawn(
+      { component: Transform, data: { pos: [...PARKED_LIGHT_POS] } },
+      {
+        component: SpotLight,
+        data: {
+          direction: [...DEN_FIXTURE_SPOT.direction],
+          color: [...DEN_FIXTURE_SPOT.color],
+          intensity: 0,
+          range: DEN_FIXTURE_SPOT.range,
+          innerConeDeg: DEN_FIXTURE_SPOT.innerConeDeg,
+          outerConeDeg: DEN_FIXTURE_SPOT.outerConeDeg,
+          castShadow: DEN_FIXTURE_SPOT.castShadow,
+        },
+      },
+    ).unwrap();
+    const campMoonSpot = world.spawn(
+      { component: Transform, data: { pos: [...PARKED_LIGHT_POS] } },
+      {
+        component: SpotLight,
+        data: {
+          direction: [...CAMP_MOON_SPOT.direction],
+          color: [...CAMP_MOON_SPOT.color],
+          intensity: 0,
+          range: CAMP_MOON_SPOT.range,
+          innerConeDeg: CAMP_MOON_SPOT.innerConeDeg,
+          outerConeDeg: CAMP_MOON_SPOT.outerConeDeg,
+          castShadow: CAMP_MOON_SPOT.castShadow,
+        },
+      },
+    ).unwrap();
+    let torchBaseA = CAMP_TORCH_BASE, torchBaseB = CAMP_TORCH_BASE;   // flicker centre per slot
+    let campfireBase = CAMP_CAMPFIRE_BASE;
+    let spotBaseA = 0, spotBaseB = 0;
+    let moonBase = 0;
     let torchSeatTimer = 0;
     let flickT = 0;
-    const seatDenTorches = (): void => {
-      // Two nearest fire fixtures within 26 m; an unused slot parks below the
-      // floor (range 12 ≪ 60 m of rock → contributes nothing).
-      const near = dungeon.firePoints
-        .map((p) => ({ p, d: Math.hypot(p.x - state.px, p.z - state.pz) }))
-        .filter((e) => e.d < 26)
-        .sort((a, b) => a.d - b.d);
-      const slots = [torchA, torchB] as const;
-      for (let i = 0; i < slots.length; i++) {
-        const seat = near[i]?.p;
-        world.set(slots[i]!, Transform, seat
-          ? { pos: [seat.x, seat.y, seat.z] }
-          : { pos: [0, -60, 0] });
+    /** Set after installRenderSettings — re-apply Camera so area exposure mul sticks. */
+    let refreshCameraExposure: () => void = () => {};
+    const seatDenFixtures = (): void => {
+      // 3 nearest fire fixtures → campfire + torchA/B; 2 nearest → den spots.
+      // Unused slots park below the floor (range ≪ burial → no contribution).
+      const pointSeats = denPointSeatPositions(dungeon.firePoints, { x: state.px, z: state.pz });
+      const pointSlots = [campfireLight, torchA, torchB] as const;
+      for (let i = 0; i < pointSlots.length; i++) {
+        world.set(pointSlots[i]!, Transform, { pos: [...pointSeats[i]!] });
       }
-      torchBaseA = 9; torchBaseB = 9;
+      const spotSeats = denSpotSeatPositions(dungeon.firePoints, { x: state.px, z: state.pz });
+      const spotSlots = [denSpotA, denSpotB] as const;
+      for (let i = 0; i < spotSlots.length; i++) {
+        const pos = spotSeats[i]!;
+        const live = pos[1]! > -30;
+        world.set(spotSlots[i]!, Transform, { pos: [...pos] });
+        if (i === 0) spotBaseA = live ? DEN_FIXTURE_SPOT.intensity : 0;
+        else spotBaseB = live ? DEN_FIXTURE_SPOT.intensity : 0;
+      }
+      campfireBase = 11;
+      torchBaseA = 10;
+      torchBaseB = 10;
+    };
+    const parkDenSpots = (): void => {
+      world.set(denSpotA, Transform, { pos: [...PARKED_LIGHT_POS] });
+      world.set(denSpotB, Transform, { pos: [...PARKED_LIGHT_POS] });
+      world.set(denSpotA, SpotLight, { intensity: 0 });
+      world.set(denSpotB, SpotLight, { intensity: 0 });
+      spotBaseA = 0;
+      spotBaseB = 0;
+    };
+    const seatCampMoon = (): void => {
+      world.set(campMoonSpot, Transform, { pos: [...campMoonSpotPosition()] });
+      moonBase = CAMP_MOON_SPOT.intensity;
+    };
+    const parkCampMoon = (): void => {
+      world.set(campMoonSpot, Transform, { pos: [...PARKED_LIGHT_POS] });
+      world.set(campMoonSpot, SpotLight, { intensity: 0 });
+      moonBase = 0;
     };
     // Multipliers from F10 render-settings (updated via onLighting).
     let lightSettings: Pick<RenderSettings, 'sunMul' | 'ambientMul' | 'fireMul' | 'fillMul' | 'atmoTemp'> = {
@@ -1434,6 +1549,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       };
     };
     const applyAreaLighting = (a: Area): void => {
+      // Wild keeps the same blood-moon sun as camp; den uses warm shaft.
       const look = SUN_LOOK[a === 'den' ? 'den' : 'camp'];
       const sunTint = tempShiftRgb(look.color, lightSettings.atmoTemp);
       // Always re-assert CSM knobs — look spread only carries dir/color/intensity.
@@ -1450,27 +1566,31 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         pcfKernelSize: 3,
       });
       if (sky) {
-        // Den ambient: dimmer + ember-tinted so torch pools and the sun shaft
-        // carry the read; outdoors: neutral IBL (when ready) / warm solid fallback.
+        // Den: Pekla-grade near-black (T2). Camp dusk + wild outdoor IBL (T3).
         // Always re-pass equirect so world.set does not drop the IBL source handle.
-        // Outdoors: warm, dim IBL — Belfast HDR is hot; don't let sky bleach the camp.
-        // Very dim brown ambient — sky vault is LDR ash; torch/campfire carry the read.
-        const tint = a === 'den'
-          ? (sky.ibl ? { color: [0.72, 0.38, 0.24] as [number, number, number], intensity: 0.07 } : { color: [0.55, 0.28, 0.18] as [number, number, number], intensity: 0.14 })
-          : (sky.ibl ? { color: [0.65, 0.34, 0.20] as [number, number, number], intensity: 0.055 } : { color: [0.55, 0.28, 0.18] as [number, number, number], intensity: 0.14 });
+        const tint = ambientForArea(a, sky.ibl);
         const ambTint = tempShiftRgb(tint.color, lightSettings.atmoTemp);
         const amb = { ...ambTint, intensity: tint.intensity * lightSettings.ambientMul };
         world.set(sky.ent, Skylight, sky.equirect
           ? { equirect: sky.equirect, ...amb }
           : amb);
       }
-      if (a === 'den') {
-        seatDenTorches();
-      } else {
+      // Pure seating plan (light-director) drives live vs park — no zone bypass.
+      const seating = areaLightSeating(a);
+      if (seating.pointFixtures === 'outdoor-fixed') {
+        // Camp + wild: fixed outdoor point seats (distant camp fixtures for wild).
+        world.set(campfireLight, Transform, { pos: [...CAMPFIRE_POS] });
         world.set(torchA, Transform, { pos: [GATE_L.x, GATE_L.y, GATE_L.z] });
         world.set(torchB, Transform, { pos: [GATE_R.x, GATE_R.y, GATE_R.z] });
-        torchBaseA = 9.5; torchBaseB = 9.5;
+        campfireBase = CAMP_CAMPFIRE_BASE;
+        torchBaseA = CAMP_TORCH_BASE;
+        torchBaseB = CAMP_TORCH_BASE;
       }
+      if (seating.denSpots === 'seat-nearest') seatDenFixtures();
+      else parkDenSpots();
+      if (seating.campMoon === 'seat') seatCampMoon();
+      else parkCampMoon();
+      refreshCameraExposure();
     };
 
     // faceX/faceZ: witch facing on XZ (also drives showcase stub yaw).
@@ -1513,6 +1633,25 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         ),
       },
       get dodge() { return dodgeState; },
+      /** PR2c T2–T3 light-director counters — baseline after area transitions / Stop→Play. */
+      lighting: {
+        spotBudget: SPOT_SLOT_BUDGET,
+        get denSpotsLive() {
+          return (spotBaseA > 0 ? 1 : 0) + (spotBaseB > 0 ? 1 : 0);
+        },
+        get campMoonLive() {
+          return moonBase > 0 ? 1 : 0;
+        },
+        get pointFixtureBases() {
+          return { campfire: campfireBase, torchA: torchBaseA, torchB: torchBaseB };
+        },
+        get spotBases() {
+          return { a: spotBaseA, b: spotBaseB, moon: moonBase };
+        },
+        get exposureMul() {
+          return exposureMulForArea(area);
+        },
+      },
     };
 
     // ── camera + runtime render-settings (F10) ────────────────────────────
@@ -1553,6 +1692,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       },
       // UiLayerManager owns F10 exclusivity with inventory/skills (see below).
       bindHotkey: false,
+      // PR2c T3: per-area exposure scale stays inside applyCamera (single writer).
+      getExposureMul: () => exposureMulForArea(area),
       onLighting: (s) => {
         lightSettings = {
           sunMul: s.sunMul,
@@ -1567,7 +1708,15 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       onParticles: (s) => { onParticlesHook(s); },
       onDisplay: (s) => { applyDisplaySettings(s); },
       onAudio: (s) => { applyAudioSettings(s); },
+      onAtmosphere: (s) => {
+        atmosphereApi?.setParams({
+          vignette: s.vignette,
+          haze: s.haze,
+          atmoTemp: s.atmoTemp,
+        });
+      },
     });
+    refreshCameraExposure = () => rs.applyCamera();
     onCleanup(() => rs.dispose());
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).camera = camera;
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).Camera = Camera;
@@ -2821,18 +2970,22 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // ── lighting director tick ──
       // Sky upgrade resolved after boot → re-tint once for the current area.
       if (skyLightDirty) { skyLightDirty = false; applyAreaLighting(area); }
-      // Roaming torch slots follow the player through the den.
+      // Roaming fixture points + den spots follow the player through the den.
       if (area === 'den') {
         torchSeatTimer -= dt;
-        if (torchSeatTimer <= 0) { torchSeatTimer = 0.4; seatDenTorches(); }
+        if (torchSeatTimer <= 0) { torchSeatTimer = 0.4; seatDenFixtures(); }
       }
       // Ember flicker: two incommensurate sines ≈ organic wobble, no RNG churn.
       flickT += dt;
       const flick = (ph: number): number => 0.86 + 0.14 * Math.sin(flickT * 9.7 + ph) * Math.sin(flickT * 5.3 + ph * 1.7);
       const fireMul = lightSettings.fireMul;
-      world.set(campfireLight, PointLight, { intensity: 12 * fireMul * flick(0) });
+      world.set(campfireLight, PointLight, { intensity: campfireBase * fireMul * flick(0) });
       world.set(torchA, PointLight, { intensity: torchBaseA * fireMul * flick(2.1) });
       world.set(torchB, PointLight, { intensity: torchBaseB * fireMul * flick(4.4) });
+      world.set(denSpotA, SpotLight, { intensity: spotBaseA * fireMul * flick(1.3) });
+      world.set(denSpotB, SpotLight, { intensity: spotBaseB * fireMul * flick(3.7) });
+      // Moon key is steady (no ember flicker); scales with sunMul like the directional.
+      world.set(campMoonSpot, SpotLight, { intensity: moonBase * lightSettings.sunMul });
       // Poll equirect→cubemap status (throttled). Spawn SkyboxBackground only
       // after ready — earlier bind samples unready GPU memory (rainbow garbage).
       if (sky && sky.equirect && !skyPollStopped && !skyboxSpawned) {
@@ -3153,6 +3306,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       onParticles: () => {},
       onDisplay: (s) => { applyDisplaySettings(s); },
       onAudio: (s) => { applyAudioSettings(s); },
+      onAtmosphere: (s) => {
+        atmosphereApi?.setParams({
+          vignette: s.vignette,
+          haze: s.haze,
+          atmoTemp: s.atmoTemp,
+        });
+      },
     });
     onCleanup(() => {
       titleRs?.dispose();
@@ -3184,11 +3344,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       shell!.showLoading('正在加载角色与场景…');
     };
     const dimAtmosphereForPreview = (on: boolean): void => {
-      // Keep CharSelect readable — full grade haze/vignette crush the stage.
-      const haze = document.getElementById('hf-rs-haze');
-      const vig = document.getElementById('hf-rs-vignette');
-      if (haze) haze.style.opacity = on ? '0.22' : String(titleRs?.get().haze ?? 0.7);
-      if (vig) vig.style.opacity = on ? '0.28' : String(titleRs?.get().vignette ?? 0.65);
+      // Keep CharSelect readable — drive HDR pass params, never CSS overlays (L3).
+      const s = titleRs?.get();
+      atmosphereApi?.setPreviewDim(on, s
+        ? { vignette: s.vignette, haze: s.haze, atmoTemp: s.atmoTemp }
+        : undefined);
     };
     const previewClassId = (classId: ClassId): ClassId =>
       (CLASS_DEFS[classId] ? classId : 'sorceress');

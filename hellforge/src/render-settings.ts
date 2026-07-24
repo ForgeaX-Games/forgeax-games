@@ -26,35 +26,15 @@ import {
   TONEMAP_REINHARD_EXTENDED,
 } from '@forgeax/engine-runtime';
 import { FONT_UI } from './ui-theme';
+import {
+  ATMOSPHERE_CSS_OVERLAYS_ENABLED,
+  RENDER_SETTINGS_DEFAULTS,
+  type RenderSettingsDefaults,
+} from './render-settings-defaults';
 
-export interface RenderSettings {
-  tonemap: 'aces' | 'agx' | 'neutral' | 'cineon' | 'reinhard' | 'linear';
-  exposure: number; // 0.2..3 default 1
-  whitePoint: number; // 1..8 default 4
-  antialias: 'none' | 'fxaa' | 'msaa';
-  bloom: boolean;
-  bloomThreshold: number; // 0.5..3 default 1.25
-  bloomIntensity: number; // 0..2 default 0.55
-  bloomBlurRadius: number; // 1..8 default 4
-  sunMul: number; // 0..2.5 default 1
-  ambientMul: number; // 0..3 default 1
-  fireMul: number; // 0..2 default 1
-  fillMul: number; // 0..2 default 1
-  atmoTemp: number; // -1..1 default 0
-  vignette: number; // 0..0.8 default 0.22
-  /** CSS horizon / smoke haze strength (fake distance fog; not engine Fog). */
-  haze: number; // 0..1 default 0.55
-  particleDensity: number; // 0..2 default 1
-  particleStyle: 'auto' | 'ash' | 'snow' | 'off';
-  /** Backbuffer scale vs CSS size × devicePixelRatio (0.5..1.5). */
-  renderScale: number;
-  /** Cap gameplay update rate; 0 = unlimited. */
-  fpsCap: number;
-  /** Scene BGM gain 0..1 (HTMLAudio; default under SFX so hits stay readable). */
-  bgmVolume: number;
-  /** Synthesized SFX gain 0..1 (scales sfx.ts master). */
-  sfxVolume: number;
-}
+export type RenderSettings = RenderSettingsDefaults;
+
+export { ATMOSPHERE_CSS_OVERLAYS_ENABLED, RENDER_SETTINGS_DEFAULTS };
 
 export type InstallRenderSettingsArgs = {
   mount: HTMLElement;
@@ -71,6 +51,11 @@ export type InstallRenderSettingsArgs = {
   /** Called whenever bgmVolume / sfxVolume change. */
   onAudio?: (s: RenderSettings) => void;
   /**
+   * Called whenever HDR-chain atmosphere knobs change (vignette / haze / atmoTemp).
+   * T1: drives hellforge::atmosphere PostProcessParams — not CSS overlays.
+   */
+  onAtmosphere?: (s: RenderSettings) => void;
+  /**
    * Camera projection params used by applyCamera.
    * `getVerticalFovRad` must read from the gameplay CameraRigState (sole FOV SSOT).
    */
@@ -80,6 +65,11 @@ export type InstallRenderSettingsArgs = {
    * toggle exclusivity. Default true (Title shell).
    */
   bindHotkey?: boolean;
+  /**
+   * Optional per-area exposure scale (PR2c T3). Applied inside applyCamera so
+   * Camera stays a single writer: `settings.exposure * getExposureMul()`.
+   */
+  getExposureMul?: () => number;
 };
 
 export type RenderSettingsApi = {
@@ -95,38 +85,15 @@ export type RenderSettingsApi = {
 };
 
 // v3: dark hellforge grade — Belfast HDR peaks crushed so sky isn't blown white.
+// Grade table SSOT (tonemap / exposure / whitePoint / bloom): render-settings-defaults.ts (PR2c T4).
 const LS_KEY = 'hellforge.render.v3';
 const STYLE_ID = 'hf-rs-style';
 const PANEL_ID = 'hf-rs';
-const VIGNETTE_ID = 'hf-rs-vignette';
-const HAZE_ID = 'hf-rs-haze';
 
 /** Fallback clear when skybox unavailable — keep in sync with main.ts SKY_CLEAR. */
 const SKY_CLEAR = [0.055, 0.018, 0.012, 1] as const;
 
-const DEFAULTS: RenderSettings = {
-  tonemap: 'aces',
-  exposure: 0.42,
-  whitePoint: 4.5,
-  antialias: 'fxaa',
-  bloom: true,
-  bloomThreshold: 1.9,
-  bloomIntensity: 0.50,
-  bloomBlurRadius: 4.5,
-  sunMul: 0.55,
-  ambientMul: 0.42,
-  fireMul: 1.4,
-  fillMul: 0.70,
-  atmoTemp: 0.50,
-  vignette: 0.65,
-  haze: 0.70,
-  particleDensity: 1.15,
-  particleStyle: 'auto',
-  renderScale: 1,
-  fpsCap: 0,
-  bgmVolume: 0.22,
-  sfxVolume: 1,
-};
+const DEFAULTS = RENDER_SETTINGS_DEFAULTS;
 
 const CSS = `
 #${PANEL_ID} {
@@ -171,29 +138,6 @@ const CSS = `
   background: linear-gradient(180deg, #6a4a2a, #3a2818); color: #f0e0c0;
   border: 1px solid rgba(200,150,80,0.55); border-radius: 6px;
   padding: 7px; font: 700 12px ${FONT_UI};
-}
-#${VIGNETTE_ID} {
-  position: absolute; inset: 0; z-index: 40; pointer-events: none;
-  /* Stronger dark rim + ember wash for Diablo-dark grade. */
-  background:
-    radial-gradient(ellipse at 50% 70%, rgba(120, 32, 8, 0.18) 0%, transparent 50%),
-    radial-gradient(ellipse at center, transparent 32%, rgba(0, 0, 0, 0.96) 100%);
-}
-#${HAZE_ID} {
-  position: absolute; inset: 0; z-index: 41; pointer-events: none;
-  /* Fake distance fog: heavier ash vault + horizon wash (Diablo outdoor). */
-  background:
-    linear-gradient(180deg,
-      rgba(12, 5, 4, 0.45) 0%,
-      rgba(20, 8, 5, 0.18) 22%,
-      transparent 34%,
-      rgba(42, 16, 8, 0.38) 50%,
-      rgba(22, 9, 5, 0.55) 66%,
-      rgba(8, 3, 2, 0.35) 100%),
-    radial-gradient(ellipse 130% 60% at 50% 56%,
-      rgba(48, 18, 8, 0.48) 0%,
-      rgba(22, 8, 5, 0.22) 48%,
-      transparent 74%);
 }
 `;
 
@@ -286,10 +230,14 @@ function fmt(n: number, digits = 2): string {
 
 export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSettingsApi {
   const settings = load();
-  const { world, camera, getAspect, onLighting, onParticles, onDisplay, onAudio, proj } = args;
+  const {
+    world, camera, getAspect, onLighting, onParticles, onDisplay, onAudio, onAtmosphere, proj,
+    getExposureMul,
+  } = args;
 
   const applyCamera = (): void => {
     const clear = tempShiftClear(SKY_CLEAR, settings.atmoTemp);
+    const exposureMul = getExposureMul?.() ?? 1;
     world.set(camera, Camera, {
       ...perspective({
         fov: proj.getVerticalFovRad(),
@@ -298,7 +246,7 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
         far: proj.far,
       }),
       tonemap: tonemapConst(settings.tonemap),
-      exposure: settings.exposure,
+      exposure: settings.exposure * exposureMul,
       whitePoint: settings.whitePoint,
       antialias: antialiasConst(settings.antialias),
       bloom: settings.bloom ? BLOOM_ENABLED : BLOOM_DISABLED,
@@ -309,26 +257,20 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
     });
   };
 
-  const applyAtmosphereOverlay = (): void => {
-    if (typeof document === 'undefined') return;
-    const v = document.getElementById(VIGNETTE_ID);
-    if (v) v.style.opacity = String(clamp(settings.vignette, 0, 0.8));
-    const h = document.getElementById(HAZE_ID);
-    if (h) h.style.opacity = String(clamp(settings.haze, 0, 1));
-  };
-
   const persistAndNotify = (opts: {
     lighting?: boolean;
     particles?: boolean;
     display?: boolean;
     audio?: boolean;
+    atmosphere?: boolean;
   }): void => {
     save(settings);
     // Display first so renderScale can resize the canvas before applyCamera
     // reads getAspect().
     if (opts.display) onDisplay?.(settings);
     applyCamera();
-    applyAtmosphereOverlay();
+    // HDR atmosphere pass (T1) — never resurrect CSS #hf-rs-vignette / #hf-rs-haze.
+    if (opts.atmosphere !== false) onAtmosphere?.(settings);
     if (opts.lighting) onLighting(settings);
     if (opts.particles) onParticles(settings);
     if (opts.audio) onAudio?.(settings);
@@ -358,23 +300,11 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
   }
 
   document.getElementById(PANEL_ID)?.remove();
-  document.getElementById(VIGNETTE_ID)?.remove();
-  document.getElementById(HAZE_ID)?.remove();
+  // L3: strip any leftover CSS gloom overlays from older sessions / HMR.
+  document.getElementById('hf-rs-vignette')?.remove();
+  document.getElementById('hf-rs-haze')?.remove();
 
   const scoped = args.mount !== document.body;
-  const posKind = scoped ? 'absolute' : 'fixed';
-
-  const vignetteEl = document.createElement('div');
-  vignetteEl.id = VIGNETTE_ID;
-  vignetteEl.style.position = posKind;
-  vignetteEl.style.opacity = String(clamp(settings.vignette, 0, 0.8));
-  args.mount.appendChild(vignetteEl);
-
-  const hazeEl = document.createElement('div');
-  hazeEl.id = HAZE_ID;
-  hazeEl.style.position = posKind;
-  hazeEl.style.opacity = String(clamp(settings.haze, 0, 1));
-  args.mount.appendChild(hazeEl);
 
   const panel = document.createElement('div');
   panel.id = PANEL_ID;
@@ -495,6 +425,8 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
       particles: group === 'particles',
       display: group === 'display',
       audio: group === 'audio',
+      // Vignette/haze rows are grouped under 'camera'; atmoTemp under 'lighting'.
+      atmosphere: group === 'camera' || group === 'lighting',
     });
   };
 
@@ -629,8 +561,8 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
     dispose: () => {
       if (bindHotkey) window.removeEventListener('keydown', onKey);
       panel.remove();
-      vignetteEl.remove();
-      hazeEl.remove();
+      document.getElementById('hf-rs-vignette')?.remove();
+      document.getElementById('hf-rs-haze')?.remove();
     },
   };
 }

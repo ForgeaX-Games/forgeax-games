@@ -25,6 +25,10 @@ import { HANDLE_CUBE, type AssetRegistry } from '@forgeax/engine-assets-runtime'
 
 import { getHeroDef, type HeroDef } from './heroes';
 import type { ClassId } from './classes';
+import {
+  releasePreviewLightSlots,
+  type PreviewLightSlots,
+} from './preview-light-ownership';
 
 /** From prop-select-ring.glb.meta.json (bake-select-ring.ts). */
 const SELECT_RING_MESH_GUID = '1ada3896-0ee6-3468-d185-6ba3161bf8e2';
@@ -95,7 +99,12 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
   let stageFxLoading: Promise<void> | null = null;
   let loading: Promise<void> | null = null;
 
+  const isCurrent = (gen: number): boolean => visible && gen === loadGen;
+
   const ensureLights = (): void => {
+    // Never create preview lights while hidden — in-flight show()/spawnHero
+    // can resume after hide() and must not recreate URP owners.
+    if (!visible) return;
     if (keyLight === null) {
       keyLight = world.spawn(
         { component: DirectionalLight, data: {
@@ -125,13 +134,54 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
     }
   };
 
-  const ensureStageFx = async (): Promise<void> => {
-    if (selectRing !== null) return;
+  const releaseLights = (): void => {
+    const next = releasePreviewLightSlots(
+      (e) => {
+        world.despawn(e as EntityHandle);
+      },
+      {
+        keyLight: keyLight as number | null,
+        fillLight: fillLight as number | null,
+        rimLight: rimLight as number | null,
+        footLight: footLight as number | null,
+      } satisfies PreviewLightSlots,
+    );
+    keyLight = next.keyLight as EntityHandle | null;
+    fillLight = next.fillLight as EntityHandle | null;
+    rimLight = next.rimLight as EntityHandle | null;
+    footLight = next.footLight as EntityHandle | null;
+  };
+
+  const spawnFootLight = (): void => {
+    if (footLight !== null || !visible) return;
+    footLight = world.spawn(
+      { component: Transform, data: { pos: [STAGE.x, 0.55, STAGE.z] } },
+      { component: PointLight, data: {
+        color: [1, 0.62, 0.28],
+        intensity: 28,
+        range: 4.5,
+      } },
+    ).unwrap() as EntityHandle;
+  };
+
+  const ensureStageFx = async (gen: number): Promise<void> => {
+    // Ring may survive hide(); foot light is released with preview lights and
+    // must be recreatable when CharSelect returns.
+    if (selectRing !== null) {
+      if (isCurrent(gen)) spawnFootLight();
+      return;
+    }
     if (stageFxLoading) {
       await stageFxLoading;
-      if (selectRing !== null) return;
+      if (!isCurrent(gen)) return;
+      if (selectRing !== null) {
+        spawnFootLight();
+        return;
+      }
       stageFxLoading = null; // previous attempt failed — allow retry
     }
+    if (!isCurrent(gen)) return;
+    const loadAt = gen;
     stageFxLoading = (async () => {
       if (emberMat === null) {
         emberMat = world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', Materials.standard({
@@ -151,8 +201,11 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
         if (!g.ok) throw new Error('select-ring mesh guid');
         const res = await assets.loadByGuid<MeshAsset>(g.value);
         if (!res.ok) throw new Error('select-ring mesh load');
+        // hide()/newer show() may have invalidated this load while suspended.
+        if (!isCurrent(loadAt)) return;
         ringMesh = world.allocSharedRef<'MeshAsset', MeshAsset>('MeshAsset', res.value);
       }
+      if (!isCurrent(loadAt)) return;
       if (selectRing === null && ringMesh !== null && ringMat !== null) {
         const fx = STAGE.x;
         selectRing = world.spawn(
@@ -164,16 +217,7 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
           { component: MeshRenderer, data: { materials: [ringMat] } },
         ).unwrap() as EntityHandle;
       }
-      if (footLight === null) {
-        footLight = world.spawn(
-          { component: Transform, data: { pos: [STAGE.x, 0.55, STAGE.z] } },
-          { component: PointLight, data: {
-            color: [1, 0.62, 0.28],
-            intensity: 28,
-            range: 4.5,
-          } },
-        ).unwrap() as EntityHandle;
-      }
+      spawnFootLight();
     })().catch((err) => {
       console.warn('[hellforge] select-ring stage fx failed:', err);
     });
@@ -202,8 +246,9 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
       }
       return;
     }
-    void ensureStageFx().then(() => {
-      if (!visible || selectRing === null) return;
+    const gen = loadGen;
+    void ensureStageFx(gen).then(() => {
+      if (!isCurrent(gen) || selectRing === null) return;
       world.set(selectRing, Transform, {
         pos: [STAGE.x, 0.015, STAGE.z],
         scale: [RING_BASE_SCALE, 1, RING_BASE_SCALE],
@@ -341,8 +386,14 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
   };
 
   const spawnHero = async (hero: HeroDef, gen: number): Promise<void> => {
+    await ensureStageFx(gen);
+    // Prove the load is still current before creating any preview lights.
+    // Calling ensureLights() before this check recreated key/fill/rim after hide().
+    if (!isCurrent(gen)) {
+      if (!visible) releaseLights();
+      return;
+    }
     ensureLights();
-    await ensureStageFx();
     // Keep the previous hero on stage until the next instantiate succeeds
     // (atomic swap) so CharSelect never flashes an empty/broken hierarchy.
 
@@ -350,7 +401,10 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
     if (!sceneGuid.ok) throw new Error(`preview scene guid: ${hero.id}`);
     const sceneRes = await assets.loadByGuid<SceneAsset>(sceneGuid.value);
     if (!sceneRes.ok) throw new Error(`preview scene load: ${hero.id}`);
-    if (gen !== loadGen || !visible) return;
+    if (!isCurrent(gen)) {
+      if (!visible) releaseLights();
+      return;
+    }
 
     let idleHandle: Handle<'AnimationClip', 'shared'> | null = null;
     for (const def of hero.gltf.clips) {
@@ -359,10 +413,17 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
       if (!g.ok) continue;
       const r = await assets.loadByGuid<AnimationClip>(g.value);
       if (!r.ok) continue;
+      if (!isCurrent(gen)) {
+        if (!visible) releaseLights();
+        return;
+      }
       idleHandle = world.allocSharedRef<'AnimationClip', AnimationClip>('AnimationClip', r.value);
       break;
     }
-    if (gen !== loadGen || !visible) return;
+    if (!isCurrent(gen)) {
+      if (!visible) releaseLights();
+      return;
+    }
 
     const nextScale = hero.scale;
     const nextRig = world.spawn(
@@ -375,7 +436,7 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
       try { world.despawn(nextRig); } catch { /* */ }
       throw new Error(`preview instantiate: ${hero.id}`);
     }
-    if (gen !== loadGen || !visible) {
+    if (!isCurrent(gen)) {
       // Stale load — tear down the orphan hierarchy (ChildOf does not cascade).
       const orphanRoot = instRes.value as EntityHandle;
       const orphanInst = world.get(orphanRoot, SceneInstance);
@@ -388,6 +449,7 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
           try { world.despawn(ent as EntityHandle); } catch { /* */ }
         }
       }
+      if (!visible) releaseLights();
       return;
     }
 
@@ -443,8 +505,14 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
     get classId() { return classId; },
     async show(next: ClassId): Promise<void> {
       visible = true;
+      // Bump early so hide()/a newer show() can invalidate every await below.
+      const gen = ++loadGen;
+      await ensureStageFx(gen);
+      if (!isCurrent(gen)) {
+        if (!visible) releaseLights();
+        return;
+      }
       ensureLights();
-      await ensureStageFx();
       setStageFxVisible(true);
       if (classId === next && rig !== null) {
         applyCamera();
@@ -452,7 +520,6 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
       }
       classId = next;
       const hero = getHeroDef(next);
-      const gen = ++loadGen;
       loading = spawnHero(hero, gen).catch((err) => {
         console.warn('[hellforge] hero preview failed:', err);
       });
@@ -462,7 +529,16 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
       visible = false;
       loadGen += 1;
       clearHero();
-      setStageFxVisible(false);
+      clearEmbers();
+      // Park stage mesh only — do not leave intensity=0 lights in the world
+      // (extraction still packs them and they steal URP point/dir slots).
+      if (selectRing !== null) {
+        world.set(selectRing, Transform, {
+          pos: [STAGE.x, -2, STAGE.z],
+          scale: [0.01, 0.01, 0.01],
+        });
+      }
+      releaseLights();
       classId = null;
     },
     tick(dt: number): void {
@@ -482,10 +558,7 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
       clearHero();
       clearEmbers();
       if (selectRing !== null) { try { world.despawn(selectRing); } catch { /* */ } selectRing = null; }
-      if (footLight !== null) { try { world.despawn(footLight); } catch { /* */ } footLight = null; }
-      if (keyLight !== null) { try { world.despawn(keyLight); } catch { /* */ } keyLight = null; }
-      if (fillLight !== null) { try { world.despawn(fillLight); } catch { /* */ } fillLight = null; }
-      if (rimLight !== null) { try { world.despawn(rimLight); } catch { /* */ } rimLight = null; }
+      releaseLights();
       ringMesh = null;
       ringMat = null;
       emberMat = null;
