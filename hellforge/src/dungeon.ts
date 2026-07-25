@@ -14,9 +14,16 @@
 // spawned directly from the layout as a fallback, so the game never breaks.
 
 import {
-  Transform, MeshFilter, MeshRenderer, Materials,
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+  Materials,
+} from '@forgeax/engine-render';
+import {
   type MaterialAsset,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine-types';
 import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';

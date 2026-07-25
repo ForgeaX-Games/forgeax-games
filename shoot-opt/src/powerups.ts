@@ -9,7 +9,13 @@
  *
  * // 给辛苦的飞行员一点点小礼物~ ♪
  */
-import { Transform, MeshFilter, MeshRenderer } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+} from '@forgeax/engine-render';
 import { defineComponent, type EntityHandle } from '@forgeax/engine-ecs';
 import type { World } from '@forgeax/engine-ecs';
 import type { Geo, Mat } from './setup';

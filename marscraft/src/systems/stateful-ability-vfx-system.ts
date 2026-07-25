@@ -35,7 +35,16 @@
  */
 
 import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
-import { Transform, MeshFilter, MeshRenderer, type Handle } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+} from '@forgeax/engine-render';
+import {
+  type Handle,
+} from '@forgeax/engine-types';
 import { Motion } from '../components';
 import { hasBuff } from './abilities-runtime';
 import { eventBus, type GameEvents } from '../core/event-bus';

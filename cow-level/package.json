@@ -43,7 +43,9 @@
     "@forgeax/engine-ecs": "workspace:*",
     "@forgeax/engine-pack": "workspace:*",
     "@forgeax/engine-physics": "workspace:*",
-    "@forgeax/engine-types": "workspace:*"
+    "@forgeax/engine-render": "workspace:*",
+    "@forgeax/engine-types": "workspace:*",
+    "@forgeax/engine-scene": "workspace:*"
   },
   "devDependencies": {
     "@webgpu/types": "^0.1.70"

@@ -29,25 +29,35 @@
 
 import {
   AnimationPlayer,
+} from '@forgeax/engine-animation';
+import {
   Camera,
-  ChildOf,
   DirectionalLight,
   Materials,
   MeshFilter,
   MeshRenderer,
-  Name,
   PointLight,
   SceneInstance,
-  Skin,
   Skylight,
   SkyboxBackground,
   SKYBOX_MODE_CUBEMAP,
   SpotLight,
-  Transform,
   perspective,
+} from '@forgeax/engine-render';
+import {
+  ChildOf,
+  Name,
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  Skin,
+} from '@forgeax/engine-skinning';
+import {
   quat,
-  type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import {
+  type MaterialAsset,
+} from '@forgeax/engine-types';
 import {
   HANDLE_CUBE,
   HANDLE_QUAD,

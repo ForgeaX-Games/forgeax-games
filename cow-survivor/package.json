@@ -42,7 +42,9 @@
     "@forgeax/engine-geometry": "workspace:*",
     "@forgeax/engine-input": "workspace:*",
     "@forgeax/engine-render-graph": "workspace:*",
+    "@forgeax/engine-render": "workspace:*",
     "@forgeax/engine-ecs": "workspace:*",
+    "@forgeax/engine-scene": "workspace:*",
     "@forgeax/engine-pack": "workspace:*",
     "@forgeax/engine-physics": "workspace:*",
     "@forgeax/engine-types": "workspace:*"

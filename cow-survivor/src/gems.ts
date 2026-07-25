@@ -23,9 +23,17 @@
 //   the spawn path is just three Transform/MeshFilter/MeshRenderer fields.
 
 import {
-  Transform, MeshFilter, MeshRenderer, Materials,
-  type MaterialAsset, type Handle,
-} from '@forgeax/engine-runtime';
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+  Materials,
+} from '@forgeax/engine-render';
+import {
+  type MaterialAsset,
+  type Handle,
+} from '@forgeax/engine-types';
 import { HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';

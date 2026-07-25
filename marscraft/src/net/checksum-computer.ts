@@ -24,7 +24,9 @@
  */
 
 import type { World, EntityHandle } from '@forgeax/engine-ecs';
-import { Transform } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
 import { Faction, Health, UnitType, commandCurrent, type CommandType } from '../components';
 import { ChecksumBuilder, type ChecksumResult } from './checksum';
 import { getGameRngState, getGameRngCallCount } from './seeded-random';

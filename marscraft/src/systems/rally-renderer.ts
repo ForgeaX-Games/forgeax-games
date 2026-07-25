@@ -15,9 +15,18 @@
 
 import { Time, Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
-  Transform, MeshFilter, MeshRenderer, quat,
-  type Handle,
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+} from '@forgeax/engine-render';
+import {
+  quat,
 } from '@forgeax/engine-runtime';
+import {
+  type Handle,
+} from '@forgeax/engine-types';
 import { Building, NO_ENTITY } from '../components';
 import type { SelectionHandle } from './selection';
 import type { UnitPrimitives } from '../world/unit-models';

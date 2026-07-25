@@ -33,7 +33,11 @@
  */
 
 import { type EntityHandle, type World } from '@forgeax/engine-ecs';
-import { Children, ChildOf, Transform } from '@forgeax/engine-runtime';
+import {
+  Children,
+  ChildOf,
+  Transform,
+} from '@forgeax/engine-scene';
 import {
   Attack, Movement, Health, Selectable, UnitType, UnitStats,
   Abilities, Renderable,

@@ -10,7 +10,9 @@
  */
 
 import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
-import { Transform } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
 import {
   Harvester, Building, Faction, Health, HARVEST_STATE, BUILDING_STATE,
   buildingTypeId, buildingProductionQueue,

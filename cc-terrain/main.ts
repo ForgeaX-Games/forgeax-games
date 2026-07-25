@@ -2,17 +2,23 @@
 
 import {
   Transform,
+  ChildOf,
+} from '@forgeax/engine-scene';
+import {
   Camera,
   perspective,
-  quat,
   Materials,
   MeshFilter,
   MeshRenderer,
   SceneInstance,
-  ChildOf,
+} from '@forgeax/engine-render';
+import {
+  quat,
+} from '@forgeax/engine-runtime';
+import {
   type MaterialAsset,
   type Handle,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine-types';
 import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { vec3 } from '@forgeax/engine-math';
 import {

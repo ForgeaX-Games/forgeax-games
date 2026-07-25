@@ -51,9 +51,15 @@
 
 import { Time, Update, defineComponent, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
-  Transform, MeshFilter, MeshRenderer,
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+} from '@forgeax/engine-render';
+import {
   type Handle,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine-types';
 import type { UnitPrimitives, PartShape, TintFn } from '../world/unit-models';
 import { eventBus } from '../core/event-bus';
 import { UnitType, Faction, Renderable, COMBAT_TYPE, RACE, attackWeaponId } from '../components';

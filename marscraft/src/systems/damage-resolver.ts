@@ -35,7 +35,9 @@
  */
 
 import { type World, type EntityHandle } from '@forgeax/engine-ecs';
-import { Transform } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
 import {
   Health, UnitType, Building, Illusion, COMBAT_TYPE, BUILDING_STATE, type CombatTypeCode,
 } from '../components';

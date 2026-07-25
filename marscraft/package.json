@@ -44,6 +44,8 @@
     "@forgeax/engine-ecs": "workspace:*",
     "@forgeax/engine-pack": "workspace:*",
     "@forgeax/engine-physics": "workspace:*",
+    "@forgeax/engine-render": "workspace:*",
+    "@forgeax/engine-scene": "workspace:*",
     "@forgeax/engine-types": "workspace:*"
   },
   "devDependencies": {

@@ -1,4 +1,20 @@
-import { Transform, MeshFilter, MeshRenderer, Camera, Skylight, perspective, quat, type Handle, type MaterialAsset } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+  Camera,
+  Skylight,
+  perspective,
+} from '@forgeax/engine-render';
+import {
+  quat,
+} from '@forgeax/engine-runtime';
+import {
+  type Handle,
+  type MaterialAsset,
+} from '@forgeax/engine-types';
 import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import { Time, Update, defineComponent, Entity, type World } from '@forgeax/engine-ecs';
 import { AssetGuid } from '@forgeax/engine-pack/guid';

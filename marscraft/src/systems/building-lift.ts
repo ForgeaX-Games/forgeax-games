@@ -29,7 +29,9 @@
  * exposes `liftOff` / `landAt` for the verify hook + later command card.
  */
 
-import { Transform } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
 import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Building, Motion, Movement, BUILDING_STATE, MOVE_TYPE, buildingTypeId,

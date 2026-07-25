@@ -19,9 +19,20 @@
  */
 
 import {
-  Transform, MeshFilter, MeshRenderer, ChildOf, quat,
-  type Handle, type MaterialAsset,
+  Transform,
+  ChildOf,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+} from '@forgeax/engine-render';
+import {
+  quat,
 } from '@forgeax/engine-runtime';
+import {
+  type Handle,
+  type MaterialAsset,
+} from '@forgeax/engine-types';
 import { type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Mineral, Geyser, Faction, Selectable,

@@ -21,7 +21,9 @@
  */
 
 import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
-import { Transform } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
 import {
   SummonedLifetime, Illusion, Health, Faction, Movement,
   commandCurrent, type UnitCommand,

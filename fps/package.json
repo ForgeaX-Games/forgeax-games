@@ -45,6 +45,9 @@
     "@forgeax/engine-geometry": "workspace:*",
     "@forgeax/engine-math": "workspace:*",
     "@forgeax/engine-pack": "workspace:*",
+    "@forgeax/engine-render": "workspace:*",
+    "@forgeax/engine-scene": "workspace:*",
+    "@forgeax/engine-types": "workspace:*",
     "@forgeax/engine-gltf": "workspace:*"
   },
   "devDependencies": {

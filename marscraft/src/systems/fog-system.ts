@@ -41,9 +41,15 @@
 
 import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
-  Transform, MeshFilter, MeshRenderer,
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+} from '@forgeax/engine-render';
+import {
   type Handle,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine-types';
 import { type MeshAsset } from '@forgeax/engine-assets-runtime';
 import { meshFromInterleaved } from '@forgeax/engine-geometry';
 import { Faction, PLAYER_ID } from '../components';

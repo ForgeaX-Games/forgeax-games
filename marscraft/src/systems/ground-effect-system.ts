@@ -23,9 +23,16 @@
 
 import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
-  Transform, MeshFilter, MeshRenderer, ChildOf,
+  Transform,
+  ChildOf,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+} from '@forgeax/engine-render';
+import {
   type Handle,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine-types';
 import { GroundEffect, Health, Faction, groundEffectTypeId } from '../components';
 import { getGroundEffectDef, type GroundEffectTypeDef } from '../data/groundEffects';
 import { resolveArea } from './splash-resolver';

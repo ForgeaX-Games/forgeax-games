@@ -43,10 +43,20 @@
  */
 
 import {
-  Transform, Camera, MeshFilter, MeshRenderer, ChildOf,
+  Transform,
+  ChildOf,
+} from '@forgeax/engine-scene';
+import {
+  Camera,
+  MeshFilter,
+  MeshRenderer,
+} from '@forgeax/engine-render';
+import {
   quat,
-  type Handle,
 } from '@forgeax/engine-runtime';
+import {
+  type Handle,
+} from '@forgeax/engine-types';
 import { type MeshAsset } from '@forgeax/engine-assets-runtime';
 import { createTorusGeometry } from '@forgeax/engine-geometry';
 import { Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';

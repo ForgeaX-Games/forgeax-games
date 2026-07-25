@@ -14,7 +14,9 @@
  */
 
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
-import { Transform } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
 import { Faction } from '../components';
 import { eventBus } from '../core/event-bus';
 import { getUnitDef } from '../data/units';

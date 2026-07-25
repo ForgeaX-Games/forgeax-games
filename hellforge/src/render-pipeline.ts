@@ -2,7 +2,7 @@
 //
 // Graph order (named for PR / T1 report):
 //   shadowCascade* → skybox → main → bloom-bright → bloom-blur-h →
-//   bloom-blur-v → bloom-composite → atmosphere → tonemap → fxaa → debugOverlay
+//   bloom-blur-v → bloom-composite → atmosphere → tonemap → fxaa
 //
 // Point + spot shadow casters omitted (addPointShadowPass / addSpotShadowPass
 // not barrel-exported). Honest gap: no spot/point atlas targets and main does
@@ -14,7 +14,6 @@
 //
 // Depth sampling: NO under URP — screen-space radial + vertical gradient only.
 
-import { mat4 } from '@forgeax/engine-math';
 import { RenderGraph, type ResolveContext } from '@forgeax/engine-render-graph';
 import {
   PostProcessParams,
@@ -24,11 +23,10 @@ import {
   addShadowPass,
   addSkyboxPass,
   addTonemapPass,
-  attachDebugOverlayPass,
   type RenderPipeline,
   type RenderPipelineContext,
   type RenderPipelineData,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine-render';
 import type { RenderPipelineAsset } from '@forgeax/engine-types';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 
@@ -413,25 +411,6 @@ const hellforgePipeline: RenderPipeline = {
     addFullscreenPass(graph, FXAA_PASS_NAME, { shader: 'fxaa', color: 'fxaaIntermediate' });
 
     // Intentionally omit config.postEffects (LDR pretend-done path).
-
-    attachDebugOverlayPass(graph, (c: RenderPipelineContext) => {
-      const proj = mat4.create();
-      if (c.camera.projection === 'orthographic') {
-        mat4.orthographic(
-          proj,
-          c.camera.orthoLeft,
-          c.camera.orthoRight,
-          c.camera.orthoBottom,
-          c.camera.orthoTop,
-          c.camera.near,
-          c.camera.far,
-        );
-      } else {
-        mat4.perspective(proj, c.camera.fov, c.camera.aspect, c.camera.near, c.camera.far);
-      }
-      const view = mat4.invert(mat4.create(), c.camera.world);
-      return mat4.multiply(mat4.create(), proj, view);
-    });
 
     const compileResult = graph.compile({
       backendKind: runtime.device.caps.backendKind,

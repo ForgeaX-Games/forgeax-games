@@ -39,7 +39,9 @@
 
 import { Time, Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Entity } from '@forgeax/engine-ecs';
-import { Transform } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
 import {
   Abilities, Health, Energy, UnitType, Faction, UnitStats,
   abilityBuffs, abilityIds, abilityActivatedPassives, abilityTriggerCooldowns,

@@ -8,9 +8,22 @@
 // stages; the scene + spawner reset on every transition.
 
 import {
-  Transform, Camera, perspective, quat,
-  Skylight, SkyboxBackground, TONEMAP_ACES_FILMIC,
-  BLOOM_DISABLED, ANTIALIAS_MSAA, PointLight, SceneInstance, Name,
+  Transform,
+  Name,
+} from '@forgeax/engine-scene';
+import {
+  Camera,
+  perspective,
+  Skylight,
+  SkyboxBackground,
+  TONEMAP_ACES_FILMIC,
+  BLOOM_DISABLED,
+  ANTIALIAS_MSAA,
+  PointLight,
+  SceneInstance,
+} from '@forgeax/engine-render';
+import {
+  quat,
 } from '@forgeax/engine-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import { AssetGuid } from '@forgeax/engine-pack/guid';

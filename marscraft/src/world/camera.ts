@@ -26,7 +26,12 @@
 // dt comes from the engine 'Time' resource (inserted by the frame-loop before
 // world.update()). The system declares `resources:['Time']` per the cheatsheet.
 
-import { Transform, quat } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  quat,
+} from '@forgeax/engine-runtime';
 import { Time, Update, type EntityHandle, World } from '@forgeax/engine-ecs';
 import type { InputState } from '../input';
 

@@ -22,7 +22,15 @@
  * sloped surface picks at roughly the right XZ). No engine picking dependency.
  */
 
-import { Transform, Camera, quat } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  Camera,
+} from '@forgeax/engine-render';
+import {
+  quat,
+} from '@forgeax/engine-runtime';
 import { Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Renderable, Movement, commandCurrent, commandQueue, type UnitCommand } from '../components';
 import type { MapConfig } from '../mapgen/types';

@@ -7,8 +7,14 @@
 // ZERO lights — particles are unlit HDR cubes only (ember blooms via HDR).
 
 import {
-  Transform, MeshFilter, MeshRenderer, Instances, Materials,
-} from '@forgeax/engine-runtime';
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+  Instances,
+  Materials,
+} from '@forgeax/engine-render';
 import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle, MaterialAsset } from '@forgeax/engine-types';

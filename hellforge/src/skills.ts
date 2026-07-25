@@ -12,10 +12,20 @@
 // level unlocks (finisher).
 
 import {
-  Transform, MeshFilter, MeshRenderer, ChildOf, Materials,
+  Transform,
+  ChildOf,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+  Materials,
+} from '@forgeax/engine-render';
+import {
   quat,
-  type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import {
+  type MaterialAsset,
+} from '@forgeax/engine-types';
 import { HANDLE_CUBE, HANDLE_QUAD, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle } from '@forgeax/engine-types';

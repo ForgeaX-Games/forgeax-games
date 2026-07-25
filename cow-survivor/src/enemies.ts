@@ -32,7 +32,12 @@
 // time-phased weight tables (src/levels.ts). main.ts calls `setLevel`
 // on every stage transition; boss kind/cadence also come from the config.
 
-import { Transform, quat } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  quat,
+} from '@forgeax/engine-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import type { EntityHandle } from '@forgeax/engine-ecs';

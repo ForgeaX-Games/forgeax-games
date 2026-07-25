@@ -34,7 +34,9 @@
  */
 
 import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
-import { Transform } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
 import { Projectile, Health, Faction, projectileWeaponId } from '../components';
 import { resolveDamage } from './damage-resolver';
 import { resolveAreaDamage, type AreaParams } from './splash-resolver';

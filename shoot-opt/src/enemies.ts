@@ -11,7 +11,12 @@
  * Per-spawn variety (speed / shootTimer / hp scaling with difficulty) is applied as
  * an `Enemy` override after instantiate — the baked scene values are placeholders.
  */
-import { Transform, SceneInstance } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  SceneInstance,
+} from '@forgeax/engine-render';
 import { defineComponent, type EntityHandle } from '@forgeax/engine-ecs';
 import type { World } from '@forgeax/engine-ecs';
 import { AssetGuid } from '@forgeax/engine-pack/guid';

@@ -19,9 +19,16 @@
 
 import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
-  Transform, MeshFilter, MeshRenderer, ChildOf,
+  Transform,
+  ChildOf,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+} from '@forgeax/engine-render';
+import {
   type Handle,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine-types';
 import {
   Hazard, Health, Faction, HAZARD_SHAPE,
   hazardTypeId, hazardAreaEffects, type HazardShapeCode,

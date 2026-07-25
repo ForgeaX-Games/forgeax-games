@@ -31,7 +31,7 @@ export const HELLFORGE_MAIN_PASS_READS = ['shadowDepth', HDR_COLOR] as const;
 /**
  * Named order of the grade chain after bloom composite.
  * Full graph also has shadow cascades, skybox, main, bloom before this,
- * and debugOverlay after.
+ * after FXAA.
  */
 export const HELLFORGE_GRADE_CHAIN_PASSES = [
   ATMOSPHERE_PASS_NAME,
@@ -129,7 +129,6 @@ export function hellforgeGraphPassContract(cascadeCount = 1): readonly Hellforge
     },
     { name: TONEMAP_PASS_NAME, reads: tonemapReads, writes: [] },
     { name: FXAA_PASS_NAME, reads: [], writes: ['fxaaIntermediate'] },
-    { name: 'debug-overlay', reads: [], writes: [] },
   ];
 }
 

@@ -29,7 +29,9 @@
  */
 
 import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
-import { Transform } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
 import { Faction, Garrisoned, Building, PLAYER_ID } from '../components';
 import type { MapConfig } from '../mapgen/types';
 import type { VisionHandle } from '../systems/vision-system';

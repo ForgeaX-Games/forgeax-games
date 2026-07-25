@@ -14,7 +14,9 @@
  */
 
 import type { World } from '@forgeax/engine-ecs';
-import { type Handle } from '@forgeax/engine-runtime';
+import {
+  type Handle,
+} from '@forgeax/engine-types';
 import { type MeshAsset } from '@forgeax/engine-assets-runtime';
 import { meshFromInterleaved } from '@forgeax/engine-geometry';
 

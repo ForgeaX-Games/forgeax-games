@@ -19,7 +19,9 @@
  */
 
 import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
-import { Transform } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
 import {
   Transport, Garrisoned, Health, Faction, Movement, Attack, Selectable, Building,
   MOVE_TYPE,

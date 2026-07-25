@@ -19,12 +19,29 @@
 // stays self-contained inside the engine workspace.
 
 import {
-  Transform, Camera, perspective, quat, Materials, MeshFilter, MeshRenderer,
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  Camera,
+  perspective,
+  Materials,
+  MeshFilter,
+  MeshRenderer,
   SceneInstance,
-  Skylight, SkyboxBackground, TONEMAP_REINHARD_EXTENDED,
-  BLOOM_ENABLED, ANTIALIAS_FXAA, PointLight,
-  type MaterialAsset, type Handle,
+  Skylight,
+  SkyboxBackground,
+  TONEMAP_REINHARD_EXTENDED,
+  BLOOM_ENABLED,
+  ANTIALIAS_FXAA,
+  PointLight,
+} from '@forgeax/engine-render';
+import {
+  quat,
 } from '@forgeax/engine-runtime';
+import {
+  type MaterialAsset,
+  type Handle,
+} from '@forgeax/engine-types';
 import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { pick } from '@forgeax/engine-picking';
 import { createSphereGeometry } from '@forgeax/engine-geometry';

@@ -15,6 +15,8 @@
 
 import {
   Transform,
+} from '@forgeax/engine-scene';
+import {
   MeshFilter,
   MeshRenderer,
   Camera,
@@ -24,9 +26,13 @@ import {
   TONEMAP_ACES_FILMIC,
   perspective,
   Materials,
+} from '@forgeax/engine-render';
+import {
   quat,
-  type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import {
+  type MaterialAsset,
+} from '@forgeax/engine-types';
 import { createSphereGeometry, createCylinderGeometry } from '@forgeax/engine-geometry';
 import { vec3 } from '@forgeax/engine-math';
 import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';

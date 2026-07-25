@@ -27,10 +27,21 @@
 // Visual scale is independent of collider radius.
 
 import {
-  Transform, MeshFilter, MeshRenderer, ChildOf,
-  Materials, quat,
-  type MaterialAsset, type Handle,
+  Transform,
+  ChildOf,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+  Materials,
+} from '@forgeax/engine-render';
+import {
+  quat,
 } from '@forgeax/engine-runtime';
+import {
+  type MaterialAsset,
+  type Handle,
+} from '@forgeax/engine-types';
 import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import type { EntityHandle } from '@forgeax/engine-ecs';

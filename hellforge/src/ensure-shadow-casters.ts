@@ -9,7 +9,9 @@
 // Skips: skinned (pbr-skin), transparent (blend / queue≥3000), materials that
 // already carry ShadowCaster.
 
-import { MeshRenderer } from '@forgeax/engine-runtime';
+import {
+  MeshRenderer,
+} from '@forgeax/engine-render';
 import { createQueryState, queryRun, Entity } from '@forgeax/engine-ecs';
 import { resolveAssetHandle } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';

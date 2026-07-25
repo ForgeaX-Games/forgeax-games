@@ -29,10 +29,20 @@
 
 import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
-  Transform, MeshFilter, MeshRenderer, ChildOf,
+  Transform,
+  ChildOf,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+} from '@forgeax/engine-render';
+import {
   quat,
-  type Handle, type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import {
+  type Handle,
+  type MaterialAsset,
+} from '@forgeax/engine-types';
 import { type MeshAsset } from '@forgeax/engine-assets-runtime';
 import { createPlaneGeometry } from '@forgeax/engine-geometry';
 import { Health, Selectable, Renderable } from '../components';

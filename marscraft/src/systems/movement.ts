@@ -35,7 +35,12 @@
  */
 
 import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
-import { Transform, quat } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  quat,
+} from '@forgeax/engine-runtime';
 import { Movement, Motion, Renderable, MOVE_TYPE } from '../components';
 import type { OccupancyGrid } from '../world/occupancy-grid';
 

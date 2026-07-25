@@ -5,8 +5,18 @@
  * // 让每一次飞行都像冒险一样精彩~ ♪
  */
 import {
-  Transform, Camera, perspective, DirectionalLight, Skylight, quat,
-  MeshFilter, MeshRenderer,
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  Camera,
+  perspective,
+  DirectionalLight,
+  Skylight,
+  MeshFilter,
+  MeshRenderer,
+} from '@forgeax/engine-render';
+import {
+  quat,
 } from '@forgeax/engine-runtime';
 import { Time, Update, Entity, type EntityHandle } from '@forgeax/engine-ecs';
 import type { World } from '@forgeax/engine-ecs';

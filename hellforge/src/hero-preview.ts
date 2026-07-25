@@ -5,17 +5,25 @@
 
 import {
   AnimationPlayer,
+} from '@forgeax/engine-animation';
+import {
   Camera,
-  ChildOf,
   DirectionalLight,
   Materials,
   MeshFilter,
   MeshRenderer,
   PointLight,
   SceneInstance,
-  Skin,
-  Transform,
   perspective,
+} from '@forgeax/engine-render';
+import {
+  ChildOf,
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  Skin,
+} from '@forgeax/engine-skinning';
+import {
   quat,
 } from '@forgeax/engine-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';

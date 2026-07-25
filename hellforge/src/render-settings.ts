@@ -24,7 +24,7 @@ import {
   TONEMAP_LINEAR,
   TONEMAP_NEUTRAL,
   TONEMAP_REINHARD_EXTENDED,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine-render';
 import { FONT_UI } from './ui-theme';
 import {
   ATMOSPHERE_CSS_OVERLAYS_ENABLED,

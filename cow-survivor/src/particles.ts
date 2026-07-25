@@ -24,9 +24,17 @@
 //   choke the world.spawn path. Instances collapses 60 draws to 1.
 
 import {
-  Transform, MeshFilter, MeshRenderer, Instances,
-  type MaterialAsset, type Handle,
-} from '@forgeax/engine-runtime';
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+  Instances,
+} from '@forgeax/engine-render';
+import {
+  type MaterialAsset,
+  type Handle,
+} from '@forgeax/engine-types';
 import { HANDLE_SPHERE, HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';

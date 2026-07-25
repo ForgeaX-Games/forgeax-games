@@ -25,7 +25,11 @@
  */
 
 import { Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
-import { Transform, Children, ChildOf } from '@forgeax/engine-runtime';
+import {
+  Transform,
+  Children,
+  ChildOf,
+} from '@forgeax/engine-scene';
 import {
   Health,
   attackWeaponId, attackSplashFalloff,

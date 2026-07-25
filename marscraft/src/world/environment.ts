@@ -27,11 +27,17 @@
 
 import {
   Transform,
+} from '@forgeax/engine-scene';
+import {
   MeshFilter,
   MeshRenderer,
+} from '@forgeax/engine-render';
+import {
   quat,
-  type Handle,
 } from '@forgeax/engine-runtime';
+import {
+  type Handle,
+} from '@forgeax/engine-types';
 import { type MeshAsset } from '@forgeax/engine-assets-runtime';
 import {
   createBoxGeometry,

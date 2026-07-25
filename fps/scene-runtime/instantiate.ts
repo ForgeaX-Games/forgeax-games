@@ -11,11 +11,15 @@
 // an ordinary color picker in the Inspector.
 import {
   Transform,
+} from '@forgeax/engine-scene';
+import {
   MeshFilter,
   MeshRenderer,
   DirectionalLight,
   PointLight,
   Materials,
+} from '@forgeax/engine-render';
+import {
   quat,
 } from '@forgeax/engine-runtime';
 import { createSphereGeometry, createCylinderGeometry } from '@forgeax/engine-geometry';

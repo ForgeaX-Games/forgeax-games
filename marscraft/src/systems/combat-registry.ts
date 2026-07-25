@@ -15,7 +15,9 @@
  */
 
 import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
-import { Transform } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
 import {
   Health, Faction, Movement, UnitType, Selectable, Renderable, Building,
   MOVE_TYPE, BUILDING_STATE, PLAYER_ID,

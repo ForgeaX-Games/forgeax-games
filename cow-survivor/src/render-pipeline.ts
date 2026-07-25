@@ -21,7 +21,7 @@ import {
   type RenderPipeline,
   type RenderPipelineContext,
   type RenderPipelineData,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine-render';
 import type { MaterialAsset, RenderPipelineAsset } from '@forgeax/engine-types';
 import type { GameEntry } from '@forgeax/engine-app';
 

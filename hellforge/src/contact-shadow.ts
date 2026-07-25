@@ -12,7 +12,11 @@
 import {
   MeshFilter,
   MeshRenderer,
+} from '@forgeax/engine-render';
+import {
   Transform,
+} from '@forgeax/engine-scene';
+import {
   quat,
 } from '@forgeax/engine-runtime';
 import { HANDLE_QUAD } from '@forgeax/engine-assets-runtime';

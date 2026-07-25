@@ -29,7 +29,13 @@
  * wiring is the M8-refinery seam; base placement is the verification target).
  */
 
-import { Transform, MeshFilter, MeshRenderer } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+} from '@forgeax/engine-render';
 import { Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Building, BUILDING_STATE, buildingTypeId, commandCurrent, commandQueue,

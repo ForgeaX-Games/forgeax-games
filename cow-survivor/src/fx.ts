@@ -35,9 +35,18 @@
 //   • lightningFork — short side-arc fork branching off the middle of a bolt
 
 import {
-  Transform, MeshFilter, MeshRenderer, Materials, Name,
-  type MaterialAsset, type Handle,
-} from '@forgeax/engine-runtime';
+  Transform,
+  Name,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+  Materials,
+} from '@forgeax/engine-render';
+import {
+  type MaterialAsset,
+  type Handle,
+} from '@forgeax/engine-types';
 import { HANDLE_SPHERE, HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';

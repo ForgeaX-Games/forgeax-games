@@ -26,9 +26,19 @@
 
 import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
-  Transform, MeshFilter, MeshRenderer, ChildOf, quat,
-  type Handle,
+  Transform,
+  ChildOf,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+} from '@forgeax/engine-render';
+import {
+  quat,
 } from '@forgeax/engine-runtime';
+import {
+  type Handle,
+} from '@forgeax/engine-types';
 import {
   DirectionWave, Health, Faction, Garrisoned,
   directionWaveHitEffects, directionWaveHitSet,

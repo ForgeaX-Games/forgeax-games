@@ -13,10 +13,22 @@
 // at an angle. Grid <-> world helpers live in src/world/map.ts.
 
 import {
-  Transform, Camera, perspective, quat,
-  Skylight, DirectionalLight, ChildOf,
-  type Handle, type MaterialAsset,
+  Transform,
+  ChildOf,
+} from '@forgeax/engine-scene';
+import {
+  Camera,
+  perspective,
+  Skylight,
+  DirectionalLight,
+} from '@forgeax/engine-render';
+import {
+  quat,
 } from '@forgeax/engine-runtime';
+import {
+  type Handle,
+  type MaterialAsset,
+} from '@forgeax/engine-types';
 import { Time, Update, type World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
 import { AssetGuid } from '@forgeax/engine-pack/guid';

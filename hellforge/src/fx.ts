@@ -17,9 +17,16 @@
 // emissive intensity ≤ 2, premultiplied-alpha blend on custom shaders.
 
 import {
-  Transform, MeshFilter, MeshRenderer, Materials,
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+  Materials,
+} from '@forgeax/engine-render';
+import {
   type MaterialAsset,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine-types';
 import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle } from '@forgeax/engine-types';

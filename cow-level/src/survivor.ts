@@ -20,9 +20,20 @@
 //     mesh; a billboard popup would cast a ground shadow — bug-20260610).
 //
 import {
-  Transform, MeshFilter, MeshRenderer, Materials, quat,
-  type MaterialAsset, type Handle,
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  MeshFilter,
+  MeshRenderer,
+  Materials,
+} from '@forgeax/engine-render';
+import {
+  quat,
 } from '@forgeax/engine-runtime';
+import {
+  type MaterialAsset,
+  type Handle,
+} from '@forgeax/engine-types';
 import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import type { EntityHandle } from '@forgeax/engine-ecs';

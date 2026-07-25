@@ -12,11 +12,27 @@
 // `() => true`.
 
 import {
-  AnimationPlayer, ChildOf, Materials, MeshFilter, MeshRenderer,
-  SceneInstance, Skin, Transform,
+  AnimationPlayer,
+} from '@forgeax/engine-animation';
+import {
+  ChildOf,
+  Transform,
+} from '@forgeax/engine-scene';
+import {
+  Materials,
+  MeshFilter,
+  MeshRenderer,
+  SceneInstance,
+} from '@forgeax/engine-render';
+import {
+  Skin,
+} from '@forgeax/engine-skinning';
+import {
   quat,
-  type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import {
+  type MaterialAsset,
+} from '@forgeax/engine-types';
 import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';

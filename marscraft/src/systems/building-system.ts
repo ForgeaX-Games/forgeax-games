@@ -49,7 +49,11 @@
  *   - SCV build-wander animation + low-HP auto-burn — cosmetic; dropped.
  */
 
-import { Transform, Children, ChildOf } from '@forgeax/engine-runtime';
+import {
+  Transform,
+  Children,
+  ChildOf,
+} from '@forgeax/engine-scene';
 import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import {
   Building, Health, Faction, Command, Movement, UnitType, Larva,

@@ -6,10 +6,16 @@ import {
   Materials,
   MeshFilter,
   MeshRenderer,
+} from '@forgeax/engine-render';
+import {
   Transform,
+} from '@forgeax/engine-scene';
+import {
   quat,
-  type MaterialAsset,
 } from '@forgeax/engine-runtime';
+import {
+  type MaterialAsset,
+} from '@forgeax/engine-types';
 import { HANDLE_CUBE, type AssetRegistry } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';

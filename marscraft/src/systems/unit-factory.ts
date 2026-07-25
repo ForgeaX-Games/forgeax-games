@@ -36,7 +36,9 @@
  *   - abilities.ts (M9): per-unit ability lists; seeded from form.abilityIds.
  */
 
-import { Transform } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
 import { type World, type EntityHandle } from '@forgeax/engine-ecs';
 import type { UnitDef, RaceType } from '../data/units';
 import { getUnitDef } from '../data/units';

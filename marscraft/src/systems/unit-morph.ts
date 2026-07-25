@@ -31,7 +31,9 @@
  */
 
 import { Time, Update, Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
-import { Transform } from '@forgeax/engine-runtime';
+import {
+  Transform,
+} from '@forgeax/engine-scene';
 import {
   UnitType, Health, Movement, Attack, Energy, Faction, UnitStats,
   unitTypeId, unitDisplayName, attackWeaponId, attackSplashFalloff, abilityIds,
