@@ -3,6 +3,13 @@
 // dungeon walk grid). Never samples render meshes per frame.
 
 import { CELL, CELLS } from './dungeon-layout';
+import {
+  NAV_VALIDATE_DT,
+  NAV_VALIDATE_STRIDE,
+  PATH_ARRIVE,
+  PLAYER_SPRINT_SPEED,
+  simulateFollowPath,
+} from './path-follower';
 
 /** Must match `dungeon.ts` DUNGEON_ORIGIN (kept here so nav stays engine-free). */
 const DUNGEON_ORIGIN = { x: 300, z: 300 } as const;
@@ -247,6 +254,210 @@ function nearestWalkCell(
   return null;
 }
 
+
+/** Player collision radius shared with main.ts walkableAt. */
+export const NAV_AGENT_RADIUS = 0.35;
+
+/**
+ * Erosion-aware segment clearance — supersample along a→b at `step` metres
+ * (plan default: cellSize/8) using the same walkable(point, radius) contract
+ * the follower uses.
+ *
+ * When `followerSlide` is set, also require per-axis slide (stride ≤ that
+ * value) to reach b — catches corner-pinches that point samples miss.
+ */
+export function segmentClear(
+  walkable: (point: readonly [number, number], radius: number) => boolean,
+  a: readonly [number, number],
+  b: readonly [number, number],
+  radius: number,
+  step: number,
+  followerSlide?: number,
+): boolean {
+  const dx = b[0] - a[0];
+  const dz = b[1] - a[1];
+  const len = Math.hypot(dx, dz);
+  if (len < 1e-9) return walkable(a, radius);
+  const sampleStep = Math.max(step, 1e-6);
+  const n = Math.max(1, Math.ceil(len / sampleStep));
+  for (let i = 0; i <= n; i++) {
+    const t = i / n;
+    if (!walkable([a[0] + dx * t, a[1] + dz * t], radius)) return false;
+  }
+  if (followerSlide == null) return true;
+  const at = (x: number, z: number) => walkable([x, z], radius);
+  const dirX = dx / len;
+  const dirZ = dz / len;
+  const strideCap = Math.max(1e-4, Math.min(sampleStep, followerSlide));
+  let px = a[0];
+  let pz = a[1];
+  let traveled = 0;
+  let guard = 0;
+  while (traveled < len - 0.05 && guard++ < 20000) {
+    const stride = Math.min(strideCap, len - traveled);
+    const nxp = px + dirX * stride;
+    const nzp = pz + dirZ * stride;
+    let x = px;
+    let z = pz;
+    if (at(nxp, z)) x = nxp;
+    if (at(x, nzp)) z = nzp;
+    const moved = Math.hypot(x - px, z - pz);
+    if (moved < 1e-6) return false;
+    const prog = (x - a[0]) * dirX + (z - a[1]) * dirZ;
+    if (prog < traveled - 1e-4) return false;
+    traveled = Math.max(traveled, prog);
+    px = x;
+    pz = z;
+  }
+  return Math.hypot(px - b[0], pz - b[1]) <= PATH_ARRIVE;
+}
+
+/**
+ * LOS string-pulling over an A* polyline. A* remains the source of truth;
+ * this only removes vertices when the shortcut is eroded-walkable.
+ */
+export function stringPullPath(
+  path: readonly (readonly [number, number])[],
+  walkable: (point: readonly [number, number], radius: number) => boolean,
+  radius: number,
+  step: number,
+): readonly (readonly [number, number])[] {
+  if (path.length <= 2) return path;
+  const out: Array<readonly [number, number]> = [path[0]!];
+  let i = 0;
+  while (i < path.length - 1) {
+    let best = i + 1;
+    for (let j = path.length - 1; j > i + 1; j--) {
+      if (segmentClear(walkable, path[i]!, path[j]!, radius, step)) {
+        best = j;
+        break;
+      }
+    }
+    out.push(path[best]!);
+    i = best;
+  }
+  return out;
+}
+
+/**
+ * Replace the A* start (own-cell centre) with the agent's true position so
+ * the first leg never backsteps (§0(a)/(c)).
+ *
+ * Same-cell A* returns a single goal centre — must keep that head when
+ * prepending `from`, otherwise the destination is discarded.
+ */
+export function anchorPathAtStart(
+  from: readonly [number, number],
+  path: readonly (readonly [number, number])[],
+): readonly (readonly [number, number])[] {
+  if (path.length === 0) return path;
+  const head = path[0]!;
+  if (Math.hypot(from[0] - head[0], from[1] - head[1]) < 0.01) return path;
+  if (path.length === 1) return [[from[0], from[1]] as const, head];
+  return [[from[0], from[1]] as const, ...path.slice(1)];
+}
+
+function tryClickSnap(
+  from: readonly [number, number],
+  to: readonly [number, number],
+  path: readonly (readonly [number, number])[],
+  walkable: (point: readonly [number, number], radius: number) => boolean,
+  step: number,
+  snapOk: boolean,
+): readonly (readonly [number, number])[] {
+  if (!snapOk || path.length === 0) return path;
+  const last = path[path.length - 1]!;
+  if (Math.hypot(last[0] - to[0], last[1] - to[1]) <= 0.01) return path;
+  const prev = path.length >= 2 ? path[path.length - 2]! : from;
+  // Validate at sprint stride so Shift-held click-move cannot invent a chord
+  // that walk-speed validation would accept but sprint overshoots into a pinch.
+  // Keep ±0.4 m side probes for long multi-cell snaps (walk-speed pinches that
+  // sprint accept misses). Same-cell false rejects are recovered by the direct
+  // [from,to] fallback in postProcessPath.
+  if (!segmentClear(walkable, prev, to, NAV_AGENT_RADIUS, step, NAV_VALIDATE_STRIDE)) return path;
+  for (const [ox, oz] of [[0.4, 0], [-0.4, 0], [0, 0.4], [0, -0.4]] as const) {
+    const p2 = [prev[0] + ox, prev[1] + oz] as const;
+    if (!walkable(p2, NAV_AGENT_RADIUS)) continue;
+    if (!segmentClear(walkable, p2, to, NAV_AGENT_RADIUS, step, NAV_VALIDATE_STRIDE)) return path;
+  }
+  return [...path.slice(0, -1), [to[0], to[1]] as const];
+}
+
+function followerAccepts(
+  from: readonly [number, number],
+  to: readonly [number, number],
+  path: readonly (readonly [number, number])[],
+  walkable: (point: readonly [number, number], radius: number) => boolean,
+): boolean {
+  if (path.length === 0) return false;
+  const sim = simulateFollowPath(path, from, (x, z) => walkable([x, z], NAV_AGENT_RADIUS), {
+    walkSpeed: PLAYER_SPRINT_SPEED,
+    dt: NAV_VALIDATE_DT,
+  });
+  if (!sim.arrived || sim.uTurnCount !== 0 || sim.stuckCount !== 0) return false;
+  // Must land near the click — arriving at an A* cell centre while still far
+  // from `to` is a zero-move trap when the agent already sits in PATH_ARRIVE.
+  if (Math.hypot(sim.finalPos[0] - to[0], sim.finalPos[1] - to[1]) > PATH_ARRIVE) {
+    return false;
+  }
+  const goalDist = Math.hypot(to[0] - from[0], to[1] - from[1]);
+  if (goalDist > PATH_ARRIVE && sim.walkedLength < 1e-3) return false;
+  return true;
+}
+
+/** Validated direct click path — used when A* + snap cannot land near `to`. */
+function directClickPath(
+  from: readonly [number, number],
+  to: readonly [number, number],
+): readonly (readonly [number, number])[] {
+  if (Math.hypot(to[0] - from[0], to[1] - from[1]) <= PATH_ARRIVE) {
+    return [[to[0], to[1]] as const];
+  }
+  return [[from[0], from[1]] as const, [to[0], to[1]] as const];
+}
+
+function postProcessPath(
+  from: readonly [number, number],
+  to: readonly [number, number],
+  cells: readonly (readonly [number, number])[],
+  walkable: (point: readonly [number, number], radius: number) => boolean,
+  cellSize: number,
+  snapOk: boolean,
+): readonly (readonly [number, number])[] {
+  if (cells.length === 0) return cells;
+  const step = cellSize / 8;
+  const anchored = anchorPathAtStart(from, cells);
+  const pulled = tryClickSnap(
+    from,
+    to,
+    stringPullPath(anchored, walkable, NAV_AGENT_RADIUS, step),
+    walkable,
+    step,
+    snapOk,
+  );
+  if (followerAccepts(from, to, pulled, walkable)) return pulled;
+  const safe = tryClickSnap(from, to, anchored, walkable, step, snapOk);
+  if (followerAccepts(from, to, safe, walkable)) return safe;
+  // Same-cell / failed-snap: prefer a validated chord to the click over a
+  // cell-centre path that "arrives" without reaching `to`.
+  const direct = directClickPath(from, to);
+  const directClear = direct.length < 2
+    || segmentClear(walkable, direct[0]!, direct[1]!, NAV_AGENT_RADIUS, step, NAV_VALIDATE_STRIDE);
+  if (directClear && followerAccepts(from, to, direct, walkable)) return direct;
+  // Keep A* when it lands near the click.
+  if (followerAccepts(from, to, anchored, walkable)) return anchored;
+  // Important #3: reject only the zero-move trap (already at last wp, far from
+  // click). Multi-cell A* that cannot snap still beats an empty path.
+  const last = anchored[anchored.length - 1]!;
+  const nearLast = Math.hypot(from[0] - last[0], from[1] - last[1]) <= PATH_ARRIVE;
+  const farFromTo = Math.hypot(to[0] - from[0], to[1] - from[1]) > PATH_ARRIVE;
+  if (nearLast && farFromTo) {
+    if (directClear) return direct;
+    return [];
+  }
+  return anchored;
+}
+
 export function createOpenAreaNavigation(
   bounds: WorldBounds,
   blockers: readonly NavBlocker[],
@@ -256,18 +467,21 @@ export function createOpenAreaNavigation(
   const inBounds = (x: number, z: number) =>
     x > bounds.x0 && x < bounds.x1 && z > bounds.z0 && z < bounds.z1;
 
+  const walkable = (point: readonly [number, number], radius: number): boolean => {
+    const samples = radius <= 0
+      ? [[0, 0] as const]
+      : [[-radius, -radius], [radius, -radius], [-radius, radius], [radius, radius], [0, 0]] as const;
+    for (const [ox, oz] of samples) {
+      const x = point[0] + ox;
+      const z = point[1] + oz;
+      if (!inBounds(x, z)) return false;
+      if (pointHitsBlocker(x, z, blockers)) return false;
+    }
+    return true;
+  };
+
   return {
-    walkable(point, radius) {
-      const samples = radius <= 0
-        ? [[0, 0] as const]
-        : [[-radius, -radius], [radius, -radius], [-radius, radius], [radius, radius], [0, 0]] as const;
-      for (const [ox, oz] of samples) {
-        const x = point[0] + ox, z = point[1] + oz;
-        if (!inBounds(x, z)) return false;
-        if (pointHitsBlocker(x, z, blockers)) return false;
-      }
-      return true;
-    },
+    walkable,
     path(from, to) {
       if (!inBounds(from[0], from[1]) || !inBounds(to[0], to[1])) return [];
       const s0 = worldToGrid(grid, from[0], from[1]);
@@ -285,26 +499,22 @@ export function createOpenAreaNavigation(
         (cx, cy) => gridToWorld(grid, cx, cy),
       );
       if (cells.length === 0) return [];
-      // Snap final waypoint to exact click when walkable.
-      const last = cells[cells.length - 1]!;
-      if (pointHitsBlocker(to[0], to[1], blockers) || !inBounds(to[0], to[1])) return cells;
-      if (Math.hypot(last[0] - to[0], last[1] - to[1]) > 0.01) {
-        return [...cells.slice(0, -1), [to[0], to[1]] as const];
-      }
-      return cells;
+      return postProcessPath(from, to, cells, walkable, cellSize, walkable(to, NAV_AGENT_RADIUS));
     },
   };
 }
 
 export function createDungeonNavigation(dungeon: DungeonNavSource): NavigationQuery {
+  const walkable = (point: readonly [number, number], radius: number): boolean => {
+    if (radius <= 0) return dungeon.walkable(point[0], point[1]);
+    for (const [ox, oz] of [[-radius, -radius], [radius, -radius], [-radius, radius], [radius, radius]] as const) {
+      if (!dungeon.walkable(point[0] + ox, point[1] + oz)) return false;
+    }
+    return true;
+  };
+
   return {
-    walkable(point, radius) {
-      if (radius <= 0) return dungeon.walkable(point[0], point[1]);
-      for (const [ox, oz] of [[-radius, -radius], [radius, -radius], [-radius, radius], [radius, radius]] as const) {
-        if (!dungeon.walkable(point[0] + ox, point[1] + oz)) return false;
-      }
-      return true;
-    },
+    walkable,
     path(from, to) {
       const s0 = dungeon.worldToCell(from[0], from[1]);
       const g0 = dungeon.worldToCell(to[0], to[1]);
@@ -325,13 +535,7 @@ export function createDungeonNavigation(dungeon: DungeonNavSource): NavigationQu
         (cx, cy) => dungeon.cellToWorld(cx, cy),
       );
       if (cells.length === 0) return [];
-      if (dungeon.walkable(to[0], to[1])) {
-        const last = cells[cells.length - 1]!;
-        if (Math.hypot(last[0] - to[0], last[1] - to[1]) > 0.05) {
-          return [...cells.slice(0, -1), [to[0], to[1]] as const];
-        }
-      }
-      return cells;
+      return postProcessPath(from, to, cells, walkable, CELL, walkable(to, NAV_AGENT_RADIUS));
     },
   };
 }

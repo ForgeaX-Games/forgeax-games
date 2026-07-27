@@ -58,9 +58,28 @@
 4. Optional: `__hf.playFinisherClimax()` for Hero Shot → Face CU queue.
 5. Esc during CU skips; `__hf.uiLayers.active()` returns to non-cutscene.
 
+## Flow F — PR12 den click-move (run twice)
+
+Drive real `:18920` Play (gateway). Sequence after den entry: corridor bend →
+across a room → doorway → boss approach. (Den entry itself is setup — portal
+teleport, not a click-move stuck probe.)
+
+1. Enter Slagdeep Hollow; wait until `__hf.nav` is defined.
+2. For each click-move in the sequence:
+   - Issue the ground click (or inject via existing input path).
+   - Assert the `point` intent clears within its time budget
+     (`__hf.moveIntent.get().kind === 'none'`).
+   - Assert `__hf.nav.stuck === 0` after the intent clears.
+     (`stuck` counts geometry-jam clears after a failed repath — brief attack
+     roots must not increment it.)
+3. Spot-check `__hf.nav.position` advances toward the click; path list on
+   `__hf.nav.lastPath` is non-empty right after the click.
+4. Re-run Flow A / Flow B once after Flow F (no owner/perf regression).
+
 ## Pass criteria
 
 - Flow A completed **twice** with logs.
 - Flow B: three consecutive Stop→Play cycles with `assertSingleOwners().ok`.
 - Flow C + D archived; mountain-ring wilderness/den view no longer shows a
   triangular mountain intrusion on the den floor.
+- Flow F completed **twice** with `__hf.nav.stuck === 0` throughout.

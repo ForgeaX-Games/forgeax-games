@@ -296,6 +296,14 @@ import {
   type InteractionCandidate,
   type MovementIntent,
 } from './src/movement-intent';
+import {
+  followPathDirection,
+  integratePerAxisSlide,
+  PATH_ARRIVE,
+  PLAYER_SPRINT_SPEED,
+  PLAYER_WALK_SPEED,
+  shouldRepathPursuit,
+} from './src/path-follower';
 const clamp = (v: number, lo: number, hi: number) => (v < lo ? lo : v > hi ? hi : v);
 
 // Active hero resolves inside initializeRuntime from the CharacterDomain
@@ -1875,7 +1883,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).ambientFx = ambientFx;
 
     // ── tuning ────────────────────────────────────────────────────────────
-    const SPEED = 3.4, SPRINT = 5.4;
+    const SPEED = PLAYER_WALK_SPEED;
+    const SPRINT = PLAYER_SPRINT_SPEED;
     const FACING_SIGN = 1;
     // Stride = ground speed (m/s) each locomotion clip matches at playback
     // rate 1. free-walk ≈ 1.07 s / free-run ≈ 0.67 s loops — calibrate
@@ -2211,9 +2220,17 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // ── movement intent + interaction registry (Spec §5.3) ────────────────
     let moveIntent: MovementIntent = { kind: 'none' };
     let followPath: readonly (readonly [number, number])[] = [];
+    let lastNavPath: readonly (readonly [number, number])[] = [];
     let followIdx = 0;
     let targetRepathAcc = 0;
-    const PATH_ARRIVE = 0.45;
+    /** Last pursuit target position used for a path (hysteresis gate). */
+    let lastRepathTarget: readonly [number, number] | null = null;
+    let navStuckCount = 0;
+    let stuckAcc = 0;
+    let stuckOrigin: readonly [number, number] | null = null;
+    let stuckRepathed = false;
+    const STUCK_WINDOW_SEC = 0.75;
+    const STUCK_DISPLACE_M = 0.05;
     const CLICK_PICK_R = 1.6;
 
     const applyPickupEvent = (ev: {
@@ -2420,11 +2437,20 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       followPath = [];
       followIdx = 0;
       targetRepathAcc = 0;
+      lastRepathTarget = null;
+      stuckAcc = 0;
+      stuckOrigin = null;
+      stuckRepathed = false;
       if (next.kind === 'point') {
         followPath = navigation.path([state.px, state.pz], next.world);
+        lastNavPath = followPath;
       } else if (next.kind === 'target') {
         const resolved = interactions.resolve(next.target);
-        if (resolved) followPath = navigation.path([state.px, state.pz], resolved.position);
+        if (resolved) {
+          followPath = navigation.path([state.px, state.pz], resolved.position);
+          lastNavPath = followPath;
+          lastRepathTarget = resolved.position;
+        }
       }
     };
 
@@ -2586,6 +2612,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).moveIntent = {
       get: () => moveIntent,
       clear: clearMoveIntent,
+    };
+    /** PR12 read-only nav debug surface (game-side; mirrors moveIntent). */
+    ((window as unknown as { __hf: Record<string, unknown> }).__hf).nav = {
+      get position() { return [state.px, state.pz] as const; },
+      get path() { return followPath.map((p) => [p[0], p[1]] as const); },
+      get followIdx() { return followIdx; },
+      get stuck() { return navStuckCount; },
+      get lastPath() { return lastNavPath.map((p) => [p[0], p[1]] as const); },
     };
 
     const toggleMajorPanel = (panel: MajorPanel): void => {
@@ -3037,8 +3071,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
               targetRepathAcc = 0;
               const resolved = interactions.resolve(moveIntent.target);
               if (resolved?.valid) {
-                followPath = navigation.path([state.px, state.pz], resolved.position);
-                followIdx = 0;
+                if (shouldRepathPursuit(lastRepathTarget, resolved.position, followPath.length === 0)) {
+                  followPath = navigation.path([state.px, state.pz], resolved.position);
+                  lastNavPath = followPath;
+                  followIdx = 0;
+                  lastRepathTarget = resolved.position;
+                }
               }
             }
             const tick = tickTargetIntent(moveIntent, [state.px, state.pz], interactions);
@@ -3046,22 +3084,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
             if (moveIntent.kind !== 'target') {
               followPath = [];
               followIdx = 0;
+              lastRepathTarget = null;
             }
           }
-          while (followIdx < followPath.length) {
-            const wp = followPath[followIdx]!;
-            const dx = wp[0] - state.px;
-            const dz = wp[1] - state.pz;
-            const dist = Math.hypot(dx, dz);
-            if (dist <= PATH_ARRIVE) {
-              followIdx += 1;
-              continue;
-            }
-            mvx = dx / dist;
-            mvz = dz / dist;
-            break;
+          const step = followPathDirection(followPath, followIdx, state.px, state.pz, PATH_ARRIVE);
+          followIdx = step.idx;
+          if (!step.complete) {
+            mvx = step.dirX;
+            mvz = step.dirZ;
           }
-          if (moveIntent.kind === 'point' && followIdx >= followPath.length) {
+          if (moveIntent.kind === 'point' && step.complete) {
             clearMoveIntent();
           }
         }
@@ -3083,16 +3115,61 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const prevPx = state.px;
       const prevPz = state.pz;
       if (state.moving) {
-        const nx = mvx / len, nz = mvz / len;
-        faceX = nx; faceZ = nz;
-        const nxp = state.px + nx * spd;
-        const nzp = state.pz + nz * spd;
-        if (walkableAt(nxp, state.pz)) state.px = nxp;
-        if (walkableAt(state.px, nzp)) state.pz = nzp;
+        faceX = mvx / len;
+        faceZ = mvz / len;
+        const slid = integratePerAxisSlide(state.px, state.pz, mvx, mvz, spd, walkableAt);
+        state.px = slid.px;
+        state.pz = slid.pz;
       }
       // Actual ground speed after collision slide (not key/sprint flags).
       const groundSpeed = Math.hypot(state.px - prevPx, state.pz - prevPz) / Math.max(dt, 1e-6);
       const isPathDriven = moveIntent.kind === 'point' || moveIntent.kind === 'target';
+
+      // Stuck detection (PR12 T4): geometry-jam safety net for point/target intents.
+      // Pause (don't reset) while attack/dodge/finisher root translation — otherwise
+      // a one-shot cast looks like zero displacement and false-repaths/clears.
+      if (isPathDriven && !player.dead) {
+        const motionUnlocked = allowLoco && !oneShotActive && !dodgeOwnsMove && len > 0;
+        if (motionUnlocked) {
+          if (stuckOrigin == null) {
+            stuckOrigin = [state.px, state.pz];
+            stuckAcc = 0;
+          } else {
+            stuckAcc += dt;
+            if (stuckAcc >= STUCK_WINDOW_SEC) {
+              const disp = Math.hypot(state.px - stuckOrigin[0], state.pz - stuckOrigin[1]);
+              if (disp < STUCK_DISPLACE_M) {
+                if (!stuckRepathed && followPath.length > 0) {
+                  const goal = moveIntent.kind === 'point'
+                    ? moveIntent.world
+                    : moveIntent.kind === 'target'
+                      ? (interactions.resolve(moveIntent.target)?.position ?? null)
+                      : null;
+                  if (goal) {
+                    followPath = navigation.path([state.px, state.pz], goal);
+                    lastNavPath = followPath;
+                    followIdx = 0;
+                    if (moveIntent.kind === 'target') lastRepathTarget = goal;
+                  }
+                  stuckRepathed = true;
+                } else {
+                  navStuckCount += 1;
+                  clearMoveIntent();
+                }
+              } else {
+                // Healthy window — allow a future jam to try one repath again.
+                stuckRepathed = false;
+              }
+              stuckOrigin = [state.px, state.pz];
+              stuckAcc = 0;
+            }
+          }
+        }
+      } else {
+        stuckAcc = 0;
+        stuckOrigin = null;
+        stuckRepathed = false;
+      }
 
       // animation state machine — locomotion from velocity; one-shots untouched
       if (!state.paused && !oneShotActive && !player.dead) {
