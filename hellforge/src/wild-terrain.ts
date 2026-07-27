@@ -22,7 +22,7 @@ import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle, MeshAsset } from '@forgeax/engine-types';
 
 import { mulberry32 } from './dungeon-layout';
-import { SLAG_MATERIAL_GUID, VOLCANO_VARIANTS } from './volcano-assets';
+import { SLAG_MATERIAL_GUID, VOLCANO_VARIANTS, type VolcanoVariant } from './volcano-assets';
 
 /** Re-export seeded PRNG — wilderness generation never uses Math.random(). */
 export { mulberry32 };
@@ -63,6 +63,8 @@ export type InstallWildTerrainOpts = {
   apron?: boolean;
   /** Log label — camp | den. */
   label?: string;
+  /** PR11 T2 — fires once per settled peak-bank load (first install only). */
+  onItem?: () => void;
 };
 
 type PeakBank = {
@@ -76,15 +78,29 @@ let peakBank: PeakBank[] | null = null;
 async function ensurePeakBank(
   world: World,
   assets: AssetRegistry,
+  onItem?: () => void,
 ): Promise<PeakBank[] | null> {
   if (peakBank !== null) return peakBank;
+  const note = (): void => { onItem?.(); };
 
   const slagGuid = AssetGuid.parse(SLAG_MATERIAL_GUID);
   if (!slagGuid.ok) {
     console.warn('[hellforge] wild-terrain: slag material guid invalid');
+    // Settle all 9 items (material + 8 meshes) so a bad constant can't stall the
+    // determinate bar below 100% — the load is done (failed), not pending.
+    for (let i = 0; i < 1 + VOLCANO_VARIANTS.length; i++) note();
     return null;
   }
-  const slagRes = await assets.loadByGuid<MaterialAsset>(slagGuid.value);
+  // Slag material + all 8 cone meshes race together (PR11 T3); onItem fires
+  // once per settled load (1 material + 8 meshes = 9 items) for the tracker.
+  const slagP = assets.loadByGuid<MaterialAsset>(slagGuid.value).then((r) => { note(); return r; });
+  const meshPs = VOLCANO_VARIANTS.map((v) => {
+    const mg = AssetGuid.parse(v.mesh);
+    if (!mg.ok) { note(); return Promise.resolve<{ v: VolcanoVariant; payload: MeshAsset | null }>({ v, payload: null }); }
+    return assets.loadByGuid<MeshAsset>(mg.value)
+      .then((mr): { v: VolcanoVariant; payload: MeshAsset | null } => { note(); return { v, payload: mr.ok && mr.value ? mr.value : null }; });
+  });
+  const [slagRes, meshResults] = await Promise.all([slagP, Promise.all(meshPs)]);
   if (!slagRes.ok) {
     console.warn('[hellforge] wild-terrain: slag material load failed');
     return null;
@@ -95,16 +111,13 @@ async function ensurePeakBank(
   );
 
   const bank: PeakBank[] = [];
-  for (const v of VOLCANO_VARIANTS) {
-    const mg = AssetGuid.parse(v.mesh);
-    if (!mg.ok) continue;
-    const mr = await assets.loadByGuid<MeshAsset>(mg.value);
-    if (!mr.ok) {
+  for (const { v, payload } of meshResults) {
+    if (payload === null) {
       console.warn(`[hellforge] wild-terrain: failed to load ${v.name}`);
       continue;
     }
     bank.push({
-      mesh: world.allocSharedRef<'MeshAsset', MeshAsset>('MeshAsset', mr.value),
+      mesh: world.allocSharedRef<'MeshAsset', MeshAsset>('MeshAsset', payload),
       mat: slagMat,
     });
   }
@@ -156,7 +169,7 @@ export async function installWildTerrain(
     return;
   }
 
-  const bank = await ensurePeakBank(world, assets);
+  const bank = await ensurePeakBank(world, assets, opts.onItem);
   if (!bank) return;
 
   const spawnPeak = (

@@ -42,6 +42,17 @@ export interface ShellHandle {
   goTo(state: ShellState): void;
   /** Noninteractive cover while heavy runtime boots after character selection. */
   showLoading(message: string): void;
+  /**
+   * Drive the DETERMINATE loading bar (0..1). Wired to a LoadTracker by the
+   * caller; monotonic by tracker contract. No-op value clamping applied here.
+   */
+  setLoadingProgress(fraction: number): void;
+  /**
+   * Hide the loading cover WITHOUT a shell state change. Used by the den
+   * zone-transition (we are already 'inGame'); restores the hidden shell root
+   * so gameplay HUD re-owns the viewport.
+   */
+  hideLoading(): void;
   /** Drive Title Canvas2D particles — call from ctx.registerUpdate (SPEC §3.2). */
   tick(dt: number): void;
   root: HTMLElement;
@@ -79,8 +90,9 @@ export function installShell(mount: HTMLElement, cb: ShellCallbacks): ShellHandl
     hasSave: cb.hasSave,
   });
 
-  // Loading cover — D2 loading-screen language: gold Cinzel message,
-  // indeterminate sweep bar, quiet tip line (replaces the old bare text).
+  // Loading cover — D2 loading-screen language: gold Cinzel message, quiet tip
+  // line, and a DETERMINATE bar (PR11 T2) whose width is driven by real load
+  // completions via setLoadingProgress — no fake indeterminate sweep.
   const loading = document.createElement('div');
   loading.style.cssText = 'position:absolute;inset:0;display:none;align-items:center;' +
     `justify-content:center;background:${Ui.ink};color:${Ui.text};pointer-events:auto;`;
@@ -96,9 +108,9 @@ export function installShell(mount: HTMLElement, cb: ShellCallbacks): ShellHandl
     `background:${Ui.inkWell};border:1px solid ${Ui.goldLineSoft};`;
   const loadingFill = document.createElement('div');
   loadingFill.style.cssText =
-    `width:38%;height:100%;border-radius:2px;` +
-    `background:linear-gradient(90deg,transparent,${Ui.gold} 45%,${Ui.goldBright} 55%,transparent);` +
-    'animation:hf-load-sweep 1.15s linear infinite;';
+    `width:0%;height:100%;border-radius:2px;` +
+    `background:linear-gradient(90deg,${Ui.gold},${Ui.goldBright});` +
+    'box-shadow:0 0 8px rgba(230,180,90,0.45);transition:width 160ms ease-out;';
   loadingBar.appendChild(loadingFill);
   const loadingTip = document.createElement('div');
   loadingTip.style.cssText = `font:500 12px ${FONT_UI};color:${Ui.textDim};letter-spacing:2px;`;
@@ -125,6 +137,12 @@ export function installShell(mount: HTMLElement, cb: ShellCallbacks): ShellHandl
 
   function refreshTitleButtons(): void { title.refresh(); }
 
+  /** Determinate fill writer — clamps to [0,1] and quantises to 0.1%. */
+  const setFill = (fraction: number): void => {
+    const clamped = Math.min(1, Math.max(0, Number.isFinite(fraction) ? fraction : 0));
+    loadingFill.style.width = `${Math.round(clamped * 1000) / 10}%`;
+  };
+
   return {
     state: () => state,
     goTo,
@@ -132,7 +150,15 @@ export function installShell(mount: HTMLElement, cb: ShellCallbacks): ShellHandl
       title.hide();
       root.style.display = '';
       loadingMessage.textContent = message;
+      setFill(0); // fresh cover starts empty; tracker drives it up
       loading.style.display = 'flex';
+    },
+    setLoadingProgress: setFill,
+    hideLoading: () => {
+      loading.style.display = 'none';
+      // In-game the shell root is display:none (goTo('inGame')) so the HUD owns
+      // the viewport — restore that after a mid-game transition cover.
+      if (state === 'inGame') root.style.display = 'none';
     },
     tick: (dt) => { if (state === 'title') title.tick(dt); },
     root,
@@ -223,10 +249,6 @@ function installTitle(
       @keyframes hf-title-fade-in {
         from { opacity:0; transform:translateY(20px); }
         to   { opacity:1; transform:translateY(0); }
-      }
-      @keyframes hf-load-sweep {
-        0%   { transform:translateX(-110%); }
-        100% { transform:translateX(280%); }
       }
     `;
     document.head.appendChild(s);

@@ -44,6 +44,16 @@ type MatHandle = Handle<'MaterialAsset', 'shared'>;
 
 export type MonsterKind = 'imp' | 'ashwalker' | 'charred' | 'flamecaller' | 'slaglord';
 
+/**
+ * Zone split for lazy GLB-visual loading (PR11 T5). Wild kinds spawn from
+ * frame one (authored ashen-reach encounters), so they load at boot; den-only
+ * kinds load lazily inside ensureDenLoaded(). The den ALSO spawns wild kinds,
+ * but those banks are already warm from boot, so the den pre-spawn (run after
+ * the den kinds load) always finds every bank it needs.
+ */
+export const WILD_MONSTER_KINDS: readonly MonsterKind[] = ['imp', 'ashwalker', 'charred'];
+export const DEN_MONSTER_KINDS: readonly MonsterKind[] = ['flamecaller', 'slaglord'];
+
 export type PartMatKey = 'body' | 'accent' | 'bone' | 'eye' | 'glow' | 'weapon';
 
 export interface PartSpec {
@@ -364,6 +374,12 @@ export class MonsterManager {
   private nextStableId = 1;
   /** Loaded GLB visuals by kind — empty until loadVisuals() runs. */
   private glb = new Map<MonsterKind, GlbBank>();
+  /**
+   * Kinds whose visual load was REQUESTED (settled or not) — PR11 T5. spawn()
+   * uses this to tell "bank failed → genuine parts fallback" apart from
+   * "spawned before its load was even requested → sequencing bug" (loud).
+   */
+  private visualsAttempted = new Set<MonsterKind>();
   private corpses: Corpse[] = [];
   /**
    * fps compensation, set by main.ts each frame (= smoothed real dt × 60).
@@ -419,53 +435,90 @@ export class MonsterManager {
   }
 
   /**
-   * Load the skinned GLB visuals (scene + 5 clips per kind). Call once at
-   * boot BEFORE spawning; kinds that fail to load quietly fall back to the
-   * lowpoly PartSpec assemblies.
+   * Load the skinned GLB visuals (scene + 5 clips per kind) for the given
+   * kinds — kinds race each other and each kind's clips race each other
+   * (PR11 T3). Kinds that fail quietly fall back to the lowpoly PartSpec
+   * assemblies; a missing idle clip still fails the whole kind (unchanged).
+   *
+   * `onItem` (PR11 T2) fires once per settled scene/clip load (success OR
+   * failure) so a LoadTracker can advance — 6 items per kind (1 scene + 5
+   * clips), matching the caller's registered count.
    */
-  async loadVisuals(assets: {
-    loadByGuid<T>(guid: unknown): Promise<{ ok: boolean; value?: T; error?: { code?: string } }>;
-    instantiate<T>(h: Handle<'SceneAsset', 'shared'>, w: World, parent?: EntityHandle):
-      { ok: boolean; value?: unknown; error?: { code?: string } };
-  }): Promise<readonly MonsterKind[]> {
+  async loadVisualsFor(
+    kinds: readonly MonsterKind[],
+    assets: {
+      loadByGuid<T>(guid: unknown): Promise<{ ok: boolean; value?: T; error?: { code?: string } }>;
+      instantiate<T>(h: Handle<'SceneAsset', 'shared'>, w: World, parent?: EntityHandle):
+        { ok: boolean; value?: unknown; error?: { code?: string } };
+    },
+    onItem?: () => void,
+  ): Promise<readonly MonsterKind[]> {
     this.assets = assets;
-    const loaded: MonsterKind[] = [];
-    for (const [kind, def] of Object.entries(GLB_VISUALS) as [MonsterKind, typeof GLB_VISUALS[MonsterKind]][]) {
-      try {
-        const sceneGuid = AssetGuid.parse(def.scene);
-        if (!sceneGuid.ok) throw new Error('scene guid parse');
-        const sceneRes = await assets.loadByGuid<SceneAsset>(sceneGuid.value);
-        if (!sceneRes.ok || !sceneRes.value) throw new Error('scene load: ' + (sceneRes.error?.code ?? '?'));
-        const bank: GlbBank = {
-          scene: this.world.allocSharedRef<'SceneAsset', SceneAsset>('SceneAsset', sceneRes.value),
-          clips: new Map(),
-        };
-        for (const [name, guid] of Object.entries(def.clips)) {
-          const g = AssetGuid.parse(guid);
-          if (!g.ok) continue;
-          const r = await assets.loadByGuid<AnimationClip>(g.value);
-          if (!r.ok || !r.value) { console.warn(`[hellforge] monster clip load failed: ${kind}.${name}`); continue; }
-          // Strip horizontal ROOT MOTION before minting the shared clip: some
-          // rigs (zombie: 1.67 m of hips +Z in `move`) translate the root
-          // joint across the clip, and since WE drive world position from
-          // the AI, the animated offset made monsters glide forward and then
-          // SNAP BACK at every loop. Pin the hips' X/Z tracks to their first
-          // key (keep Y — that's the gait bob).
-          stripRootMotionXZ(r.value);
-          bank.clips.set(name, {
-            h: this.world.allocSharedRef<'AnimationClip', AnimationClip>('AnimationClip', r.value),
-            dur: (r.value as unknown as { duration: number }).duration,
-          });
-        }
-        if (!bank.clips.has('idle')) throw new Error('idle clip missing');
-        this.glb.set(kind, bank);
-        loaded.push(kind);
-      } catch (err) {
-        console.warn(`[hellforge] GLB visual unavailable for ${kind} — parts fallback:`, (err as Error).message);
-      }
-    }
+    const results = await Promise.all(kinds.map((kind) => this.loadKindVisual(kind, assets, onItem)));
+    const loaded = results.filter((k): k is MonsterKind => k !== null);
     console.log(`[hellforge] monster GLB visuals loaded: ${loaded.join(', ') || '(none)'}`);
     return loaded;
+  }
+
+  /**
+   * Load one kind's scene + 5 clips in parallel. Returns the kind on success,
+   * null on failure (→ parts fallback). Strip-root-motion stays per-clip.
+   */
+  private async loadKindVisual(
+    kind: MonsterKind,
+    assets: {
+      loadByGuid<T>(guid: unknown): Promise<{ ok: boolean; value?: T; error?: { code?: string } }>;
+    },
+    onItem?: () => void,
+  ): Promise<MonsterKind | null> {
+    this.visualsAttempted.add(kind);
+    const def = GLB_VISUALS[kind];
+    const note = (): void => { onItem?.(); };
+    try {
+      const sceneGuid = AssetGuid.parse(def.scene);
+      if (!sceneGuid.ok) {
+        // Settle this kind's scene + clip items so a bad constant can't stall
+        // the bar below 100% — the load is done (failed), not pending.
+        for (let i = 0; i <= Object.keys(def.clips).length; i++) note();
+        throw new Error('scene guid parse');
+      }
+      // Kick the scene + every clip load off together. A bad clip only warns
+      // (unchanged); a missing scene or idle clip still fails the kind.
+      const sceneP = assets.loadByGuid<SceneAsset>(sceneGuid.value).then((r) => { note(); return r; });
+      const clipPs = (Object.entries(def.clips) as Array<[string, string]>).map(([name, guid]) => {
+        const g = AssetGuid.parse(guid);
+        if (!g.ok) { note(); return Promise.resolve<[string, AnimationClip | null]>([name, null]); }
+        return assets.loadByGuid<AnimationClip>(g.value)
+          .then((r): [string, AnimationClip | null] => { note(); return [name, r.ok && r.value ? r.value : null]; });
+      });
+      // Await scene + all clips together (no floating promise on scene failure).
+      const [sceneRes, clipResults] = await Promise.all([sceneP, Promise.all(clipPs)]);
+      if (!sceneRes.ok || !sceneRes.value) throw new Error('scene load: ' + (sceneRes.error?.code ?? '?'));
+      const bank: GlbBank = {
+        scene: this.world.allocSharedRef<'SceneAsset', SceneAsset>('SceneAsset', sceneRes.value),
+        clips: new Map(),
+      };
+      for (const [name, payload] of clipResults) {
+        if (payload === null) { console.warn(`[hellforge] monster clip load failed: ${kind}.${name}`); continue; }
+        // Strip horizontal ROOT MOTION before minting the shared clip: some
+        // rigs (zombie: 1.67 m of hips +Z in `move`) translate the root
+        // joint across the clip, and since WE drive world position from
+        // the AI, the animated offset made monsters glide forward and then
+        // SNAP BACK at every loop. Pin the hips' X/Z tracks to their first
+        // key (keep Y — that's the gait bob).
+        stripRootMotionXZ(payload);
+        bank.clips.set(name, {
+          h: this.world.allocSharedRef<'AnimationClip', AnimationClip>('AnimationClip', payload),
+          dur: (payload as unknown as { duration: number }).duration,
+        });
+      }
+      if (!bank.clips.has('idle')) throw new Error('idle clip missing');
+      this.glb.set(kind, bank);
+      return kind;
+    } catch (err) {
+      console.warn(`[hellforge] GLB visual unavailable for ${kind} — parts fallback:`, (err as Error).message);
+      return null;
+    }
   }
 
   /** Swap a GLB monster's AnimationPlayer clip (looping locomotion). */
@@ -502,6 +555,17 @@ export class MonsterManager {
     const instEntities: EntityHandle[] = [];
 
     // ── preferred: skinned GLB visual (assets/monsters/*.glb) ──
+    // PR11 T5 invariant: spawn() must never consult a bank whose load was never
+    // requested. Wild kinds load before the boot spawn block; den kinds load
+    // inside ensureDenLoaded() before the den pre-spawn — so reaching here with
+    // an un-attempted kind is a sequencing BUG (loud), distinct from a genuine
+    // load failure (attempted, bank absent → silent-by-design parts fallback).
+    if (!this.visualsAttempted.has(kind)) {
+      console.error(
+        `[hellforge] spawn('${kind}', ${zone}) before its GLB visual load was requested — ` +
+        'sequencing bug (PR11 T5 intends this unreachable); falling back to parts.',
+      );
+    }
     const glbBank = this.glb.get(kind);
     if (glbBank && this.assets) {
       const instRes = this.assets.instantiate(glbBank.scene, this.world, root);

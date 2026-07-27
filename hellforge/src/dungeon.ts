@@ -142,56 +142,85 @@ export class Dungeon {
    * Materialize the dungeon visuals: instantiate the baked scene pack under
    * a root at DUNGEON_ORIGIN; fall back to spawning from the layout when
    * the pack can't be loaded. Also loads the boss antechamber pack at bossAt
-   * (PR1 quality room on the den approach path). Call once at boot.
+   * (PR1 quality room on the den approach path).
+   *
+   * PR11 T4: called LAZILY from main's ensureDenLoaded() (first den entry /
+   * prefetch / den-direct boot), no longer at campaign boot. PR11 T3: the
+   * slagdeep + antechamber packs load in PARALLEL; `onItem` (PR11 T2) fires
+   * once per settled pack load (2 total) for the den-transition tracker.
    */
-  async installGeometry(assets?: {
-    loadByGuid<T>(guid: unknown): Promise<{ ok: boolean; value?: T; error?: { code?: string } }>;
-    instantiate<T>(h: Handle<'SceneAsset', 'shared'>, w: World, parent?: EntityHandle):
-      { ok: boolean; value?: unknown; error?: { code?: string } };
-  }): Promise<'pack' | 'fallback'> {
-    let denMode: 'pack' | 'fallback' = 'fallback';
-    if (assets) {
-      try {
-        const g = AssetGuid.parse(DUNGEON_SCENE_GUID);
-        if (g.ok) {
-          const res = await assets.loadByGuid<SceneAsset>(g.value);
-          if (res.ok && res.value) {
-            const rootRes = this.world.spawn(
-              { component: Transform, data: { pos: [DUNGEON_ORIGIN.x, 0, DUNGEON_ORIGIN.z], scale: [1, 1, 1] } },
-            );
-            if (rootRes.ok) {
-              const handle = this.world.allocSharedRef<'SceneAsset', SceneAsset>('SceneAsset', res.value);
-              const inst = assets.instantiate<SceneAsset>(handle, this.world, rootRes.value as EntityHandle);
-              if (inst.ok) {
-                console.log('[hellforge] den geometry: baked scene pack (slagdeep-hollow)');
-                denMode = 'pack';
-              }
-            }
-          }
-        }
-      } catch (err) {
-        console.warn('[hellforge] baked den pack failed — runtime fallback:', (err as Error).message);
-      }
-    }
+  async installGeometry(
+    assets?: {
+      loadByGuid<T>(guid: unknown): Promise<{ ok: boolean; value?: T; error?: { code?: string } }>;
+      instantiate<T>(h: Handle<'SceneAsset', 'shared'>, w: World, parent?: EntityHandle):
+        { ok: boolean; value?: unknown; error?: { code?: string } };
+    },
+    onItem?: () => void,
+  ): Promise<'pack' | 'fallback'> {
+    // Kick slagdeep + antechamber off together; each instantiates as its pack
+    // resolves, so a slow/failed antechamber never holds up the slagdeep path.
+    const slagdeepP = this.loadSlagdeepPack(assets, onItem);
+    const anteP = this.installAntechamber(assets, onItem);
+    const denMode = await slagdeepP;
     if (denMode === 'fallback') {
       this.spawnGeometryFallback();
       console.log('[hellforge] den geometry: runtime fallback spawn');
     }
-    await this.installAntechamber(assets);
+    await anteP;
     return denMode;
   }
 
+  /** Load + instantiate the slagdeep-hollow pack; 'fallback' when unavailable. */
+  private async loadSlagdeepPack(
+    assets: {
+      loadByGuid<T>(guid: unknown): Promise<{ ok: boolean; value?: T; error?: { code?: string } }>;
+      instantiate<T>(h: Handle<'SceneAsset', 'shared'>, w: World, parent?: EntityHandle):
+        { ok: boolean; value?: unknown; error?: { code?: string } };
+    } | undefined,
+    onItem?: () => void,
+  ): Promise<'pack' | 'fallback'> {
+    const note = (): void => { onItem?.(); };
+    if (!assets) { note(); return 'fallback'; }
+    try {
+      const g = AssetGuid.parse(DUNGEON_SCENE_GUID);
+      if (!g.ok) { note(); return 'fallback'; }
+      const res = await assets.loadByGuid<SceneAsset>(g.value);
+      note();
+      if (res.ok && res.value) {
+        const rootRes = this.world.spawn(
+          { component: Transform, data: { pos: [DUNGEON_ORIGIN.x, 0, DUNGEON_ORIGIN.z], scale: [1, 1, 1] } },
+        );
+        if (rootRes.ok) {
+          const handle = this.world.allocSharedRef<'SceneAsset', SceneAsset>('SceneAsset', res.value);
+          const inst = assets.instantiate<SceneAsset>(handle, this.world, rootRes.value as EntityHandle);
+          if (inst.ok) {
+            console.log('[hellforge] den geometry: baked scene pack (slagdeep-hollow)');
+            return 'pack';
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('[hellforge] baked den pack failed — runtime fallback:', (err as Error).message);
+    }
+    return 'fallback';
+  }
+
   /** Instantiate boss-antechamber.pack.json at world bossAt (slight Y lift vs greybox). */
-  private async installAntechamber(assets?: {
-    loadByGuid<T>(guid: unknown): Promise<{ ok: boolean; value?: T; error?: { code?: string } }>;
-    instantiate<T>(h: Handle<'SceneAsset', 'shared'>, w: World, parent?: EntityHandle):
-      { ok: boolean; value?: unknown; error?: { code?: string } };
-  }): Promise<void> {
-    if (!assets) return;
+  private async installAntechamber(
+    assets: {
+      loadByGuid<T>(guid: unknown): Promise<{ ok: boolean; value?: T; error?: { code?: string } }>;
+      instantiate<T>(h: Handle<'SceneAsset', 'shared'>, w: World, parent?: EntityHandle):
+        { ok: boolean; value?: unknown; error?: { code?: string } };
+    } | undefined,
+    onItem?: () => void,
+  ): Promise<void> {
+    const note = (): void => { onItem?.(); };
+    if (!assets) { note(); return; }
     try {
       const g = AssetGuid.parse(ANTECHAMBER_SCENE_GUID);
-      if (!g.ok) return;
+      if (!g.ok) { note(); return; }
       const res = await assets.loadByGuid<SceneAsset>(g.value);
+      note();
       if (!res.ok || !res.value) {
         console.warn('[hellforge] antechamber pack missing — quality room skipped');
         return;

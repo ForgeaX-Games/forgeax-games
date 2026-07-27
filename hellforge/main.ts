@@ -81,7 +81,8 @@ import { COMBAT_EFFECT_DEFS, combatBeat } from './src/fx/defs';
 import { createPerfProbe, readFoldedDraws } from './src/perf-probe';
 import { createOwnerLedger, HELLFORGE_UPDATE_SYSTEMS } from './src/owner-ledger';
 import { cutsceneBlocksChromeKey } from './src/cutscene-input';
-import { MonsterManager, MONSTERS, type Monster } from './src/monsters';
+import { MonsterManager, MONSTERS, DEN_MONSTER_KINDS, WILD_MONSTER_KINDS, type Monster } from './src/monsters';
+import { LoadTracker } from './src/load-tracker';
 import {
   createSkillCaster,
   skillDefForRanks,
@@ -529,6 +530,26 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const hero = getHeroDef(character.snapshot().identity.classId);
     const playerScale = hero.scale;
 
+    // ── PR11 T2: determinate boot-load tracker → shell cover bar ─────────
+    // Count-weighted, NOT byte-weighted: source analysis of the engine asset
+    // runtime (T1's engine unknowns, resolved from code — not yet a live
+    // waterfall) shows the browser downloads cooked pack artifacts (not raw
+    // GLBs) and the hero GLB is cache-warm from the CharSelect preview, so raw
+    // GLB byte weights would front-load the bar and lie (§9). Every load call
+    // site below reports each item as it SETTLES (success or fail); 'ready'
+    // completes last, right before the cover hides, so the bar hits 100%
+    // exactly on hide (§5.4). Den packs are NOT here — they moved to the lazy
+    // ensureDenLoaded() transition tracker (T4).
+    const bootTracker = new LoadTracker()
+      .register('hero', 1 + hero.gltf.clips.length)          // scene + N clips
+      .register('veyra', 2)                                   // scene + idle clip
+      .register('monsters-wild', WILD_MONSTER_KINDS.length * 6) // kind × (scene + 5 clips)
+      .register('volcano', 1 + 8)                             // slag material + 8 cone meshes
+      .register('jsons', 2)                                   // obstacles + ashen layout
+      .register('ready', 1);                                  // finalize — completes last
+    const unbindBootProgress = bootTracker.onChange((f) => shell?.setLoadingProgress(f));
+    onCleanup(unbindBootProgress);
+
     // ── 1. encampment scene (engine-native pack) ──────────────────────────
     // The host resolves + instantiates the defaultScene before entry runs; the
     // encampment root is a side-effect spawn (hellforge never reads its mapping).
@@ -597,17 +618,22 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // AnimationPlayer are likewise minted from each clip payload, and the clip
       // duration is read straight off the payload (no more `assets.get`).
       const sceneRes = await assets.loadByGuid<SceneAsset>(sceneGuid.value);
+      bootTracker.complete('hero');
       if (!sceneRes.ok) throw new Error('witch scene loadByGuid: ' + ((sceneRes.error as { code?: string }).code ?? '?'));
-      for (const def of hero.gltf.clips) {
+      // PR11 T3: the N clip loads now race each other. Per-clip failure is still
+      // warn-and-continue (only the scene load is fatal), and instantiate below
+      // still waits for every clip to settle. Each settled clip advances the bar.
+      await Promise.all(hero.gltf.clips.map(async (def) => {
         const g = AssetGuid.parse(def.guid);
-        if (!g.ok) { console.warn('[hellforge] clip guid parse:', def.name); continue; }
+        if (!g.ok) { console.warn('[hellforge] clip guid parse:', def.name); bootTracker.complete('hero'); return; }
         const r = await assets.loadByGuid<AnimationClip>(g.value);
-        if (!r.ok) { console.warn('[hellforge] clip loadByGuid:', def.name, (r.error as { code?: string }).code); continue; }
+        bootTracker.complete('hero');
+        if (!r.ok) { console.warn('[hellforge] clip loadByGuid:', def.name, (r.error as { code?: string }).code); return; }
         const clipHandle = world.allocSharedRef<'AnimationClip', AnimationClip>('AnimationClip', r.value);
         clipHandles.set(def.name, clipHandle);
         // Record clip duration so one-shot clips (attack/hit/death) can auto-end.
         clipDur.set(def.name, (r.value as unknown as { duration: number }).duration);
-      }
+      }));
       // Parent the witch scene under playerRig (3rd arg) so the rig drives her.
       const sceneHandle = world.allocSharedRef<'SceneAsset', SceneAsset>('SceneAsset', sceneRes.value);
       const instRes = assets.instantiate<SceneAsset>(sceneHandle, world, playerRig);
@@ -709,13 +735,18 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         if (!assets) throw new Error('no asset registry for Veyra');
         const sceneGuid = AssetGuid.parse(VEYRA_SCENE_GUID);
         if (!sceneGuid.ok) throw new Error('Veyra scene guid parse');
-        const sceneRes = await assets.loadByGuid<SceneAsset>(sceneGuid.value);
+        const idleGuid = AssetGuid.parse(VEYRA_IDLE_GUID);
+        if (!idleGuid.ok) throw new Error('Veyra idle guid parse');
+        // PR11 T3: Veyra scene + idle clip now load in parallel (both fatal on
+        // failure, unchanged); the two settled loads advance the bar together.
+        const [sceneRes, idleRes] = await Promise.all([
+          assets.loadByGuid<SceneAsset>(sceneGuid.value),
+          assets.loadByGuid<AnimationClip>(idleGuid.value),
+        ]);
+        bootTracker.complete('veyra', 2);
         if (!sceneRes.ok) {
           throw new Error('Veyra witch.glb scene load failed: ' + ((sceneRes.error as { code?: string }).code ?? '?'));
         }
-        const idleGuid = AssetGuid.parse(VEYRA_IDLE_GUID);
-        if (!idleGuid.ok) throw new Error('Veyra idle guid parse');
-        const idleRes = await assets.loadByGuid<AnimationClip>(idleGuid.value);
         if (!idleRes.ok) {
           throw new Error('Veyra idle clip load failed: ' + ((idleRes.error as { code?: string }).code ?? '?'));
         }
@@ -833,12 +864,18 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // geometry comes from the EDITABLE baked scene pack (see src/dungeon.ts).
     const dungeon = new Dungeon(world);
     const degraded: string[] = [];
-    if (await dungeon.installGeometry(assets) === 'fallback') degraded.push('地牢场景');
-    console.log(`[hellforge] den generated — ${dungeon.roomCount} rooms, ${dungeon.monsterSpawns.length} monsters`);
-    if (stopped) return;
+    // PR11 T4: den GEOMETRY (slagdeep-hollow + boss-antechamber packs, ~the
+    // largest single download) is LAZY — ensureDenLoaded() (below) instantiates
+    // it on first den entry / wild prefetch / den-direct boot, NOT here. The
+    // seed layout (walkability, monsterSpawns, entry) is constructor-cheap and
+    // stays on the boot path, so navigation/automap/camera probes work as before.
+    console.log(`[hellforge] den layout ready — ${dungeon.roomCount} rooms, ${dungeon.monsterSpawns.length} monsters (geometry lazy)`);
 
     // Distant irregular lava cones (ground-only) — camp wild rim + den cavern rim.
-    await installWildTerrain(world, assets, { label: 'camp' });
+    // The camp install loads the shared peak bank (slag material + 8 cone meshes,
+    // parallel — T3) and advances the bar; the den rim reuses that module cache
+    // (spawn-only, no new fetches — plan keeps it at boot).
+    await installWildTerrain(world, assets, { label: 'camp', onItem: () => bootTracker.complete('volcano') });
     {
       // Den floor is CELLS×CELL metres at DUNGEON_ORIGIN; ring the map centre
       // so peaks sit outside walls but inside the camera far plane (~200).
@@ -850,8 +887,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         label: 'den',
       });
     }
-    // Second pass: any late-resolved prop materials from terrain/geometry installs.
+    // Second pass: any late-resolved prop materials from terrain installs.
+    // (Den-pack props get their own pass inside ensureDenLoaded — T4.)
     ensureShadowCasters(world);
+    if (stopped) return;
 
     // Authored 2D nav blockers (never sampled from render meshes per frame).
     const emptyObstacles: ObstacleDoc = { version: 1, blockers: [] };
@@ -865,9 +904,15 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         return fallback;
       }
     };
-    const campObstacles = await loadSceneJson<ObstacleDoc>(
-      './assets/scenes/rogue-encampment.obstacles.json', emptyObstacles,
-    );
+    // PR11 T3: the two scene JSONs now fetch in parallel (each settle → bar +1).
+    // ashenLayout is consumed later (navigation + encounter markers) — hoisting
+    // its fetch here is safe: nothing between reads it before navigation.
+    const [campObstacles, ashenLayout] = await Promise.all([
+      loadSceneJson<ObstacleDoc>('./assets/scenes/rogue-encampment.obstacles.json', emptyObstacles)
+        .then((d) => { bootTracker.complete('jsons'); return d; }),
+      loadSceneJson<AshenReachLayout>('./assets/scenes/ashen-reach.layout.json', emptyAshen)
+        .then((d) => { bootTracker.complete('jsons'); return d; }),
+    ]);
     // Camp + den wall + antechamber — each source once (no double-register).
     const cameraProbeBlockers = [
       ...campObstacles.blockers,
@@ -900,9 +945,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         /* no-op — never scale authored props */
       },
     });
-    const ashenLayout = await loadSceneJson<AshenReachLayout>(
-      './assets/scenes/ashen-reach.layout.json', emptyAshen,
-    );
     const navigation = createHellforgeNavigation({
       dungeon: {
         contains: (wx, wz) => dungeon.contains(wx, wz),
@@ -1050,15 +1092,17 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     onCleanup(() => contactShadows.dispose());
     monsters.setContactShadows(contactShadows);
 
-    // Skinned GLB monster visuals (assets/monsters/*.glb) — load BEFORE the
-    // den pre-spawn so every monster gets the real rig; kinds that fail fall
-    // back to the lowpoly parts assemblies.
-    const loadedMonsterKinds = assets ? await monsters.loadVisuals(assets) : [];
-    if (loadedMonsterKinds.length < Object.keys(MONSTERS).length) degraded.push('怪物模型');
+    // Skinned GLB monster visuals (assets/monsters/*.glb). PR11 T5: only WILD
+    // kinds (imp/ashwalker/charred) load at boot — authored wild spawns exist
+    // from frame one (below) and must never pop in or fall back. Den-only kinds
+    // (flamecaller/slaglord) load lazily inside ensureDenLoaded(), and the den
+    // pre-spawn moved there too, so no den monster can exist before its visual.
+    // Kinds that fail still fall back to the lowpoly parts assemblies.
+    const loadedWildKinds = assets
+      ? await monsters.loadVisualsFor(WILD_MONSTER_KINDS, assets, () => bootTracker.complete('monsters-wild'))
+      : [];
+    if (loadedWildKinds.length < WILD_MONSTER_KINDS.length) degraded.push('怪物模型');
     if (stopped) return;
-    for (const s of dungeon.monsterSpawns) {
-      if (monsters.spawn(s.kind, s.x, s.z, 'den')) denTotal++;
-    }
 
     // ── equipment + bag (打宝核心) — CharacterDomain is the authority ─────
     // 6-slot paper doll + 24-slot bag. Pickups / swaps / melts dispatch domain
@@ -2107,6 +2151,50 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     refreshQuest();
     applyEquipment();          // paints the (empty) equip slots + baseline mods
 
+    // ── PR11 T4: lazy den packs (~the largest single download) ────────────
+    // slagdeep-hollow + boss-antechamber geometry + den-only monster visuals
+    // (flamecaller/slaglord) load ONCE here, off the campaign boot path.
+    // Triggers: (a) prefetch on first wild entry (idle bandwidth on the cave
+    // approach), (b) awaited at the cave portal behind a determinate cover,
+    // (c) awaited at boot for den-direct launches. The den pre-spawn + denTotal
+    // moved here too, so no den monster exists before its geometry + visual are
+    // ready (T5 no-air-monster invariant). One-shot: the same promise serves
+    // every caller, so a second entry is instant.
+    let denLoadPromise: Promise<void> | null = null;
+    let denReady = false;
+    /** Portal cover's progress sink — wired only while that cover is up. */
+    let denItemSink: (() => void) | null = null;
+    const ensureDenLoaded = (): Promise<void> => {
+      if (denLoadPromise) return denLoadPromise;
+      const note = (): void => { denItemSink?.(); };
+      denLoadPromise = (async () => {
+        const denDegraded: string[] = [];
+        // 1. den geometry (slagdeep + antechamber packs, parallel — T3). On
+        //    failure it spawns the same runtime fallback as before (never silent).
+        if (await dungeon.installGeometry(assets, note) === 'fallback') denDegraded.push('地牢场景');
+        if (stopped) return; // torn down mid-load — skip further world/HUD writes
+        // 2. den-only monster visuals (wild kinds are already warm from boot;
+        //    the den also spawns those, so every bank it needs is present).
+        const denKinds = assets
+          ? await monsters.loadVisualsFor(DEN_MONSTER_KINDS, assets, note)
+          : [];
+        if (denKinds.length < DEN_MONSTER_KINDS.length) denDegraded.push('怪物模型');
+        if (stopped) return; // torn down mid-load — don't spawn into a dead world
+        // 3. den pre-spawn (moved from boot) + quest denominator.
+        for (const s of dungeon.monsterSpawns) {
+          if (monsters.spawn(s.kind, s.x, s.z, 'den')) denTotal++;
+        }
+        // 4. shadow-caster pass for the newly instantiated den entities (T4).
+        ensureShadowCasters(world);
+        denReady = true;
+        if (denDegraded.length > 0) {
+          hud.banner(`部分资产降级：${denDegraded.join('、')}`, '#ffb070', 5000);
+        }
+        refreshQuest();
+      })();
+      return denLoadPromise;
+    };
+
     const enterArea = (next: Area): void => {
       if (next === area) return;
       area = next;
@@ -2125,7 +2213,72 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           questId: PURGE_QUEST_ID,
         });
       }
+      // PR11 T4a: first wild entry prefetches the den (bandwidth is idle on the
+      // cave approach), so the cave portal is usually instant. One-shot/no-op
+      // once resolved; leaving the den also lands here with the promise done.
+      // .catch is defensive — internals have fallbacks and stopped-guards, so
+      // rejection is near-impossible, but if it ever fires it's loud (never an
+      // unhandled rejection).
+      if (next === 'wild') {
+        void ensureDenLoaded().catch((err) => {
+          console.error('[hellforge] den prefetch load failed:', err);
+        });
+      }
       refreshQuest();
+    };
+
+    // ── PR11 T4: den zone-transition (cave portal) ────────────────────────
+    // The teleport itself is extracted unchanged from the pre-PR11 inline
+    // sequence so it can run AFTER the lazy den load completes.
+    let denTransitioning = false;
+    const doDenTeleport = (): void => {
+      const transition = resolveAreaTransition('slagdeep-hollow', 'den-entry', {
+        characterId: character.snapshot().identity.id,
+        den: { entry: dungeon.entry, exitPad: DEN_EXIT },
+      });
+      state.px = transition.playerPos[0];
+      state.pz = transition.playerPos[1];
+      camRig = snapCameraFocus(makeArpgAtPlayer(), [state.px, 0, state.pz]);
+      rs.applyCamera();
+      sfx.play('portal');
+      const denDef = getAreaDef('slagdeep-hollow');
+      void uiTransition.zoneCard(denDef.displayName, {
+        sub: denDef.displayNameEn,
+        tip: '净化窟底的污秽',
+      });
+      enterArea('den');
+      denTransitioning = false; // transition complete — portal may re-arm off-pad
+    };
+    // Gate: prefetch usually makes entry instant (denReady → no cover, runs
+    // synchronously like before). A slow first entry pays the remainder behind
+    // the determinate transition cover (T2), then teleports. denTransitioning
+    // keeps portalArmed false until the whole transition completes (no double).
+    const enterDenViaPortal = (): void => {
+      if (denTransitioning) return;
+      denTransitioning = true;
+      if (denReady) { doDenTeleport(); return; }
+      const denTracker = new LoadTracker()
+        .register('den', 2 + DEN_MONSTER_KINDS.length * 6); // packs + kind × (scene+5)
+      denTracker.onChange((f) => shell?.setLoadingProgress(f));
+      denItemSink = () => denTracker.complete('den');
+      shell?.showLoading('深入熔渣深窟…');
+      const finish = (): void => { denItemSink = null; };
+      void ensureDenLoaded()
+        .then(() => {
+          denTracker.completePhase('den'); // 100% exactly as the cover hides (§5.4)
+          shell?.hideLoading();
+          finish();
+          if (stopped) return; // torn down mid-load — don't teleport a dead world
+          doDenTeleport();
+        })
+        .catch((err) => {
+          // ensureDenLoaded has internal fallbacks; never strand the player.
+          console.error('[hellforge] den load at portal failed — entering with fallbacks:', err);
+          shell?.hideLoading();
+          finish();
+          if (stopped) return;
+          doDenTeleport();
+        });
     };
 
     // Abort BEFORE in-game handoff / input wiring. Returning after hud.show() +
@@ -2141,6 +2294,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       inv.hide();
     }
     if (startedInDen) {
+      // PR11 T4: den-direct pays the lazy den leg at boot (no prefetch benefit)
+      // so the handoff below lands in a fully-loaded den — same code path.
+      await ensureDenLoaded();
+      if (stopped) return;
       state.px = dungeon.entry.x;
       state.pz = dungeon.entry.z;
       camRig = snapCameraFocus(camRig, [state.px, 0, state.pz]);
@@ -2149,6 +2306,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       persistCharacter();
       charSelect?.hide();
       charList?.hide();
+      bootTracker.complete('ready'); // 100% exactly as the cover hides (§5.4)
       shell?.goTo('inGame');
       shellPhase = 'inGame';
       inGame = true;
@@ -3297,22 +3455,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
             hud.banner('深窟封锁 — 先与烬守者维拉交谈', '#ffb070', 2200);
             portalArmed = false;
           } else {
+            // PR11 T4: gate on the lazy den load. Prefetch (first wild entry)
+            // usually makes this instant; a slow first entry pays the remainder
+            // behind the determinate transition cover, then teleports. The
+            // teleport/zone-card/enterArea('den') sequence itself is unchanged.
             portalArmed = false;
-            const transition = resolveAreaTransition('slagdeep-hollow', 'den-entry', {
-              characterId: character.snapshot().identity.id,
-              den: { entry: dungeon.entry, exitPad: DEN_EXIT },
-            });
-            state.px = transition.playerPos[0];
-            state.pz = transition.playerPos[1];
-            camRig = snapCameraFocus(makeArpgAtPlayer(), [state.px, 0, state.pz]);
-            rs.applyCamera();
-            sfx.play('portal');
-            const denDef = getAreaDef('slagdeep-hollow');
-            void uiTransition.zoneCard(denDef.displayName, {
-              sub: denDef.displayNameEn,
-              tip: '净化窟底的污秽',
-            });
-            enterArea('den');
+            enterDenViaPortal();
           }
         } else if (area === 'den' && dExit < 1.5) {
           portalArmed = false;
@@ -3336,7 +3484,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           enterArea('wild');
         }
       }
-      if (!portalArmed && dCave > 3.5 && dExit > 3.5) portalArmed = true;
+      // PR11 T4: don't re-arm the pads while a den transition is still awaiting
+      // its lazy load — portalArmed must stay false until doDenTeleport finishes.
+      if (!portalArmed && !denTransitioning && dCave > 3.5 && dExit > 3.5) portalArmed = true;
       // camp ⇄ wild label edge (same map, rect boundary)
       if (area !== 'den') {
         const nowCamp = inCamp(state.px, state.pz);
