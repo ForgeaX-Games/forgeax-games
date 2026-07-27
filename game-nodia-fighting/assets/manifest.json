@@ -357,6 +357,28 @@
         "sourceMeta": {},
         "uploadFingerprint": "eb992396304a39e91275a93f8131cf564de5d2d3c5209a3f0bcfd10edda1b208"
       }
+    },
+    {
+      "id": "fa6da536-df0b-4f4f-aede-d77e8b053950",
+      "kind": "video",
+      "name": "dazhao.mp4",
+      "status": "ready",
+      "mimeType": "video/mp4",
+      "bytes": 16567438,
+      "createdAt": 1784792484101,
+      "updatedAt": 1784792519521,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/6be84ab4-43b0-45d3-8138-f767302a2dcd.mp4"
+      },
+      "meta": {
+        "type": "UPLOAD",
+        "source": "upload",
+        "sourceMeta": {
+          "mime_type": "video/mp4"
+        },
+        "uploadFingerprint": "720f2251325e57a7067bdb99fc469ae82d288907b97fa443dc4bbb6044b951a6"
+      }
     }
   ]
 }

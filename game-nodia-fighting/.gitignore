@@ -1,2 +1,3 @@
 # 导入的视频二进制不进 git（只提交 manifest + scenarios + 脚本）
-game-video/assets/blobs/
+assets/blobs/
+assets/.uploads/
