@@ -379,6 +379,292 @@
         },
         "uploadFingerprint": "720f2251325e57a7067bdb99fc469ae82d288907b97fa443dc4bbb6044b951a6"
       }
+    },
+    {
+      "id": "difanggongjiqianyao",
+      "kind": "video",
+      "name": "difanggongjiqianyao.mp4",
+      "status": "ready",
+      "mimeType": "video/mp4",
+      "bytes": 5453396,
+      "createdAt": 1785156204279,
+      "updatedAt": 1785156204279,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/500db3d0-3a21-4f95-a66d-0bc98b0b7a3a.mp4"
+      },
+      "meta": {
+        "type": "UPLOAD",
+        "source": "migration",
+        "sourceMeta": {
+          "mime_type": "video/mp4"
+        },
+        "uploadFingerprint": "24e3109b93b75731103f0935598d70ea39c1f9c42ade03db0264a39c9f4fcbdb"
+      }
+    },
+    {
+      "id": "fangfan",
+      "kind": "video",
+      "name": "fangfan.mp4",
+      "status": "ready",
+      "mimeType": "video/mp4",
+      "bytes": 4811768,
+      "createdAt": 1785156204506,
+      "updatedAt": 1785156204506,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/5c7638b8-2741-4aaa-a9e7-5304c7735aaf.mp4"
+      },
+      "meta": {
+        "type": "UPLOAD",
+        "source": "migration",
+        "sourceMeta": {
+          "mime_type": "video/mp4"
+        },
+        "uploadFingerprint": "7dd3bfa25e79da1443b412e5a9749c87259e689b174221afd340ab42d98ce962"
+      }
+    },
+    {
+      "id": "huiqi",
+      "kind": "video",
+      "name": "huiqi.mp4",
+      "status": "ready",
+      "mimeType": "video/mp4",
+      "bytes": 7028498,
+      "createdAt": 1785156204770,
+      "updatedAt": 1785156204770,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/7bc27069-5210-4964-b6c3-516c91309c6d.mp4"
+      },
+      "meta": {
+        "type": "UPLOAD",
+        "source": "migration",
+        "sourceMeta": {
+          "mime_type": "video/mp4"
+        },
+        "uploadFingerprint": "8c1c6790ee2145962b9de81de733dc2120ce27cf20af399f6931086e68628da3"
+      }
+    },
+    {
+      "id": "idle01",
+      "kind": "video",
+      "name": "idle01.mp4",
+      "status": "ready",
+      "mimeType": "video/mp4",
+      "bytes": 4833734,
+      "createdAt": 1785156205045,
+      "updatedAt": 1785156205045,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/d07812fb-7931-42fb-a1a8-753a3d4adad4.mp4"
+      },
+      "meta": {
+        "type": "UPLOAD",
+        "source": "migration",
+        "sourceMeta": {
+          "mime_type": "video/mp4"
+        },
+        "uploadFingerprint": "1814b3fdee292e449534a8b3d0922af64d53bc615321b8de8af63c7f90e1bd04"
+      }
+    },
+    {
+      "id": "pugong",
+      "kind": "video",
+      "name": "pugong.mp4",
+      "status": "ready",
+      "mimeType": "video/mp4",
+      "bytes": 5850123,
+      "createdAt": 1785156205251,
+      "updatedAt": 1785156205251,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/ccfda123-afe6-4271-b25e-83413841f2f4.mp4"
+      },
+      "meta": {
+        "type": "UPLOAD",
+        "source": "migration",
+        "sourceMeta": {
+          "mime_type": "video/mp4"
+        },
+        "uploadFingerprint": "5b49968d10b882f4bb14150594a15fbdc6d4c46736e6f89b3b3844af66f67010"
+      }
+    },
+    {
+      "id": "pugong2",
+      "kind": "video",
+      "name": "pugong2.mp4",
+      "status": "ready",
+      "mimeType": "video/mp4",
+      "bytes": 6361308,
+      "createdAt": 1785156205499,
+      "updatedAt": 1785156205499,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/68870233-4f0e-4305-84a4-8a118fb8cb75.mp4"
+      },
+      "meta": {
+        "type": "UPLOAD",
+        "source": "migration",
+        "sourceMeta": {
+          "mime_type": "video/mp4"
+        },
+        "uploadFingerprint": "84246dff41c5881b371dccd0b78acf326695e862a66b29069f107e34acf53537"
+      }
+    },
+    {
+      "id": "qinggongjizhisi",
+      "kind": "video",
+      "name": "qinggongjizhisi.mp4",
+      "status": "ready",
+      "mimeType": "video/mp4",
+      "bytes": 8387917,
+      "createdAt": 1785156205771,
+      "updatedAt": 1785156205771,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/d392ae6b-bfc3-4a08-a443-67b87d1ffffb.mp4"
+      },
+      "meta": {
+        "type": "UPLOAD",
+        "source": "migration",
+        "sourceMeta": {
+          "mime_type": "video/mp4"
+        },
+        "uploadFingerprint": "13528f827196ac6dbedd52622ea7b4aa8e18c9a531a10735973499c6d04a459f"
+      }
+    },
+    {
+      "id": "shanbi",
+      "kind": "video",
+      "name": "shanbi.mp4",
+      "status": "ready",
+      "mimeType": "video/mp4",
+      "bytes": 4553826,
+      "createdAt": 1785156206012,
+      "updatedAt": 1785156206012,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/08a7bbe2-3854-402f-9506-ff838c069668.mp4"
+      },
+      "meta": {
+        "type": "UPLOAD",
+        "source": "migration",
+        "sourceMeta": {
+          "mime_type": "video/mp4"
+        },
+        "uploadFingerprint": "bf4b3fc4453c3e51a8efdd16d476bc79f3d8867e61b6afee0fad153525f599c4"
+      }
+    },
+    {
+      "id": "shengli",
+      "kind": "video",
+      "name": "shengli.mp4",
+      "status": "ready",
+      "mimeType": "video/mp4",
+      "bytes": 10143323,
+      "createdAt": 1785156206376,
+      "updatedAt": 1785156206376,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/4ac0f19b-3a37-4b1f-bbd1-b43d422326a6.mp4"
+      },
+      "meta": {
+        "type": "UPLOAD",
+        "source": "migration",
+        "sourceMeta": {
+          "mime_type": "video/mp4"
+        },
+        "uploadFingerprint": "215aaa9638dc5f4e5531d0e523fdeec8afcbf08d2cc5ccf8663ae7492c0e8483"
+      }
+    },
+    {
+      "id": "shibai",
+      "kind": "video",
+      "name": "shibai.mp4",
+      "status": "ready",
+      "mimeType": "video/mp4",
+      "bytes": 5639702,
+      "createdAt": 1785156206625,
+      "updatedAt": 1785156206625,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/52868ffa-e993-4b18-8880-d2f1525d9696.mp4"
+      },
+      "meta": {
+        "type": "UPLOAD",
+        "source": "migration",
+        "sourceMeta": {
+          "mime_type": "video/mp4"
+        },
+        "uploadFingerprint": "f9682ce00b722536f5b0bed78e3bfb025704b75e8d571bac74ddafc45a8b39f5"
+      }
+    },
+    {
+      "id": "shouji",
+      "kind": "video",
+      "name": "shouji.mp4",
+      "status": "ready",
+      "mimeType": "video/mp4",
+      "bytes": 5502796,
+      "createdAt": 1785156206887,
+      "updatedAt": 1785156206887,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/1e6e1bf8-2a47-4869-abe1-02b9059b3447.mp4"
+      },
+      "meta": {
+        "type": "UPLOAD",
+        "source": "migration",
+        "sourceMeta": {
+          "mime_type": "video/mp4"
+        },
+        "uploadFingerprint": "4a1c1bc0c2ee6836b18f0052bca6149f17f715e030345f38d695d097ccd24f58"
+      }
+    },
+    {
+      "id": "zhonggongji",
+      "kind": "video",
+      "name": "zhonggongji.mp4",
+      "status": "ready",
+      "mimeType": "video/mp4",
+      "bytes": 8390698,
+      "createdAt": 1785156207280,
+      "updatedAt": 1785156207280,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/195bdd8f-8a8a-44ba-804f-87333851e0f7.mp4"
+      },
+      "meta": {
+        "type": "UPLOAD",
+        "source": "migration",
+        "sourceMeta": {
+          "mime_type": "video/mp4"
+        },
+        "uploadFingerprint": "bb543a745b0319dfc670186da33830314e4753a2a2258e928ed52d3916538103"
+      }
+    },
+    {
+      "id": "zhonggongji2",
+      "kind": "video",
+      "name": "zhonggongji2.mp4",
+      "status": "ready",
+      "mimeType": "video/mp4",
+      "bytes": 8051936,
+      "createdAt": 1785156207555,
+      "updatedAt": 1785156207555,
+      "provider": {
+        "kind": "cos",
+        "ref": "forgeax/videos/game-nodia-fighting/842151c0-719b-448d-8d4d-d20f8dfda10e.mp4"
+      },
+      "meta": {
+        "type": "UPLOAD",
+        "source": "migration",
+        "sourceMeta": {
+          "mime_type": "video/mp4"
+        },
+        "uploadFingerprint": "997039d2ca25dfe308d9a5b9daf707ca86fcadc2a78c2668d75ffcef1786a338"
+      }
     }
   ]
 }

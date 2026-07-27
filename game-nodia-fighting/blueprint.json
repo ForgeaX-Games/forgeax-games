@@ -1,0 +1,5273 @@
+{
+  "version": "wb-game-video.graph.v1",
+  "variables": {
+    "qi": {
+      "id": "qi",
+      "name": "气力",
+      "initial": 0,
+      "min": 0,
+      "max": 5
+    },
+    "lizhi": {
+      "id": "lizhi",
+      "name": "理智",
+      "initial": 5,
+      "min": 0,
+      "max": 12
+    },
+    "yezhang": {
+      "id": "yezhang",
+      "name": "业障",
+      "initial": 1,
+      "min": 0,
+      "max": 12
+    },
+    "lotusClue": {
+      "id": "lotusClue",
+      "name": "莲花妖线索",
+      "initial": 0
+    },
+    "mineFirst": {
+      "id": "mineFirst",
+      "name": "我方先手",
+      "initial": 1,
+      "min": 0,
+      "max": 1
+    }
+  },
+  "entities": {
+    "ent-player": {
+      "id": "ent-player",
+      "name": "空藏",
+      "kind": "player",
+      "attrs": {
+        "attack": 80,
+        "defense": 40,
+        "speed": 30,
+        "hp": 300
+      },
+      "attrMeta": {
+        "hp": {
+          "min": 0,
+          "max": 300,
+          "initial": 300,
+          "label": "生命"
+        }
+      }
+    },
+    "ent-boss": {
+      "id": "ent-boss",
+      "name": "小怪",
+      "kind": "boss",
+      "attrs": {
+        "attack": 75,
+        "defense": 50,
+        "speed": 25,
+        "hp": 700
+      },
+      "attrMeta": {
+        "hp": {
+          "min": 0,
+          "max": 700,
+          "initial": 700,
+          "label": "生命"
+        }
+      }
+    }
+  },
+  "ui": {
+    "overlays": {
+      "battleHud": {
+        "id": "battleHud",
+        "title": "战斗 HUD（双血条）",
+        "children": [
+          {
+            "id": "playerHp",
+            "component": "battleHpBar",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "bind": "ent-player",
+              "label": "空藏"
+            },
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          },
+          {
+            "id": "bossHp",
+            "component": "battleHpBar",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "bind": "ent-boss",
+              "label": "小怪"
+            },
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "readouts": {
+        "id": "readouts",
+        "title": "血量读数（spawn 模板）",
+        "children": [
+          {
+            "id": "bossHp",
+            "component": "floatText",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            },
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "x": 0.08,
+              "y": 0.16,
+              "text": "{v}"
+            }
+          },
+          {
+            "id": "heroHp",
+            "component": "floatText",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            },
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "x": 0.92,
+              "y": 0.16,
+              "text": "{v}"
+            }
+          }
+        ]
+      },
+      "block": {
+        "id": "block",
+        "title": "格挡飘字",
+        "children": [
+          {
+            "id": "block-fx",
+            "trigger": {
+              "when": "at",
+              "ms": 1800
+            },
+            "inputs": {
+              "text": "{v}",
+              "x": 0.5,
+              "y": 0.42,
+              "color": "#ffd54a",
+              "expr": "-(entity.ent-boss.attr.attack + var.yezhang * 21)"
+            },
+            "component": "floatText",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "dodgeP": {
+        "id": "dodgeP",
+        "title": "闪避飘字",
+        "children": [
+          {
+            "id": "dodgeP-fx",
+            "trigger": {
+              "when": "at",
+              "ms": 2000
+            },
+            "inputs": {
+              "text": "{v}",
+              "x": 0.5,
+              "y": 0.42,
+              "color": "#ffd54a",
+              "expr": "-(entity.ent-boss.attr.attack - entity.ent-player.attr.defense / 4)"
+            },
+            "component": "floatText",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "enter": {
+        "id": "enter",
+        "title": "入场转场",
+        "children": [
+          {
+            "id": "enter-fade",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "durationMs": 700,
+              "style": "fade",
+              "color": "#000"
+            },
+            "component": "transition",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "fuzhu": {
+        "id": "fuzhu",
+        "title": "辅助回血飘字",
+        "children": [
+          {
+            "id": "fuzhu-fx",
+            "trigger": {
+              "when": "at",
+              "ms": 2000
+            },
+            "inputs": {
+              "text": "+30",
+              "x": 0.5,
+              "y": 0.42,
+              "color": "#5fbf7f"
+            },
+            "component": "floatText",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "hurt": {
+        "id": "hurt",
+        "title": "受击飘字",
+        "children": [
+          {
+            "id": "hurt-fx",
+            "trigger": {
+              "when": "at",
+              "ms": 10
+            },
+            "inputs": {
+              "text": "{v}",
+              "x": 0.5,
+              "y": 0.42,
+              "color": "#ff5a5a",
+              "expr": "-(entity.ent-boss.attr.attack + var.yezhang * 45)"
+            },
+            "component": "floatText",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "n_door": {
+        "id": "n_door",
+        "title": "叩门 QTE",
+        "children": [
+          {
+            "id": "kou",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "glyph": "叩",
+              "events": [
+                {
+                  "id": "pass",
+                  "label": "叩中"
+                },
+                {
+                  "id": "fail",
+                  "label": "错过"
+                }
+              ],
+              "cues": [
+                {
+                  "id": "kou-0",
+                  "x": 0.58,
+                  "y": 0.39,
+                  "appearAt": 0,
+                  "targetAt": 1000,
+                  "endAt": 6100
+                }
+              ],
+              "timeoutMs": 6100,
+              "defaultEvent": "fail"
+            },
+            "component": "inkKou",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "n_soul": {
+        "id": "n_soul",
+        "title": "小魂对白",
+        "children": [
+          {
+            "id": "soul-line",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "speaker": "小魂",
+              "text": "……你也是来渡河的吗？",
+              "color": "#ffd54a"
+            },
+            "component": "dialogue",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "pu": {
+        "id": "pu",
+        "title": "普攻飘字",
+        "children": [
+          {
+            "id": "pu-fx",
+            "trigger": {
+              "when": "at",
+              "ms": 1000
+            },
+            "inputs": {
+              "text": "{v}",
+              "x": 0.5,
+              "y": 0.42,
+              "color": "#ffd54a",
+              "expr": "-(entity.ent-player.attr.attack)"
+            },
+            "component": "floatText",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "pu2": {
+        "id": "pu2",
+        "title": "普攻2飘字",
+        "children": [
+          {
+            "id": "pu2-fx",
+            "trigger": {
+              "when": "at",
+              "ms": 600
+            },
+            "inputs": {
+              "text": "{v}",
+              "x": 0.5,
+              "y": 0.42,
+              "color": "#ffd54a",
+              "expr": "-(entity.ent-player.attr.attack * 13 / 10)"
+            },
+            "component": "floatText",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "tele": {
+        "id": "tele",
+        "title": "受击防反 QTE",
+        "children": [
+          {
+            "id": "parry",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "qteKind": "parry",
+              "durationMs": 2600,
+              "events": [
+                {
+                  "id": "pass",
+                  "label": "受击防反"
+                },
+                {
+                  "id": "good",
+                  "label": "受击闪避"
+                },
+                {
+                  "id": "fail",
+                  "label": "受击"
+                }
+              ],
+              "defaultEvent": "fail",
+              "cues": [
+                {
+                  "id": "parry-0",
+                  "appearAt": 0,
+                  "targetAt": 1300,
+                  "endAt": 2600
+                }
+              ]
+            },
+            "component": "battleParry",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "ult": {
+        "id": "ult",
+        "title": "灭世飘字",
+        "children": [
+          {
+            "id": "ult-fx",
+            "trigger": {
+              "when": "at",
+              "ms": 7000
+            },
+            "inputs": {
+              "text": "{v}",
+              "x": 0.5,
+              "y": 0.42,
+              "color": "#ffd54a",
+              "expr": "-(entity.ent-player.attr.attack * 3)"
+            },
+            "component": "floatText",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "wait": {
+        "id": "wait",
+        "title": "技能条（轻/重/冥想/灭世）",
+        "children": [
+          {
+            "id": "skill",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "events": [
+                {
+                  "id": "light",
+                  "label": "轻攻击"
+                },
+                {
+                  "id": "heavy",
+                  "label": "重攻击",
+                  "condition": {
+                    "all": [
+                      {
+                        "type": "var",
+                        "varId": "qi",
+                        "op": "gte",
+                        "value": 2
+                      }
+                    ]
+                  }
+                },
+                {
+                  "id": "medit",
+                  "label": "冥想"
+                },
+                {
+                  "id": "ult",
+                  "label": "灭世",
+                  "condition": {
+                    "all": [
+                      {
+                        "type": "var",
+                        "varId": "qi",
+                        "op": "gte",
+                        "value": 5
+                      },
+                      {
+                        "type": "var",
+                        "varId": "lizhi",
+                        "op": "gte",
+                        "value": 4
+                      }
+                    ]
+                  }
+                }
+              ],
+              "x": 0.5,
+              "y": 0.88
+            },
+            "component": "battleSkillBar",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "z2": {
+        "id": "z2",
+        "title": "重击2飘字",
+        "children": [
+          {
+            "id": "z2-fx",
+            "trigger": {
+              "when": "at",
+              "ms": 2500
+            },
+            "inputs": {
+              "text": "{v}",
+              "x": 0.5,
+              "y": 0.42,
+              "color": "#ffd54a",
+              "expr": "-(entity.ent-player.attr.attack * 24 / 10)"
+            },
+            "component": "floatText",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "zhong": {
+        "id": "zhong",
+        "title": "重击飘字",
+        "children": [
+          {
+            "id": "zhong-fx",
+            "trigger": {
+              "when": "at",
+              "ms": 1700
+            },
+            "inputs": {
+              "text": "{v}",
+              "x": 0.5,
+              "y": 0.42,
+              "color": "#ffd54a",
+              "expr": "-(entity.ent-player.attr.attack * 18 / 10)"
+            },
+            "component": "floatText",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            }
+          }
+        ]
+      },
+      "scheme-static": {
+        "id": "scheme-static",
+        "title": "静态组件方案",
+        "children": [
+          {
+            "id": "hp-player",
+            "component": "battleHpBar",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            },
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "bind": "ent-player",
+              "label": "我方"
+            }
+          },
+          {
+            "id": "hp-boss",
+            "component": "battleHpBar",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            },
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "bind": "ent-boss",
+              "label": "敌方"
+            }
+          },
+          {
+            "id": "line",
+            "component": "dialogue",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "speaker": "角色",
+              "text": "这是一句字幕示例。"
+            }
+          }
+        ]
+      },
+      "scheme-dynamic": {
+        "id": "scheme-dynamic",
+        "title": "动态组件方案",
+        "children": [
+          {
+            "id": "qte-kou",
+            "component": "inkKou",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            },
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "glyph": "叩",
+              "events": [
+                {
+                  "id": "pass",
+                  "label": "完美"
+                },
+                {
+                  "id": "fail",
+                  "label": "失败"
+                }
+              ],
+              "defaultEvent": "fail",
+              "cues": [
+                {
+                  "id": "k0",
+                  "x": 0.5,
+                  "y": 0.45,
+                  "appearAt": 0,
+                  "targetAt": 400,
+                  "endAt": 1000
+                }
+              ]
+            }
+          },
+          {
+            "id": "qte-parry",
+            "component": "battleParry",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            },
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "durationMs": 2600,
+              "events": [
+                {
+                  "id": "pass",
+                  "label": "防反"
+                },
+                {
+                  "id": "good",
+                  "label": "闪避"
+                },
+                {
+                  "id": "fail",
+                  "label": "受击"
+                }
+              ],
+              "defaultEvent": "fail"
+            }
+          },
+          {
+            "id": "choice-yingmo",
+            "component": "inkYingMo",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            },
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "events": [
+                {
+                  "id": "ying",
+                  "label": "應"
+                },
+                {
+                  "id": "mo",
+                  "label": "默"
+                }
+              ],
+              "x": 0.5,
+              "y": 0.88,
+              "timeoutMs": 8000,
+              "defaultEvent": "mo"
+            }
+          },
+          {
+            "id": "choice-skills",
+            "component": "battleSkillBar",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            },
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "events": [
+                {
+                  "id": "a",
+                  "label": "斩"
+                },
+                {
+                  "id": "b",
+                  "label": "突"
+                },
+                {
+                  "id": "c",
+                  "label": "守"
+                }
+              ],
+              "x": 0.5,
+              "y": 0.88
+            }
+          },
+          {
+            "id": "float",
+            "component": "floatText",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "text": "+30",
+              "x": 0.5,
+              "y": 0.4,
+              "color": "#5fbf7f"
+            }
+          }
+        ]
+      },
+      "base:floatText": {
+        "id": "base:floatText",
+        "title": "花字/飘字",
+        "children": [
+          {
+            "id": "floatText-0",
+            "component": "floatText",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "text": "+30",
+              "x": 0.5,
+              "y": 0.4,
+              "color": "#5fbf7f"
+            }
+          }
+        ]
+      },
+      "base:dialogue": {
+        "id": "base:dialogue",
+        "title": "字幕/对白",
+        "children": [
+          {
+            "id": "dialogue-0",
+            "component": "dialogue",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "text": "字幕示例"
+            }
+          }
+        ]
+      },
+      "base:transition": {
+        "id": "base:transition",
+        "title": "转场",
+        "children": [
+          {
+            "id": "transition-0",
+            "component": "transition",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "durationMs": 600,
+              "style": "fade"
+            }
+          }
+        ]
+      },
+      "base:choice": {
+        "id": "base:choice",
+        "title": "选项",
+        "children": [
+          {
+            "id": "choice-0",
+            "component": "choice",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "presentation": "list",
+              "events": [
+                {
+                  "id": "opt0",
+                  "label": "选项一"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "base:skill": {
+        "id": "base:skill",
+        "title": "技能",
+        "children": [
+          {
+            "id": "skill-0",
+            "component": "skill",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "presentation": "list",
+              "events": [
+                {
+                  "id": "opt0",
+                  "label": "选项一"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "base:qte": {
+        "id": "base:qte",
+        "title": "QTE",
+        "children": [
+          {
+            "id": "qte-0",
+            "component": "qte",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "qteKind": "parry",
+              "passingHits": 1,
+              "cues": []
+            }
+          }
+        ]
+      },
+      "base:hotspot": {
+        "id": "base:hotspot",
+        "title": "热点",
+        "children": [
+          {
+            "id": "hotspot-0",
+            "component": "hotspot",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "events": []
+            }
+          }
+        ]
+      },
+      "base:filter": {
+        "id": "base:filter",
+        "title": "滤镜",
+        "children": [
+          {
+            "id": "filter-0",
+            "component": "filter",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "filter": "warm",
+              "intensity": 1
+            }
+          }
+        ]
+      },
+      "base:fx": {
+        "id": "base:fx",
+        "title": "特效",
+        "children": [
+          {
+            "id": "fx-0",
+            "component": "fx",
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "fx": "flash",
+              "intensity": 1
+            }
+          }
+        ]
+      },
+      "base:inkKou": {
+        "id": "base:inkKou",
+        "title": "叩击 QTE",
+        "children": [
+          {
+            "id": "inkKou-0",
+            "component": "inkKou",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            },
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "glyph": "叩",
+              "events": [
+                {
+                  "id": "pass",
+                  "label": "完美"
+                },
+                {
+                  "id": "fail",
+                  "label": "失败"
+                }
+              ],
+              "defaultEvent": "fail",
+              "cues": [
+                {
+                  "id": "k0",
+                  "x": 0.5,
+                  "y": 0.45,
+                  "appearAt": 0,
+                  "targetAt": 400,
+                  "endAt": 1000
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "base:battleParry": {
+        "id": "base:battleParry",
+        "title": "防反 QTE",
+        "children": [
+          {
+            "id": "battleParry-0",
+            "component": "battleParry",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            },
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "durationMs": 2600,
+              "events": [
+                {
+                  "id": "pass",
+                  "label": "防反"
+                },
+                {
+                  "id": "good",
+                  "label": "闪避"
+                },
+                {
+                  "id": "fail",
+                  "label": "受击"
+                }
+              ],
+              "defaultEvent": "fail"
+            }
+          }
+        ]
+      },
+      "base:inkYingMo": {
+        "id": "base:inkYingMo",
+        "title": "應/默 抉择",
+        "children": [
+          {
+            "id": "inkYingMo-0",
+            "component": "inkYingMo",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            },
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "events": [
+                {
+                  "id": "ying",
+                  "label": "應"
+                },
+                {
+                  "id": "mo",
+                  "label": "默"
+                }
+              ],
+              "x": 0.5,
+              "y": 0.88,
+              "timeoutMs": 8000,
+              "defaultEvent": "mo"
+            }
+          }
+        ]
+      },
+      "base:battleSkillBar": {
+        "id": "base:battleSkillBar",
+        "title": "战斗技能条",
+        "children": [
+          {
+            "id": "battleSkillBar-0",
+            "component": "battleSkillBar",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            },
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "events": [
+                {
+                  "id": "a",
+                  "label": "斩"
+                },
+                {
+                  "id": "b",
+                  "label": "突"
+                },
+                {
+                  "id": "c",
+                  "label": "守"
+                }
+              ],
+              "x": 0.5,
+              "y": 0.88
+            }
+          }
+        ]
+      },
+      "base:battleHpBar": {
+        "id": "base:battleHpBar",
+        "title": "水墨血条",
+        "children": [
+          {
+            "id": "battleHpBar-0",
+            "component": "battleHpBar",
+            "layout": {
+              "left": 0,
+              "top": 0,
+              "width": 1,
+              "height": 1
+            },
+            "trigger": {
+              "when": "enter"
+            },
+            "inputs": {
+              "bind": "ent-player",
+              "label": "角色"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "n_open",
+        "type": "perf",
+        "position": {
+          "x": 40,
+          "y": 310
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "序章",
+          "durationMs": 15975,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-open"
+          },
+          "overlayNodes": []
+        }
+      },
+      {
+        "id": "n_door",
+        "type": "perf",
+        "position": {
+          "x": 370,
+          "y": 310
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "慈悲狱门口",
+          "durationMs": 15100,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-door"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "n_door",
+              "reactions": [
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "pass"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-door-pass"
+                    }
+                  ]
+                },
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "fail"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-door-fail"
+                    }
+                  ]
+                }
+              ],
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "n_soul",
+        "type": "perf",
+        "position": {
+          "x": 700,
+          "y": 270
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "小魂对话",
+          "durationMs": 15093,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-soul"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "n_soul",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "n_river",
+        "type": "perf",
+        "position": {
+          "x": 1030,
+          "y": 310
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "划船渡河",
+          "durationMs": 15069,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-river"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "base:inkYingMo",
+              "reactions": [
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "ying"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-river-ying"
+                    }
+                  ]
+                },
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "mo"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-river-mo"
+                    }
+                  ]
+                }
+              ],
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              },
+              "overrides": {
+                "inkYingMo-0": {
+                  "trigger": {
+                    "when": "at",
+                    "ms": 12069
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "n_child",
+        "type": "perf",
+        "position": {
+          "x": 1360,
+          "y": 270
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "小孩对话",
+          "durationMs": 12887,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-child"
+          },
+          "overlayNodes": []
+        }
+      },
+      {
+        "id": "n_land",
+        "type": "perf",
+        "position": {
+          "x": 1690,
+          "y": 310
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "上岸",
+          "durationMs": 16200,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-land"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "base:inkYingMo",
+              "reactions": [
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "ying"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-land-ying"
+                    }
+                  ]
+                },
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "mo"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-land-mo"
+                    }
+                  ]
+                }
+              ],
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              },
+              "overrides": {
+                "inkYingMo-0": {
+                  "trigger": {
+                    "when": "at",
+                    "ms": 13200
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "n_mask",
+        "type": "perf",
+        "position": {
+          "x": 2020,
+          "y": 270
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "灯笼对话",
+          "durationMs": 15093,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-mask"
+          },
+          "overlayNodes": []
+        }
+      },
+      {
+        "id": "n_mengpo",
+        "type": "perf",
+        "position": {
+          "x": 2350,
+          "y": 310
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "过桥见孟婆",
+          "durationMs": 17136,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-mengpo"
+          },
+          "overlayNodes": []
+        }
+      },
+      {
+        "id": "n_tea",
+        "type": "perf",
+        "position": {
+          "x": 2680,
+          "y": 310
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "喝孟婆汤",
+          "durationMs": 15093,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-tea"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "base:inkYingMo",
+              "reactions": [
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "ying"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-tea-ying"
+                    }
+                  ]
+                },
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "mo"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-tea-mo"
+                    }
+                  ]
+                }
+              ],
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              },
+              "overrides": {
+                "inkYingMo-0": {
+                  "trigger": {
+                    "when": "at",
+                    "ms": 12093
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "n_drink",
+        "type": "perf",
+        "position": {
+          "x": 3010,
+          "y": 440
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "饮汤应答",
+          "durationMs": 14489,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-drink"
+          },
+          "reactions": [
+            {
+              "when": {
+                "type": "enter"
+              },
+              "do": [
+                {
+                  "kind": "effect",
+                  "effects": [
+                    {
+                      "id": "drink-lizhi",
+                      "kind": "var",
+                      "varId": "lizhi",
+                      "op": "add",
+                      "value": -1
+                    },
+                    {
+                      "id": "drink-yezhang",
+                      "kind": "var",
+                      "varId": "yezhang",
+                      "op": "add",
+                      "value": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "overlayNodes": []
+        }
+      },
+      {
+        "id": "n_nodrink",
+        "type": "perf",
+        "position": {
+          "x": 3010,
+          "y": 180
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "不喝",
+          "durationMs": 15093,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-nodrink"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "base:inkYingMo",
+              "reactions": [
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "ying"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-nodrink-ying"
+                    }
+                  ]
+                },
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "mo"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-nodrink-mo"
+                    }
+                  ]
+                }
+              ],
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              },
+              "overrides": {
+                "inkYingMo-0": {
+                  "trigger": {
+                    "when": "at",
+                    "ms": 12093
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "n_follow",
+        "type": "perf",
+        "position": {
+          "x": 3340,
+          "y": 440
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "跟随引魂",
+          "durationMs": 15093,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-follow"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "base:inkYingMo",
+              "reactions": [
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "ying"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-follow-ying"
+                    }
+                  ]
+                },
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "mo"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-follow-mo"
+                    }
+                  ]
+                }
+              ],
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              },
+              "overrides": {
+                "inkYingMo-0": {
+                  "trigger": {
+                    "when": "at",
+                    "ms": 12093
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "n_getlight",
+        "type": "perf",
+        "position": {
+          "x": 3670,
+          "y": 460
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "获取道具",
+          "durationMs": 15093,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-getlight"
+          },
+          "overlayNodes": []
+        }
+      },
+      {
+        "id": "n_nolight",
+        "type": "perf",
+        "position": {
+          "x": 3670,
+          "y": 320
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "没能道具",
+          "durationMs": 15093,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-nolight"
+          },
+          "overlayNodes": []
+        }
+      },
+      {
+        "id": "n_nofollow",
+        "type": "perf",
+        "position": {
+          "x": 3340,
+          "y": 160
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "不跟随",
+          "durationMs": 15093,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-nofollow"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "base:inkYingMo",
+              "reactions": [
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "ying"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-nofollow-ying"
+                    }
+                  ]
+                },
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "mo"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-nofollow-mo"
+                    }
+                  ]
+                }
+              ],
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              },
+              "overrides": {
+                "inkYingMo-0": {
+                  "trigger": {
+                    "when": "at",
+                    "ms": 12093
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "n_lotus",
+        "type": "perf",
+        "position": {
+          "x": 3670,
+          "y": 180
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "接过莲藕",
+          "durationMs": 15093,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-lotus"
+          },
+          "overlayNodes": []
+        }
+      },
+      {
+        "id": "n_nolotus",
+        "type": "perf",
+        "position": {
+          "x": 3670,
+          "y": 40
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "不要莲藕",
+          "durationMs": 15069,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "m-narr-nolotus"
+          },
+          "reactions": [
+            {
+              "when": {
+                "type": "enter"
+              },
+              "do": [
+                {
+                  "kind": "effect",
+                  "effects": [
+                    {
+                      "id": "nolotus-clue",
+                      "kind": "var",
+                      "varId": "lotusClue",
+                      "op": "set",
+                      "value": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "overlayNodes": []
+        }
+      },
+      {
+        "id": "enter",
+        "type": "perf",
+        "position": {
+          "x": 4000,
+          "y": 260
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "进战待机",
+          "durationMs": 3000,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "idle01"
+          },
+          "mediaPlayMode": "once",
+          "overlayNodes": [
+            {
+              "overlay": "battleHud",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            },
+            {
+              "overlay": "enter",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ],
+          "reactions": [
+            {
+              "when": {
+                "type": "complete",
+                "if": {
+                  "all": [
+                    {
+                      "type": "attrCompare",
+                      "left": "ent-player",
+                      "right": "ent-boss",
+                      "attr": "speed",
+                      "op": "gte"
+                    }
+                  ]
+                }
+              },
+              "do": [
+                {
+                  "kind": "effect",
+                  "effects": [
+                    {
+                      "id": "first-me",
+                      "kind": "var",
+                      "varId": "mineFirst",
+                      "op": "set",
+                      "value": 1
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "when": {
+                "type": "complete"
+              },
+              "do": [
+                {
+                  "kind": "effect",
+                  "effects": [
+                    {
+                      "id": "first-foe",
+                      "kind": "var",
+                      "varId": "mineFirst",
+                      "op": "set",
+                      "value": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "a_my",
+        "type": "perf",
+        "position": {
+          "x": 4330,
+          "y": 190
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "我方回合",
+          "durationMs": 0,
+          "subFlow": "wait"
+        }
+      },
+      {
+        "id": "b_ai",
+        "type": "perf",
+        "position": {
+          "x": 4660,
+          "y": 280
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "敌方回合",
+          "durationMs": 0,
+          "subFlow": "tele"
+        }
+      },
+      {
+        "id": "wait",
+        "type": "perf",
+        "position": {
+          "x": 4330,
+          "y": 720
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "战斗待机",
+          "durationMs": 8000,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "idle01"
+          },
+          "mediaPlayMode": "loop",
+          "overlayNodes": [
+            {
+              "overlay": "battleHud",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            },
+            {
+              "overlay": "wait",
+              "reactions": [
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "light"
+                  },
+                  "do": [
+                    {
+                      "kind": "effect",
+                      "effects": [
+                        {
+                          "id": "sk-light-qi",
+                          "kind": "var",
+                          "varId": "qi",
+                          "op": "add",
+                          "value": 2
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "heavy"
+                  },
+                  "do": [
+                    {
+                      "kind": "effect",
+                      "effects": [
+                        {
+                          "id": "sk-heavy-qi",
+                          "kind": "var",
+                          "varId": "qi",
+                          "op": "add",
+                          "value": -2
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "medit"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-sk-medit"
+                    }
+                  ]
+                },
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "ult"
+                  },
+                  "do": [
+                    {
+                      "kind": "effect",
+                      "effects": [
+                        {
+                          "id": "sk-ult-qi",
+                          "kind": "var",
+                          "varId": "qi",
+                          "op": "set",
+                          "value": 0
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-sk-ult"
+                    }
+                  ]
+                }
+              ],
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "pu",
+        "type": "perf",
+        "position": {
+          "x": 4660,
+          "y": 1070
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "轻攻击",
+          "durationMs": 5000,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "pugong"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "battleHud",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            },
+            {
+              "overlay": "pu",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ],
+          "reactions": [
+            {
+              "when": {
+                "type": "at",
+                "ms": 1000
+              },
+              "do": [
+                {
+                  "kind": "effect",
+                  "effects": [
+                    {
+                      "id": "pu-dmg",
+                      "kind": "attr",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "add",
+                      "value": {
+                        "expr": "-(entity.ent-player.attr.attack)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "pu2",
+        "type": "perf",
+        "position": {
+          "x": 4660,
+          "y": 930
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "轻攻击·变招",
+          "durationMs": 5000,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "pugong2"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "battleHud",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            },
+            {
+              "overlay": "pu2",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ],
+          "reactions": [
+            {
+              "when": {
+                "type": "at",
+                "ms": 600
+              },
+              "do": [
+                {
+                  "kind": "effect",
+                  "effects": [
+                    {
+                      "id": "pu2-dmg",
+                      "kind": "attr",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "add",
+                      "value": {
+                        "expr": "-(entity.ent-player.attr.attack * 13 / 10)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "zhong",
+        "type": "perf",
+        "position": {
+          "x": 4660,
+          "y": 790
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "重攻击",
+          "durationMs": 6000,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "zhonggongji"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "battleHud",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            },
+            {
+              "overlay": "zhong",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ],
+          "reactions": [
+            {
+              "when": {
+                "type": "at",
+                "ms": 1700
+              },
+              "do": [
+                {
+                  "kind": "effect",
+                  "effects": [
+                    {
+                      "id": "zhong-dmg",
+                      "kind": "attr",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "add",
+                      "value": {
+                        "expr": "-(entity.ent-player.attr.attack * 18 / 10)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "z2",
+        "type": "perf",
+        "position": {
+          "x": 4660,
+          "y": 650
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "重攻击·变招",
+          "durationMs": 6000,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "zhonggongji2"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "battleHud",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            },
+            {
+              "overlay": "z2",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ],
+          "reactions": [
+            {
+              "when": {
+                "type": "at",
+                "ms": 2500
+              },
+              "do": [
+                {
+                  "kind": "effect",
+                  "effects": [
+                    {
+                      "id": "z2-dmg",
+                      "kind": "attr",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "add",
+                      "value": {
+                        "expr": "-(entity.ent-player.attr.attack * 24 / 10)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "fuzhu",
+        "type": "perf",
+        "position": {
+          "x": 4660,
+          "y": 510
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "冥想",
+          "durationMs": 5000,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "huiqi"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "battleHud",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            },
+            {
+              "overlay": "fuzhu",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ],
+          "reactions": [
+            {
+              "when": {
+                "type": "at",
+                "ms": 2000
+              },
+              "do": [
+                {
+                  "kind": "effect",
+                  "effects": [
+                    {
+                      "id": "fuzhu-heal",
+                      "kind": "attr",
+                      "entityId": "ent-player",
+                      "attr": "hp",
+                      "op": "add",
+                      "value": 30
+                    },
+                    {
+                      "id": "fuzhu-qi",
+                      "kind": "var",
+                      "varId": "qi",
+                      "op": "add",
+                      "value": 2
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "ult",
+        "type": "perf",
+        "position": {
+          "x": 4660,
+          "y": 370
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "灭世",
+          "durationMs": 12000,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "fa6da536-df0b-4f4f-aede-d77e8b053950"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "battleHud",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            },
+            {
+              "overlay": "ult",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ],
+          "reactions": [
+            {
+              "when": {
+                "type": "at",
+                "ms": 7000
+              },
+              "do": [
+                {
+                  "kind": "effect",
+                  "effects": [
+                    {
+                      "id": "ult-dmg",
+                      "kind": "attr",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "add",
+                      "value": {
+                        "expr": "-(entity.ent-player.attr.attack * 3)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "tele",
+        "type": "perf",
+        "position": {
+          "x": 4660,
+          "y": 600
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "攻击前摇·防反QTE",
+          "durationMs": 4000,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "difanggongjiqianyao"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "battleHud",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            },
+            {
+              "overlay": "tele",
+              "reactions": [
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "pass"
+                  },
+                  "do": [
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-tele-pass"
+                    }
+                  ]
+                },
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "good"
+                  },
+                  "do": [
+                    {
+                      "kind": "effect",
+                      "effects": [
+                        {
+                          "id": "dodge-qi",
+                          "kind": "var",
+                          "varId": "qi",
+                          "op": "add",
+                          "value": -1
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-tele-good"
+                    }
+                  ]
+                },
+                {
+                  "when": {
+                    "type": "event",
+                    "id": "fail"
+                  },
+                  "do": [
+                    {
+                      "kind": "effect",
+                      "effects": [
+                        {
+                          "id": "hurt-qi",
+                          "kind": "var",
+                          "varId": "qi",
+                          "op": "add",
+                          "value": 1
+                        }
+                      ]
+                    },
+                    {
+                      "kind": "advance",
+                      "edgeId": "e-tele-fail"
+                    }
+                  ]
+                }
+              ],
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "block",
+        "type": "perf",
+        "position": {
+          "x": 4990,
+          "y": 740
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "受击防反",
+          "durationMs": 4000,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "fangfan"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "battleHud",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            },
+            {
+              "overlay": "block",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ],
+          "reactions": [
+            {
+              "when": {
+                "type": "at",
+                "ms": 1800
+              },
+              "do": [
+                {
+                  "kind": "effect",
+                  "effects": [
+                    {
+                      "id": "block-dmg",
+                      "kind": "attr",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "add",
+                      "value": {
+                        "expr": "-(entity.ent-boss.attr.attack + var.yezhang * 21)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "dodgeP",
+        "type": "perf",
+        "position": {
+          "x": 4990,
+          "y": 600
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "受击闪避",
+          "durationMs": 4000,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "shanbi"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "battleHud",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            },
+            {
+              "overlay": "dodgeP",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ],
+          "reactions": [
+            {
+              "when": {
+                "type": "at",
+                "ms": 2000
+              },
+              "do": [
+                {
+                  "kind": "effect",
+                  "effects": [
+                    {
+                      "id": "dodge-dmg",
+                      "kind": "attr",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "add",
+                      "value": {
+                        "expr": "-(entity.ent-boss.attr.attack - entity.ent-player.attr.defense / 4)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "hurt",
+        "type": "perf",
+        "position": {
+          "x": 4990,
+          "y": 460
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "受击",
+          "durationMs": 4000,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "shouji"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "battleHud",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            },
+            {
+              "overlay": "hurt",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ],
+          "reactions": [
+            {
+              "when": {
+                "type": "at",
+                "ms": 10
+              },
+              "do": [
+                {
+                  "kind": "effect",
+                  "effects": [
+                    {
+                      "id": "hurt-dmg",
+                      "kind": "attr",
+                      "entityId": "ent-player",
+                      "attr": "hp",
+                      "op": "add",
+                      "value": {
+                        "expr": "-(entity.ent-boss.attr.attack + var.yezhang * 45)"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "win",
+        "type": "perf",
+        "position": {
+          "x": 4990,
+          "y": 140
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "战斗胜利",
+          "durationMs": 10000,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "shengli"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "battleHud",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "lose",
+        "type": "perf",
+        "position": {
+          "x": 4990,
+          "y": 280
+        },
+        "inputs": [],
+        "outputs": [],
+        "data": {
+          "name": "战斗失败",
+          "durationMs": 6000,
+          "media": {
+            "kind": "VIDEO",
+            "ref": "shibai"
+          },
+          "overlayNodes": [
+            {
+              "overlay": "battleHud",
+              "layout": {
+                "left": 0,
+                "top": 0,
+                "width": 1,
+                "height": 1
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "e-open",
+        "source": "n_open",
+        "target": "n_door",
+        "sourceHandle": "default",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-door-pass",
+        "source": "n_door",
+        "target": "n_soul",
+        "sourceHandle": "pass",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-door-fail",
+        "source": "n_door",
+        "target": "n_river",
+        "sourceHandle": "fail",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-soul",
+        "source": "n_soul",
+        "target": "n_river",
+        "sourceHandle": "default",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-river-ying",
+        "source": "n_river",
+        "target": "n_child",
+        "sourceHandle": "ying",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-river-mo",
+        "source": "n_river",
+        "target": "n_land",
+        "sourceHandle": "mo",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-child",
+        "source": "n_child",
+        "target": "n_land",
+        "sourceHandle": "default",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-land-ying",
+        "source": "n_land",
+        "target": "n_mask",
+        "sourceHandle": "ying",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-land-mo",
+        "source": "n_land",
+        "target": "n_mengpo",
+        "sourceHandle": "mo",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-mask",
+        "source": "n_mask",
+        "target": "n_mengpo",
+        "sourceHandle": "default",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-mengpo",
+        "source": "n_mengpo",
+        "target": "n_tea",
+        "sourceHandle": "default",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-tea-ying",
+        "source": "n_tea",
+        "target": "n_drink",
+        "sourceHandle": "ying",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-tea-mo",
+        "source": "n_tea",
+        "target": "n_nodrink",
+        "sourceHandle": "mo",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-drink",
+        "source": "n_drink",
+        "target": "n_follow",
+        "sourceHandle": "default",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-nodrink-ying",
+        "source": "n_nodrink",
+        "target": "n_follow",
+        "sourceHandle": "ying",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-nodrink-mo",
+        "source": "n_nodrink",
+        "target": "n_nofollow",
+        "sourceHandle": "mo",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-follow-ying",
+        "source": "n_follow",
+        "target": "n_getlight",
+        "sourceHandle": "ying",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-follow-mo",
+        "source": "n_follow",
+        "target": "n_nolight",
+        "sourceHandle": "mo",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-getlight",
+        "source": "n_getlight",
+        "target": "enter",
+        "sourceHandle": "default",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-nolight",
+        "source": "n_nolight",
+        "target": "enter",
+        "sourceHandle": "default",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-nofollow-ying",
+        "source": "n_nofollow",
+        "target": "n_lotus",
+        "sourceHandle": "ying",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-nofollow-mo",
+        "source": "n_nofollow",
+        "target": "n_nolotus",
+        "sourceHandle": "mo",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-lotus",
+        "source": "n_lotus",
+        "target": "enter",
+        "sourceHandle": "default",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-nolotus",
+        "source": "n_nolotus",
+        "target": "enter",
+        "sourceHandle": "default",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-init-me",
+        "source": "enter",
+        "target": "a_my",
+        "sourceHandle": "default",
+        "targetHandle": "in",
+        "data": {
+          "condition": {
+            "all": [
+              {
+                "type": "attrCompare",
+                "left": "ent-player",
+                "right": "ent-boss",
+                "attr": "speed",
+                "op": "gte"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "e-init-foe",
+        "source": "enter",
+        "target": "b_ai",
+        "sourceHandle": "default",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-sk-light",
+        "source": "wait",
+        "target": "pu",
+        "sourceHandle": "light",
+        "targetHandle": "in",
+        "data": {
+          "weight": 1
+        }
+      },
+      {
+        "id": "e-sk-light2",
+        "source": "wait",
+        "target": "pu2",
+        "sourceHandle": "light",
+        "targetHandle": "in",
+        "data": {
+          "weight": 1
+        }
+      },
+      {
+        "id": "e-sk-heavy",
+        "source": "wait",
+        "target": "zhong",
+        "sourceHandle": "heavy",
+        "targetHandle": "in",
+        "data": {
+          "weight": 1
+        }
+      },
+      {
+        "id": "e-sk-heavy2",
+        "source": "wait",
+        "target": "z2",
+        "sourceHandle": "heavy",
+        "targetHandle": "in",
+        "data": {
+          "weight": 1
+        }
+      },
+      {
+        "id": "e-sk-medit",
+        "source": "wait",
+        "target": "fuzhu",
+        "sourceHandle": "medit",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-sk-ult",
+        "source": "wait",
+        "target": "ult",
+        "sourceHandle": "ult",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-tele-pass",
+        "source": "tele",
+        "target": "block",
+        "sourceHandle": "pass",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-tele-good",
+        "source": "tele",
+        "target": "dodgeP",
+        "sourceHandle": "good",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-tele-fail",
+        "source": "tele",
+        "target": "hurt",
+        "sourceHandle": "fail",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-amy-win",
+        "source": "a_my",
+        "target": "win",
+        "sourceHandle": "default",
+        "targetHandle": "in",
+        "data": {
+          "condition": {
+            "all": [
+              {
+                "type": "attrRatio",
+                "entityId": "ent-boss",
+                "attr": "hp",
+                "op": "lte",
+                "value": 0
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "e-amy-lose",
+        "source": "a_my",
+        "target": "lose",
+        "sourceHandle": "default",
+        "targetHandle": "in",
+        "data": {
+          "condition": {
+            "all": [
+              {
+                "type": "attrRatio",
+                "entityId": "ent-player",
+                "attr": "hp",
+                "op": "lte",
+                "value": 0
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "e-amy-foe",
+        "source": "a_my",
+        "target": "b_ai",
+        "sourceHandle": "default",
+        "targetHandle": "in",
+        "data": {
+          "condition": {
+            "all": [
+              {
+                "type": "var",
+                "varId": "mineFirst",
+                "op": "eq",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "e-amy-loop",
+        "source": "a_my",
+        "target": "enter",
+        "sourceHandle": "default",
+        "targetHandle": "in"
+      },
+      {
+        "id": "e-bai-win",
+        "source": "b_ai",
+        "target": "win",
+        "sourceHandle": "default",
+        "targetHandle": "in",
+        "data": {
+          "condition": {
+            "all": [
+              {
+                "type": "attrRatio",
+                "entityId": "ent-boss",
+                "attr": "hp",
+                "op": "lte",
+                "value": 0
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "e-bai-lose",
+        "source": "b_ai",
+        "target": "lose",
+        "sourceHandle": "default",
+        "targetHandle": "in",
+        "data": {
+          "condition": {
+            "all": [
+              {
+                "type": "attrRatio",
+                "entityId": "ent-player",
+                "attr": "hp",
+                "op": "lte",
+                "value": 0
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "e-bai-loop",
+        "source": "b_ai",
+        "target": "enter",
+        "sourceHandle": "default",
+        "targetHandle": "in",
+        "data": {
+          "condition": {
+            "all": [
+              {
+                "type": "var",
+                "varId": "mineFirst",
+                "op": "eq",
+                "value": 1
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "e-bai-my",
+        "source": "b_ai",
+        "target": "a_my",
+        "sourceHandle": "default",
+        "targetHandle": "in"
+      }
+    ]
+  },
+  "manifest": {
+    "version": "wb-game-video.blueprint-manifest.v1",
+    "mainPackId": "bp-main",
+    "packs": {
+      "bp-main": {
+        "id": "bp-main",
+        "title": "主蓝图",
+        "entry": "n_open",
+        "graph": {
+          "nodes": [
+            {
+              "id": "n_open",
+              "type": "perf",
+              "position": {
+                "x": 40,
+                "y": 310
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "序章",
+                "durationMs": 15975,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-open"
+                },
+                "overlayNodes": []
+              }
+            },
+            {
+              "id": "n_door",
+              "type": "perf",
+              "position": {
+                "x": 370,
+                "y": 310
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "慈悲狱门口",
+                "durationMs": 15100,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-door"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "n_door",
+                    "reactions": [
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "pass"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-door-pass"
+                          }
+                        ]
+                      },
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "fail"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-door-fail"
+                          }
+                        ]
+                      }
+                    ],
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "n_soul",
+              "type": "perf",
+              "position": {
+                "x": 700,
+                "y": 270
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "小魂对话",
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-soul"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "n_soul",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "n_river",
+              "type": "perf",
+              "position": {
+                "x": 1030,
+                "y": 310
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "划船渡河",
+                "durationMs": 15069,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-river"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "base:inkYingMo",
+                    "reactions": [
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "ying"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-river-ying"
+                          }
+                        ]
+                      },
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "mo"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-river-mo"
+                          }
+                        ]
+                      }
+                    ],
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    },
+                    "overrides": {
+                      "inkYingMo-0": {
+                        "trigger": {
+                          "when": "at",
+                          "ms": 12069
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "n_child",
+              "type": "perf",
+              "position": {
+                "x": 1360,
+                "y": 270
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "小孩对话",
+                "durationMs": 12887,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-child"
+                },
+                "overlayNodes": []
+              }
+            },
+            {
+              "id": "n_land",
+              "type": "perf",
+              "position": {
+                "x": 1690,
+                "y": 310
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "上岸",
+                "durationMs": 16200,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-land"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "base:inkYingMo",
+                    "reactions": [
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "ying"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-land-ying"
+                          }
+                        ]
+                      },
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "mo"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-land-mo"
+                          }
+                        ]
+                      }
+                    ],
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    },
+                    "overrides": {
+                      "inkYingMo-0": {
+                        "trigger": {
+                          "when": "at",
+                          "ms": 13200
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "n_mask",
+              "type": "perf",
+              "position": {
+                "x": 2020,
+                "y": 270
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "灯笼对话",
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-mask"
+                },
+                "overlayNodes": []
+              }
+            },
+            {
+              "id": "n_mengpo",
+              "type": "perf",
+              "position": {
+                "x": 2350,
+                "y": 310
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "过桥见孟婆",
+                "durationMs": 17136,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-mengpo"
+                },
+                "overlayNodes": []
+              }
+            },
+            {
+              "id": "n_tea",
+              "type": "perf",
+              "position": {
+                "x": 2680,
+                "y": 310
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "喝孟婆汤",
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-tea"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "base:inkYingMo",
+                    "reactions": [
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "ying"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-tea-ying"
+                          }
+                        ]
+                      },
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "mo"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-tea-mo"
+                          }
+                        ]
+                      }
+                    ],
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    },
+                    "overrides": {
+                      "inkYingMo-0": {
+                        "trigger": {
+                          "when": "at",
+                          "ms": 12093
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "n_drink",
+              "type": "perf",
+              "position": {
+                "x": 3010,
+                "y": 440
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "饮汤应答",
+                "durationMs": 14489,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-drink"
+                },
+                "reactions": [
+                  {
+                    "when": {
+                      "type": "enter"
+                    },
+                    "do": [
+                      {
+                        "kind": "effect",
+                        "effects": [
+                          {
+                            "id": "drink-lizhi",
+                            "kind": "var",
+                            "varId": "lizhi",
+                            "op": "add",
+                            "value": -1
+                          },
+                          {
+                            "id": "drink-yezhang",
+                            "kind": "var",
+                            "varId": "yezhang",
+                            "op": "add",
+                            "value": 1
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "overlayNodes": []
+              }
+            },
+            {
+              "id": "n_nodrink",
+              "type": "perf",
+              "position": {
+                "x": 3010,
+                "y": 180
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "不喝",
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-nodrink"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "base:inkYingMo",
+                    "reactions": [
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "ying"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-nodrink-ying"
+                          }
+                        ]
+                      },
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "mo"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-nodrink-mo"
+                          }
+                        ]
+                      }
+                    ],
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    },
+                    "overrides": {
+                      "inkYingMo-0": {
+                        "trigger": {
+                          "when": "at",
+                          "ms": 12093
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "n_follow",
+              "type": "perf",
+              "position": {
+                "x": 3340,
+                "y": 440
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "跟随引魂",
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-follow"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "base:inkYingMo",
+                    "reactions": [
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "ying"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-follow-ying"
+                          }
+                        ]
+                      },
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "mo"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-follow-mo"
+                          }
+                        ]
+                      }
+                    ],
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    },
+                    "overrides": {
+                      "inkYingMo-0": {
+                        "trigger": {
+                          "when": "at",
+                          "ms": 12093
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "n_getlight",
+              "type": "perf",
+              "position": {
+                "x": 3670,
+                "y": 460
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "获取道具",
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-getlight"
+                },
+                "overlayNodes": []
+              }
+            },
+            {
+              "id": "n_nolight",
+              "type": "perf",
+              "position": {
+                "x": 3670,
+                "y": 320
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "没能道具",
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-nolight"
+                },
+                "overlayNodes": []
+              }
+            },
+            {
+              "id": "n_nofollow",
+              "type": "perf",
+              "position": {
+                "x": 3340,
+                "y": 160
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "不跟随",
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-nofollow"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "base:inkYingMo",
+                    "reactions": [
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "ying"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-nofollow-ying"
+                          }
+                        ]
+                      },
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "mo"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-nofollow-mo"
+                          }
+                        ]
+                      }
+                    ],
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    },
+                    "overrides": {
+                      "inkYingMo-0": {
+                        "trigger": {
+                          "when": "at",
+                          "ms": 12093
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "n_lotus",
+              "type": "perf",
+              "position": {
+                "x": 3670,
+                "y": 180
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "接过莲藕",
+                "durationMs": 15093,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-lotus"
+                },
+                "overlayNodes": []
+              }
+            },
+            {
+              "id": "n_nolotus",
+              "type": "perf",
+              "position": {
+                "x": 3670,
+                "y": 40
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "不要莲藕",
+                "durationMs": 15069,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "m-narr-nolotus"
+                },
+                "reactions": [
+                  {
+                    "when": {
+                      "type": "enter"
+                    },
+                    "do": [
+                      {
+                        "kind": "effect",
+                        "effects": [
+                          {
+                            "id": "nolotus-clue",
+                            "kind": "var",
+                            "varId": "lotusClue",
+                            "op": "set",
+                            "value": 1
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "overlayNodes": []
+              }
+            },
+            {
+              "id": "enter",
+              "type": "perf",
+              "position": {
+                "x": 4000,
+                "y": 260
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "进战待机",
+                "durationMs": 3000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "idle01"
+                },
+                "mediaPlayMode": "once",
+                "overlayNodes": [
+                  {
+                    "overlay": "battleHud",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  },
+                  {
+                    "overlay": "enter",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ],
+                "reactions": [
+                  {
+                    "when": {
+                      "type": "complete",
+                      "if": {
+                        "all": [
+                          {
+                            "type": "attrCompare",
+                            "left": "ent-player",
+                            "right": "ent-boss",
+                            "attr": "speed",
+                            "op": "gte"
+                          }
+                        ]
+                      }
+                    },
+                    "do": [
+                      {
+                        "kind": "effect",
+                        "effects": [
+                          {
+                            "id": "first-me",
+                            "kind": "var",
+                            "varId": "mineFirst",
+                            "op": "set",
+                            "value": 1
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "when": {
+                      "type": "complete"
+                    },
+                    "do": [
+                      {
+                        "kind": "effect",
+                        "effects": [
+                          {
+                            "id": "first-foe",
+                            "kind": "var",
+                            "varId": "mineFirst",
+                            "op": "set",
+                            "value": 0
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "a_my",
+              "type": "perf",
+              "position": {
+                "x": 4330,
+                "y": 190
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "我方回合",
+                "durationMs": 0,
+                "subFlow": "wait"
+              }
+            },
+            {
+              "id": "b_ai",
+              "type": "perf",
+              "position": {
+                "x": 4660,
+                "y": 280
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "敌方回合",
+                "durationMs": 0,
+                "subFlow": "tele"
+              }
+            },
+            {
+              "id": "wait",
+              "type": "perf",
+              "position": {
+                "x": 4330,
+                "y": 720
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "战斗待机",
+                "durationMs": 8000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "idle01"
+                },
+                "mediaPlayMode": "loop",
+                "overlayNodes": [
+                  {
+                    "overlay": "battleHud",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  },
+                  {
+                    "overlay": "wait",
+                    "reactions": [
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "light"
+                        },
+                        "do": [
+                          {
+                            "kind": "effect",
+                            "effects": [
+                              {
+                                "id": "sk-light-qi",
+                                "kind": "var",
+                                "varId": "qi",
+                                "op": "add",
+                                "value": 2
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "heavy"
+                        },
+                        "do": [
+                          {
+                            "kind": "effect",
+                            "effects": [
+                              {
+                                "id": "sk-heavy-qi",
+                                "kind": "var",
+                                "varId": "qi",
+                                "op": "add",
+                                "value": -2
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "medit"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-sk-medit"
+                          }
+                        ]
+                      },
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "ult"
+                        },
+                        "do": [
+                          {
+                            "kind": "effect",
+                            "effects": [
+                              {
+                                "id": "sk-ult-qi",
+                                "kind": "var",
+                                "varId": "qi",
+                                "op": "set",
+                                "value": 0
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-sk-ult"
+                          }
+                        ]
+                      }
+                    ],
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "pu",
+              "type": "perf",
+              "position": {
+                "x": 4660,
+                "y": 1070
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "轻攻击",
+                "durationMs": 5000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "pugong"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "battleHud",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  },
+                  {
+                    "overlay": "pu",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ],
+                "reactions": [
+                  {
+                    "when": {
+                      "type": "at",
+                      "ms": 1000
+                    },
+                    "do": [
+                      {
+                        "kind": "effect",
+                        "effects": [
+                          {
+                            "id": "pu-dmg",
+                            "kind": "attr",
+                            "entityId": "ent-boss",
+                            "attr": "hp",
+                            "op": "add",
+                            "value": {
+                              "expr": "-(entity.ent-player.attr.attack)"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "pu2",
+              "type": "perf",
+              "position": {
+                "x": 4660,
+                "y": 930
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "轻攻击·变招",
+                "durationMs": 5000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "pugong2"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "battleHud",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  },
+                  {
+                    "overlay": "pu2",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ],
+                "reactions": [
+                  {
+                    "when": {
+                      "type": "at",
+                      "ms": 600
+                    },
+                    "do": [
+                      {
+                        "kind": "effect",
+                        "effects": [
+                          {
+                            "id": "pu2-dmg",
+                            "kind": "attr",
+                            "entityId": "ent-boss",
+                            "attr": "hp",
+                            "op": "add",
+                            "value": {
+                              "expr": "-(entity.ent-player.attr.attack * 13 / 10)"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "zhong",
+              "type": "perf",
+              "position": {
+                "x": 4660,
+                "y": 790
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "重攻击",
+                "durationMs": 6000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "zhonggongji"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "battleHud",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  },
+                  {
+                    "overlay": "zhong",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ],
+                "reactions": [
+                  {
+                    "when": {
+                      "type": "at",
+                      "ms": 1700
+                    },
+                    "do": [
+                      {
+                        "kind": "effect",
+                        "effects": [
+                          {
+                            "id": "zhong-dmg",
+                            "kind": "attr",
+                            "entityId": "ent-boss",
+                            "attr": "hp",
+                            "op": "add",
+                            "value": {
+                              "expr": "-(entity.ent-player.attr.attack * 18 / 10)"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "z2",
+              "type": "perf",
+              "position": {
+                "x": 4660,
+                "y": 650
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "重攻击·变招",
+                "durationMs": 6000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "zhonggongji2"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "battleHud",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  },
+                  {
+                    "overlay": "z2",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ],
+                "reactions": [
+                  {
+                    "when": {
+                      "type": "at",
+                      "ms": 2500
+                    },
+                    "do": [
+                      {
+                        "kind": "effect",
+                        "effects": [
+                          {
+                            "id": "z2-dmg",
+                            "kind": "attr",
+                            "entityId": "ent-boss",
+                            "attr": "hp",
+                            "op": "add",
+                            "value": {
+                              "expr": "-(entity.ent-player.attr.attack * 24 / 10)"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "fuzhu",
+              "type": "perf",
+              "position": {
+                "x": 4660,
+                "y": 510
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "冥想",
+                "durationMs": 5000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "huiqi"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "battleHud",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  },
+                  {
+                    "overlay": "fuzhu",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ],
+                "reactions": [
+                  {
+                    "when": {
+                      "type": "at",
+                      "ms": 2000
+                    },
+                    "do": [
+                      {
+                        "kind": "effect",
+                        "effects": [
+                          {
+                            "id": "fuzhu-heal",
+                            "kind": "attr",
+                            "entityId": "ent-player",
+                            "attr": "hp",
+                            "op": "add",
+                            "value": 30
+                          },
+                          {
+                            "id": "fuzhu-qi",
+                            "kind": "var",
+                            "varId": "qi",
+                            "op": "add",
+                            "value": 2
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "ult",
+              "type": "perf",
+              "position": {
+                "x": 4660,
+                "y": 370
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "灭世",
+                "durationMs": 12000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "fa6da536-df0b-4f4f-aede-d77e8b053950"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "battleHud",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  },
+                  {
+                    "overlay": "ult",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ],
+                "reactions": [
+                  {
+                    "when": {
+                      "type": "at",
+                      "ms": 7000
+                    },
+                    "do": [
+                      {
+                        "kind": "effect",
+                        "effects": [
+                          {
+                            "id": "ult-dmg",
+                            "kind": "attr",
+                            "entityId": "ent-boss",
+                            "attr": "hp",
+                            "op": "add",
+                            "value": {
+                              "expr": "-(entity.ent-player.attr.attack * 3)"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "tele",
+              "type": "perf",
+              "position": {
+                "x": 4660,
+                "y": 600
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "攻击前摇·防反QTE",
+                "durationMs": 4000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "difanggongjiqianyao"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "battleHud",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  },
+                  {
+                    "overlay": "tele",
+                    "reactions": [
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "pass"
+                        },
+                        "do": [
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-tele-pass"
+                          }
+                        ]
+                      },
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "good"
+                        },
+                        "do": [
+                          {
+                            "kind": "effect",
+                            "effects": [
+                              {
+                                "id": "dodge-qi",
+                                "kind": "var",
+                                "varId": "qi",
+                                "op": "add",
+                                "value": -1
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-tele-good"
+                          }
+                        ]
+                      },
+                      {
+                        "when": {
+                          "type": "event",
+                          "id": "fail"
+                        },
+                        "do": [
+                          {
+                            "kind": "effect",
+                            "effects": [
+                              {
+                                "id": "hurt-qi",
+                                "kind": "var",
+                                "varId": "qi",
+                                "op": "add",
+                                "value": 1
+                              }
+                            ]
+                          },
+                          {
+                            "kind": "advance",
+                            "edgeId": "e-tele-fail"
+                          }
+                        ]
+                      }
+                    ],
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "block",
+              "type": "perf",
+              "position": {
+                "x": 4990,
+                "y": 740
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "受击防反",
+                "durationMs": 4000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "fangfan"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "battleHud",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  },
+                  {
+                    "overlay": "block",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ],
+                "reactions": [
+                  {
+                    "when": {
+                      "type": "at",
+                      "ms": 1800
+                    },
+                    "do": [
+                      {
+                        "kind": "effect",
+                        "effects": [
+                          {
+                            "id": "block-dmg",
+                            "kind": "attr",
+                            "entityId": "ent-boss",
+                            "attr": "hp",
+                            "op": "add",
+                            "value": {
+                              "expr": "-(entity.ent-boss.attr.attack + var.yezhang * 21)"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "dodgeP",
+              "type": "perf",
+              "position": {
+                "x": 4990,
+                "y": 600
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "受击闪避",
+                "durationMs": 4000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "shanbi"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "battleHud",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  },
+                  {
+                    "overlay": "dodgeP",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ],
+                "reactions": [
+                  {
+                    "when": {
+                      "type": "at",
+                      "ms": 2000
+                    },
+                    "do": [
+                      {
+                        "kind": "effect",
+                        "effects": [
+                          {
+                            "id": "dodge-dmg",
+                            "kind": "attr",
+                            "entityId": "ent-boss",
+                            "attr": "hp",
+                            "op": "add",
+                            "value": {
+                              "expr": "-(entity.ent-boss.attr.attack - entity.ent-player.attr.defense / 4)"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "hurt",
+              "type": "perf",
+              "position": {
+                "x": 4990,
+                "y": 460
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "受击",
+                "durationMs": 4000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "shouji"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "battleHud",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  },
+                  {
+                    "overlay": "hurt",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ],
+                "reactions": [
+                  {
+                    "when": {
+                      "type": "at",
+                      "ms": 10
+                    },
+                    "do": [
+                      {
+                        "kind": "effect",
+                        "effects": [
+                          {
+                            "id": "hurt-dmg",
+                            "kind": "attr",
+                            "entityId": "ent-player",
+                            "attr": "hp",
+                            "op": "add",
+                            "value": {
+                              "expr": "-(entity.ent-boss.attr.attack + var.yezhang * 45)"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "win",
+              "type": "perf",
+              "position": {
+                "x": 4990,
+                "y": 140
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "战斗胜利",
+                "durationMs": 10000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "shengli"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "battleHud",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "id": "lose",
+              "type": "perf",
+              "position": {
+                "x": 4990,
+                "y": 280
+              },
+              "inputs": [],
+              "outputs": [],
+              "data": {
+                "name": "战斗失败",
+                "durationMs": 6000,
+                "media": {
+                  "kind": "VIDEO",
+                  "ref": "shibai"
+                },
+                "overlayNodes": [
+                  {
+                    "overlay": "battleHud",
+                    "layout": {
+                      "left": 0,
+                      "top": 0,
+                      "width": 1,
+                      "height": 1
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "edges": [
+            {
+              "id": "e-open",
+              "source": "n_open",
+              "target": "n_door",
+              "sourceHandle": "default",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-door-pass",
+              "source": "n_door",
+              "target": "n_soul",
+              "sourceHandle": "pass",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-door-fail",
+              "source": "n_door",
+              "target": "n_river",
+              "sourceHandle": "fail",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-soul",
+              "source": "n_soul",
+              "target": "n_river",
+              "sourceHandle": "default",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-river-ying",
+              "source": "n_river",
+              "target": "n_child",
+              "sourceHandle": "ying",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-river-mo",
+              "source": "n_river",
+              "target": "n_land",
+              "sourceHandle": "mo",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-child",
+              "source": "n_child",
+              "target": "n_land",
+              "sourceHandle": "default",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-land-ying",
+              "source": "n_land",
+              "target": "n_mask",
+              "sourceHandle": "ying",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-land-mo",
+              "source": "n_land",
+              "target": "n_mengpo",
+              "sourceHandle": "mo",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-mask",
+              "source": "n_mask",
+              "target": "n_mengpo",
+              "sourceHandle": "default",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-mengpo",
+              "source": "n_mengpo",
+              "target": "n_tea",
+              "sourceHandle": "default",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-tea-ying",
+              "source": "n_tea",
+              "target": "n_drink",
+              "sourceHandle": "ying",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-tea-mo",
+              "source": "n_tea",
+              "target": "n_nodrink",
+              "sourceHandle": "mo",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-drink",
+              "source": "n_drink",
+              "target": "n_follow",
+              "sourceHandle": "default",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-nodrink-ying",
+              "source": "n_nodrink",
+              "target": "n_follow",
+              "sourceHandle": "ying",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-nodrink-mo",
+              "source": "n_nodrink",
+              "target": "n_nofollow",
+              "sourceHandle": "mo",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-follow-ying",
+              "source": "n_follow",
+              "target": "n_getlight",
+              "sourceHandle": "ying",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-follow-mo",
+              "source": "n_follow",
+              "target": "n_nolight",
+              "sourceHandle": "mo",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-getlight",
+              "source": "n_getlight",
+              "target": "enter",
+              "sourceHandle": "default",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-nolight",
+              "source": "n_nolight",
+              "target": "enter",
+              "sourceHandle": "default",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-nofollow-ying",
+              "source": "n_nofollow",
+              "target": "n_lotus",
+              "sourceHandle": "ying",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-nofollow-mo",
+              "source": "n_nofollow",
+              "target": "n_nolotus",
+              "sourceHandle": "mo",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-lotus",
+              "source": "n_lotus",
+              "target": "enter",
+              "sourceHandle": "default",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-nolotus",
+              "source": "n_nolotus",
+              "target": "enter",
+              "sourceHandle": "default",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-init-me",
+              "source": "enter",
+              "target": "a_my",
+              "sourceHandle": "default",
+              "targetHandle": "in",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrCompare",
+                      "left": "ent-player",
+                      "right": "ent-boss",
+                      "attr": "speed",
+                      "op": "gte"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-init-foe",
+              "source": "enter",
+              "target": "b_ai",
+              "sourceHandle": "default",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-sk-light",
+              "source": "wait",
+              "target": "pu",
+              "sourceHandle": "light",
+              "targetHandle": "in",
+              "data": {
+                "weight": 1
+              }
+            },
+            {
+              "id": "e-sk-light2",
+              "source": "wait",
+              "target": "pu2",
+              "sourceHandle": "light",
+              "targetHandle": "in",
+              "data": {
+                "weight": 1
+              }
+            },
+            {
+              "id": "e-sk-heavy",
+              "source": "wait",
+              "target": "zhong",
+              "sourceHandle": "heavy",
+              "targetHandle": "in",
+              "data": {
+                "weight": 1
+              }
+            },
+            {
+              "id": "e-sk-heavy2",
+              "source": "wait",
+              "target": "z2",
+              "sourceHandle": "heavy",
+              "targetHandle": "in",
+              "data": {
+                "weight": 1
+              }
+            },
+            {
+              "id": "e-sk-medit",
+              "source": "wait",
+              "target": "fuzhu",
+              "sourceHandle": "medit",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-sk-ult",
+              "source": "wait",
+              "target": "ult",
+              "sourceHandle": "ult",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-tele-pass",
+              "source": "tele",
+              "target": "block",
+              "sourceHandle": "pass",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-tele-good",
+              "source": "tele",
+              "target": "dodgeP",
+              "sourceHandle": "good",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-tele-fail",
+              "source": "tele",
+              "target": "hurt",
+              "sourceHandle": "fail",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-amy-win",
+              "source": "a_my",
+              "target": "win",
+              "sourceHandle": "default",
+              "targetHandle": "in",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "lte",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-amy-lose",
+              "source": "a_my",
+              "target": "lose",
+              "sourceHandle": "default",
+              "targetHandle": "in",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-player",
+                      "attr": "hp",
+                      "op": "lte",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-amy-foe",
+              "source": "a_my",
+              "target": "b_ai",
+              "sourceHandle": "default",
+              "targetHandle": "in",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "var",
+                      "varId": "mineFirst",
+                      "op": "eq",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-amy-loop",
+              "source": "a_my",
+              "target": "enter",
+              "sourceHandle": "default",
+              "targetHandle": "in"
+            },
+            {
+              "id": "e-bai-win",
+              "source": "b_ai",
+              "target": "win",
+              "sourceHandle": "default",
+              "targetHandle": "in",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-boss",
+                      "attr": "hp",
+                      "op": "lte",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-bai-lose",
+              "source": "b_ai",
+              "target": "lose",
+              "sourceHandle": "default",
+              "targetHandle": "in",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "attrRatio",
+                      "entityId": "ent-player",
+                      "attr": "hp",
+                      "op": "lte",
+                      "value": 0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-bai-loop",
+              "source": "b_ai",
+              "target": "enter",
+              "sourceHandle": "default",
+              "targetHandle": "in",
+              "data": {
+                "condition": {
+                  "all": [
+                    {
+                      "type": "var",
+                      "varId": "mineFirst",
+                      "op": "eq",
+                      "value": 1
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "e-bai-my",
+              "source": "b_ai",
+              "target": "a_my",
+              "sourceHandle": "default",
+              "targetHandle": "in"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
