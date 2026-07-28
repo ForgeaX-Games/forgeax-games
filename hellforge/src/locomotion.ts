@@ -1,4 +1,4 @@
-/** Locomotion loop clips for the hero 6-clip animation contract. */
+/** Locomotion loop clips for the hero animation contract. */
 export type LocomotionClip = 'idle' | 'walk' | 'run';
 
 /** Ground speed (m/s) at or below which the hero plays idle. */

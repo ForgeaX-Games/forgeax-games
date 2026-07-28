@@ -1,5 +1,6 @@
 // merge-gen3d-motions.ts — merge a wb-gen3d character's per-motion GLBs into a
-// single multi-clip GLB that matches hellforge's 6-clip contract.
+// single multi-clip GLB that matches hellforge's hero clip contract
+// (idle/walk/run/attack/hit/death/dodge).
 //
 //   bun scripts/merge-gen3d-motions.ts <gen3d-meta.json> <output.glb>
 //
@@ -30,14 +31,15 @@ import { mergeDocuments, unpartition, prune } from '@gltf-transform/functions';
 // are listed at the end so you can refine. Missing slots are warned.
 //
 // walk vs run must stay distinct — never fall back run→walk (or vice versa).
-// charactery (2026-07-17): free-walk / free-run Meshy clips are preferred.
+// charactery (2026-07-28): Walking_Woman for walk; free-run kept; Roll_Dodge → dodge.
 const MOTION_MAP: Record<string, RegExp[]> = {
   idle:   [/idle|stand|breath|待机|呼吸/i],
-  walk:   [/free-walk|走路/i, /handbag/i, /walk|走|move/i],
+  walk:   [/walking_woman/i, /free-walk|走路/i, /handbag/i, /walk|走|move/i],
   run:    [/free-run|跑步/i, /run|跑|dash|冲刺/i],
   attack: [/punch|kick|shot|combo|attack|slash|cast|挥|踢|打|施法/i],
   hit:    [/hit|hurt|damage|stagger|受击|被打|后仰/i],
   death:  [/dead|death|die|死亡|倒地|倒下/i],
+  dodge:  [/roll_dodge|roll.?dodge/i, /roll|dodge|翻滚|闪避/i],
 };
 
 const SLOTS = Object.keys(MOTION_MAP);

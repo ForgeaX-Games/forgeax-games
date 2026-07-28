@@ -98,6 +98,11 @@
       "guid": "019f439f-a25e-7fd4-a8b4-595f1eb96020",
       "kind": "animation-clip",
       "sourceIndex": 5
+    },
+    {
+      "guid": "019fa6b5-57cd-799f-8ccb-adc910739cbd",
+      "kind": "animation-clip",
+      "sourceIndex": 6
     }
   ]
 }

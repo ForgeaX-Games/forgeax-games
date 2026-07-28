@@ -11,7 +11,7 @@
 import { computeBaseStats, getClassDef, type ClassId, type GrowthMods, type PlayerStatsInit } from './classes';
 import { SKILLS, type SkillDef } from './skills';
 
-/** Hero GLB clip slots — sorceress is 6-clip; stand-ins may still use `move`. */
+/** Hero GLB clip slots — sorceress is 7-clip; stand-ins may still use `move`. */
 export type HeroGltfClipName =
   | 'idle'
   | 'walk'
@@ -19,7 +19,8 @@ export type HeroGltfClipName =
   | 'move'
   | 'attack'
   | 'hit'
-  | 'death';
+  | 'death'
+  | 'dodge';
 
 export interface HeroGltfClip {
   name: HeroGltfClipName;
@@ -55,7 +56,7 @@ function heroFrom(
 }
 
 // GUIDs mirror assets/characters/charactery-merged.glb.meta.json subAssets[].
-// Clip sourceIndex order after 6-clip merge: idle/walk/run/attack/hit/death.
+// Clip sourceIndex order after 7-clip merge: idle/walk/run/attack/hit/death/dodge.
 const sorceressGltf = {
   scene: '019f439f-a25e-7fd4-a8b4-595783b0359f',
   clips: [
@@ -65,6 +66,7 @@ const sorceressGltf = {
     { name: 'attack' as const, guid: '019f439f-a25e-7fd4-a8b4-595d1fd0ce06' },
     { name: 'hit' as const, guid: '019f439f-a25e-7fd4-a8b4-595ef92b9f86' },
     { name: 'death' as const, guid: '019f439f-a25e-7fd4-a8b4-595f1eb96020' },
+    { name: 'dodge' as const, guid: '019fa6b5-57cd-799f-8ccb-adc910739cbd' },
   ],
 };
 

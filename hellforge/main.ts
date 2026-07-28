@@ -106,6 +106,7 @@ import {
   cancelDodgeForSkillOrMove,
   createDodgeState,
   DODGE_MOVEMENT_S,
+  DODGE_TOTAL_S,
   dodgeAllowsSkillOrMove,
   dodgeHitReactionAborts,
   dodgeLocksTranslation,
@@ -114,6 +115,7 @@ import {
   tryStartDodge,
   type DodgeState,
 } from './src/dodge';
+import { normalizeClipRoot } from './src/anim-root';
 import { BuffDisplay } from './src/buff-display';
 import { createCharacterSelectionGate } from './src/selection-gate';
 import {
@@ -633,6 +635,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         const r = await assets.loadByGuid<AnimationClip>(g.value);
         bootTracker.complete('hero');
         if (!r.ok) { console.warn('[hellforge] clip loadByGuid:', def.name, (r.error as { code?: string }).code); return; }
+        // Same normalization monsters get: gen3d motions bake a rig scale onto
+        // Hips (Walking_Woman ships 1.1765 → the hero inflated ~18% while
+        // walking) and bake horizontal root motion (Roll_Dodge travels ~4 m,
+        // which stacked on the dodge stepper and snapped back at clip end).
+        normalizeClipRoot(r.value);
         const clipHandle = world.allocSharedRef<'AnimationClip', AnimationClip>('AnimationClip', r.value);
         clipHandles.set(def.name, clipHandle);
         // Record clip duration so one-shot clips (attack/hit/death) can auto-end.
@@ -1958,10 +1965,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const SPRINT = PLAYER_SPRINT_SPEED;
     const FACING_SIGN = 1;
     // Stride = ground speed (m/s) each locomotion clip matches at playback
-    // rate 1. free-walk ≈ 1.07 s / free-run ≈ 0.67 s loops — calibrate
+    // rate 1. Walking_Woman ≈ 1.0 s / free-run ≈ 0.67 s loops — calibrate
     // separately so feet don't slide when selectLocomotionClip swaps clips.
-    // SPEED 3.4 → walk rate ≈ 2.4; SPRINT 5.4 → run rate ≈ 1.5.
-    const ANIM_STRIDE_WALK = 1.4;
+    // SPEED 3.4 → walk rate ≈ 2.6; SPRINT 5.4 → run rate ≈ 1.5.
+    const ANIM_STRIDE_WALK = 1.3;
     const ANIM_STRIDE_RUN = 3.6;
     const ANIM_SPEED_MIN = 0.5, ANIM_SPEED_MAX = 4.8;
 
@@ -2921,7 +2928,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           faceX = next.dirX;
           faceZ = next.dirZ;
           fx.playEffect(COMBAT_EFFECT_DEFS.dodge, state.px, 0.2, state.pz);
-          // Roll clip is T2 (merge-gen3d); until then code-driven lunge only (plan §9).
+          // Time Roll_Dodge (~1.87 s) to the code-driven dodge window.
+          const dodgeClipDur = clipDur.get('dodge') ?? DODGE_TOTAL_S;
+          playOnce('dodge', Math.max(dodgeClipDur / DODGE_TOTAL_S, 0.5));
         }
       }
       // Cutscene owns UI + world input — only Esc (skip) may steal ownership.

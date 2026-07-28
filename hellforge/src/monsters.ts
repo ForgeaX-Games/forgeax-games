@@ -37,6 +37,7 @@ import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { AnimationClip, Handle, SceneAsset } from '@forgeax/engine-types';
+import { normalizeClipRoot } from './anim-root';
 import type { FxSystem } from './fx';
 import { combatBeat } from './fx/defs';
 import type { ContactShadowKit } from './contact-shadow';
@@ -334,27 +335,6 @@ interface Corpse {
   until: number;             // wall-clock s
 }
 
-/**
- * Pin a clip's root-joint (Hips) horizontal translation to its first key.
- * The importer's clip payload is `{ duration, channels: [{ targetPath:
- * [nodeName], property, sampler: { input, output } }] }`; translation
- * outputs are xyz triples.
- */
-function stripRootMotionXZ(clip: AnimationClip): void {
-  const c = clip as unknown as {
-    channels?: Array<{ targetPath?: string[]; property?: string; sampler?: { output?: Float32Array } }>;
-  };
-  for (const ch of c.channels ?? []) {
-    if (ch.property !== 'translation') continue;
-    const name = ch.targetPath?.[0] ?? '';
-    if (!/Hips|Root/i.test(name)) continue;
-    const out = ch.sampler?.output;
-    if (!out || out.length < 3) continue;
-    const x0 = out[0]!, z0 = out[2]!;
-    for (let i = 0; i < out.length; i += 3) { out[i] = x0; out[i + 2] = z0; }
-  }
-}
-
 export interface MonsterEvents {
   /**
    * Monster melee/bolt landed on the player.
@@ -501,13 +481,11 @@ export class MonsterManager {
       };
       for (const [name, payload] of clipResults) {
         if (payload === null) { console.warn(`[hellforge] monster clip load failed: ${kind}.${name}`); continue; }
-        // Strip horizontal ROOT MOTION before minting the shared clip: some
-        // rigs (zombie: 1.67 m of hips +Z in `move`) translate the root
-        // joint across the clip, and since WE drive world position from
-        // the AI, the animated offset made monsters glide forward and then
-        // SNAP BACK at every loop. Pin the hips' X/Z tracks to their first
-        // key (keep Y — that's the gait bob).
-        stripRootMotionXZ(payload);
+        // Normalize the root joint before minting the shared clip: some rigs
+        // (zombie: 1.67 m of hips +Z in `move`) translate the root across the
+        // clip, and since WE drive world position from the AI, the animated
+        // offset made monsters glide forward and then SNAP BACK at every loop.
+        normalizeClipRoot(payload);
         bank.clips.set(name, {
           h: this.world.allocSharedRef<'AnimationClip', AnimationClip>('AnimationClip', payload),
           dur: (payload as unknown as { duration: number }).duration,

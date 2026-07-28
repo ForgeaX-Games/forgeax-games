@@ -1,7 +1,7 @@
-# Hellforge 角色动作交付契约(6-clip)
+# Hellforge 角色动作交付契约(7-clip)
 
 > 你新生成一个主角时,按这份交付。Hellforge 的主角用
-> **同一套 6-clip 契约**:一份共享蒙皮 mesh + 6 条 animation clip,运行时靠
+> **同一套 7-clip 契约**:一份共享蒙皮 mesh + 7 条 animation clip,运行时靠
 > clip GUID 切换动作(**不换模型**)。当前主角参考实现:
 > [`assets/characters/charactery-merged.glb.meta.json`](./assets/characters/charactery-merged.glb.meta.json)
 > 与 [`src/heroes.ts`](./src/heroes.ts) / [`main.ts`](./main.ts) 的 `WITCH` 块
@@ -9,19 +9,19 @@
 > 早期 `witch.glb` 仍可作契约样例,但运行时已切到 charactery。
 >
 > 怪物仍可用 5-clip(`idle/move/attack/hit/death`);主角已拆成独立
-> `walk` + `run`。
+> `walk` + `run`,并含 `dodge`。
 
-## 为什么是 6 条而不是 10 个 GLB
+## 为什么是 7 条而不是 N 个 GLB
 
 Meshy/gen3d 默认一个动作一个 GLB,每个 GLB 都带一份 mesh 拷贝(gta-01 每个
 motion GLB ≈ 7.9 MB × 10 ≈ 80 MB,≈ 8 万面重复 10 次)。加载/切换都要换模型,
 性能差。引擎的高效做法(见 `charactery-merged.glb` / 早期 `witch.glb`):
-**一个 GLB 内嵌 6 条 clip**,mesh 只一份,切动作只是换 clip GUID 引用。合并流水线见
+**一个 GLB 内嵌 7 条 clip**,mesh 只一份,切动作只是换 clip GUID 引用。合并流水线见
 [`scripts/merge-gen3d-motions.ts`](./scripts/merge-gen3d-motions.ts)。
 
 ---
 
-## B1. 必需的 6 个动作
+## B1. 必需的 7 个动作
 
 | 槽位 | 动作 | 类型 | 说明 |
 |---|---|---|---|
@@ -31,27 +31,35 @@ motion GLB ≈ 7.9 MB × 10 ≈ 80 MB,≈ 8 万面重复 10 次)。加载/切换
 | `attack` | 攻击/施法 | **one-shot** | 4 个技能共用这一条;播放时锁定移动,播完回 idle/walk/run |
 | `hit` | 受击硬直 | **one-shot** | 被打时播;短促后仰/踉跄,播完回 idle/walk/run |
 | `death` | 死亡 | **one-shot** | 播完停在最后一帧,实体回收 |
+| `dodge` | 翻滚闪避 | **one-shot** | Space dodge 触发;`main.ts` 按时长对齐 `DODGE_TOTAL_S`;位移仍由 `src/dodge.ts` 代码驱动 |
 
-> 招架/闪避/技能变体等**不在契约内**;要加就扩 `HeroGltfClipName` 并改
+> 招架/技能变体等**不在契约内**;要加就扩 `HeroGltfClipName` 并改
 > `main.ts` 的 `swapClip`/`playOnce` 调用。
 
 ## B2. 交付格式
 
-- **首选**:一个内嵌 6 动画的 GLB(`charactery-merged.glb`)。meta.json 里会有
-  `mesh / material / scene / texture / skeleton / skin` 各 1 个 + 6 个
+- **首选**:一个内嵌 7 动画的 GLB(`charactery-merged.glb`)。meta.json 里会有
+  `mesh / material / scene / texture / skeleton / skin` 各 1 个 + 7 个
   `animation-clip` 子资产。
-- **次选**:6 个 motion GLB(每条动作一个),用
+- **次选**:7 个 motion GLB(每条动作一个),用
   [`scripts/merge-gen3d-motions.ts`](./scripts/merge-gen3d-motions.ts) 合并成
   上面的单 GLB。
-- **骨架**:一套骨架、一份 mesh,6 条 clip 共用。关节名与 rigged base 一致
+- **骨架**:一套骨架、一份 mesh,7 条 clip 共用。关节名与 rigged base 一致
   即可(Meshy 短名如 `Hips`,引擎按名解析,已验证 meshy rigged 与 motion GLB
   关节一致,**无需 retarget**)。
 - **mesh 节点世界矩阵为单位阵**(引擎蒙皮契约;见
   [`ENGINE-SKINNING-DOUBLE-TRANSFORM.md`](./ENGINE-SKINNING-DOUBLE-TRANSFORM.md))。
-  水平 root motion 可去除(位移由代码驱动,见 `monsters.ts` 的
-  `stripRootMotionXZ`)。
+- **根关节归一由运行时兜底**:主角与怪物在 clip 加载时都过
+  [`src/anim-root.ts`](./src/anim-root.ts) 的 `normalizeClipRoot`,它去掉 Meshy
+  烘进 `Hips` 的两样东西——① **rig 缩放**(`Walking_Woman` 带常量
+  `Hips.scale = 1.1765` + 同比放大的 translation,不去掉主角一走路就胀大 18%);
+  ② **水平 root motion**(`Roll_Dodge` 自带约 4 m 的 +Z 位移,与
+  `src/dodge.ts` 的步进叠加 → 冲很远再闪回原点)。位移一律由代码驱动:dodge 走
+  `src/dodge.ts`,怪物走 AI。所以**新动作不必手工修根位移/缩放**,但仍别故意烘。
 - **面数**:8000+ 面单个共享 mesh 没问题;**要避免的是
-  10 个 GLB 各带一份 mesh 拷贝**。
+  N 个 GLB 各带一份 mesh 拷贝**。
+- **勿**把 `assets/3d/characters/` 源树重新提交进 git(games `#36` 已为体积删掉);
+  运行时只提交 `assets/characters/*-merged.glb`(+ `.meta.json`)。
 
 ## B3. 接线(生成 + 合并完之后)
 
@@ -64,30 +72,33 @@ motion GLB ≈ 7.9 MB × 10 ≈ 80 MB,≈ 8 万面重复 10 次)。加载/切换
    forgeax-engine-remote-gltf import assets/characters/<hero>-merged.glb
    # → assets/characters/<hero>-merged.glb.meta.json
    ```
-3. 抄 `src/heroes.ts` 的 `sorceressGltf` 块,把 scene GUID + 6 clip GUID 换成新 sidecar 里的;
-   按 walk/run clip 时长分别调 `ANIM_STRIDE_WALK` / `ANIM_STRIDE_RUN`(free-walk ≈ 1.07s,
+3. 抄 `src/heroes.ts` 的 `sorceressGltf` 块,把 scene GUID + 7 clip GUID 换成新 sidecar 里的;
+   按 walk/run clip 时长分别调 `ANIM_STRIDE_WALK` / `ANIM_STRIDE_RUN`(Walking_Woman ≈ 1.0s,
    free-run ≈ 0.67s)。
 4. 运行时用 [`src/locomotion.ts`](./src/locomotion.ts) `selectLocomotionClip(speed, isPathDriven)`
    按**实际地速**选 walk/run,不要读按键状态。
-5. **勿**把引擎生成的 `*.rigged_model.glb.meta.json` 留在 `assets/3d/characters/`
+5. Space dodge:`playOnce('dodge', …)` 对齐 `DODGE_TOTAL_S`;**禁止**运行时 retarget。
+6. **勿**把引擎生成的 `*.rigged_model.glb.meta.json` 留在 `assets/3d/characters/`
    (会撞 wb-gen3d 扫描);gen3d 侧车是 `*.glb.gen3d-meta.json`。
 
 ## B4. 动作标签 → 槽位映射(给 gen3d motion 命名用)
 
-Meshy 的 motion 标签不直接对应 6 槽,合并脚本里 `MOTION_MAP` 按关键词归槽:
+Meshy 的 motion 标签不直接对应 7 槽,合并脚本里 `MOTION_MAP` 按关键词归槽:
 
 | Meshy 标签关键词 | 归到槽位 |
 |---|---|
-| `free-walk` / `走路` / `handbag` / `walk` / `走` | `walk`(free-walk / 走路 优先) |
+| `Walking_Woman` / `free-walk` / `走路` / `handbag` / `walk` / `走` | `walk`(**Walking_Woman 优先**;其次 free-walk) |
 | `free-run` / `跑步` / `run` / `跑` / `dash` | `run`(free-run / 跑步 优先;**禁止**回退到 walk) |
 | `idle` / `stand` / `breath` | `idle` |
 | `Punch` / `Kick` / `Shot` / `Combo` / `attack` / `cast` | `attack` |
 | `hit` / `hurt` / `damage` / `受击` | `hit` |
 | `Dead` / `death` / `die` / `死亡` | `death` |
+| `Roll_Dodge` / `roll` / `dodge` / `翻滚` / `闪避` | `dodge`(**Roll_Dodge 优先**) |
 
-> 主角固定输入(Task 1.4):
-> `charactery.animated_model.motion-meshy-free-walk.glb` +
-> `charactery.animated_model.motion-meshy-free-run.glb`。缺二进制 blob
+> 主角当前固定输入:
+> `charactery.animated_model.motion-meshy-1.glb`(`Walking_Woman`) +
+> `charactery.animated_model.motion-meshy-free-run.glb` +
+> `charactery.animated_model.motion-meshy-158.glb`(`Roll_Dodge`)。缺二进制 blob
 > (只剩 `.meta.json`)是硬阻塞——先补资产再合并,禁止把 walk 复制成 run。
 > `hit` 在 Meshy 库里常缺;可从 `idle` 加一段抖动当 hit,或单独生成。
 
