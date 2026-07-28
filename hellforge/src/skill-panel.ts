@@ -41,6 +41,10 @@ export interface SkillNodeViewModel {
   readonly grantsActive: ActiveSkillId | null;
   readonly currentEffect: readonly string[];
   readonly nextRankDelta: string | null;
+  /** Product "keystone" = code kind `capstone`. */
+  readonly isKeystone: boolean;
+  /** Badge frame edge length in px (normal 54 / keystone 78). */
+  readonly frameSize: number;
 }
 
 export interface SkillTreeViewModel {
@@ -71,7 +75,10 @@ export interface SkillPanelHandle {
 }
 
 const PANEL_ID = 'hellforge-skill-panel';
-const NODE_SIZE = 54;
+/** Normal node badge edge length (px). */
+export const NODE_SIZE = 54;
+/** Keystone (`capstone`) badge edge length (px) — L4 larger than normal. */
+export const KEYSTONE_SIZE = 78;
 
 /** aidiablo frame recipes per node state (five-stop gradients). */
 const FRAME_GRADIENT: Record<NodeAvailability, string> = {
@@ -80,6 +87,15 @@ const FRAME_GRADIENT: Record<NodeAvailability, string> = {
   invested: 'linear-gradient(135deg,#6aaa6a,#4a7a4a,#5a905a,#4a7a4a,#6aaa6a)',
   maxed: 'linear-gradient(135deg,#d4b058,#a88838,#b89848,#a08038,#d4b058)',
 };
+
+/** Extra outer ring for keystones — distinct from normal 54px badges. */
+function keystoneFrameShadow(state: NodeAvailability): string {
+  const rim = state === 'maxed' ? '#e0c060'
+    : state === 'invested' ? '#6aaa6a'
+    : state === 'available' ? '#c09838'
+    : '#5a5448';
+  return `0 0 0 2px #040302,0 0 0 4px #1a1410,0 0 0 6px ${rim},inset 0 0 10px rgba(0,0,0,0.65)`;
+}
 
 function branchGlyphSvg(branch: SkillBranch, sizePx: number, color: string): string {
   let body = '';
@@ -101,7 +117,7 @@ function nextRankHint(nodeId: SkillNodeId, rank: number, maxRank: number): strin
     getSkillNode(nodeId).grantsActive ?? 'frost',
     { skillRanks: { [nodeId]: rank } },
   );
-  // Prefer formula-specific short deltas from Spec §7.2.
+  // Prefer formula-specific short deltas from Spec §7.2 / PR9 roster.
   switch (nodeId) {
     case 'magma-bolt': return `下一阶：基础伤害 +12%（→${next}）`;
     case 'frost-fang': return `下一阶：基础伤害 +10%（→${next}）`;
@@ -118,6 +134,27 @@ function nextRankHint(nodeId: SkillNodeId, rank: number, maxRank: number): strin
     case 'hellfire-catalyst': return '下一阶：暴击狱火爆发';
     case 'winters-grasp': return '下一阶：对减速目标 +30%';
     case 'overcharge': return '下一阶：电弧命中减影踏 CD';
+    // PR9 — flame
+    case 'flame-burst': return `下一阶：基础伤害 +10%（→${next}）`;
+    case 'ember': return '下一阶：灼烧时长 +0.5s';
+    case 'searing': return '下一阶：灼烧暴击 +5%';
+    case 'wildfire': return `下一阶：溅射灼烧 ${[50, 100][next - 1]}%`;
+    case 'heat-shimmer': return '下一阶：熔火弹速 +15%';
+    case 'furnace-heart': return '下一阶：灼烧击杀引爆';
+    // PR9 — frost
+    case 'frost-nova': return `下一阶：基础伤害 +10%（→${next}）`;
+    case 'rime': return '下一阶：减速幅度 +5%';
+    case 'piercing-cold': return '下一阶：穿透 +1';
+    case 'glacier-shards': return '下一阶：碎冰片数 +1';
+    case 'frozen-focus': return '下一阶：霜牙蓝耗 −0.5';
+    case 'deep-freeze': return '下一阶：对已减速 +15% · 刷新减速';
+    // PR9 — arcane
+    case 'discharge': return `下一阶：基础伤害 +10% · 电弧 +1（→${next}）`;
+    case 'resonance': return '下一阶：电弧伤害 +6%';
+    case 'swift-phases': return '下一阶：影踏 CD −0.5s';
+    case 'echo-mastery': return '下一阶：回响窗口 +0.5s · 伤害 +5%';
+    case 'overcast': return '下一阶：电弧 CD −8%';
+    case 'tempest-conduit': return '下一阶：过载上限 2s · 作用于释放';
     default: {
       void cur;
       return `下一阶：等级 ${next}/${maxRank}`;
@@ -140,6 +177,7 @@ export function buildNodeViewModel(
     const parent = def.branch === 'flame' ? 'magma' : def.branch === 'frost' ? 'frost' : 'arc';
     currentEffect = resolveSkill(parent, { skillRanks: treeState.skillRanks }).tooltipLines.slice(1);
   }
+  const isKeystone = def.kind === 'capstone';
   return {
     id: nodeId,
     name: def.name,
@@ -152,6 +190,8 @@ export function buildNodeViewModel(
     grantsActive: active,
     currentEffect,
     nextRankDelta: nextRankHint(nodeId, rank, def.maxRank),
+    isKeystone,
+    frameSize: isKeystone ? KEYSTONE_SIZE : NODE_SIZE,
   };
 }
 
@@ -394,28 +434,37 @@ export function installSkillPanel(mount: HTMLElement, cb: SkillPanelCallbacks): 
       const el = document.createElement('button');
       el.type = 'button';
       el.dataset.nodeId = node.id;
+      if (node.isKeystone) el.dataset.keystone = '1';
       const learned = node.rank > 0;
-      el.style.cssText = `position:absolute;width:${NODE_SIZE}px;height:${NODE_SIZE}px;` +
-        `left:${pos.x - NODE_SIZE / 2}px;top:${pos.y - NODE_SIZE / 2}px;` +
-        'padding:0;border-radius:5px;cursor:pointer;' +
+      const size = node.frameSize;
+      const radius = node.isKeystone ? 8 : 5;
+      const frameShadow = node.isKeystone
+        ? keystoneFrameShadow(node.state)
+        : '0 0 0 2px #040302,0 0 0 3px #121010,inset 0 0 6px rgba(0,0,0,0.6)';
+      el.style.cssText = `position:absolute;width:${size}px;height:${size}px;` +
+        `left:${pos.x - size / 2}px;top:${pos.y - size / 2}px;` +
+        `padding:0;border-radius:${radius}px;cursor:pointer;` +
         `background:${FRAME_GRADIENT[node.state]};` +
-        'box-shadow:0 0 0 2px #040302,0 0 0 3px #121010,inset 0 0 6px rgba(0,0,0,0.6);' +
+        `box-shadow:${frameShadow};` +
         (selectedNode === node.id ? `outline:2px solid rgba(255,255,255,0.9);outline-offset:2px;` : '') +
         (node.state === 'locked' ? 'opacity:0.55;' : '');
       // icon recess
+      const recessInset = node.isKeystone ? 6 : 4;
+      const iconPx = node.isKeystone ? 56 : 40;
+      const glyphPx = node.isKeystone ? 36 : 26;
       const recess = document.createElement('div');
-      recess.style.cssText = 'position:absolute;inset:4px;display:flex;align-items:center;justify-content:center;' +
+      recess.style.cssText = `position:absolute;inset:${recessInset}px;display:flex;align-items:center;justify-content:center;` +
         `background:radial-gradient(circle at 50% 40%,${node.state === 'maxed' ? '#6a5838' : learned ? '#3a6838' : '#32323a'} 0%,${learned ? '#122a10' : '#121218'} 100%);` +
-        'border-radius:3px;overflow:hidden;';
+        `border-radius:${node.isKeystone ? 5 : 3}px;overflow:hidden;`;
       const icon = node.grantsActive
-        ? skillIconImg(node.grantsActive, 40, { alt: node.nameZh })
+        ? skillIconImg(node.grantsActive, iconPx, { alt: node.nameZh })
         : null;
       if (icon) {
         icon.style.opacity = learned ? '1' : '0.35';
         recess.appendChild(icon);
       } else {
         recess.innerHTML = branchGlyphSvg(
-          getSkillNode(node.id).branch, 26,
+          getSkillNode(node.id).branch, glyphPx,
           learned ? '#e8e0d0' : '#6a6a70',
         );
       }
@@ -431,7 +480,8 @@ export function installSkillPanel(mount: HTMLElement, cb: SkillPanelCallbacks): 
       // learnable green pulse dot
       if (node.canInvest) {
         const dot = document.createElement('div');
-        dot.style.cssText = 'position:absolute;top:-4px;right:-4px;width:10px;height:10px;border-radius:50%;' +
+        const pulse = node.isKeystone ? 12 : 10;
+        dot.style.cssText = `position:absolute;top:-4px;right:-4px;width:${pulse}px;height:${pulse}px;border-radius:50%;` +
           'background:#20e820;box-shadow:0 0 6px 2px rgba(32,232,32,0.55);' +
           'animation:hf-skill-pulse 1.6s ease-in-out infinite;';
         el.appendChild(dot);
@@ -439,7 +489,7 @@ export function installSkillPanel(mount: HTMLElement, cb: SkillPanelCallbacks): 
       // maxed star
       if (node.state === 'maxed') {
         const star = document.createElement('div');
-        star.style.cssText = 'position:absolute;top:-6px;left:-4px;font-size:12px;color:#f0c840;' +
+        star.style.cssText = `position:absolute;top:-6px;left:-4px;font-size:${node.isKeystone ? 14 : 12}px;color:#f0c840;` +
           'text-shadow:0 0 4px rgba(240,200,64,0.6);';
         star.textContent = '★';
         el.appendChild(star);

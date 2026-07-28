@@ -22,28 +22,50 @@ export interface SkillPrereqEdge {
   readonly to: SkillNodeId;
 }
 
-/** Authored node positions per branch — five nodes each, readable at 1280×720. */
+/**
+ * Authored node positions per branch — 11 nodes each (9 normal + 2 capstone),
+ * readable at 1280×720. Capstones bottom-anchored with wider x spacing so a
+ * ~78px keystone badge (L4 / T5) still clears neighbors on the ~420×560 canvas.
+ */
 const LAYOUT: Readonly<Record<SkillBranch, readonly SkillNodeLayout[]>> = {
   flame: [
-    { id: 'magma-bolt', x: 0.50, y: 0.12 },
-    { id: 'kindling', x: 0.28, y: 0.38 },
-    { id: 'scorch', x: 0.72, y: 0.38 },
-    { id: 'volatile-core', x: 0.50, y: 0.64 },
-    { id: 'hellfire-catalyst', x: 0.50, y: 0.88 },
+    { id: 'magma-bolt', x: 0.50, y: 0.08 },
+    { id: 'kindling', x: 0.22, y: 0.26 },
+    { id: 'flame-burst', x: 0.50, y: 0.26 },
+    { id: 'scorch', x: 0.78, y: 0.26 },
+    { id: 'searing', x: 0.22, y: 0.44 },
+    { id: 'volatile-core', x: 0.50, y: 0.44 },
+    { id: 'ember', x: 0.78, y: 0.44 },
+    { id: 'heat-shimmer', x: 0.22, y: 0.62 },
+    { id: 'wildfire', x: 0.50, y: 0.62 },
+    { id: 'hellfire-catalyst', x: 0.32, y: 0.88 },
+    { id: 'furnace-heart', x: 0.68, y: 0.88 },
   ],
   frost: [
-    { id: 'frost-fang', x: 0.50, y: 0.12 },
-    { id: 'permafrost', x: 0.28, y: 0.38 },
-    { id: 'piercing-ice', x: 0.72, y: 0.38 },
-    { id: 'shatter', x: 0.50, y: 0.64 },
-    { id: 'winters-grasp', x: 0.50, y: 0.88 },
+    { id: 'frost-fang', x: 0.50, y: 0.08 },
+    { id: 'permafrost', x: 0.22, y: 0.26 },
+    { id: 'frost-nova', x: 0.50, y: 0.26 },
+    { id: 'piercing-ice', x: 0.78, y: 0.26 },
+    { id: 'rime', x: 0.22, y: 0.44 },
+    { id: 'shatter', x: 0.50, y: 0.44 },
+    { id: 'piercing-cold', x: 0.78, y: 0.44 },
+    { id: 'frozen-focus', x: 0.22, y: 0.62 },
+    { id: 'glacier-shards', x: 0.50, y: 0.62 },
+    { id: 'winters-grasp', x: 0.32, y: 0.88 },
+    { id: 'deep-freeze', x: 0.68, y: 0.88 },
   ],
   arcane: [
-    { id: 'arc-surge', x: 0.50, y: 0.12 },
-    { id: 'conduction', x: 0.28, y: 0.38 },
-    { id: 'phase-step', x: 0.72, y: 0.38 },
-    { id: 'phase-echo', x: 0.72, y: 0.64 },
-    { id: 'overcharge', x: 0.50, y: 0.88 },
+    { id: 'arc-surge', x: 0.50, y: 0.08 },
+    { id: 'conduction', x: 0.22, y: 0.26 },
+    { id: 'discharge', x: 0.50, y: 0.26 },
+    { id: 'phase-step', x: 0.78, y: 0.26 },
+    { id: 'overcast', x: 0.22, y: 0.44 },
+    { id: 'resonance', x: 0.50, y: 0.44 },
+    { id: 'phase-echo', x: 0.78, y: 0.44 },
+    { id: 'swift-phases', x: 0.22, y: 0.62 },
+    { id: 'echo-mastery', x: 0.78, y: 0.62 },
+    { id: 'overcharge', x: 0.32, y: 0.88 },
+    { id: 'tempest-conduit', x: 0.68, y: 0.88 },
   ],
 };
 

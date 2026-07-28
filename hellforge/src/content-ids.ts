@@ -1,7 +1,9 @@
 // Stable content IDs for the Sorceress Act-1 vertical slice.
 // Import these rather than redeclaring string unions in save/skill/quest modules.
 
-export type ActiveSkillId = 'magma' | 'frost' | 'arc' | 'blink' | 'inferno-nova';
+export type ActiveSkillId =
+  | 'magma' | 'frost' | 'arc' | 'blink' | 'inferno-nova'
+  | 'flame-burst' | 'frost-nova' | 'discharge';
 
 /** Four saved RMB hotbar slots (null = empty). */
 export type HotbarSlots = readonly [
@@ -13,13 +15,19 @@ export type HotbarSlots = readonly [
 
 export type SkillNodeId =
   | 'magma-bolt' | 'kindling' | 'scorch' | 'volatile-core' | 'hellfire-catalyst'
+  | 'flame-burst' | 'ember' | 'searing' | 'wildfire' | 'heat-shimmer' | 'furnace-heart'
   | 'frost-fang' | 'permafrost' | 'piercing-ice' | 'shatter' | 'winters-grasp'
-  | 'arc-surge' | 'conduction' | 'phase-step' | 'phase-echo' | 'overcharge';
+  | 'frost-nova' | 'rime' | 'piercing-cold' | 'glacier-shards' | 'frozen-focus' | 'deep-freeze'
+  | 'arc-surge' | 'conduction' | 'phase-step' | 'phase-echo' | 'overcharge'
+  | 'discharge' | 'resonance' | 'swift-phases' | 'echo-mastery' | 'overcast' | 'tempest-conduit';
 
 export const SKILL_NODE_IDS: readonly SkillNodeId[] = [
   'magma-bolt', 'kindling', 'scorch', 'volatile-core', 'hellfire-catalyst',
+  'flame-burst', 'ember', 'searing', 'wildfire', 'heat-shimmer', 'furnace-heart',
   'frost-fang', 'permafrost', 'piercing-ice', 'shatter', 'winters-grasp',
+  'frost-nova', 'rime', 'piercing-cold', 'glacier-shards', 'frozen-focus', 'deep-freeze',
   'arc-surge', 'conduction', 'phase-step', 'phase-echo', 'overcharge',
+  'discharge', 'resonance', 'swift-phases', 'echo-mastery', 'overcast', 'tempest-conduit',
 ] as const;
 
 export type QuestId = 'purge-slagdeep-hollow';

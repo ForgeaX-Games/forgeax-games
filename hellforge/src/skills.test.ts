@@ -12,6 +12,9 @@ describe('isSkillAvailable', () => {
     expect(SKILL_NODE_BY_ACTIVE.frost).toBe('frost-fang');
     expect(SKILL_NODE_BY_ACTIVE.arc).toBe('arc-surge');
     expect(SKILL_NODE_BY_ACTIVE.blink).toBe('phase-step');
+    expect(SKILL_NODE_BY_ACTIVE['flame-burst']).toBe('flame-burst');
+    expect(SKILL_NODE_BY_ACTIVE['frost-nova']).toBe('frost-nova');
+    expect(SKILL_NODE_BY_ACTIVE.discharge).toBe('discharge');
     expect(SKILL_NODE_BY_ACTIVE['inferno-nova']).toBeUndefined();
   });
 

@@ -3,7 +3,9 @@
 import type { SkillNodeId } from './content-ids';
 import { FINISHER_UNLOCK_LEVEL } from './finisher';
 
-export type ActiveKitSkillId = 'magma' | 'frost' | 'arc' | 'blink' | 'inferno-nova';
+export type ActiveKitSkillId =
+  | 'magma' | 'frost' | 'arc' | 'blink' | 'inferno-nova'
+  | 'flame-burst' | 'frost-nova' | 'discharge';
 
 /** Active kit skill → skill-tree node that grants it when rank > 0. */
 export const SKILL_NODE_BY_ACTIVE: Readonly<Partial<Record<ActiveKitSkillId, SkillNodeId>>> = {
@@ -11,6 +13,9 @@ export const SKILL_NODE_BY_ACTIVE: Readonly<Partial<Record<ActiveKitSkillId, Ski
   frost: 'frost-fang',
   arc: 'arc-surge',
   blink: 'phase-step',
+  'flame-burst': 'flame-burst',
+  'frost-nova': 'frost-nova',
+  discharge: 'discharge',
   // inferno-nova is level-granted (L5/L8), not tree-gated.
 };
 

@@ -46,6 +46,10 @@ const SKILL_ICON_FILE: Record<string, string> = {
   blink: 'skills/blink.png', // mage_chuansong.png
   // Finisher reuses magma art until dedicated icon ships (PR 6).
   'inferno-nova': 'skills/magma.png',
+  // PR9 actives — reuse sibling-element PNGs (inferno-nova precedent).
+  'flame-burst': 'skills/magma.png',
+  'frost-nova': 'skills/frost.png',
+  discharge: 'skills/arc.png',
 };
 
 export function slotIconUrl(slot: ItemSlot): string {

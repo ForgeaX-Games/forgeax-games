@@ -46,19 +46,34 @@ export type SkillEffect =
       readonly kind: 'overcharge-cdr';
       readonly perHitSec: number;
       readonly capPerCastSec: number;
+      /** Tempest Conduit: also reduce this skill's cooldown. */
+      readonly alsoAppliesTo?: ActiveSkillId;
     }
   | {
       readonly kind: 'phase-echo-grant';
       readonly windowSec: number;
       readonly damageMul: number;
+    }
+  | {
+      readonly kind: 'splash-scorch';
+      readonly fraction: number;
+    }
+  | {
+      readonly kind: 'burn-kill-detonate';
+      readonly ratio: number;
+      readonly radius: number;
     };
 
 export interface ResolvedSkill extends ResolvedActiveSkill {
   readonly onHit: readonly SkillEffect[];
-  /** Winter's Grasp multiplier to apply at hit when the target is slowed. */
+  /** Winter's Grasp / Deep Freeze multiplier when the target is slowed. */
   readonly slowedTargetMul: number;
   /** Phase Echo multiplier already baked into damage when charge was active. */
   readonly phaseEchoApplied: boolean;
+  /** Searing: bonus crit chance vs burning targets. */
+  readonly burnCritChanceBonus: number;
+  /** Deep Freeze: refresh remaining slow by this many seconds on hit. */
+  readonly refreshSlowSec: number;
   /** Display lines from the same numbers gameplay uses. */
   readonly tooltipLines: readonly string[];
 }
@@ -154,6 +169,57 @@ const BASE: Readonly<Record<ActiveSkillId, ResolvedActiveSkill>> = {
     erratic: false,
     knockback: 5.5,
   },
+  /** PR9 — instant PBAOE; rank folds below. */
+  'flame-burst': {
+    damage: 28,
+    manaCost: 14,
+    cooldown: 4,
+    projectileSpeed: 0,
+    projectileLifetime: 0,
+    projectileCount: 0,
+    splashRadius: 2.5,
+    splashRatio: 1,
+    slowMagnitude: 0,
+    slowDuration: 0,
+    pierceCount: 0,
+    blinkRange: 0,
+    erratic: false,
+    knockback: 5,
+  },
+  /** PR9 — instant PBAOE ring with slow. */
+  'frost-nova': {
+    damage: 22,
+    manaCost: 14,
+    cooldown: 4,
+    projectileSpeed: 0,
+    projectileLifetime: 0,
+    projectileCount: 0,
+    splashRadius: 3,
+    splashRatio: 1,
+    slowMagnitude: 0.35,
+    slowDuration: 2.2,
+    pierceCount: 0,
+    blinkRange: 0,
+    erratic: false,
+    knockback: 2.4,
+  },
+  /** PR9 — radial bolt burst; rank 1 → 7 bolts (6+rank). */
+  discharge: {
+    damage: 8,
+    manaCost: 12,
+    cooldown: 1.2,
+    projectileSpeed: 12,
+    projectileLifetime: 1.2,
+    projectileCount: 7,
+    splashRadius: 0,
+    splashRatio: 0,
+    slowMagnitude: 0,
+    slowDuration: 0,
+    pierceCount: 0,
+    blinkRange: 0,
+    erratic: true,
+    knockback: 3.0,
+  },
 };
 
 function rankOf(
@@ -172,6 +238,67 @@ function normalizeContext(
   return { skillRanks: context as Readonly<Partial<Record<SkillNodeId, number>>> };
 }
 
+/** Combined Phase Echo damage mul (phase-echo ranks + echo-mastery ranks). */
+function phaseEchoDamageMul(
+  ranks: Readonly<Partial<Record<SkillNodeId, number>>>,
+): number {
+  const echo = rankOf(ranks, 'phase-echo');
+  if (echo <= 0) return 1;
+  const mastery = rankOf(ranks, 'echo-mastery');
+  return 1 + 0.1 * echo + 0.05 * mastery;
+}
+
+/** Display mul to 2 decimals without FP ×1.49 for 1.3×1.15. */
+function formatMul2(m: number): string {
+  return (Math.round(m * 1000) / 1000).toFixed(2);
+}
+
+/**
+ * Frost-element actives (`frost` / `frost-nova`) share these folds:
+ * rime, permafrost, winters-grasp, deep-freeze.
+ */
+function foldFrostElementPassives(
+  ranks: Readonly<Partial<Record<SkillNodeId, number>>>,
+  out: ResolvedActiveSkill,
+  tips: string[],
+  damage: number,
+  targetSlowed: boolean | undefined,
+): { slowedTargetMul: number; refreshSlowSec: number } {
+  let slowedTargetMul = 1;
+  let refreshSlowSec = 0;
+
+  const perma = rankOf(ranks, 'permafrost');
+  if (perma > 0) {
+    out.slowDuration += 0.4 * perma;
+    tips.push(`减速 +${(0.4 * perma).toFixed(1)}s`);
+  }
+
+  const rime = rankOf(ranks, 'rime');
+  if (rime > 0) {
+    out.slowMagnitude += 0.05 * rime;
+    tips.push(`霜雾减速 +${(rime * 5).toFixed(0)}%`);
+  }
+
+  const hasWinters = rankOf(ranks, 'winters-grasp') > 0;
+  const hasDeep = rankOf(ranks, 'deep-freeze') > 0;
+  if (hasWinters) slowedTargetMul = 1.3;
+  if (hasDeep) {
+    slowedTargetMul *= 1.15;
+    refreshSlowSec = 0.5;
+    tips.push('深度冻结 +15% vs 减速 · 刷新 0.5s');
+  }
+  // Attribute winters as +30%; stacked mul only appears in slowed preview (×1.50).
+  if (hasWinters) {
+    tips.push(
+      targetSlowed
+        ? `冬之握 ×${formatMul2(slowedTargetMul)} → ${(damage * slowedTargetMul).toFixed(1)}`
+        : '冬之握 +30% vs 减速',
+    );
+  }
+
+  return { slowedTargetMul, refreshSlowSec };
+}
+
 /**
  * Resolve combat numbers for an active skill from the base table + tree ranks.
  * Tooltip lines are generated from the same resolved fields.
@@ -187,6 +314,8 @@ export function resolveSkill(
   const onHit: SkillEffect[] = [];
   let slowedTargetMul = 1;
   let phaseEchoApplied = false;
+  let burnCritChanceBonus = 0;
+  let refreshSlowSec = 0;
   const tips: string[] = [];
 
   if (skillId === 'magma') {
@@ -209,11 +338,33 @@ export function resolveSkill(
     }
 
     const scorch = rankOf(ranks, 'scorch');
+    const ember = rankOf(ranks, 'ember');
     if (scorch > 0) {
       const fractions = [0.2, 0.3, 0.4] as const;
       const fraction = fractions[Math.min(scorch, 3) - 1]!;
-      onHit.push({ kind: 'scorch', fraction, durationSec: 2 });
-      tips.push(`灼烧 ${(fraction * 100).toFixed(0)}% / 2 秒`);
+      const durationSec = 2 + 0.5 * ember;
+      onHit.push({ kind: 'scorch', fraction, durationSec });
+      tips.push(`灼烧 ${(fraction * 100).toFixed(0)}% / ${durationSec.toFixed(1)} 秒`);
+    }
+
+    const wildfire = rankOf(ranks, 'wildfire');
+    if (wildfire > 0) {
+      const fractions = [0.5, 1.0] as const;
+      const fraction = fractions[Math.min(wildfire, 2) - 1]!;
+      onHit.push({ kind: 'splash-scorch', fraction });
+      tips.push(`野火溅射灼烧 ${(fraction * 100).toFixed(0)}%`);
+    }
+
+    const shimmer = rankOf(ranks, 'heat-shimmer');
+    if (shimmer > 0) {
+      out.projectileSpeed = base.projectileSpeed * (1 + 0.15 * shimmer);
+      tips.push(`热浪弹速 +${(shimmer * 15).toFixed(0)}%`);
+    }
+
+    const searing = rankOf(ranks, 'searing');
+    if (searing > 0) {
+      burnCritChanceBonus = 0.05 * searing;
+      tips.push(`灼热暴击 +${(searing * 5).toFixed(0)}% vs 燃烧`);
     }
 
     if (rankOf(ranks, 'hellfire-catalyst') > 0) {
@@ -221,24 +372,26 @@ export function resolveSkill(
       tips.push('暴击狱火爆发 50% · 1.5 m');
     }
 
+    if (rankOf(ranks, 'furnace-heart') > 0) {
+      onHit.push({ kind: 'burn-kill-detonate', ratio: 0.5, radius: 2 });
+      tips.push('熔炉之心：击杀燃烧目标爆发 50% · 2 m');
+    }
+
     tips.unshift(`伤害 ${out.damage.toFixed(1)} · 蓝耗 ${out.manaCost} · CD ${out.cooldown.toFixed(2)}s`);
   } else if (skillId === 'frost') {
     const frostRank = Math.max(1, rankOf(ranks, 'frost-fang') || 1);
     out.damage = base.damage * (1 + 0.1 * (frostRank - 1));
 
-    const perma = rankOf(ranks, 'permafrost');
-    if (perma > 0) {
-      out.slowDuration = base.slowDuration + 0.4 * perma;
-      tips.push(`减速 +${(0.4 * perma).toFixed(1)}s`);
-    }
-
-    out.pierceCount = rankOf(ranks, 'piercing-ice') > 0 ? 1 : 0;
+    const pierceIce = rankOf(ranks, 'piercing-ice') > 0 ? 1 : 0;
+    const pierceCold = rankOf(ranks, 'piercing-cold');
+    out.pierceCount = pierceIce + pierceCold;
     if (out.pierceCount > 0) tips.push(`穿透 ${out.pierceCount}`);
 
     const shatter = rankOf(ranks, 'shatter');
     if (shatter > 0) {
       const counts = [2, 3, 4] as const;
-      const count = counts[Math.min(shatter, 3) - 1]!;
+      const glacier = rankOf(ranks, 'glacier-shards');
+      const count = counts[Math.min(shatter, 3) - 1]! + glacier;
       onHit.push({
         kind: 'shatter-shards',
         count,
@@ -248,16 +401,17 @@ export function resolveSkill(
       tips.push(`碎冰 ${count}×15%`);
     }
 
-    if (rankOf(ranks, 'winters-grasp') > 0) {
-      slowedTargetMul = 1.3;
-      // Optional preview when caller already knows the target is slowed.
-      const preview = ctx.targetSlowed ? out.damage * slowedTargetMul : out.damage;
-      tips.push(
-        ctx.targetSlowed
-          ? `冬之握 ×1.30 → ${preview.toFixed(1)}`
-          : '冬之握 +30% vs 减速',
-      );
+    const focus = rankOf(ranks, 'frozen-focus');
+    if (focus > 0) {
+      out.manaCost = base.manaCost - 0.5 * focus;
+      tips.push(`冰霜专注 蓝耗 −${(0.5 * focus).toFixed(1)}`);
     }
+
+    const frostFolds = foldFrostElementPassives(
+      ranks, out, tips, out.damage, ctx.targetSlowed,
+    );
+    slowedTargetMul = frostFolds.slowedTargetMul;
+    refreshSlowSec = frostFolds.refreshSlowSec;
 
     tips.unshift(
       `伤害 ${out.damage.toFixed(1)} · 减速 ${(out.slowMagnitude * 100).toFixed(0)}%/${out.slowDuration.toFixed(1)}s`,
@@ -279,22 +433,57 @@ export function resolveSkill(
       tips.push(`电弧 ${bolts} 道 · 总量 +${(conduction * 8).toFixed(0)}%`);
     }
 
+    const resonance = rankOf(ranks, 'resonance');
+    if (resonance > 0) {
+      out.damage *= 1 + 0.06 * resonance;
+      tips.push(`共鸣 +${(resonance * 6).toFixed(0)}% 电弧伤害`);
+    }
+
+    const overcast = rankOf(ranks, 'overcast');
+    if (overcast > 0) {
+      out.cooldown = base.cooldown * (1 - 0.08 * overcast);
+      tips.push(`超频 CD −${(overcast * 8).toFixed(0)}%`);
+    }
+
     if (rankOf(ranks, 'overcharge') > 0) {
-      onHit.push({ kind: 'overcharge-cdr', perHitSec: 0.25, capPerCastSec: 1.0 });
-      tips.push('过载：击中减影踏 CD（最多 1s/次）');
+      const tempest = rankOf(ranks, 'tempest-conduit') > 0;
+      const cdr: SkillEffect = tempest
+        ? {
+            kind: 'overcharge-cdr',
+            perHitSec: 0.25,
+            capPerCastSec: 2.0,
+            alsoAppliesTo: 'discharge',
+          }
+        : { kind: 'overcharge-cdr', perHitSec: 0.25, capPerCastSec: 1.0 };
+      onHit.push(cdr);
+      tips.push(
+        tempest
+          ? '过载：击中减影踏/静电 CD（最多 2s/次）'
+          : '过载：击中减影踏 CD（最多 1s/次）',
+      );
     }
 
     tips.unshift(`每道 ${out.damage.toFixed(1)} · ×${out.projectileCount} · CD ${out.cooldown.toFixed(2)}s`);
   } else if (skillId === 'blink') {
     const echo = rankOf(ranks, 'phase-echo');
     if (echo > 0) {
+      const mastery = rankOf(ranks, 'echo-mastery');
+      const windowSec = 2 + 0.5 * mastery;
+      const damageMul = phaseEchoDamageMul(ranks);
       onHit.push({
         kind: 'phase-echo-grant',
-        windowSec: 2,
-        damageMul: 1 + 0.1 * echo,
+        windowSec,
+        damageMul,
       });
-      tips.push(`相位回响 +${(echo * 10).toFixed(0)}% · 2 秒`);
+      tips.push(`相位回响 +${((damageMul - 1) * 100).toFixed(0)}% · ${windowSec.toFixed(1)} 秒`);
     }
+
+    const swift = rankOf(ranks, 'swift-phases');
+    if (swift > 0) {
+      out.cooldown = base.cooldown - 0.5 * swift;
+      tips.push(`迅捷相位 CD −${(0.5 * swift).toFixed(1)}s`);
+    }
+
     tips.unshift(`蓝耗 ${out.manaCost} · CD ${out.cooldown.toFixed(1)}s · 距离 ${out.blinkRange} m`);
   } else if (skillId === 'inferno-nova') {
     // Brief burn via the same scorch path magma uses (skills.applyOnHit).
@@ -303,13 +492,46 @@ export function resolveSkill(
     tips.unshift(
       `伤害 ${out.damage.toFixed(1)} · 蓝耗 ${out.manaCost} · CD ${out.cooldown.toFixed(0)}s · ${out.splashRadius.toFixed(0)} m`,
     );
+  } else if (skillId === 'flame-burst') {
+    const rank = Math.max(1, rankOf(ranks, 'flame-burst') || 1);
+    out.damage = base.damage * (1 + 0.10 * (rank - 1));
+    tips.unshift(
+      `伤害 ${out.damage.toFixed(1)} · 蓝耗 ${out.manaCost} · CD ${out.cooldown.toFixed(0)}s · ${out.splashRadius.toFixed(1)} m`,
+    );
+  } else if (skillId === 'frost-nova') {
+    const rank = Math.max(1, rankOf(ranks, 'frost-nova') || 1);
+    out.damage = base.damage * (1 + 0.10 * (rank - 1));
+    const frostFolds = foldFrostElementPassives(
+      ranks, out, tips, out.damage, ctx.targetSlowed,
+    );
+    slowedTargetMul = frostFolds.slowedTargetMul;
+    refreshSlowSec = frostFolds.refreshSlowSec;
+    tips.unshift(
+      `伤害 ${out.damage.toFixed(1)} · 减速 ${(out.slowMagnitude * 100).toFixed(0)}%/${out.slowDuration.toFixed(1)}s · ${out.splashRadius.toFixed(0)} m`,
+    );
+  } else if (skillId === 'discharge') {
+    const rank = Math.max(1, rankOf(ranks, 'discharge') || 1);
+    const bolts = 6 + rank;
+    const rankMul = 1 + 0.10 * (rank - 1);
+    // Conduction-style: total ≈ base×rankMul×6, split across bolts.
+    out.projectileCount = bolts;
+    out.damage = base.damage * rankMul * (6 / bolts);
+
+    const resonance = rankOf(ranks, 'resonance');
+    if (resonance > 0) {
+      out.damage *= 1 + 0.06 * resonance;
+      tips.push(`共鸣 +${(resonance * 6).toFixed(0)}% 电弧伤害`);
+    }
+
+    tips.push(`静电 ${bolts} 道`);
+    tips.unshift(`每道 ${out.damage.toFixed(1)} · ×${out.projectileCount} · CD ${out.cooldown.toFixed(2)}s`);
   }
 
   // Phase Echo multiplies the entire damaging cast when charge is active.
   if (skillId !== 'blink' && ctx.phaseEchoActive && out.damage > 0) {
     const echo = rankOf(ranks, 'phase-echo');
     if (echo > 0) {
-      const mul = 1 + 0.1 * echo;
+      const mul = phaseEchoDamageMul(ranks);
       out.damage *= mul;
       phaseEchoApplied = true;
       tips.push(`相位回响 ×${mul.toFixed(2)}`);
@@ -321,6 +543,8 @@ export function resolveSkill(
     onHit,
     slowedTargetMul,
     phaseEchoApplied,
+    burnCritChanceBonus,
+    refreshSlowSec,
     tooltipLines: tips,
   };
 }

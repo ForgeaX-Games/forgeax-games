@@ -21,7 +21,7 @@ acceptance and licensed audio remain open human gates** — see Open gates.
 - [x] Domain save (`CharacterDomain` envelope), derived `CombatStats`, damage
 - [x] Point-and-click + WASD movement intent; UiLayerManager panel ownership
 - [x] ARPG camera rig + camp showcase (probe / orbit / blend)
-- [x] Three-branch Sorceress skill tree (15 nodes) + hotbar select (1–4)
+- [x] Three-branch Sorceress skill tree (33 nodes) + hotbar select (1–4)
 - [x] Quest / dialogue (Veyra) — rewards on turn-in, not auto-grant
 - [x] Hybrid areas: Cinderwatch → Ashen Reach → Slagdeep
 - [x] Frost Fang shader VFX language (M5.1–5.2)

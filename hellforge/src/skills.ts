@@ -117,6 +117,21 @@ const DISPLAY: Record<SkillId, DisplayMeta> = {
     desc: '锁定地面目标，短暂蓄力后引爆狱火新星',
     unlockLevel: 3,
   },
+  'flame-burst': {
+    id: 'flame-burst', name: '烈焰迸发', icon: 'magma',
+    desc: '自身周围爆发烈焰，造成伤害并击退',
+    unlockLevel: 4,
+  },
+  'frost-nova': {
+    id: 'frost-nova', name: '寒冰新星', icon: 'frost',
+    desc: '自身周围寒冰环爆，造成伤害并减速',
+    unlockLevel: 4,
+  },
+  discharge: {
+    id: 'discharge', name: '静电释放', icon: 'arc',
+    desc: '向四周放射电弧束',
+    unlockLevel: 4,
+  },
 };
 
 function defFromResolved(id: SkillId, r: ResolvedSkill): SkillDef {
@@ -142,7 +157,10 @@ function defFromResolved(id: SkillId, r: ResolvedSkill): SkillDef {
 
 /** Kit sheet at base ranks — prefer skillDefForRanks() for live tooltips. */
 export const SKILLS: SkillDef[] = (
-  ['magma', 'frost', 'arc', 'blink', 'inferno-nova'] as const
+  [
+    'magma', 'frost', 'arc', 'blink', 'inferno-nova',
+    'flame-burst', 'frost-nova', 'discharge',
+  ] as const
 ).map((id) => defFromResolved(id, resolveSkill(id)));
 
 /** Build a SkillDef from the same resolveSkill() data used by combat. */
@@ -204,9 +222,11 @@ const VISUALS: Partial<Record<SkillId, PartBlueprint[]>> = {
     { shape: 'cube', px:  0.05, py: 0.03,  pz:  0.14, sx: 0.11, sy: 0.11, sz: 0.11, mat: 'accent' },
   ],
 };
+// Discharge reuses Arc Surge mesh parts (radial bolt burst).
+VISUALS.discharge = VISUALS.arc;
 
 /** Projectile skills with a PR8 sprite flight body + trail (blink/nova: none). */
-const FLIGHT_SKILLS: ReadonlySet<string> = new Set(['magma', 'frost', 'arc']);
+const FLIGHT_SKILLS: ReadonlySet<string> = new Set(['magma', 'frost', 'arc', 'discharge']);
 
 export type CastResult = 'ok' | 'cooldown' | 'mana' | 'locked' | 'dead';
 
@@ -243,6 +263,20 @@ const DEFAULT_COMBAT_MODS: Readonly<SkillCombatMods> = Object.freeze({
   critMultiplier: 1.5,
 });
 
+function flightStyleOf(skillId: SkillId): FlightStyle {
+  if (skillId === 'discharge') return 'arc';
+  if (skillId === 'magma' || skillId === 'frost' || skillId === 'arc') return skillId;
+  return 'arc';
+}
+
+function elementMulOf(skillId: SkillId, mods: Readonly<SkillCombatMods>): number {
+  if (skillId === 'magma' || skillId === 'flame-burst' || skillId === 'inferno-nova') {
+    return mods.fireMul;
+  }
+  if (skillId === 'frost' || skillId === 'frost-nova') return mods.frostMul;
+  return mods.arcMul;
+}
+
 export interface SkillCaster {
   cast(
     skillId: ActiveSkillId,
@@ -266,6 +300,13 @@ export class SkillSystem {
   /** PR8 T6 — windup charge drip timer (~10 Hz). */
   #novaChargeT = 0;
   #telegraph: NovaTelegraphVfx | null = null;
+  /** PR9 instant PBAOE — applied at the start of the next tick (has monsters). */
+  #pendingPbaoe: {
+    skillId: 'flame-burst' | 'frost-nova';
+    resolved: ResolvedSkill;
+    x: number;
+    z: number;
+  } | null = null;
 
   constructor(private world: World, private fx: FxSystem, private hooks: SkillHooks, private skills: SkillDef[]) {
     this.cooldowns = skills.map(() => 0);
@@ -282,7 +323,12 @@ export class SkillSystem {
     const frostMain = frost?.projectile ?? mk([0.40, 0.75, 1, 1], [0.30, 0.60, 1], 1.2);
     const frostAccent = frost?.impact ?? mk([0.55, 0.85, 1, 1], [0.45, 0.78, 1], 0.9);
     this.mats.set('frost', { main: frostMain, accent: frostAccent });
-    this.mats.set('arc', { main: mk([0.85, 0.65, 1, 1], [0.70, 0.50, 1], 1.8), accent: mk([0.60, 0.35, 1, 1], [0.55, 0.30, 1], 1.2) });
+    const arcPair = {
+      main: mk([0.85, 0.65, 1, 1], [0.70, 0.50, 1], 1.8),
+      accent: mk([0.60, 0.35, 1, 1], [0.55, 0.30, 1], 1.2),
+    };
+    this.mats.set('arc', arcPair);
+    this.mats.set('discharge', arcPair);
   }
 
   /** L5: windup locks move/cast; aftermath does not. */
@@ -417,6 +463,26 @@ export class SkillSystem {
       return 'ok';
     }
 
+    // PR9 instant PBAOE — no projectile; damage stamps on next tick (has monsters).
+    if (skillId === 'flame-burst' || skillId === 'frost-nova') {
+      player.mana -= resolved.manaCost;
+      this.cooldowns[idx] = resolved.cooldown * this.mods.cdrMul;
+      if (resolved.phaseEchoApplied) this.#phaseEchoUntil = 0;
+      this.#pendingPbaoe = { skillId, resolved, x: ox, z: oz };
+      if (skillId === 'flame-burst') {
+        this.fx.playEffect(
+          combatBeat('flame-burst', ['impact', 'impact-burst', 'hellfire', 'hellfire-burst']),
+          ox, 1.0, oz,
+        );
+      } else {
+        this.fx.playEffect(
+          combatBeat('frost-nova', ['impact', 'impact-burst', 'shatter-burst', 'shatter-pop']),
+          ox, 1.0, oz,
+        );
+      }
+      return 'ok';
+    }
+
     player.mana -= resolved.manaCost;
     this.cooldowns[idx] = resolved.cooldown * this.mods.cdrMul;
     if (resolved.phaseEchoApplied) {
@@ -428,16 +494,28 @@ export class SkillSystem {
       this.fx.frostCastCue(cx, 1.0, cz);
     } else if (skillId === 'magma') {
       this.fx.playEffect(combatBeat('magma', ['cast']), cx, 1.0, cz);
+    } else if (skillId === 'discharge') {
+      this.fx.playEffect(combatBeat('discharge', ['cast']), ox, 1.0, oz);
     } else {
       this.fx.playEffect(combatBeat('arc', ['cast']), cx, 1.0, cz);
     }
     const cast: CastRuntime = { overchargeReduced: 0, phaseEchoConsumed: resolved.phaseEchoApplied };
     const count = Math.max(1, resolved.projectileCount);
+    const baseAngle = Math.atan2(aimX, aimZ);
     for (let i = 0; i < count; i++) {
-      const spread = count > 1 ? (i / (count - 1) - 0.5) * 0.5 : 0;
-      const cos = Math.cos(spread), sin = Math.sin(spread);
-      const dx = aimX * cos - aimZ * sin;
-      const dz = aimX * sin + aimZ * cos;
+      let dx: number;
+      let dz: number;
+      if (skillId === 'discharge') {
+        // Radial bolt burst — full 360°, rotated by aim.
+        const angle = baseAngle + (i / count) * Math.PI * 2;
+        dx = Math.sin(angle);
+        dz = Math.cos(angle);
+      } else {
+        const spread = count > 1 ? (i / (count - 1) - 0.5) * 0.5 : 0;
+        const cos = Math.cos(spread), sin = Math.sin(spread);
+        dx = aimX * cos - aimZ * sin;
+        dz = aimX * sin + aimZ * cos;
+      }
       this.spawnProjectile(skillId, resolved, ox + dx * 0.6, oz + dz * 0.6, dx, dz, cast);
     }
     return 'ok';
@@ -483,7 +561,7 @@ export class SkillSystem {
       );
       if (partRes.ok) parts.push(partRes.value as EntityHandle);
     }
-    const elemMul = skillId === 'magma' ? this.mods.fireMul : skillId === 'frost' ? this.mods.frostMul : this.mods.arcMul;
+    const elemMul = elementMulOf(skillId, this.mods);
     this.projectiles.push({
       e: root, resolved, skillId,
       damage: resolved.damage * this.mods.dmgMul * elemMul,
@@ -495,18 +573,19 @@ export class SkillSystem {
       overchargeHitDone: false,
       // PR8 body layer — persistent sprites follow the projectile (T3/T4/T5).
       ...(FLIGHT_SKILLS.has(skillId)
-        ? { vfx: { body: this.fx.flightBody(skillId as FlightStyle, x, y, z), trailT: 0 } }
+        ? { vfx: { body: this.fx.flightBody(flightStyleOf(skillId), x, y, z), trailT: 0 } }
         : {}),
     });
   }
 
-  /** Apply tree onHit effects. Shatter/Hellfire never recurse into skill effects. */
+  /** Apply tree onHit effects. Shatter/Hellfire/detonate never recurse into skill effects. */
   private applyOnHit(
     p: Projectile,
     m: Monster,
     directDmg: number,
     crit: boolean,
     monsters: MonsterManager,
+    opts: { killed: boolean; wasBurning: boolean } = { killed: false, wasBurning: false },
   ): void {
     for (const fx of p.resolved.onHit) {
       if (fx.kind === 'scorch') {
@@ -557,7 +636,34 @@ export class SkillSystem {
           if (blinkIdx >= 0) {
             this.cooldowns[blinkIdx] = Math.max(0, this.cooldowns[blinkIdx]! - reduce);
           }
+          // Tempest Conduit: also reduce Discharge's cooldown.
+          if (fx.alsoAppliesTo) {
+            const otherIdx = this.indexOf(fx.alsoAppliesTo);
+            if (otherIdx >= 0) {
+              this.cooldowns[otherIdx] = Math.max(0, this.cooldowns[otherIdx]! - reduce);
+            }
+          }
         }
+      } else if (
+        fx.kind === 'burn-kill-detonate'
+        && opts.killed
+        && opts.wasBurning
+      ) {
+        // Furnace Heart — no recursion into skill effects.
+        const boom = directDmg * fx.ratio;
+        for (const m2 of [...monsters.monsters]) {
+          if (m2 === m || p.hits.has(m2)) continue;
+          const adx = m2.x - m.x, adz = m2.z - m.z;
+          if (adx * adx + adz * adz > fx.radius * fx.radius) continue;
+          p.hits.add(m2);
+          const ad = Math.hypot(adx, adz) || 1;
+          const k2 = monsters.damage(m2, boom, 0, adx / ad, adz / ad, (p.resolved.knockback ?? 0) * 0.5);
+          this.hooks.onHit(m2.x, 1.0, m2.z, boom, k2, false);
+        }
+        this.fx.playEffect(
+          combatBeat('magma', ['hellfire', 'hellfire-burst']),
+          m.x, 1.0, m.z,
+        );
       }
     }
   }
@@ -565,6 +671,13 @@ export class SkillSystem {
   tick(dt: number, monsters: MonsterManager): void {
     for (let i = 0; i < this.cooldowns.length; i++) {
       if (this.cooldowns[i]! > 0) this.cooldowns[i] = Math.max(0, this.cooldowns[i]! - dt);
+    }
+    if (this.#pendingPbaoe) {
+      const pending = this.#pendingPbaoe;
+      this.#pendingPbaoe = null;
+      this.#applyInstantPbaoeAt(
+        pending.skillId, pending.resolved, pending.x, pending.z, monsters,
+      );
     }
     this.#tickFinisher(dt, monsters);
     const kill = (p: Projectile) => {
@@ -603,14 +716,21 @@ export class SkillSystem {
         const hitR = MONSTERS[m.kind].radius + 0.35;
         if (mdx * mdx + mdz * mdz > hitR * hitR) continue;
         p.hits.add(m);
-        // Winter's Grasp: check slow BEFORE this hit's damage/slow resolves.
-        const winterMul = r.slowedTargetMul > 1 && monsters.isSlowed(m) ? r.slowedTargetMul : 1;
-        const crit = Math.random() < this.mods.critChance;
+        // Winter's Grasp / Deep Freeze: check slow BEFORE this hit resolves.
+        const wasSlowed = monsters.isSlowed(m);
+        const winterMul = r.slowedTargetMul > 1 && wasSlowed ? r.slowedTargetMul : 1;
+        const wasBurning = monsters.isBurning(m);
+        const critChance = this.mods.critChance
+          + (wasBurning ? r.burnCritChanceBonus : 0);
+        const crit = Math.random() < critChance;
         const dmg = p.damage * winterMul * (crit ? this.mods.critMultiplier : 1);
         const kb = (r.knockback ?? 0) * (crit ? 1.4 : 1);
         const killed = monsters.damage(m, dmg, r.slowDuration, p.dx, p.dz, kb);
+        if (wasSlowed && r.refreshSlowSec > 0) {
+          monsters.refreshSlow(m, r.refreshSlowSec);
+        }
         this.hooks.onHit(m.x, 1.0, m.z, dmg, killed, crit);
-        this.applyOnHit(p, m, dmg, crit, monsters);
+        this.applyOnHit(p, m, dmg, crit, monsters, { killed, wasBurning });
         if (p.skillId === 'magma') {
           // PR8 T3 impact + residue layers (body/trail ride the projectile).
           this.fx.playEffect(
@@ -627,6 +747,12 @@ export class SkillSystem {
           this.fx.frostImpact(p.x, p.y, p.z, crit);
           // T7 element hit feedback — frost shards.
           this.fx.playEffect(combatBeat('hit-frost', ['shards']), m.x, 1.0, m.z);
+        } else if (p.skillId === 'discharge') {
+          this.fx.playEffect(
+            combatBeat('discharge', ['impact', 'impact-burst', 'impact-scorch']),
+            p.x, p.y, p.z,
+          );
+          this.fx.playEffect(combatBeat('hit-arc', ['arcs']), m.x, 1.0, m.z);
         } else {
           this.fx.playEffect(
             combatBeat('arc', ['impact', 'impact-burst', 'impact-scorch']),
@@ -637,6 +763,9 @@ export class SkillSystem {
         }
         if (r.splashRadius > 0) {
           const splashMul = r.splashRatio > 0 ? r.splashRatio : 0.5;
+          const splashScorch = r.onHit.find((fx) => fx.kind === 'splash-scorch');
+          const scorchFx = r.onHit.find((fx) => fx.kind === 'scorch');
+          const splashBurnDur = scorchFx?.durationSec ?? 2;
           for (const m2 of [...monsters.monsters]) {
             if (m2 === m || p.hits.has(m2)) continue;
             const adx = m2.x - p.x, adz = m2.z - p.z;
@@ -644,8 +773,13 @@ export class SkillSystem {
             if (ad2 < r.splashRadius * r.splashRadius) {
               p.hits.add(m2);
               const ad = Math.sqrt(ad2) || 1;
-              const k2 = monsters.damage(m2, dmg * splashMul, 0, adx / ad, adz / ad, (r.knockback ?? 0) * 0.7);
-              this.hooks.onHit(m2.x, 1.0, m2.z, dmg * splashMul, k2, false);
+              const splashDmg = dmg * splashMul;
+              const k2 = monsters.damage(m2, splashDmg, 0, adx / ad, adz / ad, (r.knockback ?? 0) * 0.7);
+              this.hooks.onHit(m2.x, 1.0, m2.z, splashDmg, k2, false);
+              // Wildfire: splash applies scorch at resolved fraction.
+              if (splashScorch) {
+                monsters.applyBurn(m2, splashDmg * splashScorch.fraction, splashBurnDur);
+              }
             }
           }
         }
@@ -674,7 +808,7 @@ export class SkillSystem {
         p.vfx.trailT -= dt;
         if (p.vfx.trailT <= 0) {
           p.vfx.trailT = 0.03;
-          this.fx.flightTrailPuff(p.skillId as FlightStyle, p.x, p.y, p.z);
+          this.fx.flightTrailPuff(flightStyleOf(p.skillId), p.x, p.y, p.z);
         }
       }
     }
@@ -701,6 +835,7 @@ export class SkillSystem {
     this.fx.noteProjectiles(0);
     for (let i = 0; i < this.cooldowns.length; i++) this.cooldowns[i] = 0;
     this.#phaseEchoUntil = 0;
+    this.#pendingPbaoe = null;
     this.#finisher = createFinisherState();
     this.#finisherResolved = null;
     this.#finisherOrigin = null;
@@ -793,9 +928,64 @@ export class SkillSystem {
       const adz = m.z - tz;
       if (adx * adx + adz * adz > radius * radius) continue;
       const ad = Math.hypot(adx, adz) || 1;
+      const wasBurning = monsters.isBurning(m);
       const killed = monsters.damage(m, hitDmg, 0, adx / ad, adz / ad, resolved.knockback);
       this.hooks.onHit(m.x, 1.0, m.z, hitDmg, killed, crit);
-      this.applyOnHit(proxy, m, hitDmg, crit, monsters);
+      this.applyOnHit(proxy, m, hitDmg, crit, monsters, { killed, wasBurning });
+    }
+  }
+
+  /**
+   * PR9 instant PBAOE (flame-burst / frost-nova) — finisher-shaped stamp at
+   * the caster, no windup / telegraph.
+   */
+  #applyInstantPbaoeAt(
+    skillId: 'flame-burst' | 'frost-nova',
+    resolved: ResolvedSkill,
+    tx: number,
+    tz: number,
+    monsters: MonsterManager,
+  ): void {
+    const radius = resolved.splashRadius || 2.5;
+    const elemMul = elementMulOf(skillId, this.mods);
+    const dmg = resolved.damage * this.mods.dmgMul * elemMul;
+    const proxy: Projectile = {
+      e: 0 as unknown as EntityHandle,
+      resolved,
+      skillId,
+      damage: dmg,
+      x: tx, y: 1, z: tz,
+      dx: 0, dz: 0,
+      age: 0, jitterT: 0,
+      pierceLeft: 0,
+      hits: new Set(),
+      parts: [],
+      cast: { overchargeReduced: 0, phaseEchoConsumed: resolved.phaseEchoApplied },
+      overchargeHitDone: false,
+    };
+    for (const m of [...monsters.monsters]) {
+      const adx = m.x - tx;
+      const adz = m.z - tz;
+      if (adx * adx + adz * adz > radius * radius) continue;
+      const ad = Math.hypot(adx, adz) || 1;
+      const wasSlowed = monsters.isSlowed(m);
+      const winterMul = resolved.slowedTargetMul > 1 && wasSlowed
+        ? resolved.slowedTargetMul
+        : 1;
+      const wasBurning = monsters.isBurning(m);
+      const critChance = this.mods.critChance
+        + (wasBurning ? resolved.burnCritChanceBonus : 0);
+      const crit = Math.random() < critChance;
+      const hitDmg = dmg * winterMul * (crit ? this.mods.critMultiplier : 1);
+      const slowSec = skillId === 'frost-nova' ? resolved.slowDuration : 0;
+      const killed = monsters.damage(
+        m, hitDmg, slowSec, adx / ad, adz / ad, resolved.knockback,
+      );
+      if (wasSlowed && resolved.refreshSlowSec > 0) {
+        monsters.refreshSlow(m, resolved.refreshSlowSec);
+      }
+      this.hooks.onHit(m.x, 1.0, m.z, hitDmg, killed, crit);
+      this.applyOnHit(proxy, m, hitDmg, crit, monsters, { killed, wasBurning });
     }
   }
 }

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { createSorceressDomain } from './character-domain';
+import { BAG_SIZE, createSorceressDomain } from './character-domain';
 import {
   createFrostforgedWand,
   FROSTFORGED_WAND_REWARD,
@@ -45,7 +45,7 @@ function fillBagAndWeapon(domain: ReturnType<typeof createSorceressDomain>): voi
       },
     }).ok).toBe(true);
   }
-  for (let i = 0; i < 24; i++) {
+  for (let i = 0; i < BAG_SIZE; i++) {
     const filler: ItemInstance = {
       instanceId: `fill-${i}`,
       slot: 'ring',

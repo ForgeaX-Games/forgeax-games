@@ -11,12 +11,12 @@ function particleSum(def: (typeof COMBAT_EFFECT_DEFS)[CombatEffectId]): number {
 const IDS = Object.keys(COMBAT_EFFECT_DEFS) as CombatEffectId[];
 
 describe('COMBAT_EFFECT_DEFS', () => {
-  test('registry has the eleven combat ids', () => {
+  test('registry has the fourteen combat ids (PR9 +3 actives)', () => {
     expect(IDS.sort()).toEqual(
       [
         'arc', 'blink', 'death-dissolve', 'death-dissolve-boss',
-        'dodge', 'frost', 'hit-arc', 'hit-fire', 'hit-frost',
-        'inferno-nova', 'magma',
+        'discharge', 'dodge', 'flame-burst', 'frost', 'frost-nova',
+        'hit-arc', 'hit-fire', 'hit-frost', 'inferno-nova', 'magma',
       ].sort(),
     );
   });

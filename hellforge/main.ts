@@ -1138,7 +1138,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     if (stopped) return;
 
     // ── equipment + bag (打宝核心) — CharacterDomain is the authority ─────
-    // 10-slot paper doll + 24-slot bag. Pickups / swaps / melts dispatch domain
+    // 10-slot paper doll + 60-slot bag. Pickups / swaps / melts dispatch domain
     // commands; HUD/inventory read deep-frozen snapshots at render time (no
     // writable bag/equipment mirrors). CombatStats is re-derived; resource
     // ratios are preserved so re-equip cannot heal.

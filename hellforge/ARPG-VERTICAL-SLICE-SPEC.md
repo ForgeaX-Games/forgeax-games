@@ -95,9 +95,9 @@ No Blizzard assets, extracted sounds, icons, fonts, or textures may be used.
    it shares rank, equipment modifiers, mana, cooldown, pierce, and slow with
    RMB Frost Fang, but is independent of the currently selected RMB slot.
 9. **Skill points only.** STR/DEX/VIT/ENERGY allocation is out of scope.
-10. **Complete Sorceress tree:** three branches, approximately 15 implemented
-    nodes; no UI-only nodes.
-11. **Inventory:** retain the 24 single-cell bag and six equipment slots.
+10. **Complete Sorceress tree:** three branches, 33 implemented nodes
+    (11 per branch); no UI-only nodes.
+11. **Inventory:** a 60 single-cell bag (12×5) and six equipment slots.
 12. **Persistence:** save long-term progression; reload at camp with full
     health/mana.
 13. **Death:** return to camp, retain long-term progression, reset the current
@@ -427,7 +427,8 @@ a wall-clipping fix.
 
 ### 7.1 System behaviour
 
-The tree contains three tabs and 15 implemented nodes:
+The tree contains three tabs and 33 implemented nodes (11 per branch:
+9 normal + 2 keystones / `capstone` kind):
 
 - Flame;
 - Frost;
@@ -445,12 +446,13 @@ Required behaviour:
 - skill ranks, hotbar, and unspent points persist;
 - every node changes runtime behaviour or numbers through `SkillResolver`.
 
-Frost Fang starts at rank 1 without consuming a point. Each level after level 1
-grants one point. Respec never removes or refunds the free Frost Fang rank;
-it refunds only paid ranks. Any hotbar slot whose active skill becomes unlearned
-is cleared, and selection falls back to the valid Frost Fang slot.
+Frost Fang and Magma Bolt start at rank 1 without consuming a point. Each level
+after level 1 grants one point. Respec never removes or refunds those free
+starter ranks; it refunds only paid ranks. Any hotbar slot whose active skill
+becomes unlearned is cleared, and selection falls back to the valid Frost Fang
+slot. Save schema version stays 1 — missing new-node ranks hydrate as 0.
 
-### 7.2 Initial 15-node content
+### 7.2 33-node content
 
 Values below are initial implementation values and must remain data-driven.
 
@@ -464,19 +466,34 @@ Values below are initial implementation values and must remain data-driven.
    +0.35 m splash radius and +10% splash damage/rank.
 5. **Hellfire Catalyst** — capstone, max 1, requires Volatile Core 2 and level 6;
    Magma Bolt critical hits trigger an extra 50% damage explosion.
+6. **Flame Burst** — active, max 5, requires Magma Bolt 3 and level 4; instant
+   PBAOE at caster; each rank above 1 adds 10% base damage.
+7. **Ember** — passive, max 3, requires Scorch 2; Scorch duration +0.5 s/rank.
+8. **Searing** — passive, max 3, requires Kindling 2; +5% crit chance/rank vs
+   burning targets.
+9. **Wildfire** — modifier, max 2, requires Volatile Core 2 and level 4; splash
+   applies Scorch at 50/100% fraction.
+10. **Heat Shimmer** — passive, max 2, requires Volatile Core 1; Magma projectile
+    speed +15%/rank.
+11. **Furnace Heart** — capstone, max 1, requires Hellfire Catalyst 1 and level 6;
+    killing a burning enemy detonates it (50% of killing hit, 2 m, no recursion).
 
 Resolver details:
 
 - Magma rank multiplier is `1 + 0.12 × (rank - 1)`.
 - Kindling multiplies all fire damage by `1 + 0.06 × rank`.
-- Scorch has one stack per target. A new hit refreshes 2 seconds and replaces
-  the stored amount; it does not stack. Total DoT is hit damage ×
+- Scorch has one stack per target. A new hit refreshes base 2 seconds (+ Ember)
+  and replaces the stored amount; it does not stack. Total DoT is hit damage ×
   `0.20 | 0.30 | 0.40`.
 - Base splash deals 50% of direct damage in 1.7 m. Volatile Core changes radius
   to `1.7 + 0.35 × rank` m and splash ratio to `0.50 + 0.10 × rank`.
 - Hellfire Catalyst adds one 1.5 m explosion dealing 50% of the critical direct
   hit to secondary targets only. It cannot recursively trigger Scorch,
   Catalyst, or Shatter.
+- Flame Burst rank multiplier is `1 + 0.10 × (rank - 1)`.
+- Wildfire splash-scorch fractions are `0.50 | 1.00`.
+- Furnace Heart detonation cannot recursively trigger Scorch, Catalyst, Shatter,
+  or itself.
 
 #### Frost
 
@@ -488,19 +505,33 @@ Resolver details:
    emits 2/3/4 shards at 15% hit damage each.
 5. **Winter's Grasp** — capstone, max 1, requires Shatter 3 and level 6;
    +30% Frost Fang damage against slowed targets.
+6. **Frost Nova** — active, max 5, requires Frost Fang 3 and level 4; instant
+   PBAOE ring with damage + slow; each rank above 1 adds 10% base damage.
+7. **Rime** — passive, max 3, requires Permafrost 2; slow magnitude +5%/rank.
+8. **Piercing Cold** — modifier, max 1, requires Piercing Ice and level 4;
+   pierce +1 (total 2 with Piercing Ice).
+9. **Glacier Shards** — modifier, max 2, requires Shatter 3 and level 4;
+   Shatter shard count +1/rank.
+10. **Frozen Focus** — passive, max 3, requires Frost Fang 3; Frost mana cost
+    −0.5/rank.
+11. **Deep Freeze** — capstone, max 1, requires Winter's Grasp 1 and level 6;
+    hits on already-slowed targets +15% and refresh slow (+0.5 s).
 
 Resolver details:
 
 - Frost rank multiplier is `1 + 0.10 × (rank - 1)`.
 - Base slow is 35% for 2.2 seconds; Permafrost adds 0.4 seconds/rank and refreshes
-  duration without stacking magnitude.
-- Piercing Ice changes pierce count from 0 to 1.
+  duration without stacking magnitude. Rime adds +5% magnitude/rank.
+- Piercing Ice changes pierce count from 0 to 1; Piercing Cold adds one more.
 - Every successful direct Frost Fang hit, including the pierced hit, can emit
-  Shatter once. It sends 2/3/4 shards to the nearest distinct monsters within
-  3 m. Each shard deals 15% of that direct hit; shards cannot hit the source
-  target and cannot recursively trigger skill effects.
+  Shatter once. It sends `2/3/4 + Glacier Shards` shards to the nearest distinct
+  monsters within 3 m. Each shard deals 15% of that direct hit; shards cannot
+  hit the source target and cannot recursively trigger skill effects.
 - Winter's Grasp checks the target's slow status before damage resolution and
   applies a 1.30 multiplier.
+- Frost Nova rank multiplier is `1 + 0.10 × (rank - 1)` and reuses frost slow
+  folds.
+- Deep Freeze multiplies already-slowed hits by 1.15 and refreshes slow by 0.5 s.
 
 #### Arcane
 
@@ -512,6 +543,18 @@ Resolver details:
    within 2 seconds after Blink gains +10% damage/rank.
 5. **Overcharge** — capstone, max 1, requires Conduction 3 and Phase Echo 2;
    Arc Surge hits reduce Blink cooldown by 0.25 s, capped at 1 s per cast.
+6. **Discharge** — active, max 5, requires Arc Surge 3 and level 4; radial bolt
+   burst (`6 + rank` bolts, conduction-style per-bolt scale); each rank above 1
+   adds 10% base damage.
+7. **Resonance** — passive, max 3, requires Arc Surge 3; +6% arc damage/rank.
+8. **Swift Phases** — passive, max 2, requires Phase Step; Blink cooldown
+   −0.5 s/rank.
+9. **Echo Mastery** — modifier, max 2, requires Phase Echo 2 and level 4;
+   Phase Echo window +0.5 s and +5% damage/rank.
+10. **Overcast** — passive, max 2, requires Conduction 1; Arc cooldown
+    −8%/rank.
+11. **Tempest Conduit** — capstone, max 1, requires Overcharge 1 and level 6;
+    Overcharge cap 1 s → 2 s and also applies to Discharge's cooldown.
 
 Resolver details:
 
@@ -519,18 +562,24 @@ Resolver details:
 - Conduction bolt count is `3 + rank`. Per-bolt multiplier is
   `(3 / (3 + rank)) × (1 + 0.08 × rank)`, so each rank adds 8% total theoretical
   damage rather than multiplying the original three-bolt damage unchecked.
-- A successful Phase Step grants one 2-second Phase Echo charge. The next
-  successful damaging cast consumes it and multiplies that entire cast by
-  `1 + 0.10 × rank`; expiry consumes it without effect.
+- A successful Phase Step grants one Phase Echo charge (base 2 s; Echo Mastery
+  extends). The next successful damaging cast consumes it and multiplies that
+  entire cast by `1 + 0.10 × rank` (+ Echo Mastery damage); expiry consumes it
+  without effect.
 - Each Arc Surge projectile's first valid hit may reduce Phase Step cooldown by
-  0.25 seconds. Reduction is capped at 1 second for that cast.
+  0.25 seconds. Reduction is capped at 1 second for that cast (2 s with Tempest
+  Conduit). Tempest Conduit also applies the same CDR path to Discharge.
+- Discharge bolt count is `6 + rank` with conduction-style per-bolt scaling.
+- Resonance multiplies arc damage by `1 + 0.06 × rank`.
+- Overcast multiplies Arc cooldown by `1 − 0.08 × rank`.
 
 The first 15–20 minute run exposes only early nodes; later content uses the same
-tree without redesign.
+tree without redesign. The DEV skill fixture (`?hfSkillFixture=1`) can apply a
+fully invested Flame branch for stills and video.
 
 ## 8. Equipment and inventory
 
-Existing item generation, rarity, affixes, 24 bag slots, and six equipment
+Existing item generation, rarity, affixes, 60 bag slots, and six equipment
 slots remain:
 
 - weapon;
@@ -596,7 +645,7 @@ Dialogue reads quest state and emits commands. It does not mutate rewards or
 area access directly. Quest logic owns state transitions, objective progress,
 rewards, and gates.
 
-Turn-in is transactional. If the 24-slot bag is full, dialogue returns
+Turn-in is transactional. If the 60-slot bag is full, dialogue returns
 `inventory-full`, grants nothing, and leaves the quest `ready/unclaimed`.
 Only successful insertion of all rewards may transition to `completed`; that
 transition and save happen once.

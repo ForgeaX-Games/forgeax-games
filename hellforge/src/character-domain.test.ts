@@ -159,6 +159,17 @@ describe('createSorceressDomain', () => {
     expect(snap.hotbar).not.toContain('blink');
   });
 
+  test('onboarding never auto-grants PR9 actives (tree-gated only)', () => {
+    const domain = createSorceressDomain({ playerName: 'PR9', level: 10 });
+    const snap = domain.snapshot();
+    expect(snap.skillRanks['flame-burst'] ?? 0).toBe(0);
+    expect(snap.skillRanks['frost-nova'] ?? 0).toBe(0);
+    expect(snap.skillRanks.discharge ?? 0).toBe(0);
+    expect(snap.hotbar).not.toContain('flame-burst');
+    expect(snap.hotbar).not.toContain('frost-nova');
+    expect(snap.hotbar).not.toContain('discharge');
+  });
+
   test('starting above level 1 grants one skill point per level after 1', () => {
     const domain = createSorceressDomain({ playerName: '起点', level: 4 });
     expect(domain.snapshot().level).toBe(4);

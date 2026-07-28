@@ -349,6 +349,82 @@ describe('serialize / hydrate round trip', () => {
     env.progression.level = 99;
     expect(domain.snapshot().level).toBe(3);
   });
+
+  test('PR9 T6: pre-expansion envelope hydrates 18 new nodes at rank 0; schema stays 1', () => {
+    expect(SAVE_SCHEMA_VERSION).toBe(1);
+    const base = validEnvelope();
+    // Pre-PR9 wire shape: only the original 15 SkillNodeId keys.
+    const legacyRanks: Record<string, number> = {
+      'magma-bolt': 3,
+      kindling: 2,
+      scorch: 0,
+      'volatile-core': 0,
+      'hellfire-catalyst': 0,
+      'frost-fang': 2,
+      permafrost: 0,
+      'piercing-ice': 0,
+      shatter: 0,
+      'winters-grasp': 0,
+      'arc-surge': 1,
+      conduction: 0,
+      'phase-step': 0,
+      'phase-echo': 0,
+      overcharge: 0,
+    };
+    const legacyRaw = {
+      ...base,
+      progression: {
+        ...base.progression,
+        level: 6,
+        unspentSkillPoints: 2,
+        skillRanks: legacyRanks,
+      },
+    };
+    const parsed = parseEnvelope(legacyRaw);
+    expect(parsed).not.toBeNull();
+    expect(parsed!.schemaVersion).toBe(1);
+    expect(parsed!.progression.skillRanks['magma-bolt']).toBe(3);
+    expect(parsed!.progression.skillRanks['frost-fang']).toBe(2);
+    const newIds = [
+      'flame-burst', 'ember', 'searing', 'wildfire', 'heat-shimmer', 'furnace-heart',
+      'frost-nova', 'rime', 'piercing-cold', 'glacier-shards', 'frozen-focus', 'deep-freeze',
+      'discharge', 'resonance', 'swift-phases', 'echo-mastery', 'overcast', 'tempest-conduit',
+    ] as const;
+    for (const id of newIds) {
+      expect(parsed!.progression.skillRanks[id]).toBe(0);
+    }
+    const restored = hydrateCharacter(parsed!).snapshot();
+    for (const id of newIds) {
+      expect(restored.skillRanks[id]).toBe(0);
+    }
+    expect(restored.skillRanks['magma-bolt']).toBe(3);
+  });
+
+  test('PR9 T6: round-trip new skill ranks; schema version stays 1', () => {
+    const domain = createSorceressDomain({ playerName: 'PR9往返', id: 'pr9-rt', level: 10 });
+    expect(domain.dispatch({ op: 'invest-skill', nodeId: 'magma-bolt' }).ok).toBe(true);
+    expect(domain.dispatch({ op: 'invest-skill', nodeId: 'magma-bolt' }).ok).toBe(true);
+    expect(domain.dispatch({ op: 'invest-skill', nodeId: 'flame-burst' }).ok).toBe(true);
+    expect(domain.dispatch({ op: 'invest-skill', nodeId: 'flame-burst' }).ok).toBe(true);
+    expect(domain.dispatch({ op: 'invest-skill', nodeId: 'frost-fang' }).ok).toBe(true);
+    expect(domain.dispatch({ op: 'invest-skill', nodeId: 'frost-fang' }).ok).toBe(true);
+    expect(domain.dispatch({ op: 'invest-skill', nodeId: 'frost-nova' }).ok).toBe(true);
+    expect(domain.dispatch({ op: 'assign-hotbar', nodeId: 'flame-burst', slot: 2 }).ok).toBe(true);
+
+    const env = serializeCharacter(domain.snapshot());
+    expect(env.schemaVersion).toBe(SAVE_SCHEMA_VERSION);
+    expect(SAVE_SCHEMA_VERSION).toBe(1);
+    expect(env.progression.skillRanks['flame-burst']).toBe(2);
+    expect(env.progression.skillRanks['frost-nova']).toBe(1);
+    expect(env.progression.hotbar[2]).toBe('flame-burst');
+
+    const restored = hydrateCharacter(env).snapshot();
+    expect(restored.skillRanks['flame-burst']).toBe(2);
+    expect(restored.skillRanks['frost-nova']).toBe(1);
+    expect(restored.skillRanks['magma-bolt']).toBe(3);
+    expect(restored.skillRanks['frost-fang']).toBe(3);
+    expect(restored.hotbar[2]).toBe('flame-burst');
+  });
 });
 
 describe('legacy migration', () => {

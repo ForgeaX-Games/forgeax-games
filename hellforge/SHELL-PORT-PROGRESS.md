@@ -21,7 +21,7 @@
 | 3 | Shell skeleton (ShellManager + Title) | ✅ accepted | Title mounts before heavy runtime; clicks stay inside uiRoot |
 | 4 | CharSelect / CharList + preview camera | ✅ accepted | One-shot gate; selected `CharacterRecord` owns runtime hero bind |
 | 5 | HUD redo (`HudViewModel` + D2 layout) | ✅ code | Globes / skill bar / XP / target / C sheet / showcase reduced HUD — **browser pending** |
-| 6 | Automap / SkillTree / Quest / Dialogue | ✅ code | Den automap + 15-node tree + Q log + Veyra dialogue — **browser pending** |
+| 6 | Automap / SkillTree / Quest / Dialogue | ✅ code | Den automap + 33-node tree + Q log + Veyra dialogue — **browser pending** |
 | 7 | Camp showcase camera | ✅ code | Spring-arm probe + 400 ms blend + RMB orbit — **browser pending** |
 
 ## Stabilization acceptance gate (2026-07-15)

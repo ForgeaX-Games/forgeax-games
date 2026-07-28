@@ -237,3 +237,204 @@ describe('resolveSkill — 15 node effect snapshots (Spec §7.2)', () => {
     });
   });
 });
+
+describe('resolveSkill — PR9 18 node effect snapshots', () => {
+  test('16 Flame Burst rank scaling +10%/rank above 1', () => {
+    expect(resolveSkill('flame-burst', ranks({ 'flame-burst': 1 })).damage).toBe(28);
+    expect(resolveSkill('flame-burst', ranks({ 'flame-burst': 5 })).damage).toBeCloseTo(
+      28 * (1 + 0.10 * 4), 6,
+    );
+    const r = resolveSkill('flame-burst', ranks({ 'flame-burst': 1 }));
+    expect(r.manaCost).toBe(14);
+    expect(r.cooldown).toBe(4);
+    expect(r.splashRadius).toBe(2.5);
+    expect(r.knockback).toBe(5);
+    expect(r.projectileCount).toBe(0);
+  });
+
+  test('17 Ember extends scorch duration +0.5s/rank', () => {
+    const r = resolveSkill('magma', ranks({ 'magma-bolt': 2, scorch: 2, ember: 3 }));
+    expect(r.onHit).toContainEqual({ kind: 'scorch', fraction: 0.3, durationSec: 2 + 0.5 * 3 });
+  });
+
+  test('18 Searing burn-crit chance +5%/rank', () => {
+    const r = resolveSkill('magma', ranks({ 'magma-bolt': 1, kindling: 2, searing: 3 }));
+    expect(r.burnCritChanceBonus).toBeCloseTo(0.05 * 3, 6);
+  });
+
+  test('19 Wildfire splash-scorch fractions 50/100%', () => {
+    const r1 = resolveSkill('magma', ranks({
+      'magma-bolt': 2, kindling: 2, 'volatile-core': 2, wildfire: 1,
+    }));
+    const r2 = resolveSkill('magma', ranks({
+      'magma-bolt': 2, kindling: 2, 'volatile-core': 2, wildfire: 2,
+    }));
+    expect(r1.onHit).toContainEqual({ kind: 'splash-scorch', fraction: 0.5 });
+    expect(r2.onHit).toContainEqual({ kind: 'splash-scorch', fraction: 1.0 });
+  });
+
+  test('20 Heat Shimmer magma projectile speed +15%/rank', () => {
+    const r = resolveSkill('magma', ranks({
+      'magma-bolt': 2, kindling: 2, 'volatile-core': 1, 'heat-shimmer': 2,
+    }));
+    expect(r.projectileSpeed).toBeCloseTo(15 * (1 + 0.15 * 2), 6);
+  });
+
+  test('21 Furnace Heart burn-kill detonate 50% / 2 m', () => {
+    const r = resolveSkill('magma', ranks({
+      'magma-bolt': 2, kindling: 2, 'volatile-core': 2, 'hellfire-catalyst': 1, 'furnace-heart': 1,
+    }));
+    expect(r.onHit).toContainEqual({
+      kind: 'burn-kill-detonate', ratio: 0.5, radius: 2,
+    });
+  });
+
+  test('22 Frost Nova rank scaling +10%/rank above 1', () => {
+    expect(resolveSkill('frost-nova', ranks({ 'frost-nova': 1 })).damage).toBe(22);
+    expect(resolveSkill('frost-nova', ranks({ 'frost-nova': 5 })).damage).toBeCloseTo(
+      22 * (1 + 0.10 * 4), 6,
+    );
+    const r = resolveSkill('frost-nova', ranks({ 'frost-nova': 1 }));
+    expect(r.manaCost).toBe(14);
+    expect(r.cooldown).toBe(4);
+    expect(r.splashRadius).toBe(3);
+    expect(r.slowMagnitude).toBe(0.35);
+    expect(r.slowDuration).toBe(2.2);
+  });
+
+  test('22b Frost Nova inherits frost slow/bonus folds', () => {
+    const r = resolveSkill('frost-nova', ranks({
+      'frost-nova': 1, permafrost: 2, rime: 3, 'winters-grasp': 1, 'deep-freeze': 1,
+    }));
+    expect(r.slowDuration).toBeCloseTo(2.2 + 0.4 * 2, 6);
+    expect(r.slowMagnitude).toBeCloseTo(0.35 + 0.05 * 3, 6);
+    expect(r.slowedTargetMul).toBeCloseTo(1.3 * 1.15, 6);
+    expect(r.refreshSlowSec).toBe(0.5);
+    // winters attributed as +30%; deep-freeze keeps its own +15% line (not ×1.49 / +49%)
+    expect(r.tooltipLines.some((l) => l.includes('冬之握 +30%'))).toBe(true);
+    expect(r.tooltipLines.some((l) => /冬之握 \+49%|×1\.49/.test(l))).toBe(false);
+    const preview = resolveSkill('frost-nova', {
+      ...ranks({ 'frost-nova': 1, 'winters-grasp': 1, 'deep-freeze': 1 }),
+      targetSlowed: true,
+    });
+    expect(preview.tooltipLines.some((l) => l.includes('×1.50'))).toBe(true);
+  });
+
+  test('23 Rime slow magnitude +5%/rank', () => {
+    const r = resolveSkill('frost', ranks({ 'frost-fang': 2, permafrost: 2, rime: 3 }));
+    expect(r.slowMagnitude).toBeCloseTo(0.35 + 0.05 * 3, 6);
+  });
+
+  test('24 Piercing Cold adds pierce (stacks with Piercing Ice)', () => {
+    const ice = resolveSkill('frost', ranks({ 'frost-fang': 2, 'piercing-ice': 1 }));
+    const both = resolveSkill('frost', ranks({
+      'frost-fang': 2, 'piercing-ice': 1, 'piercing-cold': 1,
+    }));
+    expect(ice.pierceCount).toBe(1);
+    expect(both.pierceCount).toBe(2);
+  });
+
+  test('25 Glacier Shards shatter count +1/rank', () => {
+    const base = resolveSkill('frost', ranks({
+      'frost-fang': 2, 'piercing-ice': 1, shatter: 3,
+    }));
+    const g1 = resolveSkill('frost', ranks({
+      'frost-fang': 2, 'piercing-ice': 1, shatter: 3, 'glacier-shards': 1,
+    }));
+    const g2 = resolveSkill('frost', ranks({
+      'frost-fang': 2, 'piercing-ice': 1, shatter: 3, 'glacier-shards': 2,
+    }));
+    expect(base.onHit).toContainEqual({
+      kind: 'shatter-shards', count: 4, damageRatio: 0.15, rangeM: 3,
+    });
+    expect(g1.onHit).toContainEqual({
+      kind: 'shatter-shards', count: 5, damageRatio: 0.15, rangeM: 3,
+    });
+    expect(g2.onHit).toContainEqual({
+      kind: 'shatter-shards', count: 6, damageRatio: 0.15, rangeM: 3,
+    });
+  });
+
+  test('26 Frozen Focus frost mana −0.5/rank', () => {
+    const r = resolveSkill('frost', ranks({ 'frost-fang': 3, 'frozen-focus': 3 }));
+    expect(r.manaCost).toBeCloseTo(7 - 0.5 * 3, 6);
+  });
+
+  test('27 Deep Freeze +15% vs slowed + refresh 0.5s', () => {
+    const r = resolveSkill('frost', ranks({
+      'frost-fang': 2, 'piercing-ice': 1, shatter: 3, 'winters-grasp': 1, 'deep-freeze': 1,
+    }));
+    expect(r.slowedTargetMul).toBeCloseTo(1.3 * 1.15, 6);
+    expect(r.refreshSlowSec).toBe(0.5);
+    expect(r.tooltipLines.some((l) => l.includes('冬之握 +30%'))).toBe(true);
+    expect(r.tooltipLines.some((l) => l.includes('深度冻结 +15%'))).toBe(true);
+    expect(r.tooltipLines.some((l) => /冬之握 \+49%|×1\.49/.test(l))).toBe(false);
+  });
+
+  test('28 Discharge bolts 6+rank, +10%/rank above 1, conduction-style split', () => {
+    const r1 = resolveSkill('discharge', ranks({ discharge: 1 }));
+    expect(r1.projectileCount).toBe(7);
+    expect(r1.damage).toBeCloseTo(8 * (6 / 7), 6);
+
+    const r5 = resolveSkill('discharge', ranks({ discharge: 5 }));
+    expect(r5.projectileCount).toBe(11);
+    const rankMul = 1 + 0.10 * 4;
+    expect(r5.damage).toBeCloseTo(8 * rankMul * (6 / 11), 6);
+    // Total theoretical ≈ base×rankMul×6
+    expect(r5.damage * r5.projectileCount).toBeCloseTo(8 * rankMul * 6, 6);
+  });
+
+  test('29 Resonance +6% arc damage/rank', () => {
+    const r = resolveSkill('arc', ranks({ 'arc-surge': 3, resonance: 3 }));
+    expect(r.damage).toBeCloseTo(8 * (1 + 0.1 * 2) * (1 + 0.06 * 3), 6);
+  });
+
+  test('29b Resonance also boosts discharge damage', () => {
+    const base = resolveSkill('discharge', ranks({ discharge: 2 }));
+    const boosted = resolveSkill('discharge', ranks({ discharge: 2, resonance: 3 }));
+    const rankMul = 1 + 0.10 * 1;
+    const bolts = 6 + 2;
+    expect(base.damage).toBeCloseTo(8 * rankMul * (6 / bolts), 6);
+    expect(boosted.damage).toBeCloseTo(8 * rankMul * (6 / bolts) * (1 + 0.06 * 3), 6);
+    expect(boosted.damage).toBeCloseTo(base.damage * (1 + 0.06 * 3), 6);
+  });
+
+  test('30 Swift Phases blink cooldown −0.5s/rank', () => {
+    const r = resolveSkill('blink', ranks({
+      'arc-surge': 2, 'phase-step': 1, 'swift-phases': 2,
+    }));
+    expect(r.cooldown).toBeCloseTo(3.0 - 0.5 * 2, 6);
+  });
+
+  test('31 Echo Mastery Phase Echo window +0.5s and +5% damage/rank', () => {
+    const r = resolveSkill('blink', ranks({
+      'arc-surge': 2, 'phase-step': 1, 'phase-echo': 2, 'echo-mastery': 2,
+    }));
+    expect(r.onHit).toContainEqual({
+      kind: 'phase-echo-grant', windowSec: 2 + 0.5 * 2, damageMul: 1 + 0.1 * 2 + 0.05 * 2,
+    });
+    const hot = resolveSkill('frost', {
+      ...ranks({ 'frost-fang': 1, 'phase-echo': 2, 'echo-mastery': 2 }),
+      phaseEchoActive: true,
+    });
+    expect(hot.damage).toBeCloseTo(11 * (1 + 0.1 * 2 + 0.05 * 2), 6);
+  });
+
+  test('32 Overcast arc cooldown −8%/rank', () => {
+    const r = resolveSkill('arc', ranks({ 'arc-surge': 2, conduction: 1, overcast: 2 }));
+    expect(r.cooldown).toBeCloseTo(0.8 * (1 - 0.08 * 2), 6);
+  });
+
+  test('33 Tempest Conduit Overcharge cap 2s + applies to Discharge', () => {
+    const r = resolveSkill('arc', ranks({
+      'arc-surge': 2, conduction: 3, 'phase-step': 1, 'phase-echo': 2, overcharge: 1,
+      'tempest-conduit': 1,
+    }));
+    expect(r.onHit).toContainEqual({
+      kind: 'overcharge-cdr',
+      perHitSec: 0.25,
+      capPerCastSec: 2,
+      alsoAppliesTo: 'discharge',
+    });
+  });
+});

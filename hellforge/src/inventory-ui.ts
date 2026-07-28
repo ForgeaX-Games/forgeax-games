@@ -79,7 +79,10 @@ const DOLL_LAYOUT: ReadonlyArray<{ slot: EquipSlot; area: EquipSlot }> = [
   { slot: 'ring2', area: 'ring2' },
 ];
 
-const BAG_COLS = 8;
+/** BAG_COLS × BAG_CELL_PX must fit the 640px dock minus body padding. */
+const BAG_COLS = 12;
+const BAG_CELL_PX = 40;
+const BAG_GAP_PX = 4;
 
 /**
  * Doll slot to compare a bag candidate against: prefer an empty dual slot
@@ -157,7 +160,9 @@ export function installInventory(
   bagTitle.style.cssText = `font:700 13px ${FONT_DISPLAY};color:#d4b05a;letter-spacing:2px;`;
   const grid = document.createElement('div');
   grid.dataset.bagGrid = '1';
-  grid.style.cssText = `display:grid;grid-template-columns:repeat(${BAG_COLS},52px);grid-auto-rows:52px;gap:5px;` +
+  grid.style.cssText =
+    `display:grid;grid-template-columns:repeat(${BAG_COLS},${BAG_CELL_PX}px);` +
+    `grid-auto-rows:${BAG_CELL_PX}px;gap:${BAG_GAP_PX}px;` +
     'justify-content:center;padding:6px;' +
     'border:0;background:rgba(8,6,4,0.35);';
 
@@ -409,7 +414,7 @@ export function installInventory(
       (item
         ? `border:1px solid ${qCol}aa;box-shadow:inset 0 0 10px ${qCol}33;`
         : 'border:0;') +
-      'width:52px;height:52px;box-sizing:border-box;overflow:hidden;';
+      `width:${BAG_CELL_PX}px;height:${BAG_CELL_PX}px;box-sizing:border-box;overflow:hidden;`;
     return el;
   };
 
@@ -434,13 +439,8 @@ export function installInventory(
     curBag.forEach((item, i) => {
       const el = bagCell(item);
       if (item) {
-        el.appendChild(slotIconImg(item.slot, 28, { alt: item.name }));
-        const lab = document.createElement('span');
-        lab.textContent = item.name;
-        lab.style.cssText =
-          `font-size:8px;color:${RARITY_META[item.rarity].color};max-width:95%;overflow:hidden;` +
-          'white-space:nowrap;text-overflow:ellipsis;';
-        el.appendChild(lab);
+        // Dense cell: icon only — the name lives in the hover tooltip.
+        el.appendChild(slotIconImg(item.slot, 32, { alt: item.name }));
         el.addEventListener('mousemove', (e) => {
           const wornSlot = wornSlotForCompare(curEq!, item.slot);
           const worn = curEq![wornSlot];

@@ -641,6 +641,17 @@ export class MonsterManager {
     return m.slowUntil > this.now;
   }
 
+  /** True while a Scorch burn is active (Searing / Furnace Heart). */
+  isBurning(m: Monster): boolean {
+    return m.burnUntil > this.now && m.burnDps > 0;
+  }
+
+  /** Deep Freeze: extend remaining slow by `extraSec` (no-op if not slowed). */
+  refreshSlow(m: Monster, extraSec: number): void {
+    if (extraSec <= 0 || m.slowUntil <= this.now) return;
+    m.slowUntil += extraSec;
+  }
+
   /**
    * Apply/replace Scorch burn. One stack per target: refresh duration and
    * replace stored DPS; does not stack (Spec §7.2).

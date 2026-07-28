@@ -71,7 +71,10 @@ export interface CharacterSavesStore {
   readonly hiddenLegacyIds: readonly string[];
 }
 
-const ACTIVE_SKILLS: readonly ActiveSkillId[] = ['magma', 'frost', 'arc', 'blink', 'inferno-nova'];
+const ACTIVE_SKILLS: readonly ActiveSkillId[] = [
+  'magma', 'frost', 'arc', 'blink', 'inferno-nova',
+  'flame-burst', 'frost-nova', 'discharge',
+];
 const ITEM_SLOTS: readonly ItemSlot[] = SLOT_ORDER;
 const EQUIP_SLOTS: readonly EquipSlot[] = EQUIP_SLOT_ORDER;
 const RARITIES: readonly Rarity[] = ['common', 'magic', 'rare', 'legendary'];

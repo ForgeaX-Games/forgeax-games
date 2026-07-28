@@ -3,9 +3,12 @@
 
 import type { CharacterDomain, CharacterSnapshot } from './character-domain';
 import type { SkillNodeId } from './content-ids';
-import { emptySkillRanks } from './skill-tree';
+import { emptySkillRanks, getSkillNode, nodesForBranch, totalPaidRanks } from './skill-tree';
 
 export const HF_SKILL_FIXTURE_PARAM = 'hfSkillFixture';
+
+/** Demo branch for stills/video — one click shows a fully invested Flame tree. */
+export const FIXTURE_BRANCH = 'flame' as const;
 
 export function isSkillFixtureEnabled(): boolean {
   // tsconfig.check.json pin `types` to bun/webgpu — no Vite ImportMeta.env.
@@ -19,7 +22,7 @@ export function isSkillFixtureEnabled(): boolean {
   }
 }
 
-/** Level-10 + 9 unspent points so every early node / capstone path is reachable. */
+/** Max every Flame node; free Frost Fang stays at starter rank. Level covers paid ranks. */
 export function fixtureProgression(): {
   level: number;
   xp: number;
@@ -28,12 +31,17 @@ export function fixtureProgression(): {
   hotbar: CharacterSnapshot['hotbar'];
   selectedHotbarSlot: 0 | 1 | 2 | 3;
 } {
+  const skillRanks = emptySkillRanks();
+  for (const node of nodesForBranch(FIXTURE_BRANCH)) {
+    skillRanks[node.id] = getSkillNode(node.id).maxRank;
+  }
+  const paid = totalPaidRanks(skillRanks);
   return {
-    level: 10,
+    level: Math.max(6, paid + 1),
     xp: 0,
-    unspentSkillPoints: 9,
-    skillRanks: emptySkillRanks(),
-    hotbar: ['frost', 'magma', null, null],
+    unspentSkillPoints: 0,
+    skillRanks,
+    hotbar: ['frost', 'magma', 'flame-burst', null],
     selectedHotbarSlot: 0,
   };
 }
@@ -50,8 +58,8 @@ export interface SkillFixtureHandle {
 
 /**
  * Mount a tiny DEV control that can apply/restore a progression snapshot for
- * exercising all 15 nodes. Returns a no-op handle in production / without the
- * query param — no DOM, no query-param side effects.
+ * a fully invested Flame branch (all 11 nodes maxed). Returns a no-op handle
+ * in production / without the query param — no DOM, no query-param side effects.
  */
 export function installSkillFixture(
   mount: HTMLElement,
@@ -73,7 +81,7 @@ export function installSkillFixture(
   const applyBtn = document.createElement('button');
   applyBtn.type = 'button';
   applyBtn.textContent = '技能夹具';
-  applyBtn.title = 'DEV: level 10 + 9 skill points';
+  applyBtn.title = 'DEV: fully invested Flame branch (11 nodes max)';
   applyBtn.style.cssText =
     'padding:6px 10px;cursor:pointer;border:1px solid #e0b84a;background:#201808;color:#f5d878;';
 

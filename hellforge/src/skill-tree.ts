@@ -70,7 +70,60 @@ export type SkillNodeFormula =
       readonly perHitSec: number;
       readonly capPerCastSec: number;
     }
-  | { readonly kind: 'grant-active'; readonly active: ActiveSkillId };
+  | { readonly kind: 'grant-active'; readonly active: ActiveSkillId }
+  // PR9 — metadata only here; resolver folds land in T2.
+  | { readonly kind: 'scorch-duration'; readonly perRankSec: number }
+  | { readonly kind: 'burn-crit-chance'; readonly perRank: number }
+  | { readonly kind: 'splash-scorch'; readonly fractions: readonly [number, number] }
+  | {
+      readonly kind: 'projectile-speed-mul';
+      readonly active: ActiveSkillId;
+      readonly perRank: number;
+    }
+  | {
+      readonly kind: 'burn-kill-detonate';
+      readonly ratio: number;
+      readonly radius: number;
+    }
+  | { readonly kind: 'slow-magnitude'; readonly perRank: number }
+  | { readonly kind: 'shatter-count-bonus'; readonly perRank: number }
+  | {
+      readonly kind: 'mana-cost';
+      readonly active: ActiveSkillId;
+      readonly perRank: number;
+    }
+  | {
+      readonly kind: 'deep-freeze';
+      readonly damageMul: number;
+      readonly refreshSlowSec: number;
+    }
+  | {
+      readonly kind: 'discharge-burst';
+      readonly perRankAbove1: number;
+      readonly baseBolts: number;
+      readonly boltsPerRank: number;
+    }
+  | { readonly kind: 'arc-damage-mul'; readonly perRank: number }
+  | {
+      readonly kind: 'cooldown';
+      readonly active: ActiveSkillId;
+      readonly perRankSec: number;
+    }
+  | {
+      readonly kind: 'echo-mastery';
+      readonly windowPerRankSec: number;
+      readonly damagePerRank: number;
+    }
+  | {
+      readonly kind: 'cooldown-mul';
+      readonly active: ActiveSkillId;
+      readonly perRank: number;
+    }
+  | {
+      readonly kind: 'tempest-conduit';
+      readonly overchargeCapSec: number;
+      readonly appliesTo: ActiveSkillId;
+    };
 
 export interface SkillNodeDef {
   readonly id: SkillNodeId;
@@ -124,6 +177,9 @@ export const ACTIVE_BY_SKILL_NODE: Readonly<Partial<Record<SkillNodeId, ActiveSk
   'frost-fang': 'frost',
   'arc-surge': 'arc',
   'phase-step': 'blink',
+  'flame-burst': 'flame-burst',
+  'frost-nova': 'frost-nova',
+  discharge: 'discharge',
 };
 
 export const SKILL_NODES: readonly SkillNodeDef[] = [
@@ -197,6 +253,73 @@ export const SKILL_NODES: readonly SkillNodeDef[] = [
     prereqGroups: [[{ nodeId: 'volatile-core', minRank: 2 }]],
     formula: { kind: 'hellfire-crit-explosion', radius: 1.5, ratio: 0.5 },
   },
+  {
+    id: 'flame-burst',
+    branch: 'flame',
+    name: 'Flame Burst',
+    nameZh: '烈焰迸发',
+    kind: 'active',
+    maxRank: 5,
+    requiredLevel: 4,
+    prereqGroups: [[{ nodeId: 'magma-bolt', minRank: 3 }]],
+    grantsActive: 'flame-burst',
+    formula: { kind: 'active-rank-damage', active: 'flame-burst', perRankAbove1: 0.10 },
+  },
+  {
+    id: 'ember',
+    branch: 'flame',
+    name: 'Ember',
+    nameZh: '余烬',
+    kind: 'passive',
+    maxRank: 3,
+    requiredLevel: 1,
+    prereqGroups: [[{ nodeId: 'scorch', minRank: 2 }]],
+    formula: { kind: 'scorch-duration', perRankSec: 0.5 },
+  },
+  {
+    id: 'searing',
+    branch: 'flame',
+    name: 'Searing',
+    nameZh: '灼热',
+    kind: 'passive',
+    maxRank: 3,
+    requiredLevel: 1,
+    prereqGroups: [[{ nodeId: 'kindling', minRank: 2 }]],
+    formula: { kind: 'burn-crit-chance', perRank: 0.05 },
+  },
+  {
+    id: 'wildfire',
+    branch: 'flame',
+    name: 'Wildfire',
+    nameZh: '野火',
+    kind: 'modifier',
+    maxRank: 2,
+    requiredLevel: 4,
+    prereqGroups: [[{ nodeId: 'volatile-core', minRank: 2 }]],
+    formula: { kind: 'splash-scorch', fractions: [0.5, 1.0] },
+  },
+  {
+    id: 'heat-shimmer',
+    branch: 'flame',
+    name: 'Heat Shimmer',
+    nameZh: '热浪',
+    kind: 'passive',
+    maxRank: 2,
+    requiredLevel: 1,
+    prereqGroups: [[{ nodeId: 'volatile-core', minRank: 1 }]],
+    formula: { kind: 'projectile-speed-mul', active: 'magma', perRank: 0.15 },
+  },
+  {
+    id: 'furnace-heart',
+    branch: 'flame',
+    name: 'Furnace Heart',
+    nameZh: '熔炉之心',
+    kind: 'capstone',
+    maxRank: 1,
+    requiredLevel: 6,
+    prereqGroups: [[{ nodeId: 'hellfire-catalyst', minRank: 1 }]],
+    formula: { kind: 'burn-kill-detonate', ratio: 0.5, radius: 2 },
+  },
 
   // ── Frost ──────────────────────────────────────────────────────────────
   {
@@ -263,6 +386,73 @@ export const SKILL_NODES: readonly SkillNodeDef[] = [
     prereqGroups: [[{ nodeId: 'shatter', minRank: 3 }]],
     formula: { kind: 'slowed-target-bonus', mul: 1.3 },
   },
+  {
+    id: 'frost-nova',
+    branch: 'frost',
+    name: 'Frost Nova',
+    nameZh: '寒冰新星',
+    kind: 'active',
+    maxRank: 5,
+    requiredLevel: 4,
+    prereqGroups: [[{ nodeId: 'frost-fang', minRank: 3 }]],
+    grantsActive: 'frost-nova',
+    formula: { kind: 'active-rank-damage', active: 'frost-nova', perRankAbove1: 0.10 },
+  },
+  {
+    id: 'rime',
+    branch: 'frost',
+    name: 'Rime',
+    nameZh: '霜雾',
+    kind: 'passive',
+    maxRank: 3,
+    requiredLevel: 1,
+    prereqGroups: [[{ nodeId: 'permafrost', minRank: 2 }]],
+    formula: { kind: 'slow-magnitude', perRank: 0.05 },
+  },
+  {
+    id: 'piercing-cold',
+    branch: 'frost',
+    name: 'Piercing Cold',
+    nameZh: '寒穿',
+    kind: 'modifier',
+    maxRank: 1,
+    requiredLevel: 4,
+    prereqGroups: [[{ nodeId: 'piercing-ice', minRank: 1 }]],
+    formula: { kind: 'pierce', pierceCount: 1 },
+  },
+  {
+    id: 'glacier-shards',
+    branch: 'frost',
+    name: 'Glacier Shards',
+    nameZh: '冰川碎片',
+    kind: 'modifier',
+    maxRank: 2,
+    requiredLevel: 4,
+    prereqGroups: [[{ nodeId: 'shatter', minRank: 3 }]],
+    formula: { kind: 'shatter-count-bonus', perRank: 1 },
+  },
+  {
+    id: 'frozen-focus',
+    branch: 'frost',
+    name: 'Frozen Focus',
+    nameZh: '冰霜专注',
+    kind: 'passive',
+    maxRank: 3,
+    requiredLevel: 1,
+    prereqGroups: [[{ nodeId: 'frost-fang', minRank: 3 }]],
+    formula: { kind: 'mana-cost', active: 'frost', perRank: -0.5 },
+  },
+  {
+    id: 'deep-freeze',
+    branch: 'frost',
+    name: 'Deep Freeze',
+    nameZh: '深度冻结',
+    kind: 'capstone',
+    maxRank: 1,
+    requiredLevel: 6,
+    prereqGroups: [[{ nodeId: 'winters-grasp', minRank: 1 }]],
+    formula: { kind: 'deep-freeze', damageMul: 1.15, refreshSlowSec: 0.5 },
+  },
 
   // ── Arcane ─────────────────────────────────────────────────────────────
   {
@@ -328,6 +518,78 @@ export const SKILL_NODES: readonly SkillNodeDef[] = [
       { nodeId: 'phase-echo', minRank: 2 },
     ]],
     formula: { kind: 'overcharge-cdr', perHitSec: 0.25, capPerCastSec: 1.0 },
+  },
+  {
+    id: 'discharge',
+    branch: 'arcane',
+    name: 'Discharge',
+    nameZh: '静电释放',
+    kind: 'active',
+    maxRank: 5,
+    requiredLevel: 4,
+    prereqGroups: [[{ nodeId: 'arc-surge', minRank: 3 }]],
+    grantsActive: 'discharge',
+    formula: {
+      kind: 'discharge-burst',
+      perRankAbove1: 0.10,
+      baseBolts: 6,
+      boltsPerRank: 1,
+    },
+  },
+  {
+    id: 'resonance',
+    branch: 'arcane',
+    name: 'Resonance',
+    nameZh: '共鸣',
+    kind: 'passive',
+    maxRank: 3,
+    requiredLevel: 1,
+    prereqGroups: [[{ nodeId: 'arc-surge', minRank: 3 }]],
+    formula: { kind: 'arc-damage-mul', perRank: 0.06 },
+  },
+  {
+    id: 'swift-phases',
+    branch: 'arcane',
+    name: 'Swift Phases',
+    nameZh: '迅捷相位',
+    kind: 'passive',
+    maxRank: 2,
+    requiredLevel: 1,
+    prereqGroups: [[{ nodeId: 'phase-step', minRank: 1 }]],
+    formula: { kind: 'cooldown', active: 'blink', perRankSec: -0.5 },
+  },
+  {
+    id: 'echo-mastery',
+    branch: 'arcane',
+    name: 'Echo Mastery',
+    nameZh: '回响精通',
+    kind: 'modifier',
+    maxRank: 2,
+    requiredLevel: 4,
+    prereqGroups: [[{ nodeId: 'phase-echo', minRank: 2 }]],
+    formula: { kind: 'echo-mastery', windowPerRankSec: 0.5, damagePerRank: 0.05 },
+  },
+  {
+    id: 'overcast',
+    branch: 'arcane',
+    name: 'Overcast',
+    nameZh: '超频',
+    kind: 'passive',
+    maxRank: 2,
+    requiredLevel: 1,
+    prereqGroups: [[{ nodeId: 'conduction', minRank: 1 }]],
+    formula: { kind: 'cooldown-mul', active: 'arc', perRank: -0.08 },
+  },
+  {
+    id: 'tempest-conduit',
+    branch: 'arcane',
+    name: 'Tempest Conduit',
+    nameZh: '风暴导管',
+    kind: 'capstone',
+    maxRank: 1,
+    requiredLevel: 6,
+    prereqGroups: [[{ nodeId: 'overcharge', minRank: 1 }]],
+    formula: { kind: 'tempest-conduit', overchargeCapSec: 2, appliesTo: 'discharge' },
   },
 ] as const;
 

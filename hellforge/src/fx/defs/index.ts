@@ -1,6 +1,7 @@
 import type { EffectDef } from '../effect-def';
 import { arcDef } from './arc';
 import { blinkDef } from './blink';
+import { dischargeDef } from './discharge';
 import { dodgeDef } from './dodge';
 import {
   bossDeathDissolveDef,
@@ -9,7 +10,9 @@ import {
   hitFireDef,
   hitFrostDef,
 } from './feedback';
+import { flameBurstDef } from './flame-burst';
 import { frostDef } from './frost';
+import { frostNovaDef } from './frost-nova';
 import { infernoNovaDef } from './inferno-nova';
 import { magmaDef } from './magma';
 
@@ -20,6 +23,9 @@ export const COMBAT_EFFECT_DEFS = {
   arc: arcDef,
   blink: blinkDef,
   'inferno-nova': infernoNovaDef,
+  'flame-burst': flameBurstDef,
+  'frost-nova': frostNovaDef,
+  discharge: dischargeDef,
   dodge: dodgeDef,
   'death-dissolve': deathDissolveDef,
   'death-dissolve-boss': bossDeathDissolveDef,
@@ -62,8 +68,11 @@ export {
   blinkDef,
   bossDeathDissolveDef,
   deathDissolveDef,
+  dischargeDef,
   dodgeDef,
+  flameBurstDef,
   frostDef,
+  frostNovaDef,
   hitArcDef,
   hitFireDef,
   hitFrostDef,

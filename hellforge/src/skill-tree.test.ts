@@ -42,25 +42,50 @@ function investPath(state: SkillTreeState, path: readonly SkillNodeId[]): SkillT
 }
 
 describe('skill-tree definitions', () => {
-  test('encodes exactly 15 nodes covering all SkillNodeIds', () => {
-    expect(SKILL_NODES).toHaveLength(15);
+  test('encodes exactly 33 nodes covering all SkillNodeIds (bijection)', () => {
+    expect(SKILL_NODES).toHaveLength(33);
+    expect(SKILL_NODE_IDS).toHaveLength(33);
     const ids = new Set(SKILL_NODES.map((n) => n.id));
+    expect(ids.size).toBe(33);
     for (const id of SKILL_NODE_IDS) expect(ids.has(id)).toBe(true);
+    for (const n of SKILL_NODES) expect(SKILL_NODE_IDS.includes(n.id)).toBe(true);
   });
 
-  test('three branches have five nodes each', () => {
-    expect(nodesForBranch('flame')).toHaveLength(5);
-    expect(nodesForBranch('frost')).toHaveLength(5);
-    expect(nodesForBranch('arcane')).toHaveLength(5);
+  test('three branches have eleven nodes each (9 normal + 2 capstone)', () => {
+    for (const branch of ['flame', 'frost', 'arcane'] as const) {
+      const nodes = nodesForBranch(branch);
+      expect(nodes).toHaveLength(11);
+      expect(nodes.filter((n) => n.kind === 'capstone')).toHaveLength(2);
+      expect(nodes.filter((n) => n.kind !== 'capstone')).toHaveLength(9);
+    }
   });
 
-  test('active identity stays magma/frost/arc/blink', () => {
+  test('prereq graph has no dangling SkillNodeId refs', () => {
+    const ids = new Set<SkillNodeId>(SKILL_NODE_IDS);
+    for (const n of SKILL_NODES) {
+      for (const group of n.prereqGroups) {
+        for (const p of group) {
+          expect(ids.has(p.nodeId)).toBe(true);
+          expect(p.minRank).toBeGreaterThan(0);
+          expect(p.minRank).toBeLessThanOrEqual(getSkillNode(p.nodeId).maxRank);
+        }
+      }
+    }
+  });
+
+  test('active identity stays magma/frost/arc/blink + PR9 actives', () => {
     expect(ACTIVE_BY_SKILL_NODE['magma-bolt']).toBe('magma');
     expect(ACTIVE_BY_SKILL_NODE['frost-fang']).toBe('frost');
     expect(ACTIVE_BY_SKILL_NODE['arc-surge']).toBe('arc');
     expect(ACTIVE_BY_SKILL_NODE['phase-step']).toBe('blink');
+    expect(ACTIVE_BY_SKILL_NODE['flame-burst']).toBe('flame-burst');
+    expect(ACTIVE_BY_SKILL_NODE['frost-nova']).toBe('frost-nova');
+    expect(ACTIVE_BY_SKILL_NODE['discharge']).toBe('discharge');
     expect(getSkillNode('magma-bolt').grantsActive).toBe('magma');
     expect(getSkillNode('phase-step').grantsActive).toBe('blink');
+    expect(getSkillNode('flame-burst').grantsActive).toBe('flame-burst');
+    expect(getSkillNode('frost-nova').grantsActive).toBe('frost-nova');
+    expect(getSkillNode('discharge').grantsActive).toBe('discharge');
   });
 
   test('emptySkillRanks grants Frost Fang + Magma Bolt free ranks once', () => {
@@ -284,6 +309,51 @@ describe('respecInCamp', () => {
     expect(res.state.hotbar).not.toContain('arc');
     expect(res.state.hotbar).not.toContain('blink');
     expect(res.state.hotbar[res.state.selectedHotbarSlot]).toBe('frost');
+  });
+
+  test('PR9: camp respec refunds new-node paid ranks and clears new actives', () => {
+    let state = baseState({ level: 10, unspentSkillPoints: 12 });
+    state = investPath(state, [
+      'magma-bolt', 'magma-bolt', // →3
+      'flame-burst', 'flame-burst',
+      'frost-fang', 'frost-fang', // →3
+      'frost-nova',
+      'arc-surge', 'arc-surge', 'arc-surge', // →3
+      'discharge',
+    ]);
+    const paid = totalPaidRanks(state.skillRanks);
+    expect(state.skillRanks['flame-burst']).toBe(2);
+    expect(state.skillRanks['frost-nova']).toBe(1);
+    expect(state.skillRanks.discharge).toBe(1);
+
+    let assigned = assignActiveToHotbar(state, 'flame-burst', 1);
+    expect(assigned.ok).toBe(true);
+    if (!assigned.ok) return;
+    state = assigned.state;
+    assigned = assignActiveToHotbar(state, 'frost-nova', 2);
+    expect(assigned.ok).toBe(true);
+    if (!assigned.ok) return;
+    state = assigned.state;
+    assigned = assignActiveToHotbar(state, 'discharge', 3);
+    expect(assigned.ok).toBe(true);
+    if (!assigned.ok) return;
+    state = assigned.state;
+
+    const res = respecInCamp(state, 'cinderwatch');
+    expect(res.ok).toBe(true);
+    if (!res.ok) return;
+    expect(res.state.skillRanks['flame-burst']).toBe(0);
+    expect(res.state.skillRanks['frost-nova']).toBe(0);
+    expect(res.state.skillRanks.discharge).toBe(0);
+    expect(res.state.skillRanks['frost-fang']).toBe(1);
+    expect(res.state.skillRanks['magma-bolt']).toBe(1);
+    expect(totalPaidRanks(res.state.skillRanks)).toBe(0);
+    expect(res.state.unspentSkillPoints).toBe(state.unspentSkillPoints + paid);
+    expect(res.state.hotbar).toContain('frost');
+    expect(res.state.hotbar).toContain('magma');
+    expect(res.state.hotbar).not.toContain('flame-burst');
+    expect(res.state.hotbar).not.toContain('frost-nova');
+    expect(res.state.hotbar).not.toContain('discharge');
   });
 });
 

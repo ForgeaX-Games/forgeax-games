@@ -65,7 +65,8 @@ type MutableHotbarSlots = [
   ActiveSkillId | null,
 ];
 
-export const BAG_SIZE = 24;
+/** 12×5 grid — see inventory-ui BAG_COLS. Legacy saves pad/truncate to this. */
+export const BAG_SIZE = 60;
 
 /** Belt potion stock — domain counters (not bag items), see UI-CUTSCENE-UPGRADE-PLAN §R2. */
 export interface PotionStock {
