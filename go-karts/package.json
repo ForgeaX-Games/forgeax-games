@@ -1,0 +1,34 @@
+{
+  "name": "@forgeax/game-go-karts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "Native ForgeaX ECS port of Fable5 pet kart racer (distilled from Three MainScene).",
+  "scripts": {
+    "build-scene": "node scripts/build-scene.mjs"
+  },
+  "forgeax": {
+    "assets": {
+      "roots": [
+        "assets"
+      ]
+    }
+  },
+  "dependencies": {
+    "@forgeax/engine-app": "workspace:*",
+    "@forgeax/engine-assets-runtime": "workspace:*",
+    "@forgeax/engine-ecs": "workspace:*",
+    "@forgeax/engine-geometry": "workspace:*",
+    "@forgeax/engine-input": "workspace:*",
+    "@forgeax/engine-pack": "workspace:*",
+    "@forgeax/engine-physics": "workspace:*",
+    "@forgeax/engine-picking": "workspace:*",
+    "@forgeax/engine-runtime": "workspace:*",
+    "@forgeax/engine-types": "workspace:*",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@webgpu/types": "^0.1.71"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "prop_clocktower.glb",
+  "subAssets": [
+    {
+      "guid": "019f83e3-b986-7339-a337-5c28d9aae173",
+      "kind": "mesh",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f83e3-b986-7339-a337-5c29a96cd005",
+      "kind": "material",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f83e3-b986-7339-a337-5c2a42d93ddc",
+      "kind": "scene",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f83e3-b986-7339-a337-5c2b91e16c48",
+      "kind": "texture",
+      "sourceIndex": 0
+    }
+  ]
+}

@@ -1,0 +1,1051 @@
+{
+ "schemaVersion": "1.0.0",
+ "kind": "internal-text-package",
+ "assets": [
+  {
+   "guid": "fb1066e9-2079-4d68-b1f7-aea6f61c1a72",
+   "kind": "scene",
+   "payload": {
+    "entities": [
+     {
+      "localId": 0,
+      "components": {
+       "Name": {
+        "value": "Ground"
+       },
+       "Transform": {
+        "pos": [
+         0,
+         -0.1,
+         0
+        ],
+        "scale": [
+         24,
+         0.2,
+         24
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         1
+        ]
+       }
+      }
+     },
+     {
+      "localId": 1,
+      "components": {
+       "Name": {
+        "value": "Sun"
+       },
+       "Transform": {
+        "pos": [
+         0,
+         6,
+         0
+        ],
+        "scale": [
+         1,
+         1,
+         1
+        ]
+       },
+       "DirectionalLight": {
+        "direction": [
+         -0.4,
+         -1,
+         -0.3
+        ],
+        "color": [
+         1,
+         0.9607843137254902,
+         0.8784313725490196
+        ],
+        "intensity": 3.2,
+        "castShadow": true,
+        "mapSize": 2048,
+        "shadowDistance": 60
+       }
+      }
+     },
+     {
+      "localId": 2,
+      "components": {
+       "Name": {
+        "value": "TreeTrunk"
+       },
+       "Transform": {
+        "pos": [
+         -4,
+         0.9,
+         -3
+        ],
+        "scale": [
+         0.4,
+         1.8,
+         0.4
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 2
+       },
+       "MeshRenderer": {
+        "materials": [
+         3
+        ]
+       }
+      }
+     },
+     {
+      "localId": 3,
+      "components": {
+       "Name": {
+        "value": "TreeCanopy"
+       },
+       "Transform": {
+        "pos": [
+         -4,
+         2.4,
+         -3
+        ],
+        "scale": [
+         1.4,
+         1.4,
+         1.4
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 4
+       },
+       "MeshRenderer": {
+        "materials": [
+         5
+        ]
+       }
+      }
+     },
+     {
+      "localId": 4,
+      "components": {
+       "Name": {
+        "value": "RedBox"
+       },
+       "Transform": {
+        "pos": [
+         3,
+         0.5,
+         -2
+        ],
+        "scale": [
+         1,
+         1,
+         1
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         6
+        ]
+       }
+      }
+     },
+     {
+      "localId": 5,
+      "components": {
+       "Name": {
+        "value": "BlueBall"
+       },
+       "Transform": {
+        "pos": [
+         4.5,
+         0.8,
+         1.5
+        ],
+        "scale": [
+         0.8,
+         0.8,
+         0.8
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 4
+       },
+       "MeshRenderer": {
+        "materials": [
+         7
+        ]
+       }
+      }
+     },
+     {
+      "localId": 6,
+      "components": {
+       "Name": {
+        "value": "YellowPillar"
+       },
+       "Transform": {
+        "pos": [
+         2,
+         0.75,
+         3.5
+        ],
+        "scale": [
+         0.6,
+         1.5,
+         0.6
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 2
+       },
+       "MeshRenderer": {
+        "materials": [
+         8
+        ]
+       }
+      }
+     },
+     {
+      "localId": 7,
+      "components": {
+       "Name": {
+        "value": "Crate14"
+       },
+       "Transform": {
+        "pos": [
+         5.38,
+         0.31,
+         -4
+        ],
+        "scale": [
+         0.62,
+         0.62,
+         0.62
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         12
+        ]
+       }
+      }
+     },
+     {
+      "localId": 8,
+      "components": {
+       "Name": {
+        "value": "Crate15"
+       },
+       "Transform": {
+        "pos": [
+         6,
+         0.31,
+         -4
+        ],
+        "scale": [
+         0.62,
+         0.62,
+         0.62
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         12
+        ]
+       }
+      }
+     },
+     {
+      "localId": 9,
+      "components": {
+       "Name": {
+        "value": "Crate16"
+       },
+       "Transform": {
+        "pos": [
+         6.62,
+         0.31,
+         -4
+        ],
+        "scale": [
+         0.62,
+         0.62,
+         0.62
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         12
+        ]
+       }
+      }
+     },
+     {
+      "localId": 10,
+      "components": {
+       "Name": {
+        "value": "Crate17"
+       },
+       "Transform": {
+        "pos": [
+         5.69,
+         0.9299999999999999,
+         -4
+        ],
+        "scale": [
+         0.62,
+         0.62,
+         0.62
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         12
+        ]
+       }
+      }
+     },
+     {
+      "localId": 11,
+      "components": {
+       "Name": {
+        "value": "Crate18"
+       },
+       "Transform": {
+        "pos": [
+         6.31,
+         0.9299999999999999,
+         -4
+        ],
+        "scale": [
+         0.62,
+         0.62,
+         0.62
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         12
+        ]
+       }
+      }
+     },
+     {
+      "localId": 12,
+      "components": {
+       "Name": {
+        "value": "Crate19"
+       },
+       "Transform": {
+        "pos": [
+         6,
+         1.55,
+         -4
+        ],
+        "scale": [
+         0.62,
+         0.62,
+         0.62
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         12
+        ]
+       }
+      }
+     },
+     {
+      "localId": 13,
+      "components": {
+       "Name": {
+        "value": "BouncyBall"
+       },
+       "Transform": {
+        "pos": [
+         -5,
+         0.55,
+         4
+        ],
+        "scale": [
+         0.55,
+         0.55,
+         0.55
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 4
+       },
+       "MeshRenderer": {
+        "materials": [
+         13
+        ]
+       }
+      }
+     },
+     {
+      "localId": 14,
+      "components": {
+       "Name": {
+        "value": "Player"
+       },
+       "Transform": {
+        "pos": [
+         0,
+         0.75,
+         0
+        ],
+        "scale": [
+         1,
+         1,
+         1
+        ]
+       }
+      }
+     },
+     {
+      "localId": 15,
+      "components": {
+       "Name": {
+        "value": "PlayerTorso"
+       },
+       "Transform": {
+        "pos": [
+         0,
+         0,
+         0
+        ],
+        "scale": [
+         0.5,
+         0.55,
+         0.28
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         10
+        ]
+       },
+       "ChildOf": {
+        "parent": 14
+       }
+      }
+     },
+     {
+      "localId": 16,
+      "components": {
+       "Name": {
+        "value": "PlayerHead"
+       },
+       "Transform": {
+        "pos": [
+         0,
+         0.5,
+         0.02
+        ],
+        "scale": [
+         0.32,
+         0.32,
+         0.32
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         9
+        ]
+       },
+       "ChildOf": {
+        "parent": 14
+       }
+      }
+     },
+     {
+      "localId": 17,
+      "components": {
+       "Name": {
+        "value": "PlayerArmL"
+       },
+       "Transform": {
+        "pos": [
+         -0.34,
+         0,
+         0
+        ],
+        "scale": [
+         0.14,
+         0.45,
+         0.14
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         9
+        ]
+       },
+       "ChildOf": {
+        "parent": 14
+       }
+      }
+     },
+     {
+      "localId": 18,
+      "components": {
+       "Name": {
+        "value": "PlayerArmR"
+       },
+       "Transform": {
+        "pos": [
+         0.34,
+         0,
+         0
+        ],
+        "scale": [
+         0.14,
+         0.45,
+         0.14
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         9
+        ]
+       },
+       "ChildOf": {
+        "parent": 14
+       }
+      }
+     },
+     {
+      "localId": 19,
+      "components": {
+       "Name": {
+        "value": "PlayerLegL"
+       },
+       "Transform": {
+        "pos": [
+         -0.12,
+         -0.5,
+         0
+        ],
+        "scale": [
+         0.18,
+         0.5,
+         0.18
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         11
+        ]
+       },
+       "ChildOf": {
+        "parent": 14
+       }
+      }
+     },
+     {
+      "localId": 20,
+      "components": {
+       "Name": {
+        "value": "PlayerLegR"
+       },
+       "Transform": {
+        "pos": [
+         0.12,
+         -0.5,
+         0
+        ],
+        "scale": [
+         0.18,
+         0.5,
+         0.18
+        ]
+       },
+       "MeshFilter": {
+        "assetHandle": 0
+       },
+       "MeshRenderer": {
+        "materials": [
+         11
+        ]
+       },
+       "ChildOf": {
+        "parent": 14
+       }
+      }
+     },
+     {
+      "localId": 21,
+      "components": {
+       "Name": {
+        "value": "Skylight"
+       },
+       "Skylight": {
+        "equirect": 14,
+        "color": [
+         1,
+         1,
+         1
+        ],
+        "intensity": 0.2
+       }
+      }
+     },
+     {
+      "localId": 22,
+      "components": {
+       "Name": {
+        "value": "Skybox"
+       },
+       "SkyboxBackground": {
+        "equirect": 14,
+        "mode": 0
+       }
+      }
+     }
+    ]
+   },
+   "refs": [
+    "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
+    "953dcd0a-c702-4f0e-9933-07257d434f5f",
+    "ab20af21-0764-55be-a7f2-b80ab3d46a0a",
+    "e7ac0224-e340-4e25-b108-e9b057fe78fc",
+    "95730fd2-9846-5f84-8658-0b3c971eb263",
+    "628a7d47-1731-4418-9e75-71085ce1aef4",
+    "1ef3d40c-425a-4b92-a4f5-083a668e1dca",
+    "eb412199-077a-4c22-96b6-aec3fdc9ed91",
+    "7c31716a-6575-4e42-908e-212eea2f71c3",
+    "d0304941-6eea-4abe-8e28-1ae4b38e890b",
+    "05212883-4309-42dd-baa2-a100cbc5d8fc",
+    "d9e8e50c-9f25-46c5-8144-972eeaa20019",
+    "a37536a0-f4b2-4e86-8234-d6d9d1a93b9b",
+    "0237a820-1056-443e-8d40-428d2fddac4b",
+    "81eec382-392f-5a93-8998-0ecf11ef7990"
+   ]
+  },
+  {
+   "guid": "953dcd0a-c702-4f0e-9933-07257d434f5f",
+   "kind": "material",
+   "payload": {
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     },
+     {
+      "name": "ShadowCaster",
+      "shader": "forgeax::default-shadow-caster",
+      "tags": {
+       "LightMode": "ShadowCaster"
+      },
+      "passKind": "shadow-caster"
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.47843137254901963,
+      0.6196078431372549,
+      0.35294117647058826,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.95
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "e7ac0224-e340-4e25-b108-e9b057fe78fc",
+   "kind": "material",
+   "payload": {
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     },
+     {
+      "name": "ShadowCaster",
+      "shader": "forgeax::default-shadow-caster",
+      "tags": {
+       "LightMode": "ShadowCaster"
+      },
+      "passKind": "shadow-caster"
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.5411764705882353,
+      0.35294117647058826,
+      0.16862745098039217,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.9
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "628a7d47-1731-4418-9e75-71085ce1aef4",
+   "kind": "material",
+   "payload": {
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     },
+     {
+      "name": "ShadowCaster",
+      "shader": "forgeax::default-shadow-caster",
+      "tags": {
+       "LightMode": "ShadowCaster"
+      },
+      "passKind": "shadow-caster"
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.37254901960784315,
+      0.6823529411764706,
+      0.30980392156862746,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.85
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "1ef3d40c-425a-4b92-a4f5-083a668e1dca",
+   "kind": "material",
+   "payload": {
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     },
+     {
+      "name": "ShadowCaster",
+      "shader": "forgeax::default-shadow-caster",
+      "tags": {
+       "LightMode": "ShadowCaster"
+      },
+      "passKind": "shadow-caster"
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.9058823529411765,
+      0.43529411764705883,
+      0.3176470588235294,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.7
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "eb412199-077a-4c22-96b6-aec3fdc9ed91",
+   "kind": "material",
+   "payload": {
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     },
+     {
+      "name": "ShadowCaster",
+      "shader": "forgeax::default-shadow-caster",
+      "tags": {
+       "LightMode": "ShadowCaster"
+      },
+      "passKind": "shadow-caster"
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.2901960784313726,
+      0.6392156862745098,
+      0.8745098039215686,
+      1
+     ],
+     "metallic": 0.1,
+     "roughness": 0.4
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "7c31716a-6575-4e42-908e-212eea2f71c3",
+   "kind": "material",
+   "payload": {
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     },
+     {
+      "name": "ShadowCaster",
+      "shader": "forgeax::default-shadow-caster",
+      "tags": {
+       "LightMode": "ShadowCaster"
+      },
+      "passKind": "shadow-caster"
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.9568627450980393,
+      0.7725490196078432,
+      0.25882352941176473,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.6
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "d0304941-6eea-4abe-8e28-1ae4b38e890b",
+   "kind": "material",
+   "payload": {
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     },
+     {
+      "name": "ShadowCaster",
+      "shader": "forgeax::default-shadow-caster",
+      "tags": {
+       "LightMode": "ShadowCaster"
+      },
+      "passKind": "shadow-caster"
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.93,
+      0.74,
+      0.55,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.8
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "05212883-4309-42dd-baa2-a100cbc5d8fc",
+   "kind": "material",
+   "payload": {
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     },
+     {
+      "name": "ShadowCaster",
+      "shader": "forgeax::default-shadow-caster",
+      "tags": {
+       "LightMode": "ShadowCaster"
+      },
+      "passKind": "shadow-caster"
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.27,
+      0.5,
+      0.86,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.8
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "d9e8e50c-9f25-46c5-8144-972eeaa20019",
+   "kind": "material",
+   "payload": {
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     },
+     {
+      "name": "ShadowCaster",
+      "shader": "forgeax::default-shadow-caster",
+      "tags": {
+       "LightMode": "ShadowCaster"
+      },
+      "passKind": "shadow-caster"
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.22,
+      0.24,
+      0.3,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.8
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "a37536a0-f4b2-4e86-8234-d6d9d1a93b9b",
+   "kind": "material",
+   "payload": {
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     },
+     {
+      "name": "ShadowCaster",
+      "shader": "forgeax::default-shadow-caster",
+      "tags": {
+       "LightMode": "ShadowCaster"
+      },
+      "passKind": "shadow-caster"
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.85,
+      0.55,
+      0.2,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.8
+    }
+   },
+   "refs": []
+  },
+  {
+   "guid": "0237a820-1056-443e-8d40-428d2fddac4b",
+   "kind": "material",
+   "payload": {
+    "passes": [
+     {
+      "name": "Forward",
+      "shader": "forgeax::default-standard-pbr",
+      "tags": {
+       "LightMode": "Forward"
+      },
+      "queue": 2000
+     },
+     {
+      "name": "ShadowCaster",
+      "shader": "forgeax::default-shadow-caster",
+      "tags": {
+       "LightMode": "ShadowCaster"
+      },
+      "passKind": "shadow-caster"
+     }
+    ],
+    "paramValues": {
+     "baseColor": [
+      0.9,
+      0.2,
+      0.3,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.35
+    }
+   },
+   "refs": []
+  }
+ ]
+}

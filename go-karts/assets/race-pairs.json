@@ -1,0 +1,802 @@
+[
+  {
+    "meshIndex": 0,
+    "matIndex": 0,
+    "name": "asphalt"
+  },
+  {
+    "meshIndex": 1,
+    "matIndex": 1,
+    "name": "sidewalk"
+  },
+  {
+    "meshIndex": 2,
+    "matIndex": 2,
+    "name": "col_1.000,0.585,0.050|e0"
+  },
+  {
+    "meshIndex": 3,
+    "matIndex": 3,
+    "name": "col_1.000,0.740,0.195|e0"
+  },
+  {
+    "meshIndex": 4,
+    "matIndex": 4,
+    "name": "col_0.915,0.890,0.825|e0"
+  },
+  {
+    "meshIndex": 5,
+    "matIndex": 5,
+    "name": "col_1.000,0.880,0.695|e0"
+  },
+  {
+    "meshIndex": 6,
+    "matIndex": 6,
+    "name": "col_1.000,0.545,0.090|e0"
+  },
+  {
+    "meshIndex": 7,
+    "matIndex": 7,
+    "name": "col_0.015,0.020,0.025|e0"
+  },
+  {
+    "meshIndex": 8,
+    "matIndex": 8,
+    "name": "col_0.920,0.895,0.840|e0"
+  },
+  {
+    "meshIndex": 9,
+    "matIndex": 9,
+    "name": "col_1.000,0.255,0.045|e0"
+  },
+  {
+    "meshIndex": 10,
+    "matIndex": 10,
+    "name": "col_0.390,0.685,0.190|e0"
+  },
+  {
+    "meshIndex": 11,
+    "matIndex": 11,
+    "name": "col_0.480,0.435,0.370|e0"
+  },
+  {
+    "meshIndex": 12,
+    "matIndex": 12,
+    "name": "col_0.920,0.800,0.580|e0"
+  },
+  {
+    "meshIndex": 13,
+    "matIndex": 13,
+    "name": "col_0.980,0.955,0.870|e0"
+  },
+  {
+    "meshIndex": 14,
+    "matIndex": 14,
+    "name": "col_0.625,0.170,0.080|e0"
+  },
+  {
+    "meshIndex": 15,
+    "matIndex": 15,
+    "name": "col_0.145,0.390,0.580|e0"
+  },
+  {
+    "meshIndex": 16,
+    "matIndex": 16,
+    "name": "col_0.255,0.100,0.040|e0"
+  },
+  {
+    "meshIndex": 17,
+    "matIndex": 17,
+    "name": "mid_awning_pizza"
+  },
+  {
+    "meshIndex": 18,
+    "matIndex": 18,
+    "name": "mid_sign_pizza"
+  },
+  {
+    "meshIndex": 19,
+    "matIndex": 19,
+    "name": "col_0.890,0.590,0.520|e0"
+  },
+  {
+    "meshIndex": 20,
+    "matIndex": 20,
+    "name": "col_1.000,0.920,0.825|e0"
+  },
+  {
+    "meshIndex": 21,
+    "matIndex": 21,
+    "name": "col_0.485,0.195,0.110|e0"
+  },
+  {
+    "meshIndex": 22,
+    "matIndex": 22,
+    "name": "col_0.080,0.330,0.295|e0"
+  },
+  {
+    "meshIndex": 23,
+    "matIndex": 23,
+    "name": "mid_awning_gelato"
+  },
+  {
+    "meshIndex": 24,
+    "matIndex": 24,
+    "name": "mid_sign_gelato"
+  },
+  {
+    "meshIndex": 25,
+    "matIndex": 25,
+    "name": "col_0.770,0.550,0.330|e0"
+  },
+  {
+    "meshIndex": 26,
+    "matIndex": 26,
+    "name": "col_0.540,0.140,0.100|e0"
+  },
+  {
+    "meshIndex": 27,
+    "matIndex": 27,
+    "name": "col_0.195,0.070,0.025|e0"
+  },
+  {
+    "meshIndex": 28,
+    "matIndex": 28,
+    "name": "mid_awning_burger"
+  },
+  {
+    "meshIndex": 29,
+    "matIndex": 29,
+    "name": "mid_sign_burger"
+  },
+  {
+    "meshIndex": 30,
+    "matIndex": 30,
+    "name": "mid_awning_cake"
+  },
+  {
+    "meshIndex": 31,
+    "matIndex": 31,
+    "name": "mid_sign_cake"
+  },
+  {
+    "meshIndex": 32,
+    "matIndex": 32,
+    "name": "col_0.905,0.880,0.815|e0"
+  },
+  {
+    "meshIndex": 33,
+    "matIndex": 33,
+    "name": "col_0.035,0.115,0.275|e0"
+  },
+  {
+    "meshIndex": 34,
+    "matIndex": 34,
+    "name": "col_0.485,0.625,0.745|e0"
+  },
+  {
+    "meshIndex": 35,
+    "matIndex": 35,
+    "name": "mid_window_grid"
+  },
+  {
+    "meshIndex": 36,
+    "matIndex": 36,
+    "name": "col_0.070,0.195,0.350|e0"
+  },
+  {
+    "meshIndex": 37,
+    "matIndex": 37,
+    "name": "col_0.805,0.775,0.700|e0"
+  },
+  {
+    "meshIndex": 38,
+    "matIndex": 38,
+    "name": "col_0.855,0.890,0.915|e0"
+  },
+  {
+    "meshIndex": 39,
+    "matIndex": 39,
+    "name": "col_0.345,0.630,0.855|e0"
+  },
+  {
+    "meshIndex": 40,
+    "matIndex": 40,
+    "name": "col_0.920,0.825,0.670|e0"
+  },
+  {
+    "meshIndex": 41,
+    "matIndex": 41,
+    "name": "col_1.000,0.585,0.255|e0"
+  },
+  {
+    "meshIndex": 42,
+    "matIndex": 42,
+    "name": "col_0.435,0.040,0.030|e0"
+  },
+  {
+    "meshIndex": 43,
+    "matIndex": 43,
+    "name": "col_0.025,0.030,0.040|e0"
+  },
+  {
+    "meshIndex": 44,
+    "matIndex": 44,
+    "name": "mid_sign_goldenwok"
+  },
+  {
+    "meshIndex": 45,
+    "matIndex": 45,
+    "name": "col_0.870,0.525,0.050|e0"
+  },
+  {
+    "meshIndex": 46,
+    "matIndex": 46,
+    "name": "col_0.045,0.055,0.080|e0"
+  },
+  {
+    "meshIndex": 47,
+    "matIndex": 47,
+    "name": "col_0.745,0.035,0.025|e0"
+  },
+  {
+    "meshIndex": 48,
+    "matIndex": 48,
+    "name": "mid_sign_luckydragon"
+  },
+  {
+    "meshIndex": 49,
+    "matIndex": 49,
+    "name": "mid_sign_dimsum"
+  },
+  {
+    "meshIndex": 50,
+    "matIndex": 50,
+    "name": "mid_sign_jadepalace"
+  },
+  {
+    "meshIndex": 51,
+    "matIndex": 51,
+    "name": "mid_sign_teagarden"
+  },
+  {
+    "meshIndex": 52,
+    "matIndex": 52,
+    "name": "mid_sign_baohouse"
+  },
+  {
+    "meshIndex": 53,
+    "matIndex": 53,
+    "name": "col_0.805,0.445,0.040|e0"
+  },
+  {
+    "meshIndex": 54,
+    "matIndex": 54,
+    "name": "mid_sign_chinatown"
+  },
+  {
+    "meshIndex": 55,
+    "matIndex": 55,
+    "name": "col_0.025,0.025,0.035|e0"
+  },
+  {
+    "meshIndex": 56,
+    "matIndex": 56,
+    "name": "mid_lantern"
+  },
+  {
+    "meshIndex": 57,
+    "matIndex": 57,
+    "name": "col_0.325,0.165,0.065|e0"
+  },
+  {
+    "meshIndex": 58,
+    "matIndex": 58,
+    "name": "col_1.000,0.815,0.510|e0"
+  },
+  {
+    "meshIndex": 59,
+    "matIndex": 59,
+    "name": "col_0.760,0.095,0.070|e0"
+  },
+  {
+    "meshIndex": 60,
+    "matIndex": 60,
+    "name": "col_0.980,0.930,0.840|e0"
+  },
+  {
+    "meshIndex": 61,
+    "matIndex": 61,
+    "name": "mid_sign_noodle"
+  },
+  {
+    "meshIndex": 62,
+    "matIndex": 62,
+    "name": "col_0.050,0.335,0.145|e0"
+  },
+  {
+    "meshIndex": 63,
+    "matIndex": 63,
+    "name": "mid_sign_teahouse"
+  },
+  {
+    "meshIndex": 64,
+    "matIndex": 64,
+    "name": "col_0.785,0.325,0.030|e0"
+  },
+  {
+    "meshIndex": 65,
+    "matIndex": 65,
+    "name": "mid_sign_baobao"
+  },
+  {
+    "meshIndex": 66,
+    "matIndex": 66,
+    "name": "col_0.255,0.125,0.050|e0"
+  },
+  {
+    "meshIndex": 67,
+    "matIndex": 67,
+    "name": "col_0.030,0.140,0.480|e0"
+  },
+  {
+    "meshIndex": 68,
+    "matIndex": 68,
+    "name": "col_0.050,0.210,0.695|e0"
+  },
+  {
+    "meshIndex": 69,
+    "matIndex": 69,
+    "name": "mid_bridge_blue"
+  },
+  {
+    "meshIndex": 70,
+    "matIndex": 70,
+    "name": "mid_bridge_dark"
+  },
+  {
+    "meshIndex": 71,
+    "matIndex": 71,
+    "name": "col_1.000,0.645,0.050|e0"
+  },
+  {
+    "meshIndex": 72,
+    "matIndex": 72,
+    "name": "mid_bridge_yellow"
+  },
+  {
+    "meshIndex": 73,
+    "matIndex": 73,
+    "name": "col_0.010,0.040,0.025|e0"
+  },
+  {
+    "meshIndex": 74,
+    "matIndex": 74,
+    "name": "col_0.075,0.915,0.260|e0"
+  },
+  {
+    "meshIndex": 75,
+    "matIndex": 75,
+    "name": "col_0.915,0.870,0.825|e0"
+  },
+  {
+    "meshIndex": 76,
+    "matIndex": 76,
+    "name": "col_1.000,0.340,0.480|e0"
+  },
+  {
+    "meshIndex": 77,
+    "matIndex": 77,
+    "name": "col_0.330,0.145,0.055|e0"
+  },
+  {
+    "meshIndex": 78,
+    "matIndex": 78,
+    "name": "col_0.080,0.340,0.040|e0"
+  },
+  {
+    "meshIndex": 79,
+    "matIndex": 79,
+    "name": "col_0.135,0.485,0.095|e0"
+  },
+  {
+    "meshIndex": 80,
+    "matIndex": 80,
+    "name": "col_0.770,0.670,0.495|e0"
+  },
+  {
+    "meshIndex": 81,
+    "matIndex": 81,
+    "name": "col_0.360,0.170,0.120|e0"
+  },
+  {
+    "meshIndex": 82,
+    "matIndex": 82,
+    "name": "col_0.255,0.120,0.055|e0"
+  },
+  {
+    "meshIndex": 83,
+    "matIndex": 83,
+    "name": "col_0.110,0.390,0.140|e0"
+  },
+  {
+    "meshIndex": 84,
+    "matIndex": 84,
+    "name": "col_0.835,0.760,0.500|e0"
+  },
+  {
+    "meshIndex": 85,
+    "matIndex": 85,
+    "name": "col_0.435,0.200,0.110|e0"
+  },
+  {
+    "meshIndex": 86,
+    "matIndex": 86,
+    "name": "col_0.100,0.145,0.195|e0"
+  },
+  {
+    "meshIndex": 87,
+    "matIndex": 87,
+    "name": "col_0.790,0.560,0.460|e0"
+  },
+  {
+    "meshIndex": 88,
+    "matIndex": 88,
+    "name": "col_0.685,0.710,0.745|e0"
+  },
+  {
+    "meshIndex": 89,
+    "matIndex": 89,
+    "name": "col_0.495,0.505,0.520|e0"
+  },
+  {
+    "meshIndex": 90,
+    "matIndex": 90,
+    "name": "col_0.740,0.765,0.810|e0"
+  },
+  {
+    "meshIndex": 91,
+    "matIndex": 91,
+    "name": "col_0.395,0.130,0.100|e0"
+  },
+  {
+    "meshIndex": 92,
+    "matIndex": 92,
+    "name": "col_0.595,0.415,0.120|e0"
+  },
+  {
+    "meshIndex": 93,
+    "matIndex": 93,
+    "name": "col_0.280,0.090,0.065|e0"
+  },
+  {
+    "meshIndex": 94,
+    "matIndex": 94,
+    "name": "col_0.805,0.715,0.585|e0"
+  },
+  {
+    "meshIndex": 95,
+    "matIndex": 95,
+    "name": "col_0.130,0.485,0.915|e0"
+  },
+  {
+    "meshIndex": 96,
+    "matIndex": 96,
+    "name": "col_0.915,0.360,0.130|e0"
+  },
+  {
+    "meshIndex": 97,
+    "matIndex": 97,
+    "name": "col_0.430,0.440,0.465|e0"
+  },
+  {
+    "meshIndex": 98,
+    "matIndex": 98,
+    "name": "col_0.440,0.120,0.100|e0"
+  },
+  {
+    "meshIndex": 99,
+    "matIndex": 99,
+    "name": "col_0.915,0.870,0.790|e0"
+  },
+  {
+    "meshIndex": 100,
+    "matIndex": 100,
+    "name": "col_0.115,0.430,0.070|e0"
+  },
+  {
+    "meshIndex": 101,
+    "matIndex": 101,
+    "name": "col_0.685,0.595,0.390|e0"
+  },
+  {
+    "meshIndex": 102,
+    "matIndex": 102,
+    "name": "col_0.210,0.595,0.115|e0"
+  },
+  {
+    "meshIndex": 103,
+    "matIndex": 103,
+    "name": "col_1.000,0.160,0.285|e0"
+  },
+  {
+    "meshIndex": 104,
+    "matIndex": 104,
+    "name": "col_0.890,0.115,0.630|e0"
+  },
+  {
+    "meshIndex": 105,
+    "matIndex": 105,
+    "name": "col_1.000,0.100,0.155|e0"
+  },
+  {
+    "meshIndex": 106,
+    "matIndex": 106,
+    "name": "col_1.000,0.760,0.195|e0"
+  },
+  {
+    "meshIndex": 107,
+    "matIndex": 107,
+    "name": "mid_banner_start"
+  },
+  {
+    "meshIndex": 108,
+    "matIndex": 108,
+    "name": "col_0.980,0.955,0.890|e0"
+  },
+  {
+    "meshIndex": 109,
+    "matIndex": 109,
+    "name": "mid_banner_paw"
+  },
+  {
+    "meshIndex": 110,
+    "matIndex": 110,
+    "name": "mid_itembox_wood"
+  },
+  {
+    "meshIndex": 111,
+    "matIndex": 111,
+    "name": "mid_itembox_q"
+  },
+  {
+    "meshIndex": 112,
+    "matIndex": 112,
+    "name": "mid_boost_pad"
+  },
+  {
+    "meshIndex": 113,
+    "matIndex": 113,
+    "name": "mid_boost_arrow"
+  },
+  {
+    "meshIndex": 114,
+    "matIndex": 114,
+    "name": "mid_city_rail"
+  },
+  {
+    "meshIndex": 115,
+    "matIndex": 115,
+    "name": "mid_city_rail_post"
+  },
+  {
+    "meshIndex": 116,
+    "matIndex": 116,
+    "name": "mid_planter_pot"
+  },
+  {
+    "meshIndex": 117,
+    "matIndex": 117,
+    "name": "mid_planter_rim"
+  },
+  {
+    "meshIndex": 118,
+    "matIndex": 118,
+    "name": "col_0.325,0.145,0.060|e0"
+  },
+  {
+    "meshIndex": 119,
+    "matIndex": 119,
+    "name": "col_0.135,0.495,0.145|e0"
+  },
+  {
+    "meshIndex": 120,
+    "matIndex": 120,
+    "name": "col_0.340,0.650,0.145|e0"
+  },
+  {
+    "meshIndex": 121,
+    "matIndex": 121,
+    "name": "col_0.870,0.790,0.670|e0"
+  },
+  {
+    "meshIndex": 122,
+    "matIndex": 122,
+    "name": "col_1.000,0.340,0.205|e0"
+  },
+  {
+    "meshIndex": 123,
+    "matIndex": 123,
+    "name": "col_0.145,0.195,0.255|e0"
+  },
+  {
+    "meshIndex": 124,
+    "matIndex": 124,
+    "name": "col_0.205,0.660,1.000|e0"
+  },
+  {
+    "meshIndex": 125,
+    "matIndex": 125,
+    "name": "col_0.480,0.550,0.630|e0"
+  },
+  {
+    "meshIndex": 126,
+    "matIndex": 126,
+    "name": "col_0.630,0.065,0.100|e0"
+  },
+  {
+    "meshIndex": 127,
+    "matIndex": 127,
+    "name": "col_0.100,0.130,0.160|e0"
+  },
+  {
+    "meshIndex": 128,
+    "matIndex": 128,
+    "name": "col_0.390,0.470,0.550|e0"
+  },
+  {
+    "meshIndex": 129,
+    "matIndex": 129,
+    "name": "col_0.070,0.145,0.245|e0"
+  },
+  {
+    "meshIndex": 130,
+    "matIndex": 130,
+    "name": "mid_billboard_corgi"
+  },
+  {
+    "meshIndex": 131,
+    "matIndex": 131,
+    "name": "col_1.000,0.890,0.605|e0"
+  },
+  {
+    "meshIndex": 132,
+    "matIndex": 132,
+    "name": "mid_billboard_panda"
+  },
+  {
+    "meshIndex": 133,
+    "matIndex": 133,
+    "name": "mid_sign_go"
+  },
+  {
+    "meshIndex": 134,
+    "matIndex": 134,
+    "name": "mid_sign_chevron"
+  },
+  {
+    "meshIndex": 135,
+    "matIndex": 135,
+    "name": "mid_pond_water"
+  },
+  {
+    "meshIndex": 136,
+    "matIndex": 136,
+    "name": "col_0.870,0.715,0.550|e0"
+  },
+  {
+    "meshIndex": 137,
+    "matIndex": 137,
+    "name": "col_1.000,1.000,1.000|e0"
+  },
+  {
+    "meshIndex": 138,
+    "matIndex": 138,
+    "name": "col_0.905,0.905,0.905|e0"
+  },
+  {
+    "meshIndex": 139,
+    "matIndex": 139,
+    "name": "col_0.070,0.195,0.435|e0"
+  },
+  {
+    "meshIndex": 140,
+    "matIndex": 140,
+    "name": "col_0.025,0.025,0.040|e0"
+  },
+  {
+    "meshIndex": 141,
+    "matIndex": 141,
+    "name": "mid_mall_floor"
+  },
+  {
+    "meshIndex": 142,
+    "matIndex": 142,
+    "name": "mid_mall_ceil"
+  },
+  {
+    "meshIndex": 143,
+    "matIndex": 143,
+    "name": "mid_mall_wood"
+  },
+  {
+    "meshIndex": 144,
+    "matIndex": 144,
+    "name": "mid_mall_view"
+  },
+  {
+    "meshIndex": 145,
+    "matIndex": 145,
+    "name": "mid_mall_concrete"
+  },
+  {
+    "meshIndex": 146,
+    "matIndex": 146,
+    "name": "mid_mall_skirt"
+  },
+  {
+    "meshIndex": 147,
+    "matIndex": 147,
+    "name": "mid_mall_shopwood"
+  },
+  {
+    "meshIndex": 148,
+    "matIndex": 148,
+    "name": "mid_mall_shopwin"
+  },
+  {
+    "meshIndex": 149,
+    "matIndex": 149,
+    "name": "col_1.000,0.205,0.105|e0"
+  },
+  {
+    "meshIndex": 150,
+    "matIndex": 150,
+    "name": "mid_sign_toys"
+  },
+  {
+    "meshIndex": 151,
+    "matIndex": 151,
+    "name": "col_0.125,0.485,0.145|e0"
+  },
+  {
+    "meshIndex": 152,
+    "matIndex": 152,
+    "name": "mid_sign_cafe"
+  },
+  {
+    "meshIndex": 153,
+    "matIndex": 153,
+    "name": "col_0.105,0.335,1.000|e0"
+  },
+  {
+    "meshIndex": 154,
+    "matIndex": 154,
+    "name": "mid_sign_gifts"
+  },
+  {
+    "meshIndex": 155,
+    "matIndex": 155,
+    "name": "mid_mall_beam"
+  },
+  {
+    "meshIndex": 156,
+    "matIndex": 156,
+    "name": "mid_mall_strip"
+  },
+  {
+    "meshIndex": 157,
+    "matIndex": 157,
+    "name": "mid_mall_portal"
+  },
+  {
+    "meshIndex": 158,
+    "matIndex": 158,
+    "name": "mid_sign_petmall"
+  },
+  {
+    "meshIndex": 159,
+    "matIndex": 159,
+    "name": "mid_sign_seeyou"
+  }
+]

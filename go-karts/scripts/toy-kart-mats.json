@@ -1,0 +1,232 @@
+[
+  {
+    "guid": "b1a11e00-0002-4000-8000-000000000010",
+    "kind": "material",
+    "payload": {
+      "kind": "material",
+      "passes": [
+        {
+          "name": "Forward",
+          "shader": "forgeax::default-standard-pbr",
+          "tags": { "LightMode": "Forward" },
+          "queue": 2000
+        },
+        {
+          "name": "ShadowCaster",
+          "shader": "forgeax::default-shadow-caster",
+          "tags": { "LightMode": "ShadowCaster" },
+          "passKind": "shadow-caster"
+        }
+      ],
+      "paramValues": { "baseColor": [1, 1, 1, 1], "metallic": 0.05, "roughness": 0.45 }
+    },
+    "refs": []
+  },
+  {
+    "guid": "b1a11e00-0002-4000-8000-000000000011",
+    "kind": "material",
+    "payload": {
+      "kind": "material",
+      "passes": [
+        {
+          "name": "Forward",
+          "shader": "forgeax::default-standard-pbr",
+          "tags": { "LightMode": "Forward" },
+          "queue": 2000
+        },
+        {
+          "name": "ShadowCaster",
+          "shader": "forgeax::default-shadow-caster",
+          "tags": { "LightMode": "ShadowCaster" },
+          "passKind": "shadow-caster"
+        }
+      ],
+      "paramValues": { "baseColor": [0.188, 0.204, 0.247, 1], "metallic": 0, "roughness": 0.5 }
+    },
+    "refs": []
+  },
+  {
+    "guid": "b1a11e00-0002-4000-8000-000000000012",
+    "kind": "material",
+    "payload": {
+      "kind": "material",
+      "passes": [
+        {
+          "name": "Forward",
+          "shader": "forgeax::default-standard-pbr",
+          "tags": { "LightMode": "Forward" },
+          "queue": 2000
+        },
+        {
+          "name": "ShadowCaster",
+          "shader": "forgeax::default-shadow-caster",
+          "tags": { "LightMode": "ShadowCaster" },
+          "passKind": "shadow-caster"
+        }
+      ],
+      "paramValues": { "baseColor": [1, 0.824, 0.243, 1], "metallic": 0.2, "roughness": 0.35 }
+    },
+    "refs": []
+  },
+  {
+    "guid": "b1a11e00-0002-4000-8000-000000000013",
+    "kind": "material",
+    "payload": {
+      "kind": "material",
+      "passes": [
+        {
+          "name": "Forward",
+          "shader": "forgeax::default-standard-pbr",
+          "tags": { "LightMode": "Forward" },
+          "queue": 2000
+        },
+        {
+          "name": "ShadowCaster",
+          "shader": "forgeax::default-shadow-caster",
+          "tags": { "LightMode": "ShadowCaster" },
+          "passKind": "shadow-caster"
+        }
+      ],
+      "paramValues": { "baseColor": [0.165, 0.176, 0.208, 1], "metallic": 0, "roughness": 0.9 }
+    },
+    "refs": []
+  },
+  {
+    "guid": "b1a11e00-0002-4000-8000-000000000020",
+    "kind": "material",
+    "payload": {
+      "kind": "material",
+      "passes": [
+        {
+          "name": "Forward",
+          "shader": "forgeax::default-standard-pbr",
+          "tags": { "LightMode": "Forward" },
+          "queue": 2000
+        },
+        {
+          "name": "ShadowCaster",
+          "shader": "forgeax::default-shadow-caster",
+          "tags": { "LightMode": "ShadowCaster" },
+          "passKind": "shadow-caster"
+        }
+      ],
+      "paramValues": { "baseColor": [1, 0.824, 0.243, 1], "metallic": 0.05, "roughness": 0.45 }
+    },
+    "refs": []
+  },
+  {
+    "guid": "b1a11e00-0002-4000-8000-000000000021",
+    "kind": "material",
+    "payload": {
+      "kind": "material",
+      "passes": [
+        {
+          "name": "Forward",
+          "shader": "forgeax::default-standard-pbr",
+          "tags": { "LightMode": "Forward" },
+          "queue": 2000
+        },
+        {
+          "name": "ShadowCaster",
+          "shader": "forgeax::default-shadow-caster",
+          "tags": { "LightMode": "ShadowCaster" },
+          "passKind": "shadow-caster"
+        }
+      ],
+      "paramValues": { "baseColor": [1, 0.541, 0.239, 1], "metallic": 0, "roughness": 0.5 }
+    },
+    "refs": []
+  },
+  {
+    "guid": "b1a11e00-0002-4000-8000-000000000022",
+    "kind": "material",
+    "payload": {
+      "kind": "material",
+      "passes": [
+        {
+          "name": "Forward",
+          "shader": "forgeax::default-standard-pbr",
+          "tags": { "LightMode": "Forward" },
+          "queue": 2000
+        },
+        {
+          "name": "ShadowCaster",
+          "shader": "forgeax::default-shadow-caster",
+          "tags": { "LightMode": "ShadowCaster" },
+          "passKind": "shadow-caster"
+        }
+      ],
+      "paramValues": { "baseColor": [1, 1, 1, 1], "metallic": 0.2, "roughness": 0.35 }
+    },
+    "refs": []
+  },
+  {
+    "guid": "b1a11e00-0002-4000-8000-000000000030",
+    "kind": "material",
+    "payload": {
+      "kind": "material",
+      "passes": [
+        {
+          "name": "Forward",
+          "shader": "forgeax::default-standard-pbr",
+          "tags": { "LightMode": "Forward" },
+          "queue": 2000
+        },
+        {
+          "name": "ShadowCaster",
+          "shader": "forgeax::default-shadow-caster",
+          "tags": { "LightMode": "ShadowCaster" },
+          "passKind": "shadow-caster"
+        }
+      ],
+      "paramValues": { "baseColor": [0.188, 0.204, 0.247, 1], "metallic": 0.05, "roughness": 0.45 }
+    },
+    "refs": []
+  },
+  {
+    "guid": "b1a11e00-0002-4000-8000-000000000031",
+    "kind": "material",
+    "payload": {
+      "kind": "material",
+      "passes": [
+        {
+          "name": "Forward",
+          "shader": "forgeax::default-standard-pbr",
+          "tags": { "LightMode": "Forward" },
+          "queue": 2000
+        },
+        {
+          "name": "ShadowCaster",
+          "shader": "forgeax::default-shadow-caster",
+          "tags": { "LightMode": "ShadowCaster" },
+          "passKind": "shadow-caster"
+        }
+      ],
+      "paramValues": { "baseColor": [1, 1, 1, 1], "metallic": 0, "roughness": 0.5 }
+    },
+    "refs": []
+  },
+  {
+    "guid": "b1a11e00-0002-4000-8000-000000000032",
+    "kind": "material",
+    "payload": {
+      "kind": "material",
+      "passes": [
+        {
+          "name": "Forward",
+          "shader": "forgeax::default-standard-pbr",
+          "tags": { "LightMode": "Forward" },
+          "queue": 2000
+        },
+        {
+          "name": "ShadowCaster",
+          "shader": "forgeax::default-shadow-caster",
+          "tags": { "LightMode": "ShadowCaster" },
+          "passKind": "shadow-caster"
+        }
+      ],
+      "paramValues": { "baseColor": [1, 0.353, 0.431, 1], "metallic": 0.2, "roughness": 0.35 }
+    },
+    "refs": []
+  }
+]

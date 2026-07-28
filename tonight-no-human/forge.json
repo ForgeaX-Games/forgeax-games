@@ -1,0 +1,8 @@
+{
+  "id": "tonight-no-human",
+  "name": "今晚别变回人",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": "3d",
+  "defaultScene": "fb1066e9-2079-4d68-b1f7-aea6f61c1a72"
+}

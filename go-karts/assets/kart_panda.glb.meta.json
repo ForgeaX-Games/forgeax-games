@@ -1,0 +1,36 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "kart_panda.glb",
+  "subAssets": [
+    {
+      "guid": "019f83e3-be91-786b-8ad2-257982d3e245",
+      "kind": "mesh",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f83e3-be91-786b-8ad2-257aafe00000",
+      "kind": "material",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f83e3-be91-786b-8ad2-257bac98bb57",
+      "kind": "scene",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019f83e3-be91-786b-8ad2-257ca8971f66",
+      "kind": "texture",
+      "sourceIndex": 0
+    }
+  ]
+}

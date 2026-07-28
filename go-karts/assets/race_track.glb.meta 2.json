@@ -1,0 +1,1177 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "RacePart_0",
+        "RacePart_1",
+        "RacePart_2",
+        "RacePart_3",
+        "RacePart_4",
+        "RacePart_5",
+        "RacePart_6",
+        "RacePart_7",
+        "RacePart_8",
+        "RacePart_9",
+        "RacePart_10",
+        "RacePart_11",
+        "RacePart_12",
+        "RacePart_13",
+        "RacePart_14",
+        "RacePart_15",
+        "RacePart_16",
+        "RacePart_17",
+        "RacePart_18",
+        "RacePart_19",
+        "RacePart_20",
+        "RacePart_21",
+        "RacePart_22",
+        "RacePart_23",
+        "RacePart_24",
+        "RacePart_25",
+        "RacePart_26",
+        "RacePart_27",
+        "RacePart_28",
+        "RacePart_29",
+        "RacePart_30",
+        "RacePart_31",
+        "RacePart_32",
+        "RacePart_33",
+        "RacePart_34",
+        "RacePart_35",
+        "RacePart_36",
+        "RacePart_37",
+        "RacePart_38",
+        "RacePart_39",
+        "RacePart_40",
+        "RacePart_41",
+        "RacePart_42",
+        "RacePart_43",
+        "RacePart_44",
+        "RacePart_45",
+        "RacePart_46",
+        "RacePart_47",
+        "RacePart_48",
+        "RacePart_49",
+        "RacePart_50",
+        "RacePart_51",
+        "RacePart_52",
+        "RacePart_53",
+        "RacePart_54",
+        "RacePart_55",
+        "RacePart_56",
+        "RacePart_57",
+        "RacePart_58",
+        "RacePart_59",
+        "RacePart_60",
+        "RacePart_61",
+        "RacePart_62",
+        "RacePart_63",
+        "RacePart_64",
+        "RacePart_65",
+        "RacePart_66",
+        "RacePart_67",
+        "RacePart_68",
+        "RacePart_69",
+        "RacePart_70",
+        "RacePart_71",
+        "RacePart_72",
+        "RacePart_73",
+        "RacePart_74",
+        "RacePart_75",
+        "RacePart_76",
+        "RacePart_77",
+        "RacePart_78",
+        "RacePart_79",
+        "RacePart_80",
+        "RacePart_81",
+        "RacePart_82",
+        "RacePart_83",
+        "RacePart_84",
+        "RacePart_85",
+        "RacePart_86",
+        "RacePart_87",
+        "RacePart_88",
+        "RacePart_89",
+        "RacePart_90",
+        "RacePart_91",
+        "RacePart_92",
+        "RacePart_93",
+        "RacePart_94",
+        "RacePart_95",
+        "RacePart_96",
+        "RacePart_97",
+        "RacePart_98",
+        "RacePart_99"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "race_track.glb",
+  "subAssets": [
+    {
+      "guid": "019fa2a8-7369-7194-b1ed-c2067317bb89",
+      "kind": "mesh",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08b87ddcd732",
+      "kind": "mesh",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08b9ac90e7b7",
+      "kind": "mesh",
+      "sourceIndex": 2
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08ba0094d283",
+      "kind": "mesh",
+      "sourceIndex": 3
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08bb0c971306",
+      "kind": "mesh",
+      "sourceIndex": 4
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08bcdf6408f1",
+      "kind": "mesh",
+      "sourceIndex": 5
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08bd736c2480",
+      "kind": "mesh",
+      "sourceIndex": 6
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08beab130615",
+      "kind": "mesh",
+      "sourceIndex": 7
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08bf263da320",
+      "kind": "mesh",
+      "sourceIndex": 8
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08c0ef1c6144",
+      "kind": "mesh",
+      "sourceIndex": 9
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08c1da5e3372",
+      "kind": "mesh",
+      "sourceIndex": 10
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08c219dfe01c",
+      "kind": "mesh",
+      "sourceIndex": 11
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08c316d668eb",
+      "kind": "mesh",
+      "sourceIndex": 12
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08c465fd167f",
+      "kind": "mesh",
+      "sourceIndex": 13
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08c558872071",
+      "kind": "mesh",
+      "sourceIndex": 14
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08c61bd8be6c",
+      "kind": "mesh",
+      "sourceIndex": 15
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08c79e6f0a3b",
+      "kind": "mesh",
+      "sourceIndex": 16
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08c80a469dad",
+      "kind": "mesh",
+      "sourceIndex": 17
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08c9f5c4642e",
+      "kind": "mesh",
+      "sourceIndex": 18
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08ca55e78525",
+      "kind": "mesh",
+      "sourceIndex": 19
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08cb97efc374",
+      "kind": "mesh",
+      "sourceIndex": 20
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08ccfddffe62",
+      "kind": "mesh",
+      "sourceIndex": 21
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08cd126aeb71",
+      "kind": "mesh",
+      "sourceIndex": 22
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08ce80124321",
+      "kind": "mesh",
+      "sourceIndex": 23
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08cfb535b1db",
+      "kind": "mesh",
+      "sourceIndex": 24
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08d0f5ae42a9",
+      "kind": "mesh",
+      "sourceIndex": 25
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08d1aa0e788b",
+      "kind": "mesh",
+      "sourceIndex": 26
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08d2df8bbb0f",
+      "kind": "mesh",
+      "sourceIndex": 27
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08d3c06a63ac",
+      "kind": "mesh",
+      "sourceIndex": 28
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08d44a8398a4",
+      "kind": "mesh",
+      "sourceIndex": 29
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08d566af3d28",
+      "kind": "mesh",
+      "sourceIndex": 30
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08d65fa9f338",
+      "kind": "mesh",
+      "sourceIndex": 31
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08d780be352c",
+      "kind": "mesh",
+      "sourceIndex": 32
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08d8eb2b7890",
+      "kind": "mesh",
+      "sourceIndex": 33
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08d9e22d00ac",
+      "kind": "mesh",
+      "sourceIndex": 34
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08daa66b8f49",
+      "kind": "mesh",
+      "sourceIndex": 35
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08db36181f7c",
+      "kind": "mesh",
+      "sourceIndex": 36
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08dcbd8c7303",
+      "kind": "mesh",
+      "sourceIndex": 37
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08dd6facbeda",
+      "kind": "mesh",
+      "sourceIndex": 38
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08de23be9608",
+      "kind": "mesh",
+      "sourceIndex": 39
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08dffcf272a6",
+      "kind": "mesh",
+      "sourceIndex": 40
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08e048708c8c",
+      "kind": "mesh",
+      "sourceIndex": 41
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08e16aead052",
+      "kind": "mesh",
+      "sourceIndex": 42
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08e23ada1790",
+      "kind": "mesh",
+      "sourceIndex": 43
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08e32330db71",
+      "kind": "mesh",
+      "sourceIndex": 44
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08e4480e1d13",
+      "kind": "mesh",
+      "sourceIndex": 45
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08e5ee38aa4f",
+      "kind": "mesh",
+      "sourceIndex": 46
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08e6a8005cc8",
+      "kind": "mesh",
+      "sourceIndex": 47
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08e70a91fd88",
+      "kind": "mesh",
+      "sourceIndex": 48
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08e8ec61a4ba",
+      "kind": "mesh",
+      "sourceIndex": 49
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08e9e7719b08",
+      "kind": "mesh",
+      "sourceIndex": 50
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08ea7d6de993",
+      "kind": "mesh",
+      "sourceIndex": 51
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08eb84d4ef1e",
+      "kind": "mesh",
+      "sourceIndex": 52
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08ec9a3e6271",
+      "kind": "mesh",
+      "sourceIndex": 53
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08ed5b155bdc",
+      "kind": "mesh",
+      "sourceIndex": 54
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08ee281cec60",
+      "kind": "mesh",
+      "sourceIndex": 55
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08ef3c2d652a",
+      "kind": "mesh",
+      "sourceIndex": 56
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08f03f29a471",
+      "kind": "mesh",
+      "sourceIndex": 57
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08f1fe639763",
+      "kind": "mesh",
+      "sourceIndex": 58
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08f25ed5bff8",
+      "kind": "mesh",
+      "sourceIndex": 59
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08f3c6b5acd2",
+      "kind": "mesh",
+      "sourceIndex": 60
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08f46d49683c",
+      "kind": "mesh",
+      "sourceIndex": 61
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08f543cc6f87",
+      "kind": "mesh",
+      "sourceIndex": 62
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08f61c021b5a",
+      "kind": "mesh",
+      "sourceIndex": 63
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08f76420015d",
+      "kind": "mesh",
+      "sourceIndex": 64
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08f83d52f0df",
+      "kind": "mesh",
+      "sourceIndex": 65
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08f9c9575f2d",
+      "kind": "mesh",
+      "sourceIndex": 66
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08fac5f449d3",
+      "kind": "mesh",
+      "sourceIndex": 67
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08fb735a8045",
+      "kind": "mesh",
+      "sourceIndex": 68
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08fc54f44c59",
+      "kind": "mesh",
+      "sourceIndex": 69
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08fd9ad76592",
+      "kind": "mesh",
+      "sourceIndex": 70
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08febd2c44c6",
+      "kind": "mesh",
+      "sourceIndex": 71
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-08ffd8ea8c79",
+      "kind": "mesh",
+      "sourceIndex": 72
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0900c8f471d0",
+      "kind": "mesh",
+      "sourceIndex": 73
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-090191c016cf",
+      "kind": "mesh",
+      "sourceIndex": 74
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-090295c758db",
+      "kind": "mesh",
+      "sourceIndex": 75
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09031ed6d471",
+      "kind": "mesh",
+      "sourceIndex": 76
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09041031c057",
+      "kind": "mesh",
+      "sourceIndex": 77
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0905e8dbd29e",
+      "kind": "mesh",
+      "sourceIndex": 78
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09060f8dcf5f",
+      "kind": "mesh",
+      "sourceIndex": 79
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0907dc9a2c33",
+      "kind": "mesh",
+      "sourceIndex": 80
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0908e8cc2dc2",
+      "kind": "mesh",
+      "sourceIndex": 81
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0909d80c478a",
+      "kind": "mesh",
+      "sourceIndex": 82
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-090a6dfe0ccc",
+      "kind": "mesh",
+      "sourceIndex": 83
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-090b4526b680",
+      "kind": "mesh",
+      "sourceIndex": 84
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-090c17fe695d",
+      "kind": "mesh",
+      "sourceIndex": 85
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-090df806e675",
+      "kind": "mesh",
+      "sourceIndex": 86
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-090ee7c54ecc",
+      "kind": "mesh",
+      "sourceIndex": 87
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-090f313ddee3",
+      "kind": "mesh",
+      "sourceIndex": 88
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0910bee10f6a",
+      "kind": "mesh",
+      "sourceIndex": 89
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0911cf339234",
+      "kind": "mesh",
+      "sourceIndex": 90
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0912f5a6d44f",
+      "kind": "mesh",
+      "sourceIndex": 91
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09137f129829",
+      "kind": "mesh",
+      "sourceIndex": 92
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-091408b12619",
+      "kind": "mesh",
+      "sourceIndex": 93
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0915970dd6b4",
+      "kind": "mesh",
+      "sourceIndex": 94
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09165a85c26f",
+      "kind": "mesh",
+      "sourceIndex": 95
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09172e9866af",
+      "kind": "mesh",
+      "sourceIndex": 96
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0918f95354cc",
+      "kind": "mesh",
+      "sourceIndex": 97
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0919b119107f",
+      "kind": "mesh",
+      "sourceIndex": 98
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-091ae2d42d55",
+      "kind": "mesh",
+      "sourceIndex": 99
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-091b7330e258",
+      "kind": "material",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-091c025539df",
+      "kind": "material",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-091d6b23567a",
+      "kind": "material",
+      "sourceIndex": 2
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-091ec021fe3d",
+      "kind": "material",
+      "sourceIndex": 3
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-091fb40313a2",
+      "kind": "material",
+      "sourceIndex": 4
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-092045a04333",
+      "kind": "material",
+      "sourceIndex": 5
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09210e46c93c",
+      "kind": "material",
+      "sourceIndex": 6
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09225e5d8675",
+      "kind": "material",
+      "sourceIndex": 7
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09233d3b3dcf",
+      "kind": "material",
+      "sourceIndex": 8
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0924c9185d58",
+      "kind": "material",
+      "sourceIndex": 9
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09254a612c4f",
+      "kind": "material",
+      "sourceIndex": 10
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09268010354a",
+      "kind": "material",
+      "sourceIndex": 11
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0927195bf953",
+      "kind": "material",
+      "sourceIndex": 12
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0928669baef8",
+      "kind": "material",
+      "sourceIndex": 13
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09293ecd41b2",
+      "kind": "material",
+      "sourceIndex": 14
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-092a1e947eda",
+      "kind": "material",
+      "sourceIndex": 15
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-092b21b515f4",
+      "kind": "material",
+      "sourceIndex": 16
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-092cde329f6b",
+      "kind": "material",
+      "sourceIndex": 17
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-092db0a68c01",
+      "kind": "material",
+      "sourceIndex": 18
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-092e752b140f",
+      "kind": "material",
+      "sourceIndex": 19
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-092f7903f3a2",
+      "kind": "material",
+      "sourceIndex": 20
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0930cf4f079b",
+      "kind": "material",
+      "sourceIndex": 21
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0931f425f21d",
+      "kind": "material",
+      "sourceIndex": 22
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-093206581ea4",
+      "kind": "material",
+      "sourceIndex": 23
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09334ce8dd96",
+      "kind": "material",
+      "sourceIndex": 24
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09349c26e871",
+      "kind": "material",
+      "sourceIndex": 25
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09354abde5e1",
+      "kind": "material",
+      "sourceIndex": 26
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0936b2c76bfd",
+      "kind": "material",
+      "sourceIndex": 27
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0937b75774d4",
+      "kind": "material",
+      "sourceIndex": 28
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0938a10492e0",
+      "kind": "material",
+      "sourceIndex": 29
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0939fa243340",
+      "kind": "material",
+      "sourceIndex": 30
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-093ac77a3364",
+      "kind": "material",
+      "sourceIndex": 31
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-093b25ac9def",
+      "kind": "material",
+      "sourceIndex": 32
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-093c2ecbdd2f",
+      "kind": "material",
+      "sourceIndex": 33
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-093d72409111",
+      "kind": "material",
+      "sourceIndex": 34
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-093e0002f29d",
+      "kind": "material",
+      "sourceIndex": 35
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-093f3bb81c5c",
+      "kind": "material",
+      "sourceIndex": 36
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-094053e683e1",
+      "kind": "material",
+      "sourceIndex": 37
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-094180f519c9",
+      "kind": "material",
+      "sourceIndex": 38
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0942e9399a31",
+      "kind": "material",
+      "sourceIndex": 39
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0943eab82d9d",
+      "kind": "material",
+      "sourceIndex": 40
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0944c10e7e4c",
+      "kind": "material",
+      "sourceIndex": 41
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-094597a5d9c3",
+      "kind": "material",
+      "sourceIndex": 42
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-094609865e5d",
+      "kind": "material",
+      "sourceIndex": 43
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-094792d1a730",
+      "kind": "material",
+      "sourceIndex": 44
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09487719338c",
+      "kind": "material",
+      "sourceIndex": 45
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-094941f71ea9",
+      "kind": "material",
+      "sourceIndex": 46
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-094a02b31c7b",
+      "kind": "material",
+      "sourceIndex": 47
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-094ba1c957fa",
+      "kind": "material",
+      "sourceIndex": 48
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-094c0c84e59f",
+      "kind": "material",
+      "sourceIndex": 49
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-094dcd3ec28d",
+      "kind": "material",
+      "sourceIndex": 50
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-094e4d25837d",
+      "kind": "material",
+      "sourceIndex": 51
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-094f393ba4d2",
+      "kind": "material",
+      "sourceIndex": 52
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0950f94b88f8",
+      "kind": "material",
+      "sourceIndex": 53
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-095136d6e5a2",
+      "kind": "material",
+      "sourceIndex": 54
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0952f999da84",
+      "kind": "material",
+      "sourceIndex": 55
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-095396852ab1",
+      "kind": "material",
+      "sourceIndex": 56
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09543d02db93",
+      "kind": "material",
+      "sourceIndex": 57
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-095589f92b87",
+      "kind": "material",
+      "sourceIndex": 58
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-0956db1f9e0e",
+      "kind": "material",
+      "sourceIndex": 59
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09576f36eee7",
+      "kind": "material",
+      "sourceIndex": 60
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-095829f37469",
+      "kind": "material",
+      "sourceIndex": 61
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-09597820be7c",
+      "kind": "material",
+      "sourceIndex": 62
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-095ae73d3df2",
+      "kind": "material",
+      "sourceIndex": 63
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-095b8e42ca60",
+      "kind": "material",
+      "sourceIndex": 64
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-095c032cdda7",
+      "kind": "material",
+      "sourceIndex": 65
+    },
+    {
+      "guid": "019fa2a8-736c-7a84-b8dc-095db132ef6e",
+      "kind": "material",
+      "sourceIndex": 66
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c700160412f",
+      "kind": "material",
+      "sourceIndex": 67
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c715bd8c000",
+      "kind": "material",
+      "sourceIndex": 68
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c72f8a520cb",
+      "kind": "material",
+      "sourceIndex": 69
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c7366f4eb1b",
+      "kind": "material",
+      "sourceIndex": 70
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c74920c34c5",
+      "kind": "material",
+      "sourceIndex": 71
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c75a5663653",
+      "kind": "material",
+      "sourceIndex": 72
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c76d51c34c9",
+      "kind": "material",
+      "sourceIndex": 73
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c7783d7d019",
+      "kind": "material",
+      "sourceIndex": 74
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c78d5fb4177",
+      "kind": "material",
+      "sourceIndex": 75
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c79ee254f53",
+      "kind": "material",
+      "sourceIndex": 76
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c7aad358bc2",
+      "kind": "material",
+      "sourceIndex": 77
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c7b93ec2ba2",
+      "kind": "material",
+      "sourceIndex": 78
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c7cb8a8f696",
+      "kind": "material",
+      "sourceIndex": 79
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c7d48267296",
+      "kind": "material",
+      "sourceIndex": 80
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c7e9f44fe50",
+      "kind": "material",
+      "sourceIndex": 81
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c7f4a6dbc0c",
+      "kind": "material",
+      "sourceIndex": 82
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c8052bbf949",
+      "kind": "material",
+      "sourceIndex": 83
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c810bd5723a",
+      "kind": "material",
+      "sourceIndex": 84
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c82414cd98b",
+      "kind": "material",
+      "sourceIndex": 85
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c83c8cd0485",
+      "kind": "material",
+      "sourceIndex": 86
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c8433c737bb",
+      "kind": "material",
+      "sourceIndex": 87
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c85754aed94",
+      "kind": "material",
+      "sourceIndex": 88
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c86ed433584",
+      "kind": "material",
+      "sourceIndex": 89
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c87189fa6ed",
+      "kind": "material",
+      "sourceIndex": 90
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c8864d3580d",
+      "kind": "material",
+      "sourceIndex": 91
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c8918aa775e",
+      "kind": "material",
+      "sourceIndex": 92
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c8afd1b02d3",
+      "kind": "material",
+      "sourceIndex": 93
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c8b99daa855",
+      "kind": "material",
+      "sourceIndex": 94
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c8cfb3619ba",
+      "kind": "material",
+      "sourceIndex": 95
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c8d8fe7eb79",
+      "kind": "material",
+      "sourceIndex": 96
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c8e8d206fcf",
+      "kind": "material",
+      "sourceIndex": 97
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c8fd66164d3",
+      "kind": "material",
+      "sourceIndex": 98
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c90a0f91734",
+      "kind": "material",
+      "sourceIndex": 99
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c91abffc3bc",
+      "kind": "scene",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c925de5e99a",
+      "kind": "texture",
+      "sourceIndex": 0
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c93d05d9f6d",
+      "kind": "texture",
+      "sourceIndex": 1
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c942c0508ae",
+      "kind": "texture",
+      "sourceIndex": 2
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c9525dc98b6",
+      "kind": "texture",
+      "sourceIndex": 3
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c960a73485b",
+      "kind": "texture",
+      "sourceIndex": 4
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c97dc0b5baa",
+      "kind": "texture",
+      "sourceIndex": 5
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c98afd88e4f",
+      "kind": "texture",
+      "sourceIndex": 6
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c996b5a603a",
+      "kind": "texture",
+      "sourceIndex": 7
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c9a1bfe471a",
+      "kind": "texture",
+      "sourceIndex": 8
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c9b01c79402",
+      "kind": "texture",
+      "sourceIndex": 9
+    },
+    {
+      "guid": "019fa2a8-736d-79d7-b6c2-2c9c149c3fef",
+      "kind": "texture",
+      "sourceIndex": 10
+    }
+  ]
+}

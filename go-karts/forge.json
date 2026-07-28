@@ -1,0 +1,8 @@
+{
+  "id": "go-karts",
+  "name": "萌宠卡丁车（ForgeaX）",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": "3d",
+  "defaultScene": "8e21f04f-e29b-464b-8b6f-2a001f4f18ad"
+}
