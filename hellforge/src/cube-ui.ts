@@ -1,46 +1,20 @@
-// Forge cube — direct port of aidiablo's ui/CubeUI.ts. 3×4 grid + Transmute
-// button; a caller pushes bag items in and gets a list of bag indices back
-// via sendTransmute — the cube holds no crafting logic of its own, matching
-// the SPEC's framing of this component as orphan-until-wired.
+// Forge cube — 熔炉方块. 3×4 placement grid + 拆解 / 重铸 / 合成 verbs.
+// Domain owns recipes (crafting.ts) and bag/material mutations
+// (character-domain salvage-bag / reroll-bag / fuse-bag); this panel only
+// enables buttons from validators + shard affordability and reports clicks.
 //
-// Deviations from source:
-// - Factory shape: aidiablo's CubeUI is a bare `new CubeUI(callbacks)` that
-//   always appends to document.body (web-only). hellforge's panels can also
-//   live inside an in-editor preview iframe, so this follows inventory-ui.ts's
-//   `installXxx(cb, mount) -> Handle` factory + fixed/absolute dual-mode
-//   positioning instead.
-// - Item identity: aidiablo's `ItemInstance` carries a stable `.id`; hellforge's
-//   `Item` (./items) has none — bags are fixed-size `Array<Item|null>` slots
-//   addressed by index (see inventory-ui.ts). The cube tracks bag INDICES,
-//   not item copies, and re-reads `getBag()` live on every render — so a slot
-//   that emptied out from under the cube (melted/equipped elsewhere) just
-//   quietly drops out next render. No separate `syncWithInventory` call
-//   needed; aidiablo needed one only because it cached item copies.
-// - Icons: aidiablo's `getItemIconHtml(item, sizePx)` callback existed for
-//   items with a custom `iconImg`; hellforge maps ItemSlot → PNG art via
-//   ui-icons.slotIconUrl (see inventory-ui.ts), inlined as <img> tags.
-// - Audio: aidiablo emitted UI_CUBE_OPEN/CLOSE/TRANSMUTE on its own audio
-//   bus. hellforge's inventory-ui.ts never plays sfx from inside a UI
-//   component — main.ts plays Sfx from inside callback implementations
-//   instead — so those three emit() calls are dropped, not replaced.
-// - Socketables: aidiablo badges rune/gem/jewel bag items with a 符/石/珠
-//   label via `item.socketableType`; hellforge has no socketable items, so
-//   that badge is gone.
-// - Naming: "赫拉迪克方块" is Diablo 2's Horadrim lore; hellforge's own lore
-//   is the Great Forge (see items.ts's legendary flavor text), so the panel
-//   is renamed "熔炉方块" (Forge Cube) rather than carried over verbatim.
-// - Two copy-paste inaccuracies in the source text are fixed in the port:
-//   the top hint said "拖入" (drag in) though the mechanic is click-to-add
-//   (the OTHER hint six lines down already said "点击"/click correctly);
-//   and a cube-item's title said "右键移出" (right-click to remove) though
-//   the bound handler is a plain click, never contextmenu.
-//
-// `sendTransmute`'s 3s "did the caller ever call setTransmuting(false)"
-// timeout is kept as-is — a UI safety net, not a network wait, and works
-// the same whether transmute resolves sync or async. hellforge has no
-// crafting mechanic yet; this stays unwired until one exists, same status
-// BuffDisplay accepts until a buff-granting source lands.
+// Factory shape matches inventory-ui.ts: installXxx(cb, mount) → Handle with
+// open/close for UiLayerManager.register('craft'). Bag indices (not item
+// copies) are tracked and re-read live via getBag() each render.
 
+import {
+  canFuse,
+  canReroll,
+  canSalvage,
+  rerollCost,
+  type MaterialCounts,
+  type MaterialTier,
+} from './crafting';
 import { RARITY_META, type Item } from './items';
 import { FONT_UI, Z } from './ui-theme';
 import { slotIconUrl } from './ui-icons';
@@ -51,11 +25,77 @@ const CUBE_SLOTS = CUBE_COLS * CUBE_ROWS;
 const CELL_SIZE = 52;
 const PANEL_ID = 'hellforge-cube';
 
+const TIER_LABEL: Readonly<Record<MaterialTier, string>> = {
+  common: '白',
+  magic: '蓝',
+  rare: '黄',
+};
+
+export type ForgeLockReason = 'legendary' | 'wrong-recipe' | 'insufficient-shards';
+
+/** Pure enablement + hint — UI + tests share this (validators stay in crafting.ts). */
+export function resolveForgeActions(
+  items: readonly Readonly<Item>[],
+  materials: MaterialCounts,
+): {
+  salvage: boolean;
+  reroll: boolean;
+  fuse: boolean;
+  lockReason: ForgeLockReason | null;
+  hint: string | null;
+} {
+  const salvage = items.length === 1 && canSalvage(items[0]!);
+  const cost = items.length === 1 ? rerollCost(items[0]!) : null;
+  const affordable = !!cost
+    && materials.common >= cost.common
+    && materials.magic >= cost.magic
+    && materials.rare >= cost.rare;
+  const reroll = items.length === 1 && canReroll(items[0]!) && affordable;
+  const fuse = canFuse(items);
+
+  if (items.length === 0) {
+    return { salvage, reroll, fuse, lockReason: null, hint: null };
+  }
+  if (items.some((it) => it.rarity === 'legendary')) {
+    return {
+      salvage: false,
+      reroll: false,
+      fuse: false,
+      lockReason: 'legendary',
+      hint: '传奇不可拆解 / 重铸 / 合成',
+    };
+  }
+  if (items.length === 1 && canReroll(items[0]!) && !affordable && cost) {
+    const tier = items[0]!.rarity as MaterialTier;
+    const need = cost[tier];
+    return {
+      salvage,
+      reroll: false,
+      fuse: false,
+      lockReason: 'insufficient-shards',
+      hint: `材料不足：重铸需 ${need} 片${TIER_LABEL[tier]}色碎片`,
+    };
+  }
+  if (!salvage && !reroll && !fuse) {
+    return {
+      salvage: false,
+      reroll: false,
+      fuse: false,
+      lockReason: 'wrong-recipe',
+      hint: '配方不符：拆解/重铸需 1 件；合成需 3 件同部位同稀有度（白/蓝）',
+    };
+  }
+  return { salvage, reroll, fuse, lockReason: null, hint: null };
+}
+
 export interface CubeUICallbacks {
   /** Live bag snapshot — same fixed-size Array<Item|null> as inventory-ui.ts. */
   getBag: () => Array<Item | null>;
-  /** Caller resolves (or defers) the craft; call setTransmuting(false) + clearItems() when done. */
-  sendTransmute: (bagIndices: number[]) => void;
+  getMaterials: () => MaterialCounts;
+  /** Return true when the domain accepted the verb (cube clears placement). */
+  onSalvage: (bagIndex: number) => boolean;
+  onReroll: (bagIndex: number) => boolean;
+  onFuse: (bagIndices: readonly [number, number, number]) => boolean;
   showNotification: (text: string, color?: string) => void;
   onClose: () => void;
 }
@@ -67,9 +107,8 @@ export interface CubeUIHandle {
   close(): void;
   /** Bag indices currently placed in the cube. */
   getCubeIndices(): number[];
-  /** Caller calls this after a successful transmute to empty the cube. */
+  /** Caller / UI clears placement after a consuming craft. */
   clearItems(): void;
-  setTransmuting(val: boolean): void;
   dispose(): void;
 }
 
@@ -79,8 +118,6 @@ export function installCubeUI(cb: CubeUICallbacks, mount: HTMLElement = document
 
   let visible = false;
   let cubeIdx: number[] = [];
-  let transmuting = false;
-  let transmuteTimer: ReturnType<typeof setTimeout> | null = null;
 
   const panel = document.createElement('div');
   panel.id = PANEL_ID;
@@ -100,14 +137,34 @@ export function installCubeUI(cb: CubeUICallbacks, mount: HTMLElement = document
   `;
   mount.appendChild(panel);
 
+  const pill = (inner: string): string =>
+    `<span style="padding:2px 8px;background:rgba(20,16,12,0.7);border:1px solid #4a4038;` +
+    `display:inline-flex;align-items:center;gap:4px;font-size:12px;">${inner}</span>`;
+
+  function actionBtn(id: string, label: string, enabled: boolean): string {
+    return `<div id="${id}" style="
+      flex:1;padding:8px 0;text-align:center;
+      background:${enabled ? 'linear-gradient(180deg,#5a4a20,#3a2a10)' : 'rgba(30,25,18,0.6)'};
+      border:2px solid ${enabled ? '#c8a84e' : '#3a3228'};border-radius:4px;
+      color:${enabled ? '#ffd700' : '#5a4a3a'};font-size:13px;font-weight:bold;
+      cursor:${enabled ? 'pointer' : 'not-allowed'};user-select:none;">${label}</div>`;
+  }
+
   function render(): void {
     const bag = cb.getBag();
+    const materials = cb.getMaterials();
     const cubeItems: Array<{ idx: number; item: Item }> = [];
     for (const idx of cubeIdx) {
       const item = bag[idx];
       if (item) cubeItems.push({ idx, item });
     }
+    // Drop stale indices whose bag slot emptied under us.
+    if (cubeItems.length !== cubeIdx.length) {
+      cubeIdx = cubeItems.map((c) => c.idx);
+    }
     const cubeSet = new Set(cubeItems.map((c) => c.idx));
+    const placed = cubeItems.map((c) => c.item);
+    const actions = resolveForgeActions(placed, materials);
 
     const gridW = CUBE_COLS * CELL_SIZE;
     const gridH = CUBE_ROWS * CELL_SIZE;
@@ -117,7 +174,12 @@ export function installCubeUI(cb: CubeUICallbacks, mount: HTMLElement = document
         <div style="color:#c8a84e;font-size:16px;font-weight:bold;">🔥 熔炉方块</div>
         <div style="cursor:pointer;color:#888;font-size:18px;padding:0 4px;" id="cube-close">✕</div>
       </div>
-      <div style="color:#5a4a3a;font-size:11px;margin-bottom:6px;">点击背包物品放入方块，凑齐后点击合成</div>
+      <div style="color:#5a4a3a;font-size:11px;margin-bottom:4px;">点击背包物品放入方块，选择拆解 / 重铸 / 合成</div>
+      <div style="display:flex;gap:6px;width:100%;justify-content:center;margin-bottom:2px;">
+        ${pill(`<span style="color:${RARITY_META.common.color};font-weight:bold;">${materials.common}</span><span style="color:#8a7a58;font-size:10px;">白</span>`)}
+        ${pill(`<span style="color:${RARITY_META.magic.color};font-weight:bold;">${materials.magic}</span><span style="color:#8a7a58;font-size:10px;">蓝</span>`)}
+        ${pill(`<span style="color:${RARITY_META.rare.color};font-weight:bold;">${materials.rare}</span><span style="color:#8a7a58;font-size:10px;">黄</span>`)}
+      </div>
     `;
 
     html += `<div style="position:relative;width:${gridW}px;height:${gridH}px;
@@ -144,18 +206,17 @@ export function installCubeUI(cb: CubeUICallbacks, mount: HTMLElement = document
     });
     html += `</div>`;
 
-    const canTransmute = cubeItems.length > 0 && !transmuting;
-    html += `<div id="cube-transmute" style="
-      width:100%;padding:8px 0;margin-top:4px;text-align:center;
-      background:${canTransmute ? 'linear-gradient(180deg,#5a4a20,#3a2a10)' : 'rgba(30,25,18,0.6)'};
-      border:2px solid ${canTransmute ? '#c8a84e' : '#3a3228'};border-radius:4px;
-      color:${canTransmute ? '#ffd700' : '#5a4a3a'};font-size:14px;font-weight:bold;
-      cursor:${canTransmute ? 'pointer' : 'not-allowed'};
-      transition:all 0.15s;">
-      ${transmuting ? '⏳ 合成中...' : '✨ 转化 (Transmute)'}
+    html += `<div style="display:flex;gap:6px;width:100%;margin-top:4px;">
+      ${actionBtn('cube-salvage', '拆解', actions.salvage)}
+      ${actionBtn('cube-reroll', '重铸', actions.reroll)}
+      ${actionBtn('cube-fuse', '合成', actions.fuse)}
     </div>`;
 
-    html += `<div style="color:#5a4a3a;font-size:11px;margin-top:6px;width:100%;border-top:1px solid #3a2a18;padding-top:6px;">
+    if (actions.hint) {
+      html += `<div style="color:#ff8866;font-size:11px;width:100%;text-align:center;">${actions.hint}</div>`;
+    }
+
+    html += `<div style="color:#5a4a3a;font-size:11px;margin-top:2px;width:100%;border-top:1px solid #3a2a18;padding-top:6px;">
       ${cubeItems.length >= CUBE_SLOTS ? '方块已满' : `点击背包物品放入方块（已放入 ${cubeItems.length}/${CUBE_SLOTS}）`}
     </div>`;
     if (cubeItems.length < CUBE_SLOTS) {
@@ -179,29 +240,41 @@ export function installCubeUI(cb: CubeUICallbacks, mount: HTMLElement = document
     }
 
     panel.innerHTML = html;
-    bindEvents();
+    bindEvents(actions);
   }
 
-  function bindEvents(): void {
+  function bindEvents(actions: ReturnType<typeof resolveForgeActions>): void {
     panel.querySelector('#cube-close')?.addEventListener('click', () => {
-      close();
       cb.onClose();
     });
 
-    panel.querySelector('#cube-transmute')?.addEventListener('click', () => {
-      if (cubeIdx.length === 0 || transmuting) return;
-      transmuting = true;
-      render();
-      cb.sendTransmute(cubeIdx.slice());
-      if (transmuteTimer) clearTimeout(transmuteTimer);
-      transmuteTimer = setTimeout(() => {
-        if (transmuting) {
-          transmuting = false;
-          cb.showNotification('合成超时，请重试', '#ff8800');
-          if (visible) render();
-        }
-        transmuteTimer = null;
-      }, 3000);
+    panel.querySelector('#cube-salvage')?.addEventListener('click', () => {
+      if (!actions.salvage || cubeIdx.length !== 1) return;
+      const idx = cubeIdx[0]!;
+      if (cb.onSalvage(idx)) {
+        cubeIdx = [];
+        render();
+      }
+    });
+
+    panel.querySelector('#cube-reroll')?.addEventListener('click', () => {
+      if (!actions.reroll || cubeIdx.length !== 1) return;
+      const idx = cubeIdx[0]!;
+      if (cb.onReroll(idx)) {
+        // Item stays in the same bag slot with new affixes — keep placement.
+        render();
+      }
+    });
+
+    panel.querySelector('#cube-fuse')?.addEventListener('click', () => {
+      if (!actions.fuse || cubeIdx.length !== 3) return;
+      const indices = cubeIdx.slice(0, 3) as [number, number, number];
+      if (cb.onFuse(indices)) {
+        // Fused result lands in the lowest index — keep that cell selected.
+        const dest = Math.min(indices[0], indices[1], indices[2]);
+        cubeIdx = [dest];
+        render();
+      }
     });
 
     panel.querySelectorAll<HTMLElement>('[data-add-idx]').forEach((el) => {
@@ -252,16 +325,7 @@ export function installCubeUI(cb: CubeUICallbacks, mount: HTMLElement = document
       cubeIdx = [];
       if (visible) render();
     },
-    setTransmuting(val: boolean) {
-      transmuting = val;
-      if (!val && transmuteTimer) {
-        clearTimeout(transmuteTimer);
-        transmuteTimer = null;
-      }
-      if (visible) render();
-    },
     dispose() {
-      if (transmuteTimer) clearTimeout(transmuteTimer);
       panel.remove();
     },
   };

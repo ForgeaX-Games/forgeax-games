@@ -26,13 +26,13 @@ import {
 import {
   type MaterialAsset,
 } from '@forgeax/engine-types';
-import { HANDLE_CUBE, HANDLE_QUAD, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
+import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle } from '@forgeax/engine-types';
 
 import type { ActiveSkillId, SkillNodeId } from './content-ids';
 import { isSkillAvailable } from './skill-availability';
-import type { FxSystem, MatHandle } from './fx';
+import type { BodyVfx, FlightStyle, FxSystem, MatHandle, NovaTelegraphVfx } from './fx';
 import { combatBeat } from './fx/defs';
 import type { Monster, MonsterManager } from './monsters';
 import { MONSTERS } from './monsters';
@@ -176,6 +176,8 @@ interface Projectile {
   cast: CastRuntime;
   /** First valid hit on this projectile already applied Overcharge. */
   overchargeHitDone: boolean;
+  /** PR8 flight VFX — body sprites + trail drip timer (magma/frost/arc). */
+  vfx?: { body: BodyVfx; trailT: number };
 }
 
 type PartBlueprint = {
@@ -187,9 +189,9 @@ type PartBlueprint = {
 };
 
 const VISUALS: Partial<Record<SkillId, PartBlueprint[]>> = {
-  magma: [
-    { shape: 'sphere', px: 0, py: 0, pz: 0, sx: 0.5, sy: 0.5, sz: 0.5, mat: 'main' },
-  ],
+  // Magma Bolt has NO mesh parts (PR8): the legacy fire-bolt sphere read as a
+  // perfect circle no matter what sprite layers wrapped it — the body is now
+  // the fireball tongue + glow sprites following the root (flightBody).
   frost: [
     { shape: 'cube', px: 0, py: 0, pz: 0,     sx: 0.13, sy: 0.13, sz: 0.55, mat: 'main' },
     { shape: 'cube', px: 0, py: 0, pz: 0.30,  sx: 0.08, sy: 0.08, sz: 0.18, mat: 'accent' },
@@ -202,6 +204,9 @@ const VISUALS: Partial<Record<SkillId, PartBlueprint[]>> = {
     { shape: 'cube', px:  0.05, py: 0.03,  pz:  0.14, sx: 0.11, sy: 0.11, sz: 0.11, mat: 'accent' },
   ],
 };
+
+/** Projectile skills with a PR8 sprite flight body + trail (blink/nova: none). */
+const FLIGHT_SKILLS: ReadonlySet<string> = new Set(['magma', 'frost', 'arc']);
 
 export type CastResult = 'ok' | 'cooldown' | 'mana' | 'locked' | 'dead';
 
@@ -256,9 +261,11 @@ export class SkillSystem {
   #phaseEchoUntil = 0;
   #finisher: FinisherState = createFinisherState();
   #finisherResolved: ResolvedSkill | null = null;
-  #telegraph: EntityHandle | null = null;
-  #telegraphMat: MatHandle | null = null;
-  #telegraphFlatQ: [number, number, number, number] | null = null;
+  /** PR8 T6 — caster position at finisher commit (windup charge anchor). */
+  #finisherOrigin: { x: number; z: number } | null = null;
+  /** PR8 T6 — windup charge drip timer (~10 Hz). */
+  #novaChargeT = 0;
+  #telegraph: NovaTelegraphVfx | null = null;
 
   constructor(private world: World, private fx: FxSystem, private hooks: SkillHooks, private skills: SkillDef[]) {
     this.cooldowns = skills.map(() => 0);
@@ -276,17 +283,6 @@ export class SkillSystem {
     const frostAccent = frost?.impact ?? mk([0.55, 0.85, 1, 1], [0.45, 0.78, 1], 0.9);
     this.mats.set('frost', { main: frostMain, accent: frostAccent });
     this.mats.set('arc', { main: mk([0.85, 0.65, 1, 1], [0.70, 0.50, 1], 1.8), accent: mk([0.60, 0.35, 1, 1], [0.55, 0.30, 1], 1.2) });
-    // Finisher telegraph — contact-shadow-style flat quad, fire-tinted (L7: 1 decal).
-    const tq = quat.create();
-    quat.fromAxisAngle(tq, [1, 0, 0], -Math.PI / 2);
-    this.#telegraphFlatQ = [tq[0]!, tq[1]!, tq[2]!, tq[3]!];
-    this.#telegraphMat = world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', Materials.standard({
-      baseColor: [1.0, 0.22, 0.05, 0.42],
-      roughness: 0.9,
-      metallic: 0.0,
-      emissive: [1.0, 0.28, 0.06],
-      emissiveIntensity: 0.85,
-    }));
   }
 
   /** L5: windup locks move/cast; aftermath does not. */
@@ -411,9 +407,12 @@ export class SkillSystem {
       this.#finisher = commitFinisher(this.#finisher, [tx, tz], {
         onFinisherHeroShot: (target) => this.hooks.onFinisherHeroShot?.(target),
       });
+      // PR8 T6 windup charge anchor (caster position at commit).
+      this.#finisherOrigin = { x: ox, z: oz };
+      this.#novaChargeT = 0;
       this.#setTelegraph(tx, tz, resolved.splashRadius || FINISHER_RADIUS_M);
-      // Commit cue — customStep on inferno-nova (telegraph stays procedural).
-      // Small fire pop until executor binds customStep hooks.
+      // Commit cue — small procedural fire pop (telegraph is the sprite-decal
+      // danger ring; PR8 T6 windup charge drips from #tickFinisher).
       this.fx.pop(ox + aimX * 0.5, 1.0, oz + aimZ * 0.5, 'fire', 0.28);
       return 'ok';
     }
@@ -494,6 +493,10 @@ export class SkillSystem {
       hits: new Set(), parts,
       cast,
       overchargeHitDone: false,
+      // PR8 body layer — persistent sprites follow the projectile (T3/T4/T5).
+      ...(FLIGHT_SKILLS.has(skillId)
+        ? { vfx: { body: this.fx.flightBody(skillId as FlightStyle, x, y, z), trailT: 0 } }
+        : {}),
     });
   }
 
@@ -568,6 +571,7 @@ export class SkillSystem {
       this.world.despawn(p.e);
       for (const pe of p.parts) this.world.despawn(pe);
       p.parts.length = 0;
+      if (p.vfx) this.fx.releaseFlightBody(p.vfx.body);
     };
     for (let i = this.projectiles.length - 1; i >= 0; i--) {
       const p = this.projectiles[i]!;
@@ -608,19 +612,28 @@ export class SkillSystem {
         this.hooks.onHit(m.x, 1.0, m.z, dmg, killed, crit);
         this.applyOnHit(p, m, dmg, crit, monsters);
         if (p.skillId === 'magma') {
+          // PR8 T3 impact + residue layers (body/trail ride the projectile).
           this.fx.playEffect(
-            combatBeat('magma', ['impact', 'impact-burst']),
+            combatBeat('magma', [
+              'impact', 'impact-burst', 'impact-glow', 'impact-smoke', 'impact-scorch',
+            ]),
             p.x, p.y, p.z,
           );
+          // T7 element hit feedback — fire sparks on the struck monster.
+          this.fx.playEffect(combatBeat('hit-fire', ['sparks']), m.x, 1.0, m.z);
         } else if (p.skillId === 'frost') {
           // Collision-aligned impact (shader mats shared via frostVfx();
           // particle beat via frostDef — crit scale owned by data defaults).
           this.fx.frostImpact(p.x, p.y, p.z, crit);
+          // T7 element hit feedback — frost shards.
+          this.fx.playEffect(combatBeat('hit-frost', ['shards']), m.x, 1.0, m.z);
         } else {
           this.fx.playEffect(
-            combatBeat('arc', ['impact', 'impact-burst']),
+            combatBeat('arc', ['impact', 'impact-burst', 'impact-scorch']),
             p.x, p.y, p.z,
           );
+          // T7 element hit feedback — arc arcs.
+          this.fx.playEffect(combatBeat('hit-arc', ['arcs']), m.x, 1.0, m.z);
         }
         if (r.splashRadius > 0) {
           const splashMul = r.splashRatio > 0 ? r.splashRatio : 0.5;
@@ -655,6 +668,15 @@ export class SkillSystem {
         quat: [0, Math.sin(h), 0, Math.cos(h)],
         scale: [1, 1, 1],
       });
+      // PR8 body follows the projectile; trail drips at ~33 Hz (L4 single trail).
+      if (p.vfx) {
+        this.fx.moveFlightBody(p.vfx.body, p.x, p.y, p.z);
+        p.vfx.trailT -= dt;
+        if (p.vfx.trailT <= 0) {
+          p.vfx.trailT = 0.03;
+          this.fx.flightTrailPuff(p.skillId as FlightStyle, p.x, p.y, p.z);
+        }
+      }
     }
     // Keep __hf / lifecycle projectile count in sync after expiry & hits.
     this.fx.noteProjectiles(this.projectiles.length);
@@ -671,6 +693,9 @@ export class SkillSystem {
     for (const p of this.projectiles) {
       this.world.despawn(p.e);
       for (const pe of p.parts) this.world.despawn(pe);
+      // PR8 — release flight bodies on EVERY projectile-clear path (not just
+      // tick kill): beginCameraMode calls this without an fx.clearTransient.
+      if (p.vfx) this.fx.releaseFlightBody(p.vfx.body);
     }
     this.projectiles.length = 0;
     this.fx.noteProjectiles(0);
@@ -678,40 +703,39 @@ export class SkillSystem {
     this.#phaseEchoUntil = 0;
     this.#finisher = createFinisherState();
     this.#finisherResolved = null;
+    this.#finisherOrigin = null;
     this.#clearTelegraph();
   }
 
   #setTelegraph(x: number, z: number, radius: number): void {
-    if (!this.#telegraphMat || !this.#telegraphFlatQ) return;
-    const scale = radius * 2;
-    const q = this.#telegraphFlatQ;
+    // PR8 T6 — fiery danger ring + faint fill + center pulse (fx sprite
+    // decals), replacing the legacy solid orange block.
     if (this.#telegraph) {
-      this.world.set(this.#telegraph, Transform, {
-        pos: [x, 0.03, z],
-        quat: q,
-        scale: [scale, scale, scale],
-      });
+      // NOTE: move ignores radius — the finisher splash radius is constant
+      // per cast today (FINISHER_RADIUS_M); if a rank ever scales it, the
+      // ring must be respawned at the new radius instead.
+      this.fx.moveNovaTelegraph(this.#telegraph, x, z);
       return;
     }
-    const spawned = this.world.spawn(
-      {
-        component: Transform,
-        data: { pos: [x, 0.03, z], quat: q, scale: [scale, scale, scale] },
-      },
-      { component: MeshFilter, data: { assetHandle: HANDLE_QUAD } },
-      { component: MeshRenderer, data: { materials: [this.#telegraphMat] } },
-    );
-    if (spawned.ok) this.#telegraph = spawned.value as EntityHandle;
+    this.#telegraph = this.fx.novaTelegraph(x, z, radius);
   }
 
   #clearTelegraph(): void {
     if (!this.#telegraph) return;
-    try { this.world.despawn(this.#telegraph); } catch { /* */ }
+    this.fx.releaseNovaTelegraph(this.#telegraph);
     this.#telegraph = null;
   }
 
   #tickFinisher(dt: number, monsters: MonsterManager): void {
     if (this.#finisher.phase === 'idle') return;
+    // PR8 T6 windup charge — converging hot motes while the cast winds up.
+    if (this.#finisher.phase === 'windup' && this.#finisherOrigin) {
+      this.#novaChargeT -= dt;
+      if (this.#novaChargeT <= 0) {
+        this.#novaChargeT = 0.1;
+        this.fx.novaChargePuff(this.#finisherOrigin.x, 0.9, this.#finisherOrigin.z);
+      }
+    }
     this.#finisher = tickFinisher(this.#finisher, dt, {
       // Apply inside the hook so a large dt that ends the cast still hits the
       // committed target (state may reset to idle in the same tick).
@@ -719,6 +743,7 @@ export class SkillSystem {
     });
     if (this.#finisher.phase === 'idle') {
       this.#finisherResolved = null;
+      this.#finisherOrigin = null;
       this.#clearTelegraph();
     } else {
       this.#setTelegraph(
@@ -738,7 +763,7 @@ export class SkillSystem {
     const crit = Math.random() < this.mods.critChance;
     const hitDmg = dmg * (crit ? this.mods.critMultiplier : 1);
     // Damage stamp — pop+burst at impact height; rise at ground (legacy y=0.2).
-    // Telegraph / commit pop stay procedural (customStep not bound yet).
+    // PR8 T6: additive shock ring + ground scorch ride outside the def (L7 cap).
     this.fx.playEffect(
       combatBeat('inferno-nova', ['damage-pop', 'damage-burst']),
       tx, 1.0, tz,
@@ -747,6 +772,8 @@ export class SkillSystem {
       combatBeat('inferno-nova', ['damage-rise']),
       tx, 0.2, tz,
     );
+    this.fx.novaShockRing(tx, tz, radius);
+    this.fx.novaScorch(tx, tz, radius);
     const proxy: Projectile = {
       e: 0 as unknown as EntityHandle,
       resolved,

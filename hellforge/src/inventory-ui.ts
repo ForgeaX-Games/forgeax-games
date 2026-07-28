@@ -1,17 +1,19 @@
 // Hellforge inventory panel — 1:1 aidiablo right-dock stone slab (B/I).
-// 560px full-height stone panel: pillar at the free edge, amber-gem corner
-// ornaments, stone-inset paper doll, 8×3 bag grid, gold pill, drag-drop.
-// Interactions (unchanged semantics):
+// ~640px full-height stone panel: pillar at the free edge, amber-gem corner
+// ornaments, 10-cell paper doll, 8×3 bag grid, gold + materials footer, drag-drop.
+// Interactions:
 //   • click a bag item  → equip (swaps the current piece back into the bag)
 //   • click an equipped slot → unequip into the bag
-//   • drag bag item → matching doll slot = equip; drag equipped → bag = unequip
-//   • right-click a bag item → melt confirm → melt to gold
+//   • drag bag item → matching doll slot = equip (passes EquipSlot target); drag equipped → bag = unequip
+//   • right-click a bag item → melt confirm → melt to gold (legendary: no confirm)
 //   • hover → global tooltip with equipped-vs-candidate StatDelta comparison
 // Mutations stay in main.ts via callbacks — this file only renders and reports.
 
+import type { MaterialCounts } from './crafting';
 import {
-  RARITY_META, SLOT_META, SLOT_ORDER, compareItems, itemTooltipLines, meltGoldValue,
-  type Equipment, type Item, type ItemInstance, type ItemSlot, type StatDelta,
+  RARITY_META, SLOT_META, compareItems, equipSlotsFor, itemSlotForEquip,
+  itemTooltipLines, meltGoldValue,
+  type Equipment, type EquipSlot, type Item, type ItemInstance, type ItemSlot, type StatDelta,
 } from './items';
 import { HudArt } from './hud-art';
 import {
@@ -22,9 +24,9 @@ import { slotIconImg, slotSilhouetteSvg } from './ui-icons';
 import { installUiTooltip, type UiTooltipHandle } from './ui-tooltip';
 
 export interface InventoryCallbacks {
-  /** Equip bag[index]; return false to reject (e.g. level requirement). */
-  onEquipFromBag(index: number): boolean;
-  onUnequip(slot: ItemSlot): boolean;
+  /** Equip bag[index]; optional doll target (ring1/ring2 drag). Return false to reject. */
+  onEquipFromBag(index: number, target?: EquipSlot): boolean;
+  onUnequip(slot: EquipSlot): boolean;
   onMelt(index: number): void;
 }
 
@@ -34,7 +36,13 @@ export type InventoryBagView = readonly (Readonly<ItemInstance> | null)[];
 
 export interface InventoryHandle {
   /** Re-render from a deep-readonly domain snapshot (cheap full rebuild — 30 nodes). */
-  update(eq: InventoryEquipmentView, bag: InventoryBagView, playerLevel: number, gold: number): void;
+  update(
+    eq: InventoryEquipmentView,
+    bag: InventoryBagView,
+    playerLevel: number,
+    gold: number,
+    materials: MaterialCounts,
+  ): void;
   /** Surface API for UiLayerManager.register — prefer manager.open/close in main. */
   show(): void;
   hide(): void;
@@ -53,17 +61,46 @@ export interface InventoryDeps {
 
 const PANEL_ID = 'hellforge-inventory';
 
-/** Paper-doll grid areas — hellforge's 6 slots (aidiablo layout shapes kept). */
-const DOLL_LAYOUT: ReadonlyArray<{ slot: ItemSlot; area: string }> = [
+/**
+ * Paper-doll cells — grid-area names are EquipSlot keys (4×4 template).
+ * Layout: `. helm . .` / `weapon armor amulet offhand` /
+ * `. gloves belt .` / `ring1 . boots ring2`.
+ */
+const DOLL_LAYOUT: ReadonlyArray<{ slot: EquipSlot; area: EquipSlot }> = [
   { slot: 'helm', area: 'helm' },
   { slot: 'weapon', area: 'weapon' },
   { slot: 'armor', area: 'armor' },
   { slot: 'amulet', area: 'amulet' },
+  { slot: 'offhand', area: 'offhand' },
+  { slot: 'gloves', area: 'gloves' },
+  { slot: 'belt', area: 'belt' },
+  { slot: 'ring1', area: 'ring1' },
   { slot: 'boots', area: 'boots' },
-  { slot: 'ring', area: 'ring' },
+  { slot: 'ring2', area: 'ring2' },
 ];
 
 const BAG_COLS = 8;
+
+/**
+ * Doll slot to compare a bag candidate against: prefer an empty dual slot
+ * (ring1/ring2), else the weaker filled piece by item score.
+ */
+export function wornSlotForCompare(
+  eq: InventoryEquipmentView,
+  itemSlot: ItemSlot,
+): EquipSlot {
+  const slots = equipSlotsFor(itemSlot);
+  const empty = slots.find((s) => !eq[s]);
+  if (empty) return empty;
+  let weakest = slots[0]!;
+  for (const s of slots) {
+    const cur = eq[s];
+    const best = eq[weakest];
+    if (!cur) continue;
+    if (!best || cur.score < best.score) weakest = s;
+  }
+  return weakest;
+}
 
 /** PR6 painted equip-slot plate. Quality color uses inset ring (not border — border:0). */
 function stoneInsetCss(qCol: string | null): string {
@@ -88,7 +125,8 @@ export function installInventory(
   const root = document.createElement('div');
   root.id = PANEL_ID;
   root.style.cssText =
-    `position:${posKind};right:0;top:0;width:min(560px,94%);height:calc(100% - 150px);` +
+    // +1 doll column (~72px) over the prior 560px right-dock.
+    `position:${posKind};right:0;top:0;width:min(640px,94%);height:calc(100% - 150px);` +
     `z-index:${Z.inventory};display:none;pointer-events:auto;user-select:none;` +
     `font:600 13px ${FONT_UI};color:#e0d8cc;` +
     `background:url('${HudArt.panelInventory()}') center/100% 100% no-repeat,rgba(12,8,4,0.96);` +
@@ -109,12 +147,12 @@ export function installInventory(
   const dollBody = document.createElement('div');
   dollBody.style.cssText =
     'position:relative;display:grid;' +
-    'grid-template-columns:64px 64px 64px;grid-template-rows:repeat(4,64px);gap:8px;' +
+    'grid-template-columns:repeat(4,64px);grid-template-rows:repeat(4,64px);gap:8px;' +
     'justify-content:center;padding:12px 6px 10px;' +
-    "grid-template-areas:'. helm .' 'weapon armor amulet' '. boots .' '. ring .';";
+    "grid-template-areas:'. helm . .' 'weapon armor amulet offhand' '. gloves belt .' 'ring1 . boots ring2';";
   body.appendChild(dollBody);
 
-  // ── bag grid + gold row ──────────────────────────────────────────────────
+  // ── bag grid + gold/materials footer ───────────────────────────────────
   const bagTitle = document.createElement('div');
   bagTitle.style.cssText = `font:700 13px ${FONT_DISPLAY};color:#d4b05a;letter-spacing:2px;`;
   const grid = document.createElement('div');
@@ -124,12 +162,16 @@ export function installInventory(
     'border:0;background:rgba(8,6,4,0.35);';
 
   const footer = document.createElement('div');
-  footer.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-top:2px;';
+  footer.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:2px;';
+  const currencyRow = document.createElement('div');
+  currencyRow.style.cssText = 'display:flex;align-items:center;gap:8px;flex-wrap:wrap;';
   const goldEl = document.createElement('span');
+  const matsEl = document.createElement('span');
+  currencyRow.append(goldEl, matsEl);
   const hintEl = document.createElement('span');
-  hintEl.style.cssText = `font:600 10px ${FONT_UI};color:#8a7a5a;`;
+  hintEl.style.cssText = `font:600 10px ${FONT_UI};color:#8a7a5a;flex-shrink:0;`;
   hintEl.textContent = '左键 穿戴 · 右键 熔毁 · 拖拽换装 · B 关闭';
-  footer.append(goldEl, hintEl);
+  footer.append(currencyRow, hintEl);
   body.append(bagTitle, grid, footer);
   root.appendChild(body);
 
@@ -223,7 +265,7 @@ export function installInventory(
   // drag: ghost follows the cursor, drop target glows green(valid)/red(invalid).
   type DragSrc =
     | { kind: 'bag'; index: number; item: Readonly<ItemInstance> }
-    | { kind: 'slot'; slot: ItemSlot; item: Readonly<ItemInstance> };
+    | { kind: 'slot'; slot: EquipSlot; item: Readonly<ItemInstance> };
   const DRAG_PX = 6;
   let drag: { src: DragSrc; ghost: HTMLDivElement; moved: boolean; x0: number; y0: number } | null = null;
   let suppressClick = false;
@@ -248,14 +290,19 @@ export function installInventory(
     drag = null;
     clearDropGlow();
   };
-  const dropTargetAt = (clientX: number, clientY: number): { el: HTMLElement; ok: boolean } | null => {
+  const dropTargetAt = (
+    clientX: number,
+    clientY: number,
+  ): { el: HTMLElement; ok: boolean; target?: EquipSlot } | null => {
     if (!drag) return null;
     const under = document.elementFromPoint(clientX, clientY) as HTMLElement | null;
     if (!under) return null;
     if (drag.src.kind === 'bag') {
       const slotEl = under.closest<HTMLElement>('[data-slot]');
-      if (slotEl && slotEl.dataset.slot === drag.src.item.slot) return { el: slotEl, ok: true };
-      return slotEl ? { el: slotEl, ok: false } : null;
+      if (!slotEl?.dataset.slot) return null;
+      const target = slotEl.dataset.slot as EquipSlot;
+      const ok = equipSlotsFor(drag.src.item.slot).includes(target);
+      return { el: slotEl, ok, target };
     }
     const bagEl = under.closest<HTMLElement>('[data-bag-grid]');
     return bagEl ? { el: bagEl, ok: true } : null;
@@ -284,7 +331,7 @@ export function installInventory(
       const t = dropTargetAt(e.clientX, e.clientY);
       if (t?.ok) {
         hideConfirm();
-        if (drag.src.kind === 'bag') cb.onEquipFromBag(drag.src.index);
+        if (drag.src.kind === 'bag') cb.onEquipFromBag(drag.src.index, t.target);
         else cb.onUnequip(drag.src.slot);
       }
     }
@@ -312,27 +359,32 @@ export function installInventory(
   };
 
   // ── cells ────────────────────────────────────────────────────────────────
-  const slotCell = (item: Readonly<ItemInstance> | null, slot: ItemSlot): HTMLDivElement => {
+  const slotCell = (
+    item: Readonly<ItemInstance> | null,
+    slot: EquipSlot,
+    area: EquipSlot,
+  ): HTMLDivElement => {
+    const itemSlot = itemSlotForEquip(slot);
     const el = document.createElement('div');
     const qCol = item ? RARITY_META[item.rarity].color : null;
     const baseShadow = qCol
       ? `inset 0 0 0 2px ${qCol}aa,inset 0 0 12px ${qCol}33,inset 0 0 10px rgba(0,0,0,0.45)`
       : 'inset 0 0 10px rgba(0,0,0,0.55)';
     el.style.cssText =
-      `grid-area:${slot};position:relative;z-index:1;display:flex;flex-direction:column;` +
+      `grid-area:${area};position:relative;z-index:1;display:flex;flex-direction:column;` +
       'align-items:center;justify-content:center;cursor:pointer;' +
       stoneInsetCss(qCol);
     if (!item) {
       const sil = document.createElement('div');
-      sil.innerHTML = slotSilhouetteSvg(slot, 34);
+      sil.innerHTML = slotSilhouetteSvg(itemSlot, 34);
       sil.style.cssText = 'opacity:0.14;line-height:0;';
       el.appendChild(sil);
       const lab = document.createElement('span');
-      lab.textContent = SLOT_META[slot].label;
+      lab.textContent = SLOT_META[itemSlot].label;
       lab.style.cssText = 'font-size:9px;color:#6a6058;margin-top:2px;letter-spacing:0.5px;';
       el.appendChild(lab);
     } else {
-      el.appendChild(slotIconImg(slot, 34, { alt: item.name }));
+      el.appendChild(slotIconImg(itemSlot, 34, { alt: item.name }));
       const lab = document.createElement('span');
       lab.textContent = item.name;
       lab.style.cssText =
@@ -365,9 +417,9 @@ export function installInventory(
     if (!curEq) return;
     // paper doll
     dollBody.querySelectorAll('[data-slot]').forEach((n) => n.remove());
-    for (const { slot } of DOLL_LAYOUT) {
+    for (const { slot, area } of DOLL_LAYOUT) {
       const item = curEq[slot];
-      const el = slotCell(item, slot);
+      const el = slotCell(item, slot, area);
       el.dataset.slot = slot;
       if (item) {
         el.addEventListener('mousemove', (e) => showTip(e, [renderTipCol(itemTooltipLines(item, curLevel), '已装备')]));
@@ -390,7 +442,8 @@ export function installInventory(
           'white-space:nowrap;text-overflow:ellipsis;';
         el.appendChild(lab);
         el.addEventListener('mousemove', (e) => {
-          const worn = curEq![item.slot];
+          const wornSlot = wornSlotForCompare(curEq!, item.slot);
+          const worn = curEq![wornSlot];
           const cols = [
             renderTipCol(itemTooltipLines(item, curLevel), '背包'),
             renderDeltaCol(compareItems(item, worn ?? null)),
@@ -404,6 +457,8 @@ export function installInventory(
         el.addEventListener('contextmenu', (e) => {
           e.preventDefault();
           hideTip();
+          // L3 — legendary equip/store only; no melt confirm dialog.
+          if (item.rarity === 'legendary') return;
           showConfirm(i, item);
         });
       }
@@ -413,19 +468,36 @@ export function installInventory(
 
   mount.appendChild(root);
 
+  const currencyPill = (inner: string): string =>
+    `<span style="padding:3px 10px;background:linear-gradient(180deg,rgba(40,34,26,0.8),rgba(28,24,18,0.9));` +
+    `border:1px solid #4a4038;display:inline-flex;align-items:center;gap:5px;">${inner}</span>`;
+
   return {
-    update(eq, bag, playerLevel, gold) {
+    update(eq, bag, playerLevel, gold, materials) {
       curEq = eq; curBag = bag; curLevel = playerLevel;
       const used = bag.filter(Boolean).length;
       const full = used >= bag.length && bag.length > 0;
       bagTitle.textContent = full ? `背包 ${used}/${bag.length} · 已满` : `背包 ${used}/${bag.length}`;
       bagTitle.style.color = full ? '#ff6a6a' : '#d4b05a';
-      goldEl.innerHTML =
-        `<span style="padding:3px 14px;background:linear-gradient(180deg,rgba(40,34,26,0.8),rgba(28,24,18,0.9));` +
-        `border:1px solid #4a4038;display:inline-flex;align-items:center;gap:6px;">` +
+      goldEl.innerHTML = currencyPill(
         `<span style="color:#ffd700;font-size:14px;">★</span>` +
         `<span style="color:#f0c840;font-weight:bold;">${gold}</span>` +
-        `<span style="color:#8a7a58;font-size:10px;">金币</span></span>`;
+        `<span style="color:#8a7a58;font-size:10px;">金币</span>`,
+      );
+      matsEl.innerHTML =
+        currencyPill(
+          `<span style="color:${RARITY_META.common.color};font-weight:bold;">${materials.common}</span>` +
+          `<span style="color:#8a7a58;font-size:10px;">白</span>`,
+        ) +
+        currencyPill(
+          `<span style="color:${RARITY_META.magic.color};font-weight:bold;">${materials.magic}</span>` +
+          `<span style="color:#8a7a58;font-size:10px;">蓝</span>`,
+        ) +
+        currencyPill(
+          `<span style="color:${RARITY_META.rare.color};font-weight:bold;">${materials.rare}</span>` +
+          `<span style="color:#8a7a58;font-size:10px;">黄</span>`,
+        );
+      matsEl.style.cssText = 'display:inline-flex;align-items:center;gap:6px;';
       if (root.style.display !== 'none') render();
     },
     show() {

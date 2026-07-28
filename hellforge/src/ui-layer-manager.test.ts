@@ -122,4 +122,27 @@ describe('createUiLayerManager', () => {
     expect(cutscene.calls).toEqual(['show', 'hide']);
     expect(inventory.calls).toEqual(['show']);
   });
+
+  test('craft has the same single-owner exclusivity as inventory', () => {
+    const craft = trackSurface();
+    const inventory = trackSurface();
+    const ui = createUiLayerManager();
+    ui.register('craft', craft.surface);
+    ui.register('inventory', inventory.surface);
+
+    ui.open('craft');
+    expect(ui.active()).toBe('craft');
+    expect(craft.calls).toEqual(['show']);
+    expect(ui.blocksWorldInput()).toBe(true);
+
+    ui.open('inventory');
+    expect(ui.active()).toBe('inventory');
+    expect(craft.calls).toEqual(['show', 'hide']);
+    expect(inventory.calls).toEqual(['show']);
+
+    ui.close('inventory');
+    ui.open('craft');
+    expect(ui.active()).toBe('craft');
+    expect(ui.blocksWorldInput()).toBe(true);
+  });
 });

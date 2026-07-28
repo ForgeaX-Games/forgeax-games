@@ -2,6 +2,13 @@ import type { EffectDef } from '../effect-def';
 import { arcDef } from './arc';
 import { blinkDef } from './blink';
 import { dodgeDef } from './dodge';
+import {
+  bossDeathDissolveDef,
+  deathDissolveDef,
+  hitArcDef,
+  hitFireDef,
+  hitFrostDef,
+} from './feedback';
 import { frostDef } from './frost';
 import { infernoNovaDef } from './inferno-nova';
 import { magmaDef } from './magma';
@@ -14,6 +21,11 @@ export const COMBAT_EFFECT_DEFS = {
   blink: blinkDef,
   'inferno-nova': infernoNovaDef,
   dodge: dodgeDef,
+  'death-dissolve': deathDissolveDef,
+  'death-dissolve-boss': bossDeathDissolveDef,
+  'hit-fire': hitFireDef,
+  'hit-frost': hitFrostDef,
+  'hit-arc': hitArcDef,
 } as const satisfies Record<string, EffectDef>;
 
 export type CombatEffectId = keyof typeof COMBAT_EFFECT_DEFS;
@@ -48,8 +60,13 @@ export function combatBeat(
 export {
   arcDef,
   blinkDef,
+  bossDeathDissolveDef,
+  deathDissolveDef,
   dodgeDef,
   frostDef,
+  hitArcDef,
+  hitFireDef,
+  hitFrostDef,
   infernoNovaDef,
   magmaDef,
 };

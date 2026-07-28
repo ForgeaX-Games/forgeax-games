@@ -10,6 +10,8 @@ export type MajorPanel =
   | 'character'
   | 'dialogue'
   | 'settings'
+  /** Forge cube — salvage / re-roll / fuse (KeyF). */
+  | 'craft'
   /** Cutscene playback — registering it hijacks the exclusivity/input funnel. */
   | 'cutscene';
 

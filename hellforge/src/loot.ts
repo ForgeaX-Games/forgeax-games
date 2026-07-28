@@ -20,6 +20,7 @@ import type { Handle } from '@forgeax/engine-types';
 import type { Monster } from './monsters';
 import { MONSTERS } from './monsters';
 import { RARITY_META, type ItemInstance, type Rarity } from './items';
+import type { FxSystem, LootBeamVfx } from './fx';
 
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
 
@@ -33,6 +34,8 @@ interface Drop {
   amount: number;
   /** Equipment payload (kind === 'item' only). */
   item?: ItemInstance;
+  /** Sprite loot beam (kind === 'item' only) — released exactly once on despawn. */
+  beam?: LootBeamVfx;
   x: number; y: number; z: number;
   baseY: number;
   /** Render scale (item beams are tall pillars, orbs are small). */
@@ -60,7 +63,7 @@ export class LootSystem {
   readonly collectR = 0.7;
   readonly lifeSec = 30;
 
-  constructor(private world: World) {
+  constructor(private world: World, private fx: FxSystem) {
     const mk = (color: [number, number, number], i: number) =>
       world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', Materials.standard({
         baseColor: [color[0], color[1], color[2], 1],
@@ -127,8 +130,9 @@ export class LootSystem {
     });
   }
 
-  /** Equipment drop — a D2-style rarity-coloured beam pillar. Legendary
-   *  beams are visibly fatter + taller (the across-the-room "orange!"). */
+  /** Equipment drop — a D2-style rarity-coloured beam pillar (emissive mesh
+   *  base + additive sprite beam, PR8 T7). Legendary beams are visibly fatter
+   *  + taller with a fat base glow (the across-the-room "orange!"). */
   spawnItem(item: ItemInstance, x: number, z: number): void {
     const ang = Math.random() * Math.PI * 2;
     x += Math.cos(ang) * 0.6;
@@ -142,15 +146,26 @@ export class LootSystem {
       { component: MeshRenderer, data: { materials: [this.beamMats[item.rarity]] } },
     );
     if (!res.ok) return;
+    // HDR sprite beam over the mesh pillar (0 handles in Edit mode = inert).
+    const meta = RARITY_META[item.rarity];
+    const beam = this.fx.lootBeam(x, z, [
+      meta.beam[0] * meta.beamI, meta.beam[1] * meta.beamI, meta.beam[2] * meta.beamI, 1,
+    ], { tall, glowSize: item.rarity === 'legendary' ? 0.8 : undefined });
     this.drops.push({
       id: `l-${this.nextStableId++}`,
-      e: res.value as EntityHandle, kind: 'item', amount: 0, item,
+      e: res.value as EntityHandle, kind: 'item', amount: 0, item, beam,
       x, y: baseY, z, baseY,
       sx: fat, sy: tall, sz: fat,
       vx: 0, vz: 0, age: 0, hooked: false,
       bobPhase: Math.random() * Math.PI * 2,
       spinPhase: Math.random() * Math.PI * 2,
     });
+  }
+
+  /** Despawn a drop entity and release its sprite beam exactly once. */
+  private despawnDrop(g: Drop): void {
+    if (g.beam) this.fx.releaseLootBeam(g.beam);
+    this.world.despawn(g.e);
   }
 
   byId(id: string): { id: string; x: number; z: number; kind: DropKind; item?: ItemInstance; amount: number } | null {
@@ -172,7 +187,7 @@ export class LootSystem {
     const g = this.drops[i]!;
     if (g.kind === 'item' && !canTakeItem()) return null;
     const ev: PickupEvent = { kind: g.kind, amount: g.amount, item: g.item, x: g.x, y: g.y, z: g.z };
-    this.world.despawn(g.e);
+    this.despawnDrop(g);
     this.drops.splice(i, 1);
     return ev;
   }
@@ -191,7 +206,7 @@ export class LootSystem {
       g.age += dt;
       // equipment never rots away — only currency/potion orbs expire
       if (g.kind !== 'item' && g.age > this.lifeSec) {
-        this.world.despawn(g.e);
+        this.despawnDrop(g);
         this.drops.splice(i, 1);
         continue;
       }
@@ -212,7 +227,7 @@ export class LootSystem {
         g.y += ((g.kind === 'item' ? 1.1 : 0.9) - g.y) * Math.min(1, dt * 6);
         if (d2 < collectR2) {
           events.push({ kind: g.kind, amount: g.amount, item: g.item, x: g.x, y: g.y, z: g.z });
-          this.world.despawn(g.e);
+          this.despawnDrop(g);
           this.drops.splice(i, 1);
           continue;
         }
@@ -235,7 +250,7 @@ export class LootSystem {
 
   /** Remove all ground drops (combat-run reset). */
   clearGroundDrops(): void {
-    for (const g of this.drops) this.world.despawn(g.e);
+    for (const g of this.drops) this.despawnDrop(g);
     this.drops.length = 0;
   }
 }

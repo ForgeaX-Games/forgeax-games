@@ -29,20 +29,22 @@ function fillBagAndWeapon(domain: ReturnType<typeof createSorceressDomain>): voi
       score: 0,
     },
   }).ok).toBe(true);
-  // Occupy ring so further ring fillers go to the bag.
-  expect(domain.dispatch({
-    op: 'take-item',
-    item: {
-      instanceId: 'junk-r',
-      slot: 'ring',
-      rarity: 'common',
-      name: '占位戒',
-      ilvl: 1,
-      reqLevel: 1,
-      affixes: [],
-      score: 0,
-    },
-  }).ok).toBe(true);
+  // Occupy both ring doll slots (ring1 + ring2) so further ring fillers go to the bag.
+  for (const id of ['junk-r1', 'junk-r2'] as const) {
+    expect(domain.dispatch({
+      op: 'take-item',
+      item: {
+        instanceId: id,
+        slot: 'ring',
+        rarity: 'common',
+        name: '占位戒',
+        ilvl: 1,
+        reqLevel: 1,
+        affixes: [],
+        score: 0,
+      },
+    }).ok).toBe(true);
+  }
   for (let i = 0; i < 24; i++) {
     const filler: ItemInstance = {
       instanceId: `fill-${i}`,

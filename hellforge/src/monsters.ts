@@ -38,6 +38,7 @@ import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { AnimationClip, Handle, SceneAsset } from '@forgeax/engine-types';
 import type { FxSystem } from './fx';
+import { combatBeat } from './fx/defs';
 import type { ContactShadowKit } from './contact-shadow';
 
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
@@ -706,6 +707,17 @@ export class MonsterManager {
 
   private kill(m: Monster): void {
     this.fx.gibs(m.x, 0.6, m.z, 'blood', m.kind === 'slaglord' ? 22 : 9);
+    // Dissolve envelope layers on top of the gibs (PR8 T7): flipbook pop +
+    // smoke wisps + embers read as the body disintegrating during the death
+    // clip. Skinned GLB materials can't be eroded per-entity, so it's a
+    // particle envelope, not a shader dissolve.
+    this.fx.playEffect(
+      combatBeat(
+        m.kind === 'slaglord' ? 'death-dissolve-boss' : 'death-dissolve',
+        ['dissolve-flash', 'dissolve-wisps', 'dissolve-embers'],
+      ),
+      m.x, 0.7, m.z,
+    );
     // Status VFX ends with death even when the corpse clip still plays.
     this.fx.endSlowStatus(m.id);
     if (m.contactShadow !== null) {

@@ -187,6 +187,7 @@ export function serializeCharacter(
       hotbar: [...snapshot.hotbar] as CharacterSaveEnvelope['progression']['hotbar'],
       selectedHotbarSlot: snapshot.selectedHotbarSlot,
       potions: { ...snapshot.potions },
+      materials: { ...snapshot.materials },
     },
     inventory: {
       bag: deepClone(snapshot.bag as Array<unknown>) as CharacterSaveEnvelope['inventory']['bag'],
@@ -230,6 +231,7 @@ export function hydrateCharacter(
     equipment: parsed.inventory.equipment,
     quests: parsed.quests,
     potions: parsed.progression.potions,
+    materials: parsed.progression.materials,
   });
 }
 

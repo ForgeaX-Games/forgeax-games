@@ -1,0 +1,247 @@
+{
+  "version": 1,
+  "textures": [
+    {
+      "id": "glow",
+      "path": null,
+      "sha256": null,
+      "source": "procedural",
+      "license": "team-owned",
+      "attribution": "",
+      "usage": "additive hot-core glow layer (impacts, projectile bodies, loot beams)"
+    },
+    {
+      "id": "noise",
+      "path": null,
+      "sha256": null,
+      "source": "procedural",
+      "license": "team-owned",
+      "attribution": "",
+      "usage": "tileable fbm — UV distortion input, bound on every sprite material"
+    },
+    {
+      "id": "flame",
+      "path": "assets/vfx/packs/kenney-particle-pack",
+      "sha256": "0705f7e33a750cef2402091dfc83a9e228398a5f03697267a667ea58aee5aaf3",
+      "files": [
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/fire_01.png",
+          "sha256": "8e552769e5516430d372760e5dc020587ee9a6e25893ce1c6d1b0323ecb0eea5"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/flame_05.png",
+          "sha256": "2af81bb1b5e08286f7c7d968c7077f8f7306547693a736ed708358d99cde8221"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/fire_02.png",
+          "sha256": "5111680df5bd2aabb4f2eaed43eca40e0b837af7fa6b610adccc57de0687a546"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/flame_06.png",
+          "sha256": "a9879e25c93690242065495618fe15b82b50f981a6994a0b2dd2ae1de3966f37"
+        }
+      ],
+      "source": "kenney-particle-pack",
+      "sourceUrl": "https://kenney.nl/assets/particle-pack",
+      "downloaded": "2026-07-27",
+      "license": "CC0-1.0",
+      "licenseDeed": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution": "Kenney Vleugels (www.kenney.nl)",
+      "usage": "4-frame tongued flame bodies (campfire / torch / brazier ambient fire)"
+    },
+    {
+      "id": "fireball",
+      "path": "assets/vfx/packs/kenney-particle-pack",
+      "sha256": "9ed764a83ae1597ccf55ec4bc116363db57b2f3d4d4a86e01374fbe93e7528af",
+      "files": [
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/flame_05.png",
+          "sha256": "2af81bb1b5e08286f7c7d968c7077f8f7306547693a736ed708358d99cde8221"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/flame_06.png",
+          "sha256": "a9879e25c93690242065495618fe15b82b50f981a6994a0b2dd2ae1de3966f37"
+        }
+      ],
+      "source": "kenney-particle-pack",
+      "sourceUrl": "https://kenney.nl/assets/particle-pack",
+      "downloaded": "2026-07-27",
+      "license": "CC0-1.0",
+      "licenseDeed": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution": "Kenney Vleugels (www.kenney.nl)",
+      "usage": "tall flame tongues — projectile flight bodies + trails (Magma Bolt)"
+    },
+    {
+      "id": "impact",
+      "path": "assets/vfx/packs/kenney-particle-pack",
+      "sha256": "257620ac0374877da2f82fdd00f8843f44031e7acb365ba494fc410dfc265106",
+      "files": [
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/muzzle_03.png",
+          "sha256": "5561415e28d0f9656ce606aae97fe8f5a03af6a6accb31168523eaaea6bc1525"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/muzzle_05.png",
+          "sha256": "7308b2834db1c5709b3cb752046b478a1714e26b57dbe487ec1298215abc5336"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/muzzle_01.png",
+          "sha256": "d2c71557f03b14dcf68593a72b34b8c5357b83de6f2008f154d1e5305e41d7ce"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/muzzle_02.png",
+          "sha256": "b55f6ea23144578e05b826bb1578755951e46b8538cf0382d1b2244b70cb4ebe"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/fire_01.png",
+          "sha256": "8e552769e5516430d372760e5dc020587ee9a6e25893ce1c6d1b0323ecb0eea5"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/fire_02.png",
+          "sha256": "5111680df5bd2aabb4f2eaed43eca40e0b837af7fa6b610adccc57de0687a546"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/smoke_01.png",
+          "sha256": "ec771fddc30601658fe004691744d9e505c9d7b0683fcda7db58961010ea7ec1"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/smoke_02.png",
+          "sha256": "3e5b79969c8ed187c010d0652ac8b28ef307a8f1e922d10c8cb950557355cf0e"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/smoke_03.png",
+          "sha256": "ab8712d468b37a4dc3f899b38c8bd8a68ad37285dd556165c8caf0cca2ce103a"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/smoke_04.png",
+          "sha256": "acf0046e0680cdaa9736f72143252cc84408c925b97f3b332142fe7de59f199c"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/smoke_05.png",
+          "sha256": "e3b2a02b405278fce38fd60fb1df1984f4516db7a545a2afbc75c9795ef9498e"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/smoke_06.png",
+          "sha256": "44d665456a766583a512ddb54fa449e48a104086c6a0b8a720226da582893d71"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/smoke_07.png",
+          "sha256": "b442030686815dc6eb6ff05a40228801d68e1f9545db37416af5af0dc05f7733"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/smoke_08.png",
+          "sha256": "615b56203cd7451f1ab1f1c65387188a0ee5430bcc4d8759bbc442a86021cdf7"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/smoke_09.png",
+          "sha256": "19bc9e25d1e548974bf72d34f9f51ad76ba7795701b02a175cbd49052730711c"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/smoke_10.png",
+          "sha256": "9326f6ec6d36041574f7c132ccd53fe342391ba74131f7db67e17d9dcb9c8587"
+        }
+      ],
+      "source": "kenney-particle-pack",
+      "sourceUrl": "https://kenney.nl/assets/particle-pack",
+      "downloaded": "2026-07-27",
+      "license": "CC0-1.0",
+      "licenseDeed": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution": "Kenney Vleugels (www.kenney.nl)",
+      "usage": "flipbook impact bursts (projectile hits, melee feedback)"
+    },
+    {
+      "id": "spark",
+      "path": null,
+      "sha256": null,
+      "source": "procedural",
+      "license": "team-owned",
+      "attribution": "",
+      "usage": "elongated spark streaks (fire sparks, ember accents)"
+    },
+    {
+      "id": "shard",
+      "path": null,
+      "sha256": null,
+      "source": "procedural",
+      "license": "team-owned",
+      "attribution": "",
+      "usage": "frost crystal shards (Frost Fang trail, Shatter fragments)"
+    },
+    {
+      "id": "bolt",
+      "path": null,
+      "sha256": null,
+      "source": "procedural",
+      "license": "team-owned",
+      "attribution": "",
+      "usage": "lightning polylines (Arc Surge segments, arc hit feedback)"
+    },
+    {
+      "id": "scorch",
+      "path": null,
+      "sha256": null,
+      "source": "procedural",
+      "license": "team-owned",
+      "attribution": "",
+      "usage": "ground scorch / burn residue decals (premult)"
+    },
+    {
+      "id": "ring",
+      "path": null,
+      "sha256": null,
+      "source": "procedural",
+      "license": "team-owned",
+      "attribution": "",
+      "usage": "shockwave annulus (inferno-nova, impact rings)"
+    },
+    {
+      "id": "beam",
+      "path": null,
+      "sha256": null,
+      "source": "procedural",
+      "license": "team-owned",
+      "attribution": "",
+      "usage": "loot rarity beam pillar"
+    },
+    {
+      "id": "smoke",
+      "path": "assets/vfx/packs/kenney-particle-pack",
+      "sha256": "022fb66adf545f513ad32f7ca751b36ecb9a035dd7bc4257833b29491bae0b1b",
+      "files": [
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/smoke_01.png",
+          "sha256": "ec771fddc30601658fe004691744d9e505c9d7b0683fcda7db58961010ea7ec1"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/smoke_05.png",
+          "sha256": "e3b2a02b405278fce38fd60fb1df1984f4516db7a545a2afbc75c9795ef9498e"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/smoke_07.png",
+          "sha256": "b442030686815dc6eb6ff05a40228801d68e1f9545db37416af5af0dc05f7733"
+        },
+        {
+          "path": "assets/vfx/packs/kenney-particle-pack/smoke_10.png",
+          "sha256": "9326f6ec6d36041574f7c132ccd53fe342391ba74131f7db67e17d9dcb9c8587"
+        }
+      ],
+      "source": "kenney-particle-pack",
+      "sourceUrl": "https://kenney.nl/assets/particle-pack",
+      "downloaded": "2026-07-27",
+      "license": "CC0-1.0",
+      "licenseDeed": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution": "Kenney Vleugels (www.kenney.nl)",
+      "usage": "soft smoke puffs (ember aftermath, death dissolve wisp)"
+    }
+  ],
+  "rejected": [
+    {
+      "id": "kenney-particle-pack/flame_01+flame_03+flame_04",
+      "reason": "Evaluated 2026-07-27 as flame-sheet frames: wispy smoke-column silhouettes that do not read as flame tongues — style rejection per plan §9 (license CC0 itself is fine). Shipped flame frames are fire_01/flame_05/fire_02/flame_06 (ambient) and flame_05/flame_06 (fireball)."
+    },
+    {
+      "id": "kenney-particle-pack/Rotated",
+      "reason": "Evaluated 2026-07-27: 90°-rotated flame/muzzle variants for horizontal trail use — wrong orientation for the vertical flame bodies and impact bursts shipped here (style/orientation rejection; license CC0 itself is fine)."
+    }
+  ]
+}

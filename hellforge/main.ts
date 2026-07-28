@@ -78,6 +78,7 @@ import { deriveCombatStats, type CombatStats } from './src/combat-stats';
 import { resolveIncomingDamage } from './src/damage';
 import { FxSystem } from './src/fx';
 import { COMBAT_EFFECT_DEFS, combatBeat } from './src/fx/defs';
+import { upgradeFxSheetsFromPacks } from './src/fx/texture-packs';
 import { createPerfProbe, readFoldedDraws } from './src/perf-probe';
 import { createOwnerLedger, HELLFORGE_UPDATE_SYSTEMS } from './src/owner-ledger';
 import { cutsceneBlocksChromeKey } from './src/cutscene-input';
@@ -134,11 +135,14 @@ import {
 } from './src/dungeon-room-events';
 import { Sfx } from './src/sfx';
 import {
+  equipSlotsFor,
   rollDrop,
   RARITY_META,
   type Equipment, type ItemInstance,
 } from './src/items';
 import { installInventory } from './src/inventory-ui';
+import { installCubeUI } from './src/cube-ui';
+import { salvageYield } from './src/crafting';
 import {
   installRenderSettings,
   loadRenderSettings,
@@ -812,8 +816,30 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       classDef,
     });
     const player = createPlayerFromCombatStats(combatStats);
+    // CC0 sheet upgrade (PR8 T9a — plan §4 L2): swap the weak procedural
+    // sheets (flame/impact/smoke) for the shipped Kenney Particle Pack frames
+    // BEFORE the first sprite spawn — SpriteSystem.textureFor caches the
+    // first generate() call, so a late upgrade would never reach the GPU.
+    // Per-sheet failure warns and keeps the procedural sheet (the plan's §9
+    // L2 fallback); a missing pack file must never stall boot.
+    // Camp torch glow positions (rogue-encampment.pack.json Torch*_Glow),
+    // flame centre lowered 0.25 into the post so the tongue seats in the bowl.
+    const CAMP_TORCH_GLOWS = [
+      [-2.5, 1.75, 13.5], [2.5, 1.75, 13.5],
+      [-5, 1.75, -3.5], [5, 1.75, -3.5],
+      [-2.5, 1.75, -9], [2.5, 1.75, -9],
+    ] as const;
+    await upgradeFxSheetsFromPacks(
+      new URL('./assets/vfx/packs/kenney-particle-pack', import.meta.url).href,
+    );
+    if (stopped) return;
     const fx = new FxSystem(world, app);
     fx.setCampfire(0, 0.9, 0);      // pack's CampfireGlow sits at (0, 0.7, 0)
+    // PR8 ambient fire — camp torch glows (gate / huts / back row, positions
+    // from rogue-encampment.pack.json Torch*_Glow entities).
+    for (const [tx, ty, tz] of CAMP_TORCH_GLOWS) {
+      fx.addAmbientFire(tx, ty, tz, { scale: 0.55 });
+    }
     const hud = installHud(uiMount, {
       tooltip: uiTooltip,
       onQuickAction: (action) => {
@@ -831,7 +857,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     onCleanup(() => buffDisplay.clear());
     const cutsceneUi = installCutsceneUi(uiMount);
     onCleanup(() => cutsceneUi.dispose());
-    const loot = new LootSystem(world);
+    const loot = new LootSystem(world, fx);
     const sfx = new Sfx();
     onCleanup(ownerLedger.trackSfx());
     sfx.install();
@@ -1105,20 +1131,20 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     if (stopped) return;
 
     // ── equipment + bag (打宝核心) — CharacterDomain is the authority ─────
-    // 6-slot paper doll + 24-slot bag. Pickups / swaps / melts dispatch domain
+    // 10-slot paper doll + 24-slot bag. Pickups / swaps / melts dispatch domain
     // commands; HUD/inventory read deep-frozen snapshots at render time (no
     // writable bag/equipment mirrors). CombatStats is re-derived; resource
     // ratios are preserved so re-equip cannot heal.
     let moveMul = 1;
     const applyEquipment = (opts: { refill?: boolean } = {}): void => {
       const snap = character.snapshot();
-      const { equipment, bag, level, gold } = snap;
+      const { equipment, bag, level, gold, materials } = snap;
       combatStats = deriveCombatStats({ character: snap, classDef });
       syncRuntimeFromCombatStats(player, combatStats, { refill: opts.refill });
       skills.applyCombatStats(combatStats);
       moveMul = combatStats.moveSpeed;
       const eq = equipment as Equipment;
-      inv.update(eq, bag as Array<ItemInstance | null>, level, gold);
+      inv.update(eq, bag as Array<ItemInstance | null>, level, gold, materials);
       hud.setGold(gold);
       refreshCharacterPanel();
     };
@@ -1126,7 +1152,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     /** Pickup → domain take-item (empty slot or bag). */
     const takeItem = (item: ItemInstance, sx: number | null, sy: number | null): void => {
       const before = character.snapshot();
-      const equippedEmpty = !before.equipment[item.slot] && before.level >= item.reqLevel;
+      const equippedEmpty = equipSlotsFor(item.slot).some((s) => !before.equipment[s])
+        && before.level >= item.reqLevel;
       const res = character.dispatch({ op: 'take-item', item });
       if (!res.ok) {
         if (res.reason === 'bag-full') hud.banner('背包已满', '#ff6a6a', 1200);
@@ -1209,10 +1236,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     // ── inventory panel (B) — mutations dispatch through CharacterDomain ──
     const inv = installInventory({
-      onEquipFromBag: (idx) => {
+      onEquipFromBag: (idx, target) => {
         const item = character.snapshot().bag[idx];
         if (!item) return false;
-        const res = character.dispatch({ op: 'equip-from-bag', index: idx });
+        const res = character.dispatch({ op: 'equip-from-bag', index: idx, target });
         if (!res.ok) {
           if (res.reason === 'level-req') {
             hud.banner(`需要等级 ${item.reqLevel}`, '#ff6a6a', 1200);
@@ -2173,6 +2200,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         //    failure it spawns the same runtime fallback as before (never silent).
         if (await dungeon.installGeometry(assets, note) === 'fallback') denDegraded.push('地牢场景');
         if (stopped) return; // torn down mid-load — skip further world/HUD writes
+        // PR8 T3 ambient fire — sprite flame bodies on every den torch/brazier,
+        // ignited with the lazy den load (not at camp boot).
+        for (const f of dungeon.flameFixtures) {
+          fx.addAmbientFire(f.x, f.y, f.z, { scale: f.brazier ? 0.85 : 0.6 });
+        }
         // 2. den-only monster visuals (wild kinds are already warm from boot;
         //    the den also spawns those, so every bank it needs is present).
         const denKinds = assets
@@ -2709,6 +2741,60 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       dialogueUi.show(node);
     };
 
+    // ── forge cube (F) — salvage / re-roll / fuse via CharacterDomain ─────
+    const craftFailBanner = (reason: string): void => {
+      if (reason === 'legendary-locked') hud.banner('传奇不可锻造', '#ff8866', 1400);
+      else if (reason === 'not-enough-materials') hud.banner('材料不足', '#ff8866', 1400);
+      else if (reason === 'bad-recipe') hud.banner('配方不符', '#ff8866', 1400);
+      else if (reason === 'bad-index' || reason === 'empty-slot') hud.banner('物品已失效', '#ff8866', 1200);
+    };
+    const cube = installCubeUI({
+      getBag: () => character.snapshot().bag as Array<ItemInstance | null>,
+      getMaterials: () => character.snapshot().materials,
+      onSalvage: (index) => {
+        const before = character.snapshot().bag[index];
+        const res = character.dispatch({ op: 'salvage-bag', index });
+        if (!res.ok) { craftFailBanner(res.reason); return false; }
+        const yield_ = before ? salvageYield(before) : null;
+        const tierLabel = before?.rarity === 'common' ? '白'
+          : before?.rarity === 'magic' ? '蓝'
+            : before?.rarity === 'rare' ? '黄' : '';
+        const n = yield_ && before && (before.rarity === 'common' || before.rarity === 'magic' || before.rarity === 'rare')
+          ? yield_[before.rarity] : 0;
+        sfx.play('pickup');
+        if (n > 0) hud.banner(`拆解 +${n} ${tierLabel}`, '#c8a84e', 1100);
+        applyEquipment();
+        persistCharacter();
+        return true;
+      },
+      onReroll: (index) => {
+        const res = character.dispatch({ op: 'reroll-bag', index });
+        if (!res.ok) { craftFailBanner(res.reason); return false; }
+        sfx.play('equip');
+        const next = character.snapshot().bag[index];
+        hud.banner(next ? `重铸：${next.name}` : '重铸完成', '#88ccff', 1200);
+        applyEquipment();
+        persistCharacter();
+        return true;
+      },
+      onFuse: (indices) => {
+        const res = character.dispatch({
+          op: 'fuse-bag',
+          indices: [indices[0], indices[1], indices[2]],
+        });
+        if (!res.ok) { craftFailBanner(res.reason); return false; }
+        sfx.play('equip');
+        const dest = Math.min(indices[0], indices[1], indices[2]);
+        const fused = character.snapshot().bag[dest];
+        hud.banner(fused ? `合成：${fused.name}` : '合成完成', '#ffd066', 1400);
+        applyEquipment();
+        persistCharacter();
+        return true;
+      },
+      showNotification: (text, color) => { hud.banner(text, color ?? '#ffd066', 1200); },
+      onClose: () => { uiLayers.close('craft'); },
+    }, uiMount);
+
     uiLayers.register('inventory', { show: () => inv.show(), hide: () => inv.hide() });
     uiLayers.register('skills', { show: () => skillPanel.show(), hide: () => skillPanel.hide() });
     uiLayers.register('settings', { show: () => rs.open(), hide: () => rs.close() });
@@ -2724,6 +2810,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       show: () => questLog.setOpen(true),
       hide: () => questLog.setOpen(false),
     });
+    uiLayers.register('craft', { show: () => cube.open(), hide: () => cube.close() });
     // Cutscene surface is a no-op — chrome is driven per-frame from the update
     // loop; registration exists for exclusivity + the input-block funnel.
     uiLayers.register('cutscene', { show: () => {}, hide: () => {} });
@@ -2740,6 +2827,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       uiLayers.closeAll();
       dialogueUi.dispose();
       questLog.dispose();
+      cube.dispose();
     });
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).uiLayers = uiLayers;
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).owners = () =>
@@ -2842,6 +2930,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           automap.setOpen(false);
           applyEquipment();
           toggleMajorPanel('inventory');
+        }
+        if (e.code === 'KeyF') {
+          automap.setOpen(false);
+          toggleMajorPanel('craft');
         }
         if (e.code === 'KeyK') {
           automap.setOpen(false);
@@ -3171,6 +3263,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       {
         const dodgeWalk = (x: number, z: number, radius: number) =>
           navigation.walkable([x, z], radius);
+        // PR8 T5: wisp drips mid-roll — replay the dodge puff beat as the
+        // movement phase crosses its 1/3 and 2/3 marks (kept minimal: at
+        // most two extra puffs per roll, none on a blocked short roll).
+        const prevMoveElapsed =
+          dodgeState.phase === 'movement' ? dodgeState.phaseElapsed : 0;
         const dodged = tickDodge({
           state: dodgeState,
           dt: state.paused ? 0 : dt,
@@ -3181,6 +3278,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         dodgeState = dodged.state;
         state.px = dodged.x;
         state.pz = dodged.z;
+        if (dodgeState.phase === 'movement') {
+          for (const mark of [DODGE_MOVEMENT_S / 3, (DODGE_MOVEMENT_S * 2) / 3]) {
+            if (prevMoveElapsed < mark && dodgeState.phaseElapsed >= mark) {
+              fx.playEffect(combatBeat('dodge', ['puff']), dodged.x, 0.2, dodged.z);
+            }
+          }
+        }
         // L3: only buildup+movement own facing / clear path intent.
         if (dodgeLocksTranslation(dodgeState)) {
           faceX = dodgeState.dirX;

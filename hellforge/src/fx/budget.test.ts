@@ -33,6 +33,7 @@ function noopPort(): FxSpawnPort {
     burst: () => lease(),
     pop: () => lease(),
     rise: () => lease(),
+    sprite: () => lease(),
   };
 }
 
@@ -89,6 +90,42 @@ describe('checkEffectBudget / effectExecutionDemand', () => {
     });
     const result = checkEffectBudget(slice);
     expect(result.ok).toBe(false);
+  });
+
+  test('sprite emitters count into particle demand like other kinds (PR8 T1)', () => {
+    const slice = def({
+      emitters: [
+        { id: 'flames', kind: 'sprite', color: 'fire', count: 10, sprite: { sheet: 'flame' } },
+        { id: 'afterglow', kind: 'sprite', color: 'fire', count: 5, sprite: { sheet: 'glow' } },
+      ],
+      subEmitters: [
+        {
+          id: 'glow-on-death',
+          parentEmitterId: 'flames',
+          childEmitterId: 'afterglow',
+          trigger: 'onDeath',
+        },
+      ],
+    });
+    // Root 10 + sub-emitter edge child 5 — identical semantics to burst/rise.
+    expect(effectExecutionDemand(slice)).toEqual({
+      emitters: 2,
+      particles: 15,
+      trails: 0,
+    });
+  });
+
+  test('sprite particle demand trips maxParticles (L4 per-effect cap 64)', () => {
+    const result = checkEffectBudget(def({
+      emitters: [
+        { id: 'big', kind: 'sprite', color: 'fire', count: 65, sprite: { sheet: 'impact' } },
+      ],
+      budget: { maxEmitters: 4, maxParticles: 64, maxTrails: 0 },
+    }));
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.errors.some((e) => e.includes('maxParticles'))).toBe(true);
+    }
   });
 });
 

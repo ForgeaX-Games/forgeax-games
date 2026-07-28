@@ -4,23 +4,22 @@
 
 import { describe, expect, mock, test } from 'bun:test';
 
-const AnimationPlayer = Symbol('AnimationPlayer');
-const ChildOf = Symbol('ChildOf');
-const Transform = Symbol('Transform');
-const Materials = { standard: (data: unknown) => data };
-const MeshFilter = Symbol('MeshFilter');
-const MeshRenderer = Symbol('MeshRenderer');
-const SceneInstance = Symbol('SceneInstance');
-const Skin = Symbol('Skin');
+// Engine mocks come from the shared registry (process-global mock identity —
+// see tools/engine-test-mocks.ts header).
+import {
+  AnimationPlayer,
+  ChildOf,
+  Materials,
+  MeshFilter,
+  MeshRenderer,
+  SceneInstance,
+  Skin,
+  Transform,
+} from '../tools/engine-test-mocks';
 
-mock.module('@forgeax/engine-animation', () => ({ AnimationPlayer }));
-mock.module('@forgeax/engine-scene', () => ({ ChildOf, Transform }));
-mock.module('@forgeax/engine-render', () => ({ Materials, MeshFilter, MeshRenderer, SceneInstance }));
-mock.module('@forgeax/engine-skinning', () => ({ Skin }));
-mock.module('@forgeax/engine-runtime', () => ({
-  quat: { eulerY: () => [0, 0, 0, 1], create: () => [0, 0, 0, 1], fromAxisAngle: () => undefined, multiply: () => undefined },
-}));
-mock.module('@forgeax/engine-assets-runtime', () => ({ HANDLE_CUBE: 1, HANDLE_SPHERE: 2 }));
+// NOTE: '@forgeax/engine-pack/guid' must be mocked from THIS file — a mock
+// registered from the shared helper does not intercept this subpath specifier
+// (AssetGuid.parse would return the real 16-byte form and break guid equality).
 mock.module('@forgeax/engine-pack/guid', () => ({
   AssetGuid: {
     parse: (dash: string) =>

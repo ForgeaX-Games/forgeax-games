@@ -21,11 +21,23 @@ import {
 } from './classes';
 import { deepClone, deepFreeze, shouldFreezeSnapshots, type DeepReadonly } from './deep-readonly';
 import {
+  buildFuseResult,
+  buildRerollResult,
+  canFuse,
+  canReroll,
+  canSalvage,
+  rerollCost,
+  salvageYield,
+  type MaterialCounts,
+  type MaterialTier,
+} from './crafting';
+import {
   emptyEquipment,
+  equipSlotsFor,
   meltGoldValue,
   type Equipment,
+  type EquipSlot,
   type ItemInstance,
-  type ItemSlot,
 } from './items';
 import { FINISHER_UNLOCK_LEVEL, grantFinisherHotbar } from './finisher';
 import {
@@ -37,6 +49,13 @@ import {
   type SkillTreeFailReason,
 } from './skill-tree';
 import { xpForLevel } from './xp';
+
+/** Shard currency on the snapshot (not bag items). */
+export type Materials = MaterialCounts;
+
+function emptyMaterials(): Record<MaterialTier, number> {
+  return { common: 0, magic: 0, rare: 0 };
+}
 
 /** Mutable storage twin of HotbarSlots (readonly tuple cannot assign into fields). */
 type MutableHotbarSlots = [
@@ -78,6 +97,8 @@ export interface CharacterSnapshot {
   readonly equipment: Readonly<Equipment>;
   readonly quests: Readonly<Record<QuestId, QuestSave>>;
   readonly potions: Readonly<PotionStock>;
+  /** Forge shard currency (白/蓝/黄) — not bag cells. */
+  readonly materials: Materials;
 }
 
 export type CharacterCommand =
@@ -87,9 +108,12 @@ export type CharacterCommand =
   | { op: 'death-xp-toll' }
   | { op: 'set-quest-status'; questId: QuestId; status: QuestSave['status'] }
   | { op: 'take-item'; item: ItemInstance }
-  | { op: 'equip-from-bag'; index: number }
-  | { op: 'unequip'; slot: ItemSlot }
+  | { op: 'equip-from-bag'; index: number; target?: EquipSlot }
+  | { op: 'unequip'; slot: EquipSlot }
   | { op: 'melt-bag'; index: number }
+  | { op: 'salvage-bag'; index: number }
+  | { op: 'reroll-bag'; index: number }
+  | { op: 'fuse-bag'; indices: readonly [number, number, number] }
   /** current/max let the domain reject full-resource uses without consuming stock. */
   | { op: 'use-potion'; kind: 'life' | 'mana'; current: number; max: number }
   | { op: 'add-potion'; kind: 'life' | 'mana'; count?: number }
@@ -136,6 +160,9 @@ export type CharacterResult =
         | 'empty-equip'
         | 'empty-potion'
         | 'not-needed'
+        | 'legendary-locked'
+        | 'not-enough-materials'
+        | 'bad-recipe'
         | SkillTreeFailReason;
     };
 
@@ -188,6 +215,8 @@ export interface HydrateSorceressOptions {
   quests: Readonly<Record<QuestId, QuestSave>>;
   /** Old saves predate potions — absent means 0/0 (no retroactive stock). */
   potions?: PotionStock;
+  /** T4 wires save field; absent → zeros (in-memory default). */
+  materials?: Materials;
 }
 
 class CharacterDomainImpl implements CharacterDomain {
@@ -203,6 +232,7 @@ class CharacterDomainImpl implements CharacterDomain {
   #equipment: Equipment;
   #quests: Record<QuestId, QuestSave>;
   #potions: PotionStock;
+  #materials: Record<MaterialTier, number>;
 
   constructor(opts: CreateSorceressOptions) {
     const now = Date.now();
@@ -228,6 +258,7 @@ class CharacterDomainImpl implements CharacterDomain {
     this.#quests = emptyQuests();
     // Starting belt stock (D2 convention: a couple of reds, one blue).
     this.#potions = { life: 2, mana: 1 };
+    this.#materials = emptyMaterials();
     // Catch up level grants when constructed above level 1 (legacy migrate / fixtures).
     for (let lv = 2; lv <= this.#level; lv++) this.#applyOnboardingLevelGrant(lv);
   }
@@ -259,6 +290,11 @@ class CharacterDomainImpl implements CharacterDomain {
       life: Math.min(POTION_CAP, Math.max(0, Math.floor(opts.potions?.life ?? 0))),
       mana: Math.min(POTION_CAP, Math.max(0, Math.floor(opts.potions?.mana ?? 0))),
     };
+    domain.#materials = {
+      common: Math.max(0, Math.floor(opts.materials?.common ?? 0)),
+      magic: Math.max(0, Math.floor(opts.materials?.magic ?? 0)),
+      rare: Math.max(0, Math.floor(opts.materials?.rare ?? 0)),
+    };
     return domain;
   }
 
@@ -284,11 +320,17 @@ class CharacterDomainImpl implements CharacterDomain {
       case 'take-item':
         return this.#takeItem(command.item);
       case 'equip-from-bag':
-        return this.#equipFromBag(command.index);
+        return this.#equipFromBag(command.index, command.target);
       case 'unequip':
         return this.#unequip(command.slot);
       case 'melt-bag':
         return this.#meltBag(command.index);
+      case 'salvage-bag':
+        return this.#salvageBag(command.index);
+      case 'reroll-bag':
+        return this.#rerollBag(command.index);
+      case 'fuse-bag':
+        return this.#fuseBag(command.indices);
       case 'use-potion': {
         if (this.#potions[command.kind] <= 0) return { ok: false, reason: 'empty-potion' };
         const max = Number.isFinite(command.max) ? command.max : 0;
@@ -377,6 +419,7 @@ class CharacterDomainImpl implements CharacterDomain {
       equipment: deepClone(this.#equipment),
       quests: deepClone(this.#quests),
       potions: { ...this.#potions },
+      materials: { ...this.#materials },
     };
     const detached = deepClone(raw);
     return (shouldFreezeSnapshots() ? deepFreeze(detached) : detached) as DeepReadonly<CharacterSnapshot>;
@@ -425,8 +468,10 @@ class CharacterDomainImpl implements CharacterDomain {
   }
 
   #takeItem(item: ItemInstance): CharacterResult {
-    if (!this.#equipment[item.slot] && this.#level >= item.reqLevel) {
-      this.#equipment = { ...this.#equipment, [item.slot]: deepClone(item) };
+    // Walk equipSlotsFor first-empty (ring1 → ring2); full slots → bag.
+    const target = equipSlotsFor(item.slot).find((s) => !this.#equipment[s]);
+    if (target !== undefined && this.#level >= item.reqLevel) {
+      this.#equipment = { ...this.#equipment, [target]: deepClone(item) };
       return { ok: true };
     }
     const i = this.#bag.indexOf(null);
@@ -435,17 +480,27 @@ class CharacterDomainImpl implements CharacterDomain {
     return { ok: true };
   }
 
-  #equipFromBag(index: number): CharacterResult {
+  #equipFromBag(index: number, target?: EquipSlot): CharacterResult {
+    if (index < 0 || index >= this.#bag.length) return { ok: false, reason: 'bad-index' };
     const item = this.#bag[index];
     if (!item) return { ok: false, reason: 'empty-slot' };
     if (this.#level < item.reqLevel) return { ok: false, reason: 'level-req' };
-    const prev = this.#equipment[item.slot];
-    this.#equipment = { ...this.#equipment, [item.slot]: deepClone(item) };
+    const slots = equipSlotsFor(item.slot);
+    let dest: EquipSlot;
+    if (target !== undefined) {
+      if (!slots.includes(target)) return { ok: false, reason: 'bad-index' };
+      dest = target;
+    } else {
+      // First empty, else swap the primary slot (ring1 when both rings filled).
+      dest = slots.find((s) => !this.#equipment[s]) ?? slots[0]!;
+    }
+    const prev = this.#equipment[dest];
+    this.#equipment = { ...this.#equipment, [dest]: deepClone(item) };
     this.#bag[index] = prev ? deepClone(prev) : null;
     return { ok: true };
   }
 
-  #unequip(slot: ItemSlot): CharacterResult {
+  #unequip(slot: EquipSlot): CharacterResult {
     const item = this.#equipment[slot];
     if (!item) return { ok: false, reason: 'empty-equip' };
     const i = this.#bag.indexOf(null);
@@ -456,12 +511,92 @@ class CharacterDomainImpl implements CharacterDomain {
   }
 
   #meltBag(index: number): CharacterResult {
+    if (index < 0 || index >= this.#bag.length) return { ok: false, reason: 'bad-index' };
     const item = this.#bag[index];
     if (!item) return { ok: false, reason: 'empty-slot' };
+    if (item.rarity === 'legendary') return { ok: false, reason: 'legendary-locked' };
     const gold = meltGoldValue(item);
     this.#bag[index] = null;
     this.#gold += gold;
     return { ok: true, goldGained: gold, melted: true };
+  }
+
+  #bagItemAt(index: number): CharacterResult | ItemInstance {
+    if (index < 0 || index >= this.#bag.length) return { ok: false, reason: 'bad-index' };
+    const item = this.#bag[index];
+    if (!item) return { ok: false, reason: 'empty-slot' };
+    return item;
+  }
+
+  #addMaterials(delta: MaterialCounts): void {
+    this.#materials = {
+      common: this.#materials.common + delta.common,
+      magic: this.#materials.magic + delta.magic,
+      rare: this.#materials.rare + delta.rare,
+    };
+  }
+
+  #hasMaterials(cost: MaterialCounts): boolean {
+    return this.#materials.common >= cost.common
+      && this.#materials.magic >= cost.magic
+      && this.#materials.rare >= cost.rare;
+  }
+
+  #spendMaterials(cost: MaterialCounts): void {
+    this.#materials = {
+      common: this.#materials.common - cost.common,
+      magic: this.#materials.magic - cost.magic,
+      rare: this.#materials.rare - cost.rare,
+    };
+  }
+
+  #salvageBag(index: number): CharacterResult {
+    const got = this.#bagItemAt(index);
+    if ('ok' in got) return got;
+    if (got.rarity === 'legendary') return { ok: false, reason: 'legendary-locked' };
+    if (!canSalvage(got)) return { ok: false, reason: 'bad-recipe' };
+    const yield_ = salvageYield(got);
+    if (!yield_) return { ok: false, reason: 'bad-recipe' };
+    this.#bag[index] = null;
+    this.#addMaterials(yield_);
+    return { ok: true };
+  }
+
+  #rerollBag(index: number): CharacterResult {
+    const got = this.#bagItemAt(index);
+    if ('ok' in got) return got;
+    if (got.rarity === 'legendary') return { ok: false, reason: 'legendary-locked' };
+    if (!canReroll(got)) return { ok: false, reason: 'bad-recipe' };
+    const cost = rerollCost(got);
+    if (!cost) return { ok: false, reason: 'bad-recipe' };
+    if (!this.#hasMaterials(cost)) return { ok: false, reason: 'not-enough-materials' };
+    const next = buildRerollResult(got);
+    if (!next) return { ok: false, reason: 'bad-recipe' };
+    this.#spendMaterials(cost);
+    this.#bag[index] = deepClone(next);
+    return { ok: true };
+  }
+
+  #fuseBag(indices: readonly [number, number, number]): CharacterResult {
+    const [i0, i1, i2] = indices;
+    if (new Set(indices).size !== 3) return { ok: false, reason: 'bad-index' };
+    const items: ItemInstance[] = [];
+    for (const idx of indices) {
+      const got = this.#bagItemAt(idx);
+      if ('ok' in got) return got;
+      items.push(got);
+    }
+    if (items.some((it) => it.rarity === 'legendary')) {
+      return { ok: false, reason: 'legendary-locked' };
+    }
+    if (!canFuse(items)) return { ok: false, reason: 'bad-recipe' };
+    const result = buildFuseResult(items);
+    if (!result) return { ok: false, reason: 'bad-recipe' };
+    // Clear inputs, place fused item in the lowest index.
+    const dest = Math.min(i0, i1, i2);
+    for (const idx of indices) this.#bag[idx] = null;
+    this.#bag[dest] = deepClone(result);
+    return { ok: true };
   }
 }
 

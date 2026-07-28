@@ -7,6 +7,7 @@ import type {
   EffectDef,
   EmitterDef,
   EmitterKind,
+  SpriteDef,
   SubEmitterDef,
 } from './effect-def';
 
@@ -43,6 +44,12 @@ export interface FxSpawnPort {
   rise(
     x: number, y: number, z: number,
     color: EffectColor, count?: number, spread?: number,
+  ): FxSpawnLease;
+  /** Sprite emitter (PR8 T1) — speed = radial spread like burst. */
+  sprite(
+    x: number, y: number, z: number,
+    color: EffectColor, count: number, speed: number | undefined,
+    def: SpriteDef,
   ): FxSpawnLease;
 }
 
@@ -89,6 +96,9 @@ const DEFAULT_LIFE: Record<EmitterKind, number> = {
   pop: 0.16,
   rise: 1.5,
   custom: 0.5,
+  // Just over FxSystem.spriteBurst's per-particle life — the lease is the
+  // backstop cleanup; particles should have died naturally by then.
+  sprite: 1.0,
 };
 
 function childEmitterIds(def: EffectDef): Set<string> {
@@ -356,6 +366,15 @@ export class EffectExecutor {
         lease = this.port.rise(
           origin.x, origin.y, origin.z, edef.color, edef.count, edef.spread,
         );
+        break;
+      case 'sprite':
+        // validateEffectDef requires sprite on kind 'sprite'; guard anyway so
+        // unvalidated defs degrade to a no-op instead of throwing.
+        if (edef.sprite) {
+          lease = this.port.sprite(
+            origin.x, origin.y, origin.z, edef.color, edef.count, edef.speed, edef.sprite,
+          );
+        }
         break;
       case 'custom':
         // Escape hatch — no presentation in T2; T3 may bind customStep hooks.

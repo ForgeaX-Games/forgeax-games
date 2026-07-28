@@ -4,53 +4,20 @@
 
 import { describe, expect, mock, test } from 'bun:test';
 
-const DirectionalLight = Symbol('DirectionalLight');
-const PointLight = Symbol('PointLight');
-const Transform = Symbol('Transform');
-const MeshFilter = Symbol('MeshFilter');
-const MeshRenderer = Symbol('MeshRenderer');
-const Camera = Symbol('Camera');
-const SceneInstance = Symbol('SceneInstance');
-const Skin = Symbol('Skin');
-const AnimationPlayer = Symbol('AnimationPlayer');
-const ChildOf = Symbol('ChildOf');
-
-mock.module('@forgeax/engine-runtime', () => ({
+// Engine mocks come from the shared registry (process-global mock identity —
+// see tools/engine-test-mocks.ts header); only './heroes' is mocked locally.
+import {
   AnimationPlayer,
   Camera,
   ChildOf,
   DirectionalLight,
-  Materials: {
-    standard: (data: unknown) => data,
-  },
   MeshFilter,
   MeshRenderer,
   PointLight,
   SceneInstance,
   Skin,
   Transform,
-  perspective: (p: unknown) => p,
-  quat: {
-    create: () => [0, 0, 0, 1],
-    fromAxisAngle: () => undefined,
-    multiply: () => undefined,
-  },
-}));
-
-mock.module('@forgeax/engine-pack/guid', () => ({
-  AssetGuid: {
-    parse: (dashForm: string) => {
-      if (!/^[0-9a-f-]{36}$/i.test(dashForm)) {
-        return { ok: false as const, error: new Error('bad guid') };
-      }
-      return { ok: true as const, value: dashForm };
-    },
-  },
-}));
-
-mock.module('@forgeax/engine-assets-runtime', () => ({
-  HANDLE_CUBE: 1,
-}));
+} from '../tools/engine-test-mocks';
 
 mock.module('./heroes', () => ({
   getHeroDef: () => ({

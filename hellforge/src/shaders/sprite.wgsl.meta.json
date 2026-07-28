@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "shader",
+  "source": "sprite.wgsl",
+  "importSettings": { "materialShaderIdentifier": "hellforge::sprite" },
+  "subAssets": [
+    { "guid": "cf141ce5-34d6-4437-80a2-86e554659497", "sourceIndex": 0, "kind": "material-shader" }
+  ],
+  "paramSchema": [
+    { "name": "baseColor", "type": "color" },
+    { "name": "frame", "type": "f32" },
+    { "name": "frames", "type": "f32" },
+    { "name": "cols", "type": "f32" },
+    { "name": "rows", "type": "f32" },
+    { "name": "billboard", "type": "f32" },
+    { "name": "distort", "type": "f32" },
+    { "name": "time", "type": "f32" },
+    { "name": "erosion", "type": "f32" },
+    { "name": "blendFrames", "type": "f32" },
+    { "name": "sheet", "type": "texture2d" },
+    { "name": "noise", "type": "texture2d" }
+  ]
+}

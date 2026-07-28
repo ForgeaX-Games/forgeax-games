@@ -1,7 +1,9 @@
 // Hellforge UI icon registry — real art replaces the emoji stand-ins
 // (UI-CUTSCENE-UPGRADE-PLAN.md §2). PNGs live in assets/ui/icons/ and are
 // user-owned AI-generated assets ported from the aidiablo reference project
-// (dist/icons/, v0.5.0). No Blizzard art, no aidiablo code.
+// (dist/icons/, v0.5.0). PR10 gloves/belt/offhand also from aidiablo
+// dist/icons v0.5.0 (leather_gloves / sash / orb/glowing_orb). No Blizzard art,
+// no aidiablo code.
 //
 // Consumption: domain meta carries icon KEYS (ItemSlot / SkillId / ClassId);
 // only this module maps keys to pixels. Empty paper-doll slots render the same
@@ -25,12 +27,15 @@ export function uiIconUrl(rel: string): string {
 }
 
 const SLOT_ICON_FILE: Record<ItemSlot, string> = {
-  weapon: 'weapon.png', // crystal_staff.png (hellforge weapons are staves)
-  helm: 'helm.png', // iron_helm.png
-  armor: 'armor.png', // chain_mail.png
-  boots: 'boots.png', // leather_boots.png
-  ring: 'ring.png',
-  amulet: 'amulet.png',
+  weapon:  'weapon.png', // crystal_staff.png (hellforge weapons are staves)
+  helm:    'helm.png', // iron_helm.png
+  armor:   'armor.png', // chain_mail.png
+  boots:   'boots.png', // leather_boots.png
+  ring:    'ring.png',
+  amulet:  'amulet.png',
+  gloves:  'gloves.png', // leather_gloves.png (aidiablo dist/icons v0.5.0)
+  belt:    'belt.png', // sash.png (aidiablo dist/icons v0.5.0)
+  offhand: 'offhand.png', // orb/glowing_orb.png (aidiablo dist/icons v0.5.0)
 };
 
 /** Skill icons keyed by SkillId — value of SkillDef.icon (skills.ts DISPLAY). */
@@ -113,6 +118,17 @@ export function slotSilhouetteSvg(slot: ItemSlot, sizePx: number, color = '#8a7a
     case 'amulet':
       body = `<path d="M12 8 Q22 20 32 8" fill="none" stroke="${color}" stroke-width="3"/>` +
         `<circle cx="22" cy="24" r="6" fill="${color}"/>`;
+      break;
+    case 'gloves':
+      body = `<path d="M14 14 L18 10 L22 14 L26 10 L30 14 L30 28 L26 34 L18 34 L14 28 Z" fill="${color}"/>`;
+      break;
+    case 'belt':
+      body = `<path d="M10 20 L34 20 L34 28 L10 28 Z" fill="${color}"/>` +
+        `<rect x="19" y="18" width="6" height="12" fill="${color}"/>`;
+      break;
+    case 'offhand':
+      body = `<circle cx="22" cy="22" r="10" fill="none" stroke="${color}" stroke-width="3"/>` +
+        `<path d="M22 12 L22 32 M12 22 L32 22" stroke="${color}" stroke-width="2"/>`;
       break;
   }
   return `<svg viewBox="0 0 44 44" width="${sizePx}" height="${sizePx}" aria-hidden="true">${body}</svg>`;

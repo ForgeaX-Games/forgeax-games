@@ -3,10 +3,18 @@ import { createSorceressDomain } from './character-domain';
 import {
   affixRangeFor,
   compareItems,
+  computeBonus,
   createFrostforgedWand,
+  emptyEquipment,
+  equipSlotsFor,
+  EQUIP_SLOT_ORDER,
   meltGoldValue,
+  rollItem,
+  SLOT_ORDER,
+  type EquipSlot,
   type Item,
   type ItemInstance,
+  type ItemSlot,
 } from './items';
 import { hydrateCharacter, serializeCharacter } from './save';
 
@@ -165,5 +173,82 @@ describe('affixRangeFor (Exile-UI tooltip ranges)', () => {
       slot: 'ring', rarity: 'magic', name: '铜环', ilvl: 1, reqLevel: 1, affixes: [], score: 0,
     };
     expect(affixRangeFor(item, 3)).toBeNull();
+  });
+});
+
+describe('PR10 T1 slot model (6→10)', () => {
+  test("equipSlotsFor('ring') → ['ring1','ring2']; identity otherwise", () => {
+    expect(equipSlotsFor('ring')).toEqual(['ring1', 'ring2']);
+    expect(equipSlotsFor('weapon')).toEqual(['weapon']);
+    expect(equipSlotsFor('gloves')).toEqual(['gloves']);
+    expect(equipSlotsFor('belt')).toEqual(['belt']);
+    expect(equipSlotsFor('offhand')).toEqual(['offhand']);
+  });
+
+  test('emptyEquipment has ten null EquipSlot keys', () => {
+    expect(EQUIP_SLOT_ORDER).toHaveLength(10);
+    const eq = emptyEquipment();
+    for (const slot of EQUIP_SLOT_ORDER) {
+      expect(eq[slot]).toBeNull();
+    }
+    expect(Object.keys(eq).sort()).toEqual([...EQUIP_SLOT_ORDER].sort());
+  });
+
+  test('computeBonus sums affixes across all ten equip slots', () => {
+    const eq = emptyEquipment();
+    const stub = (slot: ItemSlot, instanceId: string): ItemInstance => ({
+      instanceId,
+      slot,
+      rarity: 'magic',
+      name: 'stub',
+      ilvl: 1,
+      reqLevel: 1,
+      affixes: [{ stat: 'maxHp', v: 1, label: '+1 生命上限' }],
+      score: 1,
+    });
+    const fill: Array<[EquipSlot, ItemSlot]> = [
+      ['weapon', 'weapon'],
+      ['helm', 'helm'],
+      ['armor', 'armor'],
+      ['boots', 'boots'],
+      ['amulet', 'amulet'],
+      ['gloves', 'gloves'],
+      ['belt', 'belt'],
+      ['ring1', 'ring'],
+      ['ring2', 'ring'],
+      ['offhand', 'offhand'],
+    ];
+    for (const [eqSlot, itemSlot] of fill) {
+      eq[eqSlot] = stub(itemSlot, eqSlot);
+    }
+    expect(computeBonus(eq).maxHp).toBe(10);
+  });
+
+  test('rollItem produces gloves/belt/offhand over a seeded draw sample', () => {
+    expect(SLOT_ORDER).toEqual(expect.arrayContaining(['gloves', 'belt', 'offhand']));
+
+    const seen = new Set<ItemSlot>();
+    const orig = Math.random;
+    try {
+      for (let idx = 0; idx < SLOT_ORDER.length; idx++) {
+        let n = 0;
+        Math.random = () => {
+          n += 1;
+          // First draw picks SLOT_ORDER[idx]; later draws stay in-range for affixes.
+          if (n === 1) return (idx + 0.5) / SLOT_ORDER.length;
+          return 0.5;
+        };
+        seen.add(rollItem('common', 1).slot);
+      }
+    } finally {
+      Math.random = orig;
+    }
+    expect(seen.has('gloves')).toBe(true);
+    expect(seen.has('belt')).toBe(true);
+    expect(seen.has('offhand')).toBe(true);
+
+    expect(rollItem('magic', 1, 'gloves').name).toContain('布手套');
+    expect(rollItem('magic', 4, 'belt').name).toContain('铁');
+    expect(rollItem('magic', 7, 'offhand').name).toContain('法器');
   });
 });

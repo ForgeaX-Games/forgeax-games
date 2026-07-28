@@ -1,7 +1,10 @@
 // Hellforge items — the loot-game core (装备/词条/品质/装备等级).
 //
 // Itemization model:
-//   • 6 equip slots (weapon/helm/armor/boots/ring/amulet — a paper doll)
+//   • ItemSlot (drop/identity): weapon/helm/armor/boots/ring/amulet/gloves/
+//     belt/offhand — rings stay a single item slot
+//   • EquipSlot (paper doll): 10 keys; ItemSlot 'ring' maps to ring1+ring2
+//     via equipSlotsFor()
 //   • 4 rarities: 普通 (1 weak implicit) / 魔法 (1-2 affixes) / 稀有 (3-4)
 //     / 传奇 (fixed-name uniques with a curated affix set rolled high)
 //   • 16 affix stats split D2-style: PREFIXES are offense (damage%, per-
@@ -14,7 +17,15 @@
 //
 // The bag/paper-doll UI lives in inventory-ui.ts; this module is pure data.
 
-export type ItemSlot = 'weapon' | 'helm' | 'armor' | 'boots' | 'ring' | 'amulet';
+export type ItemSlot =
+  | 'weapon' | 'helm' | 'armor' | 'boots' | 'ring' | 'amulet'
+  | 'gloves' | 'belt' | 'offhand';
+
+/** Paper-doll / bonus keys — rings split; items still use ItemSlot 'ring'. */
+export type EquipSlot =
+  | 'weapon' | 'helm' | 'armor' | 'boots' | 'amulet'
+  | 'gloves' | 'belt' | 'ring1' | 'ring2' | 'offhand';
+
 export type Rarity = 'common' | 'magic' | 'rare' | 'legendary';
 
 export type AffixStat =
@@ -74,23 +85,49 @@ export const RARITY_META: Record<Rarity, { label: string; color: string; beam: [
 };
 
 export const SLOT_META: Record<ItemSlot, { label: string }> = {
-  weapon: { label: '武器' },
-  helm:   { label: '头盔' },
-  armor:  { label: '胸甲' },
-  boots:  { label: '靴子' },
-  ring:   { label: '戒指' },
-  amulet: { label: '项链' },
+  weapon:  { label: '武器' },
+  helm:    { label: '头盔' },
+  armor:   { label: '胸甲' },
+  boots:   { label: '靴子' },
+  ring:    { label: '戒指' },
+  amulet:  { label: '项链' },
+  gloves:  { label: '手套' },
+  belt:    { label: '腰带' },
+  offhand: { label: '法器' },
 };
 
-export const SLOT_ORDER: ItemSlot[] = ['weapon', 'helm', 'armor', 'boots', 'ring', 'amulet'];
+/** Drop-pool order for random rolls (ItemSlot identity). */
+export const SLOT_ORDER: ItemSlot[] = [
+  'weapon', 'helm', 'armor', 'boots', 'ring', 'amulet', 'gloves', 'belt', 'offhand',
+];
+
+/** Paper-doll / computeBonus iteration order (EquipSlot). */
+export const EQUIP_SLOT_ORDER: EquipSlot[] = [
+  'weapon', 'helm', 'armor', 'boots', 'amulet', 'gloves', 'belt', 'ring1', 'ring2', 'offhand',
+];
+
+/** Map an item's slot to the doll slot(s) it can occupy. */
+export function equipSlotsFor(slot: ItemSlot): EquipSlot[] {
+  if (slot === 'ring') return ['ring1', 'ring2'];
+  return [slot];
+}
+
+/** EquipSlot → ItemSlot for labels/icons (ring1/ring2 → ring). */
+export function itemSlotForEquip(slot: EquipSlot): ItemSlot {
+  if (slot === 'ring1' || slot === 'ring2') return 'ring';
+  return slot;
+}
 
 const BASE_NAMES: Record<ItemSlot, string[]> = {
-  weapon: ['焦木杖', '熔岩杖', '星核杖'],
-  helm:   ['布兜帽', '铁面盔', '角冠'],
-  armor:  ['灰布袍', '烬羽斗篷', '熔鳞甲'],
-  boots:  ['麻绳靴', '皮行靴', '熔纹靴'],
-  ring:   ['铜环', '银纹戒', '曜石戒'],
-  amulet: ['骨符', '烬石坠', '熔核项链'],
+  weapon:  ['焦木杖', '熔岩杖', '星核杖'],
+  helm:    ['布兜帽', '铁面盔', '角冠'],
+  armor:   ['灰布袍', '烬羽斗篷', '熔鳞甲'],
+  boots:   ['麻绳靴', '皮行靴', '熔纹靴'],
+  ring:    ['铜环', '银纹戒', '曜石戒'],
+  amulet:  ['骨符', '烬石坠', '熔核项链'],
+  gloves:  ['布手套', '铁护手', '熔纹手套'],
+  belt:    ['布腰带', '铁束带', '熔纹腰带'],
+  offhand: ['布纹法器', '铁环法器', '熔核法器'],
 };
 
 interface AffixDef { stat: AffixStat; name: string; lo: number; hi: number }
@@ -323,10 +360,13 @@ export function rollDrop(monsterLevel: number, isBoss: boolean, magicFind: numbe
   return rollItem(rarity, isBoss ? Math.min(10, ilvl + 1) : ilvl);
 }
 
-export type Equipment = Record<ItemSlot, ItemInstance | null>;
+export type Equipment = Record<EquipSlot, ItemInstance | null>;
 
 export function emptyEquipment(): Equipment {
-  return { weapon: null, helm: null, armor: null, boots: null, ring: null, amulet: null };
+  return {
+    weapon: null, helm: null, armor: null, boots: null, amulet: null,
+    gloves: null, belt: null, ring1: null, ring2: null, offhand: null,
+  };
 }
 
 export function computeBonus(eq: Readonly<Equipment>): EquipBonus {
@@ -335,7 +375,7 @@ export function computeBonus(eq: Readonly<Equipment>): EquipBonus {
     maxHp: 0, maxMana: 0, hpRegen: 0, manaRegen: 0, moveSpd: 0, cdr: 0,
     goldFind: 0, magicFind: 0, xpGain: 0, lifeOnKill: 0,
   };
-  for (const slot of SLOT_ORDER) {
+  for (const slot of EQUIP_SLOT_ORDER) {
     const item = eq[slot];
     if (!item) continue;
     for (const a of item.affixes) b[a.stat] += a.v;

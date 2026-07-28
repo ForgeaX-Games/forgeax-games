@@ -46,6 +46,7 @@ acceptance and licensed audio remain open human gates** — see Open gates.
 | Tab | den automap |
 | V | camp-only showcase toggle (combat / loot / entrance off) |
 | R | respawn after death (camp; progression kept) |
+| F | forge / 熔炉方块 (salvage / re-roll / fuse) |
 | F10 | render-settings panel |
 | Esc | close major panels / automap |
 

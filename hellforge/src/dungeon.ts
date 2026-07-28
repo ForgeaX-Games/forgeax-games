@@ -73,6 +73,11 @@ export class Dungeon {
   /** World-space fire fixtures (torch flames / braziers) — light-pool seats. */
   firePoints: Array<{ x: number; y: number; z: number }> = [];
   /**
+   * Geometry-derived flame/brazier anchors only (no antechamber light seats —
+   * PR8 T3 ambient-fire ignition points; `firePoints` stays the light SSOT).
+   */
+  flameFixtures: Array<{ x: number; y: number; z: number; brazier: boolean }> = [];
+  /**
    * World-space camera probe blockers for den walls — via
    * `denCameraBlockerStubs` + `cameraBlockersToProbeBlockers`. Same PR1
    * `ProbeBlocker` shape main already feeds the spring-arm.
@@ -102,13 +107,15 @@ export class Dungeon {
     // Seat point above the emissive mesh (flame tip +0.45, brazier bowl +0.75)
     // so a light parked there sits OUTSIDE the mesh — a shadow-casting light
     // inside its own fixture geometry would be fully occluded by it.
-    this.firePoints = this.layout.geometry
+    this.flameFixtures = this.layout.geometry
       .filter((g) => g.kind === 'flame' || g.kind === 'brazier')
       .map((g) => ({
         x: g.x + DUNGEON_ORIGIN.x,
         y: g.kind === 'flame' ? g.y + 0.45 : g.y + 0.75,
         z: g.z + DUNGEON_ORIGIN.z,
+        brazier: g.kind === 'brazier',
       }));
+    this.firePoints = this.flameFixtures.map(({ x, y, z }) => ({ x, y, z }));
 
     // T6: den wall proxies (modular nav.blockers / greybox walk — single helper).
     this.denProbeBlockers = cameraBlockersToProbeBlockers(

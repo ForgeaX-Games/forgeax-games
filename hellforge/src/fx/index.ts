@@ -8,6 +8,7 @@ export {
   type EmitterDef,
   type EmitterKind,
   type EmitterMode,
+  type SpriteDef,
   type SubEmitterDef,
   type SubEmitterTrigger,
   type TrailDef,

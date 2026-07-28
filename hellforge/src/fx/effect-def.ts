@@ -13,7 +13,7 @@ export type EffectColor =
   | 'shadow'
   | 'heal';
 
-export type EmitterKind = 'burst' | 'pop' | 'rise' | 'custom';
+export type EmitterKind = 'burst' | 'pop' | 'rise' | 'custom' | 'sprite';
 
 /** Particle integration mode — mirrors FxSystem particle modes. */
 export type EmitterMode = 'shrink' | 'rise' | 'pop';
@@ -26,6 +26,40 @@ export interface EffectBudget {
   readonly maxEmitters: number;
   readonly maxParticles: number;
   readonly maxTrails: number;
+}
+
+/** Sprite emitter presentation (PR8 T1) — textured billboard quads. */
+export interface SpriteDef {
+  /** Sheet registry id (fx/textures.ts) — validated at spawn, not here. */
+  readonly sheet: string;
+  readonly fps?: number;
+  readonly loop?: boolean;
+  readonly blend?: 'additive' | 'premult';
+  readonly billboard?: 'none' | 'spherical' | 'cylindrical';
+  /** UV-noise distortion strength (0 = off; sane 0.02-0.10). */
+  readonly distort?: number;
+  readonly size?: number;
+  /** Scale lerp target over life (default = size). */
+  readonly endSize?: number;
+  /** Erosion fade start as a fraction of life. */
+  readonly fadeOutFrac?: number;
+  /**
+   * Per-particle life in seconds (PR8 T3). Default: 0.9 (spriteBurst one-shot).
+   * Emitters with a particle life beyond the executor's DEFAULT_LIFE.sprite
+   * backstop (1.0s) must also declare EmitterDef.life so the spawn lease
+   * outlives the particle.
+   */
+  readonly life?: number;
+  /**
+   * Ground-residue route (PR8 T3): flat stationary decal clamped to ground
+   * height instead of a radial burst. Defaults: blend premult, life 2.5s.
+   */
+  readonly decal?: boolean;
+  /**
+   * Gravity override (radial route only) — negative falls (default −7),
+   * positive floats upward (rise-style embers).
+   */
+  readonly gy?: number;
 }
 
 export interface EmitterDef {
@@ -41,6 +75,8 @@ export interface EmitterDef {
   readonly spread?: number;
   readonly life?: number;
   readonly mode?: EmitterMode;
+  /** Required when kind is 'sprite' (PR8 T1); ignored by other kinds. */
+  readonly sprite?: SpriteDef;
 }
 
 export interface BehaviorDef {
@@ -81,10 +117,47 @@ export type ValidateEffectDefResult =
 const EFFECT_COLORS = new Set<string>([
   'fire', 'ice', 'lightning', 'blood', 'gold', 'shadow', 'heal',
 ]);
-const EMITTER_KINDS = new Set<string>(['burst', 'pop', 'rise', 'custom']);
+const EMITTER_KINDS = new Set<string>(['burst', 'pop', 'rise', 'custom', 'sprite']);
 const EMITTER_MODES = new Set<string>(['shrink', 'rise', 'pop']);
 const BEHAVIOR_TYPES = new Set<string>(['gravity', 'drag', 'customStep']);
 const SUB_TRIGGERS = new Set<string>(['onSpawn', 'onDeath', 'atAge']);
+const SPRITE_BLENDS = new Set<string>(['additive', 'premult']);
+const SPRITE_BILLBOARDS = new Set<string>(['none', 'spherical', 'cylindrical']);
+
+/** Sprite emitter numeric fields that must be >= 0 when set. */
+const SPRITE_NUMERIC_FIELDS = ['fps', 'distort', 'size', 'endSize', 'fadeOutFrac', 'life'] as const;
+
+/** Validate a SpriteDef block; `path` scopes error messages. Unknown keys tolerated. */
+function validateSpriteDef(sprite: unknown, path: string, errors: string[]): void {
+  if (!isPlainObject(sprite)) {
+    errors.push(`${path} must be an object`);
+    return;
+  }
+  if (!isNonEmptyString(sprite.sheet)) {
+    errors.push(`${path}.sheet must be a non-empty string`);
+  }
+  if (sprite.blend !== undefined && (!isNonEmptyString(sprite.blend) || !SPRITE_BLENDS.has(sprite.blend))) {
+    errors.push(`${path}.blend must be one of additive|premult when set`);
+  }
+  if (sprite.billboard !== undefined && (!isNonEmptyString(sprite.billboard) || !SPRITE_BILLBOARDS.has(sprite.billboard))) {
+    errors.push(`${path}.billboard must be one of none|spherical|cylindrical when set`);
+  }
+  if (sprite.loop !== undefined && typeof sprite.loop !== 'boolean') {
+    errors.push(`${path}.loop must be a boolean when set`);
+  }
+  if (sprite.decal !== undefined && typeof sprite.decal !== 'boolean') {
+    errors.push(`${path}.decal must be a boolean when set`);
+  }
+  for (const key of SPRITE_NUMERIC_FIELDS) {
+    if (sprite[key] !== undefined && !isNonNegNumber(sprite[key])) {
+      errors.push(`${path}.${key} must be a number >= 0 when set`);
+    }
+  }
+  // gy may be negative (gravity) or positive (buoyancy) — any finite number.
+  if (sprite.gy !== undefined && (typeof sprite.gy !== 'number' || !Number.isFinite(sprite.gy))) {
+    errors.push(`${path}.gy must be a finite number when set`);
+  }
+}
 
 function isPlainObject(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -149,7 +222,7 @@ export function validateEffectDef(def: unknown): ValidateEffectDefResult {
         emitterIds.add(e.id);
       }
       if (!isNonEmptyString(e.kind) || !EMITTER_KINDS.has(e.kind)) {
-        errors.push(`${path}.kind must be one of burst|pop|rise|custom`);
+        errors.push(`${path}.kind must be one of burst|pop|rise|custom|sprite`);
       }
       if (!isNonEmptyString(e.color) || !EFFECT_COLORS.has(e.color)) {
         errors.push(`${path}.color must be a known EffectColor`);
@@ -172,6 +245,14 @@ export function validateEffectDef(def: unknown): ValidateEffectDefResult {
       }
       if (e.mode !== undefined && (!isNonEmptyString(e.mode) || !EMITTER_MODES.has(e.mode))) {
         errors.push(`${path}.mode must be one of shrink|rise|pop when set`);
+      }
+      if (e.kind === 'sprite') {
+        if (e.sprite === undefined) {
+          errors.push(`${path}.sprite is required when kind is sprite`);
+          emittersStructOk = false;
+        } else {
+          validateSpriteDef(e.sprite, `${path}.sprite`, errors);
+        }
       }
     }
   }

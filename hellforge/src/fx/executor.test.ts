@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from 'bun:test';
 import { FX_DEV_ASSERTS, setFxDevAsserts } from './budget';
-import type { EffectColor, EffectDef, EmitterDef } from './effect-def';
+import type { EffectColor, EffectDef, EmitterDef, SpriteDef } from './effect-def';
 import {
   EffectExecutor,
   type EffectHandle,
@@ -16,7 +16,8 @@ afterEach(() => {
 type SpawnCall =
   | { kind: 'burst'; x: number; y: number; z: number; color: EffectColor; count?: number; speed?: number }
   | { kind: 'pop'; x: number; y: number; z: number; color: EffectColor; size?: number }
-  | { kind: 'rise'; x: number; y: number; z: number; color: EffectColor; count?: number; spread?: number };
+  | { kind: 'rise'; x: number; y: number; z: number; color: EffectColor; count?: number; spread?: number }
+  | { kind: 'sprite'; x: number; y: number; z: number; color: EffectColor; count: number; speed: number | undefined; def: SpriteDef };
 
 function makeLease(onDispose: () => void): FxSpawnLease {
   let disposed = false;
@@ -44,6 +45,13 @@ function recordingPort(): FxSpawnPort & { calls: SpawnCall[]; disposeCount: numb
     },
     rise(x: number, y: number, z: number, color: EffectColor, count?: number, spread?: number) {
       calls.push({ kind: 'rise', x, y, z, color, count, spread });
+      return makeLease(() => { port.disposeCount++; });
+    },
+    sprite(
+      x: number, y: number, z: number,
+      color: EffectColor, count: number, speed: number | undefined, def: SpriteDef,
+    ) {
+      calls.push({ kind: 'sprite', x, y, z, color, count, speed, def });
       return makeLease(() => { port.disposeCount++; });
     },
   };
@@ -137,6 +145,7 @@ describe('EffectExecutor', () => {
       burst() { spawnCount++; return noopLease(); },
       pop() { spawnCount++; return noopLease(); },
       rise() { spawnCount++; return noopLease(); },
+      sprite() { spawnCount++; return noopLease(); },
     });
     const effect = def({
       emitters: [
@@ -519,6 +528,7 @@ describe('EffectExecutor', () => {
         return noop();
       },
       rise() { return noop(); },
+      sprite() { return noop(); },
     };
     ex = new EffectExecutor(port);
 
@@ -558,6 +568,7 @@ describe('EffectExecutor', () => {
       },
       pop() { return noop(); },
       rise() { return noop(); },
+      sprite() { return noop(); },
     });
     const effect = def({
       emitters: [{ id: 'a', kind: 'burst', color: 'fire', count: 3 }],
@@ -585,5 +596,46 @@ describe('EffectExecutor', () => {
     expect(ex.activeCount()).toBe(1);
     ex.tick(0.1);
     expect(ex.activeCount()).toBe(0);
+  });
+
+  test("case 'sprite' presents via the sprite port; release disposes its lease (PR8 T1)", () => {
+    const port = recordingPort();
+    const ex = new EffectExecutor(port);
+    const sprite: SpriteDef = { sheet: 'flame', fps: 12, blend: 'additive', billboard: 'spherical' };
+    const handle = ex.play(
+      def({
+        emitters: [
+          { id: 'flames', kind: 'sprite', color: 'fire', count: 4, speed: 2.2, life: 0.2, sprite },
+        ],
+      }),
+      { x: 1, y: 0.5, z: 2 },
+    );
+    expect(handle).not.toBeNull();
+    expect(port.calls).toEqual([
+      { kind: 'sprite', x: 1, y: 0.5, z: 2, color: 'fire' as EffectColor, count: 4, speed: 2.2, def: sprite },
+    ]);
+    expect(port.disposeCount).toBe(0);
+    ex.release(handle!);
+    expect(port.disposeCount).toBe(1);
+    // Double release stays a safe no-op.
+    ex.release(handle!);
+    expect(port.disposeCount).toBe(1);
+  });
+
+  test('sprite emitter without a sprite block degrades to a no-op presentation', () => {
+    // Unvalidated def — play() only budget-checks; the port must not throw.
+    const port = recordingPort();
+    const ex = new EffectExecutor(port);
+    const handle = ex.play(
+      def({
+        emitters: [
+          { id: 'broken', kind: 'sprite', color: 'fire', count: 1 },
+        ],
+      }),
+      { x: 0, y: 0, z: 0 },
+    );
+    expect(handle).not.toBeNull();
+    expect(port.calls).toHaveLength(0);
+    ex.release(handle!);
   });
 });

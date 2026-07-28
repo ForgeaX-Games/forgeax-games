@@ -183,6 +183,164 @@ describe('serialize / hydrate round trip', () => {
     expect(env.checkpointId).toBe('cinderwatch');
   });
 
+  test('PR10 T4: round-trip new slots + materials; schema version stays 1', () => {
+    const domain = createSorceressDomain({ playerName: '铸炉', id: 'pr10-rt', level: 5, gold: 10 });
+    const gear: Array<Partial<ItemInstance> & { slot: ItemInstance['slot']; instanceId: string }> = [
+      { instanceId: 'g-gloves', slot: 'gloves', name: '手套' },
+      { instanceId: 'g-belt', slot: 'belt', name: '腰带' },
+      { instanceId: 'g-ring1', slot: 'ring', name: '戒指甲' },
+      { instanceId: 'g-ring2', slot: 'ring', name: '戒指乙' },
+      { instanceId: 'g-offhand', slot: 'offhand', name: '法器' },
+    ];
+    for (const g of gear) {
+      expect(domain.dispatch({
+        op: 'take-item',
+        item: sampleItem({
+          ...g,
+          rarity: 'magic',
+          affixes: [{ stat: 'maxHp', v: 5, label: '+5 HP' }],
+        }),
+      }).ok).toBe(true);
+    }
+    // Occupy amulet so the salvage fodder lands in the bag.
+    domain.dispatch({
+      op: 'take-item',
+      item: sampleItem({
+        instanceId: 'amu-fill',
+        slot: 'amulet',
+        rarity: 'common',
+        name: '占位',
+        affixes: [{ stat: 'maxHp', v: 1, label: '+1' }],
+      }),
+    });
+    domain.dispatch({
+      op: 'take-item',
+      item: sampleItem({
+        instanceId: 'salv-me',
+        slot: 'amulet',
+        rarity: 'rare',
+        name: '拆解物',
+        affixes: [{ stat: 'maxHp', v: 1, label: '+1' }],
+      }),
+    });
+    const salvIdx = domain.snapshot().bag.findIndex((i) => i?.instanceId === 'salv-me');
+    expect(salvIdx).toBeGreaterThanOrEqual(0);
+    expect(domain.dispatch({ op: 'salvage-bag', index: salvIdx }).ok).toBe(true);
+    expect(domain.snapshot().materials.rare).toBe(4);
+
+    const env = serializeCharacter(domain.snapshot());
+    expect(env.schemaVersion).toBe(SAVE_SCHEMA_VERSION);
+    expect(SAVE_SCHEMA_VERSION).toBe(1);
+    expect(env.progression.materials).toEqual({ common: 0, magic: 0, rare: 4 });
+    expect(env.inventory.equipment.gloves?.instanceId).toBe('g-gloves');
+    expect(env.inventory.equipment.belt?.instanceId).toBe('g-belt');
+    expect(env.inventory.equipment.ring1?.instanceId).toBe('g-ring1');
+    expect(env.inventory.equipment.ring2?.instanceId).toBe('g-ring2');
+    expect(env.inventory.equipment.offhand?.instanceId).toBe('g-offhand');
+
+    const restored = hydrateCharacter(env).snapshot();
+    expect(restored.materials).toEqual({ common: 0, magic: 0, rare: 4 });
+    expect(restored.equipment.gloves?.instanceId).toBe('g-gloves');
+    expect(restored.equipment.belt?.instanceId).toBe('g-belt');
+    expect(restored.equipment.ring1?.instanceId).toBe('g-ring1');
+    expect(restored.equipment.ring2?.instanceId).toBe('g-ring2');
+    expect(restored.equipment.offhand?.instanceId).toBe('g-offhand');
+  });
+
+  test('PR10 T4 merge gate: legacy 6-slot envelope with ring key, no materials', () => {
+    const base = validEnvelope();
+    const ringItem = sampleItem({
+      instanceId: 'legacy-ring',
+      slot: 'ring',
+      name: '旧戒指',
+      rarity: 'magic',
+      affixes: [{ stat: 'maxHp', v: 3, label: '+3 HP' }],
+    });
+    // Pre-PR10 wire shape: 6 doll slots, key `ring`, no materials / new slots.
+    const legacyRaw = {
+      ...base,
+      schemaVersion: 1,
+      progression: {
+        level: base.progression.level,
+        xp: base.progression.xp,
+        gold: base.progression.gold,
+        unspentSkillPoints: base.progression.unspentSkillPoints,
+        skillRanks: base.progression.skillRanks,
+        hotbar: base.progression.hotbar,
+        selectedHotbarSlot: base.progression.selectedHotbarSlot,
+        // intentionally omit materials + potions
+      },
+      inventory: {
+        bag: base.inventory.bag,
+        equipment: {
+          weapon: base.inventory.equipment.weapon,
+          helm: null,
+          armor: null,
+          boots: null,
+          amulet: null,
+          ring: ringItem,
+        },
+      },
+    };
+    const parsed = parseEnvelope(legacyRaw);
+    expect(parsed).not.toBeNull();
+    expect(parsed!.schemaVersion).toBe(1);
+    expect(parsed!.inventory.equipment.ring1?.instanceId).toBe('legacy-ring');
+    expect(parsed!.inventory.equipment.ring2).toBeNull();
+    expect(parsed!.inventory.equipment.gloves).toBeNull();
+    expect(parsed!.inventory.equipment.belt).toBeNull();
+    expect(parsed!.inventory.equipment.offhand).toBeNull();
+    expect(parsed!.progression.materials).toEqual({ common: 0, magic: 0, rare: 0 });
+
+    const restored = hydrateCharacter(parsed!).snapshot();
+    expect(restored.equipment.ring1?.instanceId).toBe('legacy-ring');
+    expect(restored.materials).toEqual({ common: 0, magic: 0, rare: 0 });
+  });
+
+  test('PR10 T4: garbage materials → zeros; envelope still accepted', () => {
+    const env = validEnvelope();
+    const raw = {
+      ...env,
+      progression: {
+        ...env.progression,
+        materials: { common: 'nope', magic: -3, rare: NaN, extra: 99 },
+      },
+    };
+    const parsed = parseEnvelope(raw);
+    expect(parsed).not.toBeNull();
+    expect(parsed!.progression.materials).toEqual({ common: 0, magic: 0, rare: 0 });
+  });
+
+  test('PR10 T4: explicit ring1 wins over legacy ring key', () => {
+    const env = validEnvelope();
+    const legacy = sampleItem({
+      instanceId: 'from-legacy-ring',
+      slot: 'ring',
+      name: '旧',
+      affixes: [{ stat: 'maxHp', v: 1, label: '+1' }],
+    });
+    const explicit = sampleItem({
+      instanceId: 'from-ring1',
+      slot: 'ring',
+      name: '新',
+      affixes: [{ stat: 'maxHp', v: 2, label: '+2' }],
+    });
+    const raw = {
+      ...env,
+      inventory: {
+        bag: env.inventory.bag,
+        equipment: {
+          ...env.inventory.equipment,
+          ring: legacy,
+          ring1: explicit,
+        },
+      },
+    };
+    const parsed = parseEnvelope(raw);
+    expect(parsed).not.toBeNull();
+    expect(parsed!.inventory.equipment.ring1?.instanceId).toBe('from-ring1');
+  });
+
   test('hydrate discards envelope — mutating source JSON cannot affect domain', () => {
     const env = validEnvelope() as CharacterSaveEnvelope & {
       progression: { level: number };

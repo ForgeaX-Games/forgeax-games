@@ -13,8 +13,8 @@ import {
 } from './content-ids';
 import type { CharacterRecord, ClassId } from './classes';
 import type { DeepReadonly } from './deep-readonly';
-import type { Affix, AffixStat, Equipment, ItemInstance, ItemSlot, Rarity } from './items';
-import { SLOT_ORDER } from './items';
+import type { Affix, AffixStat, Equipment, EquipSlot, ItemInstance, ItemSlot, Rarity } from './items';
+import { EQUIP_SLOT_ORDER, equipSlotsFor, SLOT_ORDER } from './items';
 import { BAG_SIZE, POTION_CAP } from './character-domain';
 import type { HotbarSlots } from './content-ids';
 import { clampSkillRanks } from './skill-tree';
@@ -26,6 +26,9 @@ export const CHECKPOINT_CINDERWATCH = 'cinderwatch' as const;
 
 export type CheckpointId = typeof CHECKPOINT_CINDERWATCH;
 
+/** Shard currency counters (PR10). Optional on disk — old saves parse as zeros. */
+export type MaterialsSave = { common: number; magic: number; rare: number };
+
 export interface ProgressionSave {
   readonly level: number;
   readonly xp: number;
@@ -36,6 +39,8 @@ export interface ProgressionSave {
   readonly selectedHotbarSlot: 0 | 1 | 2 | 3;
   /** Belt stock (R2 potions). Optional on disk — old saves parse as 0/0. */
   readonly potions?: { life: number; mana: number };
+  /** Forge materials (PR10). Optional on disk — old saves parse as 0/0/0. */
+  readonly materials?: MaterialsSave;
 }
 
 export interface InventorySave {
@@ -68,6 +73,7 @@ export interface CharacterSavesStore {
 
 const ACTIVE_SKILLS: readonly ActiveSkillId[] = ['magma', 'frost', 'arc', 'blink', 'inferno-nova'];
 const ITEM_SLOTS: readonly ItemSlot[] = SLOT_ORDER;
+const EQUIP_SLOTS: readonly EquipSlot[] = EQUIP_SLOT_ORDER;
 const RARITIES: readonly Rarity[] = ['common', 'magic', 'rare', 'legendary'];
 const AFFIX_STATS: readonly AffixStat[] = [
   'dmgPct', 'fireDmg', 'frostDmg', 'arcDmg', 'critChance', 'critDmg',
@@ -183,14 +189,16 @@ function parseSkillRanks(raw: unknown): Record<SkillNodeId, number> | null {
 function parseEquipment(raw: unknown): Equipment | null {
   if (!isObject(raw)) return null;
   const eq = {} as Equipment;
-  for (const slot of ITEM_SLOTS) {
-    const v = raw[slot];
+  for (const slot of EQUIP_SLOTS) {
+    // Legacy key `ring` → ring1; explicit ring1 wins if both present.
+    const v = slot === 'ring1' && raw.ring1 === undefined ? raw.ring : raw[slot];
     if (v === null || v === undefined) {
       eq[slot] = null;
       continue;
     }
     const item = parseItemInstance(v);
-    if (!item || item.slot !== slot) return null;
+    // Rings: ItemSlot 'ring' may sit in ring1 or ring2 (identity ≠ EquipSlot key).
+    if (!item || !equipSlotsFor(item.slot).includes(slot)) return null;
     eq[slot] = item;
   }
   return eq;
@@ -230,6 +238,14 @@ function parsePotions(raw: unknown): { life: number; mana: number } {
   const n = (v: unknown): number =>
     isFiniteNumber(v) && v >= 0 ? Math.min(POTION_CAP, Math.floor(v)) : 0;
   return { life: n(raw.life), mana: n(raw.mana) };
+}
+
+/** Optional forge materials — absent/garbage → zeros (never rejects the envelope). */
+function parseMaterials(raw: unknown): MaterialsSave {
+  if (!isObject(raw)) return { common: 0, magic: 0, rare: 0 };
+  const n = (v: unknown): number =>
+    isFiniteNumber(v) && v >= 0 ? Math.floor(v) : 0;
+  return { common: n(raw.common), magic: n(raw.magic), rare: n(raw.rare) };
 }
 
 /** Validate unknown JSON → CharacterSaveEnvelope, or null if malformed. */
@@ -282,6 +298,7 @@ export function parseEnvelope(raw: unknown): CharacterSaveEnvelope | null {
       hotbar,
       selectedHotbarSlot,
       potions: parsePotions(progression.potions),
+      materials: parseMaterials(progression.materials),
     },
     inventory: { bag, equipment },
     quests,
