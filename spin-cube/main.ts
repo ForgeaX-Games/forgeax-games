@@ -23,6 +23,7 @@ import type { BootstrapContext } from '@forgeax/engine-app';
 const BASE_MATERIAL_GUID = 'd0606ad7-78d8-47e3-9d39-9ba94e9b4e22';
 
 const Spin = defineComponent('Spin', { axisX: 'f32', axisY: 'f32', axisZ: 'f32', speed: 'f32' });
+type InputRecord = { type: string; key?: string; phase?: string; x?: number; y?: number; button?: string };
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const { assets } = ctx ?? {};
@@ -30,6 +31,40 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     console.error('[spin-cube] no asset registry — cannot load base material');
     return;
   }
+  // Keep the carrier's input→query acceptance test game-owned. The host first
+  // offers the typed action through this projection; games without an `input`
+  // projection still receive the same DOM event fallback. This counter is
+  // transient Play state and is discarded with the Play World on Stop.
+  let inputEventCount = 0;
+  let lastInput: InputRecord = { type: 'none' };
+  ctx?.gameProjection?.registerAction({
+    id: 'input',
+    title: 'Record gameplay input',
+    description: 'Record one typed input action for the carrier continuity probe',
+    argsSchema: {
+      type: 'object',
+      properties: {
+        type: { type: 'string', enum: ['key', 'pointer'] },
+        key: { type: 'string' },
+        phase: { type: 'string', enum: ['down', 'up'] },
+        x: { type: 'number' },
+        y: { type: 'number' },
+        button: { type: 'string', enum: ['left', 'middle', 'right'] },
+      },
+      required: ['type'],
+    },
+    run: (args) => {
+      inputEventCount += 1;
+      const value = args as unknown as InputRecord;
+      lastInput = { ...value };
+    },
+  });
+  ctx?.gameProjection?.registerRead({
+    id: 'input.status',
+    title: 'Gameplay input status',
+    description: 'Read the input actions received by the live Play World',
+    read: () => ({ eventCount: inputEventCount, lastInput }),
+  });
   const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
   const dpr = window.devicePixelRatio || 1;
   canvas.width = canvas.clientWidth * dpr;
@@ -60,7 +95,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   );
 
   // Ambient: standard materials compute ambient=0 without a Skylight, so the
-  // cubes go black ("天光没了"), especially on WebKit/WKWebView (the desktop app)
+  // cubes go black when ambient light disappears, especially on WebKit/WKWebView (the desktop app)
   // which can't run the IBL precompute. A cubemap-less Skylight binds the
   // engine's 1×1 white irradiance cube → flat ambient live on the first frame,
   // no async GPU work, renders everywhere.
