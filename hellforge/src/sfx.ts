@@ -13,6 +13,7 @@ type SfxName =
   | 'cast-magma' | 'cast-frost' | 'cast-arc' | 'blink'
   | 'hit' | 'crit' | 'kill' | 'boss-kill'
   | 'player-hurt' | 'player-die'
+  | 'monster-aggro' | 'monster-attack'
   | 'pickup' | 'potion' | 'equip' | 'levelup' | 'portal' | 'quest';
 
 export class Sfx {
@@ -22,6 +23,8 @@ export class Sfx {
   /** User-facing 0..1 (F10 「音效」); scales BASE_GAIN. */
   private volume = 1;
   private static readonly BASE_GAIN = 0.42;
+  /** Gesture handler kept so dispose() can unarm a never-gestured install. */
+  private arm: (() => void) | null = null;
 
   /** Arm the context on the first user gesture (autoplay policy). */
   install(): void {
@@ -35,9 +38,30 @@ export class Sfx {
       } catch { /* no audio — fine */ }
       window.removeEventListener('pointerdown', arm);
       window.removeEventListener('keydown', arm);
+      this.arm = null;
     };
+    this.arm = arm;
     window.addEventListener('pointerdown', arm);
     window.addEventListener('keydown', arm);
+  }
+
+  /**
+   * Tear down every audio side effect: unarm the gesture listeners (if the
+   * user never gestured) and close the AudioContext (stops all live nodes in
+   * one call). Idempotent — safe when install() never ran or never armed.
+   */
+  dispose(): void {
+    if (this.arm) {
+      window.removeEventListener('pointerdown', this.arm);
+      window.removeEventListener('keydown', this.arm);
+      this.arm = null;
+    }
+    if (this.ctx) {
+      try { void this.ctx.close(); } catch { /* already closed */ }
+    }
+    this.ctx = null;
+    this.master = null;
+    this.lastAt.clear();
   }
 
   /** 0..1 — applied immediately if AudioContext is already armed. */
@@ -50,6 +74,9 @@ export class Sfx {
   play(name: SfxName): void {
     const ctx = this.ctx;
     if (!ctx || !this.master) return;
+    // Browsers can suspend the context outside the arming gesture (tab
+    // switch, autoplay heuristics) — nudge it back before queueing nodes.
+    if (ctx.state === 'suspended') void ctx.resume();
     const now = ctx.currentTime;
     const last = this.lastAt.get(name) ?? -1;
     if (now - last < 0.045) return;
@@ -59,12 +86,14 @@ export class Sfx {
       case 'cast-frost': this.noise(0.10, 2600, 0.7, 0.16); this.tone('sine', 1250, 900, 0.09, 0.07); break;
       case 'cast-arc':   this.buzz(0.10, 0.16); break;
       case 'blink':      this.tone('sine', 800, 180, 0.16, 0.14); this.noise(0.12, 1800, 0.4, 0.10); break;
-      case 'hit':        this.tone('triangle', 160, 90, 0.07, 0.30); this.noise(0.04, 700, 0.4, 0.18); break;
-      case 'crit':       this.tone('triangle', 210, 70, 0.10, 0.40); this.noise(0.06, 900, 0.5, 0.26); break;
+      case 'hit':        this.tone('triangle', 160, 90, 0.07, 0.45); this.noise(0.04, 700, 0.4, 0.26); break;
+      case 'crit':       this.tone('triangle', 210, 70, 0.10, 0.55); this.noise(0.06, 900, 0.5, 0.34); break;
       case 'kill':       this.tone('sawtooth', 180, 40, 0.20, 0.30); this.noise(0.10, 500, 0.6, 0.24); break;
       case 'boss-kill':  this.tone('sawtooth', 130, 28, 0.7, 0.45); this.noise(0.5, 400, 0.8, 0.35); break;
       case 'player-hurt': this.tone('square', 130, 80, 0.09, 0.26); break;
       case 'player-die': this.tone('sawtooth', 220, 40, 0.9, 0.4); break;
+      case 'monster-aggro': this.tone('sawtooth', 95, 55, 0.22, 0.20); this.noise(0.16, 320, 0.9, 0.12); break;
+      case 'monster-attack': this.noise(0.13, 1100, 0.6, 0.20); this.tone('sine', 320, 110, 0.09, 0.13); break;
       case 'pickup':     this.tone('sine', 1180, 1560, 0.07, 0.10); break;
       case 'potion':     this.tone('sine', 620, 940, 0.12, 0.16); break;
       case 'equip':      this.tone('triangle', 520, 780, 0.10, 0.18); this.tone('triangle', 780, 1170, 0.10, 0.14, 0.06); break;

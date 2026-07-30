@@ -102,6 +102,7 @@ describe('parseEnvelope / parseLegacy', () => {
     expect(parseEnvelope(undefined)).toBeNull();
     expect(parseEnvelope({})).toBeNull();
     expect(parseEnvelope({ schemaVersion: 2 })).toBeNull();
+    expect(parseEnvelope({ schemaVersion: 3 })).toBeNull(); // future versions rejected
     expect(parseLegacyRecord(null)).toBeNull();
     expect(parseLegacyList('nope')).toEqual([]);
     expect(parseSavesStore(null).envelopes).toEqual({});
@@ -116,7 +117,7 @@ describe('parseEnvelope / parseLegacy', () => {
     expect(parseEnvelope(bad)).toBeNull();
   });
 
-  test('accepts valid v1 envelope and preserves item instanceId', () => {
+  test('accepts valid v2 envelope and preserves item instanceId + anchors', () => {
     const env = validEnvelope();
     const parsed = parseEnvelope(env);
     expect(parsed).not.toBeNull();
@@ -125,6 +126,8 @@ describe('parseEnvelope / parseLegacy', () => {
     expect(parsed!.progression.level).toBe(3);
     expect(parsed!.inventory.equipment.weapon?.instanceId).toBe('inst-frost-wand');
     expect(parsed!.quests['purge-slagdeep-hollow'].status).toBe('active');
+    // v2 bag is an anchor list; this fixture's single item auto-equipped → empty bag.
+    expect(parsed!.inventory.bag).toEqual([]);
   });
 
   test('parsePotions clamps belt stock to POTION_CAP (20), not 999', () => {
@@ -223,14 +226,14 @@ describe('serialize / hydrate round trip', () => {
         affixes: [{ stat: 'maxHp', v: 1, label: '+1' }],
       }),
     });
-    const salvIdx = domain.snapshot().bag.findIndex((i) => i?.instanceId === 'salv-me');
+    const salvIdx = domain.snapshot().bag.findIndex((a) => a.item.instanceId === 'salv-me');
     expect(salvIdx).toBeGreaterThanOrEqual(0);
     expect(domain.dispatch({ op: 'salvage-bag', index: salvIdx }).ok).toBe(true);
     expect(domain.snapshot().materials.rare).toBe(4);
 
     const env = serializeCharacter(domain.snapshot());
     expect(env.schemaVersion).toBe(SAVE_SCHEMA_VERSION);
-    expect(SAVE_SCHEMA_VERSION).toBe(1);
+    expect(SAVE_SCHEMA_VERSION).toBe(2);
     expect(env.progression.materials).toEqual({ common: 0, magic: 0, rare: 4 });
     expect(env.inventory.equipment.gloves?.instanceId).toBe('g-gloves');
     expect(env.inventory.equipment.belt?.instanceId).toBe('g-belt');
@@ -256,7 +259,9 @@ describe('serialize / hydrate round trip', () => {
       rarity: 'magic',
       affixes: [{ stat: 'maxHp', v: 3, label: '+3 HP' }],
     });
-    // Pre-PR10 wire shape: 6 doll slots, key `ring`, no materials / new slots.
+    // Pre-PR10 wire shape: 6 doll slots, key `ring`, no materials / new slots;
+    // v1 bag = flat 60-cell array (sparse).
+    const v1Bag: Array<unknown> = new Array(60).fill(null);
     const legacyRaw = {
       ...base,
       schemaVersion: 1,
@@ -271,7 +276,7 @@ describe('serialize / hydrate round trip', () => {
         // intentionally omit materials + potions
       },
       inventory: {
-        bag: base.inventory.bag,
+        bag: v1Bag,
         equipment: {
           weapon: base.inventory.equipment.weapon,
           helm: null,
@@ -284,13 +289,14 @@ describe('serialize / hydrate round trip', () => {
     };
     const parsed = parseEnvelope(legacyRaw);
     expect(parsed).not.toBeNull();
-    expect(parsed!.schemaVersion).toBe(1);
+    expect(parsed!.schemaVersion).toBe(2); // v1 normalizes to v2 on read
     expect(parsed!.inventory.equipment.ring1?.instanceId).toBe('legacy-ring');
     expect(parsed!.inventory.equipment.ring2).toBeNull();
     expect(parsed!.inventory.equipment.gloves).toBeNull();
     expect(parsed!.inventory.equipment.belt).toBeNull();
     expect(parsed!.inventory.equipment.offhand).toBeNull();
     expect(parsed!.progression.materials).toEqual({ common: 0, magic: 0, rare: 0 });
+    expect(parsed!.inventory.bag).toEqual([]);
 
     const restored = hydrateCharacter(parsed!).snapshot();
     expect(restored.equipment.ring1?.instanceId).toBe('legacy-ring');
@@ -350,8 +356,8 @@ describe('serialize / hydrate round trip', () => {
     expect(domain.snapshot().level).toBe(3);
   });
 
-  test('PR9 T6: pre-expansion envelope hydrates 18 new nodes at rank 0; schema stays 1', () => {
-    expect(SAVE_SCHEMA_VERSION).toBe(1);
+  test('PR9 T6: pre-expansion envelope hydrates 18 new nodes at rank 0; schema v2', () => {
+    expect(SAVE_SCHEMA_VERSION).toBe(2);
     const base = validEnvelope();
     // Pre-PR9 wire shape: only the original 15 SkillNodeId keys.
     const legacyRanks: Record<string, number> = {
@@ -382,7 +388,7 @@ describe('serialize / hydrate round trip', () => {
     };
     const parsed = parseEnvelope(legacyRaw);
     expect(parsed).not.toBeNull();
-    expect(parsed!.schemaVersion).toBe(1);
+    expect(parsed!.schemaVersion).toBe(2);
     expect(parsed!.progression.skillRanks['magma-bolt']).toBe(3);
     expect(parsed!.progression.skillRanks['frost-fang']).toBe(2);
     const newIds = [
@@ -400,7 +406,7 @@ describe('serialize / hydrate round trip', () => {
     expect(restored.skillRanks['magma-bolt']).toBe(3);
   });
 
-  test('PR9 T6: round-trip new skill ranks; schema version stays 1', () => {
+  test('PR9 T6: round-trip new skill ranks; schema version 2', () => {
     const domain = createSorceressDomain({ playerName: 'PR9往返', id: 'pr9-rt', level: 10 });
     expect(domain.dispatch({ op: 'invest-skill', nodeId: 'magma-bolt' }).ok).toBe(true);
     expect(domain.dispatch({ op: 'invest-skill', nodeId: 'magma-bolt' }).ok).toBe(true);
@@ -413,7 +419,7 @@ describe('serialize / hydrate round trip', () => {
 
     const env = serializeCharacter(domain.snapshot());
     expect(env.schemaVersion).toBe(SAVE_SCHEMA_VERSION);
-    expect(SAVE_SCHEMA_VERSION).toBe(1);
+    expect(SAVE_SCHEMA_VERSION).toBe(2);
     expect(env.progression.skillRanks['flame-burst']).toBe(2);
     expect(env.progression.skillRanks['frost-nova']).toBe(1);
     expect(env.progression.hotbar[2]).toBe('flame-burst');
@@ -661,5 +667,89 @@ describe('envelopeToRecord', () => {
     const rec = envelopeToRecord(validEnvelope());
     expect(projectCharacterRecord(hydrateCharacter(validEnvelope()).snapshot()).id).toBe(rec.id);
     expect(rec.classId).toBe('sorceress');
+  });
+});
+
+describe('v1 → v2 bag migration (flat 60-cell → anchor list)', () => {
+  /** v1 wire envelope with a caller-supplied flat bag array. */
+  function v1EnvelopeWithBag(bag: readonly unknown[]) {
+    const base = validEnvelope();
+    return {
+      ...base,
+      schemaVersion: 1,
+      inventory: {
+        bag,
+        equipment: base.inventory.equipment,
+      },
+    };
+  }
+
+  test('sparse v1 bag replays through firstFit in index order', () => {
+    const v1Bag: Array<unknown> = new Array(60).fill(null);
+    v1Bag[0] = sampleItem({ instanceId: 'v1-armor', slot: 'armor', name: '旧甲' });
+    v1Bag[7] = sampleItem({ instanceId: 'v1-weapon', slot: 'weapon', name: '旧杖' });
+    v1Bag[42] = sampleItem({ instanceId: 'v1-ring', slot: 'ring', name: '旧戒' });
+    const parsed = parseEnvelope(v1EnvelopeWithBag(v1Bag));
+    expect(parsed).not.toBeNull();
+    expect(parsed!.schemaVersion).toBe(2);
+    const bag = parsed!.inventory.bag;
+    expect(bag.map((a) => a.item.instanceId)).toEqual(['v1-armor', 'v1-weapon', 'v1-ring']);
+    // armor 2×3 at origin; staff 1×3 beside it; ring in the next free cell.
+    expect(bag[0]).toMatchObject({ x: 0, y: 0 });
+    expect(bag[1]).toMatchObject({ x: 2, y: 0 });
+    expect(bag[2]).toMatchObject({ x: 3, y: 0 });
+  });
+
+  test('v1 items without size derive their footprint from the slot', () => {
+    const v1Bag = [sampleItem({ instanceId: 'v1-armor', slot: 'armor', name: '旧甲' })];
+    const parsed = parseEnvelope(v1EnvelopeWithBag(v1Bag));
+    expect(parsed).not.toBeNull();
+    expect(parsed!.inventory.bag[0]!.item.size).toEqual({ w: 2, h: 3 });
+  });
+
+  test('out-of-space v1 bag migrates what fits and drops the rest sanely', () => {
+    // A full v1 bag of body armor (60 × 1-cell then, 2×3 now) cannot fit 60 cells.
+    const v1Bag = Array.from({ length: 60 }, (_, i) =>
+      sampleItem({ instanceId: `v1-armor-${i}`, slot: 'armor', name: `甲${i}` }));
+    const parsed = parseEnvelope(v1EnvelopeWithBag(v1Bag));
+    expect(parsed).not.toBeNull();
+    const bag = parsed!.inventory.bag;
+    // 12×5 grid: six 2×3 armors per 3-row band, one band → 6 fit, 54 dropped.
+    expect(bag).toHaveLength(6);
+    expect(bag.map((a) => a.item.instanceId)).toEqual(
+      ['v1-armor-0', 'v1-armor-1', 'v1-armor-2', 'v1-armor-3', 'v1-armor-4', 'v1-armor-5'],
+    );
+    // Migrated save hydrates and re-serializes as v2 anchors.
+    const restored = hydrateCharacter(parsed!).snapshot();
+    expect(restored.bag).toHaveLength(6);
+    const env = serializeCharacter(restored);
+    expect(env.schemaVersion).toBe(2);
+    expect(env.inventory.bag).toHaveLength(6);
+  });
+
+  test('v2 bag rejects overlapping / out-of-bounds / bad-size anchors', () => {
+    const env = validEnvelope();
+    const armor = { item: sampleItem({ instanceId: 'a1', slot: 'armor' }), x: 0, y: 0 };
+    const overlap = { item: sampleItem({ instanceId: 'a2', slot: 'ring' }), x: 1, y: 1 };
+    expect(parseEnvelope({
+      ...env,
+      inventory: { bag: [armor, overlap], equipment: env.inventory.equipment },
+    })).toBeNull();
+
+    const oob = { item: sampleItem({ instanceId: 'a3', slot: 'armor' }), x: 11, y: 4 };
+    expect(parseEnvelope({
+      ...env,
+      inventory: { bag: [oob], equipment: env.inventory.equipment },
+    })).toBeNull();
+
+    const badSize = {
+      item: { ...sampleItem({ instanceId: 'a4', slot: 'ring' }), size: { w: 0, h: 1 } },
+      x: 0,
+      y: 0,
+    };
+    expect(parseEnvelope({
+      ...env,
+      inventory: { bag: [badSize], equipment: env.inventory.equipment },
+    })).toBeNull();
   });
 });

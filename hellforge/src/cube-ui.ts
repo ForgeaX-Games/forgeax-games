@@ -4,8 +4,9 @@
 // enables buttons from validators + shard affordability and reports clicks.
 //
 // Factory shape matches inventory-ui.ts: installXxx(cb, mount) → Handle with
-// open/close for UiLayerManager.register('craft'). Bag indices (not item
-// copies) are tracked and re-read live via getBag() each render.
+// open/close for UiLayerManager.register('craft'). Bag LIST indices into the
+// anchor array (bag-grid.ts) are tracked and re-read live via getBag() each
+// render.
 
 import {
   canFuse,
@@ -16,7 +17,9 @@ import {
   type MaterialTier,
 } from './crafting';
 import { RARITY_META, type Item } from './items';
-import { FONT_UI, Z } from './ui-theme';
+import type { BagAnchor } from './bag-grid';
+import { FONT_DISPLAY, FONT_UI, goldDividerHtml, titleBandCss, Ui, Z } from './ui-theme';
+import { HudArt } from './hud-art';
 import { slotIconUrl } from './ui-icons';
 
 const CUBE_COLS = 3;
@@ -82,15 +85,15 @@ export function resolveForgeActions(
       reroll: false,
       fuse: false,
       lockReason: 'wrong-recipe',
-      hint: '配方不符：拆解/重铸需 1 件；合成需 3 件同部位同稀有度（白/蓝）',
+      hint: '配方不符：拆解/重铸需 1 件；合成需 3 件同稀有度（部位不限，黄×3→传奇）',
     };
   }
   return { salvage, reroll, fuse, lockReason: null, hint: null };
 }
 
 export interface CubeUICallbacks {
-  /** Live bag snapshot — same fixed-size Array<Item|null> as inventory-ui.ts. */
-  getBag: () => Array<Item | null>;
+  /** Live bag snapshot — anchor list (bag-grid.ts), indexed by list position. */
+  getBag: () => readonly BagAnchor[];
   getMaterials: () => MaterialCounts;
   /** Return true when the domain accepted the verb (cube clears placement). */
   onSalvage: (bagIndex: number) => boolean;
@@ -121,32 +124,31 @@ export function installCubeUI(cb: CubeUICallbacks, mount: HTMLElement = document
 
   const panel = document.createElement('div');
   panel.id = PANEL_ID;
+  // Painted frame asset (same family as the inventory/character panels) —
+  // no CSS gradient rim. Content padded to sit inside the frame bezel.
   panel.style.cssText = `
     position: ${scoped ? 'absolute' : 'fixed'}; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: ${CUBE_COLS * CELL_SIZE + 48}px;
-    background:
-      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(25,18,10,0.04) 2px, rgba(25,18,10,0.04) 4px),
-      linear-gradient(180deg, #3e3632 0%, #342c26 40%, #2c2622 100%);
-    border: 6px solid;
-    border-image: linear-gradient(180deg, #5a4a30 0%, #3a2a18 50%, #5a4a30 100%) 1;
-    padding: 16px 20px;
-    font-family: ${FONT_UI}; color: #ddd; z-index: ${Z.cube};
-    box-shadow: 0 0 60px rgba(0,0,0,0.95), inset 0 0 60px rgba(0,0,0,0.3);
-    display: none; flex-direction: column; align-items: center; gap: 10px;
+    width: ${CUBE_COLS * CELL_SIZE + 56}px;
+    padding: 24px 26px 18px;
+    font-family: ${FONT_UI}; color: ${Ui.text}; z-index: ${Z.cube};
+    background:url('${HudArt.panelInventory()}') center/100% 100% no-repeat,${Ui.inkPanel};
+    box-shadow:0 18px 50px rgba(0,0,0,0.8);
+    display: none; flex-direction: column; align-items: center; gap: 8px;
     pointer-events: auto;
   `;
   mount.appendChild(panel);
 
   const pill = (inner: string): string =>
-    `<span style="padding:2px 8px;background:rgba(20,16,12,0.7);border:1px solid #4a4038;` +
+    `<span style="padding:2px 8px;background:${Ui.inkWell};border:1px solid ${Ui.goldLineSoft};` +
     `display:inline-flex;align-items:center;gap:4px;font-size:12px;">${inner}</span>`;
 
   function actionBtn(id: string, label: string, enabled: boolean): string {
     return `<div id="${id}" style="
       flex:1;padding:8px 0;text-align:center;
-      background:${enabled ? 'linear-gradient(180deg,#5a4a20,#3a2a10)' : 'rgba(30,25,18,0.6)'};
-      border:2px solid ${enabled ? '#c8a84e' : '#3a3228'};border-radius:4px;
-      color:${enabled ? '#ffd700' : '#5a4a3a'};font-size:13px;font-weight:bold;
+      background:${enabled ? `linear-gradient(180deg,${Ui.goldFill},rgba(28,20,10,0.95))` : 'rgba(16,12,8,0.6)'};
+      border:2px solid ${enabled ? Ui.gold : '#3a3228'};border-radius:2px;
+      color:${enabled ? Ui.goldBright : Ui.textDim};font-size:13px;font-weight:bold;font-family:${FONT_DISPLAY};
+      letter-spacing:2px;text-shadow:${enabled ? `0 1px 0 ${Ui.goldDeep}` : 'none'};
       cursor:${enabled ? 'pointer' : 'not-allowed'};user-select:none;">${label}</div>`;
   }
 
@@ -155,7 +157,7 @@ export function installCubeUI(cb: CubeUICallbacks, mount: HTMLElement = document
     const materials = cb.getMaterials();
     const cubeItems: Array<{ idx: number; item: Item }> = [];
     for (const idx of cubeIdx) {
-      const item = bag[idx];
+      const item = bag[idx]?.item;
       if (item) cubeItems.push({ idx, item });
     }
     // Drop stale indices whose bag slot emptied under us.
@@ -170,25 +172,26 @@ export function installCubeUI(cb: CubeUICallbacks, mount: HTMLElement = document
     const gridH = CUBE_ROWS * CELL_SIZE;
 
     let html = `
-      <div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:4px;">
-        <div style="color:#c8a84e;font-size:16px;font-weight:bold;">🔥 熔炉方块</div>
-        <div style="cursor:pointer;color:#888;font-size:18px;padding:0 4px;" id="cube-close">✕</div>
+      <div style="position:relative;width:100%;">
+        <div style="${titleBandCss()}padding:4px 0;">熔炉方块</div>
+        <div style="position:absolute;right:0;top:50%;transform:translateY(-50%);cursor:pointer;color:${Ui.textDim};font-size:16px;padding:0 4px;" id="cube-close">✕</div>
       </div>
-      <div style="color:#5a4a3a;font-size:11px;margin-bottom:4px;">点击背包物品放入方块，选择拆解 / 重铸 / 合成</div>
+      ${goldDividerHtml(2)}
+      <div style="color:${Ui.textDim};font-size:11px;">点击背包物品放入方块，选择拆解 / 重铸 / 合成</div>
       <div style="display:flex;gap:6px;width:100%;justify-content:center;margin-bottom:2px;">
-        ${pill(`<span style="color:${RARITY_META.common.color};font-weight:bold;">${materials.common}</span><span style="color:#8a7a58;font-size:10px;">白</span>`)}
-        ${pill(`<span style="color:${RARITY_META.magic.color};font-weight:bold;">${materials.magic}</span><span style="color:#8a7a58;font-size:10px;">蓝</span>`)}
-        ${pill(`<span style="color:${RARITY_META.rare.color};font-weight:bold;">${materials.rare}</span><span style="color:#8a7a58;font-size:10px;">黄</span>`)}
+        ${pill(`<span style="color:${RARITY_META.common.color};font-weight:bold;">${materials.common}</span><span style="color:${Ui.textDim};font-size:10px;">白</span>`)}
+        ${pill(`<span style="color:${RARITY_META.magic.color};font-weight:bold;">${materials.magic}</span><span style="color:${Ui.textDim};font-size:10px;">蓝</span>`)}
+        ${pill(`<span style="color:${RARITY_META.rare.color};font-weight:bold;">${materials.rare}</span><span style="color:${Ui.textDim};font-size:10px;">黄</span>`)}
       </div>
     `;
 
     html += `<div style="position:relative;width:${gridW}px;height:${gridH}px;
-      background:rgba(8,6,4,0.6);border:2px solid #3a3228;border-radius:3px;">`;
+      background:${Ui.inkWell};border:1px solid ${Ui.goldLineSoft};">`;
     for (let y = 0; y < CUBE_ROWS; y++) {
       for (let x = 0; x < CUBE_COLS; x++) {
         html += `<div style="position:absolute;left:${x * CELL_SIZE}px;top:${y * CELL_SIZE}px;
-          width:${CELL_SIZE - 1}px;height:${CELL_SIZE - 1}px;
-          border:1px solid #2a2420;background:rgba(15,12,8,0.5);box-sizing:border-box;"></div>`;
+          width:${CELL_SIZE}px;height:${CELL_SIZE}px;box-sizing:border-box;
+          background:url('${HudArt.bagSlot()}') center/100% 100% no-repeat;"></div>`;
       }
     }
     cubeItems.forEach(({ idx, item }, i) => {
@@ -213,16 +216,17 @@ export function installCubeUI(cb: CubeUICallbacks, mount: HTMLElement = document
     </div>`;
 
     if (actions.hint) {
-      html += `<div style="color:#ff8866;font-size:11px;width:100%;text-align:center;">${actions.hint}</div>`;
+      html += `<div style="color:${Ui.danger};font-size:11px;width:100%;text-align:center;">${actions.hint}</div>`;
     }
 
-    html += `<div style="color:#5a4a3a;font-size:11px;margin-top:2px;width:100%;border-top:1px solid #3a2a18;padding-top:6px;">
+    html += `<div style="color:${Ui.textDim};font-size:11px;margin-top:2px;width:100%;border-top:1px solid ${Ui.goldLineSoft};padding-top:6px;">
       ${cubeItems.length >= CUBE_SLOTS ? '方块已满' : `点击背包物品放入方块（已放入 ${cubeItems.length}/${CUBE_SLOTS}）`}
     </div>`;
     if (cubeItems.length < CUBE_SLOTS) {
       html += `<div style="width:100%;max-height:180px;overflow-y:auto;display:flex;flex-wrap:wrap;gap:3px;">`;
-      bag.forEach((item, idx) => {
-        if (!item || cubeSet.has(idx)) return;
+      bag.forEach((anchor, idx) => {
+        if (cubeSet.has(idx)) return;
+        const item = anchor.item;
         const color = RARITY_META[item.rarity].color;
         html += `<div data-add-idx="${idx}" style="
           width:${CELL_SIZE - 4}px;height:${CELL_SIZE - 4}px;
@@ -285,7 +289,7 @@ export function installCubeUI(cb: CubeUICallbacks, mount: HTMLElement = document
           return;
         }
         const bag = cb.getBag();
-        if (bag[idx] && !cubeIdx.includes(idx)) {
+        if (bag[idx]?.item && !cubeIdx.includes(idx)) {
           cubeIdx.push(idx);
           render();
         }

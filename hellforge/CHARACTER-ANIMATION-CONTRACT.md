@@ -31,7 +31,7 @@ motion GLB ≈ 7.9 MB × 10 ≈ 80 MB,≈ 8 万面重复 10 次)。加载/切换
 | `attack` | 攻击/施法 | **one-shot** | 4 个技能共用这一条;播放时锁定移动,播完回 idle/walk/run |
 | `hit` | 受击硬直 | **one-shot** | 被打时播;短促后仰/踉跄,播完回 idle/walk/run |
 | `death` | 死亡 | **one-shot** | 播完停在最后一帧,实体回收 |
-| `dodge` | 翻滚闪避 | **one-shot** | Space dodge 触发;`main.ts` 按时长对齐 `DODGE_TOTAL_S`;位移仍由 `src/dodge.ts` 代码驱动 |
+| `dodge` | 翻滚闪避 | **one-shot** | Space dodge 触发;`main.ts` 用独立常量 `DODGE_CLIP_RATE` 完整播放(**不按** `DODGE_TOTAL_S` 压缩);位移仍由 `src/dodge.ts` 代码驱动 |
 
 > 招架/技能变体等**不在契约内**;要加就扩 `HeroGltfClipName` 并改
 > `main.ts` 的 `swapClip`/`playOnce` 调用。
@@ -77,7 +77,7 @@ motion GLB ≈ 7.9 MB × 10 ≈ 80 MB,≈ 8 万面重复 10 次)。加载/切换
    free-run ≈ 0.67s)。
 4. 运行时用 [`src/locomotion.ts`](./src/locomotion.ts) `selectLocomotionClip(speed, isPathDriven)`
    按**实际地速**选 walk/run,不要读按键状态。
-5. Space dodge:`playOnce('dodge', …)` 对齐 `DODGE_TOTAL_S`;**禁止**运行时 retarget。
+5. Space dodge:`playOnce('dodge', DODGE_CLIP_RATE)` 完整播放(独立速率常量,勿回退到按 `DODGE_TOTAL_S` 压缩);**禁止**运行时 retarget。
 6. **勿**把引擎生成的 `*.rigged_model.glb.meta.json` 留在 `assets/3d/characters/`
    (会撞 wb-gen3d 扫描);gen3d 侧车是 `*.glb.gen3d-meta.json`。
 

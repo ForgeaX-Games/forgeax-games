@@ -100,16 +100,16 @@ import {
 } from './src/skill-tree';
 import { installSkillFixture } from './src/dev-skill-fixture';
 import { getHeroDef } from './src/heroes';
-import { selectLocomotionClip } from './src/locomotion';
+import { LOCOMOTION_IDLE_SPEED, selectLocomotionClip } from './src/locomotion';
 import {
   abortDodge,
   cancelDodgeForSkillOrMove,
   createDodgeState,
   DODGE_MOVEMENT_S,
-  DODGE_TOTAL_S,
   dodgeAllowsSkillOrMove,
   dodgeHitReactionAborts,
   dodgeLocksTranslation,
+  isDodging,
   isDodgeInvulnerable,
   tickDodge,
   tryStartDodge,
@@ -142,6 +142,7 @@ import {
   RARITY_META,
   type Equipment, type ItemInstance,
 } from './src/items';
+import { hasFreeCell, type BagAnchor } from './src/bag-grid';
 import { installInventory } from './src/inventory-ui';
 import { installCubeUI } from './src/cube-ui';
 import { salvageYield } from './src/crafting';
@@ -193,6 +194,7 @@ import { installUiCursors } from './src/ui-cursors';
 import { installUiTooltip } from './src/ui-tooltip';
 import { installUiTransition } from './src/ui-transition';
 import { installCutsceneUi } from './src/cutscene-ui';
+import { installLootCelebration } from './src/loot-celebration';
 import {
   buildBossDefeatBeat,
   buildBossEntranceBeat,
@@ -228,7 +230,7 @@ import {
   pickBestEyeFocusBone,
   translationFromWorldMat4,
 } from './src/player-eye-focus';
-import { ASHEN_REACH_BOUNDS, installWildTerrain } from './src/wild-terrain';
+import { ASHEN_REACH_BOUNDS, installWildTerrain, resetWildTerrainCache } from './src/wild-terrain';
 import {
   bgmPhaseForMusic,
   CINEMATIC_BGM_DUCK_DB,
@@ -525,11 +527,18 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       ? () => {}
       : installSaveLifecycleHooks(() => character.snapshot());
     onCleanup(() => {
+      let saved = true;
       if (!ephemeral) {
         character.dispatch({ op: 'touch' });
-        flushReturnToTitle(character.snapshot());
+        saved = flushReturnToTitle(character.snapshot());
       } else {
-        flushCharacterSaves();
+        saved = flushCharacterSaves();
+      }
+      if (!saved) {
+        // hud is declared later in this boot scope — a very-early abort may
+        // hit the TDZ; the console.warn from save.ts is the fallback signal.
+        try { hud.banner('存档失败：进度未能写入本地存储', '#ff6a6a', 4000); }
+        catch { /* hud not installed yet */ }
       }
       uninstallSaveHooks();
     });
@@ -864,10 +873,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     onCleanup(() => buffDisplay.clear());
     const cutsceneUi = installCutsceneUi(uiMount);
     onCleanup(() => cutsceneUi.dispose());
+    // Rare/legendary drop celebration card (gacha-style strong notify).
+    const celebration = installLootCelebration(uiMount);
+    onCleanup(() => celebration.dispose());
     const loot = new LootSystem(world, fx);
     const sfx = new Sfx();
     onCleanup(ownerLedger.trackSfx());
     sfx.install();
+    onCleanup(() => sfx.dispose());
     sfxForAudio = sfx;
     applyAudioSettings(loadRenderSettings());
 
@@ -920,6 +933,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         label: 'den',
       });
     }
+    onCleanup(() => resetWildTerrainCache());
     // Second pass: any late-resolved prop materials from terrain installs.
     // (Den-pack props get their own pass inside ensureDenLoaded — T4.)
     ensureShadowCasters(world);
@@ -1024,15 +1038,19 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     let bossEntrancePlayed = false;
     let bossDefeatPlayed = false;
     const monsters = new MonsterManager(world, fx, {
+      onAggro: () => { sfx.play('monster-aggro'); },
+      onAttack: () => { sfx.play('monster-attack'); },
       onPlayerHit: (rawDmg, source) => {
         if (area === 'camp') return;                       // camp is sacred
         // PR4a T2: den cinematic invuln (Boss / Hero Shot) via owner policy.
         if (shouldPlayerBeInvulnerable(activeWorldPolicy())) return;
         // PR2a L2: i-frames only during dodge Movement phase.
         if (isDodgeInvulnerable(dodgeState)) return;
-        // L3: hit during buildup/recover aborts the roll (no i-frames).
+        // L3: hit during buildup/recover aborts the roll (no i-frames) —
+        // release the clip lock too so the roll tail doesn't play on air.
         if (dodgeHitReactionAborts(dodgeState)) {
           dodgeState = abortDodge(dodgeState);
+          state.oneShotUntil = 0;
         }
         // L4 B2: temporary taken-damage mul while inside the slag-cursed vault.
         const curseMul = dungeon.encounters
@@ -1048,7 +1066,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           if (src) {
             const kx = state.px - src.x, kz = state.pz - src.z;
             const kl = Math.hypot(kx, kz) || 1;
-            const push = source === 'slaglord' ? 0.75 : 0.3;
+            const push = source === 'slaglord' ? 0.5 : 0.3;
             const nxp = state.px + (kx / kl) * push;
             const nzp = state.pz + (kz / kl) * push;
             if (walkableAt(nxp, state.pz)) state.px = nxp;
@@ -1074,7 +1092,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         const isBoss = !!MONSTERS[m.kind].isBoss;
         const rolls = isBoss ? 3 + Math.floor(Math.random() * 3) : 1;
         for (let i = 0; i < rolls; i++) {
-          const drop = rollDrop(mLevel, isBoss, combatStats.magicFind);
+          const drop = rollDrop(mLevel, isBoss, combatStats.magicFind, character.snapshot().level);
           if (drop) loot.spawnItem(drop, m.x, m.z);
         }
         if (combatStats.lifeOnKill > 0) {
@@ -1151,7 +1169,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       skills.applyCombatStats(combatStats);
       moveMul = combatStats.moveSpeed;
       const eq = equipment as Equipment;
-      inv.update(eq, bag as Array<ItemInstance | null>, level, gold, materials);
+      inv.update(eq, bag as BagAnchor[], level, gold, materials);
       hud.setGold(gold);
       refreshCharacterPanel();
     };
@@ -1163,7 +1181,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         && before.level >= item.reqLevel;
       const res = character.dispatch({ op: 'take-item', item });
       if (!res.ok) {
-        if (res.reason === 'bag-full') hud.banner('背包已满', '#ff6a6a', 1200);
+        if (res.reason === 'bag-full') {
+          hud.banner('背包已满', '#ff6a6a', 1200);
+          // Multi-cell items can fail placement after the 1×1 magnet probe —
+          // re-drop on the ground instead of deleting the gear.
+          loot.spawnItem(item, state.px, state.pz);
+        }
         return;
       }
       const meta = RARITY_META[item.rarity];
@@ -1177,12 +1200,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         applyEquipment();
       }
       persistCharacter();
-      if (item.rarity === 'legendary') {
-        hud.banner(`传奇！ ${item.name}`, meta.color, 2600);
-        sfx.play('quest');
-        addShake(0.15);
-      } else if (item.rarity === 'rare') {
-        sfx.play('equip');
+      if (item.rarity === 'legendary' || item.rarity === 'rare') {
+        celebration.show(item);
+        sfx.play(item.rarity === 'legendary' ? 'quest' : 'equip');
+        if (item.rarity === 'legendary') addShake(0.15);
       }
     };
 
@@ -1244,7 +1265,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // ── inventory panel (B) — mutations dispatch through CharacterDomain ──
     const inv = installInventory({
       onEquipFromBag: (idx, target) => {
-        const item = character.snapshot().bag[idx];
+        const item = character.snapshot().bag[idx]?.item;
         if (!item) return false;
         const res = character.dispatch({ op: 'equip-from-bag', index: idx, target });
         if (!res.ok) {
@@ -1875,6 +1896,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         },
       },
     };
+    onCleanup(() => { delete (window as unknown as { __hf?: unknown }).__hf; });
 
     // ── camera + runtime render-settings (F10) ────────────────────────────
     // Camera *component* fields have a SINGLE writer: rs.applyCamera().
@@ -1968,9 +1990,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // rate 1. Walking_Woman ≈ 1.0 s / free-run ≈ 0.67 s loops — calibrate
     // separately so feet don't slide when selectLocomotionClip swaps clips.
     // SPEED 3.4 → walk rate ≈ 2.6; SPRINT 5.4 → run rate ≈ 1.5.
-    const ANIM_STRIDE_WALK = 1.3;
-    const ANIM_STRIDE_RUN = 3.6;
-    const ANIM_SPEED_MIN = 0.5, ANIM_SPEED_MAX = 4.8;
+    // Stride speeds ≈ clip's natural ground speed: playbackRate = speed/stride
+    // lands near 1.0–1.25× at walk 3.4 / sprint 5.4 m/s (was 1.3/3.6 → 2.6×
+    // fast-forward walk). Cap MAX at 2.0 so buffed speed never looks comical.
+    const ANIM_STRIDE_WALK = 3.0;
+    const ANIM_STRIDE_RUN = 4.4;
+    const ANIM_SPEED_MIN = 0.6, ANIM_SPEED_MAX = 2.0;
 
     // ── camera math: world↔screen / aim from CameraRigState only ──────────
     const worldToScreen = (wx: number, wy: number, wz: number): { x: number; y: number } | null =>
@@ -2006,13 +2031,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // cast at ~0.9 s so the wind-up reads as responsive instead of laggy.
     const ATTACK_SPEED = 2.6;
     const HIT_SPEED = 1.7;
-    // fps compensation: the engine's advanceAnimationPlayer steps clips a
-    // FIXED 1/60 s per rendered frame (measured rate == fps/60), so below
-    // 60 fps every skeletal animation plays in slow motion. Until the engine
-    // takes real dt (ENGINE-ISSUES-for-ubpa.md), every AnimationPlayer
-    // `speeds` write is multiplied by this smoothed real-dt×60 rate — witch
-    // here, monsters via monsters.animRate.
-    let animRate = 1;
+    // Roll_Dodge (~1.87 s) dedicated pace: fast enough that the clip nearly
+    // completes as the 0.65 s dodge window closes (~0.85 s at 2.2×) — a slow
+    // rate leaves the landing tail playing after the roll and reads stuck.
+    // NOT derived from DODGE_TOTAL_S (2.9× compression was a cartoon snap).
+    const DODGE_CLIP_RATE = 2.2;
+    // The engine's advanceAnimationPlayer advances clips by real Time.delta
+    // (animation/src/systems/advance-animation-player.ts:776), so playback is
+    // wall-clock true in every scene. The retired fixed-1/60 fps compensation
+    // (ENGINE-ISSUES-for-ubpa.md, since fixed engine-side) distorted rates at
+    // off-60 fps — 120 fps camp ×0.5 slow-mo, 30 fps den ×2.0 fast-forward.
     let witchAnimBase = 1;
     const swapClip = (name: string) => {
       if (witchSkinEnt === null) return;
@@ -2021,7 +2049,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       state.currentClip = name;
       witchAnimBase = 1;
       world.set(witchSkinEnt, AnimationPlayer, {
-        clips: [h], times: new Float32Array([0]), weights: new Float32Array([1]), speeds: new Float32Array([animRate]), looping: true, paused: state.paused,
+        clips: [h], times: new Float32Array([0]), weights: new Float32Array([1]), speeds: new Float32Array([1]), looping: true, paused: state.paused,
       });
     };
     const playOnce = (name: string, speed = 1, lockScale = 1) => {
@@ -2036,8 +2064,19 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       state.oneShotUntil = performance.now() + ((clipDur.get(name) ?? 1) / speed) * 1000 * lockScale;
       witchAnimBase = speed;
       world.set(witchSkinEnt, AnimationPlayer, {
-        clips: [h], times: new Float32Array([0]), weights: new Float32Array([1]), speeds: new Float32Array([speed * animRate]), looping: false, paused: state.paused,
+        clips: [h], times: new Float32Array([0]), weights: new Float32Array([1]), speeds: new Float32Array([speed]), looping: false, paused: state.paused,
       });
+    };
+
+    /**
+     * Roll-cancel shared by cast / click-move / WASD: when the cancel actually
+     * aborts the roll, also release the clip lock so the next animation takes
+     * over immediately instead of sliding in the roll tail.
+     */
+    const rollCancel = (): void => {
+      const next = cancelDodgeForSkillOrMove(dodgeState);
+      if (next.phase === 'idle' && dodgeState.phase !== 'idle') state.oneShotUntil = 0;
+      dodgeState = next;
     };
 
     // ── casting — SkillCaster + CharacterDomain hotbar (shared mana/cd/ranks) ─
@@ -2073,7 +2112,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const groundXZ = id === FINISHER_ID ? groundAimXZ() ?? undefined : undefined;
       const res = skillCaster.cast(id, [aim.x, aim.z], groundXZ ? { groundXZ } : undefined);
       // L3 roll-cancel: successful cast during late recover aborts + arms CD.
-      if (res === 'ok') dodgeState = cancelDodgeForSkillOrMove(dodgeState);
+      if (res === 'ok') rollCancel();
       finishCast(id, aim, res);
       return res;
     };
@@ -2600,7 +2639,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       },
       onLootInteract: (id) => {
         if (camMode !== 'arpg') return 'failed';
-        const ev = loot.collectById(id, () => character.snapshot().bag.includes(null));
+        const ev = loot.collectById(id, () => hasFreeCell(character.snapshot().bag as BagAnchor[]));
         if (!ev) return 'failed';
         applyPickupEvent(ev);
         return 'consumed';
@@ -2756,10 +2795,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       else if (reason === 'bad-index' || reason === 'empty-slot') hud.banner('物品已失效', '#ff8866', 1200);
     };
     const cube = installCubeUI({
-      getBag: () => character.snapshot().bag as Array<ItemInstance | null>,
+      getBag: () => character.snapshot().bag as BagAnchor[],
       getMaterials: () => character.snapshot().materials,
       onSalvage: (index) => {
-        const before = character.snapshot().bag[index];
+        const before = character.snapshot().bag[index]?.item;
         const res = character.dispatch({ op: 'salvage-bag', index });
         if (!res.ok) { craftFailBanner(res.reason); return false; }
         const yield_ = before ? salvageYield(before) : null;
@@ -2778,7 +2817,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         const res = character.dispatch({ op: 'reroll-bag', index });
         if (!res.ok) { craftFailBanner(res.reason); return false; }
         sfx.play('equip');
-        const next = character.snapshot().bag[index];
+        const next = character.snapshot().bag[index]?.item;
         hud.banner(next ? `重铸：${next.name}` : '重铸完成', '#88ccff', 1200);
         applyEquipment();
         persistCharacter();
@@ -2792,7 +2831,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         if (!res.ok) { craftFailBanner(res.reason); return false; }
         sfx.play('equip');
         const dest = Math.min(indices[0], indices[1], indices[2]);
-        const fused = character.snapshot().bag[dest];
+        const fused = character.snapshot().bag[dest]?.item;
         hud.banner(fused ? `合成：${fused.name}` : '合成完成', '#ffd066', 1400);
         applyEquipment();
         persistCharacter();
@@ -2928,9 +2967,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           faceX = next.dirX;
           faceZ = next.dirZ;
           fx.playEffect(COMBAT_EFFECT_DEFS.dodge, state.px, 0.2, state.pz);
-          // Time Roll_Dodge (~1.87 s) to the code-driven dodge window.
-          const dodgeClipDur = clipDur.get('dodge') ?? DODGE_TOTAL_S;
-          playOnce('dodge', Math.max(dodgeClipDur / DODGE_TOTAL_S, 0.5));
+          // Roll at its own pace, played to completion (flip peaks as the
+          // movement window ends; landing runs past the state window).
+          // Cancels (cast/move/WASD) and hits cut it via oneShotUntil = 0;
+          // post-roll movement yields the tail via the locomotion branch.
+          playOnce('dodge', DODGE_CLIP_RATE);
         }
       }
       // Cutscene owns UI + world input — only Esc (skip) may steal ownership.
@@ -3080,6 +3121,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     window.addEventListener('keyup', onKeyUp, true);
     onCleanup(() => window.removeEventListener('keyup', onKeyUp, true));
 
+    // Blurring the tab mid-press leaves keys stuck down (no matching keyup).
+    const clearHeldKeys = () => { for (const code of Object.keys(keys)) keys[code] = false; };
+    const onVisibilityClear = () => { if (document.hidden) clearHeldKeys(); };
+    window.addEventListener('blur', clearHeldKeys);
+    document.addEventListener('visibilitychange', onVisibilityClear);
+    onCleanup(() => {
+      window.removeEventListener('blur', clearHeldKeys);
+      document.removeEventListener('visibilitychange', onVisibilityClear);
+    });
+
     const onContextMenu = (e: MouseEvent) => e.preventDefault();
     canvas.addEventListener('contextmenu', onContextMenu);
     onCleanup(() => canvas.removeEventListener('contextmenu', onContextMenu));
@@ -3111,7 +3162,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       );
       if (!hit) return;
       // L3 roll-cancel: committed click-move during late recover aborts + arms CD.
-      dodgeState = cancelDodgeForSkillOrMove(dodgeState);
+      rollCancel();
       const world: readonly [number, number] = [hit.x, hit.z];
       const picked = interactions.pickAt(world, CLICK_PICK_R);
       if (picked) {
@@ -3181,9 +3232,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         ...fx.debugCounts(),
       });
       if (!allowUpdateFrame(dt)) return;
-      // fps compensation rate for AnimationPlayer speeds (see clip helpers).
-      // Smoothed so a single hitchy frame doesn't pulse the animations.
-      animRate += (clamp(dt * 60, 0.3, 3) - animRate) * Math.min(1, dt * 10);
 
       if (inGame) automap.tick();
 
@@ -3193,7 +3241,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           if (state.currentClip !== 'idle') swapClip('idle');
           witchAnimBase = 1;
           world.set(witchSkinEnt, AnimationPlayer, {
-            speeds: new Float32Array([witchAnimBase * animRate]),
+            speeds: new Float32Array([witchAnimBase]),
           });
         }
         // Face the preview camera (south of the witch, looking north).
@@ -3329,7 +3377,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         const vec = wasdVectorFromKeys(keys);
         if (vec) {
           // L3 roll-cancel: WASD during late recover aborts the roll.
-          dodgeState = cancelDodgeForSkillOrMove(dodgeState);
+          rollCancel();
           setMoveIntent(reduceIntent(moveIntent, { op: 'set-vector', x: vec.x, z: vec.z }));
           mvx = vec.x;
           mvz = vec.z;
@@ -3442,6 +3490,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         stuckRepathed = false;
       }
 
+      // Roll follow-through yields to real movement: the dodge state machine
+      // finished but the clip's stand-up tail still holds the one-shot lock —
+      // actual ground speed swaps back to locomotion instead of sliding.
+      if (oneShotActive && state.currentClip === 'dodge' && !isDodging(dodgeState) && groundSpeed > LOCOMOTION_IDLE_SPEED) {
+        state.oneShotUntil = 0;
+      }
       // animation state machine — locomotion from velocity; one-shots untouched
       if (!state.paused && !oneShotActive && !player.dead) {
         if (state.oneShotUntil !== 0) state.oneShotUntil = 0;
@@ -3457,7 +3511,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       }
       // fps-compensated speeds write, every frame (base × real-dt rate).
       if (witchSkinEnt !== null) {
-        world.set(witchSkinEnt, AnimationPlayer, { speeds: new Float32Array([witchAnimBase * animRate]) });
+        world.set(witchSkinEnt, AnimationPlayer, { speeds: new Float32Array([witchAnimBase]) });
       }
 
       // drive ONLY the player rig (witch parented under it)
@@ -3531,7 +3585,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       tickPlayer(player, dt);
       fx.tick(dt);
       const playerSafe = area !== 'den' && inCamp(state.px, state.pz);
-      monsters.animRate = animRate;
       // PR4a T2: skip monsters.tick when active cinematic policy freezes AI
       // (Boss entrance/defeat + Hero Shot). Camp beats keep the world running.
       // skills.tick still runs so finisher damage at 0.4 s stays independent.
@@ -3554,7 +3607,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
       // loot pickups — disabled in showcase (Spec §6.2)
       if (camMode === 'arpg') {
-        for (const ev of loot.tick(dt, state.px, state.pz, () => character.snapshot().bag.includes(null))) {
+        for (const ev of loot.tick(dt, state.px, state.pz, () => hasFreeCell(character.snapshot().bag as BagAnchor[]))) {
           applyPickupEvent(ev);
         }
       }
@@ -3599,7 +3652,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       }
       // PR11 T4: don't re-arm the pads while a den transition is still awaiting
       // its lazy load — portalArmed must stay false until doDenTeleport finishes.
-      if (!portalArmed && !denTransitioning && dCave > 3.5 && dExit > 3.5) portalArmed = true;
+      // Wild landing is ~4.24 from the cave mouth, so 3.5 re-armed instantly
+      // and caused BGM ping-pong.
+      if (!portalArmed && !denTransitioning && dCave > 6 && dExit > 6) portalArmed = true;
       // camp ⇄ wild label edge (same map, rect boundary)
       if (area !== 'den') {
         const nowCamp = inCamp(state.px, state.pz);

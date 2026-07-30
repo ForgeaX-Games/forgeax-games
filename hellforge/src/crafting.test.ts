@@ -74,19 +74,24 @@ describe('PR10 T2 crafting SSOT — validators', () => {
     expect(buildFuseResult([legend, legend, legend])).toBeNull();
   });
 
-  test('fuse rejects mixed slot, mixed rarity, rare ceiling, wrong count', () => {
+  test('fuse (relaxed): same rarity any slots OK; mixed rarity / wrong count rejected', () => {
     const a = item({ slot: 'weapon', rarity: 'common', ilvl: 2 });
     const b = item({ slot: 'helm', rarity: 'common', ilvl: 2 });
     const c = item({ slot: 'weapon', rarity: 'magic', ilvl: 2 });
     const rare = item({ slot: 'weapon', rarity: 'rare', ilvl: 3 });
 
-    expect(canFuse([a, b, item({ slot: 'weapon', rarity: 'common' })])).toBe(false); // mixed slot
-    expect(canFuse([a, c, item({ slot: 'weapon', rarity: 'common' })])).toBe(false); // mixed rarity
-    expect(canFuse([rare, rare, rare])).toBe(false); // rare ceiling
-    expect(canFuse([a, a])).toBe(false); // wrong count
+    // cross-slot with uniform rarity is now allowed
+    expect(canFuse([a, b, item({ slot: 'ring', rarity: 'common' })])).toBe(true);
+    // mismatched rarity still rejected
+    expect(canFuse([a, c, item({ slot: 'weapon', rarity: 'common' })])).toBe(false);
+    expect(canFuse([a, b, rare])).toBe(false);
+    // rare×3 is the legendary path — now fusable
+    expect(canFuse([rare, rare, rare])).toBe(true);
+    // wrong count
+    expect(canFuse([a, a])).toBe(false);
     expect(canFuse([a, a, a, a])).toBe(false);
 
-    // happy: 3 same-slot same-rarity below rare
+    // happy: 3 same-slot same-rarity still works (white and blue)
     expect(canFuse([a, a, a])).toBe(true);
     expect(canFuse([
       item({ slot: 'gloves', rarity: 'magic', ilvl: 1 }),
@@ -153,5 +158,53 @@ describe('PR10 T2 crafting SSOT — result builders', () => {
     expect(up!.rarity).toBe('rare');
     expect(up!.ilvl).toBe(5);
     expect(up!.slot).toBe('offhand');
+  });
+
+  test('cross-slot fuse → one tier up, max(ilvl), product slot picked among inputs', () => {
+    const inputs: Item[] = [
+      item({ slot: 'weapon', rarity: 'common', ilvl: 2, instanceId: 'x1' }),
+      item({ slot: 'helm', rarity: 'common', ilvl: 8, instanceId: 'x2' }),
+      item({ slot: 'ring', rarity: 'common', ilvl: 4, instanceId: 'x3' }),
+    ];
+    const seen = new Set<string>();
+    for (let i = 0; i < 40; i++) {
+      const out = buildFuseResult(inputs);
+      expect(out).not.toBeNull();
+      expect(out!.rarity).toBe('magic');
+      expect(out!.ilvl).toBe(8);
+      expect(['weapon', 'helm', 'ring']).toContain(out!.slot);
+      seen.add(out!.slot);
+    }
+    // Slot pick is random among the three inputs — must not be pinned to one.
+    expect(seen.size).toBeGreaterThan(1);
+  });
+
+  test('rare×3 → legendary at max(ilvl); mismatched rarity still null', () => {
+    const rares: Item[] = [
+      item({ slot: 'weapon', rarity: 'rare', ilvl: 4, instanceId: 'r1' }),
+      item({ slot: 'armor', rarity: 'rare', ilvl: 9, instanceId: 'r2' }),
+      item({ slot: 'boots', rarity: 'rare', ilvl: 6, instanceId: 'r3' }),
+    ];
+    const out = buildFuseResult(rares);
+    expect(out).not.toBeNull();
+    expect(out!.rarity).toBe('legendary');
+    expect(out!.ilvl).toBe(9);
+    expect(out!.legendary).toBeTruthy(); // curated unique id
+    expect(['r1', 'r2', 'r3']).not.toContain(out!.instanceId);
+
+    // magic×3 still steps to rare (not legendary)
+    const magics = [
+      item({ slot: 'amulet', rarity: 'magic', ilvl: 5 }),
+      item({ slot: 'amulet', rarity: 'magic', ilvl: 5 }),
+      item({ slot: 'amulet', rarity: 'magic', ilvl: 5 }),
+    ];
+    expect(buildFuseResult(magics)!.rarity).toBe('rare');
+
+    // mismatched rarity → no result
+    expect(buildFuseResult([
+      item({ slot: 'weapon', rarity: 'common' }),
+      item({ slot: 'weapon', rarity: 'common' }),
+      item({ slot: 'weapon', rarity: 'magic' }),
+    ])).toBeNull();
   });
 });

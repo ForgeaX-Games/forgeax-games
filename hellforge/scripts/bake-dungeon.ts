@@ -195,32 +195,41 @@ const entities = layout.geometry.flatMap((g) => {
 
   if (policy === 'tile') {
     // Walls: tile the wall mesh as a GRID of near-native-size blocks so the FRONT
-    // texels stay ~square (NO vertical stretch). The old approach scaled a 1.5 m
-    // mesh to fill a 3.2 m wall, stretching the face ~2×; here each column instead
-    // STACKS full-height crisp rows (scale y≈1) + a per-column partial top CAP, so
-    // HEIGHT varies (jagged tops = the visible random dimension) while faces stay
-    // undistorted. Columns span the run length at ~cell width. Depth fills the
-    // cell (side faces hidden between contiguous segments). Alternating 180° Y
-    // flips break the tile-repetition pattern without needing a second mesh.
+    // texels stay ~square (NO vertical stretch). Each column STACKS full-height
+    // crisp rows (scale y≈1) + a per-column partial top CAP, so HEIGHT varies
+    // (jagged tops = the visible random dimension) while faces stay undistorted.
+    // Columns span the run length at ~cell width. Depth stays NATIVE (szFit = 1):
+    // the old depth/nz ≈ 2.1 cell-fill stretch skewed tangent frames on turning
+    // surfaces (the engine transforms tangents by the plain model matrix, which
+    // is only correct for uniform scale). With native depth each column is
+    // SEATED toward the walkable side — its bbox front face lands exactly on the
+    // slab's facing edge, which the pipeline placed on the walkable-cell
+    // boundary (g.rotY = facing yaw: block +Z → walkable side; see
+    // dungeon-pipeline.ts emitWallRun). The prop bbox is z-symmetric, so the
+    // alternating 180° Y flips below never move the seated face.
     const pool = PROP_POOL[g.kind];
     const vi = Math.floor(vrand() * pool.length);
     const bb = poolBBox(g.kind, vi);
-    const [nx, ny, nz] = bb.size;                  // native block size (~2×1.5×1.14)
-    const isH = g.sx >= g.sz;                       // run long axis: H→X, V→Z
+    const [nx, ny] = bb.size;                  // native block size (~2×1.5×1.14)
+    const isH = g.sx >= g.sz;                   // run long axis: H→X, V→Z
     const runLen = isH ? g.sx : g.sz;
-    const depth = isH ? g.sz : g.sx;               // thin axis = CELL (2.4 m)
+    const depth = isH ? g.sz : g.sx;            // slab thickness along the facing axis
     const cols = Math.max(1, Math.round(runLen / nx));
     const colW = runLen / cols;
-    const sxFit = colW / nx;                        // block length fit (~1.0–1.2)
-    const szFit = depth / nz;                       // fill cell depth (hidden sides)
-    const bottom = g.y - g.sy / 2;                 // ground plane (walls sit on floor)
-    const baseRotY = isH ? 0 : Math.PI / 2;        // V-run: rotate block length onto Z
+    const sxFit = colW / nx;                    // block length fit (~1.0–1.2)
+    const szFit = 1;                            // native depth (was depth/nz ≈ 2.1)
+    const facing = g.rotY;                      // undefined → legacy centred seat
+    const seat = facing === undefined ? 0 : depth / 2 - bb.max[2] * szFit;
+    const faceX = facing === undefined ? 0 : Math.sin(facing);
+    const faceZ = facing === undefined ? 0 : Math.cos(facing);
+    const bottom = g.y - g.sy / 2;             // ground plane (walls sit on floor)
+    const baseRotY = facing ?? (isH ? 0 : Math.PI / 2);
     const out: ReturnType<typeof makeEntity>[] = [];
     let idx = 0;
     for (let c = 0; c < cols; c++) {
       const off = -runLen / 2 + colW * (c + 0.5);
-      const cxp = g.x + (isH ? off : 0);
-      const czp = g.z + (isH ? 0 : off);
+      const cxp = g.x + (isH ? off : 0) + faceX * seat;
+      const czp = g.z + (isH ? 0 : off) + faceZ * seat;
       // per-column height = N crisp full rows + a partial top cap (→ jagged top)
       const targetH = g.sy * (0.9 + vrand() * 0.45);      // ~2.9–4.3 m (g.sy = WALL_H)
       const rowsFull = Math.max(1, Math.floor(targetH / ny));

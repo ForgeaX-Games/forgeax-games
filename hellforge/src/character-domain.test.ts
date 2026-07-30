@@ -41,11 +41,11 @@ function occupyEquipSlots(domain: CharacterDomain, slot: ItemSlot, tag: string):
   }
 }
 
-/** Place `item` into the bag; returns its bag index. */
+/** Place `item` into the bag; returns its bag anchor-list index. */
 function putInBag(domain: CharacterDomain, item: ItemInstance): number {
   occupyEquipSlots(domain, item.slot, item.instanceId);
   expect(domain.dispatch({ op: 'take-item', item }).ok).toBe(true);
-  const idx = domain.snapshot().bag.findIndex((i) => i?.instanceId === item.instanceId);
+  const idx = domain.snapshot().bag.findIndex((a) => a.item.instanceId === item.instanceId);
   expect(idx).toBeGreaterThanOrEqual(0);
   return idx;
 }
@@ -98,7 +98,7 @@ describe('createSorceressDomain', () => {
     const mutable = snap as unknown as {
       equipment: { weapon: { affixes: Array<{ v: number }> } };
       quests: { 'purge-slagdeep-hollow': { status: string } };
-      bag: Array<{ affixes: Array<{ v: number }> } | null>;
+      bag: Array<{ item: { affixes: Array<{ v: number }> }; x: number; y: number }>;
     };
 
     expect(() => {
@@ -311,7 +311,7 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
     }).ok).toBe(true);
     expect(domain.snapshot().equipment.ring1?.instanceId).toBe('r-a');
     expect(domain.snapshot().equipment.ring2?.instanceId).toBe('r-b');
-    expect(domain.snapshot().bag.some((i) => i?.instanceId === 'r-c')).toBe(true);
+    expect(domain.snapshot().bag.some((a) => a.item.instanceId === 'r-c')).toBe(true);
   });
 
   test('equip-from-bag with both rings filled swaps ring1; target ring2 swaps ring2', () => {
@@ -323,13 +323,13 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
     expect(domain.dispatch({ op: 'equip-from-bag', index: bagIdx }).ok).toBe(true);
     expect(domain.snapshot().equipment.ring1?.instanceId).toBe('r3');
     expect(domain.snapshot().equipment.ring2?.instanceId).toBe('r2');
-    expect(domain.snapshot().bag[bagIdx]?.instanceId).toBe('r1');
+    expect(domain.snapshot().bag[bagIdx]?.item.instanceId).toBe('r1');
 
-    const bagIdx2 = domain.snapshot().bag.findIndex((i) => i?.instanceId === 'r1');
+    const bagIdx2 = domain.snapshot().bag.findIndex((a) => a.item.instanceId === 'r1');
     expect(domain.dispatch({ op: 'equip-from-bag', index: bagIdx2, target: 'ring2' }).ok).toBe(true);
     expect(domain.snapshot().equipment.ring1?.instanceId).toBe('r3');
     expect(domain.snapshot().equipment.ring2?.instanceId).toBe('r1');
-    expect(domain.snapshot().bag[bagIdx2]?.instanceId).toBe('r2');
+    expect(domain.snapshot().bag[bagIdx2]?.item.instanceId).toBe('r2');
   });
 
   test('equip-from-bag target ring2 with ring1 empty still lands on ring2', () => {
@@ -341,7 +341,7 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
       if (!eq) continue;
       expect(domain.dispatch({ op: 'unequip', slot }).ok).toBe(true);
     }
-    const bagIdx = domain.snapshot().bag.findIndex((i) => i?.instanceId === 'drag-r');
+    const bagIdx = domain.snapshot().bag.findIndex((a) => a.item.instanceId === 'drag-r');
     expect(bagIdx).toBe(idx);
     expect(domain.dispatch({ op: 'equip-from-bag', index: bagIdx, target: 'ring2' }).ok).toBe(true);
     expect(domain.snapshot().equipment.ring1).toBeNull();
@@ -363,7 +363,7 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
     expect(domain.dispatch({ op: 'unequip', slot: 'ring2' }).ok).toBe(true);
     expect(domain.snapshot().equipment.ring2).toBeNull();
     expect(domain.snapshot().equipment.ring1?.instanceId).toBe('u1');
-    expect(domain.snapshot().bag.some((i) => i?.instanceId === 'u2')).toBe(true);
+    expect(domain.snapshot().bag.some((a) => a.item.instanceId === 'u2')).toBe(true);
   });
 
   test('salvage-bag happy: grants matching-tier shards and clears bag cell', () => {
@@ -383,12 +383,12 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
       }));
       const res = domain.dispatch({ op: 'salvage-bag', index: idx });
       expect(res.ok).toBe(true);
-      expect(domain.snapshot().bag[idx]).toBeNull();
+      expect(domain.snapshot().bag.some((a) => a.item.instanceId === `salv-${key}`)).toBe(false);
       expect(domain.snapshot().materials[key]).toBe(before[key] + SALVAGE_YIELD[key]);
     }
   });
 
-  test('salvage-bag rejects legendary with legendary-locked; empty-slot / bad-index', () => {
+  test('salvage-bag rejects legendary with legendary-locked; out-of-range indices', () => {
     const domain = createSorceressDomain({ playerName: '禁拆' });
     const idx = putInBag(domain, sampleItem({
       instanceId: 'leg',
@@ -400,10 +400,11 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
     const locked = domain.dispatch({ op: 'salvage-bag', index: idx });
     expect(locked.ok).toBe(false);
     expect(!locked.ok && locked.reason).toBe('legendary-locked');
-    expect(domain.snapshot().bag[idx]?.instanceId).toBe('leg');
+    expect(domain.snapshot().bag[idx]?.item.instanceId).toBe('leg');
     expect(domain.snapshot().materials).toEqual({ common: 0, magic: 0, rare: 0 });
 
-    expect(domain.dispatch({ op: 'salvage-bag', index: 23 })).toMatchObject({ ok: false, reason: 'empty-slot' });
+    // Anchor list has no empty cells — any out-of-range index is bad-index.
+    expect(domain.dispatch({ op: 'salvage-bag', index: 23 })).toMatchObject({ ok: false, reason: 'bad-index' });
     expect(domain.dispatch({ op: 'salvage-bag', index: 99 })).toMatchObject({ ok: false, reason: 'bad-index' });
   });
 
@@ -431,15 +432,17 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
     const res = domain.dispatch({ op: 'reroll-bag', index: idx });
     expect(res.ok).toBe(true);
     const after = domain.snapshot().bag[idx]!;
-    expect(after).not.toBeNull();
-    expect(after.slot).toBe(before.slot);
-    expect(after.rarity).toBe(before.rarity);
-    expect(after.ilvl).toBe(before.ilvl);
-    expect(after.instanceId).not.toBe(before.instanceId);
+    // Reroll keeps slot/rarity/ilvl → same footprint → same anchor cell.
+    expect(after.x).toBe(before.x);
+    expect(after.y).toBe(before.y);
+    expect(after.item.slot).toBe(before.item.slot);
+    expect(after.item.rarity).toBe(before.item.rarity);
+    expect(after.item.ilvl).toBe(before.item.ilvl);
+    expect(after.item.instanceId).not.toBe(before.item.instanceId);
     expect(domain.snapshot().materials.magic).toBe(0);
   });
 
-  test('reroll-bag rejects: legendary-locked, not-enough-materials, empty-slot', () => {
+  test('reroll-bag rejects: legendary-locked, not-enough-materials, bad-index', () => {
     const domain = createSorceressDomain({ playerName: '禁铸' });
     const legIdx = putInBag(domain, sampleItem({
       instanceId: 'leg-r',
@@ -462,9 +465,9 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
       ok: false,
       reason: 'not-enough-materials',
     });
-    expect(domain.snapshot().bag[idx]?.instanceId).toBe('need-mats');
+    expect(domain.snapshot().bag[idx]?.item.instanceId).toBe('need-mats');
 
-    expect(domain.dispatch({ op: 'reroll-bag', index: 22 })).toMatchObject({ ok: false, reason: 'empty-slot' });
+    expect(domain.dispatch({ op: 'reroll-bag', index: 22 })).toMatchObject({ ok: false, reason: 'bad-index' });
   });
 
   test('fuse-bag happy: 3 same-slot commons → one magic; consumes inputs', () => {
@@ -480,34 +483,25 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
     const res = domain.dispatch({ op: 'fuse-bag', indices: indices as [number, number, number] });
     expect(res.ok).toBe(true);
     expect(domain.snapshot().materials).toEqual(matsBefore); // fuse costs items only
-    const remaining = domain.snapshot().bag.filter((i) => i && indices.includes(domain.snapshot().bag.indexOf(i)));
-    // All three input cells cleared except one holds the fused result.
-    const cells = indices.map((i) => domain.snapshot().bag[i]);
-    const nonNull = cells.filter((c) => c !== null);
-    expect(nonNull).toHaveLength(1);
-    expect(nonNull[0]!.rarity).toBe('magic');
-    expect(nonNull[0]!.slot).toBe('gloves');
-    expect(nonNull[0]!.ilvl).toBe(5); // max ilvl
-    expect(['fuse-0', 'fuse-1', 'fuse-2']).not.toContain(nonNull[0]!.instanceId);
-    expect(remaining.length).toBeLessThanOrEqual(1);
+    // All three inputs consumed; the fused result sits at the lowest list index.
+    const bagAfter = domain.snapshot().bag;
+    expect(bagAfter).toHaveLength(1);
+    const fused = bagAfter[0]!.item;
+    expect(fused.rarity).toBe('magic');
+    expect(fused.slot).toBe('gloves');
+    expect(fused.ilvl).toBe(5); // max ilvl
+    expect(['fuse-0', 'fuse-1', 'fuse-2']).not.toContain(fused.instanceId);
+    expect(bagAfter[0]!.x).toBe(0);
+    expect(bagAfter[0]!.y).toBe(0);
   });
 
   test('fuse-bag rejects: bad-recipe, legendary-locked, bad-index', () => {
     const domain = createSorceressDomain({ playerName: '禁合' });
+    // Mixed RARITY still violates the (relaxed) recipe: 3 of the same rarity.
     const a = putInBag(domain, sampleItem({ instanceId: 'fa', slot: 'weapon', rarity: 'common' }));
-    const b = putInBag(domain, sampleItem({ instanceId: 'fb', slot: 'helm', rarity: 'common' }));
+    const m = putInBag(domain, sampleItem({ instanceId: 'fm', slot: 'helm', rarity: 'magic' }));
     const c = putInBag(domain, sampleItem({ instanceId: 'fc', slot: 'weapon', rarity: 'common' }));
-    expect(domain.dispatch({ op: 'fuse-bag', indices: [a, b, c] })).toMatchObject({
-      ok: false,
-      reason: 'bad-recipe',
-    });
-
-    const rareIdxs = [0, 1, 2].map((n) => putInBag(domain, sampleItem({
-      instanceId: `rare-${n}`,
-      slot: 'boots',
-      rarity: 'rare',
-    })));
-    expect(domain.dispatch({ op: 'fuse-bag', indices: rareIdxs as [number, number, number] })).toMatchObject({
+    expect(domain.dispatch({ op: 'fuse-bag', indices: [a, m, c] })).toMatchObject({
       ok: false,
       reason: 'bad-recipe',
     });
@@ -535,6 +529,33 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
     });
   });
 
+  test('fuse-bag relaxed recipe: cross-slot commons fuse; rare×3 → legendary', () => {
+    const domain = createSorceressDomain({ playerName: '宽合' });
+    const trio = [
+      putInBag(domain, sampleItem({ instanceId: 'xa', slot: 'weapon', rarity: 'common' })),
+      putInBag(domain, sampleItem({ instanceId: 'xb', slot: 'helm', rarity: 'common' })),
+      putInBag(domain, sampleItem({ instanceId: 'xc', slot: 'belt', rarity: 'common' })),
+    ];
+    const res = domain.dispatch({ op: 'fuse-bag', indices: trio as [number, number, number] });
+    expect(res.ok).toBe(true);
+    const bagAfter = domain.snapshot().bag;
+    expect(bagAfter).toHaveLength(1);
+    expect(bagAfter[0]!.item.rarity).toBe('magic');
+    // Result slot is picked at random among the input slots.
+    expect(['weapon', 'helm', 'belt']).toContain(bagAfter[0]!.item.slot);
+
+    const rares = [
+      putInBag(domain, sampleItem({ instanceId: 'ra', slot: 'ring', rarity: 'rare' })),
+      putInBag(domain, sampleItem({ instanceId: 'rb', slot: 'ring', rarity: 'rare' })),
+      putInBag(domain, sampleItem({ instanceId: 'rc', slot: 'amulet', rarity: 'rare' })),
+    ];
+    const res2 = domain.dispatch({ op: 'fuse-bag', indices: rares as [number, number, number] });
+    expect(res2.ok).toBe(true);
+    const fused = domain.snapshot().bag.find((x) => x.item.rarity === 'legendary');
+    expect(fused).toBeDefined();
+    expect(fused!.item.legendary).toBeDefined();
+  });
+
   test('melt-bag rejects legendary with legendary-locked (item + gold untouched)', () => {
     const domain = createSorceressDomain({ playerName: '禁熔' });
     domain.dispatch({ op: 'add-gold', amount: 10 });
@@ -548,7 +569,7 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
     const res = domain.dispatch({ op: 'melt-bag', index: idx });
     expect(res.ok).toBe(false);
     expect(!res.ok && res.reason).toBe('legendary-locked');
-    expect(domain.snapshot().bag[idx]?.instanceId).toBe('leg-melt');
+    expect(domain.snapshot().bag[idx]?.item.instanceId).toBe('leg-melt');
     expect(domain.snapshot().gold).toBe(goldBefore);
   });
 
@@ -562,7 +583,111 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
     const res = domain.dispatch({ op: 'melt-bag', index: idx });
     expect(res.ok).toBe(true);
     expect(res.ok && res.melted).toBe(true);
-    expect(domain.snapshot().bag[idx]).toBeNull();
+    expect(domain.snapshot().bag.some((a) => a.item.instanceId === 'melt-ok')).toBe(false);
     expect(domain.snapshot().gold).toBeGreaterThan(0);
+  });
+});
+
+describe('bag grid anchors (multi-size items)', () => {
+  test('take-item firstFits by footprint: staff 1×3 then armor 2×3 packs beside it', () => {
+    const domain = createSorceressDomain({ playerName: '摆放' });
+    // Occupy weapon + armor doll slots so both items land in the bag.
+    domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'eq-w', slot: 'weapon' }) });
+    domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'eq-a', slot: 'armor' }) });
+    expect(domain.dispatch({
+      op: 'take-item',
+      item: sampleItem({ instanceId: 'bag-w', slot: 'weapon', name: '杖' }),
+    }).ok).toBe(true);
+    expect(domain.dispatch({
+      op: 'take-item',
+      item: sampleItem({ instanceId: 'bag-a', slot: 'armor', name: '甲' }),
+    }).ok).toBe(true);
+    const bag = domain.snapshot().bag;
+    expect(bag).toHaveLength(2);
+    expect(bag[0]).toMatchObject({ x: 0, y: 0 }); // 1×3 staff at the top-left
+    expect(bag[1]).toMatchObject({ x: 1, y: 0 }); // 2×3 armor packs right beside it
+  });
+
+  test('sixty 1×1 items fill the 12×5 grid exactly; the 61st returns bag-full', () => {
+    const domain = createSorceressDomain({ playerName: '满包' });
+    // Fill both ring doll slots so every filler lands in the bag.
+    domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'eq-r1', slot: 'ring' }) });
+    domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'eq-r2', slot: 'ring' }) });
+    for (let i = 0; i < 60; i++) {
+      expect(domain.dispatch({
+        op: 'take-item',
+        item: sampleItem({ instanceId: `fill-${i}`, slot: 'ring', name: `填${i}` }),
+      }).ok).toBe(true);
+    }
+    expect(domain.snapshot().bag).toHaveLength(60);
+    const res = domain.dispatch({
+      op: 'take-item',
+      item: sampleItem({ instanceId: 'overflow', slot: 'ring' }),
+    });
+    expect(res.ok).toBe(false);
+    expect(!res.ok && res.reason).toBe('bag-full');
+  });
+
+  test('unequip firstFits back into the bag; no fit keeps the item equipped', () => {
+    const domain = createSorceressDomain({ playerName: '卸装' });
+    domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'eq-r1', slot: 'ring' }) });
+    domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'eq-r2', slot: 'ring' }) });
+    // Partially filled bag: unequipped gloves (2×2) land at the first free spot.
+    domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'eq-g', slot: 'gloves' }) });
+    expect(domain.dispatch({
+      op: 'take-item',
+      item: sampleItem({ instanceId: 'bag-r', slot: 'ring' }),
+    }).ok).toBe(true); // one 1×1 at (0,0)
+    expect(domain.dispatch({ op: 'unequip', slot: 'gloves' }).ok).toBe(true);
+    const after = domain.snapshot();
+    expect(after.equipment.gloves).toBeNull();
+    const g = after.bag.find((a) => a.item.instanceId === 'eq-g');
+    expect(g).toMatchObject({ x: 1, y: 0 }); // 2×2 next to the 1×1 ring
+
+    // Fill the grid completely, then unequip must refuse and keep the item on.
+    // 60 cells − 5 occupied (1×1 ring + 2×2 gloves) = 55 one-cell fillers.
+    for (let i = 0; i < 55; i++) {
+      expect(domain.dispatch({
+        op: 'take-item',
+        item: sampleItem({ instanceId: `pack-${i}`, slot: 'ring' }),
+      }).ok).toBe(true);
+    }
+    // 57 anchors cover all 60 cells (1 + 4 + 55×1) — no free cell remains.
+    expect(domain.snapshot().bag).toHaveLength(57);
+    const res = domain.dispatch({ op: 'unequip', slot: 'ring1' });
+    expect(res.ok).toBe(false);
+    expect(!res.ok && res.reason).toBe('bag-full');
+    expect(domain.snapshot().equipment.ring1?.instanceId).toBe('eq-r1');
+  });
+
+  test('equip-from-bag swap is atomic: no-fit for the swapped-out piece changes nothing', () => {
+    const domain = createSorceressDomain({ playerName: '原子' });
+    // Oversized custom rings (2×2) on both doll ring slots.
+    domain.dispatch({
+      op: 'take-item',
+      item: sampleItem({ instanceId: 'big-r1', slot: 'ring', size: { w: 2, h: 2 } }),
+    });
+    domain.dispatch({
+      op: 'take-item',
+      item: sampleItem({ instanceId: 'big-r2', slot: 'ring', size: { w: 2, h: 2 } }),
+    });
+    // One small ring in the bag, then pack every remaining cell.
+    const swapIdx = putInBag(domain, sampleItem({ instanceId: 'small-r', slot: 'ring', name: '小戒' }));
+    for (let i = 0; i < 59; i++) {
+      expect(domain.dispatch({
+        op: 'take-item',
+        item: sampleItem({ instanceId: `jam-${i}`, slot: 'ring' }),
+      }).ok).toBe(true);
+    }
+    expect(domain.snapshot().bag).toHaveLength(60);
+    // Swapping small-r in would have to firstFit big-r1 (2×2) into one free cell — impossible.
+    const res = domain.dispatch({ op: 'equip-from-bag', index: swapIdx });
+    expect(res.ok).toBe(false);
+    expect(!res.ok && res.reason).toBe('bag-full');
+    const after = domain.snapshot();
+    expect(after.equipment.ring1?.instanceId).toBe('big-r1');
+    expect(after.equipment.ring2?.instanceId).toBe('big-r2');
+    expect(after.bag).toHaveLength(60);
+    expect(after.bag[swapIdx]?.item.instanceId).toBe('small-r');
   });
 });

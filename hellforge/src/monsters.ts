@@ -38,7 +38,7 @@ import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { AnimationClip, Handle, SceneAsset } from '@forgeax/engine-types';
 import { normalizeClipRoot } from './anim-root';
-import type { FxSystem } from './fx';
+import type { BodyVfx, FlightStyle, FxSystem, NovaTelegraphVfx } from './fx';
 import { combatBeat } from './fx/defs';
 import type { ContactShadowKit } from './contact-shadow';
 
@@ -200,10 +200,10 @@ export const MONSTERS: Record<MonsterKind, MonsterDef> = {
   // ── 熔渣督军 Slaglord — Slagdeep Hollow unique (Act 1 boss slice) ────────
   slaglord: {
     kind: 'slaglord', name: '熔渣督军',
-    hp: 420, speed: 2.0, damage: 18, attackRange: 2.3, attackCooldown: 1.5,
-    aggroRange: 14, xp: 160, level: 6, goldChance: 1, radius: 1.15,
+    hp: 360, speed: 2.4, damage: 14, attackRange: 2.3, attackCooldown: 2.4,
+    aggroRange: 14, xp: 300, level: 6, goldChance: 1, radius: 1.15,
     isBoss: true, enrageBelow: 0.4,
-    ranged: { speed: 11, cooldown: 3.5, range: 13, keepDistance: 0 },
+    ranged: { speed: 11, cooldown: 6.0, range: 13, keepDistance: 0 },
     palette: {
       body:   { color: [0.38, 0.10, 0.14], roughness: 0.75 },
       accent: { color: [0.20, 0.05, 0.08], roughness: 0.85 },
@@ -266,6 +266,16 @@ export interface Monster {
   /** Contact-frame strike scheduled by an attack swing (manager clock s; 0 = none). */
   strikeAt: number;
   strikeRanged: boolean;
+  /**
+   * True once the player has entered aggroRange (idle→aggro latch, with
+   * hysteresis) — drives the one-shot onAggro event.
+   */
+  aggro: boolean;
+  /**
+   * Boss AoE slam in flight: telegraph decals + marked ground point, set at
+   * melee wind-up and resolved (or cancelled) with the strike.
+   */
+  slam: { vfx: NovaTelegraphVfx; x: number; z: number; radius: number } | null;
   /** Knockback velocity (m/s, decays fast). */
   kbX: number; kbZ: number;
   /** Base playback speed of the current clip (before fps compensation). */
@@ -276,12 +286,17 @@ export interface Monster {
 
 /** A flamecaller/boss fire bolt in flight (managed by MonsterManager). */
 interface HostileBolt {
-  e: EntityHandle;
   x: number; y: number; z: number;
   dx: number; dz: number;
   speed: number;
   damage: number;
   age: number;
+  /** Attribution for onPlayerHit (the fan volley is the boss's, not the shaman's). */
+  source: MonsterKind;
+  /** Flight presentation — sprite body + trail (0-handles in Edit mode). */
+  style: FlightStyle;
+  vfx: BodyVfx;
+  trailT: number;
 }
 
 interface MatBank { byKey: Map<PartMatKey, { normal: MatHandle; flash: MatHandle; slow: MatHandle }> }
@@ -344,13 +359,24 @@ export interface MonsterEvents {
   onPlayerHit(damage: number, source: MonsterKind): void;
   /** Monster died (already despawned). */
   onDeath(m: Monster): void;
+  /** Idle→aggro transition (one shot per aggro latch; hysteresis on exit). */
+  onAggro?(m: Monster): void;
+  /** A melee/ranged strike was INITIATED (wind-up start, not impact). */
+  onAttack?(m: Monster): void;
 }
+
+// ── Boss (Slaglord) attack tuning ──────────────────────────────────────────
+/** AoE slam: ground-mark radius the player must escape during the wind-up. */
+const BOSS_SLAM_RADIUS = 2.5;
+/** AoE slam: seconds from telegraph mark to contact frame (readable dodge). */
+const BOSS_SLAM_WINDUP = 1.1;
+/** Ranged volley: 3 bolts fanned ±15° around the player-bearing. */
+const BOSS_FAN_ANGLE = Math.PI / 12;
 
 export class MonsterManager {
   monsters: Monster[] = [];
   private banks = new Map<MonsterKind, MatBank>();
   private bolts: HostileBolt[] = [];
-  private boltMat: MatHandle;
   private now = 0;
   private nextStableId = 1;
   /** Loaded GLB visuals by kind — empty until loadVisuals() runs. */
@@ -362,15 +388,6 @@ export class MonsterManager {
    */
   private visualsAttempted = new Set<MonsterKind>();
   private corpses: Corpse[] = [];
-  /**
-   * fps compensation, set by main.ts each frame (= smoothed real dt × 60).
-   * The engine's advanceAnimationPlayer steps clips a FIXED 1/60 s per
-   * rendered frame, so any fps below 60 plays skeletal animation in slow
-   * motion (measured: rate == fps/60 exactly). Until the engine takes real
-   * dt (filed in ENGINE-ISSUES-for-ubpa.md), every `speeds` write here is
-   * multiplied by this rate so playback stays wall-clock true.
-   */
-  animRate = 1;
   /** AssetRegistry surface kept from loadVisuals (instantiate per spawn). */
   private assets: {
     instantiate<T>(h: Handle<'SceneAsset', 'shared'>, w: World, parent?: EntityHandle):
@@ -409,10 +426,6 @@ export class MonsterManager {
       }
       this.banks.set(def.kind, bank);
     }
-    this.boltMat = world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', Materials.standard({
-      baseColor: [1, 0.35, 0.08, 1], roughness: 0.4, metallic: 0,
-      emissive: [1, 0.3, 0.06], emissiveIntensity: 1.8,
-    }));
   }
 
   /**
@@ -511,7 +524,7 @@ export class MonsterManager {
     if (!loop) m.clipUntil = performance.now() + (clip.dur / speed) * 1000;
     this.world.set(m.skinEnt, AnimationPlayer, {
       clips: [clip.h], times: new Float32Array([0]), weights: new Float32Array([1]),
-      speeds: new Float32Array([speed * this.animRate]), looping: loop, paused: false,
+      speeds: new Float32Array([speed]), looping: loop, paused: false,
     });
   }
 
@@ -623,6 +636,7 @@ export class MonsterManager {
       skinEnt, instEntities,
       clip: 'idle', clipUntil: 0,
       strikeAt: 0, strikeRanged: false,
+      aggro: false, slam: null,
       kbX: 0, kbZ: 0,
       animBase: 1,
       contactShadow,
@@ -694,7 +708,15 @@ export class MonsterManager {
     return false;
   }
 
+  /** Release a pending boss slam telegraph (death / despawn mid wind-up). */
+  private releaseSlam(m: Monster): void {
+    if (m.slam === null) return;
+    this.fx.releaseNovaTelegraph(m.slam.vfx);
+    m.slam = null;
+  }
+
   private kill(m: Monster): void {
+    this.releaseSlam(m);
     this.fx.gibs(m.x, 0.6, m.z, 'blood', m.kind === 'slaglord' ? 22 : 9);
     // Dissolve envelope layers on top of the gibs (PR8 T7): flipbook pop +
     // smoke wisps + embers read as the body disintegrating during the death
@@ -733,6 +755,7 @@ export class MonsterManager {
   }
 
   private despawn(m: Monster): void {
+    this.releaseSlam(m);
     if (m.contactShadow !== null) {
       this.contact?.disposeEntity(m.contactShadow);
       m.contactShadow = null;
@@ -847,6 +870,17 @@ export class MonsterManager {
       const def = MONSTERS[m.kind];
       const dx = playerX - m.x, dz = playerZ - m.z;
       const dist = Math.hypot(dx, dz);
+
+      // Idle→aggro latch (one-shot growl hook). Hysteresis on exit so a
+      // player hovering at the rim doesn't re-trigger the roar every frame.
+      const inAggro = !playerSafe && dist < def.aggroRange;
+      if (inAggro && !m.aggro) {
+        m.aggro = true;
+        this.events.onAggro?.(m);
+      } else if (m.aggro && (playerSafe || dist > def.aggroRange * 1.2)) {
+        m.aggro = false;
+      }
+
       const slowed = m.slowUntil > this.now;
       // Slow marker begins/ends with the same gameplay status clock.
       this.fx.syncSlowStatus(m.id, slowed, m.x, m.z, m.slowUntil);
@@ -859,25 +893,40 @@ export class MonsterManager {
       // A one-shot clip (attack wind-up / hit flinch) ROOTS the monster:
       // no stepping, no turning. This is what makes swings dodgeable — step
       // out of reach during the wind-up and the strike whiffs.
-      const busy = performance.now() < m.clipUntil;
+      // Boss exception: the Slaglord keeps stalking through his RANGED
+      // wind-up (rooted only for a beat at the loose, below) so the fight
+      // doesn't degenerate into a stationary bolt turret.
+      const busy = performance.now() < m.clipUntil
+        && !(def.isBoss && m.strikeAt > 0 && m.strikeRanged);
 
       // ── contact-frame strike resolution ──
       if (m.strikeAt > 0 && this.now >= m.strikeAt) {
         m.strikeAt = 0;
-        if (m.strikeRanged && def.ranged) {
-          // Loose the bolt at the player's CURRENT position.
-          const bd = Math.hypot(dx, dz) || 1;
-          const spawned = this.world.spawn(
-            { component: Transform, data: { pos: [m.x, 1.1, m.z], scale: [0.22, 0.22, 0.22] } },
-            { component: MeshFilter, data: { assetHandle: HANDLE_SPHERE } },
-            { component: MeshRenderer, data: { materials: [this.boltMat] } },
-          );
-          if (spawned.ok) {
-            this.bolts.push({
-              e: spawned.value as EntityHandle,
-              x: m.x, y: 1.1, z: m.z, dx: dx / bd, dz: dz / bd,
-              speed: def.ranged.speed, damage: def.damage, age: 0,
-            });
+        if (m.slam !== null) {
+          // Boss AoE slam: drop the telegraph and test the player against the
+          // MARKED ground (not the boss's reach) — sidestep the ring, no hit.
+          const slam = m.slam;
+          m.slam = null;
+          this.fx.releaseNovaTelegraph(slam.vfx);
+          const sdx = playerX - slam.x, sdz = playerZ - slam.z;
+          if (!playerSafe && sdx * sdx + sdz * sdz <= slam.radius * slam.radius) {
+            this.events.onPlayerHit(def.damage, m.kind);
+            this.fx.burst(playerX, 0.9, playerZ, 'blood', 4, 2.2);
+          }
+          this.fx.novaShockRing(slam.x, slam.z, slam.radius);
+          this.fx.novaScorch(slam.x, slam.z, slam.radius);
+          this.fx.burst(slam.x, 0.6, slam.z, 'fire', 10, 3.2);
+        } else if (m.strikeRanged && def.ranged) {
+          // Loose at the player's CURRENT position — bosses fire a 3-bolt fan.
+          const base = Math.atan2(dz, dx);
+          const offs = def.isBoss ? [-BOSS_FAN_ANGLE, 0, BOSS_FAN_ANGLE] : [0];
+          for (const off of offs) {
+            this.spawnBolt(m, def, Math.cos(base + off), Math.sin(base + off));
+          }
+          if (def.isBoss) {
+            // Brief root at the loose only (300 ms) — the wind-up itself
+            // left him mobile (see `busy` above).
+            m.clipUntil = Math.min(m.clipUntil, performance.now() + 300);
           }
         } else if (!playerSafe && dist <= def.attackRange + 0.55) {
           // Melee connects only if the player is STILL in reach — dodged
@@ -915,22 +964,38 @@ export class MonsterManager {
         }
         // Melee swing: start the wind-up NOW, land the hit at the clip's
         // contact frame (~45% in) — resolved above on a later tick.
-        if (dist <= def.attackRange && m.attackCd <= 0) {
+        // A pending strike (boss mid-volley-wind-up) is never overwritten.
+        if (dist <= def.attackRange && m.attackCd <= 0 && m.strikeAt <= 0) {
           m.attackCd = def.attackCooldown;
           const clip = this.glb.get(m.kind)?.clips.get('attack');
-          const windup = clip ? (clip.dur / 1.4) * 0.45 : 0.18;
-          this.playOnce(m, 'attack', 1.4);
-          m.strikeAt = this.now + windup;
-          m.strikeRanged = false;
+          if (def.isBoss) {
+            // Boss AoE slam: mark the player's CURRENT ground, then a slow,
+            // readable wind-up (~1.1 s to contact) — sidestep the ring.
+            const speed = clip ? Math.max(0.4, (clip.dur * 0.45) / BOSS_SLAM_WINDUP) : 0.7;
+            this.playOnce(m, 'attack', speed);
+            m.strikeAt = this.now + BOSS_SLAM_WINDUP;
+            m.strikeRanged = false;
+            m.slam = {
+              vfx: this.fx.novaTelegraph(playerX, playerZ, BOSS_SLAM_RADIUS),
+              x: playerX, z: playerZ, radius: BOSS_SLAM_RADIUS,
+            };
+          } else {
+            const windup = clip ? (clip.dur / 1.4) * 0.45 : 0.18;
+            this.playOnce(m, 'attack', 1.4);
+            m.strikeAt = this.now + windup;
+            m.strikeRanged = false;
+          }
+          this.events.onAttack?.(m);
         }
         // Ranged: same wind-up treatment (bolt looses at ~40% of the cast).
-        if (wantRanged && m.rangedCd <= 0 && def.ranged) {
+        if (wantRanged && m.rangedCd <= 0 && m.strikeAt <= 0 && def.ranged) {
           m.rangedCd = def.ranged.cooldown;
           const clip = this.glb.get(m.kind)?.clips.get('attack');
           const windup = clip ? (clip.dur / 1.2) * 0.4 : 0.2;
           this.playOnce(m, 'attack', 1.2);
           m.strikeAt = this.now + windup;
           m.strikeRanged = true;
+          this.events.onAttack?.(m);
         }
       } else if (!busy && dist > def.aggroRange * 2.5 && m.zone === 'wild') {
         // Far-away wilderness monsters idle-wander a little.
@@ -968,10 +1033,10 @@ export class MonsterManager {
             m.animBase = 1;
           }
         }
-        // fps compensation: re-write speeds EVERY frame (engine steps clips
-        // a fixed 1/60 s per frame; animRate = real dt × 60 corrects it).
+        // Re-write speeds every frame so animBase changes (chase / attack /
+        // enrage) take effect on the already-playing clip.
         if (m.skinEnt !== null) {
-          this.world.set(m.skinEnt, AnimationPlayer, { speeds: new Float32Array([m.animBase * this.animRate]) });
+          this.world.set(m.skinEnt, AnimationPlayer, { speeds: new Float32Array([m.animBase]) });
         }
       } else {
         // Hit-flash / slow-tint material swaps (parts fallback only).
@@ -1005,19 +1070,36 @@ export class MonsterManager {
       const dx = playerX - b.x, dz = playerZ - b.z;
       const hit = dx * dx + dz * dz < 0.55 * 0.55;
       if (hit && !playerSafe) {
-        this.events.onPlayerHit(b.damage, 'flamecaller');
+        this.events.onPlayerHit(b.damage, b.source);
         this.fx.burst(b.x, 1.0, b.z, 'fire', 6, 2.6);
+        this.fx.playEffect(combatBeat('hit-fire', ['sparks']), b.x, 1.0, b.z);
       }
       if (hit || b.age > 2.5) {
-        this.world.despawn(b.e);
+        this.fx.releaseFlightBody(b.vfx);
         this.bolts.splice(i, 1);
         continue;
       }
-      this.world.set(b.e, Transform, {
-        pos: [b.x, b.y, b.z],
-        scale: [0.22, 0.22, 0.22],
-      });
+      // PR8 body follows the bolt; trail drips at ~33 Hz (same caller-side
+      // rate-limit pattern as the player projectiles in skills.ts).
+      this.fx.moveFlightBody(b.vfx, b.x, b.y, b.z);
+      b.trailT -= dt;
+      if (b.trailT <= 0) {
+        b.trailT = 0.03;
+        this.fx.flightTrailPuff(b.style, b.x, b.y, b.z);
+      }
     }
+  }
+
+  /** Loose one hostile bolt — sprite flight body (0-handles in Edit mode). */
+  private spawnBolt(m: Monster, def: MonsterDef, dx: number, dz: number): void {
+    const style: FlightStyle = def.isBoss ? 'slag' : 'magma';
+    this.bolts.push({
+      x: m.x, y: 1.1, z: m.z, dx, dz,
+      speed: def.ranged!.speed, damage: def.damage, age: 0,
+      source: m.kind, style,
+      vfx: this.fx.flightBody(style, m.x, 1.1, m.z),
+      trailT: 0,
+    });
   }
 
   /** Wall-clock the manager runs on (skills use it for slow timing). */
@@ -1037,7 +1119,7 @@ export class MonsterManager {
 
   /** Clear hostile bolts / pending attacks without touching living monsters. */
   clearEnemyAttacks(): void {
-    for (const b of this.bolts) this.world.despawn(b.e);
+    for (const b of this.bolts) this.fx.releaseFlightBody(b.vfx);
     this.bolts.length = 0;
   }
 }

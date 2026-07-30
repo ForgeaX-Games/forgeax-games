@@ -34,11 +34,18 @@ import {
 import {
   emptyEquipment,
   equipSlotsFor,
+  itemFootprint,
   meltGoldValue,
   type Equipment,
   type EquipSlot,
   type ItemInstance,
 } from './items';
+import {
+  BAG_CELLS,
+  firstFit,
+  occupancy,
+  type BagAnchor,
+} from './bag-grid';
 import { FINISHER_UNLOCK_LEVEL, grantFinisherHotbar } from './finisher';
 import {
   assignActiveToHotbar,
@@ -65,8 +72,13 @@ type MutableHotbarSlots = [
   ActiveSkillId | null,
 ];
 
-/** 12×5 grid — see inventory-ui BAG_COLS. Legacy saves pad/truncate to this. */
-export const BAG_SIZE = 60;
+/**
+ * Bag capacity in cells (12×5, SSOT in bag-grid.ts). Kept as BAG_SIZE for
+ * existing callers; the bag itself is a variable-length anchor list.
+ */
+export const BAG_SIZE = BAG_CELLS;
+
+export type { BagAnchor };
 
 /** Belt potion stock — domain counters (not bag items), see UI-CUTSCENE-UPGRADE-PLAN §R2. */
 export interface PotionStock {
@@ -94,7 +106,8 @@ export interface CharacterSnapshot {
   readonly skillRanks: Readonly<Record<SkillNodeId, number>>;
   readonly hotbar: HotbarSlots;
   readonly selectedHotbarSlot: 0 | 1 | 2 | 3;
-  readonly bag: readonly (Readonly<ItemInstance> | null)[];
+  /** Anchor list (one entry per item, top-left cell) — see bag-grid.ts. */
+  readonly bag: readonly DeepReadonly<BagAnchor>[];
   readonly equipment: Readonly<Equipment>;
   readonly quests: Readonly<Record<QuestId, QuestSave>>;
   readonly potions: Readonly<PotionStock>;
@@ -211,7 +224,8 @@ export interface HydrateSorceressOptions {
   skillRanks: Readonly<Record<SkillNodeId, number>>;
   hotbar: HotbarSlots;
   selectedHotbarSlot: 0 | 1 | 2 | 3;
-  bag: readonly (DeepReadonly<ItemInstance> | null)[];
+  /** Validated v2 anchor list (save-schema guarantees in-bounds, no overlap). */
+  bag: readonly DeepReadonly<BagAnchor>[];
   equipment: DeepReadonly<Equipment>;
   quests: Readonly<Record<QuestId, QuestSave>>;
   /** Old saves predate potions — absent means 0/0 (no retroactive stock). */
@@ -229,7 +243,7 @@ class CharacterDomainImpl implements CharacterDomain {
   #skillRanks: Record<SkillNodeId, number>;
   #hotbar: [ActiveSkillId | null, ActiveSkillId | null, ActiveSkillId | null, ActiveSkillId | null];
   #selectedHotbarSlot: 0 | 1 | 2 | 3;
-  #bag: Array<ItemInstance | null>;
+  #bag: BagAnchor[];
   #equipment: Equipment;
   #quests: Record<QuestId, QuestSave>;
   #potions: PotionStock;
@@ -254,7 +268,7 @@ class CharacterDomainImpl implements CharacterDomain {
     // PR2a L8: creation hotbar = Frost Fang + Magma Bolt (slots 0–1).
     this.#hotbar = ['frost', 'magma', null, null];
     this.#selectedHotbarSlot = 0;
-    this.#bag = new Array(BAG_SIZE).fill(null);
+    this.#bag = [];
     this.#equipment = emptyEquipment();
     this.#quests = emptyQuests();
     // Starting belt stock (D2 convention: a couple of reds, one blue).
@@ -282,9 +296,7 @@ class CharacterDomainImpl implements CharacterDomain {
     domain.#skillRanks = { ...emptySkillRanks(), ...deepClone(opts.skillRanks as Record<SkillNodeId, number>) };
     domain.#hotbar = [...opts.hotbar] as [ActiveSkillId | null, ActiveSkillId | null, ActiveSkillId | null, ActiveSkillId | null];
     domain.#selectedHotbarSlot = opts.selectedHotbarSlot;
-    const bag = deepClone(opts.bag as Array<ItemInstance | null>);
-    while (bag.length < BAG_SIZE) bag.push(null);
-    domain.#bag = bag.slice(0, BAG_SIZE);
+    domain.#bag = deepClone(opts.bag as BagAnchor[]);
     domain.#equipment = deepClone(opts.equipment as Equipment);
     domain.#quests = deepClone(opts.quests as Record<QuestId, QuestSave>);
     domain.#potions = {
@@ -416,7 +428,7 @@ class CharacterDomainImpl implements CharacterDomain {
       skillRanks: { ...this.#skillRanks },
       hotbar: [...this.#hotbar] as HotbarSlots,
       selectedHotbarSlot: this.#selectedHotbarSlot,
-      bag: this.#bag.map((item) => (item ? deepClone(item) : null)),
+      bag: this.#bag.map((a) => ({ item: deepClone(a.item), x: a.x, y: a.y })),
       equipment: deepClone(this.#equipment),
       quests: deepClone(this.#quests),
       potions: { ...this.#potions },
@@ -475,16 +487,17 @@ class CharacterDomainImpl implements CharacterDomain {
       this.#equipment = { ...this.#equipment, [target]: deepClone(item) };
       return { ok: true };
     }
-    const i = this.#bag.indexOf(null);
-    if (i < 0) return { ok: false, reason: 'bag-full' };
-    this.#bag[i] = deepClone(item);
+    const { w, h } = itemFootprint(item);
+    const fit = firstFit(occupancy(this.#bag), w, h);
+    if (!fit) return { ok: false, reason: 'bag-full' };
+    this.#bag.push({ item: deepClone(item), x: fit.x, y: fit.y });
     return { ok: true };
   }
 
   #equipFromBag(index: number, target?: EquipSlot): CharacterResult {
-    if (index < 0 || index >= this.#bag.length) return { ok: false, reason: 'bad-index' };
-    const item = this.#bag[index];
-    if (!item) return { ok: false, reason: 'empty-slot' };
+    const entry = this.#bag[index];
+    if (index < 0 || !entry) return { ok: false, reason: 'bad-index' };
+    const item = entry.item;
     if (this.#level < item.reqLevel) return { ok: false, reason: 'level-req' };
     const slots = equipSlotsFor(item.slot);
     let dest: EquipSlot;
@@ -496,37 +509,50 @@ class CharacterDomainImpl implements CharacterDomain {
       dest = slots.find((s) => !this.#equipment[s]) ?? slots[0]!;
     }
     const prev = this.#equipment[dest];
+    // Swap path: validate BEFORE mutating so a no-fit swaps nothing (atomic).
+    let prevFit: { x: number; y: number } | null = null;
+    let rest: BagAnchor[] = [];
+    if (prev) {
+      rest = this.#bag.filter((_, i) => i !== index);
+      const { w, h } = itemFootprint(prev);
+      prevFit = firstFit(occupancy(rest), w, h);
+      if (!prevFit) return { ok: false, reason: 'bag-full' };
+      rest.splice(Math.min(index, rest.length), 0, { item: deepClone(prev), x: prevFit.x, y: prevFit.y });
+    } else {
+      rest = this.#bag.filter((_, i) => i !== index);
+    }
     this.#equipment = { ...this.#equipment, [dest]: deepClone(item) };
-    this.#bag[index] = prev ? deepClone(prev) : null;
+    this.#bag = rest;
     return { ok: true };
   }
 
   #unequip(slot: EquipSlot): CharacterResult {
     const item = this.#equipment[slot];
     if (!item) return { ok: false, reason: 'empty-equip' };
-    const i = this.#bag.indexOf(null);
-    if (i < 0) return { ok: false, reason: 'bag-full' };
-    this.#bag[i] = deepClone(item);
+    const { w, h } = itemFootprint(item);
+    const fit = firstFit(occupancy(this.#bag), w, h);
+    if (!fit) return { ok: false, reason: 'bag-full' };
+    this.#bag.push({ item: deepClone(item), x: fit.x, y: fit.y });
     this.#equipment = { ...this.#equipment, [slot]: null };
     return { ok: true };
   }
 
   #meltBag(index: number): CharacterResult {
-    if (index < 0 || index >= this.#bag.length) return { ok: false, reason: 'bad-index' };
-    const item = this.#bag[index];
-    if (!item) return { ok: false, reason: 'empty-slot' };
-    if (item.rarity === 'legendary') return { ok: false, reason: 'legendary-locked' };
-    const gold = meltGoldValue(item);
-    this.#bag[index] = null;
+    const got = this.#bagItemAt(index);
+    if ('ok' in got) return got;
+    if (got.item.rarity === 'legendary') return { ok: false, reason: 'legendary-locked' };
+    const gold = meltGoldValue(got.item);
+    this.#bag.splice(index, 1);
     this.#gold += gold;
     return { ok: true, goldGained: gold, melted: true };
   }
 
-  #bagItemAt(index: number): CharacterResult | ItemInstance {
-    if (index < 0 || index >= this.#bag.length) return { ok: false, reason: 'bad-index' };
-    const item = this.#bag[index];
-    if (!item) return { ok: false, reason: 'empty-slot' };
-    return item;
+  /** Bag indices are LIST indices into the anchor array (no empty cells). */
+  #bagItemAt(index: number): CharacterResult | BagAnchor {
+    if (!Number.isInteger(index)) return { ok: false, reason: 'bad-index' };
+    const entry = this.#bag[index];
+    if (index < 0 || !entry) return { ok: false, reason: 'bad-index' };
+    return entry;
   }
 
   #addMaterials(delta: MaterialCounts): void {
@@ -554,11 +580,11 @@ class CharacterDomainImpl implements CharacterDomain {
   #salvageBag(index: number): CharacterResult {
     const got = this.#bagItemAt(index);
     if ('ok' in got) return got;
-    if (got.rarity === 'legendary') return { ok: false, reason: 'legendary-locked' };
-    if (!canSalvage(got)) return { ok: false, reason: 'bad-recipe' };
-    const yield_ = salvageYield(got);
+    if (got.item.rarity === 'legendary') return { ok: false, reason: 'legendary-locked' };
+    if (!canSalvage(got.item)) return { ok: false, reason: 'bad-recipe' };
+    const yield_ = salvageYield(got.item);
     if (!yield_) return { ok: false, reason: 'bad-recipe' };
-    this.#bag[index] = null;
+    this.#bag.splice(index, 1);
     this.#addMaterials(yield_);
     return { ok: true };
   }
@@ -566,37 +592,46 @@ class CharacterDomainImpl implements CharacterDomain {
   #rerollBag(index: number): CharacterResult {
     const got = this.#bagItemAt(index);
     if ('ok' in got) return got;
-    if (got.rarity === 'legendary') return { ok: false, reason: 'legendary-locked' };
-    if (!canReroll(got)) return { ok: false, reason: 'bad-recipe' };
-    const cost = rerollCost(got);
+    if (got.item.rarity === 'legendary') return { ok: false, reason: 'legendary-locked' };
+    if (!canReroll(got.item)) return { ok: false, reason: 'bad-recipe' };
+    const cost = rerollCost(got.item);
     if (!cost) return { ok: false, reason: 'bad-recipe' };
     if (!this.#hasMaterials(cost)) return { ok: false, reason: 'not-enough-materials' };
-    const next = buildRerollResult(got);
+    const next = buildRerollResult(got.item);
     if (!next) return { ok: false, reason: 'bad-recipe' };
     this.#spendMaterials(cost);
-    this.#bag[index] = deepClone(next);
+    // Same slot/rarity/ilvl → same footprint; the item keeps its anchor cell.
+    this.#bag[index] = { item: deepClone(next), x: got.x, y: got.y };
     return { ok: true };
   }
 
   #fuseBag(indices: readonly [number, number, number]): CharacterResult {
     const [i0, i1, i2] = indices;
     if (new Set(indices).size !== 3) return { ok: false, reason: 'bad-index' };
-    const items: ItemInstance[] = [];
+    const entries: BagAnchor[] = [];
     for (const idx of indices) {
       const got = this.#bagItemAt(idx);
       if ('ok' in got) return got;
-      items.push(got);
+      entries.push(got);
     }
+    const items = entries.map((e) => e.item);
     if (items.some((it) => it.rarity === 'legendary')) {
       return { ok: false, reason: 'legendary-locked' };
     }
     if (!canFuse(items)) return { ok: false, reason: 'bad-recipe' };
     const result = buildFuseResult(items);
     if (!result) return { ok: false, reason: 'bad-recipe' };
-    // Clear inputs, place fused item in the lowest index.
+    // Validate placement before mutating (atomic): clear the 3 inputs, then
+    // firstFit the result on the freed grid — a no-fit fuses nothing.
+    const idxSet = new Set(indices);
+    const rest = this.#bag.filter((_, i) => !idxSet.has(i));
+    const { w, h } = itemFootprint(result);
+    const fit = firstFit(occupancy(rest), w, h);
+    if (!fit) return { ok: false, reason: 'bag-full' };
+    // Result takes the lowest input list index (cube-ui keeps that cell selected).
     const dest = Math.min(i0, i1, i2);
-    for (const idx of indices) this.#bag[idx] = null;
-    this.#bag[dest] = deepClone(result);
+    rest.splice(Math.min(dest, rest.length), 0, { item: deepClone(result), x: fit.x, y: fit.y });
+    this.#bag = rest;
     return { ok: true };
   }
 }

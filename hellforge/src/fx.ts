@@ -84,7 +84,7 @@ export interface NovaTelegraphVfx {
 }
 
 /** Projectile flight presentation style (body sheet / tint per skill). */
-export type FlightStyle = 'magma' | 'frost' | 'arc';
+export type FlightStyle = 'magma' | 'frost' | 'arc' | 'slag';
 
 const FLIGHT_STYLES: Record<FlightStyle, {
   color: FxColor;
@@ -113,6 +113,14 @@ const FLIGHT_STYLES: Record<FlightStyle, {
     // Jagged bolt sheet at high fps = crackling lightning core, not a smear.
     color: 'lightning', bodySheet: 'bolt', bodySize: 0.9, bodyFps: 14, bodyDistort: 0,
     glowSize: 0.5, trailSize: 0.34, trailEndSize: 0.12, trailLife: 0.26, tintMul: 1.4,
+  },
+  slag: {
+    // Slaglord volley — a heavy molten GLOB: the 16-frame impact flipbook
+    // churns like bubbling slag (never the player's sleek flame tongue),
+    // bigger body, darker scorch-adjacent tint so hostile ordnance reads
+    // "not yours" at a glance.
+    color: 'fire', bodySheet: 'impact', bodySize: 1.6, bodyFps: 12, bodyDistort: 0.05,
+    glowSize: 0.55, trailSize: 0.7, trailEndSize: 0.3, trailLife: 0.6, tintMul: 1.7,
   },
 };
 

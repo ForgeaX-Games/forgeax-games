@@ -6,7 +6,7 @@
 // Bus:        separate from sfx.ts (synth WebAudio). master * bgm * duck gain.
 // Unlock:     first pointerdown/keydown on the game uiRoot (browser autoplay).
 //             Pre-gesture setPhase is remembered and starts on arm.
-// Switch:     ~1s linear crossfade; faded-out tracks pause + rewind.
+// Switch:     ~0.35s linear crossfade; faded-out tracks pause + rewind.
 // Duck:       optional relative dB (PR4a L2 cinematic −6 dB); restores on unduck.
 // URL:        new URL('../assets/music/<file>', import.meta.url) (Vite preview).
 // SFX files:  NOT in scope — keep synthesized sfx.ts until a real sfx/ tree exists.
@@ -68,7 +68,9 @@ export type BgmHandle = {
   readonly duckDb: number | null;
 };
 
-const CROSSFADE_SEC = 1.0;
+// 0.35s — long enough to soften the swap, short enough that two tracks are
+// not both audible for a full second on camp⇄den portal crossings.
+const CROSSFADE_SEC = 0.35;
 
 const BGM_FILES: Record<BgmPhase, string> = {
   camp: 'bgm-camp.mp3',

@@ -93,6 +93,7 @@ export const Z = {
   questLog: 130,
   cube: 135,
   dialogue: 140,
+  banner: 145,
   cutsceneChrome: 170,
   cutsceneCaption: 175,
   shell: 200,

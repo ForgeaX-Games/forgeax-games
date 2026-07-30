@@ -120,7 +120,7 @@ describe('accept / mark-ready / turn-in', () => {
     // Wand in weapon or bag
     const hasWand =
       after.equipment.weapon?.name === '霜铸魔杖'
-      || after.bag.some((i) => i?.name === '霜铸魔杖');
+      || after.bag.some((a) => a.item.name === '霜铸魔杖');
     expect(hasWand).toBe(true);
     // Idempotent — second claim grants nothing
     const gold2 = d.snapshot().gold;

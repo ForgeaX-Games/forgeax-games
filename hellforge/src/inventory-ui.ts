@@ -1,9 +1,11 @@
 // Hellforge inventory panel — 1:1 aidiablo right-dock stone slab (B/I).
 // ~640px full-height stone panel: pillar at the free edge, amber-gem corner
-// ornaments, 10-cell paper doll, 8×3 bag grid, gold + materials footer, drag-drop.
+// ornaments, 10-cell paper doll, 12×5 multi-size bag grid (Diablo-style item
+// footprints — one tile per item spanning w×h cells), gold + materials footer,
+// drag-drop.
 // Interactions:
 //   • click a bag item  → equip (swaps the current piece back into the bag)
-//   • click an equipped slot → unequip into the bag
+//   • click an equipped slot → unequip into the bag (firstFit; no fit = stays on)
 //   • drag bag item → matching doll slot = equip (passes EquipSlot target); drag equipped → bag = unequip
 //   • right-click a bag item → melt confirm → melt to gold (legendary: no confirm)
 //   • hover → global tooltip with equipped-vs-candidate StatDelta comparison
@@ -11,10 +13,13 @@
 
 import type { MaterialCounts } from './crafting';
 import {
-  RARITY_META, SLOT_META, compareItems, equipSlotsFor, itemSlotForEquip,
+  RARITY_META, SLOT_META, compareItems, equipSlotsFor, itemFootprint, itemSlotForEquip,
   itemTooltipLines, meltGoldValue,
   type Equipment, type EquipSlot, type Item, type ItemInstance, type ItemSlot, type StatDelta,
 } from './items';
+import {
+  BAG_CELLS, BAG_COLS, BAG_ROWS, occupiedCellCount, type BagAnchor,
+} from './bag-grid';
 import { HudArt } from './hud-art';
 import {
   FONT_UI, FONT_DISPLAY, Ui, Z, deltaColor,
@@ -32,7 +37,8 @@ export interface InventoryCallbacks {
 
 /** Display-only inventory snapshot — never feed mutated copies back as authority. */
 export type InventoryEquipmentView = Readonly<Equipment>;
-export type InventoryBagView = readonly (Readonly<ItemInstance> | null)[];
+/** Anchor-list bag view (list indices — equip/melt callbacks address this array). */
+export type InventoryBagView = readonly BagAnchor[];
 
 export interface InventoryHandle {
   /** Re-render from a deep-readonly domain snapshot (cheap full rebuild — 30 nodes). */
@@ -79,8 +85,7 @@ const DOLL_LAYOUT: ReadonlyArray<{ slot: EquipSlot; area: EquipSlot }> = [
   { slot: 'ring2', area: 'ring2' },
 ];
 
-/** BAG_COLS × BAG_CELL_PX must fit the 640px dock minus body padding. */
-const BAG_COLS = 12;
+/** BAG_COLS (SSOT bag-grid.ts) × BAG_CELL_PX must fit the 640px dock minus body padding. */
 const BAG_CELL_PX = 40;
 const BAG_GAP_PX = 4;
 
@@ -404,17 +409,27 @@ export function installInventory(
     return el;
   };
 
-  const bagCell = (item: Readonly<ItemInstance> | null): HTMLDivElement => {
+  /** Background grid socket (the stone cell an item tile can cover). */
+  const bagCell = (): HTMLDivElement => {
     const el = document.createElement('div');
-    const qCol = item ? RARITY_META[item.rarity].color : null;
+    el.style.cssText =
+      `background-image:url('${HudArt.bagSlot()}');background-size:100% 100%;background-repeat:no-repeat;` +
+      `border:0;width:${BAG_CELL_PX}px;height:${BAG_CELL_PX}px;box-sizing:border-box;`;
+    return el;
+  };
+
+  /** One item tile spanning w×h cells (explicit grid-column/row placement). */
+  const bagTile = (item: Readonly<ItemInstance>, w: number, h: number): HTMLDivElement => {
+    const el = document.createElement('div');
+    const qCol = RARITY_META[item.rarity].color;
     el.style.cssText =
       'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
-      `cursor:${item ? 'pointer' : 'default'};` +
-      `background-image:url('${HudArt.bagSlot()}');background-size:100% 100%;background-repeat:no-repeat;` +
-      (item
-        ? `border:1px solid ${qCol}aa;box-shadow:inset 0 0 10px ${qCol}33;`
-        : 'border:0;') +
-      `width:${BAG_CELL_PX}px;height:${BAG_CELL_PX}px;box-sizing:border-box;overflow:hidden;`;
+      'cursor:pointer;position:relative;z-index:1;background-color:rgba(12,8,4,0.88);' +
+      `border:1px solid ${qCol}aa;box-shadow:inset 0 0 10px ${qCol}33;` +
+      'box-sizing:border-box;overflow:hidden;';
+    // Icon scales with the tile's short edge (1×1 → 32px, matching the old cell).
+    const iconPx = Math.min(w, h) * (BAG_CELL_PX + BAG_GAP_PX) - BAG_GAP_PX - 8;
+    el.appendChild(slotIconImg(item.slot, iconPx, { alt: item.name }));
     return el;
   };
 
@@ -434,34 +449,43 @@ export function installInventory(
       }
       dollBody.appendChild(el);
     }
-    // bag — single-cell only (no item dimensions)
+    // bag — 12×5 background sockets + one w×h tile per anchored item
     grid.innerHTML = '';
-    curBag.forEach((item, i) => {
-      const el = bagCell(item);
-      if (item) {
-        // Dense cell: icon only — the name lives in the hover tooltip.
-        el.appendChild(slotIconImg(item.slot, 32, { alt: item.name }));
-        el.addEventListener('mousemove', (e) => {
-          const wornSlot = wornSlotForCompare(curEq!, item.slot);
-          const worn = curEq![wornSlot];
-          const cols = [
-            renderTipCol(itemTooltipLines(item, curLevel), '背包'),
-            renderDeltaCol(compareItems(item, worn ?? null)),
-          ];
-          if (worn) cols.splice(1, 0, renderTipCol(itemTooltipLines(worn, curLevel), '已装备'));
-          showTip(e, cols);
-        });
-        el.addEventListener('mouseleave', hideTip);
-        el.addEventListener('click', () => { hideTip(); hideConfirm(); cb.onEquipFromBag(i); });
-        el.addEventListener('mousedown', (e) => startDrag({ kind: 'bag', index: i, item }, e));
-        el.addEventListener('contextmenu', (e) => {
-          e.preventDefault();
-          hideTip();
-          // L3 — legendary equip/store only; no melt confirm dialog.
-          if (item.rarity === 'legendary') return;
-          showConfirm(i, item);
-        });
+    for (let y = 0; y < BAG_ROWS; y++) {
+      for (let x = 0; x < BAG_COLS; x++) {
+        const cell = bagCell();
+        cell.style.gridColumn = `${x + 1}`;
+        cell.style.gridRow = `${y + 1}`;
+        grid.appendChild(cell);
       }
+    }
+    curBag.forEach((anchor, i) => {
+      const item = anchor.item;
+      const { w, h } = itemFootprint(item);
+      const el = bagTile(item, w, h);
+      el.style.gridColumn = `${anchor.x + 1} / span ${w}`;
+      el.style.gridRow = `${anchor.y + 1} / span ${h}`;
+      // Dense tile: icon only — the name lives in the hover tooltip.
+      el.addEventListener('mousemove', (e) => {
+        const wornSlot = wornSlotForCompare(curEq!, item.slot);
+        const worn = curEq![wornSlot];
+        const cols = [
+          renderTipCol(itemTooltipLines(item, curLevel), '背包'),
+          renderDeltaCol(compareItems(item, worn ?? null)),
+        ];
+        if (worn) cols.splice(1, 0, renderTipCol(itemTooltipLines(worn, curLevel), '已装备'));
+        showTip(e, cols);
+      });
+      el.addEventListener('mouseleave', hideTip);
+      el.addEventListener('click', () => { hideTip(); hideConfirm(); cb.onEquipFromBag(i); });
+      el.addEventListener('mousedown', (e) => startDrag({ kind: 'bag', index: i, item }, e));
+      el.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        hideTip();
+        // L3 — legendary equip/store only; no melt confirm dialog.
+        if (item.rarity === 'legendary') return;
+        showConfirm(i, item);
+      });
       grid.appendChild(el);
     });
   };
@@ -475,9 +499,9 @@ export function installInventory(
   return {
     update(eq, bag, playerLevel, gold, materials) {
       curEq = eq; curBag = bag; curLevel = playerLevel;
-      const used = bag.filter(Boolean).length;
-      const full = used >= bag.length && bag.length > 0;
-      bagTitle.textContent = full ? `背包 ${used}/${bag.length} · 已满` : `背包 ${used}/${bag.length}`;
+      const usedCells = occupiedCellCount(bag);
+      const full = usedCells >= BAG_CELLS;
+      bagTitle.textContent = full ? `背包 ${usedCells}/${BAG_CELLS} · 已满` : `背包 ${usedCells}/${BAG_CELLS}`;
       bagTitle.style.color = full ? '#ff6a6a' : '#d4b05a';
       goldEl.innerHTML = currencyPill(
         `<span style="color:#ffd700;font-size:14px;">★</span>` +

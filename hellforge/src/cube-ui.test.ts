@@ -54,6 +54,35 @@ describe('resolveForgeActions', () => {
     expect(st.lockReason).toBeNull();
   });
 
+  test('relaxed recipe: cross-slot same-rarity trios fuse (incl. rare→legendary)', () => {
+    const commons = resolveForgeActions([
+      item({ slot: 'weapon', rarity: 'common', instanceId: 'a' }),
+      item({ slot: 'helm', rarity: 'common', instanceId: 'b' }),
+      item({ slot: 'belt', rarity: 'common', instanceId: 'c' }),
+    ], zero);
+    expect(commons.fuse).toBe(true);
+    expect(commons.lockReason).toBeNull();
+
+    const rares = resolveForgeActions([
+      item({ slot: 'ring', rarity: 'rare', instanceId: 'r1' }),
+      item({ slot: 'amulet', rarity: 'rare', instanceId: 'r2' }),
+      item({ slot: 'boots', rarity: 'rare', instanceId: 'r3' }),
+    ], zero);
+    expect(rares.fuse).toBe(true);
+    expect(rares.lockReason).toBeNull();
+  });
+
+  test('mixed rarity trio → wrong-recipe', () => {
+    const st = resolveForgeActions([
+      item({ slot: 'weapon', rarity: 'common', instanceId: 'a' }),
+      item({ slot: 'helm', rarity: 'magic', instanceId: 'b' }),
+      item({ slot: 'belt', rarity: 'common', instanceId: 'c' }),
+    ], zero);
+    expect(st.salvage).toBe(false);
+    expect(st.fuse).toBe(false);
+    expect(st.lockReason).toBe('wrong-recipe');
+  });
+
   test('mixed placement → wrong-recipe', () => {
     const st = resolveForgeActions([
       item({ slot: 'weapon', rarity: 'common' }),

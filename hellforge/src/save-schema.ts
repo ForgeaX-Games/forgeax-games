@@ -14,14 +14,16 @@ import {
 import type { CharacterRecord, ClassId } from './classes';
 import type { DeepReadonly } from './deep-readonly';
 import type { Affix, AffixStat, Equipment, EquipSlot, ItemInstance, ItemSlot, Rarity } from './items';
-import { EQUIP_SLOT_ORDER, equipSlotsFor, SLOT_ORDER } from './items';
-import { BAG_SIZE, POTION_CAP } from './character-domain';
+import { EQUIP_SLOT_ORDER, equipSlotsFor, itemFootprint, SLOT_ORDER } from './items';
+import { BAG_CELLS, BAG_COLS, BAG_ROWS, canPlace, firstFit, occupancy, type BagAnchor } from './bag-grid';
+import { POTION_CAP } from './character-domain';
 import type { HotbarSlots } from './content-ids';
 import { clampSkillRanks } from './skill-tree';
 
 export const LEGACY_STORAGE_KEY = 'hellforge.characters.v1';
 export const SAVES_STORAGE_KEY = 'hellforge.character-saves.v1';
-export const SAVE_SCHEMA_VERSION = 1 as const;
+/** v2: bag is an anchor list ({item,x,y}[]) — v1's flat 60-cell array migrates on read. */
+export const SAVE_SCHEMA_VERSION = 2 as const;
 export const CHECKPOINT_CINDERWATCH = 'cinderwatch' as const;
 
 export type CheckpointId = typeof CHECKPOINT_CINDERWATCH;
@@ -44,7 +46,8 @@ export interface ProgressionSave {
 }
 
 export interface InventorySave {
-  readonly bag: readonly (DeepReadonly<ItemInstance> | null)[];
+  /** v2 anchor list — one entry per bag item (top-left cell, 0-based). */
+  readonly bag: readonly DeepReadonly<BagAnchor>[];
   readonly equipment: DeepReadonly<Equipment>;
 }
 
@@ -159,6 +162,16 @@ function parseItemInstance(raw: unknown): ItemInstance | null {
     score: raw.score,
   };
   if (typeof raw.legendary === 'string') item.legendary = raw.legendary;
+  // Optional footprint; absent derives from the slot default.
+  if (raw.size !== undefined) {
+    if (!isObject(raw.size) || !isFiniteNumber(raw.size.w) || !isFiniteNumber(raw.size.h)) return null;
+    const w = Math.floor(raw.size.w);
+    const h = Math.floor(raw.size.h);
+    if (w < 1 || h < 1 || w > BAG_COLS || h > BAG_ROWS) return null;
+    item.size = { w, h };
+  } else {
+    item.size = { ...itemFootprint(item) };
+  }
   return item;
 }
 
@@ -207,20 +220,43 @@ function parseEquipment(raw: unknown): Equipment | null {
   return eq;
 }
 
-function parseBag(raw: unknown): Array<ItemInstance | null> | null {
+/** v2 wire shape: anchor list — every entry validated in-bounds + non-overlapping. */
+function parseBag(raw: unknown): BagAnchor[] | null {
   if (!Array.isArray(raw)) return null;
-  const bag: Array<ItemInstance | null> = [];
+  if (raw.length > BAG_CELLS) return null;
+  const anchors: BagAnchor[] = [];
+  for (const entry of raw) {
+    if (!isObject(entry)) return null;
+    const item = parseItemInstance(entry.item);
+    if (!item) return null;
+    if (!isFiniteNumber(entry.x) || !isFiniteNumber(entry.y)) return null;
+    const x = Math.floor(entry.x);
+    const y = Math.floor(entry.y);
+    const { w, h } = itemFootprint(item);
+    if (!canPlace(occupancy(anchors), w, h, x, y)) return null;
+    anchors.push({ item, x, y });
+  }
+  return anchors;
+}
+
+/**
+ * v1 → v2 migration: the flat 60-cell array (sparse, single-cell era) replays
+ * through firstFit in index order. Entries that no longer fit under their new
+ * footprints are dropped — a full v1 bag of 2×3 armor cannot fit 60 cells.
+ */
+function migrateBagV1(raw: unknown): BagAnchor[] | null {
+  if (!Array.isArray(raw)) return null;
+  const anchors: BagAnchor[] = [];
   for (const slot of raw) {
-    if (slot === null) {
-      bag.push(null);
-      continue;
-    }
+    if (slot === null) continue;
     const item = parseItemInstance(slot);
     if (!item) return null;
-    bag.push(item);
+    const { w, h } = itemFootprint(item);
+    const fit = firstFit(occupancy(anchors), w, h);
+    if (!fit) continue;
+    anchors.push({ item, x: fit.x, y: fit.y });
   }
-  while (bag.length < BAG_SIZE) bag.push(null);
-  return bag.slice(0, BAG_SIZE);
+  return anchors;
 }
 
 function parseQuests(raw: unknown): Record<QuestId, QuestSave> | null {
@@ -254,7 +290,9 @@ function parseMaterials(raw: unknown): MaterialsSave {
 /** Validate unknown JSON → CharacterSaveEnvelope, or null if malformed. */
 export function parseEnvelope(raw: unknown): CharacterSaveEnvelope | null {
   if (!isObject(raw)) return null;
-  if (raw.schemaVersion !== SAVE_SCHEMA_VERSION) return null;
+  // v1 envelopes load through the migration path and normalize to v2.
+  const version = raw.schemaVersion;
+  if (version !== 1 && version !== SAVE_SCHEMA_VERSION) return null;
   if (raw.checkpointId !== CHECKPOINT_CINDERWATCH) return null;
 
   const character = raw.character;
@@ -276,7 +314,7 @@ export function parseEnvelope(raw: unknown): CharacterSaveEnvelope | null {
 
   const inventory = raw.inventory;
   if (!isObject(inventory)) return null;
-  const bag = parseBag(inventory.bag);
+  const bag = version === 1 ? migrateBagV1(inventory.bag) : parseBag(inventory.bag);
   const equipment = parseEquipment(inventory.equipment);
   if (!bag || !equipment) return null;
 

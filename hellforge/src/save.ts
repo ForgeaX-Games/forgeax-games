@@ -54,11 +54,24 @@ function browserStorage(): SaveStorage | null {
   }
 }
 
-let storage: SaveStorage = browserStorage() ?? {
-  getItem: (k) => memoryFallback.get(k) ?? null,
-  setItem: (k, v) => { memoryFallback.set(k, v); },
-  removeItem: (k) => { memoryFallback.delete(k); },
-};
+// Warn once per fallback install — never per operation.
+let memoryFallbackWarned = false;
+
+function warnMemoryFallbackOnce(): void {
+  if (memoryFallbackWarned) return;
+  memoryFallbackWarned = true;
+  console.warn('[hellforge] save: localStorage unavailable — in-memory fallback active; progress will NOT persist across sessions');
+}
+
+function createMemoryFallbackStorage(): SaveStorage {
+  return {
+    getItem: (k) => { warnMemoryFallbackOnce(); return memoryFallback.get(k) ?? null; },
+    setItem: (k, v) => { warnMemoryFallbackOnce(); memoryFallback.set(k, v); },
+    removeItem: (k) => { warnMemoryFallbackOnce(); memoryFallback.delete(k); },
+  };
+}
+
+let storage: SaveStorage = browserStorage() ?? createMemoryFallbackStorage();
 
 const SAVE_DEBOUNCE_MS = 250;
 
@@ -80,11 +93,8 @@ export function __setSaveStorageForTests(next: SaveStorage | null): void {
     lifecycleCleanups.pop()?.();
   }
   memoryFallback.clear();
-  storage = next ?? browserStorage() ?? {
-    getItem: (k) => memoryFallback.get(k) ?? null,
-    setItem: (k, v) => { memoryFallback.set(k, v); },
-    removeItem: (k) => { memoryFallback.delete(k); },
-  };
+  memoryFallbackWarned = false;
+  storage = next ?? browserStorage() ?? createMemoryFallbackStorage();
 }
 
 function readJson(key: string): unknown {
@@ -279,22 +289,35 @@ function writeSnapshotNow(snapshot: DeepReadonly<CharacterSnapshot>): void {
  * Synchronously flush the latest pending snapshot (and optional live provider)
  * before control returns. Used by pagehide / visibility hidden / return-to-title /
  * cleanup.
+ *
+ * Returns true when everything pending was written (or nothing was pending).
+ * On failure the snapshot is KEPT queued for retry (never dropped) and false
+ * is returned so the caller can surface a banner — see main.ts cleanup.
  */
-export function flushCharacterSaves(): void {
+export function flushCharacterSaves(): boolean {
   if (debounceTimer !== null) {
     clearTimeout(debounceTimer);
     debounceTimer = null;
   }
   const live = latestSnapshotProvider?.() ?? null;
   const toWrite = live ?? pendingSnapshot;
+  if (!toWrite) return true;
+  try {
+    writeSnapshotNow(toWrite);
+  } catch (err) {
+    // A failed write must not lose unsaved progress — keep it queued.
+    pendingSnapshot = toWrite;
+    console.warn('[hellforge] save: flush failed — snapshot kept for retry', err);
+    return false;
+  }
   pendingSnapshot = null;
-  if (toWrite) writeSnapshotNow(toWrite);
+  return true;
 }
 
 /** Flush after capturing the current domain snapshot (return-to-title path). */
-export function flushReturnToTitle(snapshot: DeepReadonly<CharacterSnapshot>): void {
+export function flushReturnToTitle(snapshot: DeepReadonly<CharacterSnapshot>): boolean {
   pendingSnapshot = snapshot;
-  flushCharacterSaves();
+  return flushCharacterSaves();
 }
 
 /**

@@ -14,7 +14,7 @@
 
 import type { HudViewModel, SkillSlotState, TargetViewModel } from './hud-view-model';
 import { HudArt } from './hud-art';
-import { FONT_DISPLAY, FONT_UI, FONT_MONO, Ui } from './ui-theme';
+import { FONT_DISPLAY, FONT_UI, FONT_MONO, Ui, Z } from './ui-theme';
 import { ensureUiStyles } from './ui-styles';
 import { potionIconSvg, skillIconImg } from './ui-icons';
 import type { UiTooltipHandle } from './ui-tooltip';
@@ -57,7 +57,7 @@ const GOLD_BRIGHT = Ui.goldBright;
 export interface HudDeps {
   /** Global tooltip (ui-tooltip.ts); skill slots / belt cells bind to it. */
   tooltip?: UiTooltipHandle;
-  /** Quick-button row actions ('character'|'skills'|'inventory'|'quests'|'map'). */
+  /** Quick-button row actions ('character'|'skills'|'inventory'|'craft'|'quests'|'map'). */
   onQuickAction?: (action: string) => void;
 }
 
@@ -459,6 +459,7 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
     { action: 'character', key: 'C', name: '角色', color: '#c8a84e' },
     { action: 'skills', key: 'K', name: '技能', color: '#88cc88' },
     { action: 'inventory', key: 'B', name: '背包', color: '#c8a84e' },
+    { action: 'craft', key: 'F', name: '熔炉', color: '#ff9a5a' },
     { action: 'quests', key: 'Q', name: '任务', color: '#ffd700' },
     { action: 'map', key: 'Tab', name: '地图', color: '#88aacc' },
   ];
@@ -574,13 +575,15 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
     'max-width:min(280px,42%);';
   hint.innerHTML =
     '<b>WASD</b> 移动 · <b>左键</b> 互动 · <b>右键</b> 施法 · <b>1-4</b> 选技 · <b>5/6</b> 药水<br>' +
-    '<b>B</b> 背包 · <b>K</b> 技能 · <b>C</b> 角色 · <b>Q</b> 任务 · <b>Tab</b> 地图 · <b>V</b> 展示';
+    '<b>B</b> 背包 · <b>F</b> 熔炉 · <b>K</b> 技能 · <b>C</b> 角色 · <b>Q</b> 任务 · <b>Tab</b> 地图 · <b>V</b> 展示';
 
   const areaEl = document.createElement('div');
   areaEl.style.cssText = 'position:absolute;left:50%;top:26%;transform:translate(-50%,-50%);display:none;text-align:center;';
 
   const bannerEl = document.createElement('div');
-  bannerEl.style.cssText = 'position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);display:none;' +
+  // Mount-level child with its own z rung (above cube/dialogue): craft-result
+  // and level-up banners must not be hidden behind an open panel.
+  bannerEl.style.cssText = `position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);display:none;z-index:${Z.banner};` +
     'padding:14px 36px 16px;border-radius:2px;pointer-events:none;max-width:min(720px,90%);' +
     `background:url('${HudArt.automapParchment()}') center/cover no-repeat,rgba(12,8,4,0.94);` +
     `border:1px solid ${Ui.goldLine};box-shadow:0 0 0 1px ${Ui.goldDeep},0 12px 36px rgba(0,0,0,0.75),` +
@@ -603,8 +606,9 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
   const popups = document.createElement('div');
   popups.style.cssText = 'position:absolute;inset:0;overflow:visible;';
 
-  root.append(bar, questEl, targetWrap, bossWrap, hint, areaEl, bannerEl, dmgFlash, deathEl, popups);
+  root.append(bar, questEl, targetWrap, bossWrap, hint, areaEl, dmgFlash, deathEl, popups);
   mount.appendChild(root);
+  mount.appendChild(bannerEl);
 
   // ── setters (incremental) ─────────────────────────────────────────────
   let lastXp = { level: -1, cur: -1, max: -1 };
@@ -859,12 +863,13 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
     apply, setOrbs, setXp, setGold, setKills, setSkills, setQuest, setBoss,
     setTarget, setShowcaseReduced,
     setAreaLabel, showArea, banner, floatText, damageFlash, showDeath, setOrbMotion,
-    hide: () => { root.style.display = 'none'; },
+    hide: () => { root.style.display = 'none'; bannerEl.style.display = 'none'; },
     show: () => { root.style.display = ''; },
     dispose: () => {
       if (areaTimer) window.clearTimeout(areaTimer);
       if (bannerTimer) window.clearTimeout(bannerTimer);
       root.remove();
+      bannerEl.remove();
     },
   };
 }

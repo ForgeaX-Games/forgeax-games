@@ -130,6 +130,15 @@ async function ensurePeakBank(
 }
 
 /**
+ * Clear the module-level peak bank. Call from game cleanup (Stop→title):
+ * cached shared-ref handles belong to the old World and dangle across a
+ * Stop→Play cycle, so the next boot must reload them against the new World.
+ */
+export function resetWildTerrainCache(): void {
+  peakBank = null;
+}
+
+/**
  * Spawn outer apron + seeded irregular lava cones around `origin`.
  * Call for camp and again for the den (different origin/seed/half).
  */

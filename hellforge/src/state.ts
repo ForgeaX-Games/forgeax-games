@@ -95,11 +95,13 @@ export function syncRuntimeFromCombatStats(
   p.manaRegen = stats.manaRegen;
 }
 
-/** Apply damage with a 0.5s i-frame window. Returns true if it landed. */
+/** Apply damage with a 0.9s i-frame window. Returns true if it landed. */
 export function damagePlayer(p: PlayerStats, dmg: number): boolean {
   if (p.dead || p.hurtCooldown > 0) return false;
   p.hp -= dmg;
-  p.hurtCooldown = 0.5;
+  // 0.9 s (was 0.5): boss slam + volley + adds could re-hit inside the old
+  // window and chain-lock the player into a death spiral.
+  p.hurtCooldown = 0.9;
   if (p.hp <= 0) { p.hp = 0; p.dead = true; }
   return true;
 }

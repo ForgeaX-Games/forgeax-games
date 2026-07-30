@@ -8,8 +8,11 @@ import {
   emptyEquipment,
   equipSlotsFor,
   EQUIP_SLOT_ORDER,
+  itemFootprint,
   meltGoldValue,
+  rollDrop,
   rollItem,
+  SLOT_FOOTPRINT,
   SLOT_ORDER,
   type EquipSlot,
   type Item,
@@ -95,7 +98,7 @@ describe('compareItems', () => {
 });
 
 describe('item instance persistence', () => {
-  test('stable instanceId survives v1 save round trip (equipment + bag)', () => {
+  test('stable instanceId survives save round trip (equipment + bag)', () => {
     const domain = createSorceressDomain({ playerName: '存档', id: 'persist-1' });
     const wand = createFrostforgedWand();
     const bagFiller = weapon({
@@ -108,14 +111,14 @@ describe('item instance persistence', () => {
     domain.dispatch({ op: 'take-item', item: bagFiller });
     const before = domain.snapshot();
     expect(before.equipment.weapon?.instanceId).toBe(wand.instanceId);
-    expect(before.bag.some((i) => i?.instanceId === 'bag-stable-42')).toBe(true);
+    expect(before.bag.some((a) => a.item.instanceId === 'bag-stable-42')).toBe(true);
 
     const env = serializeCharacter(before);
     const restored = hydrateCharacter(env).snapshot();
     expect(restored.equipment.weapon?.instanceId).toBe(wand.instanceId);
     expect(restored.equipment.weapon?.name).toBe('霜铸魔杖');
     expect(restored.equipment.weapon?.affixes).toEqual(wand.affixes);
-    expect(restored.bag.find((i) => i?.instanceId === 'bag-stable-42')?.name).toBe('背包杖');
+    expect(restored.bag.find((a) => a.item.instanceId === 'bag-stable-42')?.item.name).toBe('背包杖');
   });
 });
 
@@ -250,5 +253,72 @@ describe('PR10 T1 slot model (6→10)', () => {
     expect(rollItem('magic', 1, 'gloves').name).toContain('布手套');
     expect(rollItem('magic', 4, 'belt').name).toContain('铁');
     expect(rollItem('magic', 7, 'offhand').name).toContain('法器');
+  });
+});
+
+describe('SLOT_FOOTPRINT + itemFootprint (bag-grid sizes)', () => {
+  test('Diablo-style per-slot defaults', () => {
+    expect(SLOT_FOOTPRINT).toEqual({
+      weapon: { w: 1, h: 3 },
+      helm: { w: 2, h: 2 },
+      armor: { w: 2, h: 3 },
+      boots: { w: 2, h: 2 },
+      ring: { w: 1, h: 1 },
+      amulet: { w: 1, h: 1 },
+      gloves: { w: 2, h: 2 },
+      belt: { w: 2, h: 1 },
+      offhand: { w: 2, h: 2 },
+    });
+  });
+
+  test('rollItem stamps size from the slot footprint (incl. legendaries)', () => {
+    expect(rollItem('magic', 3, 'weapon').size).toEqual({ w: 1, h: 3 });
+    expect(rollItem('rare', 3, 'armor').size).toEqual({ w: 2, h: 3 });
+    expect(rollItem('common', 1, 'belt').size).toEqual({ w: 2, h: 1 });
+    const legendary = rollItem('legendary', 3);
+    expect(legendary.size).toEqual(SLOT_FOOTPRINT[legendary.slot]);
+    expect(createFrostforgedWand().size).toEqual({ w: 1, h: 3 });
+  });
+
+  test('itemFootprint: explicit size wins; absent derives from the slot', () => {
+    const plain = weapon({ affixes: [] });
+    expect(itemFootprint(plain)).toEqual({ w: 1, h: 3 }); // weapon default
+    expect(itemFootprint({ ...plain, size: { w: 2, h: 4 } })).toEqual({ w: 2, h: 4 });
+  });
+});
+
+describe('rollDrop loot tuning', () => {
+  function withRandom<T>(value: number, fn: () => T): T {
+    const orig = Math.random;
+    Math.random = () => value;
+    try {
+      return fn();
+    } finally {
+      Math.random = orig;
+    }
+  }
+
+  test('normal monsters drop at 0.28 (0.2 drops now, 0.5 still nothing)', () => {
+    expect(withRandom(0.2, () => rollDrop(3, false, 0))).not.toBeNull();
+    expect(withRandom(0.5, () => rollDrop(3, false, 0))).toBeNull();
+  });
+
+  test('boss roll without playerLevel is unchanged (ilvl = monster +0/1, +1)', () => {
+    // 0.5: no ilvl bump → ilvl 8; boss rolls at ilvl+1 = 9 → reqLevel 8.
+    const drop = withRandom(0.5, () => rollDrop(8, true, 0));
+    expect(drop).not.toBeNull();
+    expect(drop!.ilvl).toBe(9);
+    expect(drop!.reqLevel).toBe(8);
+  });
+
+  test('playerLevel clamps boss ilvl so reqLevel ≤ playerLevel', () => {
+    const drop = withRandom(0.5, () => rollDrop(8, true, 0, 5));
+    expect(drop).not.toBeNull();
+    expect(drop!.ilvl).toBe(6); // min(9, 5 + 1)
+    expect(drop!.reqLevel).toBe(5);
+    // Level-1 player still gets an equippable boss drop (ilvl floor 1 → reqLevel 1).
+    const low = withRandom(0.5, () => rollDrop(8, true, 0, 1));
+    expect(low!.ilvl).toBe(2);
+    expect(low!.reqLevel).toBe(1);
   });
 });

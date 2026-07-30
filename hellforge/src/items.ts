@@ -39,6 +39,12 @@ export interface Affix {
   label: string;
 }
 
+/** Bag-grid footprint in cells (Diablo-style multi-size items). */
+export interface ItemSize {
+  w: number;
+  h: number;
+}
+
 export interface Item {
   slot: ItemSlot;
   rarity: Rarity;
@@ -48,6 +54,8 @@ export interface Item {
   affixes: Affix[];
   score: number;           // comparable power (auto-suggest / sort)
   legendary?: string;      // unique id when rarity === 'legendary'
+  /** Bag footprint; absent means the slot default (SLOT_FOOTPRINT). */
+  size?: ItemSize;
 }
 
 /** Rolled loot with a stable instance id — domain/inventory authority. */
@@ -95,6 +103,28 @@ export const SLOT_META: Record<ItemSlot, { label: string }> = {
   belt:    { label: '腰带' },
   offhand: { label: '法器' },
 };
+
+/**
+ * Diablo II-style default bag footprints per slot (single source of truth —
+ * bag-grid/inventory-ui/save-schema all derive from this). Staves are long
+ * 1×3; body armor is the big 2×3; jewelry stays 1×1.
+ */
+export const SLOT_FOOTPRINT: Readonly<Record<ItemSlot, Readonly<ItemSize>>> = Object.freeze({
+  weapon:  Object.freeze({ w: 1, h: 3 }),
+  helm:    Object.freeze({ w: 2, h: 2 }),
+  armor:   Object.freeze({ w: 2, h: 3 }),
+  boots:   Object.freeze({ w: 2, h: 2 }),
+  ring:    Object.freeze({ w: 1, h: 1 }),
+  amulet:  Object.freeze({ w: 1, h: 1 }),
+  gloves:  Object.freeze({ w: 2, h: 2 }),
+  belt:    Object.freeze({ w: 2, h: 1 }),
+  offhand: Object.freeze({ w: 2, h: 2 }),
+});
+
+/** Item footprint — explicit `size` wins, else the slot default. */
+export function itemFootprint(item: Readonly<Item>): Readonly<ItemSize> {
+  return item.size ?? SLOT_FOOTPRINT[item.slot];
+}
 
 /** Drop-pool order for random rolls (ItemSlot identity). */
 export const SLOT_ORDER: ItemSlot[] = [
@@ -282,6 +312,7 @@ function rollLegendary(ilvl: number): ItemInstance {
     slot: def.slot, rarity: 'legendary', name: def.name,
     ilvl, reqLevel: Math.max(1, ilvl - 1),
     affixes, score: scoreOf(affixes, 'legendary'), legendary: def.id,
+    size: { ...SLOT_FOOTPRINT[def.slot] },
   });
 }
 
@@ -334,16 +365,19 @@ export function rollItem(rarity: Rarity, ilvl: number, slot?: ItemSlot): ItemIns
     slot: s, rarity, name,
     ilvl, reqLevel: Math.max(1, ilvl - 1),
     affixes, score: scoreOf(affixes, rarity),
+    size: { ...SLOT_FOOTPRINT[s] },
   });
 }
 
 /**
  * Kill-time drop roll. `magicFind` (0.2 = +20%) shifts weight from common
  * toward magic/rare/legendary. Returns null for "no equipment this kill".
+ * Optional `playerLevel` clamps BOSS ilvl so reqLevel ≤ playerLevel —
+ * boss loot must be equippable on pickup (reqLevel = ilvl − 1).
  */
-export function rollDrop(monsterLevel: number, isBoss: boolean, magicFind: number): ItemInstance | null {
-  if (!isBoss && Math.random() >= 0.13) return null;
-  const ilvl = Math.max(1, Math.min(10, monsterLevel + (Math.random() < 0.35 ? 1 : 0)));
+export function rollDrop(monsterLevel: number, isBoss: boolean, magicFind: number, playerLevel?: number): ItemInstance | null {
+  if (!isBoss && Math.random() >= 0.28) return null;
+  let ilvl = Math.max(1, Math.min(10, monsterLevel + (Math.random() < 0.35 ? 1 : 0)));
   const mf = 1 + magicFind;
   // rarity weights (commons don't scale with MF — that's the point of MF)
   const wCommon = isBoss ? 0 : 60;
@@ -357,7 +391,11 @@ export function rollDrop(monsterLevel: number, isBoss: boolean, magicFind: numbe
     : (r -= wMagic) < 0 ? 'magic'
     : (r -= wRare) < 0 ? 'rare'
     : 'legendary';
-  return rollItem(rarity, isBoss ? Math.min(10, ilvl + 1) : ilvl);
+  if (isBoss) {
+    ilvl = Math.min(10, ilvl + 1);
+    if (playerLevel !== undefined) ilvl = Math.max(1, Math.min(ilvl, Math.floor(playerLevel) + 1));
+  }
+  return rollItem(rarity, ilvl);
 }
 
 export type Equipment = Record<EquipSlot, ItemInstance | null>;
@@ -490,6 +528,7 @@ export function createFrostforgedWand(def: QuestRewardDef = FROSTFORGED_WAND_REW
     reqLevel: def.reqLevel,
     affixes,
     score: scoreOf(affixes, def.rarity),
+    size: { ...SLOT_FOOTPRINT[def.slot] },
   });
 }
 

@@ -48,6 +48,22 @@ export const USE_GREYBOX_DUNGEON_LAYOUT = false;
 /** Same decor fork salt as greybox dungeon-layout.ts (`seed ^ 0xdec0de`). */
 const DECOR_STREAM_SALT = 0xdec0de;
 
+/**
+ * Floor runs this far UNDER each wall cell from every side that touches
+ * walkable space. The wall prop (prop-den-wall) is an organic rock blob whose
+ * base silhouette recedes up to ~1 m behind its bbox front face, so a floor
+ * that stops at the walkable-cell boundary leaves a dark trench at every wall
+ * foot (worst at corners). 0.6 m covers the common recession depth.
+ */
+export const WALL_FLOOR_OVERHANG = 0.6;
+
+/**
+ * Under-wall floor strips sit this far below the walk plane (y=0). Wherever a
+ * strip overlaps a base floor slab the base slab wins the depth test, so the
+ * strip shows only inside wall cells — never a z-fight, never a visible step.
+ */
+export const WALL_FLOOR_STRIP_DROP = 0.004;
+
 export interface ModularDungeon extends DungeonLayout {
   graph: DungeonGraph;
   placements: ModulePlacement[];
@@ -90,6 +106,12 @@ function buildGeometryFromNav(
     rooms.some(
       (r) => cx >= r.x && cx < r.x + r.w && cy >= r.y && cy < r.y + r.h,
     );
+  const roomIndexAt = (cx: number, cy: number) =>
+    rooms.findIndex(
+      (r) => cx >= r.x && cx < r.x + r.w && cy >= r.y && cy < r.y + r.h,
+    );
+  const walkAt = (cx: number, cy: number): boolean =>
+    cx >= 0 && cy >= 0 && cx < CELLS && cy < CELLS && !!walk[cy * CELLS + cx];
 
   for (let i = 0; i < rooms.length; i++) {
     const r = rooms[i]!;
@@ -120,44 +142,169 @@ function buildGeometryFromNav(
   }
 
   const isBoundary = (cx: number, cy: number): boolean => {
-    if (walk[cy * CELLS + cx]) return false;
+    if (walkAt(cx, cy)) return false;
     for (let dy = -1; dy <= 1; dy++) {
       for (let dx = -1; dx <= 1; dx++) {
         if (dx === 0 && dy === 0) continue;
-        const nx = cx + dx;
-        const ny = cy + dy;
-        if (
-          nx >= 0 &&
-          ny >= 0 &&
-          nx < CELLS &&
-          ny < CELLS &&
-          walk[ny * CELLS + nx]
-        ) {
+        if (walkAt(cx + dx, cy + dy)) {
           return true;
         }
       }
     }
     return false;
   };
+
+  // Wall runs carry their FACING as rotY (yaw mapping the wall prop's +Z
+  // front onto the walkable side); the bake seats each block so its bbox
+  // front face lands exactly on the walkable-cell boundary (native prop
+  // depth, no cell-filling stretch). A run squeezed between two walkable
+  // areas (walkable on BOTH ±Z sides, or both ±X sides of a 1-cell pillar)
+  // is emitted as TWO half-depth runs — one seated on each boundary — so
+  // neither side keeps a gap; 2× native depth (2.28 m) still fits the cell.
+  // Multi-cell runs never face ±X (only their end cells can vote ±X, and
+  // those sides are covered flush by the column end caps).
+  const emitWallRun = (runCx0: number, runCx1: number, cy: number): void => {
+    const a = cellToLocal(runCx0, cy);
+    const bw = cellToLocal(runCx1, cy);
+    const centerX = (a.x + bw.x) / 2;
+    const centerZ = a.z;
+    const w = (runCx1 - runCx0 + 1) * CELL;
+    let vPZ = 0;
+    let vNZ = 0;
+    let vPX = 0;
+    let vNX = 0;
+    for (let x = runCx0; x <= runCx1; x++) {
+      if (walkAt(x, cy + 1)) vPZ++;
+      if (walkAt(x, cy - 1)) vNZ++;
+      if (walkAt(x + 1, cy)) vPX++;
+      if (walkAt(x - 1, cy)) vNX++;
+    }
+    const yC = WALL_H / 2 - 0.1;
+    const wall = (
+      x: number,
+      z: number,
+      sx: number,
+      sz: number,
+      rotY: number,
+    ): void => {
+      geometry.push({ kind: 'wall', x, y: yC, z, sx, sy: WALL_H, sz, rotY });
+    };
+    if (vPZ > 0 && vNZ > 0) {
+      wall(centerX, centerZ + CELL / 4, w, CELL / 2, 0);
+      wall(centerX, centerZ - CELL / 4, w, CELL / 2, Math.PI);
+      return;
+    }
+    if (vPX > 0 && vNX > 0 && vPZ === 0 && vNZ === 0 && runCx0 === runCx1) {
+      wall(centerX + CELL / 4, centerZ, CELL / 2, CELL, Math.PI / 2);
+      wall(centerX - CELL / 4, centerZ, CELL / 2, CELL, -Math.PI / 2);
+      return;
+    }
+    const rotY =
+      vPZ + vNZ >= vPX + vNX
+        ? vPZ >= vNZ
+          ? 0
+          : Math.PI
+        : vPX >= vNX
+          ? Math.PI / 2
+          : -Math.PI / 2;
+    wall(centerX, centerZ, w, CELL, rotY);
+  };
+
   for (let cy = 0; cy < CELLS; cy++) {
     let run = -1;
     for (let cx = 0; cx <= CELLS; cx++) {
       const b = cx < CELLS && isBoundary(cx, cy);
       if (b && run < 0) run = cx;
       if (!b && run >= 0) {
-        const a = cellToLocal(run, cy);
-        const bw = cellToLocal(cx - 1, cy);
-        slab(
-          'wall',
-          (a.x + bw.x) / 2,
-          a.z,
-          (cx - run) * CELL,
-          CELL,
-          WALL_H / 2 - 0.1,
-          WALL_H,
-        );
+        emitWallRun(run, cx - 1, cy);
         run = -1;
       }
+    }
+  }
+
+  // Under-wall floor strips: extend the floor WALL_FLOOR_OVERHANG metres
+  // under every boundary cell from each side that touches walkable (a
+  // walkable DIAGONAL neighbour contributes the two adjacent side strips —
+  // that covers inner corners, where the trench was worst). One merged slab
+  // per boundary cell; its top sits WALL_FLOOR_STRIP_DROP below the walk
+  // plane so it never z-fights the base slabs or the wall blocks above it.
+  for (let cy = 0; cy < CELLS; cy++) {
+    for (let cx = 0; cx < CELLS; cx++) {
+      if (!isBoundary(cx, cy)) continue;
+      const L = cellToLocal(cx, cy);
+      const x0 = L.x - CELL / 2;
+      const x1 = L.x + CELL / 2;
+      const z0 = L.z - CELL / 2;
+      const z1 = L.z + CELL / 2;
+      let minX = Infinity;
+      let maxX = -Infinity;
+      let minZ = Infinity;
+      let maxZ = -Infinity;
+      const growZSide = (top: boolean): void => {
+        minX = Math.min(minX, x0);
+        maxX = Math.max(maxX, x1);
+        if (top) {
+          minZ = Math.min(minZ, z1 - WALL_FLOOR_OVERHANG);
+          maxZ = Math.max(maxZ, z1);
+        } else {
+          minZ = Math.min(minZ, z0);
+          maxZ = Math.max(maxZ, z0 + WALL_FLOOR_OVERHANG);
+        }
+      };
+      const growXSide = (right: boolean): void => {
+        minZ = Math.min(minZ, z0);
+        maxZ = Math.max(maxZ, z1);
+        if (right) {
+          minX = Math.min(minX, x1 - WALL_FLOOR_OVERHANG);
+          maxX = Math.max(maxX, x1);
+        } else {
+          minX = Math.min(minX, x0);
+          maxX = Math.max(maxX, x0 + WALL_FLOOR_OVERHANG);
+        }
+      };
+      if (walkAt(cx, cy + 1)) growZSide(true);
+      if (walkAt(cx, cy - 1)) growZSide(false);
+      if (walkAt(cx + 1, cy)) growXSide(true);
+      if (walkAt(cx - 1, cy)) growXSide(false);
+      for (const [dx, dy] of [
+        [1, 1],
+        [1, -1],
+        [-1, 1],
+        [-1, -1],
+      ] as const) {
+        if (!walkAt(cx + dx, cy + dy)) continue;
+        growXSide(dx > 0);
+        growZSide(dy > 0);
+      }
+      if (!Number.isFinite(minX)) continue; // boundary ⇒ ≥1 walkable neighbour
+      // Tint follows the adjacent room slab when there is one (corridor and
+      // room-edge floors otherwise match the corridor tint, floorA).
+      let kind: GeoKind = 'floorA';
+      for (const [dx, dy] of [
+        [0, 1],
+        [0, -1],
+        [1, 0],
+        [-1, 0],
+        [1, 1],
+        [1, -1],
+        [-1, 1],
+        [-1, -1],
+      ] as const) {
+        const ri = roomIndexAt(cx + dx, cy + dy);
+        if (ri >= 0) {
+          kind = ri % 2 ? 'floorA' : 'floorB';
+          break;
+        }
+      }
+      geometry.push({
+        kind,
+        x: (minX + maxX) / 2,
+        y: -WALL_FLOOR_STRIP_DROP - 0.28 / 2, // 0.28 = slab() default floor thickness
+        z: (minZ + maxZ) / 2,
+        sx: maxX - minX,
+        sy: 0.28,
+        sz: maxZ - minZ,
+      });
     }
   }
 
