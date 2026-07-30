@@ -1,0 +1,10 @@
+{
+  "id": "game-nodia-fighting",
+  "title": "Nodia Fighting",
+  "platform": "wb-game-video",
+  "platformVersion": "1",
+  "entry": {
+    "blueprint": "blueprint.json",
+    "components": "dist/components"
+  }
+}
