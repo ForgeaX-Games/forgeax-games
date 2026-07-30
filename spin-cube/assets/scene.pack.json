@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "kind": "internal-text-package",
   "assets": [
     {
@@ -362,7 +362,8 @@
         "09dfe64a-52b8-4d3b-b995-63de08f79284",
         "485318f0-f480-4b85-9697-702c8c62d38e",
         "9c1e9e2c-4582-45e5-b0ad-784eebfc33a9"
-      ]
+      ],
+      "artifacts": {}
     },
     {
       "guid": "8008adc6-ff5e-44bb-b90e-5756e64c1424",
@@ -390,7 +391,8 @@
           "roughness": 0.95
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "0dbc1332-f669-489d-b562-9997fa6f98fa",
@@ -418,7 +420,8 @@
           "roughness": 0.5
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "19f07c35-851d-4355-aaa1-8cad31b002f8",
@@ -446,7 +449,8 @@
           "roughness": 0.9
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "ea4bbc4b-f733-488a-92d1-ff016648564b",
@@ -474,7 +478,8 @@
           "roughness": 0.85
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "09dfe64a-52b8-4d3b-b995-63de08f79284",
@@ -502,7 +507,8 @@
           "roughness": 0.7
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "485318f0-f480-4b85-9697-702c8c62d38e",
@@ -530,7 +536,8 @@
           "roughness": 0.4
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "9c1e9e2c-4582-45e5-b0ad-784eebfc33a9",
@@ -558,7 +565,8 @@
           "roughness": 0.6
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     }
   ]
 }

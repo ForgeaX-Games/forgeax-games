@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "kind": "internal-text-package",
   "assets": [
     {
@@ -620,7 +620,8 @@
         "8c6bc8c9-b788-44b9-8371-44693e8310a2",
         "c343641e-5b9a-4e34-984f-d4371560a47a",
         "5a5a5409-28c6-43f8-8cd2-27de07dda814"
-      ]
+      ],
+      "artifacts": {}
     }
   ]
 }

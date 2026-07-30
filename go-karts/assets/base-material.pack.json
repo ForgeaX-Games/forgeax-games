@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "kind": "internal-text-package",
   "assets": [
     {
@@ -10,21 +10,31 @@
           {
             "name": "Forward",
             "shader": "forgeax::default-unlit",
-            "tags": { "LightMode": "Forward" },
+            "tags": {
+              "LightMode": "Forward"
+            },
             "queue": 2000
           },
           {
             "name": "ShadowCaster",
             "shader": "forgeax::default-shadow-caster",
-            "tags": { "LightMode": "ShadowCaster" },
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
             "passKind": "shadow-caster"
           }
         ],
         "paramValues": {
-          "baseColor": [0.6, 0.6, 0.6, 1]
+          "baseColor": [
+            0.6,
+            0.6,
+            0.6,
+            1
+          ]
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     }
   ]
 }

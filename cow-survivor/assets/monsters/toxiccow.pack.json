@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "kind": "internal-text-package",
   "assets": [
     {
@@ -354,7 +354,8 @@
         "897b95ae-6fab-497d-ba57-47af92d18d24",
         "bba576e8-1606-4522-a8ae-390534156e05",
         "bf273290-e2c2-4498-b01b-c6f15b6ad12b"
-      ]
+      ],
+      "artifacts": {}
     },
     {
       "guid": "12ee9311-820e-4383-9ca2-d15a5449e7d8",
@@ -382,7 +383,8 @@
           "roughness": 0.8
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "d8efd559-431f-48ae-bd1c-e9cfb4d62c50",
@@ -410,7 +412,8 @@
           "roughness": 0.7
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "897b95ae-6fab-497d-ba57-47af92d18d24",
@@ -444,7 +447,8 @@
           "emissiveIntensity": 5
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "bba576e8-1606-4522-a8ae-390534156e05",
@@ -478,7 +482,8 @@
           "emissiveIntensity": 6
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "bf273290-e2c2-4498-b01b-c6f15b6ad12b",
@@ -512,7 +517,8 @@
           "emissiveIntensity": 1.5
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     }
   ]
 }

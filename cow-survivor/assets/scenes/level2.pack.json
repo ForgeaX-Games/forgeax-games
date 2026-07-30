@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "kind": "internal-text-package",
   "assets": [
     {
@@ -55,8 +55,16 @@
                 ]
               },
               "DirectionalLight": {
-                "direction": [0.5, -0.85, 0.4],
-                "color": [0.45098039215686275, 0.5490196078431373, 1],
+                "direction": [
+                  0.5,
+                  -0.85,
+                  0.4
+                ],
+                "color": [
+                  0.45098039215686275,
+                  0.5490196078431373,
+                  1
+                ],
                 "intensity": 0.55,
                 "castShadow": true,
                 "cascadeCount": 1,
@@ -4507,7 +4515,8 @@
         "806057cb-3db9-466b-a519-71b4c9c29005",
         "2fb55dbb-8bcc-4f6e-9bfb-9fc0a56a6d5c",
         "b4df9acc-bf4f-47ba-8fc2-d05c71d16d65"
-      ]
+      ],
+      "artifacts": {}
     },
     {
       "guid": "151fd994-a02b-4f02-a028-4c3dc64434ec",
@@ -4543,7 +4552,8 @@
           "roughness": 0.95
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "74d1900b-fd06-4626-b0db-d4baa18a846d",
@@ -4579,7 +4589,8 @@
           "roughness": 0.6
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "9561fa95-c304-4dcb-af72-43d333b14b56",
@@ -4621,7 +4632,8 @@
           "emissiveIntensity": 4
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "f4d6bc6e-3c25-4c66-af27-f92a1712ae3f",
@@ -4663,7 +4675,8 @@
           "emissiveIntensity": 6
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "fa24c43a-bc42-4b01-93d0-fa6cecd46f10",
@@ -4699,7 +4712,8 @@
           "roughness": 0.95
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "edf38218-788b-47a9-88e9-36b457777d6c",
@@ -4735,7 +4749,8 @@
           "roughness": 1
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "f13c06d4-937f-4c21-a2c7-751bbebaa42c",
@@ -4771,7 +4786,8 @@
           "roughness": 0.85
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "806057cb-3db9-466b-a519-71b4c9c29005",
@@ -4807,7 +4823,8 @@
           "roughness": 0.9
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "2fb55dbb-8bcc-4f6e-9bfb-9fc0a56a6d5c",
@@ -4843,7 +4860,8 @@
           "roughness": 0.8
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "b4df9acc-bf4f-47ba-8fc2-d05c71d16d65",
@@ -4879,7 +4897,8 @@
           "roughness": 0.7
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     }
   ]
 }

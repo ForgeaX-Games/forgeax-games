@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "kind": "internal-text-package",
   "assets": [
     {
@@ -258,7 +258,8 @@
         "f0d2fdfa-0ebb-4ad4-a86a-bf7f32b94829",
         "2c1630bb-83a0-4f37-bfd2-e15e83f7eeb3",
         "477047a6-f74c-46e0-a090-904f406bf366"
-      ]
+      ],
+      "artifacts": {}
     },
     {
       "guid": "ecde0ae8-b04f-451a-ac92-4f672b7f1f00",
@@ -294,7 +295,8 @@
           "roughness": 0.95
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "9f325530-f05e-46cc-a53a-23a05e2083ca",
@@ -330,7 +332,8 @@
           "roughness": 0.9
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "61df09ee-5f70-4d1a-b0b3-07aeeebe0b7b",
@@ -366,7 +369,8 @@
           "roughness": 0.85
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "4ad6b46d-1174-4a03-8712-92da89f735b8",
@@ -402,7 +406,8 @@
           "roughness": 0.7
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "f0d2fdfa-0ebb-4ad4-a86a-bf7f32b94829",
@@ -438,7 +443,8 @@
           "roughness": 0.4
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "2c1630bb-83a0-4f37-bfd2-e15e83f7eeb3",
@@ -474,7 +480,8 @@
           "roughness": 0.6
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "477047a6-f74c-46e0-a090-904f406bf366",
@@ -510,7 +517,8 @@
           "roughness": 0.5
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     }
   ]
 }

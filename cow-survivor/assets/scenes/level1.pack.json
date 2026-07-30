@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "kind": "internal-text-package",
   "assets": [
     {
@@ -43,8 +43,16 @@
                 "value": "Sun"
               },
               "DirectionalLight": {
-                "direction": [-0.6, -0.85, -0.35],
-                "color": [1, 0.94, 0.82],
+                "direction": [
+                  -0.6,
+                  -0.85,
+                  -0.35
+                ],
+                "color": [
+                  1,
+                  0.94,
+                  0.82
+                ],
                 "intensity": 2.1,
                 "castShadow": true,
                 "cascadeCount": 1,
@@ -2044,7 +2052,8 @@
         "009b69c8-4275-4717-b7c5-b4c9f9e922e9",
         "2a7abe41-1728-4923-84ab-b92cef25dd07",
         "5192e11b-a669-4358-96a1-81b2dee3f108"
-      ]
+      ],
+      "artifacts": {}
     },
     {
       "guid": "868d9be1-4797-4232-ba22-02fc9ccce56d",
@@ -2079,7 +2088,8 @@
           "roughness": 0.95
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "f6679b45-b8cb-4b62-a2bf-cdd7b5ed8a45",
@@ -2114,7 +2124,8 @@
           "roughness": 0.75
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "dc874ad6-0806-4c58-a0bc-66bde37b0ef9",
@@ -2155,7 +2166,8 @@
           "emissiveIntensity": 0
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "4821a62a-24ea-4c46-8d02-a0bbec93ea43",
@@ -2190,7 +2202,8 @@
           "roughness": 0.5
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "89158543-018c-4932-a1e1-602084c4416a",
@@ -2225,7 +2238,8 @@
           "roughness": 0.7
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "f4db678c-656b-426d-88c7-32eaab757581",
@@ -2260,7 +2274,8 @@
           "roughness": 0.7
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "b1c50761-45f6-43b0-98ff-2e823b5d24cd",
@@ -2295,7 +2310,8 @@
           "roughness": 0.8
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "e1aeaeec-eb43-4dec-8a1e-dbed8c84729f",
@@ -2330,7 +2346,8 @@
           "roughness": 0.92
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "d0eeb806-03eb-4cbc-a9fc-e8e3a11b2071",
@@ -2365,7 +2382,8 @@
           "roughness": 0.6
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "105ffb91-d5a2-4ef6-8ec8-1cf7b37984fb",
@@ -2406,7 +2424,8 @@
           "emissiveIntensity": 0.9
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "009b69c8-4275-4717-b7c5-b4c9f9e922e9",
@@ -2447,7 +2466,8 @@
           "emissiveIntensity": 0.8
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "2a7abe41-1728-4923-84ab-b92cef25dd07",
@@ -2488,7 +2508,8 @@
           "emissiveIntensity": 1.5
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "5192e11b-a669-4358-96a1-81b2dee3f108",
@@ -2523,7 +2544,8 @@
           "roughness": 0.95
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     }
   ]
 }

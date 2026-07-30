@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
   "kind": "internal-text-package",
   "assets": [
     {
@@ -52900,7 +52900,8 @@
         "c4d3f170-2b55-827e-6a82-d3a6f582bddc",
         "5022f423-bff2-08df-1744-574acebb7035",
         "d2b7dccf-94f3-3374-6ec0-892ad2d6ff8b"
-      ]
+      ],
+      "artifacts": {}
     },
     {
       "guid": "3f7a9c21-1b6e-4a02-8f3d-6c2e91b0a4d1",
@@ -52928,7 +52929,8 @@
           "roughness": 0.9
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "84d2f0b5-7e19-4c68-b2a7-0d5c3e8f16a2",
@@ -52956,7 +52958,8 @@
           "roughness": 0.9
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "c1e85d73-2f4a-4b90-a6c8-9b7e0d241f83",
@@ -52984,7 +52987,8 @@
           "roughness": 0.9
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "5b09e6f4-8d31-4e57-92ab-4f8c1a6d0e74",
@@ -53012,7 +53016,8 @@
           "roughness": 0.9
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "a76c3e18-0b5f-4d29-8e61-7d3a9f0c25b5",
@@ -53046,7 +53051,8 @@
           "emissiveIntensity": 2.2
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "29f4b8a6-6c07-4f83-b1d5-5e9c2a7f38c6",
@@ -53080,7 +53086,8 @@
           "emissiveIntensity": 1.2
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "e83a1d59-9f62-4a14-87c3-2b0e6d8f41d7",
@@ -53108,7 +53115,8 @@
           "roughness": 0.9
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "60d7f2c4-3a85-4c96-9e07-8c4b1e5a72e8",
@@ -53136,7 +53144,8 @@
           "roughness": 0.7
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "b52e8a07-4d93-4e60-a3f9-1a6d0c9b53f9",
@@ -53170,7 +53179,8 @@
           "emissiveIntensity": 0.35
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     },
     {
       "guid": "9a1c3b5e-2d4f-4e8a-9c01-7b3f6d8e0a12",
@@ -53198,7 +53208,8 @@
           "roughness": 0.85
         }
       },
-      "refs": []
+      "refs": [],
+      "artifacts": {}
     }
   ]
 }
