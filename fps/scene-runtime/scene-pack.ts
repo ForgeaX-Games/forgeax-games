@@ -6,7 +6,7 @@
 //
 //   { schemaVersion, kind:'internal-text-package', assets: [
 //       { guid, kind:'scene',    payload:{kind:'scene', nodes}, refs:[guid…] },
-//       { guid, kind:'material', payload:{kind:'material', passes, paramValues}, refs:[] },
+//       { guid, kind:'material', payload:{kind:'material', passes, values}, refs:[] },
 //       …
 //   ] }
 //
@@ -72,24 +72,24 @@ function rgbaToHex(c: ReadonlyArray<number | undefined> | undefined): string {
   const [r = 0.8, g = 0.8, b = 0.8] = c ?? [];
   return `#${h(r)}${h(g)}${h(b)}`;
 }
-function matToPayload(m: MaterialData | undefined): { kind: 'material'; passes: unknown[]; paramValues: Record<string, unknown> } {
+function matToPayload(m: MaterialData | undefined): { kind: 'material'; passes: unknown[]; values: Record<string, unknown> } {
   const albedo = typeof m?.albedo === 'string' ? m.albedo : '#cccccc';
   const shading = m?.shading === 'unlit' ? 'unlit' : 'standard';
   const shader = shading === 'unlit' ? 'forgeax::default-unlit' : 'forgeax::default-standard-pbr';
-  const paramValues: Record<string, unknown> = { baseColor: hexToRgba(albedo) };
+  const values: Record<string, unknown> = { baseColor: hexToRgba(albedo) };
   if (shading === 'standard') {
-    paramValues.metallic = num(m?.metallic, 0);
-    paramValues.roughness = num(m?.roughness, 0.8);
+    values.metallic = num(m?.metallic, 0);
+    values.roughness = num(m?.roughness, 0.8);
     const emissive = typeof m?.emissive === 'string' ? m.emissive : '#000000';
     const ei = num(m?.emissiveIntensity, 1);
     const e = hexToRgba(emissive);
-    if ((e[0] || e[1] || e[2]) && ei > 0) { paramValues.emissive = [e[0], e[1], e[2]]; paramValues.emissiveIntensity = ei; }
+    if ((e[0] || e[1] || e[2]) && ei > 0) { values.emissive = [e[0], e[1], e[2]]; values.emissiveIntensity = ei; }
   }
-  return { kind: 'material', passes: [{ name: 'Forward', shader, tags: { LightMode: 'Forward' }, queue: 2000 }], paramValues };
+  return { kind: 'material', passes: [{ name: 'Forward', program: { module: shader }, renderState: { tags: { LightMode: 'Forward' }, queue: 2000 } }], values };
 }
-function payloadToMat(payload: { passes?: Array<{ shader?: string }>; paramValues?: Record<string, unknown> } | undefined): MaterialData {
-  const pv = payload?.paramValues ?? {};
-  const shading = payload?.passes?.[0]?.shader === 'forgeax::default-unlit' ? 'unlit' : 'standard';
+function payloadToMat(payload: { passes?: Array<{ program?: { module?: string } }>; values?: Record<string, unknown> } | undefined): MaterialData {
+  const pv = payload?.values ?? {};
+  const shading = payload?.passes?.[0]?.program?.module === 'forgeax::default-unlit' ? 'unlit' : 'standard';
   const mat: MaterialData = { albedo: rgbaToHex(pv.baseColor as number[]), shading };
   if (shading === 'standard') {
     mat.metallic = num(pv.metallic, 0);

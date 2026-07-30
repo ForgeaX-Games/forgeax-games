@@ -15,36 +15,34 @@ import {
 import { createQueryState, queryRun, Entity } from '@forgeax/engine-ecs';
 import { resolveAssetHandle } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
-import type { MaterialAsset, MaterialPassDescriptor } from '@forgeax/engine-types';
+import type { MaterialAsset, MaterialPass } from '@forgeax/engine-types';
 
-const SHADOW_CASTER_PASS: MaterialPassDescriptor = {
+const SHADOW_CASTER_PASS: MaterialPass = {
   name: 'ShadowCaster',
-  shader: 'forgeax::default-shadow-caster',
-  tags: { LightMode: 'ShadowCaster' },
-  queue: 2000,
-  passKind: 'shadow-caster',
+  program: { module: 'forgeax::default-shadow-caster' },
+  renderState: { tags: { LightMode: 'ShadowCaster' }, queue: 2000 },
 };
 
 function needsShadowCaster(mat: MaterialAsset): boolean {
   const passes = mat.passes;
   if (!passes || passes.length === 0) return false;
-  if (passes.some((p) => p.name === 'ShadowCaster' || p.tags?.LightMode === 'ShadowCaster')) {
+  if (passes.some((p) => p.name === 'ShadowCaster' || (p.renderState?.tags as { LightMode?: string } | undefined)?.LightMode === 'ShadowCaster')) {
     return false;
   }
-  if (passes.some((p) => typeof p.shader === 'string' && p.shader.includes('skin'))) {
+  if (passes.some((p) => p.program.module.includes('skin'))) {
     return false;
   }
-  if (passes.some((p) => (p.queue ?? 0) >= 3000 || p.renderState?.blend !== undefined)) {
+  if (passes.some((p) => ((p.renderState?.queue as number | undefined) ?? 0) >= 3000 || p.renderState?.blend !== undefined)) {
     return false;
   }
-  return passes.some((p) => p.name === 'Forward' || p.tags?.LightMode === 'Forward');
+  return passes.some((p) => p.name === 'Forward' || (p.renderState?.tags as { LightMode?: string } | undefined)?.LightMode === 'Forward');
 }
 
 function inject(mat: MaterialAsset): void {
   // Mutate in place — shared MaterialAsset is the registry payload; extract
   // re-reads passes each frame / on dirty. Avoid reallocating every prop.
   const next = [...(mat.passes ?? []), SHADOW_CASTER_PASS];
-  (mat as unknown as { passes: MaterialPassDescriptor[] }).passes = next;
+  (mat as unknown as { passes: MaterialPass[] }).passes = next;
 }
 
 /** Patch every MeshRenderer material currently in the world. Returns count patched. */

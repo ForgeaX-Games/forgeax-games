@@ -320,8 +320,8 @@ const pack = {
         kind: 'material',
         payload: {
           kind: 'material',
-          passes: [{ name: 'Forward', shader: 'forgeax::default-standard-pbr', tags: { LightMode: 'Forward' }, queue: 2000 }],
-          paramValues,
+          passes: [{ name: 'Forward', program: { module: 'forgeax::default-standard-pbr' }, renderState: { tags: { LightMode: 'Forward' }, queue: 2000 } }],
+          values: paramValues,
         },
         refs: [],
       };

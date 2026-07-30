@@ -62,8 +62,8 @@ if (!pack.assets.some((a) => a.guid === GROUND_MAT_GUID)) {
     kind: 'material',
     payload: {
       kind: 'material',
-      passes: [{ name: 'Forward', shader: 'forgeax::default-standard-pbr', tags: { LightMode: 'Forward' }, queue: 2000 }],
-      paramValues: { baseColor: [0.40, 0.32, 0.24, 1], metallic: 0.0, roughness: 0.96 },
+      passes: [{ name: 'Forward', program: { module: 'forgeax::default-standard-pbr' }, renderState: { tags: { LightMode: 'Forward' }, queue: 2000 } }],
+      values: { baseColor: [0.40, 0.32, 0.24, 1], metallic: 0.0, roughness: 0.96 },
     },
     refs: [],
   });

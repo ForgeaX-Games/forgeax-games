@@ -193,7 +193,7 @@ function litMaterial(world: World, baseGuid: AssetGuid, rgb: [number, number, nu
   return world.allocSharedRef('MaterialAsset', {
     kind: 'material',
     parent: baseGuid,
-    paramValues: {
+    values: {
       baseColor: [rgb[0], rgb[1], rgb[2], 1],
       metallic: opts?.metallic ?? 0,
       roughness: opts?.roughness ?? 0.85,

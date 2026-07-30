@@ -10,14 +10,18 @@
         "passes": [
           {
             "name": "Forward",
-            "shader": "forgeax::default-unlit",
-            "tags": {
-              "LightMode": "Forward"
+            "program": {
+              "module": "forgeax::default-unlit"
             },
-            "queue": 2000
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
           }
         ],
-        "paramValues": {
+        "values": {
           "baseColor": [
             0.6,
             0.6,

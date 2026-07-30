@@ -292,14 +292,18 @@
         "passes": [
           {
             "name": "Forward",
-            "shader": "forgeax::default-standard-pbr",
-            "tags": {
-              "LightMode": "Forward"
+            "program": {
+              "module": "forgeax::default-standard-pbr"
             },
-            "queue": 2000
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
           }
         ],
-        "paramValues": {
+        "values": {
           "baseColor": [
             0.2,
             0.30196078431372547,
@@ -321,14 +325,18 @@
         "passes": [
           {
             "name": "Forward",
-            "shader": "forgeax::default-standard-pbr",
-            "tags": {
-              "LightMode": "Forward"
+            "program": {
+              "module": "forgeax::default-standard-pbr"
             },
-            "queue": 2000
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
           }
         ],
-        "paramValues": {
+        "values": {
           "baseColor": [
             0.4,
             0.7019607843137254,
@@ -356,14 +364,18 @@
         "passes": [
           {
             "name": "Forward",
-            "shader": "forgeax::default-standard-pbr",
-            "tags": {
-              "LightMode": "Forward"
+            "program": {
+              "module": "forgeax::default-standard-pbr"
             },
-            "queue": 2000
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
           }
         ],
-        "paramValues": {
+        "values": {
           "baseColor": [
             0.10196078431372549,
             0.1803921568627451,
@@ -385,14 +397,18 @@
         "passes": [
           {
             "name": "Forward",
-            "shader": "forgeax::default-standard-pbr",
-            "tags": {
-              "LightMode": "Forward"
+            "program": {
+              "module": "forgeax::default-standard-pbr"
             },
-            "queue": 2000
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
           }
         ],
-        "paramValues": {
+        "values": {
           "baseColor": [
             1,
             1,

@@ -105,7 +105,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const material: Handle<'MaterialAsset', 'shared'> = world.allocSharedRef('MaterialAsset', {
       kind: 'material',
       parent: baseMaterialGuid,
-      paramValues: {
+      values: {
         baseColor: [0.2 + Math.random() * 0.8, 0.2 + Math.random() * 0.8, 0.2 + Math.random() * 0.8, 1],
       },
     } satisfies MaterialAsset);

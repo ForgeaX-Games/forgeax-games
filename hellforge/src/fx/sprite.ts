@@ -475,12 +475,10 @@ export class SpriteSystem {
       kind: 'material',
       passes: [{
         name: 'Forward',
-        shader: SPRITE_SHADER_ID,
-        tags: { LightMode: 'Forward' },
-        queue: 3000,
-        renderState: SPRITE_RENDER_STATES[blend],
+        program: { module: SPRITE_SHADER_ID },
+        renderState: { ...SPRITE_RENDER_STATES[blend], tags: { LightMode: 'Forward' }, queue: 3000 },
       }],
-      paramValues: params as never,
+      values: params as never,
     });
     return { key, mat, params };
   }

@@ -268,8 +268,8 @@ export class FxSystem {
         // fails). Same for every register call below.
         this.lightningMat = ctx.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
           kind: 'material',
-          passes: [{ name: 'Forward', shader: LIGHTNING_SHADER_ID, tags: { LightMode: 'Forward' }, queue: 3000, renderState: TRANSPARENT_STATE }],
-          paramValues: lParams as never,
+          passes: [{ name: 'Forward', program: { module: LIGHTNING_SHADER_ID }, renderState: { ...TRANSPARENT_STATE, tags: { LightMode: 'Forward' }, queue: 3000 } }],
+          values: lParams as never,
         });
         this.lightningParams = lParams;
         // ── shockwave pool ──────────────────────────────────────────────
@@ -280,8 +280,8 @@ export class FxSystem {
           const sParams = { baseColor: [...sDefault.baseColor], metallic: 1.0, roughness: sDefault.roughness };
           const sMat = ctx.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
             kind: 'material',
-            passes: [{ name: 'Forward', shader: SHOCKWAVE_SHADER_ID, tags: { LightMode: 'Forward' }, queue: 3000, renderState: TRANSPARENT_STATE }],
-            paramValues: sParams as never,
+            passes: [{ name: 'Forward', program: { module: SHOCKWAVE_SHADER_ID }, renderState: { ...TRANSPARENT_STATE, tags: { LightMode: 'Forward' }, queue: 3000 } }],
+            values: sParams as never,
           });
           this.shockwavePool.push({ mat: sMat, params: sParams });
         }
@@ -312,8 +312,8 @@ export class FxSystem {
           };
           const mat = ctx.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
             kind: 'material',
-            passes: [{ name: 'Forward', shader: shaderId, tags: { LightMode: 'Forward' }, queue: 3000, renderState: BULLET_STATE }],
-            paramValues: params as never,
+            passes: [{ name: 'Forward', program: { module: shaderId }, renderState: { ...BULLET_STATE, tags: { LightMode: 'Forward' }, queue: 3000 } }],
+            values: params as never,
           });
           this.sceneEffectMats[assetKey] = { mat, params, asset };
         }
@@ -329,8 +329,8 @@ export class FxSystem {
             };
             const mat = ctx.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
               kind: 'material',
-              passes: [{ name: 'Forward', shader: FIREBALL_SHADER_ID, tags: { LightMode: 'Forward' }, queue: 3000, renderState: TRANSPARENT_STATE }],
-              paramValues: params as never,
+              passes: [{ name: 'Forward', program: { module: FIREBALL_SHADER_ID }, renderState: { ...TRANSPARENT_STATE, tags: { LightMode: 'Forward' }, queue: 3000 } }],
+              values: params as never,
             });
             this.fireballPool.push({ mat, params });
           }
@@ -359,8 +359,8 @@ export class FxSystem {
           };
           const mat = ctx.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
             kind: 'material',
-            passes: [{ name: 'Forward', shader: shaderId, tags: { LightMode: 'Forward' }, queue: 3000, renderState: BULLET_STATE }],
-            paramValues: params as never,
+            passes: [{ name: 'Forward', program: { module: shaderId }, renderState: { ...BULLET_STATE, tags: { LightMode: 'Forward' }, queue: 3000 } }],
+            values: params as never,
           });
           this.bulletMats[target] = mat;
           this.bulletMatParams.push(params);

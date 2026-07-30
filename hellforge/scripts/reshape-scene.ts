@@ -120,8 +120,8 @@ function cmdApply(packPath: string, overridesFile?: string): void {
       kind: 'material',
       payload: {
         kind: 'material',
-        passes: [{ name: 'Forward', shader: 'forgeax::default-standard-pbr', tags: { LightMode: 'Forward' }, queue: 2000 }],
-        paramValues: { baseColor: [0.28, 0.20, 0.16, 1], metallic: 0.02, roughness: 0.92 },
+        passes: [{ name: 'Forward', program: { module: 'forgeax::default-standard-pbr' }, renderState: { tags: { LightMode: 'Forward' }, queue: 2000 } }],
+        values: { baseColor: [0.28, 0.20, 0.16, 1], metallic: 0.02, roughness: 0.92 },
       },
       refs: [],
     });
@@ -257,8 +257,8 @@ function ensureBoxMat(pack: ReturnType<typeof readPack>, scene: ReturnType<typeo
       kind: 'material',
       payload: {
         kind: 'material',
-        passes: [{ name: 'Forward', shader: 'forgeax::default-standard-pbr', tags: { LightMode: 'Forward' }, queue: 2000 }],
-        paramValues: { baseColor: [0.28, 0.20, 0.16, 1], metallic: 0.02, roughness: 0.92 },
+        passes: [{ name: 'Forward', program: { module: 'forgeax::default-standard-pbr' }, renderState: { tags: { LightMode: 'Forward' }, queue: 2000 } }],
+        values: { baseColor: [0.28, 0.20, 0.16, 1], metallic: 0.02, roughness: 0.92 },
       },
       refs: [],
     });

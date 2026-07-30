@@ -303,8 +303,8 @@ export class FxSystem {
         const fbParams: ShaderParams = { baseColor: [1.0, 0.18, 0.03, 1], metallic: 0, roughness: 1.35 };
         this.fireBoltMat = this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
           kind: 'material',
-          passes: [{ name: 'Forward', shader: FIRE_BOLT_SHADER_ID, tags: { LightMode: 'Forward' }, queue: 3000, renderState: FX_RENDER_STATE }],
-          paramValues: fbParams as never,
+          passes: [{ name: 'Forward', program: { module: FIRE_BOLT_SHADER_ID }, renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'Forward' }, queue: 3000 } }],
+          values: fbParams as never,
         });
         this.fireBoltParams = fbParams;
 
@@ -317,8 +317,8 @@ export class FxSystem {
           this.frostParams.push(params);
           return this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
             kind: 'material',
-            passes: [{ name: 'Forward', shader, tags: { LightMode: 'Forward' }, queue: 3000, renderState: FX_RENDER_STATE }],
-            paramValues: params as never,
+            passes: [{ name: 'Forward', program: { module: shader }, renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'Forward' }, queue: 3000 } }],
+            values: params as never,
           });
         };
         this.frostHandles = {
@@ -338,12 +338,10 @@ export class FxSystem {
             kind: 'material',
             passes: [{
               name: 'Forward',
-              shader: MOVE_CLICK_SHADER_ID,
-              tags: { LightMode: 'Forward' },
-              queue: 3000,
-              renderState: FX_RENDER_STATE,
+              program: { module: MOVE_CLICK_SHADER_ID },
+              renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'Forward' }, queue: 3000 },
             }],
-            paramValues: params as never,
+            values: params as never,
           });
           this.moveClickPool.push({ mat, params });
           this.moveClickFree.push(i);
@@ -373,8 +371,8 @@ export class FxSystem {
     const params: ShaderParams = { baseColor: [tint[0], tint[1], tint[2], 1], metallic: 0, roughness: 1.0 };
     const mat = this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
       kind: 'material',
-      passes: [{ name: 'Forward', shader: PORTAL_SHADER_ID, tags: { LightMode: 'Forward' }, queue: 3000, renderState: FX_RENDER_STATE }],
-      paramValues: params as never,
+      passes: [{ name: 'Forward', program: { module: PORTAL_SHADER_ID }, renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'Forward' }, queue: 3000 } }],
+      values: params as never,
     });
     this.portalMats.push({ mat, params });
     return mat;

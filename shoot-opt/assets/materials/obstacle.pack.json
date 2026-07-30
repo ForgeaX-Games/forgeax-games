@@ -8,7 +8,7 @@
       "payload": {
         "kind": "material",
         "parent": 0,
-        "paramValues": {
+        "values": {
           "baseColor": [
             0.15,
             0.12,

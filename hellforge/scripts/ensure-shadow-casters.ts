@@ -9,32 +9,28 @@ import { resolve } from 'node:path';
 
 const SHADOW_CASTER_PASS = {
   name: 'ShadowCaster',
-  shader: 'forgeax::default-shadow-caster',
-  tags: { LightMode: 'ShadowCaster' },
-  queue: 2000,
-  passKind: 'shadow-caster',
+  program: { module: 'forgeax::default-shadow-caster' },
+  renderState: { tags: { LightMode: 'ShadowCaster' }, queue: 2000 },
 };
 
 type Pass = {
   name?: string;
-  shader?: string;
-  tags?: { LightMode?: string };
-  queue?: number;
-  renderState?: { blend?: unknown };
+  program?: { module?: string };
+  renderState?: { tags?: { LightMode?: string }; queue?: number; blend?: unknown };
 };
 
 function patchPasses(passes: Pass[]): boolean {
   if (!Array.isArray(passes) || passes.length === 0) return false;
-  if (passes.some((p) => p.name === 'ShadowCaster' || p.tags?.LightMode === 'ShadowCaster')) {
+  if (passes.some((p) => p.name === 'ShadowCaster' || p.renderState?.tags?.LightMode === 'ShadowCaster')) {
     return false;
   }
-  if (passes.some((p) => typeof p.shader === 'string' && p.shader.includes('skin'))) {
+  if (passes.some((p) => typeof p.program?.module === 'string' && p.program.module.includes('skin'))) {
     return false;
   }
-  if (passes.some((p) => (p.queue ?? 0) >= 3000 || p.renderState?.blend !== undefined)) {
+  if (passes.some((p) => (p.renderState?.queue ?? 0) >= 3000 || p.renderState?.blend !== undefined)) {
     return false;
   }
-  if (!passes.some((p) => p.name === 'Forward' || p.tags?.LightMode === 'Forward')) {
+  if (!passes.some((p) => p.name === 'Forward' || p.renderState?.tags?.LightMode === 'Forward')) {
     return false;
   }
   passes.push({ ...SHADOW_CASTER_PASS });

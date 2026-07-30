@@ -91,17 +91,16 @@ export function installContactShadows(world: World): ContactShadowKit {
     passes: [
       {
         name: 'Forward',
-        shader: 'forgeax::default-unlit',
-        tags: { LightMode: 'Forward' },
-        queue: 3000,
-        passKind: 'forward',
+        program: { module: 'forgeax::default-unlit' },
         renderState: {
+          tags: { LightMode: 'Forward' },
+          queue: 3000,
           blend: straightAlphaBlend,
           depthWriteEnabled: false,
         },
       },
     ],
-    paramValues: {
+    values: {
       // Texture carries the soft alpha; tint keeps RGB black.
       baseColor: [0.02, 0.015, 0.01, 0.9],
       baseColorTexture: unwrapHandle(tex),

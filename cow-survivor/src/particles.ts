@@ -408,12 +408,10 @@ export class ParticleSystem {
       kind: 'material',
       passes: [{
         name: 'Forward',
-        shader: PARTICLE_SHADER_ID,
-        tags: { LightMode: 'Forward' },
-        queue: 3000,
-        renderState: PARTICLE_RENDER_STATE,
+        program: { module: PARTICLE_SHADER_ID },
+        renderState: { ...PARTICLE_RENDER_STATE, tags: { LightMode: 'Forward' }, queue: 3000 },
       }],
-      paramValues: params as never,
+      values: params as never,
     });
     const em = new ParticleEmitter(this.ctx, opts, matHandle, params);
     this.emitters.set(name, em);

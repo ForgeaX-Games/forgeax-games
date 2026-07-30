@@ -1457,13 +1457,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       passes: [
         {
           name: 'ShadowCaster',
-          shader: 'forgeax::default-shadow-caster',
-          tags: { LightMode: 'ShadowCaster' },
-          queue: 2000,
-          passKind: 'shadow-caster',
+          program: { module: 'forgeax::default-shadow-caster' },
+          renderState: { tags: { LightMode: 'ShadowCaster' }, queue: 2000 },
         },
       ],
-      paramValues: {},
+      values: {},
     });
     const shadowProxy = world.spawn(
       {
