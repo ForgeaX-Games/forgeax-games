@@ -62,6 +62,13 @@ export type BgmHandle = {
   duck(db: number): void;
   /** Restore bus to unducked. Idempotent. */
   unduck(): void;
+  /**
+   * N1 intro arbitration: while held, gesture arm may unlock but tracks stay
+   * silent/paused so PV owns the first audible gesture.
+   */
+  holdForIntro(): void;
+  /** Release intro hold and start the active phase if already armed. */
+  releaseIntroHold(): void;
   dispose(): void;
   readonly phase: BgmPhase;
   /** Active duck in dB, or null when unducked. */
@@ -116,13 +123,22 @@ export function installBgm(uiRoot: HTMLElement): BgmHandle {
   let bgmVolume = 0.22;
   let duckBus: BgmDuckBus = { duckDb: null };
   let armed = false;
+  let introHold = false;
   const tracks = new Map<BgmPhase, Track>();
   let unlock: (() => void) | null = null;
 
   const effective = (): number =>
     clamp01(masterVolume * bgmVolume * bgmDuckLinearGain(duckBus));
 
+  const pauseAll = (): void => {
+    for (const track of tracks.values()) {
+      try { track.el.pause(); } catch { /* */ }
+      track.playRequested = false;
+    }
+  };
+
   const startTrack = (track: Track): void => {
+    if (introHold) return;
     if (track.playRequested && !track.el.paused) return;
     track.playRequested = true;
     try {
@@ -204,6 +220,21 @@ export function installBgm(uiRoot: HTMLElement): BgmHandle {
     },
     unduck(): void {
       duckBus = unduckBgm(duckBus);
+    },
+    holdForIntro(): void {
+      introHold = true;
+      pauseAll();
+    },
+    releaseIntroHold(): void {
+      if (!introHold) return;
+      introHold = false;
+      if (armed && active) {
+        const track = getOrCreate(active);
+        if (track) {
+          track.targetVolume = 1;
+          startTrack(track);
+        }
+      }
     },
     tick(dt: number): void {
       if (!audioAvailable() || dt <= 0) return;

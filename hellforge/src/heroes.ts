@@ -4,9 +4,8 @@
 // give you" — main.ts / state.ts / skills.ts all read through it instead of
 // hardcoding one witch's data.
 //
-// CharSelect exposes barbarian / sorceress / necromancer cards. Only sorceress
-// is playable (CharacterDomain seam); the other two use stand-in GLBs and are
-// shown as disabled “开发中” until a later slice.
+// CharSelect is fixed Emberwalker create (classId sorceress). Companion heroes
+// stay narrative/preview data only — not selectable create cards.
 
 import { computeBaseStats, getClassDef, type ClassId, type GrowthMods, type PlayerStatsInit } from './classes';
 import { SKILLS, type SkillDef } from './skills';

@@ -1,13 +1,17 @@
-// CharSelect — three-class virtual picker + name entry (SPEC §4).
+// CharSelect — fixed Emberwalker create (N1).
 // DOM chrome only: centre stays transparent so main.ts hero-preview (idle +
 // 360° yaw) shows through on the WebGPU canvas beneath.
+// Product: one playable hero (classId sorceress). Companions are narrative-only.
 
-import { getClassDef, SELECTABLE_CLASS_IDS, type CharacterRecord, type ClassId } from './classes';
-import { isPlayableClass } from './character-domain';
+import { getClassDef, type CharacterRecord, type ClassId } from './classes';
 import { DEFAULT_HERO_ID } from './heroes';
 import { createCharacter, listCharacters, MAX_CHARACTERS } from './save';
 import { FONT_UI, Ui } from './ui-theme';
 import { classEmblemSvg } from './ui-icons';
+
+/** Product-facing name for the fixed create path (enum stays sorceress). */
+export const EMBERWALKER_DISPLAY_NAME = '烬行者';
+export const EMBERWALKER_CLASS_ID: ClassId = DEFAULT_HERO_ID;
 
 export interface CharSelectCallbacks {
   /** Character record persisted (via save.ts) — caller transitions to inGame. */
@@ -38,7 +42,8 @@ function generateRandomName(): string {
 
 export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): CharSelectHandle {
   const scoped = mount !== document.body;
-  let selectedId: ClassId = DEFAULT_HERO_ID;
+  const selectedId: ClassId = EMBERWALKER_CLASS_ID;
+  const def = getClassDef(selectedId);
 
   const root = document.createElement('div');
   root.id = 'hellforge-char-select';
@@ -67,7 +72,7 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
   backBtn.addEventListener('click', () => cb.onBack());
 
   const heading = document.createElement('div');
-  heading.textContent = '选择你的英雄';
+  heading.textContent = '创建烬行者';
   heading.style.cssText = 'font:900 22px inherit;letter-spacing:8px;' +
     `background:linear-gradient(180deg,#fff8e0 0%,${Ui.goldBright} 30%,${Ui.goldDeep} 70%,${Ui.gold} 100%);` +
     '-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;' +
@@ -78,67 +83,36 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
 
   const panel = document.createElement('div');
   panel.style.cssText = 'position:absolute;left:50%;bottom:28px;transform:translateX(-50%);' +
-    'width:min(720px,94vw);pointer-events:auto;padding:18px 24px;border-radius:10px;' +
+    'width:min(560px,94vw);pointer-events:auto;padding:18px 24px;border-radius:10px;' +
     `background:linear-gradient(180deg,${Ui.inkPanelHi} 0%,${Ui.inkPanel} 100%);` +
     `border:2px solid ${Ui.goldLineSoft};box-shadow:0 0 40px rgba(0,0,0,0.7),inset 0 1px 0 ${Ui.goldLineSoft};` +
     'display:flex;flex-direction:column;gap:12px;';
 
-  // ── class strip (3 virtual slots) ────────────────────────────────────
-  const strip = document.createElement('div');
-  strip.style.cssText = 'display:flex;gap:10px;justify-content:center;';
+  const heroCard = document.createElement('div');
+  heroCard.style.cssText = 'display:flex;gap:14px;align-items:flex-start;padding:12px;' +
+    'border-radius:8px;' +
+    'background:linear-gradient(180deg,rgba(70,48,22,0.55),rgba(40,28,14,0.75));' +
+    `border:2px solid ${Ui.goldLine};box-shadow:0 0 18px rgba(200,140,50,0.25);`;
 
-  const classBtns = new Map<ClassId, HTMLButtonElement>();
-  const styleClassBtn = (btn: HTMLButtonElement, id: ClassId, active: boolean): void => {
-    const def = getClassDef(id);
-    const playable = isPlayableClass(id);
-    btn.innerHTML = `<div style="line-height:1;opacity:${playable ? '1' : '0.45'}">${classEmblemSvg(id, 44)}</div>` +
-      `<div style="font:700 13px inherit;letter-spacing:2px;margin-top:6px;opacity:${playable ? '1' : '0.55'}">${def.name}</div>` +
-      (playable
-        ? ''
-        : `<div style="font:600 10px inherit;letter-spacing:1px;margin-top:6px;color:${Ui.textDim}">开发中</div>`);
-    btn.disabled = !playable;
-    btn.title = playable ? '' : 'In development';
-    btn.style.cssText = 'flex:1;min-width:0;padding:12px 8px;border-radius:8px;' +
-      `cursor:${playable ? 'pointer' : 'not-allowed'};` +
-      `color:${active && playable ? Ui.goldBright : Ui.textMuted};text-align:center;transition:all 0.2s;` +
-      `background:${active && playable
-        ? 'linear-gradient(180deg,rgba(70,48,22,0.95),rgba(40,28,14,0.98))'
-        : 'linear-gradient(180deg,rgba(35,28,22,0.85),rgba(18,14,12,0.9))'};` +
-      `border:2px solid ${active && playable ? Ui.goldLine : Ui.goldLineSoft};` +
-      `box-shadow:${active && playable ? '0 0 18px rgba(200,140,50,0.35)' : 'none'};` +
-      `opacity:${playable ? '1' : '0.72'};`;
-  };
+  const emblem = document.createElement('div');
+  emblem.innerHTML = classEmblemSvg(selectedId, 52);
+  emblem.style.cssText = 'flex:none;line-height:1;';
 
-  for (const id of SELECTABLE_CLASS_IDS) {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    styleClassBtn(btn, id, id === selectedId);
-    btn.addEventListener('click', () => {
-      if (!isPlayableClass(id)) return;
-      if (selectedId === id) return;
-      selectedId = id;
-      for (const [cid, b] of classBtns) styleClassBtn(b, cid, cid === selectedId);
-      refreshDetail();
-      cb.onClassChange?.(selectedId);
-    });
-    classBtns.set(id, btn);
-    strip.appendChild(btn);
-  }
+  const heroCopy = document.createElement('div');
+  heroCopy.style.cssText = 'flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;';
+  heroCopy.innerHTML =
+    `<div style="font:700 16px inherit;letter-spacing:3px;color:${Ui.goldBright}">${EMBERWALKER_DISPLAY_NAME}</div>` +
+    `<div style="font:600 11px inherit;letter-spacing:2px;color:${Ui.textDim}">暗法师</div>` +
+    `<div style="font:400 13px ${FONT_UI};color:${Ui.textMuted};line-height:1.5;margin-top:4px">${def.description}</div>` +
+    `<div style="font:400 12px ${FONT_UI};color:${Ui.textDim};line-height:1.5;margin-top:2px">` +
+    `<b style="color:${Ui.textMuted}">${def.coreMechanic}</b> — ${def.coreMechanicDesc}</div>`;
 
-  const detail = document.createElement('div');
-  detail.style.cssText = 'display:flex;flex-direction:column;gap:4px;min-height:72px;';
-  const descEl = document.createElement('div');
-  descEl.style.cssText = `font:400 13px ${FONT_UI};color:${Ui.textMuted};line-height:1.5;`;
-  const mechanicEl = document.createElement('div');
-  mechanicEl.style.cssText = `font:400 12px ${FONT_UI};color:${Ui.textDim};line-height:1.5;`;
-  detail.append(descEl, mechanicEl);
+  heroCard.append(emblem, heroCopy);
 
-  function refreshDetail(): void {
-    const def = getClassDef(selectedId);
-    descEl.textContent = def.description;
-    mechanicEl.innerHTML = `<b style="color:${Ui.textMuted}">${def.coreMechanic}</b> — ${def.coreMechanicDesc}`;
-  }
-  refreshDetail();
+  const companionsNote = document.createElement('div');
+  companionsNote.textContent = '同行者将在旅途中汇合（叙事同伴，非可选职业）';
+  companionsNote.style.cssText =
+    `font:600 12px ${FONT_UI};color:${Ui.textDim};letter-spacing:1px;line-height:1.4;text-align:center;`;
 
   const divider = document.createElement('div');
   divider.style.cssText = `height:1px;background:linear-gradient(90deg,transparent,${Ui.goldLineSoft} 20%,${Ui.goldLineSoft} 80%,transparent);`;
@@ -203,10 +177,6 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
   let submitted = false;
   confirmBtn.addEventListener('click', () => {
     if (submitted) return;
-    if (!isPlayableClass(selectedId)) {
-      showError('该职业尚在开发中，请选择法师');
-      return;
-    }
     const name = nameInput.value.trim() || characterName;
     if (name.length < 2) {
       showError('姓名至少需要 2 个字符');
@@ -223,13 +193,12 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
       confirmBtn.disabled = true;
       confirmBtn.textContent = '正在进入…';
       cb.onConfirm(rec);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : '';
-      showError(msg.includes('not playable') ? '该职业尚在开发中，请选择法师' : `角色数量已达上限（${MAX_CHARACTERS}）`);
+    } catch {
+      showError(`角色数量已达上限（${MAX_CHARACTERS}）`);
     }
   });
 
-  panel.append(strip, detail, divider, nameRow, errorEl, confirmBtn);
+  panel.append(heroCard, companionsNote, divider, nameRow, errorEl, confirmBtn);
   root.appendChild(panel);
   mount.appendChild(root);
 
@@ -241,8 +210,6 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
     characterName = generateRandomName();
     nameInput.value = characterName;
     clearError();
-    for (const [cid, b] of classBtns) styleClassBtn(b, cid, cid === selectedId);
-    refreshDetail();
     cb.onClassChange?.(selectedId);
   }
   function hide(): void { root.style.display = 'none'; }

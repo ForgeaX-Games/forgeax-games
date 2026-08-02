@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "fda5517e-8a79-4953-8b1c-e6847a54601f",
+      "kind": "material",
+      "payload": {
+        "passes": [
+          {
+            "name": "Forward",
+            "shader": "forgeax::default-unlit",
+            "tags": { "LightMode": "Forward" },
+            "queue": 2000
+          },
+          {
+            "name": "ShadowCaster",
+            "shader": "forgeax::default-shadow-caster",
+            "tags": { "LightMode": "ShadowCaster" },
+            "passKind": "shadow-caster"
+          }
+        ],
+        "paramValues": {
+          "baseColor": [0.6, 0.6, 0.6, 1]
+        }
+      },
+      "refs": []
+    }
+  ]
+}

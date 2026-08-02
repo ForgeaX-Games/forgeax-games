@@ -10,7 +10,8 @@ export type CursorKind = 'default' | 'attack' | 'interact' | 'loot' | 'talk' | '
 const CURSOR_ID = 'hellforge-ui-cursors';
 
 function cssUrl(kind: CursorKind): string {
-  // 32px source PNGs; hotspot near the fingertip (top-left-ish).
+  // Six states: default/attack/interact/loot/talk/portal.
+  // Current ship assets are 48×48 PNGs (A4 HD drop-in when delivered); hotspot near tip.
   return `url('${uiIconUrl(`cursors/${kind}.png`)}') 4 4, auto`;
 }
 

@@ -1,0 +1,6 @@
+{
+  "id": "paopaotang.bot-aggressive",
+  "name": "压迫型糖豆杯测试员",
+  "personaFile": "./persona/identity.md",
+  "models": { "model": "deepseek-v4-flash-openai" }
+}

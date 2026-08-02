@@ -1,0 +1,462 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "GT_MC_Large Building.008"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "GT_MC_Large Building.glb",
+  "subAssets": [
+    {
+      "guid": "019faca5-2275-7223-a051-66f8447b2d11",
+      "kind": "mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:Cube.006"
+    },
+    {
+      "guid": "019faca5-2275-7223-a051-66f9814911a1",
+      "kind": "material",
+      "sourceIndex": 0,
+      "sourceKey": "material:GT_MC_Glass Facade 3"
+    },
+    {
+      "guid": "019faca5-2275-7223-a051-66fa94f19005",
+      "kind": "material",
+      "sourceIndex": 1,
+      "sourceKey": "material:GT_MC_Tiling Dark Metal Cladding"
+    },
+    {
+      "guid": "019faca5-2275-7223-a051-66fb5a7bb942",
+      "kind": "material",
+      "sourceIndex": 2,
+      "sourceKey": "material:GT_MC_Tiling Scratched Iron Grey"
+    },
+    {
+      "guid": "019faca5-2275-7223-a051-66fce05c7eb5",
+      "kind": "material",
+      "sourceIndex": 3,
+      "sourceKey": "material:GT_MC_Facade 1"
+    },
+    {
+      "guid": "019faca5-2275-7223-a051-66fdedccffcc",
+      "kind": "material",
+      "sourceIndex": 4,
+      "sourceKey": "material:GT_MC_Tiling Wide Brick"
+    },
+    {
+      "guid": "019faca5-2275-7223-a051-66fe83674ea6",
+      "kind": "material",
+      "sourceIndex": 5,
+      "sourceKey": "material:GT_MC_Tiling Dirty Metal"
+    },
+    {
+      "guid": "019faca5-2275-7223-a051-66ff94cb9d89",
+      "kind": "material",
+      "sourceIndex": 6,
+      "sourceKey": "material:GT_MC_Tiling X Red Paint"
+    },
+    {
+      "guid": "019faca5-2275-7223-a051-6700ffa199cf",
+      "kind": "material",
+      "sourceIndex": 7,
+      "sourceKey": "material:GT_MC_Light"
+    },
+    {
+      "guid": "019faca5-2275-7223-a051-6701ebdea70a",
+      "kind": "material",
+      "sourceIndex": 8,
+      "sourceKey": "material:GT_MC_Tiling White Paint"
+    },
+    {
+      "guid": "019faca5-2275-7223-a051-6702fc83c508",
+      "kind": "material",
+      "sourceIndex": 9,
+      "sourceKey": "material:GT_MC_Tiling Grey Concrete Slab"
+    },
+    {
+      "guid": "019faca5-2275-7223-a051-6703bbd0dc48",
+      "kind": "material",
+      "sourceIndex": 10,
+      "sourceKey": "material:GT_MC_Trimsheet 1"
+    },
+    {
+      "guid": "019faca5-2275-7223-a051-67042ba37449",
+      "kind": "material",
+      "sourceIndex": 11,
+      "sourceKey": "material:GT_MC_Trimsheet 2"
+    },
+    {
+      "guid": "019faca5-2275-7223-a051-670568726142",
+      "kind": "material",
+      "sourceIndex": 12,
+      "sourceKey": "material:GT_MC_Rooftop 1"
+    },
+    {
+      "guid": "019faca5-2275-7223-a051-67068298b6f8",
+      "kind": "material",
+      "sourceIndex": 13,
+      "sourceKey": "material:GT_MC_Panel 1"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21500a070e9d",
+      "kind": "material",
+      "sourceIndex": 14,
+      "sourceKey": "material:GT_MC_Facade 1B"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21515078a280",
+      "kind": "material",
+      "sourceIndex": 15,
+      "sourceKey": "material:GT_MC_Suspended Platform"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2152110bea21",
+      "kind": "material",
+      "sourceIndex": 16,
+      "sourceKey": "material:GT_MC_Tiling X Dark Concrete"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2153d8cf6875",
+      "kind": "scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:Scene"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21541cb1444d",
+      "kind": "texture",
+      "sourceIndex": 0,
+      "sourceKey": "texture:GT_MC_Glass Facade 3_Emission"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-215540d8d445",
+      "kind": "texture",
+      "sourceIndex": 1,
+      "sourceKey": "texture:GT_MC_Glass Facade 3_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-215622b74f8b",
+      "kind": "texture",
+      "sourceIndex": 2,
+      "sourceKey": "texture:GT_MC_Glass Facade 3_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21578e5f126e",
+      "kind": "texture",
+      "sourceIndex": 3,
+      "sourceKey": "texture:GT_MC_Glass Facade 3_Metallic-GT_MC_Glass Facade 3_Roughness"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21580ef1972a",
+      "kind": "texture",
+      "sourceIndex": 4,
+      "sourceKey": "texture:GT_MC_Tiling Dark Metal Cladding_Emission"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21598d199857",
+      "kind": "texture",
+      "sourceIndex": 5,
+      "sourceKey": "texture:GT_MC_Tiling Dark Metal Cladding_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-215a63ac5007",
+      "kind": "texture",
+      "sourceIndex": 6,
+      "sourceKey": "texture:GT_MC_Tiling Dark Metal Cladding_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-215b8d734361",
+      "kind": "texture",
+      "sourceIndex": 7,
+      "sourceKey": "texture:GT_MC_Tiling Dark Metal Cladding_Metallic-GT_MC_Tiling Dark Metal Cladding_Roughness"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-215cdb165f3e",
+      "kind": "texture",
+      "sourceIndex": 8,
+      "sourceKey": "texture:GT_MC_Tiling Grey Iron Scratched_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-215d648b8895",
+      "kind": "texture",
+      "sourceIndex": 9,
+      "sourceKey": "texture:GT_MC_Tiling Grey Iron Scratched_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-215e462f1fe1",
+      "kind": "texture",
+      "sourceIndex": 10,
+      "sourceKey": "texture:GT_MC_Tiling Grey Iron Scratched_Metallic-GT_MC_Tiling Grey Iron Scratched_Roughness"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-215f497d6f44",
+      "kind": "texture",
+      "sourceIndex": 11,
+      "sourceKey": "texture:GT_MC_Facade 1_Emission"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-216002252e7a",
+      "kind": "texture",
+      "sourceIndex": 12,
+      "sourceKey": "texture:GT_MC_Facade 1_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-216137c824f2",
+      "kind": "texture",
+      "sourceIndex": 13,
+      "sourceKey": "texture:GT_MC_Facade 1_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21622927e871",
+      "kind": "texture",
+      "sourceIndex": 14,
+      "sourceKey": "texture:GT_MC_Facade 1_Metallic-GT_MC_Facade 1_Roughness"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2163b09c5999",
+      "kind": "texture",
+      "sourceIndex": 15,
+      "sourceKey": "texture:GT_MC_Tiling Wide Brick_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-216447991b37",
+      "kind": "texture",
+      "sourceIndex": 16,
+      "sourceKey": "texture:GT_MC_Tiling Wide Brick_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2165f2faa3f7",
+      "kind": "texture",
+      "sourceIndex": 17,
+      "sourceKey": "texture:GT_MC_Tiling Wide Brick_Metallic-GT_MC_Tiling Wide Brick_Roughness"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21663be39cf6",
+      "kind": "texture",
+      "sourceIndex": 18,
+      "sourceKey": "texture:GT_MC_Tiling Dirty Metal_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-216797fdea63",
+      "kind": "texture",
+      "sourceIndex": 19,
+      "sourceKey": "texture:GT_MC_Tiling Dirty Metal_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2168e594f0f0",
+      "kind": "texture",
+      "sourceIndex": 20,
+      "sourceKey": "texture:GT_MC_Tiling Dirty Metal_Metallic-GT_MC_Tiling Dirty Metal_Roughness"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21695ced2031",
+      "kind": "texture",
+      "sourceIndex": 21,
+      "sourceKey": "texture:GT_MC_Tiling X Red Paint_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-216a4af3654c",
+      "kind": "texture",
+      "sourceIndex": 22,
+      "sourceKey": "texture:GT_MC_Tiling X Red Paint_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-216be67a2b03",
+      "kind": "texture",
+      "sourceIndex": 23,
+      "sourceKey": "texture:GT_MC_Tiling X Red Paint_Metallic-GT_MC_Tiling X Red Paint_Roughness"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-216c909b5a69",
+      "kind": "texture",
+      "sourceIndex": 24,
+      "sourceKey": "texture:GT_MC_Lights_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-216dc880ab6c",
+      "kind": "texture",
+      "sourceIndex": 25,
+      "sourceKey": "texture:GT_MC_Lights_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-216e00e363f8",
+      "kind": "texture",
+      "sourceIndex": 26,
+      "sourceKey": "texture:GT_MC_Lights_Metallic-GT_MC_Lights_Roughness"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-216ffd69bb12",
+      "kind": "texture",
+      "sourceIndex": 27,
+      "sourceKey": "texture:GT_MC_Tiling White Paint_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21706f204b80",
+      "kind": "texture",
+      "sourceIndex": 28,
+      "sourceKey": "texture:GT_MC_Tiling White Paint_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21714b2c4753",
+      "kind": "texture",
+      "sourceIndex": 29,
+      "sourceKey": "texture:GT_MC_Tiling White Paint_Metallic-GT_MC_Tiling White Paint_Roughness"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2172000f66bc",
+      "kind": "texture",
+      "sourceIndex": 30,
+      "sourceKey": "texture:GT_MC_Tiling Grey Concrete Slab_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2173f2a0d3dc",
+      "kind": "texture",
+      "sourceIndex": 31,
+      "sourceKey": "texture:GT_MC_Tiling Grey Concrete Slab_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2174c04bba01",
+      "kind": "texture",
+      "sourceIndex": 32,
+      "sourceKey": "texture:GT_MC_Tiling Grey Concrete Slab_Metallic-GT_MC_Tiling Grey Concrete Slab_Roughness"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2175b0bb5753",
+      "kind": "texture",
+      "sourceIndex": 33,
+      "sourceKey": "texture:GT_MC_Trimsheet 1_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2176577f2363",
+      "kind": "texture",
+      "sourceIndex": 34,
+      "sourceKey": "texture:GT_MC_Trimsheet 1_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2177c6e8a318",
+      "kind": "texture",
+      "sourceIndex": 35,
+      "sourceKey": "texture:GT_MC_Trimsheet 1_Metallic-GT_MC_Trimsheet 1_Roughness"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-217862be533e",
+      "kind": "texture",
+      "sourceIndex": 36,
+      "sourceKey": "texture:GT_MC_Trimsheet 2_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21795535b80f",
+      "kind": "texture",
+      "sourceIndex": 37,
+      "sourceKey": "texture:GT_MC_Trimsheet 2_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-217a174b38a7",
+      "kind": "texture",
+      "sourceIndex": 38,
+      "sourceKey": "texture:GT_MC_Trimsheet 2_Metallic-GT_MC_Trimsheet 2_Roughness"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-217bc652ede0",
+      "kind": "texture",
+      "sourceIndex": 39,
+      "sourceKey": "texture:GT_MC_Rooftop 1_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-217c0443c4ca",
+      "kind": "texture",
+      "sourceIndex": 40,
+      "sourceKey": "texture:GT_MC_Rooftop 1_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-217d7548911c",
+      "kind": "texture",
+      "sourceIndex": 41,
+      "sourceKey": "texture:GT_MC_Rooftop 1_Metallic-GT_MC_Rooftop 1_Roughness"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-217e9ee7445b",
+      "kind": "texture",
+      "sourceIndex": 42,
+      "sourceKey": "texture:GT_MC_Panel 1_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-217f6e535bd8",
+      "kind": "texture",
+      "sourceIndex": 43,
+      "sourceKey": "texture:GT_MC_Panel 1_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21806c04f067",
+      "kind": "texture",
+      "sourceIndex": 44,
+      "sourceKey": "texture:GT_MC_Panel 1_Metallic.png-GT_MC_Panel 1_Roughness.png"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21818c2070bc",
+      "kind": "texture",
+      "sourceIndex": 45,
+      "sourceKey": "texture:GT_MC_Facade 1B_Emission"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21827015d49c",
+      "kind": "texture",
+      "sourceIndex": 46,
+      "sourceKey": "texture:GT_MC_Facade 1B_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2183b5c29c1a",
+      "kind": "texture",
+      "sourceIndex": 47,
+      "sourceKey": "texture:GT_MC_Facade 1B_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2184cf89c265",
+      "kind": "texture",
+      "sourceIndex": 48,
+      "sourceKey": "texture:GT_MC_Facade 1B_Metallic.png-GT_MC_Facade 1B_Roughness.png"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2185865b4ccc",
+      "kind": "texture",
+      "sourceIndex": 49,
+      "sourceKey": "texture:GT_MC_Suspended Platform_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-21860a135dda",
+      "kind": "texture",
+      "sourceIndex": 50,
+      "sourceKey": "texture:GT_MC_Suspended Platform_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-2187f37847ba",
+      "kind": "texture",
+      "sourceIndex": 51,
+      "sourceKey": "texture:GT_MC_Suspended Platform_Metallic-GT_MC_Suspended Platform_Roughness"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-218847ad0ecb",
+      "kind": "texture",
+      "sourceIndex": 52,
+      "sourceKey": "texture:GT_MC_Tiling X Dark Concrete_Normal"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-218978614169",
+      "kind": "texture",
+      "sourceIndex": 53,
+      "sourceKey": "texture:GT_MC_Tiling X Dark Concrete_BaseColor"
+    },
+    {
+      "guid": "019faca5-2276-7e93-b1c4-218a4314c041",
+      "kind": "texture",
+      "sourceIndex": 54,
+      "sourceKey": "texture:GT_MC_Tiling X Dark Concrete_Metallic-GT_MC_Tiling X Dark Concrete_Roughness"
+    }
+  ]
+}

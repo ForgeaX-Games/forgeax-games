@@ -1,0 +1,10 @@
+{
+  "id": "paopaotang.soda",
+  "name": "汽水",
+  "personaFile": "./persona/identity.md",
+  "models": {
+    "model": [
+      "deepseek-v4-flash-openai"
+    ]
+  }
+}

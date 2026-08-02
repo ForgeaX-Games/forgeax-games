@@ -1,0 +1,6 @@
+{
+  "id": "npc-render-acceptance",
+  "name": "NPC Render Acceptance",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts"
+}

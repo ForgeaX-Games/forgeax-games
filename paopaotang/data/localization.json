@@ -1,0 +1,1847 @@
+{
+  "schemaVersion": 2,
+  "records": [
+    {
+      "key": "paopaotang.main.ts:32069:5630b886f9",
+      "file": "main.ts",
+      "position": 32069,
+      "value": "你"
+    },
+    {
+      "key": "paopaotang.main.ts:32125:51a0879cdd",
+      "file": "main.ts",
+      "position": 32125,
+      "value": "🏆 按 R 领奖回小镇"
+    },
+    {
+      "key": "paopaotang.main.ts:32304:5630b886f9",
+      "file": "main.ts",
+      "position": 32304,
+      "value": "你"
+    },
+    {
+      "key": "paopaotang.main.ts:32698:bf1bb45d15",
+      "file": "main.ts",
+      "position": 32698,
+      "value": "果冻团"
+    },
+    {
+      "key": "paopaotang.main.ts:32784:15241a9860",
+      "file": "main.ts",
+      "position": 32784,
+      "value": "没关系哦~ 按 R 回小镇,再去报名"
+    },
+    {
+      "key": "paopaotang.main.ts:36673:35dc13ac55",
+      "file": "main.ts",
+      "position": 36673,
+      "value": "🥊 糖豆杯:你 vs 果冻三人组!"
+    },
+    {
+      "key": "paopaotang.main.ts:37147:14e239b8c4",
+      "file": "main.ts",
+      "position": 37147,
+      "value": "🏘️ 回到糖果小镇~ 想再战就去报名处找糖伯伯"
+    },
+    {
+      "key": "paopaotang.main.ts:37388:d0407cb467",
+      "file": "main.ts",
+      "position": 37388,
+      "value": "🔥 开打!"
+    },
+    {
+      "key": "paopaotang.main.ts:37433:d7c9f8b24b",
+      "file": "main.ts",
+      "position": 37433,
+      "value": "方向键移动"
+    },
+    {
+      "key": "paopaotang.main.ts:42096:831173a4bf",
+      "file": "main.ts",
+      "position": 42096,
+      "value": "🥊 糖豆杯:${duel.a.res.def.name} vs ${duel.b.res.def.name} 开打!空格跳上东侧看台围观~",
+      "parts": [
+        {
+          "text": "🥊 糖豆杯:"
+        },
+        {
+          "expression": "duel.a.res.def.name"
+        },
+        {
+          "text": " vs "
+        },
+        {
+          "expression": "duel.b.res.def.name"
+        },
+        {
+          "text": " 开打!空格跳上东侧看台围观~"
+        }
+      ]
+    },
+    {
+      "key": "paopaotang.main.ts:42372:98494115b2",
+      "file": "main.ts",
+      "position": 42372,
+      "value": "🏆 ${winner.res.def.name} 赢下本场糖豆杯!",
+      "parts": [
+        {
+          "text": "🏆 "
+        },
+        {
+          "expression": "winner.res.def.name"
+        },
+        {
+          "text": " 赢下本场糖豆杯!"
+        }
+      ]
+    },
+    {
+      "key": "paopaotang.main.ts:42621:bbb3a2c8f3",
+      "file": "main.ts",
+      "position": 42621,
+      "value": "⏱️ 时间到,平局!糖伯伯宣布下次再战~"
+    },
+    {
+      "key": "paopaotang.main.ts:46528:17cf714e4a",
+      "file": "main.ts",
+      "position": 46528,
+      "value": "🏘️ 欢迎来到糖果小镇~ 顺着黄色箭头穿过大拱门,找糖伯伯报名糖豆杯!(空格跳跃)"
+    },
+    {
+      "key": "paopaotang.main.ts:49511:19d4e812a3",
+      "file": "main.ts",
+      "position": 49511,
+      "value": "📣 糖豆杯即将开赛:${pair[0].def.name} vs ${pair[1].def.name}!",
+      "parts": [
+        {
+          "text": "📣 糖豆杯即将开赛:"
+        },
+        {
+          "expression": "pair[0].def.name"
+        },
+        {
+          "text": " vs "
+        },
+        {
+          "expression": "pair[1].def.name"
+        },
+        {
+          "text": "!"
+        }
+      ]
+    },
+    {
+      "key": "paopaotang.main.ts:53133:fd51395922",
+      "file": "main.ts",
+      "position": 53133,
+      "value": "✍️ 打字聊天 · 回车发送 · Esc 取消"
+    },
+    {
+      "key": "paopaotang.main.ts:53298:ab9cb6579d",
+      "file": "main.ts",
+      "position": 53298,
+      "value": "按数字提问 · 5 自由聊 · E 告别 💬"
+    },
+    {
+      "key": "paopaotang.main.ts:53690:5630b886f9",
+      "file": "main.ts",
+      "position": 53690,
+      "value": "你"
+    },
+    {
+      "key": "paopaotang.main.ts:54154:bd7d42607c",
+      "file": "main.ts",
+      "position": 54154,
+      "value": "想对${r.def.name}说什么就打什么…",
+      "parts": [
+        {
+          "text": "想对"
+        },
+        {
+          "expression": "r.def.name"
+        },
+        {
+          "text": "说什么就打什么…"
+        }
+      ]
+    },
+    {
+      "key": "paopaotang.main.ts:54391:5630b886f9",
+      "file": "main.ts",
+      "position": 54391,
+      "value": "你"
+    },
+    {
+      "key": "paopaotang.main.ts:54511:2ee976753a",
+      "file": "main.ts",
+      "position": 54511,
+      "value": "唔……这个问题好新鲜,让我想想再答你~"
+    },
+    {
+      "key": "paopaotang.main.ts:55365:b4c9009677",
+      "file": "main.ts",
+      "position": 55365,
+      "value": "💭 ${r.def.name}正在想${'·'.repeat(1 + (Math.floor(talk.dotT * 3) % 3))}",
+      "parts": [
+        {
+          "text": "💭 "
+        },
+        {
+          "expression": "r.def.name"
+        },
+        {
+          "text": "正在想"
+        },
+        {
+          "expression": "'·'.repeat(1 + (Math.floor(talk.dotT * 3) % 3))"
+        },
+        {
+          "text": ""
+        }
+      ]
+    },
+    {
+      "key": "paopaotang.main.ts:55484:3d93b61bc9",
+      "file": "main.ts",
+      "position": 55484,
+      "value": "按 E 继续 💬"
+    },
+    {
+      "key": "paopaotang.main.ts:56208:8e3ce667e6",
+      "file": "main.ts",
+      "position": 56208,
+      "value": "5 · 自由聊天 ✍️"
+    },
+    {
+      "key": "paopaotang.main.ts:56243:9114d9adae",
+      "file": "main.ts",
+      "position": 56243,
+      "value": "E · 下次再聊"
+    },
+    {
+      "key": "paopaotang.main.ts:56398:2a279f7552",
+      "file": "main.ts",
+      "position": 56398,
+      "value": "按 E 报名「糖豆杯」🥊"
+    },
+    {
+      "key": "paopaotang.main.ts:56543:15143340af",
+      "file": "main.ts",
+      "position": 56543,
+      "value": "比赛进行中…先去看台喊两嗓子?"
+    },
+    {
+      "key": "paopaotang.main.ts:57101:605180116f",
+      "file": "main.ts",
+      "position": 57101,
+      "value": "按 E 和${target.def.name}聊两句 💬",
+      "parts": [
+        {
+          "text": "按 E 和"
+        },
+        {
+          "expression": "target.def.name"
+        },
+        {
+          "text": "聊两句 💬"
+        }
+      ]
+    },
+    {
+      "key": "paopaotang.main.ts:58830:5630b886f9",
+      "file": "main.ts",
+      "position": 58830,
+      "value": "你"
+    },
+    {
+      "key": "paopaotang.main.ts:60008:e9615b9fe4",
+      "file": "main.ts",
+      "position": 60008,
+      "value": "空格键放泡泡"
+    },
+    {
+      "key": "paopaotang.main.ts:62017:794856b987",
+      "file": "main.ts",
+      "position": 62017,
+      "value": "🔥 火力 +1!"
+    },
+    {
+      "key": "paopaotang.main.ts:62137:f84ac04907",
+      "file": "main.ts",
+      "position": 62137,
+      "value": "💧 泡泡上限 +1!"
+    },
+    {
+      "key": "paopaotang.main.ts:62235:079e4bbdfb",
+      "file": "main.ts",
+      "position": 62235,
+      "value": "👟 速度提升!"
+    },
+    {
+      "key": "paopaotang.src/hud.ts:16946:237700a6da",
+      "file": "src/hud.ts",
+      "position": 16946,
+      "value": "💥 被泡泡困住了"
+    },
+    {
+      "key": "paopaotang.src/hud.ts:17181:ca9184f28e",
+      "file": "src/hud.ts",
+      "position": 17181,
+      "value": "没关系哦~ 按 R 重来"
+    },
+    {
+      "key": "paopaotang.src/hud.ts:17430:06db658863",
+      "file": "src/hud.ts",
+      "position": 17430,
+      "value": "🎉 全场清空!"
+    },
+    {
+      "key": "paopaotang.src/hud.ts:17657:891984e42e",
+      "file": "src/hud.ts",
+      "position": 17657,
+      "value": "按 R 再来一局"
+    },
+    {
+      "key": "paopaotang.src/npc-brain.ts:6772:02922ea525",
+      "file": "src/npc-brain.ts",
+      "position": 6772,
+      "value": "嗯……这个话题,让我想想再答你~"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:1870:ee4ba47dac",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 1870,
+      "value": "最近怎么样?"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:1885:0cdd1334d7",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 1885,
+      "value": "最近过得怎么样呀?"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:1922:85115a17f8",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 1922,
+      "value": "聊聊糖豆杯"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:1936:ffe6dcd916",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 1936,
+      "value": "糖豆杯……你怎么看?"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:1975:4887330508",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 1975,
+      "value": "镇上的新鲜事"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:1990:8e1ed7a37f",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 1990,
+      "value": "镇上最近有什么新鲜事?"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2032:75a1b39e31",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2032,
+      "value": "八卦一下大家"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2047:57da874690",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2047,
+      "value": "跟我说说镇上其他人呗?"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2188:90a4263ff8",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2188,
+      "value": "哈——欠。哦,新面孔。别紧张,我不是在睡觉,我是在低功耗巡逻。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2227:2d00c01578",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2227,
+      "value": "你好你好……先说好,要是糖伯伯问起来,你看见的我是「正在值勤」的我。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2269:252feaeeb6",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2269,
+      "value": "嗯?找我?可以,但语速放慢点,我刚把干劲存进梦里,还没取出来。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2332:4cf86694d3",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2332,
+      "value": "又是你呀。跟你说话不错,站着不动就行,是我最擅长的运动。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2368:1082f5a5ab",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2368,
+      "value": "哦~老熟人。来得正好,陪我「巡逻」一会儿,就在这儿,别动。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2405:4742eba05e",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2405,
+      "value": "你一来我就精神了……好吧,是眼皮抬起来了一半,已经很给面子了。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2468:333a39323d",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2468,
+      "value": "哟,冠军大人亲自巡视街道?那我这个岗我就先……交接给你了。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2505:fb99168cf0",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2505,
+      "value": "冠军!正好,给你个荣誉任务:替我站十分钟,我去充个盹。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2589:1801581927",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2589,
+      "value": "还行,今天已经完成了两次深呼吸和一次伸懒腰,进度超前。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2630:59c1fc50b0",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2630,
+      "value": "厂里的糖纸拧不完……所以我决定明天再拧。你看,烦恼一下就没了。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2665:27732f4855",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2665,
+      "value": "这招叫「时间转移大法」,免费教你。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2696:207d515957",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2696,
+      "value": "刚在长椅上研究了一下云,得出结论:它们也没在干活。我很欣慰。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2767:74d325eaf7",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2767,
+      "value": "自从认识你,我巡逻路线多了一站——就是你现在站的这儿。别谢我。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2812:c0d9419f4d",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2812,
+      "value": "老实说,跟你聊天算我今天最大的工作量了。你要负责。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2892:3687a29768",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2892,
+      "value": "糖豆杯啊,躺在看台最后一排看,是全镇最好的午睡背景音。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2933:a0b5214b20",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2933,
+      "value": "我报过一次名。走到场地门口,觉得累,回家了。至今零败绩。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2965:2cb6ed9af4",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2965,
+      "value": "你品,你细品,不打就不会输。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:2993:ec54fdb932",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 2993,
+      "value": "汽水天天喊要夺冠,我赌一包软糖他先把自己绊倒。稳赚。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3060:f80a57d1bb",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3060,
+      "value": "听说你把果冻三人组全端了?厉害……我可以自豪地说,冠军是我看着聊大的。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3109:591ac247af",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3109,
+      "value": "冠军站在我面前,我竟然一点都不想动。哦不对,我平时也不想动。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3176:e95db3fe63",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3176,
+      "value": "听说你在场里被泡泡糊了?正常,那仨果冻嘴碎手黑。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3204:69b7c3aa0e",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3204,
+      "value": "按我的打法就不会输——因为我根本不进场,哈。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3240:ec5fe644a6",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3240,
+      "value": "输了别往心里去。你看我,从不参赛,所以从不难过。要不要拜师?"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3310:5972582423",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3310,
+      "value": "上次比赛你也在看台吧?我在最后一排,靠你的欢呼声当闹钟,谢了啊。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3398:dea72f1ecf",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3398,
+      "value": "焦糖锅又堵了。班长气得直冒泡,泡还挺大,算今日一景。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3438:171c4f5495",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3438,
+      "value": "喷泉今天又是苏打味。我押汽水干的,赔率一赔一,稳得很。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3479:ef633f2c86",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3479,
+      "value": "新鲜事?我今天比昨天早起了五分钟。全镇都该知道这件大事。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3565:4d08ab7b0b",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3565,
+      "value": "汽水浑身是劲,劲多到我看着都累。建议他分我一半,大家都健康。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3609:f3eee9b25e",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3609,
+      "value": "葡萄啊,一天到晚问「泡泡知不知道自己会爆」。我知道我下一秒会困,这算哲学吗?"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3661:a3347ff93e",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3661,
+      "value": "草莓的瓜子从不离身。全镇战报问她就行,比问糖伯伯还全,还带点评。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3738:e4353945db",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3738,
+      "value": "去吧去吧……我接着「值勤」。呼……"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3763:2208ea8405",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3763,
+      "value": "慢走。我目送你,用眼皮。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3902:c317838d11",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3902,
+      "value": "嘿!!新来的吧!气色不错,骨骼惊奇,适合打糖豆杯!要不要现在就去报名?!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3946:40d2206ce0",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3946,
+      "value": "哇,生面孔!我是汽水,未来的糖豆杯冠军!先跟我握个手,沾沾冠军气!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:3987:cd60048118",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 3987,
+      "value": "站住!……开玩笑的哈哈!欢迎来糖果小镇,有我罩着你,冲鸭!!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4049:3367405190",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4049,
+      "value": "兄弟!!今天气够足,我感觉能一口气放三个泡泡——虽然规则不允许!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4089:63fe8898f3",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4089,
+      "value": "又见面啦!告诉你,我新练的走位已经练到第二步了,还剩八步!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4126:f2141653f5",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4126,
+      "value": "来啦!正好正好,陪我热身,你站着别动就行,我绕你跑两圈!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4186:dd7bfdb7db",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4186,
+      "value": "冠……冠军!!快,教练!我想学那招卡位!学费我出三瓶汽水糖!!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4225:e2594c162b",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4225,
+      "value": "全镇都在传你的战绩!下次糖豆杯我们组队……啊不对,那是单打。那你等着当我对手!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4321:f3321bdbad",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4321,
+      "value": "状态爆棚!!今天灌了一整批汽水糖,每一颗都气到顶,厂长都夸我!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4366:380d055135",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4366,
+      "value": "刚绕喷泉跑了二十圈热身!为什么是喷泉?因为跑完口渴方便!聪明吧!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4412:eca914bb8c",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4412,
+      "value": "正在憋一个大招,名字都想好了,叫「碳酸风暴」!内容……内容还在憋!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4486:3767b522e7",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4486,
+      "value": "跟你说个秘密——我今天偷偷加练了!就是练完忘了练的是啥,但肌肉记住了!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4535:1f71cb5834",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4535,
+      "value": "见到你我劲就更足了!你就是我的第二块汽水糖!这是夸人,别多想!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4621:9cbc60ea46",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4621,
+      "value": "糖豆杯就是为我准备的舞台!上届只是热身!上上届也是热身!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4663:3c5d73fd32",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4663,
+      "value": "我研究过果冻三人组!紫皮怕堵角,薄荷嘴最碎,橘子……橘子我还没研究完!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4712:a5b2ce5500",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4712,
+      "value": "等我夺冠,奖杯就摆喷泉正中间,再刻一行字:汽水,冲鸭!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4780:a32160f49e",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4780,
+      "value": "你居然真把他们仨全灭了?!服!但下一届冠军是我,这叫传承!!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4824:6ddb9165e9",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4824,
+      "value": "冠军!快说,放泡泡那一下,是先看人还是先看格子?!我请你喝汽水,管够!!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4897:98f25d6116",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4897,
+      "value": "被炸了?没事!!我被炸过十七次,你看我现在,气比谁都足!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:4939:c920767ce7",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 4939,
+      "value": "输一场而已!糖豆杯精神就是:炸不死我的,都让我更冲!走,再报一场!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5012:4f65f73aa3",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5012,
+      "value": "上次我打比赛你在看台对吧?!听到你喊了!下次喊大声点,我劲能再涨三成!!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5104:1830c01d79",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5104,
+      "value": "大新闻!喷泉又变苏打味了!……你别那样看我,这次真不是我!好吧上次是。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5153:aec93da603",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5153,
+      "value": "厂里出了新款跳跳糖,吃一颗能蹦半米高!我囤了一箱,准备当秘密武器!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5200:f8c657df90",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5200,
+      "value": "糖伯伯在练新开场词!我偷听到一句「甜度拉满,谁怂谁看」!帅爆了!!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5291:e4654177f4",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5291,
+      "value": "布丁那家伙,巡逻能睡出呼噜声!但你别说,他睡姿挺标准,像在站岗!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5337:03f6b52d5d",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5337,
+      "value": "葡萄老是盯着我看,一句话不说!肯定是想偷学我的训练法,我懂!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5381:754bba9237",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5381,
+      "value": "草莓超懂比赛!就是嗑瓜子太响,坐她旁边听不清裁判哨!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5452:01fbc541ed",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5452,
+      "value": "走啦?好!下次见面我教你摆臂!冲鸭!!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5479:2ba8238c66",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5479,
+      "value": "去吧兄弟!记住,遇事不决,先冲再说!!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5633:2f4d94abed",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5633,
+      "value": "……新来的。嗯,站姿还行,像一颗立得住的糖。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5663:977e67a79e",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5663,
+      "value": "你好。先声明,我不闲聊。……好吧,聊两句。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5692:e9f2d5d195",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5692,
+      "value": "……哦。你就是那个新挑战者。比传闻里矮一点,但眼神不虚。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5752:44115ea02f",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5752,
+      "value": "又是你。……说实话,你是镇上少数聊得下去的。别声张。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5786:3a0b473784",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5786,
+      "value": "来了。今天的问题想好了吗?我搬糖的时候顺便想了三个答案。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5822:021018d928",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5822,
+      "value": "嗯,你。……站这儿,这个角度看喷泉,苏打味都显得深刻一些。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5883:4a63a847b1",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5883,
+      "value": "冠军。……称号是泡泡,响,但会破。你本人比称号耐看一点。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:5919:627bf08314",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 5919,
+      "value": "哦,你赢了。意料之内。你放泡泡之前会先看退路,这镇上没几个人懂。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6008:ff14f9e3c9",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6008,
+      "value": "搬了三十箱葡萄糖。手很沉,心很静。……这就是生活的配重。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6050:485226d178",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6050,
+      "value": "今天观察了一颗泡泡,从吹起到破,四秒。……四秒里它是完整的。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6094:543bea76c9",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6094,
+      "value": "还行。烦恼像糖纸,拧一下,响一声,然后就归于安静。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6160:78ed228390",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6160,
+      "value": "你每次都问这个。……但今天我想认真答:比昨天,好一点点。够了。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6205:2dd62d6ee8",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6205,
+      "value": "嗯……最近发现,和你说话之后,搬糖会轻一点。样本还在积累。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6289:6efe792e97",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6289,
+      "value": "糖豆杯。一群人围着泡泡的生灭欢呼。……挺好,热闹是真的。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6331:6e46b34612",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6331,
+      "value": "输赢在放泡泡之前就定了。看退路的人赢,看对手的人输。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6371:157f67291b",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6371,
+      "value": "汽水会输在第一分钟,草莓会输在最后一分钟。……问就是观察。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6441:6c13977682",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6441,
+      "value": "你夺冠那场,最后一颗泡泡放得很冷静。……冷静,是最响的垃圾话。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6486:f888203013",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6486,
+      "value": "冠军。别飘。泡泡飘起来的下一步,就是破。……但今天,你可以飘一会儿。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6557:14c3b62713",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6557,
+      "value": "听说你被困住了。……被自己的泡泡,还是别人的?想明白这个,下一场就赢。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6606:197df6cf47",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6606,
+      "value": "输了?正常。泡泡不破,怎么知道里面是空的。……这句送你。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6690:781cafb306",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6690,
+      "value": "喷泉,第四次变成苏打味。证据链快闭合了。……汽水,我在看着你。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6735:ade682af41",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6735,
+      "value": "焦糖锅堵了。全镇都在讨论锅。……没有人问糖去哪了。我问了。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6778:a2ba30448b",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6778,
+      "value": "糖伯伯偷偷在喷泉边背新台词,背错三次。……我假装没听见,这是慈悲。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6851:8d543b551a",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6851,
+      "value": "前几天的比赛,你在看台。……你看打架的样子,比打架的人还专注。不错。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6943:c756827f2e",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6943,
+      "value": "布丁。把懒过成了哲学,我其实……有点敬佩。别告诉他。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:6983:3d7004220f",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 6983,
+      "value": "汽水。气很足,像一瓶摇过的汽水。……离他三步远,安全。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7024:66c205015e",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7024,
+      "value": "草莓。嗑瓜子的频率会随比分变化。……她自己不知道,我记了一个月。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7101:86bba1e928",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7101,
+      "value": "嗯。去吧。……糖会化,话不会。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7124:fddf12e35e",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7124,
+      "value": "再见。下次带个新问题来。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7266:7e7487745a",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7266,
+      "value": "哎哎,新来的!等等等等,让我看看——嗯,是块打糖豆杯的料!我眼光贼准!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7309:1f3ccb9a0b",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7309,
+      "value": "你就是新搬来的吧!全镇第三个发现你的是我,前两个不算,他们没跟你说话!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7352:d36d314c48",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7352,
+      "value": "来来来,认识一下,我是草莓!镇上大小战报、恩怨情仇,问我,全都有!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7417:449e8f05cb",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7417,
+      "value": "可算来了!我攒了一兜新八卦,再没人听我要憋出内伤了!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7451:a1a3f1788e",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7451,
+      "value": "老朋友!快,先陪我对一下今天的战报,我有两处细节没看清!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7487:9685e60bb2",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7487,
+      "value": "嘿嘿,是你~瓜子要吗?新炒的。边嗑边聊,效率翻倍!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7544:63c938c4f1",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7544,
+      "value": "冠军来啦!!让让让,大家让一让!——好啦其实没别人,但气势要有!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7584:97a7c7ff62",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7584,
+      "value": "我跟所有人说过你能赢!现在全镇都欠我一句「草莓说得对」!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7669:f6f9aec862",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7669,
+      "value": "忙疯了!搬了三箱草莓夹心,手到现在还是甜的,你闻闻——开玩笑,别真闻!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7718:0cf147d696",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7718,
+      "value": "今天占到了看台最好的位置!正对场地中线,谁卡位谁摸鱼,一清二楚!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7764:b2cc487bc1",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7764,
+      "value": "正在练一个新招,叫「果冻步」!……好吧上次摔进花坛了,但方向是对的!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7839:7e543f3471",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7839,
+      "value": "跟你说,我妈都问我最近怎么老提你。我说这叫「重点观察对象」!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7883:9459a68061",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7883,
+      "value": "最近过得超充实——白天上班,傍晚看赛,晚上复盘,顺便想你下场打谁!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:7971:4a80efec3b",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 7971,
+      "value": "糖豆杯我一场没落过!要点我都记着:第一别贪道具,第二别背对泡泡!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8017:d16db598e4",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8017,
+      "value": "我总有一天要上场!现在是资料积累期,懂吗,高手都这样,先观察再出手!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8065:0c5ee1fd5e",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8065,
+      "value": "果冻三人组里橘子最阴,专蹲人捡道具的路上,你记住这条,值一包瓜子!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8139:0a79a470d0",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8139,
+      "value": "你夺冠那场我全程站着看完的!最后那颗泡泡卡位,我尖叫得瓜子都撒了!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8176:05c0be1c03",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8176,
+      "value": "快教我!就那招!我笔记本都翻好了!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8207:de6c9edf5c",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8207,
+      "value": "冠军冠军,给我签个名!……签哪儿?先欠着,回头我买个本子!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8273:620c172046",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8273,
+      "value": "那场我看了……哎呀,差一点点!你被堵那下,其实往下走就出来了!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8308:f4fc356e4b",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8308,
+      "value": "没事,我笔记借你抄,下场绝对赢!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8338:d75f4a6917",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8338,
+      "value": "输了才有复盘价值!赢的谁复盘啊!来,我讲给你听,那三只果冻的换位规律——"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8414:e5cc1800e8",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8414,
+      "value": "上次NPC对决你也在看台对吧!我就说那个背影像你!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8443:7e24af4438",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8443,
+      "value": "下次坐我旁边,我解说,瓜子管够!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8515:573b5e8d8e",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8515,
+      "value": "独家!糖伯伯的哨子丢过一次,现在用的是备用哨,音高差半度!没人信我!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8563:f87f580a24",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8563,
+      "value": "喷泉苏打味事件,我拿到新证词:案发当晚有人看见一道气泡冲向汽水家!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8610:53709feb6f",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8610,
+      "value": "厂长说下周草莓夹心还要加倍!我的手,要一直甜到下个月了!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8696:90b18dc083",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8696,
+      "value": "布丁上周巡逻睡着,抱着路灯睡的!我拍……我记在小本本上了!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8739:f638cd3c96",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8739,
+      "value": "汽水说要夺冠,已经说了四届了!但你别笑,他真的每天都在练,这点我服!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8787:3f7b45cd75",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8787,
+      "value": "葡萄看着高冷,其实喷泉每次变味他都第一个去闻!鉴定用,他说的!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8863:56a8ffbbf1",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8863,
+      "value": "走啦?行,有新料我给你留着!头条位置!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:8890:ece79cc613",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 8890,
+      "value": "拜拜!下场比赛看台见,我占座!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:9038:592337f5ee",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 9038,
+      "value": "你好呀,新面孔~镇子不大,慢慢逛,竞技场就在中间。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:9086:b16fb8b6a8",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 9086,
+      "value": "又见面啦~今天也是甜甜的一天。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:9124:06012def4a",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 9124,
+      "value": "哎呀,冠军!镇上都在说你呢~"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:9176:ae124b8db8",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 9176,
+      "value": "老样子,上班,散步,看比赛。小镇的日子就是这么甜。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:9234:98899e35c8",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 9234,
+      "value": "糖豆杯呀,全镇最热闹的事,去看台感受一次就懂了。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:9282:2cc0ae10e4",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 9282,
+      "value": "你就是新科冠军吧?厉害呀,替小镇争光了!"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:9322:d7194644df",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 9322,
+      "value": "听说你输了一场?没事,果冻们赢了也就得意一晚上。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:9379:31f2906ae2",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 9379,
+      "value": "喷泉的水最近怪怪的,甜里带气,你也去尝尝?"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:9430:330b4b575b",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 9430,
+      "value": "镇上人都不坏,就是一个比一个有意思,你多聊聊就知道了。"
+    },
+    {
+      "key": "paopaotang.src/npc-dialogue.gen.ts:9484:fd2d120eaa",
+      "file": "src/npc-dialogue.gen.ts",
+      "position": 9484,
+      "value": "慢走呀~"
+    },
+    {
+      "key": "paopaotang.src/npcs/grape/index.ts:637:df9eaffa23",
+      "file": "src/npcs/grape/index.ts",
+      "position": 637,
+      "value": "葡萄"
+    },
+    {
+      "key": "paopaotang.src/npcs/grape/index.ts:738:1ed5f4cca9",
+      "file": "src/npcs/grape/index.ts",
+      "position": 738,
+      "value": "上班上班,搬完这批葡萄糖就休息~"
+    },
+    {
+      "key": "paopaotang.src/npcs/guide/index.ts:1057:22791f77ef",
+      "file": "src/npcs/guide/index.ts",
+      "position": 1057,
+      "value": "有需要就来问我~ 我一直在广场这儿。"
+    },
+    {
+      "key": "paopaotang.src/npcs/pudding/index.ts:641:331fc04211",
+      "file": "src/npcs/pudding/index.ts",
+      "position": 641,
+      "value": "布丁"
+    },
+    {
+      "key": "paopaotang.src/npcs/pudding/index.ts:745:d408e6508e",
+      "file": "src/npcs/pudding/index.ts",
+      "position": 745,
+      "value": "唉,又要去厂里拧糖纸了…谁替我上会儿班啊。"
+    },
+    {
+      "key": "paopaotang.src/npcs/soda/index.ts:635:dc120f06ef",
+      "file": "src/npcs/soda/index.ts",
+      "position": 635,
+      "value": "汽水"
+    },
+    {
+      "key": "paopaotang.src/npcs/soda/index.ts:736:ac5515b22e",
+      "file": "src/npcs/soda/index.ts",
+      "position": 736,
+      "value": "今天的汽水糖必须灌够气,冲鸭!"
+    },
+    {
+      "key": "paopaotang.src/npcs/strawberry/index.ts:647:54658e4758",
+      "file": "src/npcs/strawberry/index.ts",
+      "position": 647,
+      "value": "草莓"
+    },
+    {
+      "key": "paopaotang.src/npcs/strawberry/index.ts:754:7fb12fb865",
+      "file": "src/npcs/strawberry/index.ts",
+      "position": 754,
+      "value": "厂长说今天草莓夹心加倍,冲!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:735:60d1fce67a",
+      "file": "src/trashtalk.ts",
+      "position": 735,
+      "value": "紫皮"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:741:dda9fae1ef",
+      "file": "src/trashtalk.ts",
+      "position": 741,
+      "value": "薄荷"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:747:69b2e07c66",
+      "file": "src/trashtalk.ts",
+      "position": 747,
+      "value": "橘子"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1025:844e907502",
+      "file": "src/trashtalk.ts",
+      "position": 1025,
+      "value": "哟,这不是那个只会放一颗泡泡的小可怜吗?回家喝奶去吧!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1085:1ed76212e9",
+      "file": "src/trashtalk.ts",
+      "position": 1085,
+      "value": "少废话。等会儿水花糊你脸上的时候,记得别哭出声。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1141:30ba9ab0c2",
+      "file": "src/trashtalk.ts",
+      "position": 1141,
+      "value": "就你?我们仨闭着眼都能把你堵墙角里冲成拖把!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1196:e169e2107a",
+      "file": "src/trashtalk.ts",
+      "position": 1196,
+      "value": "正好,我今天就缺三个一百分。排好队,一个一个来。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1261:3e052cd97b",
+      "file": "src/trashtalk.ts",
+      "position": 1261,
+      "value": "又来送分了?上次被自己泡泡憋死的就是你吧,哈哈哈哈!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1320:184a23e1dd",
+      "file": "src/trashtalk.ts",
+      "position": 1320,
+      "value": "今天我火力全开,把你们仨炸成果冻布丁三拼。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1373:65a316d43e",
+      "file": "src/trashtalk.ts",
+      "position": 1373,
+      "value": "口气比火力大!等会儿跪着按 R 的时候别喊疼~"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1429:47afbab43d",
+      "file": "src/trashtalk.ts",
+      "position": 1429,
+      "value": "记住你现在这副嘴脸,等会儿爆开的时候会很精彩。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1493:533ef718a6",
+      "file": "src/trashtalk.ts",
+      "position": 1493,
+      "value": "菜就多练,练不好就退游!这张图容不下你那种走位。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1550:655779caec",
+      "file": "src/trashtalk.ts",
+      "position": 1550,
+      "value": "你的走位才像卡了两百毫秒的果冻,等着被我拆成三块。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1607:ec1236f51a",
+      "file": "src/trashtalk.ts",
+      "position": 1607,
+      "value": "哼,三打一你都赢不了,你赢了算我们输!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1659:4c1ecf1c23",
+      "file": "src/trashtalk.ts",
+      "position": 1659,
+      "value": "巧了,我最喜欢一个打三个。开始吧,别磨蹭。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1721:8e8b5e174a",
+      "file": "src/trashtalk.ts",
+      "position": 1721,
+      "value": "看好了,这是你的出生角,也是你等会儿的埋骨角!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1777:499f0be27a",
+      "file": "src/trashtalk.ts",
+      "position": 1777,
+      "value": "你话真多。果冻嘛,炸开之前都是响的。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1827:d9b0074a97",
+      "file": "src/trashtalk.ts",
+      "position": 1827,
+      "value": "嘴挺硬啊?等会儿泡泡糊脸的时候看你还硬不硬!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:1882:676d5bc7a7",
+      "file": "src/trashtalk.ts",
+      "position": 1882,
+      "value": "省点力气吧,留着待会儿喊救命用。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2132:f74ec9fb61",
+      "file": "src/trashtalk.ts",
+      "position": 2132,
+      "value": "呸!卑鄙小人…有本事别用泡泡,咱俩碰碰!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2158:721ef43d4a",
+      "file": "src/trashtalk.ts",
+      "position": 2158,
+      "value": "我诅咒你——下一颗泡泡把你自己送走!!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2183:6db18ecd23",
+      "file": "src/trashtalk.ts",
+      "position": 2183,
+      "value": "啊——记住,是你逼我的!兄弟们,把他冲成拖把!!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2213:5328ae25c7",
+      "file": "src/trashtalk.ts",
+      "position": 2213,
+      "value": "不可能…我可是果冻界的传奇…你纯属瞎猫碰上死耗子!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2244:64b3d5cca9",
+      "file": "src/trashtalk.ts",
+      "position": 2244,
+      "value": "咳咳…炸死我算什么本事,你现实里还不是个菜…菜鸟…"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2275:bb7017dc09",
+      "file": "src/trashtalk.ts",
+      "position": 2275,
+      "value": "等我重开!下把把你按在出生点摩擦!呸!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2300:432dc7cf0e",
+      "file": "src/trashtalk.ts",
+      "position": 2300,
+      "value": "我死了也是站着死的!你这种阴沟里放泡的算什么东西!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2470:3a407326f0",
+      "file": "src/trashtalk.ts",
+      "position": 2470,
+      "value": "少了一个。下一个是谁?自己站出来。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2493:3bb5cbc56b",
+      "file": "src/trashtalk.ts",
+      "position": 2493,
+      "value": "一百分到手,谢谢你的果冻尸体~"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2514:0d496f63f5",
+      "file": "src/trashtalk.ts",
+      "position": 2514,
+      "value": "就这实力,开场还敢嘴我?"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2532:e941f53450",
+      "file": "src/trashtalk.ts",
+      "position": 2532,
+      "value": "响完了?响完了就安静躺着吧。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2552:f685ff3c9b",
+      "file": "src/trashtalk.ts",
+      "position": 2552,
+      "value": "开场喊得最凶的,爆得最脆。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2709:34604a6e77",
+      "file": "src/trashtalk.ts",
+      "position": 2709,
+      "value": "哈哈哈哈就这??被自己家泡泡送走了吧!笑不活了!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2739:26f3046dc8",
+      "file": "src/trashtalk.ts",
+      "position": 2739,
+      "value": "菜狗!按 R 之前先反思一下你那拖把走位!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2766:ff6d6ca9bc",
+      "file": "src/trashtalk.ts",
+      "position": 2766,
+      "value": "笑死,建议卸载,顺便把键盘也捐了吧~"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2790:ed20043521",
+      "file": "src/trashtalk.ts",
+      "position": 2790,
+      "value": "回去多练十年再来!我们仨在这儿等你哦~哈哈哈!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2819:561feb7253",
+      "file": "src/trashtalk.ts",
+      "position": 2819,
+      "value": "你猜我们为什么懒得躲?因为你根本瞄不准啊哈哈哈!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2849:39af215363",
+      "file": "src/trashtalk.ts",
+      "position": 2849,
+      "value": "开场那么大口气,原来是给自己念悼词呢?"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:2988:0852b0b249",
+      "file": "src/trashtalk.ts",
+      "position": 2988,
+      "value": "三个,全灭。刚才的垃圾话呢?怎么不喷了?"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3394:82cfed5cea",
+      "file": "src/trashtalk.ts",
+      "position": 3394,
+      "value": "听说了吗,上届糖豆杯冠军被自己的泡泡送走了。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3424:3cd3ae87a4",
+      "file": "src/trashtalk.ts",
+      "position": 3424,
+      "value": "噗——冠军的含金量还在上升。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3446:ffa44afc06",
+      "file": "src/trashtalk.ts",
+      "position": 3446,
+      "value": "所以这届我押那个新来的,看着就莽。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3480:0e4b5ebe7b",
+      "file": "src/trashtalk.ts",
+      "position": 3480,
+      "value": "厂里的焦糖锅又堵了,班长气得直冒泡。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3506:750cd22053",
+      "file": "src/trashtalk.ts",
+      "position": 3506,
+      "value": "你就说是不是你干的吧。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3525:1b1b079d96",
+      "file": "src/trashtalk.ts",
+      "position": 3525,
+      "value": "……我就偷尝了一小口。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3553:bc9ecb563e",
+      "file": "src/trashtalk.ts",
+      "position": 3553,
+      "value": "喷泉的水今天特别甜,你尝了吗?"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3576:357c52d06a",
+      "file": "src/trashtalk.ts",
+      "position": 3576,
+      "value": "那是苏打味!你是不是把汽水糖掉里面了?"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3603:2b5117bc65",
+      "file": "src/trashtalk.ts",
+      "position": 3603,
+      "value": "嘘——小声点,被糖伯伯听见要罚扫看台的。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3640:49241bf831",
+      "file": "src/trashtalk.ts",
+      "position": 3640,
+      "value": "晚上去看比赛吗?糖伯伯新练了开场词。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3666:e1877016ab",
+      "file": "src/trashtalk.ts",
+      "position": 3666,
+      "value": "去!就爱听他喊「双倍甜度,双倍伤害」!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3702:1508d58c05",
+      "file": "src/trashtalk.ts",
+      "position": 3702,
+      "value": "我最近练了个新走位,叫「果冻步」。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3727:2f81fcec7e",
+      "file": "src/trashtalk.ts",
+      "position": 3727,
+      "value": "就是上次把你自己绕晕、一头栽进花坛那个?"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3755:feb1708966",
+      "file": "src/trashtalk.ts",
+      "position": 3755,
+      "value": "……那叫战术摔倒。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3898:540439b1aa",
+      "file": "src/trashtalk.ts",
+      "position": 3898,
+      "value": "打得好!再来一发!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3913:930e683711",
+      "file": "src/trashtalk.ts",
+      "position": 3913,
+      "value": "走位!走位!别站桩啊!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3930:b7f698900d",
+      "file": "src/trashtalk.ts",
+      "position": 3930,
+      "value": "我押的可是你,别给我丢人!!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3950:8eac494234",
+      "file": "src/trashtalk.ts",
+      "position": 3950,
+      "value": "这泡泡放的,我奶奶都比你准!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3970:08cfc6ac45",
+      "file": "src/trashtalk.ts",
+      "position": 3970,
+      "value": "别怂!堵他角落!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:3984:f43dba88d9",
+      "file": "src/trashtalk.ts",
+      "position": 3984,
+      "value": "好家伙,差点把自己送走,笑死。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4005:c702842995",
+      "file": "src/trashtalk.ts",
+      "position": 4005,
+      "value": "加油啊!我瓜子都买好了!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4151:c0c1f587ff",
+      "file": "src/trashtalk.ts",
+      "position": 4151,
+      "value": "今天就让全镇看看,糖豆杯的含金量在谁这儿!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4178:eaea508a2e",
+      "file": "src/trashtalk.ts",
+      "position": 4178,
+      "value": "待会儿输了别哭着找糖伯伯评理啊~"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4200:8d7181bc35",
+      "file": "src/trashtalk.ts",
+      "position": 4200,
+      "value": "我泡泡都预热好了,进来挨炸吧你!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4222:6ada5de917",
+      "file": "src/trashtalk.ts",
+      "position": 4222,
+      "value": "就你那走位,还是回家看喷泉合适!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4298:6c878c1553",
+      "file": "src/trashtalk.ts",
+      "position": 4298,
+      "value": "赢了!今晚喷泉边请客——请你们看我领奖!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4324:4bba9aaf8a",
+      "file": "src/trashtalk.ts",
+      "position": 4324,
+      "value": "就这?我还没出全力呢~"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4341:f3bb40ce01",
+      "file": "src/trashtalk.ts",
+      "position": 4341,
+      "value": "这就是实力,服不服!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4412:8610fbe067",
+      "file": "src/trashtalk.ts",
+      "position": 4412,
+      "value": "呜……刚才那颗泡泡它不讲武德!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4433:0ccae48171",
+      "file": "src/trashtalk.ts",
+      "position": 4433,
+      "value": "我是让着他的!下次绝对不让!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4453:c083b440ca",
+      "file": "src/trashtalk.ts",
+      "position": 4453,
+      "value": "哼,回家加练!喷泉边等着我!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4743:f3c46d9620",
+      "file": "src/trashtalk.ts",
+      "position": 4743,
+      "value": "哈——欠。是新来的吧?帮个忙,要是糖伯伯问起来,就说我在巡逻。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4784:d6f19ae1d8",
+      "file": "src/trashtalk.ts",
+      "position": 4784,
+      "value": "你这明明是在打盹吧,眼皮都粘一起了。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4812:effb33d430",
+      "file": "src/trashtalk.ts",
+      "position": 4812,
+      "value": "嘘——巡逻界的最高境界,就是看起来像在打盹。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4857:1893774ff8",
+      "file": "src/trashtalk.ts",
+      "position": 4857,
+      "value": "唉,厂里的糖纸根本拧不完……拧完一批又来一批。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4890:944507d93a",
+      "file": "src/trashtalk.ts",
+      "position": 4890,
+      "value": "那你怎么站在这儿一动不动?"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4913:8cdceea407",
+      "file": "src/trashtalk.ts",
+      "position": 4913,
+      "value": "我在酝酿干劲。酝酿,也是工作很重要的一部分。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:4973:7221687b4e",
+      "file": "src/trashtalk.ts",
+      "position": 4973,
+      "value": "嘿!你气色不错!要不要去糖豆杯练两场?我可以教你两招!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5010:e300b5d709",
+      "file": "src/trashtalk.ts",
+      "position": 5010,
+      "value": "就你?听说你上场被自己的泡泡堵在墙角了。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5040:1b19b94dfa",
+      "file": "src/trashtalk.ts",
+      "position": 5040,
+      "value": "那叫战术蓄力!下一场我绝对气冠全场,冲鸭!!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5085:1cd7d60cc7",
+      "file": "src/trashtalk.ts",
+      "position": 5085,
+      "value": "今天的汽水糖气特别足,我现在浑身都是劲!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5115:e63917d339",
+      "file": "src/trashtalk.ts",
+      "position": 5115,
+      "value": "看出来了,你说话都在冒泡。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5138:dd46bc0696",
+      "file": "src/trashtalk.ts",
+      "position": 5138,
+      "value": "哈哈哈,走,去看台占个好位置,今天肯定有好戏!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5200:9d0d37bf2e",
+      "file": "src/trashtalk.ts",
+      "position": 5200,
+      "value": "……你说,泡泡爆开之前的那一瞬间,它自己知道吗?"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5234:9ade87e4eb",
+      "file": "src/trashtalk.ts",
+      "position": 5234,
+      "value": "你这是搬葡萄糖搬累了吧。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5256:ad97af1734",
+      "file": "src/trashtalk.ts",
+      "position": 5256,
+      "value": "嗯。所以人不能学泡泡,话别放太满。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5296:01f9a8fd88",
+      "file": "src/trashtalk.ts",
+      "position": 5296,
+      "value": "喷泉今天第三次变成苏打味了。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5320:635caff79a",
+      "file": "src/trashtalk.ts",
+      "position": 5320,
+      "value": "不是汽水干的吗?"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5338:2311c64ee8",
+      "file": "src/trashtalk.ts",
+      "position": 5338,
+      "value": "证据不足。但我押注,下次还是他。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5398:28080c375b",
+      "file": "src/trashtalk.ts",
+      "position": 5398,
+      "value": "听说你把果冻三人组全灭了?!快,教教我那招卡位!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5432:db83a04c33",
+      "file": "src/trashtalk.ts",
+      "position": 5432,
+      "value": "很简单,把泡泡放在他嘴前面,他就闭嘴了。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5462:9f3e82fa44",
+      "file": "src/trashtalk.ts",
+      "position": 5462,
+      "value": "记下了!下次糖豆杯我就这么堵汽水,嘿嘿。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5505:f871fadedf",
+      "file": "src/trashtalk.ts",
+      "position": 5505,
+      "value": "厂长说今天草莓夹心加倍,我搬了三大箱,手到现在都是甜的!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5543:77ea185f2c",
+      "file": "src/trashtalk.ts",
+      "position": 5543,
+      "value": "那你现在应该回家歇着,而不是站在路中间。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5573:cf68597cfb",
+      "file": "src/trashtalk.ts",
+      "position": 5573,
+      "value": "不行!听说等会儿有比赛,我瓜子都备好了!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5750:9bd7194277",
+      "file": "src/trashtalk.ts",
+      "position": 5750,
+      "value": "你好呀,新面孔~在镇上随便转转?竞技场就在中间,报名处在东边。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5789:23f9d5be4b",
+      "file": "src/trashtalk.ts",
+      "position": 5789,
+      "value": "我正打算去看看。"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5805:65bcbdb19a",
+      "file": "src/trashtalk.ts",
+      "position": 5805,
+      "value": "去吧去吧,替我们把果冻们收拾服帖点!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:5940:a693082aed",
+      "file": "src/trashtalk.ts",
+      "position": 5940,
+      "value": "糖伯伯"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:6055:c8b4128556",
+      "file": "src/trashtalk.ts",
+      "position": 6055,
+      "value": "比赛进行中!想报名的等这场打完,想看的去看台,别挡道~"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:6088:c31ea05cc4",
+      "file": "src/trashtalk.ts",
+      "position": 6088,
+      "value": "嘘——选手正专注呢!瓜子汽水看台有售!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:6113:ecb553b8bc",
+      "file": "src/trashtalk.ts",
+      "position": 6113,
+      "value": "本裁判主持水平全镇第一,不接受反驳。看台请,好戏在后头!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:6207:bae4c0cdb0",
+      "file": "src/trashtalk.ts",
+      "position": 6207,
+      "value": "哟,勇士!报名费免了,把果冻们打服就行!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:6233:a8b9c85854",
+      "file": "src/trashtalk.ts",
+      "position": 6233,
+      "value": "好胆量!规则老样子:泡泡炸人,别炸自己,哈哈!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:6262:1126de9326",
+      "file": "src/trashtalk.ts",
+      "position": 6262,
+      "value": "登记好啦!进场吧,观众们可等着看好戏呢!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:6346:0d30d2acad",
+      "file": "src/trashtalk.ts",
+      "position": 6346,
+      "value": "糖豆杯友谊赛,现在开赛!双倍甜度,双倍伤害!"
+    },
+    {
+      "key": "paopaotang.src/trashtalk.ts:6374:1819aa778e",
+      "file": "src/trashtalk.ts",
+      "position": 6374,
+      "value": "两位选手已入场——观众朋友们,瓜子汽水拿稳了!"
+    },
+    {
+      "key": "paopaotang.tests/guide-role.test.ts:389:22791f77ef",
+      "file": "tests/guide-role.test.ts",
+      "position": 389,
+      "value": "有需要就来问我~ 我一直在广场这儿。"
+    },
+    {
+      "key": "paopaotang.tests/guide-role.test.ts:1538:de3fb53aa3",
+      "file": "tests/guide-role.test.ts",
+      "position": 1538,
+      "value": "the guide is never drafted into a 糖豆杯 duel"
+    }
+  ]
+}

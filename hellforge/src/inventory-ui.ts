@@ -23,7 +23,7 @@ import {
 import { HudArt } from './hud-art';
 import {
   FONT_UI, FONT_DISPLAY, Ui, Z, deltaColor,
-  d2StonePanelCss, goldDividerHtml, titleBandCss,
+  d2StonePanelCss, goldDividerHtml, panelChrome, titleBandCss,
 } from './ui-theme';
 import { slotIconImg, slotSilhouetteSvg } from './ui-icons';
 import { installUiTooltip, type UiTooltipHandle } from './ui-tooltip';
@@ -197,8 +197,9 @@ export function installInventory(
     'position:absolute;inset:0;display:none;align-items:center;justify-content:center;' +
     'background:rgba(6,4,3,0.72);z-index:2;';
   const confirmBox = document.createElement('div');
+  // N2: shared carved chrome (same family as loot/forge popups).
   confirmBox.style.cssText = 'min-width:220px;max-width:280px;padding:14px 16px;text-align:center;' +
-    d2StonePanelCss() + 'border:2px solid #5a3a1a;box-shadow:0 8px 28px rgba(0,0,0,0.8);';
+    panelChrome();
   const confirmText = document.createElement('div');
   confirmText.style.cssText = `font:700 13px ${FONT_UI};color:#e0d8cc;margin-bottom:6px;line-height:1.5;`;
   const confirmSub = document.createElement('div');

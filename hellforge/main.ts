@@ -174,6 +174,7 @@ import { AmbientFx } from './src/ambient-fx';
 import { installShell, type ShellHandle } from './src/shell';
 import { installCharSelect, type CharSelectHandle } from './src/char-select';
 import { installCharList, type CharListHandle } from './src/char-list';
+import { installIntroVideo } from './src/intro-video';
 import { installHeroPreview, type HeroPreviewHandle } from './src/hero-preview';
 import { CLASS_DEFS, getClassDef, type CharacterRecord, type ClassId } from './src/classes';
 import {
@@ -2795,45 +2796,65 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const cube = installCubeUI({
       getBag: () => character.snapshot().bag as BagAnchor[],
       getMaterials: () => character.snapshot().materials,
+      // N2: settle + persist immediately; SFX/banner deferred via onPresent (reveal).
       onSalvage: (index) => {
         const before = character.snapshot().bag[index]?.item;
         const res = character.dispatch({ op: 'salvage-bag', index });
-        if (!res.ok) { craftFailBanner(res.reason); return false; }
+        if (!res.ok) { craftFailBanner(res.reason); return { ok: false }; }
         const yield_ = before ? salvageYield(before) : null;
         const tierLabel = before?.rarity === 'common' ? '白'
           : before?.rarity === 'magic' ? '蓝'
             : before?.rarity === 'rare' ? '黄' : '';
         const n = yield_ && before && (before.rarity === 'common' || before.rarity === 'magic' || before.rarity === 'rare')
           ? yield_[before.rarity] : 0;
-        sfx.play('pickup');
-        if (n > 0) hud.banner(`拆解 +${n} ${tierLabel}`, '#c8a84e', 1100);
         applyEquipment();
         persistCharacter();
-        return true;
+        return {
+          ok: true,
+          present: {
+            sfx: 'pickup',
+            banner: n > 0 ? `拆解 +${n} ${tierLabel}` : '拆解完成',
+            color: '#c8a84e',
+          },
+        };
       },
       onReroll: (index) => {
         const res = character.dispatch({ op: 'reroll-bag', index });
-        if (!res.ok) { craftFailBanner(res.reason); return false; }
-        sfx.play('equip');
+        if (!res.ok) { craftFailBanner(res.reason); return { ok: false }; }
         const next = character.snapshot().bag[index]?.item;
-        hud.banner(next ? `重铸：${next.name}` : '重铸完成', '#88ccff', 1200);
         applyEquipment();
         persistCharacter();
-        return true;
+        return {
+          ok: true,
+          present: {
+            sfx: 'equip',
+            banner: next ? `重铸：${next.name}` : '重铸完成',
+            color: '#88ccff',
+          },
+        };
       },
       onFuse: (indices) => {
         const res = character.dispatch({
           op: 'fuse-bag',
           indices: [indices[0], indices[1], indices[2]],
         });
-        if (!res.ok) { craftFailBanner(res.reason); return false; }
-        sfx.play('equip');
+        if (!res.ok) { craftFailBanner(res.reason); return { ok: false }; }
         const dest = Math.min(indices[0], indices[1], indices[2]);
         const fused = character.snapshot().bag[dest]?.item;
-        hud.banner(fused ? `合成：${fused.name}` : '合成完成', '#ffd066', 1400);
         applyEquipment();
         persistCharacter();
-        return true;
+        return {
+          ok: true,
+          present: {
+            sfx: 'equip',
+            banner: fused ? `合成：${fused.name}` : '合成完成',
+            color: '#ffd066',
+          },
+        };
+      },
+      onPresent: (payload) => {
+        sfx.play(payload.sfx);
+        hud.banner(payload.banner, payload.color, 1200);
       },
       showNotification: (text, color) => { hud.banner(text, color ?? '#ffd066', 1200); },
       onClose: () => { uiLayers.close('craft'); },
@@ -3909,114 +3930,128 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       });
     }
 
-    const selection = createCharacterSelectionGate();
-    const acceptSelection = (record: CharacterRecord): void => {
-      if (!selection.select(record)) return;
-      heroPreview?.hide();
-      dimAtmosphereForPreview(false);
-      charSelect?.hide();
-      charList?.hide();
-      titleRs?.close();
-      shell!.showLoading('正在加载角色与场景…');
-    };
-    const dimAtmosphereForPreview = (on: boolean): void => {
-      // Keep CharSelect readable — drive HDR pass params, never CSS overlays (L3).
-      const s = titleRs?.get();
-      atmosphereApi?.setPreviewDim(on, s
-        ? { vignette: s.vignette, haze: s.haze, atmoTemp: s.atmoTemp }
-        : undefined);
-    };
-    const previewClassId = (classId: ClassId): ClassId =>
-      (CLASS_DEFS[classId] ? classId : 'sorceress');
-    // Shell navigation fades through black (ui-transition.ts; cover sits above
-    // the shell z-200). Loading cover handles the charSelected→inGame leg.
-    const fadeNav = (fn: () => void): void => {
-      void uiTransition.throughBlack(fn, { fadeMs: 260, holdMs: 60 });
-    };
-    const openCharSelect = (): void => {
-      charList?.hide();
-      titleRs?.close();
-      dimAtmosphereForPreview(true);
-      shell!.goTo('charSelect');
-      shellPhase = 'charSelect';
-      charSelect!.show();
-    };
-    const openCharList = (): void => {
-      charSelect?.hide();
-      titleRs?.close();
-      dimAtmosphereForPreview(true);
-      shell!.goTo('charList');
-      shellPhase = 'charList';
-      charList!.show();
-    };
-    shell = installShell(uiMount, {
-      onNewGame: () => {
-        if (listCharacters().length >= MAX_CHARACTERS) {
+    // N1: click-gate → optional PV → title shell. BGM held so the first gesture
+    // arms audio for PV (or missing-asset skip) before camp music.
+    const installTitleShell = (): void => {
+      const selection = createCharacterSelectionGate();
+      const acceptSelection = (record: CharacterRecord): void => {
+        if (!selection.select(record)) return;
+        heroPreview?.hide();
+        dimAtmosphereForPreview(false);
+        charSelect?.hide();
+        charList?.hide();
+        titleRs?.close();
+        shell!.showLoading('正在加载角色与场景…');
+      };
+      const dimAtmosphereForPreview = (on: boolean): void => {
+        // Keep CharSelect readable — drive HDR pass params, never CSS overlays (L3).
+        const s = titleRs?.get();
+        atmosphereApi?.setPreviewDim(on, s
+          ? { vignette: s.vignette, haze: s.haze, atmoTemp: s.atmoTemp }
+          : undefined);
+      };
+      const previewClassId = (classId: ClassId): ClassId =>
+        (CLASS_DEFS[classId] ? classId : 'sorceress');
+      // Shell navigation fades through black (ui-transition.ts; cover sits above
+      // the shell z-200). Loading cover handles the charSelected→inGame leg.
+      const fadeNav = (fn: () => void): void => {
+        void uiTransition.throughBlack(fn, { fadeMs: 260, holdMs: 60 });
+      };
+      const openCharSelect = (): void => {
+        charList?.hide();
+        titleRs?.close();
+        dimAtmosphereForPreview(true);
+        shell!.goTo('charSelect');
+        shellPhase = 'charSelect';
+        charSelect!.show();
+      };
+      const openCharList = (): void => {
+        charSelect?.hide();
+        titleRs?.close();
+        dimAtmosphereForPreview(true);
+        shell!.goTo('charList');
+        shellPhase = 'charList';
+        charList!.show();
+      };
+      shell = installShell(uiMount, {
+        onNewGame: () => {
+          if (listCharacters().length >= MAX_CHARACTERS) {
+            fadeNav(openCharList);
+            return;
+          }
+          fadeNav(openCharSelect);
+        },
+        onContinue: () => {
           fadeNav(openCharList);
-          return;
-        }
-        fadeNav(openCharSelect);
-      },
-      onContinue: () => {
-        fadeNav(openCharList);
-      },
-      onSettings: () => { titleRs?.open(); },
-      hasSave: () => listCharacters().length > 0,
-    });
-    charSelect = installCharSelect(shell.root, {
-      onConfirm: acceptSelection,
-      onBack: () => {
-        fadeNav(() => {
-          heroPreview?.hide();
-          dimAtmosphereForPreview(false);
-          charSelect!.hide();
-          shell!.goTo('title');
-          shellPhase = 'title';
-        });
-      },
-      onClassChange: (classId: ClassId) => {
-        void heroPreview?.show(previewClassId(classId));
-      },
-    });
-    charSelect.hide();
-    charList = installCharList(shell.root, {
-      onEnterGame: acceptSelection,
-      onNewChar: () => { fadeNav(openCharSelect); },
-      onBack: () => {
-        fadeNav(() => {
-          heroPreview?.hide();
-          dimAtmosphereForPreview(false);
-          charList!.hide();
-          shell!.goTo('title');
-          shellPhase = 'title';
-        });
-      },
-      onSelectionChange: (rec) => {
-        if (!rec) {
-          heroPreview?.hide();
-          return;
-        }
-        void heroPreview?.show(previewClassId(rec.classId));
-      },
-    });
-    charList.hide();
-    // Title particles uncapped; CharSelect/CharList drive 360° idle preview yaw.
-    onCleanup(ownerLedger.trackSystem('hellforge-shell-update'));
-    world.addSystem(Update, { name: 'hellforge-shell-update', queries: [], fn: () => {
-      const dt = world.getResource(Time).delta;
-      shell?.tick(dt);
-      if (shellPhase === 'charSelect' || shellPhase === 'charList') heroPreview?.tick(dt);
-    }});
-    onCleanup(() => {
-      charSelect?.dispose();
-      charList?.dispose();
-      shell?.dispose();
-    });
-    void selection.promise
-      .then((record) => startRuntime(record))
-      .catch((error) => {
-        failBoot('游戏初始化失败', error);
+        },
+        onSettings: () => { titleRs?.open(); },
+        hasSave: () => listCharacters().length > 0,
       });
+      charSelect = installCharSelect(shell.root, {
+        onConfirm: acceptSelection,
+        onBack: () => {
+          fadeNav(() => {
+            heroPreview?.hide();
+            dimAtmosphereForPreview(false);
+            charSelect!.hide();
+            shell!.goTo('title');
+            shellPhase = 'title';
+          });
+        },
+        onClassChange: (classId: ClassId) => {
+          void heroPreview?.show(previewClassId(classId));
+        },
+      });
+      charSelect.hide();
+      charList = installCharList(shell.root, {
+        onEnterGame: acceptSelection,
+        onNewChar: () => { fadeNav(openCharSelect); },
+        onBack: () => {
+          fadeNav(() => {
+            heroPreview?.hide();
+            dimAtmosphereForPreview(false);
+            charList!.hide();
+            shell!.goTo('title');
+            shellPhase = 'title';
+          });
+        },
+        onSelectionChange: (rec) => {
+          if (!rec) {
+            heroPreview?.hide();
+            return;
+          }
+          void heroPreview?.show(previewClassId(rec.classId));
+        },
+      });
+      charList.hide();
+      // Title particles uncapped; CharSelect/CharList drive 360° idle preview yaw.
+      onCleanup(ownerLedger.trackSystem('hellforge-shell-update'));
+      world.addSystem(Update, { name: 'hellforge-shell-update', queries: [], fn: () => {
+        const dt = world.getResource(Time).delta;
+        shell?.tick(dt);
+        if (shellPhase === 'charSelect' || shellPhase === 'charList') heroPreview?.tick(dt);
+      }});
+      onCleanup(() => {
+        charSelect?.dispose();
+        charList?.dispose();
+        shell?.dispose();
+      });
+      void selection.promise
+        .then((record) => startRuntime(record))
+        .catch((error) => {
+          failBoot('游戏初始化失败', error);
+        });
+    };
+
+    bgm.holdForIntro();
+    const intro = installIntroVideo(uiMount, {
+      onComplete: () => {
+        intro.dispose();
+        bgm.releaseIntroHold();
+        installTitleShell();
+      },
+    });
+    onCleanup(() => intro.dispose());
     return;
   }
 

@@ -1,0 +1,13 @@
+{
+  "name": "@forgeax/game-npc-render-acceptance",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@forgeax/npc-client": "file:../../../packages/npc-client",
+    "@forgeax/engine-app": "workspace:*",
+    "@forgeax/engine-assets-runtime": "workspace:*",
+    "@forgeax/engine-ecs": "workspace:*",
+    "@forgeax/engine-render": "workspace:*",
+    "@forgeax/engine-scene": "workspace:*"
+  }
+}

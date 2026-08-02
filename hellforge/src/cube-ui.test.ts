@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { resolveForgeActions } from './cube-ui';
+import { FORGE_REVEAL_MS, forgePreviewLines, resolveForgeActions } from './cube-ui';
+import { assertForgeRevealDuration } from './visual-polish-contracts';
 import type { ItemInstance } from './items';
 
 function item(overrides: Partial<ItemInstance> = {}): ItemInstance {
@@ -91,5 +92,28 @@ describe('resolveForgeActions', () => {
     expect(st.salvage).toBe(false);
     expect(st.fuse).toBe(false);
     expect(st.lockReason).toBe('wrong-recipe');
+  });
+});
+
+describe('forgePreviewLines / reveal duration (N2)', () => {
+  test('reveal ms stays inside F0 contract band', () => {
+    expect(assertForgeRevealDuration(FORGE_REVEAL_MS)).toBe(true);
+  });
+
+  test('salvage preview shows shard yield delta', () => {
+    const p = forgePreviewLines([item({ rarity: 'rare' })], { common: 0, magic: 0, rare: 99 });
+    expect(p.output).toContain('黄');
+    expect(p.delta).toContain('+');
+  });
+
+  test('fuse rare trio previews legendary', () => {
+    const trio = [
+      item({ rarity: 'rare', instanceId: 'a' }),
+      item({ rarity: 'rare', instanceId: 'b' }),
+      item({ rarity: 'rare', instanceId: 'c' }),
+    ];
+    const p = forgePreviewLines(trio, zero);
+    expect(p.recipe).toContain('传奇');
+    expect(p.output).toContain('传奇');
   });
 });

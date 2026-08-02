@@ -1,0 +1,16 @@
+{
+  "id": "paopaotang",
+  "name": "泡泡糖",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "defaultScene": "279b6439-2794-41bc-97ea-158a7b144f0d",
+  "npc": {
+    "model": "deepseek-v4-flash-openai",
+    "budget": {
+      "maxCallsPerMinute": 30,
+      "maxTokensPerMinute": 120000,
+      "maxConcurrent": 4
+    },
+    "maxTokens": 500
+  }
+}

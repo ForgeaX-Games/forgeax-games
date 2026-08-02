@@ -1,0 +1,10 @@
+{
+  "id": "paopaotang.strawberry",
+  "name": "草莓",
+  "personaFile": "./persona/identity.md",
+  "models": {
+    "model": [
+      "deepseek-v4-flash-openai"
+    ]
+  }
+}

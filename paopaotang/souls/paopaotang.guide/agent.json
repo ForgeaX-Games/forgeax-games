@@ -1,0 +1,10 @@
+{
+  "id": "paopaotang.guide",
+  "name": "Guide",
+  "personaFile": "./persona/identity.md",
+  "models": {
+    "model": [
+      "deepseek-v4-flash-openai"
+    ]
+  }
+}

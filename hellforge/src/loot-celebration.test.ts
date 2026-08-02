@@ -175,11 +175,19 @@ describe('installLootCelebration', () => {
     expect(root()!.style.display).toBe('none');
   });
 
-  test('click anywhere dismisses immediately', () => {
+  test('root is non-blocking; only card click dismisses', () => {
     const h = install(5000);
     h.show(item());
-    root()!.dispatch('click');
-    expect(root()!.style.display).toBe('none');
+    const r = root()!;
+    expect(r.style.cssText).toContain('pointer-events:none');
+    expect(r.style.cssText).not.toContain('0.82');
+    // Root click must NOT dismiss (world stays interactive under the overlay).
+    r.dispatch('click');
+    expect(r.style.display).toBe('flex');
+    const card = r.children[0]!;
+    expect(card.style.cssText).toContain('pointer-events:auto');
+    card.dispatch('click');
+    expect(r.style.display).toBe('none');
   });
 
   test('show during show replaces (latest wins) and restarts the timer', async () => {

@@ -21,6 +21,9 @@ import type { Monster } from './monsters';
 import { MONSTERS } from './monsters';
 import { RARITY_META, type ItemInstance, type Rarity } from './items';
 import type { FxSystem, LootBeamVfx } from './fx';
+import { equipmentPlacardScale } from './loot-placard';
+
+export { equipmentPlacardScale } from './loot-placard';
 
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
 
@@ -130,32 +133,32 @@ export class LootSystem {
     });
   }
 
-  /** Equipment drop — a D2-style rarity-coloured beam pillar (emissive mesh
-   *  base + additive sprite beam, PR8 T7). Legendary beams are visibly fatter
-   *  + taller with a fat base glow (the across-the-room "orange!"). */
+  /**
+   * Equipment drop (N2): thin upright icon placard + rarity beam — not a tall
+   * skinny pillar. Name lives on the ItemInstance for pick/HUD; world mesh is
+   * the placard silhouette tinted by rarity.
+   */
   spawnItem(item: ItemInstance, x: number, z: number): void {
     const ang = Math.random() * Math.PI * 2;
     x += Math.cos(ang) * 0.6;
     z += Math.sin(ang) * 0.6;
-    const fat = item.rarity === 'legendary' ? 0.2 : 0.13;
-    const tall = item.rarity === 'legendary' ? 3.0 : 2.2;
-    const baseY = tall / 2;
+    const { sx, sy, sz, beamTall } = equipmentPlacardScale(item.rarity);
+    const baseY = sy / 2 + 0.04;
     const res = this.world.spawn(
-      { component: Transform, data: { pos: [x, baseY, z], scale: [fat, tall, fat] } },
+      { component: Transform, data: { pos: [x, baseY, z], scale: [sx, sy, sz] } },
       { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
       { component: MeshRenderer, data: { materials: [this.beamMats[item.rarity]] } },
     );
     if (!res.ok) return;
-    // HDR sprite beam over the mesh pillar (0 handles in Edit mode = inert).
     const meta = RARITY_META[item.rarity];
     const beam = this.fx.lootBeam(x, z, [
       meta.beam[0] * meta.beamI, meta.beam[1] * meta.beamI, meta.beam[2] * meta.beamI, 1,
-    ], { tall, glowSize: item.rarity === 'legendary' ? 0.8 : undefined });
+    ], { tall: beamTall, glowSize: item.rarity === 'legendary' ? 0.8 : undefined });
     this.drops.push({
       id: `l-${this.nextStableId++}`,
       e: res.value as EntityHandle, kind: 'item', amount: 0, item, beam,
       x, y: baseY, z, baseY,
-      sx: fat, sy: tall, sz: fat,
+      sx, sy, sz,
       vx: 0, vz: 0, age: 0, hooked: false,
       bobPhase: Math.random() * Math.PI * 2,
       spinPhase: Math.random() * Math.PI * 2,

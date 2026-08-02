@@ -1,0 +1,10 @@
+{
+  "id": "paopaotang.pudding",
+  "name": "布丁",
+  "personaFile": "./persona/identity.md",
+  "models": {
+    "model": [
+      "deepseek-v4-flash-openai"
+    ]
+  }
+}

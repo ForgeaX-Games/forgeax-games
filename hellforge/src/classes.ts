@@ -79,9 +79,10 @@ export const CLASS_DEFS: Partial<Record<ClassId, ClassDef>> = {
   },
   sorceress: {
     id: 'sorceress',
-    name: '法师',
-    description: '掌握元素魔法的奥术大师，精通火冰电三系魔法',
-    lore: '来自余烬哨站东侧奥术学院的元素法师，以熔炉余烬与霜纹研习三系奥秘',
+    // Product display: 烬行者（暗法师）. Enum / save classId stays sorceress.
+    name: '烬行者',
+    description: '以余烬与霜纹行走哨站外缘的暗法师，精通火冰电三系',
+    lore: '烬行者——余烬哨站东侧奥术残卷的继承者，以熔炉余烬与霜纹研习三系奥秘',
     coreMechanic: '元素精通',
     coreMechanicDesc: '连续使用同一元素的技能时伤害逐步提升，满层时+60%伤害，切换元素重置层数',
     baseStatMods: { hp: -20, mp: 40, damageMin: -1, damageMax: -2, defense: -1, attackSpeed: -0.2 },
