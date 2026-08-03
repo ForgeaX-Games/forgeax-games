@@ -13,6 +13,8 @@ export const Ui = {
   gold: '#e0b84a',
   goldBright: '#f5d878',
   goldDeep: '#8a5e18',
+  /** Inventory well bezel — normal-state metal edge (k3 polish). */
+  goldMetal: '#8a6828',
   goldDim: '#a88440',
   goldLine: 'rgba(224,184,74,0.72)',
   goldLineSoft: 'rgba(224,184,74,0.42)',
@@ -84,8 +86,11 @@ export const FONT_MONO = FONT_UI;
 export const Z = {
   atmosphere: 40,
   haze: 41,
+  nameplate: 45, // above the 3D canvas, below the HUD
   hud: 50,
   inventory: 60,
+  /** Left-docked camp stash — just above the inventory slab (dual-open pair). */
+  stash: 61,
   questTracker: 90,
   automap: 110,
   skillPanel: 120,

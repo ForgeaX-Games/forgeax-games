@@ -7,6 +7,10 @@
 //   python3 scripts/soften-ground-albedo.py   # if albedo missing/stale
 //   bun scripts/bake-ground.ts [scene-pack.json]
 //
+// Ground roughness comes from lib/surface-spec.ts (SURFACE_ROUGHNESS.ground);
+// scripts/make-surface-variants.ts verifies it instead of re-editing the GLB
+// (this file owns prop-ground's writer).
+//
 // UV repeat = groundSize / tileSize (~30× for 4m tiles on 120m field).
 // Keep GROUND_SIZE in sync with wild-terrain.ts GROUND_HALF (= size/2) and
 // main.ts WILD_BOUNDS (walkable rim inside the visual apron).
@@ -16,7 +20,8 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { cookExternalAssetFields } from '../../../marketplace/plugins/wb-ai-asset/server/external-meta-cook.ts';
+import { cookKitMeta } from './lib/kit-meta';
+import { SURFACE_ROUGHNESS } from './lib/surface-spec';
 import {
   readPack, writePack, findSceneAsset, ensureRefGuid, readPropAssets,
 } from './lib/scene-authoring.ts';
@@ -91,7 +96,7 @@ function buildGroundGlb(outPath: string): Buffer {
       pbrMetallicRoughness: {
         baseColorTexture: { index: 0, texCoord: 0 },
         metallicFactor: 0,
-        roughnessFactor: 0.96,
+        roughnessFactor: SURFACE_ROUGHNESS.ground,
       },
     }],
     meshes: [{
@@ -161,7 +166,7 @@ function patchGroundEntity(packPath: string): void {
 
   writePack(packPath, pack);
   console.log(
-    `  Ground → prop-ground mesh (${bbox.size.map((v) => +v.toFixed(1)).join('×')}m native), pos=(${t.pos[0].toFixed(2)},0,${t.pos[2].toFixed(2)})`,
+    `  Ground → prop-ground mesh (${bbox.size.map((v) => +v.toFixed(1)).join('×')}m native), pos=(${curPos[0].toFixed(2)},0,${curPos[2].toFixed(2)})`,
   );
 }
 
@@ -176,8 +181,8 @@ const glbBytes = buildGroundGlb(glbPath);
 console.log(`  wrote ${glbPath} (${(glbBytes.length / 1e6).toFixed(1)} MB)`);
 
 const contentHash = `sha256:${createHash('sha256').update(glbBytes).digest('hex')}`;
-const meta = await cookExternalAssetFields(new Uint8Array(glbBytes), contentHash, 'prop-ground.glb');
-if (!meta) throw new Error('cookExternalAssetFields returned null');
+const meta = cookKitMeta(new Uint8Array(glbBytes), contentHash, 'prop-ground.glb');
+if (!meta) throw new Error('cookKitMeta returned null');
 writeFileSync(`${glbPath}.meta.json`, `${JSON.stringify(meta, null, 2)}\n`, 'utf8');
 console.log(`  sidecar: ${meta.subAssets.length} subAssets [${meta.subAssets.map((s) => s.kind).join(', ')}]`);
 

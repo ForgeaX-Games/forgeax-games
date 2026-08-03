@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
+import { afterEach, beforeEach, describe, expect, spyOn, test } from 'bun:test';
 import {
   createSorceressDomain,
   projectCharacterRecord,
@@ -73,6 +73,8 @@ function validEnvelope(overrides: Partial<CharacterSaveEnvelope> = {}): Characte
     xp: 10,
     gold: 50,
   });
+  // Starter kit fills the weapon slot — free it so the fixture item auto-equips.
+  domain.dispatch({ op: 'unequip', slot: 'weapon' });
   domain.dispatch({ op: 'take-item', item: sampleItem() });
   domain.dispatch({
     op: 'set-quest-status',
@@ -126,8 +128,9 @@ describe('parseEnvelope / parseLegacy', () => {
     expect(parsed!.progression.level).toBe(3);
     expect(parsed!.inventory.equipment.weapon?.instanceId).toBe('inst-frost-wand');
     expect(parsed!.quests['purge-slagdeep-hollow'].status).toBe('active');
-    // v2 bag is an anchor list; this fixture's single item auto-equipped → empty bag.
-    expect(parsed!.inventory.bag).toEqual([]);
+    // v2 bag is an anchor list; the unequipped starter kit weapon is its one anchor.
+    expect(parsed!.inventory.bag).toHaveLength(1);
+    expect(parsed!.inventory.bag[0]!.item.slot).toBe('weapon');
   });
 
   test('parsePotions clamps belt stock to POTION_CAP (20), not 999', () => {
@@ -165,6 +168,8 @@ describe('parseEnvelope / parseLegacy', () => {
 describe('serialize / hydrate round trip', () => {
   test('domain → envelope → domain restores progression and items', () => {
     const domain = createSorceressDomain({ playerName: '往返', id: 'rt-1', level: 4, xp: 7, gold: 99 });
+    // Starter kit fills the weapon slot — free it so the fixture item auto-equips.
+    domain.dispatch({ op: 'unequip', slot: 'weapon' });
     domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'stable-id-99' }) });
     domain.dispatch({ op: 'select-hotbar', slot: 2 });
     domain.dispatch({
@@ -188,6 +193,10 @@ describe('serialize / hydrate round trip', () => {
 
   test('PR10 T4: round-trip new slots + materials; schema version stays 1', () => {
     const domain = createSorceressDomain({ playerName: '铸炉', id: 'pr10-rt', level: 5, gold: 10 });
+    // Starter kit fills the new doll slots — free them so the gear auto-equips.
+    for (const slot of ['gloves', 'belt', 'ring1', 'ring2', 'offhand'] as const) {
+      expect(domain.dispatch({ op: 'unequip', slot }).ok).toBe(true);
+    }
     const gear: Array<Partial<ItemInstance> & { slot: ItemInstance['slot']; instanceId: string }> = [
       { instanceId: 'g-gloves', slot: 'gloves', name: '手套' },
       { instanceId: 'g-belt', slot: 'belt', name: '腰带' },
@@ -751,5 +760,111 @@ describe('v1 → v2 bag migration (flat 60-cell → anchor list)', () => {
       ...env,
       inventory: { bag: [badSize], equipment: env.inventory.equipment },
     })).toBeNull();
+  });
+});
+
+describe('personal stash (N-Stash)', () => {
+  const stashAnchor = (
+    instanceId: string,
+    x: number,
+    y: number,
+    slot: ItemInstance['slot'] = 'armor',
+  ): { item: ItemInstance; x: number; y: number } => ({
+    item: sampleItem({ instanceId, slot, name: instanceId }),
+    x,
+    y,
+  });
+
+  test('old envelope without stash parses and normalizes to stash: []', () => {
+    const env = validEnvelope();
+    delete (env.inventory as { stash?: unknown }).stash; // pre-stash wire shape
+    expect('stash' in env.inventory).toBe(false);
+    const parsed = parseEnvelope(env);
+    expect(parsed).not.toBeNull();
+    expect(parsed!.inventory.stash).toEqual([]);
+  });
+
+  test('valid stash round-trips through parse', () => {
+    const env = validEnvelope();
+    const raw = {
+      ...env,
+      inventory: {
+        ...env.inventory,
+        stash: [
+          stashAnchor('s-armor', 0, 0),
+          stashAnchor('s-ring', 2, 0, 'ring'),
+          stashAnchor('s-edge', 10, 7), // 2×3 flush against the 12×10 edges
+        ],
+      },
+    };
+    const parsed = parseEnvelope(raw);
+    expect(parsed).not.toBeNull();
+    expect(parsed!.inventory.stash!.map((a) => a.item.instanceId)).toEqual(['s-armor', 's-ring', 's-edge']);
+    expect(parsed!.inventory.stash![0]).toMatchObject({ x: 0, y: 0 });
+    expect(parsed!.inventory.stash![2]).toMatchObject({ x: 10, y: 7 });
+  });
+
+  test('corrupt stash variants → stash: [] and the envelope is still accepted', () => {
+    const env = validEnvelope();
+    const withStash = (stash: unknown): unknown => ({
+      ...env,
+      inventory: { ...env.inventory, stash },
+    });
+    const cases: unknown[] = [
+      'nope', // non-array
+      42,
+      [{ item: 'not-an-item', x: 0, y: 0 }], // bad item
+      [{ item: sampleItem({ instanceId: 'bad-size', slot: 'ring', size: { w: 0, h: 1 } }), x: 0, y: 0 }], // bad size
+      [stashAnchor('oob', 11, 7)], // out of bounds vs STASH dims
+      [stashAnchor('a', 0, 0), stashAnchor('b', 1, 1)], // overlap
+      [stashAnchor('oob-x', 0, 9)], // 2×3 would need row 12 of 10
+      Array.from({ length: 121 }, (_, i) => stashAnchor(`f${i}`, 0, 0, 'ring')), // > STASH_CELLS
+    ];
+    for (const stash of cases) {
+      const parsed = parseEnvelope(withStash(stash));
+      expect(parsed).not.toBeNull();
+      expect(parsed!.inventory.stash).toEqual([]);
+    }
+  });
+
+  test('corrupt stash warns; absent / valid stash stays silent', () => {
+    const env = validEnvelope();
+    const withStash = (stash: unknown): unknown => ({
+      ...env,
+      inventory: { ...env.inventory, stash },
+    });
+    const warn = spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      // corrupt (non-array garbage → parseBag null) → warns, still parses as []
+      expect(parseEnvelope(withStash('nope'))!.inventory.stash).toEqual([]);
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(warn.mock.calls[0]![0]).toContain('corrupt stash');
+
+      // absent stash → [] silently (pre-stash wire shape, no warning)
+      warn.mockClear();
+      const noStash = { ...env, inventory: { ...env.inventory } };
+      delete (noStash.inventory as { stash?: unknown }).stash;
+      expect(parseEnvelope(noStash)).not.toBeNull();
+      expect(parseEnvelope(noStash)!.inventory.stash).toEqual([]);
+      expect(warn).not.toHaveBeenCalled();
+
+      // valid stash → no warning
+      expect(parseEnvelope(withStash([stashAnchor('ok', 0, 0)]))).not.toBeNull();
+      expect(warn).not.toHaveBeenCalled();
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  test('2×3 footprint at the stash edge (x=11 or y=9) is rejected; x=10,y=7 fits', () => {
+    const env = validEnvelope();
+    const withStash = (stash: unknown[]): unknown => ({
+      ...env,
+      inventory: { ...env.inventory, stash },
+    });
+    expect(parseEnvelope(withStash([stashAnchor('edge-x', 11, 7)]))!.inventory.stash).toEqual([]);
+    expect(parseEnvelope(withStash([stashAnchor('edge-y', 10, 9)]))!.inventory.stash).toEqual([]);
+    expect(parseEnvelope(withStash([stashAnchor('fits', 10, 7)]))!.inventory.stash)
+      .toEqual([expect.objectContaining({ x: 10, y: 7 })]);
   });
 });

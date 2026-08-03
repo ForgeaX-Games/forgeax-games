@@ -1,0 +1,42 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "ItemBox"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "item_box.gltf",
+  "subAssets": [
+    {
+      "guid": "019fc09a-42ba-4b18-834e-366d0587ef95",
+      "kind": "mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:ItemBoxBody"
+    },
+    {
+      "guid": "019fc09a-42bb-48c4-a9c8-e4e69a8fbce4",
+      "kind": "material",
+      "sourceIndex": 0,
+      "sourceKey": "material:ItemBoxMat"
+    },
+    {
+      "guid": "019fc09a-42bb-48c4-a9c8-e4e789499974",
+      "kind": "scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:ItemBoxScene"
+    },
+    {
+      "guid": "019fc09a-42bb-48c4-a9c8-e4e8b6324b7b",
+      "kind": "texture",
+      "sourceIndex": 0,
+      "sourceKey": "texture:wood_q"
+    }
+  ]
+}

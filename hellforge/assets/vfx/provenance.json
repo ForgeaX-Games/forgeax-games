@@ -195,6 +195,15 @@
       "usage": "shockwave annulus (inferno-nova, impact rings)"
     },
     {
+      "id": "enemy_marker",
+      "path": null,
+      "sha256": null,
+      "source": "procedural",
+      "license": "team-owned",
+      "attribution": "",
+      "usage": "sharp pale-violet enemy under-rings (combat readability)"
+    },
+    {
       "id": "beam",
       "path": null,
       "sha256": null,

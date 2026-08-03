@@ -598,6 +598,35 @@ function generateRing(): GeneratedSheet {
   return atlas;
 }
 
+/** Sharp pale-violet marker annulus for enemy under-rings (N4 G2). */
+function generateEnemyMarkerRing(): GeneratedSheet {
+  // Same peak radius convention as generateRing (r0=0.78 → world radius ≈ 0.39·size)
+  // but a thin hard stroke + faint soft halo — no fiery tongue noise.
+  const S = 128;
+  const atlas = makeAtlas(1, 1, S, S);
+  const c = (S - 1) * 0.5;
+  const half = S * 0.5;
+  const r0 = 0.78;
+  const wCore = 0.018;
+  const wHalo = 0.055;
+  for (let y = 0; y < S; y++) {
+    for (let x = 0; x < S; x++) {
+      const r = Math.hypot(x - c, y - c) / half;
+      const d = (r - r0) / wCore;
+      const core = Math.exp(-d * d);
+      const dh = (r - r0) / wHalo;
+      const halo = Math.exp(-dh * dh) * 0.38;
+      const a = Math.min(1, core + halo);
+      const o = (y * S + x) * 4;
+      atlas.data[o] = 255;
+      atlas.data[o + 1] = 255;
+      atlas.data[o + 2] = 255;
+      atlas.data[o + 3] = Math.round(a * 255);
+    }
+  }
+  return atlas;
+}
+
 function generateBeam(): GeneratedSheet {
   const W = 64;
   const H = 256;
@@ -714,6 +743,11 @@ export const SPRITE_SHEETS: readonly SpriteSheetSpec[] = [
     id: 'ring', cols: 1, rows: 1, frames: 1, frameW: 128, frameH: 128,
     usage: 'shockwave annulus (inferno-nova, impact rings)',
     generate: generateRing,
+  }),
+  spec({
+    id: 'enemy_marker', cols: 1, rows: 1, frames: 1, frameW: 128, frameH: 128,
+    usage: 'sharp pale-violet enemy under-rings (combat readability)',
+    generate: generateEnemyMarkerRing,
   }),
   spec({
     id: 'beam', cols: 1, rows: 1, frames: 1, frameW: 64, frameH: 256,

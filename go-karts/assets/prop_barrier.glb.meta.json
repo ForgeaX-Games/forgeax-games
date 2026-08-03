@@ -13,24 +13,28 @@
   "source": "prop_barrier.glb",
   "subAssets": [
     {
-      "guid": "019f83e3-b7fc-7f58-82ed-c6503b82a085",
+      "guid": "019f83e3-b7fc-4f58-82ed-c6503b82a085",
       "kind": "mesh",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "mesh:0"
     },
     {
-      "guid": "019f83e3-b7fc-7f58-82ed-c651a3d5c893",
+      "guid": "019f83e3-b7fc-4f58-82ed-c651a3d5c893",
       "kind": "material",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "material:0"
     },
     {
-      "guid": "019f83e3-b7fc-7f58-82ed-c652917ab81a",
+      "guid": "019f83e3-b7fc-4f58-82ed-c652917ab81a",
       "kind": "scene",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "scene:0"
     },
     {
-      "guid": "019f83e3-b7fc-7f58-82ed-c65368cb9caf",
+      "guid": "019f83e3-b7fc-4f58-82ed-c65368cb9caf",
       "kind": "texture",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "texture:0"
     }
   ]
 }

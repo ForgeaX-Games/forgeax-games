@@ -1,0 +1,159 @@
+{
+  "asset": {
+    "generator": "glTF-Transform v4.4.2",
+    "version": "2.0"
+  },
+  "accessors": [
+    {
+      "name": "pos",
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 24,
+      "max": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "min": [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      "bufferView": 0,
+      "byteOffset": 0
+    },
+    {
+      "name": "nrm",
+      "type": "VEC3",
+      "componentType": 5126,
+      "count": 24,
+      "bufferView": 1,
+      "byteOffset": 0
+    },
+    {
+      "name": "uv",
+      "type": "VEC2",
+      "componentType": 5126,
+      "count": 24,
+      "bufferView": 2,
+      "byteOffset": 0
+    },
+    {
+      "name": "idx",
+      "type": "SCALAR",
+      "componentType": 5123,
+      "count": 36,
+      "bufferView": 3,
+      "byteOffset": 0
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 288,
+      "byteStride": 12,
+      "target": 34962
+    },
+    {
+      "buffer": 1,
+      "byteOffset": 0,
+      "byteLength": 288,
+      "byteStride": 12,
+      "target": 34962
+    },
+    {
+      "buffer": 2,
+      "byteOffset": 0,
+      "byteLength": 192,
+      "byteStride": 8,
+      "target": 34962
+    },
+    {
+      "buffer": 3,
+      "byteOffset": 0,
+      "byteLength": 72,
+      "target": 34963
+    }
+  ],
+  "samplers": [
+    {
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "textures": [
+    {
+      "source": 0,
+      "sampler": 0
+    }
+  ],
+  "images": [
+    {
+      "name": "wood_q",
+      "mimeType": "image/png",
+      "uri": "baseColor_1.png"
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "item_box_1.bin",
+      "byteLength": 288
+    },
+    {
+      "uri": "item_box_2.bin",
+      "byteLength": 288
+    },
+    {
+      "uri": "item_box_3.bin",
+      "byteLength": 192
+    },
+    {
+      "uri": "item_box_4.bin",
+      "byteLength": 72
+    }
+  ],
+  "materials": [
+    {
+      "name": "ItemBoxMat",
+      "pbrMetallicRoughness": {
+        "roughnessFactor": 0.72,
+        "metallicFactor": 0.08,
+        "baseColorTexture": {
+          "index": 0
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "ItemBoxBody",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2
+          },
+          "mode": 4,
+          "material": 0,
+          "indices": 3
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "ItemBox",
+      "mesh": 0
+    }
+  ],
+  "scenes": [
+    {
+      "name": "ItemBoxScene",
+      "nodes": [
+        0
+      ]
+    }
+  ]
+}

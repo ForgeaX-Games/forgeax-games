@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "sign_teahouse.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "019fa909-7d2e-4f93-b2f5-63ebabe5dbe5",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

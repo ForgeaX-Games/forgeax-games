@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "panel-frame-forge.webp",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "6b98d92b-2f50-4667-8012-c4020b7ad33a",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

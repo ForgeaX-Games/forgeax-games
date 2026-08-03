@@ -5,7 +5,7 @@
 
 const HUD_ART_BASE = new URL('../assets/ui/hud/ship/', import.meta.url).href.replace(/\/?$/, '/');
 /** Bump when ship cutouts change so browsers drop stale opaque WebP/PNG. */
-const HUD_ART_REV = 'v5';
+const HUD_ART_REV = 'v7';
 
 export function hudArtUrl(file: string): string {
   return `${HUD_ART_BASE}${file}?${HUD_ART_REV}`;
@@ -22,9 +22,13 @@ export const HudArt = {
   barWingRight: () => hudArtUrl('bar-wing-right.png'),
   panelInventory: () => hudArtUrl('panel-frame-inventory.webp'),
   panelCharacter: () => hudArtUrl('panel-frame-character.webp'),
+  /** N2R forge cube — sibling of inventory frame (crucible crest, same chrome language). */
+  panelForge: () => hudArtUrl('panel-frame-forge.webp'),
   /** Skill / quest reuse C / B frames (PR6 L3 deferred dedicated menu art). */
   panelSkill: () => hudArtUrl('panel-frame-character.webp'),
   panelQuest: () => hudArtUrl('panel-frame-inventory.webp'),
+  /** Semantic alias for the stash frame — dedicated「箱」art swaps in later. */
+  panelStash: () => hudArtUrl('panel-frame-inventory.webp'),
   bagSlot: () => hudArtUrl('bag-slot-empty.webp'),
   equipSlot: () => hudArtUrl('equip-slot-empty.webp'),
   automapParchment: () => hudArtUrl('automap-parchment.webp'),

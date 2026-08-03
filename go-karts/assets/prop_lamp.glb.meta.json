@@ -13,24 +13,28 @@
   "source": "prop_lamp.glb",
   "subAssets": [
     {
-      "guid": "019f83e3-ba92-7d08-8c7a-3a21903b93ce",
+      "guid": "019f83e3-ba92-4d08-8c7a-3a21903b93ce",
       "kind": "mesh",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "mesh:0"
     },
     {
-      "guid": "019f83e3-ba92-7d08-8c7a-3a22d20bb57d",
+      "guid": "019f83e3-ba92-4d08-8c7a-3a22d20bb57d",
       "kind": "material",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "material:0"
     },
     {
-      "guid": "019f83e3-ba92-7d08-8c7a-3a238fbf7732",
+      "guid": "019f83e3-ba92-4d08-8c7a-3a238fbf7732",
       "kind": "scene",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "scene:0"
     },
     {
-      "guid": "019f83e3-ba92-7d08-8c7a-3a24a6560c56",
+      "guid": "019f83e3-ba92-4d08-8c7a-3a24a6560c56",
       "kind": "texture",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "texture:0"
     }
   ]
 }

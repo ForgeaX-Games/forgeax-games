@@ -1,0 +1,182 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "kart-hotdog"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "kart-hotdog.glb",
+  "subAssets": [
+    {
+      "guid": "5c9febcc-15d1-4ece-bce7-b5a97cc2c770",
+      "kind": "mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:0"
+    },
+    {
+      "guid": "7f1a5e41-bd46-4fff-ab15-db393b6cf8bd",
+      "kind": "mesh",
+      "sourceIndex": 1,
+      "sourceKey": "mesh:1"
+    },
+    {
+      "guid": "971227e3-8211-4558-93b9-f18670024995",
+      "kind": "mesh",
+      "sourceIndex": 2,
+      "sourceKey": "mesh:2"
+    },
+    {
+      "guid": "984ca509-33af-4adf-83b2-70304c8079e2",
+      "kind": "mesh",
+      "sourceIndex": 3,
+      "sourceKey": "mesh:3"
+    },
+    {
+      "guid": "4f15e1ef-1dee-4929-8e95-6334c71cd1a3",
+      "kind": "mesh",
+      "sourceIndex": 4,
+      "sourceKey": "mesh:4"
+    },
+    {
+      "guid": "4ca0aaaa-8811-4949-9c5e-9c8846154f49",
+      "kind": "mesh",
+      "sourceIndex": 5,
+      "sourceKey": "mesh:5"
+    },
+    {
+      "guid": "d9e7ee3c-f90c-48d0-a66a-0b8585483682",
+      "kind": "mesh",
+      "sourceIndex": 6,
+      "sourceKey": "mesh:6"
+    },
+    {
+      "guid": "5c1cb7af-ca7d-41ae-b1f7-c07836d039d9",
+      "kind": "mesh",
+      "sourceIndex": 7,
+      "sourceKey": "mesh:7"
+    },
+    {
+      "guid": "1bb9e127-c432-4c4d-9b37-ec986496b900",
+      "kind": "mesh",
+      "sourceIndex": 8,
+      "sourceKey": "mesh:8"
+    },
+    {
+      "guid": "e7e2dec0-048b-434c-8059-e1afd20b080c",
+      "kind": "mesh",
+      "sourceIndex": 9,
+      "sourceKey": "mesh:9"
+    },
+    {
+      "guid": "622c9feb-1a9a-42a8-8486-b0f2f357098b",
+      "kind": "mesh",
+      "sourceIndex": 10,
+      "sourceKey": "mesh:10"
+    },
+    {
+      "guid": "9d81a3cf-2998-495b-9b83-3095ead6c285",
+      "kind": "mesh",
+      "sourceIndex": 11,
+      "sourceKey": "mesh:11"
+    },
+    {
+      "guid": "97868d80-7129-4eb3-a92a-b66db958e21c",
+      "kind": "mesh",
+      "sourceIndex": 12,
+      "sourceKey": "mesh:12"
+    },
+    {
+      "guid": "638b69fd-e0b2-43e7-a030-c0e117b29574",
+      "kind": "mesh",
+      "sourceIndex": 13,
+      "sourceKey": "mesh:13"
+    },
+    {
+      "guid": "4c35b7f4-890c-4609-a64c-3378690c5400",
+      "kind": "material",
+      "sourceIndex": 0,
+      "sourceKey": "material:0"
+    },
+    {
+      "guid": "0a6f136f-35a8-43a3-a96f-c2f93fc97a76",
+      "kind": "material",
+      "sourceIndex": 1,
+      "sourceKey": "material:1"
+    },
+    {
+      "guid": "20480752-b972-4800-9567-6fd2497815d5",
+      "kind": "material",
+      "sourceIndex": 2,
+      "sourceKey": "material:2"
+    },
+    {
+      "guid": "84f12f6f-a71f-4398-9c23-91cf7513a9da",
+      "kind": "material",
+      "sourceIndex": 3,
+      "sourceKey": "material:3"
+    },
+    {
+      "guid": "52dad777-263e-43b3-ba28-01ad1bb70041",
+      "kind": "material",
+      "sourceIndex": 4,
+      "sourceKey": "material:4"
+    },
+    {
+      "guid": "14421f80-fa53-4f4e-a91d-aab1901b7253",
+      "kind": "material",
+      "sourceIndex": 5,
+      "sourceKey": "material:5"
+    },
+    {
+      "guid": "a6a32d01-4b39-4cfd-bd15-4e14afe13274",
+      "kind": "material",
+      "sourceIndex": 6,
+      "sourceKey": "material:6"
+    },
+    {
+      "guid": "246d96b0-32db-49a4-8f29-d73c4bb957cd",
+      "kind": "material",
+      "sourceIndex": 7,
+      "sourceKey": "material:7"
+    },
+    {
+      "guid": "5848ed81-bd8a-49af-84af-2e14d9619584",
+      "kind": "scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:0"
+    }
+  ]
+}

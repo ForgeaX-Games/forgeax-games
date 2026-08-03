@@ -1,0 +1,209 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "kart-duck"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "kart-duck.glb",
+  "subAssets": [
+    {
+      "guid": "20a1946a-9885-4b0b-8963-3a4ddecb7a6b",
+      "kind": "mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:0"
+    },
+    {
+      "guid": "cae37fde-62cd-407d-b325-5a6843d5d3b1",
+      "kind": "mesh",
+      "sourceIndex": 1,
+      "sourceKey": "mesh:1"
+    },
+    {
+      "guid": "6e967339-22dd-4f87-b065-a5215fc858ae",
+      "kind": "mesh",
+      "sourceIndex": 2,
+      "sourceKey": "mesh:2"
+    },
+    {
+      "guid": "9b42ae7e-a8a0-4067-97b6-fd8f774bccc7",
+      "kind": "mesh",
+      "sourceIndex": 3,
+      "sourceKey": "mesh:3"
+    },
+    {
+      "guid": "30b3605c-51cf-4d36-97c7-b257245b5e97",
+      "kind": "mesh",
+      "sourceIndex": 4,
+      "sourceKey": "mesh:4"
+    },
+    {
+      "guid": "1cef6fa3-e394-4898-841a-f9e4e0fd698b",
+      "kind": "mesh",
+      "sourceIndex": 5,
+      "sourceKey": "mesh:5"
+    },
+    {
+      "guid": "a41720b2-bce3-4d29-afc0-802465a18fb6",
+      "kind": "mesh",
+      "sourceIndex": 6,
+      "sourceKey": "mesh:6"
+    },
+    {
+      "guid": "602ac895-0c25-4ff3-b1bc-1aa7436c97af",
+      "kind": "mesh",
+      "sourceIndex": 7,
+      "sourceKey": "mesh:7"
+    },
+    {
+      "guid": "cfbe1975-4a84-4841-ab01-a6133645d3dd",
+      "kind": "mesh",
+      "sourceIndex": 8,
+      "sourceKey": "mesh:8"
+    },
+    {
+      "guid": "34887e26-83f0-406c-a273-3b494bf868aa",
+      "kind": "mesh",
+      "sourceIndex": 9,
+      "sourceKey": "mesh:9"
+    },
+    {
+      "guid": "990aac48-1cf9-417a-9ee1-a79b8495ca31",
+      "kind": "mesh",
+      "sourceIndex": 10,
+      "sourceKey": "mesh:10"
+    },
+    {
+      "guid": "83271033-0131-4409-9e12-ca169d83d8dd",
+      "kind": "mesh",
+      "sourceIndex": 11,
+      "sourceKey": "mesh:11"
+    },
+    {
+      "guid": "2df682cc-a6c0-498e-bfec-b10e63705ce6",
+      "kind": "mesh",
+      "sourceIndex": 12,
+      "sourceKey": "mesh:12"
+    },
+    {
+      "guid": "3ef0d5c2-25ef-4939-ab91-273a0d8ecaaf",
+      "kind": "mesh",
+      "sourceIndex": 13,
+      "sourceKey": "mesh:13"
+    },
+    {
+      "guid": "e9f95769-3279-4d61-bd96-c99dd8ee4d76",
+      "kind": "mesh",
+      "sourceIndex": 14,
+      "sourceKey": "mesh:14"
+    },
+    {
+      "guid": "64671746-592c-45ed-8dea-fb4f20f1fe71",
+      "kind": "mesh",
+      "sourceIndex": 15,
+      "sourceKey": "mesh:15"
+    },
+    {
+      "guid": "e40f6a1e-b34e-453e-b706-08e8a73931f7",
+      "kind": "mesh",
+      "sourceIndex": 16,
+      "sourceKey": "mesh:16"
+    },
+    {
+      "guid": "a685e59b-74f1-4740-85cc-9c66eef22dc7",
+      "kind": "material",
+      "sourceIndex": 0,
+      "sourceKey": "material:0"
+    },
+    {
+      "guid": "705a8559-be62-4b60-af84-30051286d563",
+      "kind": "material",
+      "sourceIndex": 1,
+      "sourceKey": "material:1"
+    },
+    {
+      "guid": "c0320819-ee2c-47fc-94b7-76c2090c8e37",
+      "kind": "material",
+      "sourceIndex": 2,
+      "sourceKey": "material:2"
+    },
+    {
+      "guid": "b1af7412-f682-4e67-b60e-528d2369de8a",
+      "kind": "material",
+      "sourceIndex": 3,
+      "sourceKey": "material:3"
+    },
+    {
+      "guid": "5a6db311-cea5-4a25-a824-491fdfcdd837",
+      "kind": "material",
+      "sourceIndex": 4,
+      "sourceKey": "material:4"
+    },
+    {
+      "guid": "2304e845-87e0-4bb9-96a0-8e6e7874fa2c",
+      "kind": "material",
+      "sourceIndex": 5,
+      "sourceKey": "material:5"
+    },
+    {
+      "guid": "39a85007-4d18-4767-95af-d65e047f314d",
+      "kind": "material",
+      "sourceIndex": 6,
+      "sourceKey": "material:6"
+    },
+    {
+      "guid": "ab7414e6-7fd7-4548-944d-111f0fedb967",
+      "kind": "material",
+      "sourceIndex": 7,
+      "sourceKey": "material:7"
+    },
+    {
+      "guid": "f6efedeb-92dd-4c8c-b319-d87301563273",
+      "kind": "material",
+      "sourceIndex": 8,
+      "sourceKey": "material:8"
+    },
+    {
+      "guid": "ad700eba-1c6d-494e-ab7c-2759ba516cb1",
+      "kind": "scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:0"
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 // Bake the Slagdeep Hollow dungeon into an editable scene pack.
 //
+//   bun scripts/make-surface-variants.ts    # if GLB roughness/variant changed
 //   bun scripts/bake-dungeon.ts
 //   bun scripts/fix-prop-materials.ts assets/scenes/slagdeep-hollow.pack.json
 //
@@ -13,21 +14,25 @@ import { fileURLToPath } from 'node:url';
 import {
   CUBE_GUID, readPropBBox, remindReload, tileGrid, writePack,
 } from './lib/scene-authoring';
+import { FLOOR_VARIANT_STEM, FLOOR_VARIANT_WEIGHT, SURFACE_ROUGHNESS } from './lib/surface-spec';
 import { DUNGEON_SCENE_GUID, DUNGEON_SEED, mulberry32, quatY, type GeoKind } from '../src/dungeon-layout';
 import { resolveDungeonLayout } from '../src/dungeon-pipeline';
 
 const gameRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const propsDir = join(gameRoot, 'assets', '3d', 'props', 'meshes');
 
-// Fixed material GUIDs (generated once; NEVER regenerate).
+// Fixed material GUIDs (generated once; NEVER regenerate). roughness mirrors
+// the baked GLB surface targets (lib/surface-spec.ts) — these flat mats are
+// only the fallback when the GLB material fails to load (fix-prop-materials
+// relinks entities to the GLB materials on bake).
 const MATS: Record<GeoKind, {
   guid: string; name: string;
   base: [number, number, number, number]; rough: number;
   emissive?: [number, number, number]; ei?: number;
 }> = {
-  floorA:    { guid: '3f7a9c21-1b6e-4a02-8f3d-6c2e91b0a4d1', name: 'DenFloorA', base: [0.16, 0.13, 0.14, 1], rough: 0.9 },
-  floorB:    { guid: '84d2f0b5-7e19-4c68-b2a7-0d5c3e8f16a2', name: 'DenFloorB', base: [0.13, 0.11, 0.13, 1], rough: 0.9 },
-  wall:      { guid: 'c1e85d73-2f4a-4b90-a6c8-9b7e0d241f83', name: 'DenWall', base: [0.24, 0.17, 0.15, 1], rough: 0.9 },
+  floorA:    { guid: '3f7a9c21-1b6e-4a02-8f3d-6c2e91b0a4d1', name: 'DenFloorA', base: [0.16, 0.13, 0.14, 1], rough: SURFACE_ROUGHNESS.floorB },
+  floorB:    { guid: '84d2f0b5-7e19-4c68-b2a7-0d5c3e8f16a2', name: 'DenFloorB', base: [0.13, 0.11, 0.13, 1], rough: SURFACE_ROUGHNESS.floorB },
+  wall:      { guid: 'c1e85d73-2f4a-4b90-a6c8-9b7e0d241f83', name: 'DenWall', base: [0.24, 0.17, 0.15, 1], rough: SURFACE_ROUGHNESS.wall },
   torchPost: { guid: '5b09e6f4-8d31-4e57-92ab-4f8c1a6d0e74', name: 'DenTorchPost', base: [0.2, 0.13, 0.08, 1], rough: 0.9 },
   flame:     { guid: 'a76c3e18-0b5f-4d29-8e61-7d3a9f0c25b5', name: 'DenFlame', base: [1, 0.5, 0.12, 1], rough: 0.9, emissive: [1, 0.45, 0.10], ei: 2.2 },
   brazier:   { guid: '29f4b8a6-6c07-4f83-b1d5-5e9c2a7f38c6', name: 'DenBrazier', base: [0.45, 0.08, 0.03, 1], rough: 0.9, emissive: [1, 0.12, 0.03], ei: 1.2 },
@@ -59,11 +64,14 @@ const POLICY: Record<GeoKind, Policy> = {
 // and wrong flat-tiled as a floor (it would shatter into ~0.3 m strips), so it
 // serves as COLLAPSED DEBRIS instead: pooled with rubble, uniform-scaled small
 // and randomly spun by the 'ground' policy it reads as a fallen wall/floor shard.
+// Floor pools mix prop-den-floor-b (primary) with its grime variant
+// prop-den-floor-c (derived by make-surface-variants.ts; floorGrid picks it per
+// slab with FLOOR_VARIANT_WEIGHT).
 // slag now alternates with prop-embercrack (both are low emissive ground pieces);
 // torch posts render their real GLB via the 'post' policy (was: plain cube).
 const PROP_POOL: Record<GeoKind, string[]> = {
-  floorA: ['prop-den-floor-b'],
-  floorB: ['prop-den-floor-b'],
+  floorA: ['prop-den-floor-b', FLOOR_VARIANT_STEM],
+  floorB: ['prop-den-floor-b', FLOOR_VARIANT_STEM],
   wall: ['prop-den-wall'],
   torchPost: ['prop-den-torch-post'],
   flame: ['prop-den-flame'],
@@ -165,9 +173,15 @@ const entities = layout.geometry.flatMap((g) => {
   });
 
   const slot = { pos: [g.x, g.y, g.z] as [number, number, number], size: [g.sx, g.sy, g.sz] as [number, number, number], rotYDeg: g.rotY ?? 0 };
-  const bb0 = poolBBox(g.kind, 0);  // primary-variant bbox (floorGrid uses variant 0 only)
 
   if (policy === 'floorGrid') {
+    // Variant mix per SLAB (not per tile): one draw per floor item so each room
+    // / corridor reads as a single surface. floor-b (pool index 0) stays
+    // primary; the grime variant (index 1) is weighted by FLOOR_VARIANT_WEIGHT.
+    // Both variants share floor-b's geometry, so tiling is identical.
+    const pool = PROP_POOL[g.kind];
+    const vi = pool.length > 1 && vrand() < FLOOR_VARIANT_WEIGHT ? 1 : 0;
+    const bb = poolBBox(g.kind, vi);
     // tileGrid bottom-aligns the panel to slot.pos[1]. Layout floors store the
     // slab CENTRE (top at y=0 → centre = -sy/2); passing that centre made the
     // mesh top sit ~half-thickness above the walk plane → feet clipped into
@@ -177,7 +191,7 @@ const entities = layout.geometry.flatMap((g) => {
       size: slot.size,
       rotYDeg: slot.rotYDeg,
     };
-    const segs = tileGrid(floorSlot, bb0);
+    const segs = tileGrid(floorSlot, bb);
     return segs.map((s, j) => {
       // Per-segment 90° rotation: floor-b is a 2×2 square tile, so 90° steps
       // preserve the footprint and only rotate the mesh — breaks the grid look
@@ -189,7 +203,7 @@ const entities = layout.geometry.flatMap((g) => {
         pos: [s.pos[0], s.pos[1], s.pos[2]],
         scale: [s.scale[0], s.scale[1], s.scale[2]],
         quat: [+q[0].toFixed(6), +q[1].toFixed(6), +q[2].toFixed(6), +q[3].toFixed(6)],
-      }, propIdx(g.kind, 0));
+      }, propIdx(g.kind, vi));
     });
   }
 

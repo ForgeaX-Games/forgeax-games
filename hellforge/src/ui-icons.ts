@@ -10,7 +10,8 @@
 // PNG as a grayscale silhouette (D2 look) instead of a separate art set.
 
 import type { ClassId } from './classes';
-import type { ItemSlot } from './items';
+import type { MaterialTier } from './crafting';
+import { RARITY_META, type ItemSlot } from './items';
 import { Ui } from './ui-theme';
 
 /**
@@ -155,6 +156,27 @@ export function potionIconSvg(kind: 'life' | 'mana', sizePx: number): string {
     `<path d="M12 7.5 C7.5 9.5 5.5 12.5 5.5 16 A6.5 6.5 0 0 0 18.5 16 C18.5 12.5 16.5 9.5 12 7.5 Z" ` +
     `fill="url(#hf-pot-${kind})" stroke="#2a2622" stroke-width="1"/>` +
     `<ellipse cx="10" cy="13" rx="1.6" ry="2.6" fill="rgba(255,255,255,0.4)"/>` +
+    `</svg>`
+  );
+}
+
+/**
+ * Forge material shard (N3R-R G4 materials tab) — faceted crystal sliver.
+ * Body color is the tier's rarity color (RARITY_META SSOT: white/blue/yellow).
+ */
+export function materialShardSvg(tier: MaterialTier, sizePx: number): string {
+  const base = RARITY_META[tier].color;
+  return (
+    `<svg viewBox="0 0 24 24" width="${sizePx}" height="${sizePx}" aria-hidden="true">` +
+    `<defs><linearGradient id="hf-shard-${tier}" x1="0" y1="0" x2="0.3" y2="1">` +
+    `<stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>` +
+    `<stop offset="35%" stop-color="${base}"/>` +
+    `<stop offset="100%" stop-color="${base}" stop-opacity="0.5"/>` +
+    `</linearGradient></defs>` +
+    `<path d="M12 1.5 L17.5 8 L14.5 21 L12 22.5 L9.5 21 L6.5 8 Z" ` +
+    `fill="url(#hf-shard-${tier})" stroke="rgba(10,8,6,0.9)" stroke-width="1"/>` +
+    `<path d="M12 1.5 L12 22.5 M6.5 8 L17.5 8" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="0.7"/>` +
+    `<path d="M12 1.5 L9.5 8 L12 22.5 Z" fill="rgba(255,255,255,0.16)"/>` +
     `</svg>`
   );
 }

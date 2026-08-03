@@ -16,6 +16,36 @@ export interface UiTooltipHandle {
 
 const TIP_ID = 'hellforge-ui-tooltip';
 
+export interface TooltipMountRect {
+  readonly left: number;
+  readonly top: number;
+  readonly width: number;
+  readonly height: number;
+}
+
+/**
+ * Pure placement math (unit-tested): prefer right-below of the cursor, flip
+ * left / up near edges, clamp ≥4px from the mount origin — and cap the tip to
+ * a hard width budget (mount width − 2·pad) so it can never spill past the
+ * mount's right edge (N3R G1: the diff bar shrinks/wraps instead of clipping).
+ */
+export function tooltipPlacement(
+  clientX: number,
+  clientY: number,
+  tipWidth: number,
+  tipHeight: number,
+  m: TooltipMountRect,
+  pad = 16,
+): { left: number; top: number; maxWidth: number } {
+  const maxWidth = Math.max(160, m.width - 2 * pad);
+  const w = Math.min(tipWidth, maxWidth);
+  let x = clientX - m.left + pad;
+  if (x + w > m.width - 8) x = clientX - m.left - w - pad;
+  let y = clientY - m.top + pad;
+  if (y + tipHeight > m.height - 8) y = clientY - m.top - tipHeight - pad;
+  return { left: Math.max(4, x), top: Math.max(4, y), maxWidth };
+}
+
 /**
  * Install (or return the existing) tooltip for `mount`. The element is a
  * sibling of the installing panel so it stacks above every MajorPanel.
@@ -28,23 +58,23 @@ export function installUiTooltip(mount: HTMLElement = document.body): UiTooltipH
   el.id = TIP_ID;
   el.className = 'hf-tip';
   el.style.position = scoped ? 'absolute' : 'fixed';
+  // border-box so the inline width budget includes .hf-tip padding.
+  el.style.boxSizing = 'border-box';
   mount.appendChild(el);
 
   const place = (clientX: number, clientY: number): void => {
     if (el.style.display === 'none') return;
-    const pad = 16;
-    const m = scoped
+    const m: TooltipMountRect = scoped
       ? mount.getBoundingClientRect()
       : { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
-    const w = el.offsetWidth;
-    const h = el.offsetHeight;
-    // Prefer right-below of the cursor; flip left / up near edges.
-    let x = clientX - m.left + pad;
-    if (x + w > m.width - 8) x = clientX - m.left - w - pad;
-    let y = clientY - m.top + pad;
-    if (y + h > m.height - 8) y = clientY - m.top - h - pad;
-    el.style.left = `${Math.max(4, x)}px`;
-    el.style.top = `${Math.max(4, y)}px`;
+    // Apply the width budget BEFORE measuring: the inline max-width overrides
+    // the .hf-tip stylesheet cap, so offsetWidth reflects the true clamp.
+    const budget = Math.max(160, m.width - 32);
+    el.style.maxWidth = `${budget}px`;
+    const p = tooltipPlacement(clientX, clientY, el.offsetWidth, el.offsetHeight, m);
+    el.style.maxWidth = `${p.maxWidth}px`;
+    el.style.left = `${p.left}px`;
+    el.style.top = `${p.top}px`;
   };
 
   return {

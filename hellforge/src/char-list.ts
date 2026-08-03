@@ -25,8 +25,54 @@
 import { CLASS_DEFS, getClassDef, type CharacterRecord } from './classes';
 import { isPlayableClass } from './character-domain';
 import { listCharacters, deleteCharacter, MAX_CHARACTERS } from './save';
-import { FONT_UI, Ui } from './ui-theme';
+import { FONT_DISPLAY, FONT_UI, Ui } from './ui-theme';
 import { classEmblemSvg } from './ui-icons';
+import { HudArt } from './hud-art';
+import { ShellArt } from './shell-art';
+
+const BTN_INK = '#1a1208';
+
+/** S1–S3 plate button — ink label on parchment (matches title dock). */
+function shellPlateButton(
+  text: string,
+  opts: { primary?: boolean; onClick: () => void },
+): HTMLButtonElement {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.textContent = text;
+  const primary = !!opts.primary;
+  const plate = (state: 'idle' | 'hover' | 'pressed') =>
+    state === 'hover' ? ShellArt.btnHover()
+      : state === 'pressed' ? ShellArt.btnPressed()
+        : ShellArt.btnIdle();
+  btn.style.cssText =
+    'width:100%;height:48px;box-sizing:border-box;padding:0;border:none;cursor:pointer;' +
+    `font:700 ${primary ? '17' : '15'}px ${FONT_DISPLAY};letter-spacing:${primary ? '6' : '4'}px;` +
+    `color:${BTN_INK};text-shadow:0 1px 0 rgba(255,244,210,0.55);` +
+    `background:url('${plate('idle')}') center/100% 100% no-repeat;background-color:transparent;` +
+    `filter:${primary ? 'none' : 'brightness(0.94) saturate(0.92)'};transition:filter 0.15s ease;`;
+  btn.addEventListener('mouseenter', () => {
+    if (btn.disabled) return;
+    btn.style.backgroundImage = `url('${plate('hover')}')`;
+  });
+  btn.addEventListener('mouseleave', () => {
+    btn.style.backgroundImage = `url('${plate('idle')}')`;
+    btn.style.transform = '';
+  });
+  btn.addEventListener('mousedown', () => {
+    if (btn.disabled) return;
+    btn.style.backgroundImage = `url('${plate('pressed')}')`;
+    btn.style.transform = 'scale(0.985)';
+  });
+  btn.addEventListener('mouseup', () => {
+    btn.style.backgroundImage = `url('${plate('hover')}')`;
+    btn.style.transform = '';
+  });
+  btn.addEventListener('click', () => {
+    if (!btn.disabled) opts.onClick();
+  });
+  return btn;
+}
 
 export interface CharListCallbacks {
   onEnterGame: (rec: CharacterRecord) => void;
@@ -74,72 +120,72 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
   // camera look-at (hero always framed at NDC x≈0).
   const charNameLabel = document.createElement('div');
   charNameLabel.style.cssText = 'position:absolute;top:14%;left:50%;transform:translateX(-50%);z-index:2;' +
-    `font:800 24px inherit;letter-spacing:5px;color:${Ui.goldBright};` +
-    'text-shadow:0 0 18px rgba(255,180,0,0.5),0 2px 4px #000;pointer-events:none;white-space:nowrap;';
+    `font:800 28px ${FONT_DISPLAY};letter-spacing:5px;color:#f5e0a8;` +
+    'text-shadow:0 2px 0 #1a1008,0 4px 16px rgba(0,0,0,0.9);pointer-events:none;white-space:nowrap;';
 
   const backBtn = document.createElement('button');
+  backBtn.type = 'button';
   backBtn.textContent = '← 返回';
-  backBtn.style.cssText = 'position:absolute;left:24px;bottom:24px;pointer-events:auto;cursor:pointer;' +
-    `background:none;border:none;color:${Ui.textDim};font:600 13px inherit;letter-spacing:1px;padding:8px 4px;transition:color 0.2s;`;
-  backBtn.addEventListener('mouseenter', () => { backBtn.style.color = Ui.goldBright; });
-  backBtn.addEventListener('mouseleave', () => { backBtn.style.color = Ui.textDim; });
+  backBtn.style.cssText = 'position:absolute;left:20px;bottom:28px;z-index:3;pointer-events:auto;cursor:pointer;' +
+    'width:140px;height:44px;box-sizing:border-box;border:none;padding:0;' +
+    `font:700 15px ${FONT_DISPLAY};letter-spacing:3px;color:${BTN_INK};` +
+    `text-shadow:0 1px 0 rgba(255,244,210,0.55);` +
+    `background:url('${ShellArt.skipIdle()}') center/100% 100% no-repeat;background-color:transparent;`;
+  backBtn.addEventListener('mouseenter', () => {
+    backBtn.style.backgroundImage = `url('${ShellArt.skipHover()}')`;
+  });
+  backBtn.addEventListener('mouseleave', () => {
+    backBtn.style.backgroundImage = `url('${ShellArt.skipIdle()}')`;
+  });
   backBtn.addEventListener('click', () => cb.onBack());
   leftArea.appendChild(backBtn);
 
-  const enterBtn = document.createElement('button');
-  enterBtn.textContent = '进入游戏';
-  enterBtn.style.cssText = 'position:absolute;left:50%;bottom:6%;transform:translateX(-50%);z-index:2;' +
-    'pointer-events:auto;cursor:pointer;padding:13px 56px;font:700 16px inherit;letter-spacing:5px;' +
-    `border:2px solid ${Ui.goldDeep};background:linear-gradient(180deg,#3a2a18 0%,#2a1a10 100%);` +
-    `color:${Ui.goldBright};text-shadow:0 1px 3px #000;border-radius:4px;transition:all 0.25s ease;`;
-  function setEnterHover(on: boolean): void {
-    if (enterBtn.disabled) return;
-    enterBtn.style.background = on ? 'linear-gradient(180deg,#504028 0%,#3a2a18 100%)' : 'linear-gradient(180deg,#3a2a18 0%,#2a1a10 100%)';
-    enterBtn.style.borderColor = on ? Ui.goldDim : Ui.goldDeep;
-    enterBtn.style.boxShadow = on ? '0 0 20px rgba(255,200,0,0.2)' : 'none';
-    enterBtn.style.transform = on ? 'translateX(-50%) scale(1.03)' : 'translateX(-50%) scale(1)';
-  }
-  enterBtn.addEventListener('mouseenter', () => setEnterHover(true));
-  enterBtn.addEventListener('mouseleave', () => setEnterHover(false));
   let submitted = false;
-  enterBtn.addEventListener('click', () => {
-    if (submitted) return;
-    const rec = characters[selectedIndex];
-    if (!rec) return;
-    if (!isPlayableClass(rec.classId)) {
-      enterBtn.title = 'In development';
-      return;
-    }
-    submitted = true;
-    enterBtn.disabled = true;
-    enterBtn.textContent = '正在进入…';
-    cb.onEnterGame(rec);
+  const enterBtn = shellPlateButton('进入游戏', {
+    primary: true,
+    onClick: () => {
+      if (submitted) return;
+      const rec = characters[selectedIndex];
+      if (!rec) return;
+      if (!isPlayableClass(rec.classId)) {
+        enterBtn.title = 'In development';
+        return;
+      }
+      submitted = true;
+      enterBtn.disabled = true;
+      enterBtn.textContent = '正在进入…';
+      cb.onEnterGame(rec);
+    },
   });
+  enterBtn.style.cssText +=
+    'position:absolute;left:50%;bottom:7%;transform:translateX(-50%);z-index:2;' +
+    'pointer-events:auto;width:min(320px,56vw);height:56px;font-size:20px;letter-spacing:8px;';
 
-  // ── right: docked list panel ───────────────────────────────────────────
+  // ── right: docked list panel (parchment + plaster frame) ────────────────
   const rightPanel = document.createElement('div');
-  rightPanel.style.cssText = 'flex:0 0 360px;position:relative;display:flex;flex-direction:column;' +
-    `pointer-events:auto;background:${Ui.inkWell};border-left:1px solid #3a2e1a;padding:0 20px 22px;`;
-
-  const topDeco = document.createElement('div');
-  topDeco.style.cssText = `height:2px;background:linear-gradient(90deg,transparent,${Ui.goldDeep},${Ui.goldDim},${Ui.goldDeep},transparent);`;
-  rightPanel.appendChild(topDeco);
+  rightPanel.style.cssText = 'flex:0 0 380px;position:relative;display:flex;flex-direction:column;' +
+    'pointer-events:auto;padding:18px 22px 22px;' +
+    `background:` +
+    `url('${HudArt.automapFrame()}') center/100% 100% no-repeat,` +
+    `url('${HudArt.automapParchment()}') center/cover no-repeat,` +
+    `${Ui.inkPanel};` +
+    'box-shadow:-10px 0 28px rgba(0,0,0,0.55);';
 
   const header = document.createElement('div');
-  header.style.cssText = 'text-align:center;padding:18px 0 14px;';
+  header.style.cssText = 'text-align:center;padding:10px 0 12px;';
   const headerText = document.createElement('div');
   headerText.textContent = '选择角色';
-  headerText.style.cssText = `font:700 16px inherit;letter-spacing:6px;color:${Ui.gold};` +
-    'text-shadow:0 0 12px rgba(200,140,40,0.4),0 1px 3px #000;';
+  headerText.style.cssText = `font:800 20px ${FONT_DISPLAY};letter-spacing:6px;color:${BTN_INK};` +
+    'text-shadow:0 1px 0 rgba(255,244,210,0.45);';
   const headerLine = document.createElement('div');
-  headerLine.style.cssText = `margin-top:11px;height:1px;background:linear-gradient(90deg,transparent,${Ui.goldDeep},${Ui.goldDim},${Ui.goldDeep},transparent);`;
+  headerLine.style.cssText = `margin-top:10px;height:1px;background:linear-gradient(90deg,transparent,${Ui.goldDeep},${Ui.goldDim},${Ui.goldDeep},transparent);`;
   header.append(headerText, headerLine);
   rightPanel.appendChild(header);
 
   const charCountEl = document.createElement('div');
   charCountEl.style.cssText = 'display:flex;align-items:center;gap:8px;padding:6px 2px 10px;' +
-    `font:400 11px ${FONT_UI};letter-spacing:2px;color:${Ui.goldDeep};` +
-    'border-bottom:1px solid #1e180a;margin-bottom:6px;flex:none;';
+    `font:600 12px ${FONT_UI};letter-spacing:2px;color:${BTN_INK};` +
+    'border-bottom:1px solid rgba(60,42,18,0.35);margin-bottom:6px;flex:none;';
   rightPanel.appendChild(charCountEl);
 
   const listContainer = document.createElement('div');
@@ -148,35 +194,31 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
 
   const btnArea = document.createElement('div');
   btnArea.style.cssText = 'padding-top:14px;display:flex;flex-direction:column;gap:9px;' +
-    'border-top:1px solid #2a2010;flex:none;';
+    'border-top:1px solid rgba(60,42,18,0.35);flex:none;';
 
   const deleteBtn = document.createElement('button');
+  deleteBtn.type = 'button';
   deleteBtn.textContent = '删除角色';
-  deleteBtn.style.cssText = `width:100%;padding:10px 0;font:600 13px ${FONT_UI};letter-spacing:3px;` +
-    `background:rgba(55,12,8,0.9);border:1px solid ${Ui.crimsonSoft};color:${Ui.crimson};cursor:pointer;border-radius:4px;transition:all 0.2s;`;
+  deleteBtn.style.cssText = `width:100%;padding:11px 0;font:700 14px ${FONT_UI};letter-spacing:3px;` +
+    `background:rgba(90,22,14,0.92);border:1px solid ${Ui.crimsonSoft};color:#f0c8b8;cursor:pointer;` +
+    'border-radius:2px;transition:all 0.2s;';
   deleteBtn.addEventListener('mouseenter', () => {
     if (deleteBtn.disabled) return;
-    deleteBtn.style.background = 'rgba(85,18,12,0.9)'; deleteBtn.style.borderColor = Ui.crimson; deleteBtn.style.color = Ui.danger;
+    deleteBtn.style.background = 'rgba(120,28,18,0.95)';
+    deleteBtn.style.borderColor = Ui.crimson;
+    deleteBtn.style.color = '#fff0e8';
   });
   deleteBtn.addEventListener('mouseleave', () => {
-    deleteBtn.style.background = 'rgba(55,12,8,0.9)'; deleteBtn.style.borderColor = Ui.crimsonSoft; deleteBtn.style.color = Ui.crimson;
+    deleteBtn.style.background = 'rgba(90,22,14,0.92)';
+    deleteBtn.style.borderColor = Ui.crimsonSoft;
+    deleteBtn.style.color = '#f0c8b8';
   });
   deleteBtn.addEventListener('click', () => showDeleteModal());
   btnArea.appendChild(deleteBtn);
 
-  const createBtn = document.createElement('button');
-  createBtn.style.cssText = `width:100%;padding:10px 0;font:600 13px ${FONT_UI};letter-spacing:3px;` +
-    `background:rgba(20,16,10,0.9);border:1px solid ${Ui.goldLineSoft};color:${Ui.textMuted};cursor:pointer;border-radius:4px;` +
-    'display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;';
-  createBtn.innerHTML = `<span style="font-size:16px;line-height:1;color:${Ui.goldDim};">+</span><span>创建新角色</span>`;
-  createBtn.addEventListener('mouseenter', () => {
-    if (createBtn.disabled) return;
-    createBtn.style.background = 'rgba(32,26,16,0.9)'; createBtn.style.borderColor = Ui.goldDeep; createBtn.style.color = Ui.goldDim;
+  const createBtn = shellPlateButton('+ 创建新角色', {
+    onClick: () => cb.onNewChar(),
   });
-  createBtn.addEventListener('mouseleave', () => {
-    createBtn.style.background = 'rgba(20,16,10,0.9)'; createBtn.style.borderColor = Ui.goldLineSoft; createBtn.style.color = Ui.textMuted;
-  });
-  createBtn.addEventListener('click', () => cb.onNewChar());
   btnArea.appendChild(createBtn);
 
   rightPanel.appendChild(btnArea);
@@ -278,9 +320,9 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
   function updateCharCount(): void {
     const count = characters.length;
     const full = count >= MAX_CHARACTERS;
-    charCountEl.innerHTML = `<span style="color:${Ui.goldDeep}">已创建角色</span>` +
-      `<span style="font:700 13px ${FONT_UI};letter-spacing:1px;` +
-      `color:${full ? '#cc6622' : Ui.goldDim};${full ? 'text-shadow:0 0 8px rgba(200,80,20,0.3);' : ''}">${count} / ${MAX_CHARACTERS}</span>`;
+    charCountEl.innerHTML = `<span style="color:${BTN_INK}">已创建角色</span>` +
+      `<span style="font:800 14px ${FONT_UI};letter-spacing:1px;` +
+      `color:${full ? '#8a2a10' : BTN_INK}">${count} / ${MAX_CHARACTERS}</span>`;
   }
 
   function setActionBtnsEnabled(hasChars: boolean): void {
@@ -314,43 +356,47 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
     const classDef = CLASS_DEFS[rec.classId] ?? getClassDef('sorceress');
 
     const item = document.createElement('div');
-    item.style.cssText = `display:flex;align-items:center;gap:13px;padding:10px 11px;margin-bottom:5px;border-radius:4px;` +
-      `border:1px solid ${isSelected ? Ui.goldDeep : Ui.goldLineSoft};` +
-      `background:${isSelected ? Ui.goldFill : 'rgba(12,10,5,0.55)'};` +
+    item.style.cssText = `display:flex;align-items:center;gap:13px;padding:10px 11px;margin-bottom:5px;border-radius:2px;` +
+      `border:1px solid ${isSelected ? Ui.goldDeep : 'rgba(60,42,18,0.35)'};` +
+      `background:${isSelected ? 'rgba(255,236,190,0.55)' : 'rgba(30,22,12,0.18)'};` +
       `cursor:pointer;transition:all 0.2s;` +
-      (isSelected ? 'box-shadow:0 0 14px rgba(180,130,20,0.12) inset,0 0 4px rgba(180,130,20,0.08);' : '');
+      (isSelected ? 'box-shadow:inset 0 0 0 1px rgba(120,80,20,0.25);' : '');
 
     const dot = document.createElement('div');
     dot.innerHTML = classEmblemSvg(classDef.id, 26);
     dot.style.cssText = 'width:38px;height:38px;border-radius:50%;flex:none;display:flex;' +
       'align-items:center;justify-content:center;' +
-      `background:radial-gradient(circle at 38% 35%,rgba(160,120,255,0.5) 0%,rgba(30,20,50,0.65) 65%);` +
-      `border:1px solid rgba(160,120,255,${isSelected ? '0.5' : '0.2'});` +
-      (isSelected ? 'box-shadow:0 0 10px rgba(160,120,255,0.3);' : '');
+      'background:radial-gradient(circle at 38% 35%,rgba(72,52,24,0.92) 0%,rgba(18,12,8,0.95) 70%);' +
+      `border:1px solid ${isSelected ? Ui.goldDeep : 'rgba(90,70,36,0.55)'};`;
 
     const textArea = document.createElement('div');
     textArea.style.cssText = 'flex:1;min-width:0;';
     const nameEl = document.createElement('div');
     nameEl.textContent = rec.playerName;
-    nameEl.style.cssText = `font:600 14px ${FONT_UI};letter-spacing:1px;white-space:nowrap;` +
-      `overflow:hidden;text-overflow:ellipsis;color:${isSelected ? Ui.goldBright : Ui.goldDim};` +
-      (isSelected ? 'text-shadow:0 0 10px rgba(255,200,0,0.3);' : '');
+    nameEl.style.cssText = `font:700 15px ${FONT_UI};letter-spacing:1px;white-space:nowrap;` +
+      `overflow:hidden;text-overflow:ellipsis;color:${BTN_INK};`;
     const metaEl = document.createElement('div');
     const playable = isPlayableClass(rec.classId);
     metaEl.textContent = playable
       ? `${classDef.name} · Lv.${rec.level}`
       : `${classDef.name} · Lv.${rec.level} · 开发中`;
-    metaEl.style.cssText = `font:400 11px ${FONT_UI};margin-top:3px;letter-spacing:1px;` +
-      `color:${!playable ? Ui.textDim : isSelected ? Ui.goldDim : Ui.goldDeep};`;
+    metaEl.style.cssText = `font:500 12px ${FONT_UI};margin-top:3px;letter-spacing:1px;` +
+      `color:${!playable ? '#6a5840' : '#4a3820'};`;
     textArea.append(nameEl, metaEl);
     if (!playable) item.title = 'In development';
     item.append(dot, textArea);
 
     item.addEventListener('mouseenter', () => {
-      if (index !== selectedIndex) { item.style.background = 'rgba(26,20,8,0.65)'; item.style.borderColor = Ui.goldLine; }
+      if (index !== selectedIndex) {
+        item.style.background = 'rgba(255,236,190,0.28)';
+        item.style.borderColor = Ui.goldLine;
+      }
     });
     item.addEventListener('mouseleave', () => {
-      if (index !== selectedIndex) { item.style.background = 'rgba(12,10,5,0.55)'; item.style.borderColor = Ui.goldLineSoft; }
+      if (index !== selectedIndex) {
+        item.style.background = 'rgba(30,22,12,0.18)';
+        item.style.borderColor = 'rgba(60,42,18,0.35)';
+      }
     });
     item.addEventListener('click', () => { if (index !== selectedIndex) selectCharacter(index); });
 

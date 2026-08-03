@@ -5,9 +5,20 @@ import {
   hydrateSorceressDomain,
   projectCharacterRecord,
   type CharacterDomain,
+  type HydrateSorceressOptions,
 } from './character-domain';
 import { SALVAGE_YIELD } from './crafting';
-import { equipSlotsFor, type ItemInstance, type ItemSlot, type Rarity } from './items';
+import {
+  emptyEquipment,
+  equipSlotsFor,
+  EQUIP_SLOT_ORDER,
+  itemSlotForEquip,
+  meltGoldValue,
+  type Equipment,
+  type ItemInstance,
+  type ItemSlot,
+  type Rarity,
+} from './items';
 
 function sampleItem(overrides: Partial<ItemInstance> = {}): ItemInstance {
   return {
@@ -87,6 +98,8 @@ describe('createSorceressDomain', () => {
 
   test('snapshot freeze: nested mutation throws and does not affect next snapshot', () => {
     const domain = createSorceressDomain({ playerName: '冻结' });
+    // Starter kit fills the weapon slot — free it so sampleItem auto-equips.
+    domain.dispatch({ op: 'unequip', slot: 'weapon' });
     domain.dispatch({ op: 'take-item', item: sampleItem() });
     domain.dispatch({
       op: 'set-quest-status',
@@ -291,6 +304,10 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
 
   test('take-item ring auto-equip: ring1 → ring2 → bag when both filled', () => {
     const domain = createSorceressDomain({ playerName: '双戒' });
+    // Starter kit occupies both ring slots — free them for the auto-equip flow.
+    for (const slot of ['ring1', 'ring2'] as const) {
+      expect(domain.dispatch({ op: 'unequip', slot }).ok).toBe(true);
+    }
     expect(domain.dispatch({
       op: 'take-item',
       item: sampleItem({ instanceId: 'r-a', slot: 'ring', name: '戒A' }),
@@ -316,6 +333,10 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
 
   test('equip-from-bag with both rings filled swaps ring1; target ring2 swaps ring2', () => {
     const domain = createSorceressDomain({ playerName: '换戒' });
+    // Starter kit occupies both ring slots — free them so r1/r2 auto-equip.
+    for (const slot of ['ring1', 'ring2'] as const) {
+      expect(domain.dispatch({ op: 'unequip', slot }).ok).toBe(true);
+    }
     domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'r1', slot: 'ring', name: '戒1' }) });
     domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'r2', slot: 'ring', name: '戒2' }) });
     const bagIdx = putInBag(domain, sampleItem({ instanceId: 'r3', slot: 'ring', name: '戒3' }));
@@ -358,6 +379,10 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
 
   test('unequip takes EquipSlot (ring2)', () => {
     const domain = createSorceressDomain({ playerName: '卸戒' });
+    // Starter kit occupies both ring slots — free them so u1/u2 auto-equip.
+    for (const slot of ['ring1', 'ring2'] as const) {
+      expect(domain.dispatch({ op: 'unequip', slot }).ok).toBe(true);
+    }
     domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'u1', slot: 'ring' }) });
     domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'u2', slot: 'ring' }) });
     expect(domain.dispatch({ op: 'unequip', slot: 'ring2' }).ok).toBe(true);
@@ -591,7 +616,8 @@ describe('PR10 T3 materials + craft commands + ring targeting', () => {
 describe('bag grid anchors (multi-size items)', () => {
   test('take-item firstFits by footprint: staff 1×3 then armor 2×3 packs beside it', () => {
     const domain = createSorceressDomain({ playerName: '摆放' });
-    // Occupy weapon + armor doll slots so both items land in the bag.
+    // Starter kit occupies weapon + armor doll slots, so all four take-items
+    // land in the bag; the first two still demonstrate 1×3 then 2×3 packing.
     domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'eq-w', slot: 'weapon' }) });
     domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'eq-a', slot: 'armor' }) });
     expect(domain.dispatch({
@@ -603,16 +629,13 @@ describe('bag grid anchors (multi-size items)', () => {
       item: sampleItem({ instanceId: 'bag-a', slot: 'armor', name: '甲' }),
     }).ok).toBe(true);
     const bag = domain.snapshot().bag;
-    expect(bag).toHaveLength(2);
     expect(bag[0]).toMatchObject({ x: 0, y: 0 }); // 1×3 staff at the top-left
     expect(bag[1]).toMatchObject({ x: 1, y: 0 }); // 2×3 armor packs right beside it
   });
 
   test('sixty 1×1 items fill the 12×5 grid exactly; the 61st returns bag-full', () => {
     const domain = createSorceressDomain({ playerName: '满包' });
-    // Fill both ring doll slots so every filler lands in the bag.
-    domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'eq-r1', slot: 'ring' }) });
-    domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'eq-r2', slot: 'ring' }) });
+    // Starter kit occupies every doll slot, so all fillers land in the bag.
     for (let i = 0; i < 60; i++) {
       expect(domain.dispatch({
         op: 'take-item',
@@ -630,29 +653,30 @@ describe('bag grid anchors (multi-size items)', () => {
 
   test('unequip firstFits back into the bag; no fit keeps the item equipped', () => {
     const domain = createSorceressDomain({ playerName: '卸装' });
+    // Starter kit occupies the ring slots — free them so eq-r1/eq-r2 auto-equip.
+    domain.dispatch({ op: 'unequip', slot: 'ring1' });
+    domain.dispatch({ op: 'unequip', slot: 'ring2' });
     domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'eq-r1', slot: 'ring' }) });
     domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'eq-r2', slot: 'ring' }) });
-    // Partially filled bag: unequipped gloves (2×2) land at the first free spot.
-    domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'eq-g', slot: 'gloves' }) });
-    expect(domain.dispatch({
-      op: 'take-item',
-      item: sampleItem({ instanceId: 'bag-r', slot: 'ring' }),
-    }).ok).toBe(true); // one 1×1 at (0,0)
+    // Partially filled bag: the two 1×1 kit rings sit at (0,0)/(1,0) and the
+    // bag ring at (2,0); unequipped gloves (2×2) land at the first free spot.
+    domain.dispatch({ op: 'take-item', item: sampleItem({ instanceId: 'bag-r', slot: 'ring' }) });
+    const kitGloves = domain.snapshot().equipment.gloves!;
     expect(domain.dispatch({ op: 'unequip', slot: 'gloves' }).ok).toBe(true);
     const after = domain.snapshot();
     expect(after.equipment.gloves).toBeNull();
-    const g = after.bag.find((a) => a.item.instanceId === 'eq-g');
-    expect(g).toMatchObject({ x: 1, y: 0 }); // 2×2 next to the 1×1 ring
+    const g = after.bag.find((a) => a.item.instanceId === kitGloves.instanceId);
+    expect(g).toMatchObject({ x: 3, y: 0 }); // 2×2 next to the 1×1 ring
 
     // Fill the grid completely, then unequip must refuse and keep the item on.
-    // 60 cells − 5 occupied (1×1 ring + 2×2 gloves) = 55 one-cell fillers.
-    for (let i = 0; i < 55; i++) {
+    // 60 cells − 7 occupied (2 kit rings + 1 bag ring + 2×2 gloves) = 53 fillers.
+    for (let i = 0; i < 53; i++) {
       expect(domain.dispatch({
         op: 'take-item',
         item: sampleItem({ instanceId: `pack-${i}`, slot: 'ring' }),
       }).ok).toBe(true);
     }
-    // 57 anchors cover all 60 cells (1 + 4 + 55×1) — no free cell remains.
+    // 57 anchors cover all 60 cells (2 + 1 + 4 + 53×1) — no free cell remains.
     expect(domain.snapshot().bag).toHaveLength(57);
     const res = domain.dispatch({ op: 'unequip', slot: 'ring1' });
     expect(res.ok).toBe(false);
@@ -662,6 +686,9 @@ describe('bag grid anchors (multi-size items)', () => {
 
   test('equip-from-bag swap is atomic: no-fit for the swapped-out piece changes nothing', () => {
     const domain = createSorceressDomain({ playerName: '原子' });
+    // Starter kit occupies both rings — free them so the big rings auto-equip.
+    domain.dispatch({ op: 'unequip', slot: 'ring1' });
+    domain.dispatch({ op: 'unequip', slot: 'ring2' });
     // Oversized custom rings (2×2) on both doll ring slots.
     domain.dispatch({
       op: 'take-item',
@@ -673,7 +700,8 @@ describe('bag grid anchors (multi-size items)', () => {
     });
     // One small ring in the bag, then pack every remaining cell.
     const swapIdx = putInBag(domain, sampleItem({ instanceId: 'small-r', slot: 'ring', name: '小戒' }));
-    for (let i = 0; i < 59; i++) {
+    // 60 cells − 3 occupied (2 kit rings + small-r) = 57 one-cell jammers.
+    for (let i = 0; i < 57; i++) {
       expect(domain.dispatch({
         op: 'take-item',
         item: sampleItem({ instanceId: `jam-${i}`, slot: 'ring' }),
@@ -689,5 +717,289 @@ describe('bag grid anchors (multi-size items)', () => {
     expect(after.equipment.ring2?.instanceId).toBe('big-r2');
     expect(after.bag).toHaveLength(60);
     expect(after.bag[swapIdx]?.item.instanceId).toBe('small-r');
+  });
+});
+
+describe('starter kit (N3R-N3 ten-slot newbie gear)', () => {
+  // Tier-0 BASE_NAMES from the shared 词表 — deterministic starter names.
+  // Helm/armor/gloves/belt/offhand are the 「布*」family; weapon/boots/ring/
+  // amulet keep their own tier-0 names (词表 is shared with drops, untouched).
+  const STARTER_NAMES: Record<ItemSlot, string> = {
+    weapon: '焦木杖', helm: '布兜帽', armor: '灰布袍', boots: '麻绳靴',
+    ring: '铜环', amulet: '骨符', gloves: '布手套', belt: '布腰带', offhand: '布纹法器',
+  };
+
+  function sentinelEquipment(prefix: string): Equipment {
+    const eq = emptyEquipment();
+    for (const slot of EQUIP_SLOT_ORDER) {
+      eq[slot] = {
+        instanceId: `${prefix}-${slot}`,
+        slot: itemSlotForEquip(slot),
+        rarity: 'magic',
+        name: `哨兵-${slot}`,
+        ilvl: 3,
+        reqLevel: 1,
+        affixes: [{ stat: 'maxHp', v: 10, label: '+10 生命上限' }],
+        score: 10,
+      };
+    }
+    return eq;
+  }
+
+  test('a) new characters wear all ten slots: common / ilvl 1 / reqLevel 1 / tier-0 names', () => {
+    const eq = createSorceressDomain({ playerName: '新手' }).snapshot().equipment;
+    for (const slot of EQUIP_SLOT_ORDER) {
+      const item = eq[slot];
+      expect(item).not.toBeNull();
+      expect(item!.rarity).toBe('common');
+      expect(item!.ilvl).toBe(1);
+      expect(item!.reqLevel).toBe(1);
+      expect(item!.affixes).toEqual([]);
+      expect(item!.instanceId).toBeTruthy();
+      expect(item!.name).toBe(STARTER_NAMES[itemSlotForEquip(slot)]);
+      expect(item!.slot).toBe(itemSlotForEquip(slot));
+    }
+    // 「布*」slots: tier-0 names all carry 布 (布兜帽/灰布袍/布手套/布腰带/布纹法器).
+    for (const slot of ['helm', 'armor', 'gloves', 'belt', 'offhand'] as const) {
+      expect(eq[slot]!.name.includes('布')).toBe(true);
+    }
+  });
+
+  test('b) hydrating an equipped save keeps its gear untouched (no kit overwrite)', () => {
+    const base = createSorceressDomain({ playerName: '旧档', id: 'old-1' }).snapshot();
+    const opts = {
+      identity: base.identity,
+      level: base.level,
+      xp: base.xp,
+      gold: base.gold,
+      unspentSkillPoints: base.unspentSkillPoints,
+      skillRanks: base.skillRanks,
+      hotbar: base.hotbar,
+      selectedHotbarSlot: base.selectedHotbarSlot,
+      bag: base.bag,
+      quests: base.quests,
+    };
+    // Full ten-slot save: every sentinel survives verbatim.
+    const full = hydrateSorceressDomain({ ...opts, equipment: sentinelEquipment('s') });
+    for (const slot of EQUIP_SLOT_ORDER) {
+      expect(full.snapshot().equipment[slot]?.instanceId).toBe(`s-${slot}`);
+    }
+    // Partial old save (weapon only): nothing is granted, the rest stays null.
+    const partial = hydrateSorceressDomain({
+      ...opts,
+      equipment: { ...emptyEquipment(), weapon: sentinelEquipment('s').weapon },
+    });
+    const pe = partial.snapshot().equipment;
+    expect(pe.weapon?.instanceId).toBe('s-weapon');
+    for (const slot of EQUIP_SLOT_ORDER.filter((s) => s !== 'weapon')) {
+      expect(pe[slot]).toBeNull();
+    }
+  });
+
+  test('c) hydrating an all-empty old save grants the full kit', () => {
+    const base = createSorceressDomain({ playerName: '空档', id: 'empty-1' }).snapshot();
+    const domain = hydrateSorceressDomain({
+      identity: base.identity,
+      level: base.level,
+      xp: base.xp,
+      gold: base.gold,
+      unspentSkillPoints: base.unspentSkillPoints,
+      skillRanks: base.skillRanks,
+      hotbar: base.hotbar,
+      selectedHotbarSlot: base.selectedHotbarSlot,
+      bag: base.bag,
+      equipment: emptyEquipment(),
+      quests: base.quests,
+    });
+    const eq = domain.snapshot().equipment;
+    for (const slot of EQUIP_SLOT_ORDER) {
+      expect(eq[slot]).not.toBeNull();
+      expect(eq[slot]!.rarity).toBe('common');
+      expect(eq[slot]!.ilvl).toBe(1);
+      expect(eq[slot]!.reqLevel).toBe(1);
+      expect(eq[slot]!.name).toBe(STARTER_NAMES[itemSlotForEquip(slot)]);
+    }
+  });
+
+  test('d) granted items are real: replaceable, unequippable, meltable', () => {
+    const domain = createSorceressDomain({ playerName: '真品' });
+    const kitWeapon = domain.snapshot().equipment.weapon!;
+    // Replace: a better weapon lands in the bag (doll full) and swaps in.
+    expect(domain.dispatch({
+      op: 'take-item',
+      item: {
+        instanceId: 'better-w',
+        slot: 'weapon',
+        rarity: 'rare',
+        name: '好杖',
+        ilvl: 1,
+        reqLevel: 1,
+        affixes: [{ stat: 'dmgPct', v: 0.1, label: '+10% 伤害' }],
+        score: 20,
+      },
+    }).ok).toBe(true);
+    const swapIdx = domain.snapshot().bag.findIndex((a) => a.item.instanceId === 'better-w');
+    expect(swapIdx).toBeGreaterThanOrEqual(0);
+    expect(domain.dispatch({ op: 'equip-from-bag', index: swapIdx }).ok).toBe(true);
+    expect(domain.snapshot().equipment.weapon?.instanceId).toBe('better-w');
+    expect(domain.snapshot().bag.some((a) => a.item.instanceId === kitWeapon.instanceId)).toBe(true);
+    // Unequip a kit piece → doll slot frees up (inventory-ui shows the dim ghost).
+    const kitGloves = domain.snapshot().equipment.gloves!;
+    expect(domain.dispatch({ op: 'unequip', slot: 'gloves' }).ok).toBe(true);
+    expect(domain.snapshot().equipment.gloves).toBeNull();
+    // Melt it for gold via the existing dispatch.
+    const goldBefore = domain.snapshot().gold;
+    const meltIdx = domain.snapshot().bag.findIndex((a) => a.item.instanceId === kitGloves.instanceId);
+    expect(meltIdx).toBeGreaterThanOrEqual(0);
+    expect(domain.dispatch({ op: 'melt-bag', index: meltIdx }).ok).toBe(true);
+    expect(domain.snapshot().gold).toBe(goldBefore + meltGoldValue(kitGloves));
+    expect(domain.snapshot().bag.some((a) => a.item.instanceId === kitGloves.instanceId)).toBe(false);
+  });
+});
+
+describe('personal stash (N-Stash)', () => {
+  /** Full hydrate options from a fresh domain; stash intentionally omitted. */
+  function baseHydrateOpts(overrides: Partial<HydrateSorceressOptions> = {}): HydrateSorceressOptions {
+    const base = createSorceressDomain({ playerName: '仓库', id: 'stash-base-1' }).snapshot();
+    return {
+      identity: base.identity,
+      level: base.level,
+      xp: base.xp,
+      gold: base.gold,
+      unspentSkillPoints: base.unspentSkillPoints,
+      skillRanks: base.skillRanks,
+      hotbar: base.hotbar,
+      selectedHotbarSlot: base.selectedHotbarSlot,
+      bag: base.bag,
+      equipment: base.equipment,
+      quests: base.quests,
+      ...overrides,
+    };
+  }
+
+  /** 120 non-overlapping 1×1 rings covering the full 12×10 stash. */
+  function fullStashRings(prefix = 'st'): Array<{ item: ItemInstance; x: number; y: number }> {
+    return Array.from({ length: 120 }, (_, i) => ({
+      item: sampleItem({ instanceId: `${prefix}-${i}`, slot: 'ring', name: `${prefix}-${i}` }),
+      x: i % 12,
+      y: Math.floor(i / 12),
+    }));
+  }
+
+  test('stash-bag success: bag −1, stash +1, same instanceId, snapshot reflects', () => {
+    const domain = createSorceressDomain({ playerName: '入库' });
+    const idx = putInBag(domain, sampleItem({ instanceId: 'stash-me', slot: 'gloves', name: '入仓' }));
+    const before = domain.snapshot();
+    expect(domain.dispatch({ op: 'stash-bag', index: idx, areaId: 'cinderwatch' }).ok).toBe(true);
+    const after = domain.snapshot();
+    expect(after.bag).toHaveLength(before.bag.length - 1);
+    expect(after.bag.some((a) => a.item.instanceId === 'stash-me')).toBe(false);
+    expect(after.stash).toHaveLength(1);
+    expect(after.stash[0]!.item.instanceId).toBe('stash-me');
+    expect(after.stash[0]).toMatchObject({ x: 0, y: 0 }); // 2×2 gloves pack the stash top-left
+  });
+
+  test('stash-full is an atomic no-op: a full stash blocks the transfer', () => {
+    const domain = hydrateSorceressDomain({
+      ...baseHydrateOpts(),
+      bag: [{ item: sampleItem({ instanceId: 'last-ring', slot: 'ring' }), x: 0, y: 0 }],
+      stash: fullStashRings(),
+    });
+    const before = domain.snapshot();
+    const res = domain.dispatch({ op: 'stash-bag', index: 0, areaId: 'cinderwatch' });
+    expect(res.ok).toBe(false);
+    expect(!res.ok && res.reason).toBe('stash-full');
+    const after = domain.snapshot();
+    expect(after.bag).toHaveLength(1);
+    expect(after.bag[0]!.item.instanceId).toBe('last-ring');
+    expect(after.stash).toHaveLength(120);
+    expect(after).toEqual(before);
+  });
+
+  test('unstash-bag success: stash −1, bag +1, same instanceId', () => {
+    const domain = hydrateSorceressDomain({
+      ...baseHydrateOpts(),
+      stash: [{ item: sampleItem({ instanceId: 'out-1', slot: 'gloves', name: '出仓' }), x: 0, y: 0 }],
+    });
+    const before = domain.snapshot();
+    expect(domain.dispatch({ op: 'unstash-bag', index: 0, areaId: 'cinderwatch' }).ok).toBe(true);
+    const after = domain.snapshot();
+    expect(after.stash).toHaveLength(0);
+    expect(after.bag).toHaveLength(before.bag.length + 1);
+    const moved = after.bag.find((a) => a.item.instanceId === 'out-1');
+    expect(moved).toMatchObject({ x: 0, y: 0 });
+  });
+
+  test('bag-full is an atomic no-op: a full bag blocks unstash', () => {
+    // First 60 rings of the grid pattern fill the 12×5 bag exactly.
+    const bag = fullStashRings('bf').slice(0, 60);
+    const domain = hydrateSorceressDomain({
+      ...baseHydrateOpts(),
+      bag,
+      stash: [{ item: sampleItem({ instanceId: 'trapped', slot: 'ring', name: '困' }), x: 0, y: 0 }],
+    });
+    const before = domain.snapshot();
+    expect(before.bag).toHaveLength(60);
+    const res = domain.dispatch({ op: 'unstash-bag', index: 0, areaId: 'cinderwatch' });
+    expect(res.ok).toBe(false);
+    expect(!res.ok && res.reason).toBe('bag-full');
+    expect(domain.snapshot()).toEqual(before);
+  });
+
+  test('both ops refuse outside cinderwatch with not-in-camp and zero mutation', () => {
+    const domain = hydrateSorceressDomain({
+      ...baseHydrateOpts(),
+      bag: [{ item: sampleItem({ instanceId: 'bag-wild', slot: 'ring', name: '袋' }), x: 0, y: 0 }],
+      stash: [{ item: sampleItem({ instanceId: 'stash-wild', slot: 'ring', name: '仓' }), x: 0, y: 0 }],
+    });
+    for (const areaId of ['ashen-reach', 'slagdeep-hollow'] as const) {
+      const before = domain.snapshot();
+      expect(domain.dispatch({ op: 'stash-bag', index: 0, areaId })).toEqual({ ok: false, reason: 'not-in-camp' });
+      expect(domain.dispatch({ op: 'unstash-bag', index: 0, areaId })).toEqual({ ok: false, reason: 'not-in-camp' });
+      expect(domain.snapshot()).toEqual(before);
+    }
+  });
+
+  test('out-of-range indices → bad-index (camp gate passes first)', () => {
+    const domain = createSorceressDomain({ playerName: '越界' });
+    expect(domain.dispatch({ op: 'stash-bag', index: 5, areaId: 'cinderwatch' })).toEqual({
+      ok: false,
+      reason: 'bad-index',
+    });
+    expect(domain.dispatch({ op: 'stash-bag', index: -1, areaId: 'cinderwatch' })).toEqual({
+      ok: false,
+      reason: 'bad-index',
+    });
+    expect(domain.dispatch({ op: 'unstash-bag', index: 0, areaId: 'cinderwatch' })).toEqual({
+      ok: false,
+      reason: 'bad-index',
+    });
+  });
+
+  test('hydrate without stash yields an empty stash', () => {
+    const domain = hydrateSorceressDomain(baseHydrateOpts());
+    expect(domain.snapshot().stash).toEqual([]);
+  });
+
+  test('snapshot().stash is a deep copy — mutating it cannot touch the domain', () => {
+    const domain = hydrateSorceressDomain({
+      ...baseHydrateOpts(),
+      stash: [{ item: sampleItem({ instanceId: 'deep-1', slot: 'gloves', name: '深' }), x: 0, y: 0 }],
+    });
+    const snap = domain.snapshot();
+    const mutable = snap.stash as unknown as Array<{
+      item: { affixes: Array<{ v: number }> };
+      x: number;
+    }>;
+    expect(() => {
+      mutable[0]!.item.affixes[0]!.v = 999;
+    }).toThrow();
+    expect(() => {
+      mutable[0]!.x = 5;
+    }).toThrow();
+    const next = domain.snapshot();
+    expect(next.stash[0]!.item.affixes[0]!.v).toBe(0.1);
+    expect(next.stash[0]!.x).toBe(0);
+    expect(next.stash[0]!.item.instanceId).toBe('deep-1');
   });
 });

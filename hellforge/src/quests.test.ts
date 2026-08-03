@@ -15,6 +15,12 @@ import {
 } from './quests';
 
 function fillBagAndWeapon(domain: ReturnType<typeof createSorceressDomain>): void {
+  // Starter kit occupies weapon + both rings — free them so the junk pieces
+  // auto-equip; the 5 unequipped kit pieces take 5 cells, so 55 fillers
+  // finish the 12×5 grid exactly.
+  for (const slot of ['weapon', 'ring1', 'ring2'] as const) {
+    expect(domain.dispatch({ op: 'unequip', slot }).ok).toBe(true);
+  }
   // Occupy weapon so the quest wand cannot auto-equip.
   expect(domain.dispatch({
     op: 'take-item',
@@ -45,7 +51,7 @@ function fillBagAndWeapon(domain: ReturnType<typeof createSorceressDomain>): voi
       },
     }).ok).toBe(true);
   }
-  for (let i = 0; i < BAG_SIZE; i++) {
+  for (let i = 0; i < BAG_SIZE - 5; i++) {
     const filler: ItemInstance = {
       instanceId: `fill-${i}`,
       slot: 'ring',

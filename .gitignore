@@ -14,3 +14,6 @@ sessions/
 
 # Playwright CLI test artifacts (console/snapshot logs), not source
 .playwright-cli/
+
+# Shell UI raw masters (Downloads cutouts kept local)
+hellforge/assets/ui/shell/_masters/

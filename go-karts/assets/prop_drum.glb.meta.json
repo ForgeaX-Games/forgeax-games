@@ -13,24 +13,28 @@
   "source": "prop_drum.glb",
   "subAssets": [
     {
-      "guid": "019f83e3-ba14-7577-9790-310419b5b575",
+      "guid": "019f83e3-ba14-4577-9790-310419b5b575",
       "kind": "mesh",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "mesh:0"
     },
     {
-      "guid": "019f83e3-ba15-79e1-955f-6ba35ae03e3f",
+      "guid": "019f83e3-ba15-49e1-955f-6ba35ae03e3f",
       "kind": "material",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "material:0"
     },
     {
-      "guid": "019f83e3-ba15-79e1-955f-6ba4cd95318b",
+      "guid": "019f83e3-ba15-49e1-955f-6ba4cd95318b",
       "kind": "scene",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "scene:0"
     },
     {
-      "guid": "019f83e3-ba15-79e1-955f-6ba53e58b2a2",
+      "guid": "019f83e3-ba15-49e1-955f-6ba53e58b2a2",
       "kind": "texture",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "texture:0"
     }
   ]
 }

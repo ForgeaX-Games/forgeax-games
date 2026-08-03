@@ -305,9 +305,10 @@ export class Dungeon {
         emissive: opts.emissive, emissiveIntensity: opts.ei ?? (opts.emissive ? 2 : 0),
       }));
     const mats: Record<GeoKind, MatHandle> = {
-      floorA:    mkMat([0.16, 0.13, 0.14, 1]),
-      floorB:    mkMat([0.13, 0.11, 0.13, 1]),
-      wall:      mkMat([0.24, 0.17, 0.15, 1]),
+      // roughness mirrors the baked GLB surface targets (scripts/lib/surface-spec.ts)
+      floorA:    mkMat([0.16, 0.13, 0.14, 1], { rough: 0.78 }),
+      floorB:    mkMat([0.13, 0.11, 0.13, 1], { rough: 0.78 }),
+      wall:      mkMat([0.24, 0.17, 0.15, 1], { rough: 0.93 }),
       torchPost: mkMat([0.2, 0.13, 0.08, 1]),
       flame:     mkMat([1, 0.5, 0.12, 1], { emissive: [1, 0.45, 0.10], ei: 2.2 }),
       brazier:   mkMat([0.45, 0.08, 0.03, 1], { emissive: [1, 0.12, 0.03], ei: 1.2 }),

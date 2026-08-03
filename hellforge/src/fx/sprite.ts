@@ -17,6 +17,7 @@ import {
 import {
   MeshFilter,
   MeshRenderer,
+  Materials,
 } from '@forgeax/engine-render';
 import {
   quat,
@@ -165,6 +166,11 @@ export interface SpriteSpawnOpts {
   distort?: number;
   /** HDR rgb + master opacity. */
   tint?: readonly [number, number, number, number];
+  /**
+   * Persistent intensity modulation. Default `flicker` (fast torch-like).
+   * `breath` = slow luminous pulse for enemy under-rings / markers.
+   */
+  pulse?: 'flicker' | 'breath';
   /** Erosion fade start as a fraction of life (one-shots). */
   fadeOutFrac?: number;
   /** Lerp to the next flipbook frame by fract(frame). */
@@ -188,8 +194,11 @@ interface SpriteParticle {
   fadeOutFrac: number;
   /** Per-sprite distortion-time offset so copies don't wobble in lockstep. */
   seed: number;
-  /** Tint alpha at spawn — the flicker multiplies this, never replaces it. */
+  /** Tint alpha at spawn — the flicker/breath multiplies this, never replaces it. */
   alpha0: number;
+  /** Spawn RGB — breath multiplies these; flicker leaves them alone. */
+  rgb0: readonly [number, number, number];
+  pulse: 'flicker' | 'breath';
   slot: MatSlot;
 }
 
@@ -202,6 +211,8 @@ const FLAT_QUAT = ((): readonly [number, number, number, number] => {
 
 export class SpriteSystem {
   private readonly ok: boolean;
+  /** true = c0/Pack-v1 pass shape (`shader` + `paramValues`). */
+  private readonly customPassShaderShape: boolean;
   private particles: SpriteParticle[] = [];
   private readonly persistentByHandle = new Map<SpriteHandle, SpriteParticle>();
   private nextHandle = 1;
@@ -220,6 +231,14 @@ export class SpriteSystem {
     private canSpawn: () => boolean = () => true,
   ) {
     this.ok = registerSpriteShader(app);
+    // Same probe as fx.ts custom mats — blind program/values leaves every
+    // sprite (enemy rings, telegraph, loot beams…) invisible on c0.
+    const probePass = Materials.standard({
+      baseColor: [1, 1, 1, 1],
+      roughness: 0.5,
+      metallic: 0,
+    }).passes?.[0] as { shader?: string } | undefined;
+    this.customPassShaderShape = typeof probePass?.shader === 'string';
   }
 
   /** Shader registry unavailable / bad sheet id → spawn no-ops (Edit safe). */
@@ -347,6 +366,12 @@ export class SpriteSystem {
       fadeOutFrac: opts.fadeOutFrac ?? 0.6,
       seed: Math.random() * 64,
       alpha0: opts.tint?.[3] ?? 1,
+      rgb0: [
+        opts.tint?.[0] ?? 1,
+        opts.tint?.[1] ?? 1,
+        opts.tint?.[2] ?? 1,
+      ],
+      pulse: opts.pulse ?? 'flicker',
       slot,
     };
   }
@@ -385,12 +410,22 @@ export class SpriteSystem {
       // in lockstep read as mechanical, not as fire.
       p.slot.params.frame = frameAt(p.age + p.seed, p.fps, p.frames, true);
       p.slot.params.time = elapsed + p.seed;
-      // Intensity flicker (incommensurate sines, same family as the point-light
-      // flicker) — persistent alpha was constant, which read as stiff. It
-      // multiplies the spawn tint alpha so deliberate low-alpha fixtures
-      // (telegraph fill, residue) keep their level.
-      p.slot.params.baseColor[3] = p.alpha0 *
-        (0.84 + 0.16 * Math.sin(elapsed * 9.7 + p.seed) * Math.sin(elapsed * 5.3 + p.seed * 1.7));
+      if (p.pulse === 'breath') {
+        // Slow luminous breath (~0.37 Hz) — RGB + alpha rise/fall together.
+        const wave = 0.5 + 0.5 * Math.sin(elapsed * 2.35 + p.seed);
+        const rgbMul = 0.68 + 0.32 * wave;
+        p.slot.params.baseColor[0] = p.rgb0[0] * rgbMul;
+        p.slot.params.baseColor[1] = p.rgb0[1] * rgbMul;
+        p.slot.params.baseColor[2] = p.rgb0[2] * rgbMul;
+        p.slot.params.baseColor[3] = p.alpha0 * (0.52 + 0.48 * wave);
+      } else {
+        // Intensity flicker (incommensurate sines, same family as the point-light
+        // flicker) — persistent alpha was constant, which read as stiff. It
+        // multiplies the spawn tint alpha so deliberate low-alpha fixtures
+        // (telegraph fill, residue) keep their level.
+        p.slot.params.baseColor[3] = p.alpha0 *
+          (0.84 + 0.16 * Math.sin(elapsed * 9.7 + p.seed) * Math.sin(elapsed * 5.3 + p.seed * 1.7));
+      }
       // erosion stays 0 — persistent sprites never auto-fade.
     }
   }
@@ -471,15 +506,30 @@ export class SpriteSystem {
       sheet: unwrapHandle(this.textureFor(spec)),
       noise: unwrapHandle(this.textureFor(noise)),
     };
-    const mat = this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
-      kind: 'material',
-      passes: [{
-        name: 'Forward',
-        program: { module: SPRITE_SHADER_ID },
-        renderState: { ...SPRITE_RENDER_STATES[blend], tags: { LightMode: 'Forward' }, queue: 3000 },
-      }],
-      values: params as never,
-    });
+    const passCommon = {
+      name: 'Forward' as const,
+      renderState: { ...SPRITE_RENDER_STATES[blend], tags: { LightMode: 'Forward' }, queue: 3000 },
+    };
+    const mat = this.customPassShaderShape
+      ? this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
+          kind: 'material',
+          passes: [{
+            ...passCommon,
+            shader: SPRITE_SHADER_ID,
+            tags: { LightMode: 'Forward' },
+            queue: 3000,
+            passKind: 'forward',
+          }],
+          paramValues: params as never,
+        } as unknown as MaterialAsset)
+      : this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
+          kind: 'material',
+          passes: [{
+            ...passCommon,
+            program: { module: SPRITE_SHADER_ID },
+          }],
+          values: params as never,
+        });
     return { key, mat, params };
   }
 

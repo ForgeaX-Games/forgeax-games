@@ -1,6 +1,11 @@
 // Deterministic external-asset-package meta for kit GLBs.
 // Mirrors wb-ai-asset external-meta-cook GUID rules so scene refs stay stable
 // without importing marketplace (not always present in games worktrees).
+//
+// cookKitMeta with `existingMeta` reuses the previous sub-asset GUIDs by
+// (kind, sourceIndex) — the same reuse rule wb-ai-asset's engine import uses —
+// so an in-place content edit (roughness, textures) keeps every scene-pack ref
+// resolving instead of churning GUIDs across packs.
 
 import { createHash } from 'node:crypto';
 
@@ -55,20 +60,31 @@ function parseGlbJson(glbBytes: Uint8Array): GlTFJson | null {
   }
 }
 
-/** Cook engine `.glb.meta.json` from authored kit GLB bytes. */
+/** Cook engine `.glb.meta.json` from authored kit GLB bytes.
+ *  Pass `existingMeta` to reuse its sub-asset GUIDs by (kind, sourceIndex). */
 export function cookKitMeta(
   glbBytes: Uint8Array,
   contentHash: string,
   source: string,
+  opts?: { existingMeta?: KitExternalMeta | null },
 ): KitExternalMeta | null {
   const json = parseGlbJson(glbBytes);
   if (!json?.meshes?.length) return null;
   const bareHash = contentHash.replace(/^sha256:/, '');
+  const reuse = new Map<string, string>();
+  if (opts?.existingMeta) {
+    for (const entry of opts.existingMeta.subAssets) {
+      reuse.set(`${entry.kind}\0${entry.sourceIndex}`, entry.guid);
+    }
+  }
   const subAssets: KitSubAsset[] = [];
+  const guid = (kind: string, sourceIndex: number): string =>
+    reuse.get(`${kind}\0${sourceIndex}`)
+      ?? (kind === 'mesh' ? meshGuid(bareHash, sourceIndex) : subGuid(bareHash, kind, sourceIndex));
 
   json.meshes.forEach((mesh, sourceIndex) => {
     subAssets.push({
-      guid: meshGuid(bareHash, sourceIndex),
+      guid: guid('mesh', sourceIndex),
       sourceIndex,
       kind: 'mesh',
       ...(mesh.name ? { name: mesh.name } : {}),
@@ -77,7 +93,7 @@ export function cookKitMeta(
   for (let i = 0; i < (json.materials ?? []).length; i++) {
     const m = json.materials![i]!;
     subAssets.push({
-      guid: subGuid(bareHash, 'material', i),
+      guid: guid('material', i),
       sourceIndex: i,
       kind: 'material',
       ...(m.name ? { name: m.name } : {}),
@@ -86,7 +102,7 @@ export function cookKitMeta(
   for (let i = 0; i < (json.scenes ?? []).length; i++) {
     const s = json.scenes![i]!;
     subAssets.push({
-      guid: subGuid(bareHash, 'scene', i),
+      guid: guid('scene', i),
       sourceIndex: i,
       kind: 'scene',
       ...(s.name ? { name: s.name } : {}),
@@ -95,7 +111,7 @@ export function cookKitMeta(
   for (let i = 0; i < (json.images ?? []).length; i++) {
     const img = json.images![i]!;
     subAssets.push({
-      guid: subGuid(bareHash, 'texture', i),
+      guid: guid('texture', i),
       sourceIndex: i,
       kind: 'texture',
       ...(img.name ? { name: img.name } : {}),

@@ -145,4 +145,34 @@ describe('createUiLayerManager', () => {
     expect(ui.active()).toBe('craft');
     expect(ui.blocksWorldInput()).toBe(true);
   });
+
+  test('stash registers/opens/closes and keeps single-owner exclusivity with inventory', () => {
+    const stash = trackSurface();
+    const inventory = trackSurface();
+    const ui = createUiLayerManager();
+    ui.register('stash', stash.surface);
+    ui.register('inventory', inventory.surface);
+
+    ui.open('stash');
+    expect(ui.active()).toBe('stash');
+    expect(stash.calls).toEqual(['show']);
+    expect(ui.blocksWorldInput()).toBe(true);
+
+    // N-Stash dual-open pair is wired in main.ts — the manager itself still
+    // treats the two as exclusive surfaces, one owner at a time.
+    ui.open('inventory');
+    expect(ui.active()).toBe('inventory');
+    expect(stash.calls).toEqual(['show', 'hide']);
+    expect(inventory.calls).toEqual(['show']);
+
+    ui.open('stash');
+    expect(ui.active()).toBe('stash');
+    expect(inventory.calls).toEqual(['show', 'hide']);
+    expect(stash.calls).toEqual(['show', 'hide', 'show']);
+
+    ui.close('stash');
+    expect(ui.active()).toBeNull();
+    expect(stash.calls).toEqual(['show', 'hide', 'show', 'hide']);
+    expect(ui.blocksWorldInput()).toBe(false);
+  });
 });

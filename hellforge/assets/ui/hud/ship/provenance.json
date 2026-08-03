@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "kit": "hellforge-hud-art-ship",
-  "updatedAt": "2026-07-24T09:31:34Z",
+  "updatedAt": "2026-08-02T00:00:00Z",
   "modules": [
     {
       "id": "automap-frame",
@@ -184,6 +184,20 @@
       "attribution": "Hellforge team via image2",
       "intendedUse": "PR6 HUD art pass shipped texture",
       "notes": "2026-07-24: globe PNG cutouts replace baked checkerboard; other plates alpha webp."
+    },
+    {
+      "id": "panel-frame-forge",
+      "path": "panel-frame-forge.webp",
+      "sha256": "e08e9348ac998d49e14a7d1f97d27b6feaed555a91ebe40dcd0e59e53dee088e",
+      "bytes": 84138,
+      "source": "wb-ai-asset/image2 + local alpha cutout",
+      "provider": "image2",
+      "jobId": "image2-local-batch-2026-07-24",
+      "prompt": "forge panel frame (also HudArt.panelForge)",
+      "license": "Hellforge team generated \u2014 commercial use intended; record generator ToS in PR",
+      "attribution": "Hellforge team via image2",
+      "intendedUse": "PR6 HUD art pass shipped texture",
+      "notes": "2026-08-02: re-export from 2160x2880 master; corner flood-fill keyout of baked near-black pad (T=24 + 2px corridor guard); stone frame and interior RGB untouched; HUD_ART_REV v7."
     }
   ]
 }

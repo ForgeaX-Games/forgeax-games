@@ -9,6 +9,9 @@ import {
   hasFreeCell,
   occupancy,
   occupiedCellCount,
+  STASH_CELLS,
+  STASH_COLS,
+  STASH_ROWS,
   type BagAnchor,
 } from './bag-grid';
 import type { ItemInstance, ItemSize, ItemSlot } from './items';
@@ -36,6 +39,12 @@ describe('grid constants', () => {
     expect(BAG_COLS).toBe(12);
     expect(BAG_ROWS).toBe(5);
     expect(BAG_CELLS).toBe(60);
+  });
+
+  test('12×10 = 120 cells (personal stash parity)', () => {
+    expect(STASH_COLS).toBe(12);
+    expect(STASH_ROWS).toBe(10);
+    expect(STASH_CELLS).toBe(120);
   });
 });
 
@@ -133,5 +142,53 @@ describe('firstFitFor / hasFreeCell / occupiedCellCount', () => {
   test('occupiedCellCount counts covered cells, not items', () => {
     const anchors = [anchor('armor', 'a', 0, 0), anchor('ring', 'b', 2, 0)];
     expect(occupiedCellCount(anchors)).toBe(7); // 6 + 1
+  });
+});
+
+describe('stash grid dims (N-Stash)', () => {
+  test('occupancy honors explicit dims: 2×3 armor fits the stash edge', () => {
+    // (10,7) is legal on the 12×10 stash but overflows the 12×5 bag.
+    const cells = occupancy([anchor('armor', 'a', 10, 7)], STASH_COLS, STASH_ROWS);
+    expect(cells.filter(Boolean)).toHaveLength(6);
+    expect(cells[7 * STASH_COLS + 10]).toBe(true);
+    expect(cells[8 * STASH_COLS + 11]).toBe(true);
+    // Default dims drop out-of-bounds coverage (bag semantics unchanged).
+    expect(occupancy([anchor('armor', 'a', 10, 7)]).filter(Boolean)).toHaveLength(0);
+  });
+
+  test('canPlace with explicit dims: stash edge rejects a 2×3 at x=11 / y=9, fits at (10,7)', () => {
+    const cells = new Array<boolean>(STASH_CELLS).fill(false);
+    expect(canPlace(cells, 2, 3, 11, 7, STASH_COLS, STASH_ROWS)).toBe(false); // over right edge
+    expect(canPlace(cells, 2, 3, 10, 9, STASH_COLS, STASH_ROWS)).toBe(false); // over bottom edge
+    expect(canPlace(cells, 2, 3, 10, 7, STASH_COLS, STASH_ROWS)).toBe(true);
+    // Same footprint on default (bag) dims stays rejected at y=7.
+    expect(canPlace(cells, 2, 3, 10, 7)).toBe(false);
+  });
+
+  test('firstFit with explicit dims packs the stash top-left and exhausts 120 cells', () => {
+    const empty = new Array<boolean>(STASH_CELLS).fill(false);
+    expect(firstFit(empty, 2, 3, STASH_COLS, STASH_ROWS)).toEqual({ x: 0, y: 0 });
+    const anchors: BagAnchor[] = [];
+    for (let i = 0; i < STASH_CELLS; i++) {
+      const fit = firstFitFor(anchors, stub('ring', `s${i}`), STASH_COLS, STASH_ROWS);
+      expect(fit).not.toBeNull();
+      anchors.push({ item: stub('ring', `s${i}`), x: fit!.x, y: fit!.y });
+    }
+    expect(anchors).toHaveLength(120);
+    expect(occupiedCellCount(anchors, STASH_COLS, STASH_ROWS)).toBe(120);
+    expect(hasFreeCell(anchors, STASH_COLS, STASH_ROWS)).toBe(false);
+    expect(firstFitFor(anchors, stub('ring', 'overflow'), STASH_COLS, STASH_ROWS)).toBeNull();
+  });
+
+  test('default dims still describe the bag: a bag-full grid leaves stash room', () => {
+    const anchors: BagAnchor[] = [];
+    for (let i = 0; i < BAG_CELLS; i++) {
+      const fit = firstFitFor(anchors, stub('ring', `b${i}`));
+      expect(fit).not.toBeNull();
+      anchors.push({ item: stub('ring', `b${i}`), x: fit!.x, y: fit!.y });
+    }
+    expect(hasFreeCell(anchors)).toBe(false); // bag exhausted under defaults
+    expect(hasFreeCell(anchors, STASH_COLS, STASH_ROWS)).toBe(true);
+    expect(occupiedCellCount(anchors, STASH_COLS, STASH_ROWS)).toBe(60);
   });
 });

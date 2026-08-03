@@ -1,0 +1,229 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "kart-melon"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "kart-melon.glb",
+  "subAssets": [
+    {
+      "guid": "e6c7b2e7-1e1e-4f7c-99d0-528d1960fa16",
+      "kind": "mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:0"
+    },
+    {
+      "guid": "c798d04e-9328-43c2-a672-1219b9ae1b5e",
+      "kind": "mesh",
+      "sourceIndex": 1,
+      "sourceKey": "mesh:1"
+    },
+    {
+      "guid": "496b510a-420c-48bd-ba87-6a2b856aa9bf",
+      "kind": "mesh",
+      "sourceIndex": 2,
+      "sourceKey": "mesh:2"
+    },
+    {
+      "guid": "e5dd5c31-1b18-40f5-afb6-dca47a48732d",
+      "kind": "mesh",
+      "sourceIndex": 3,
+      "sourceKey": "mesh:3"
+    },
+    {
+      "guid": "71736177-9b0b-4ff2-84bc-173b7fc3173d",
+      "kind": "mesh",
+      "sourceIndex": 4,
+      "sourceKey": "mesh:4"
+    },
+    {
+      "guid": "dcc64e0a-a6ad-4e80-8c43-59fe6dacd9d3",
+      "kind": "mesh",
+      "sourceIndex": 5,
+      "sourceKey": "mesh:5"
+    },
+    {
+      "guid": "6f655aac-2719-40f4-a711-046dab1f09fc",
+      "kind": "mesh",
+      "sourceIndex": 6,
+      "sourceKey": "mesh:6"
+    },
+    {
+      "guid": "48291dcc-499f-4ef1-a394-9628b9b8c2c3",
+      "kind": "mesh",
+      "sourceIndex": 7,
+      "sourceKey": "mesh:7"
+    },
+    {
+      "guid": "1b86d484-4e8f-449e-86a8-c225dc1ee85e",
+      "kind": "mesh",
+      "sourceIndex": 8,
+      "sourceKey": "mesh:8"
+    },
+    {
+      "guid": "b1f89bb9-7e1e-4469-a021-556570d02494",
+      "kind": "mesh",
+      "sourceIndex": 9,
+      "sourceKey": "mesh:9"
+    },
+    {
+      "guid": "63324fea-e146-4fd4-a276-caa3e38fa27c",
+      "kind": "mesh",
+      "sourceIndex": 10,
+      "sourceKey": "mesh:10"
+    },
+    {
+      "guid": "b1e603ab-d981-477c-ba82-0623dfe8a681",
+      "kind": "mesh",
+      "sourceIndex": 11,
+      "sourceKey": "mesh:11"
+    },
+    {
+      "guid": "db39dc7c-a8c3-413b-a76d-dca51cce7a91",
+      "kind": "mesh",
+      "sourceIndex": 12,
+      "sourceKey": "mesh:12"
+    },
+    {
+      "guid": "e334b26b-98e5-43aa-8185-26f7b8227e20",
+      "kind": "mesh",
+      "sourceIndex": 13,
+      "sourceKey": "mesh:13"
+    },
+    {
+      "guid": "7dbc167b-73cc-43be-b7e4-00a2d8e5fbb5",
+      "kind": "mesh",
+      "sourceIndex": 14,
+      "sourceKey": "mesh:14"
+    },
+    {
+      "guid": "9701293e-c1e4-44c0-a700-ce4600273e84",
+      "kind": "mesh",
+      "sourceIndex": 15,
+      "sourceKey": "mesh:15"
+    },
+    {
+      "guid": "6cd6281d-bcec-4f08-b706-86c8059a2732",
+      "kind": "mesh",
+      "sourceIndex": 16,
+      "sourceKey": "mesh:16"
+    },
+    {
+      "guid": "2bc6ae7b-44c7-44d0-8591-308b8a19b33c",
+      "kind": "mesh",
+      "sourceIndex": 17,
+      "sourceKey": "mesh:17"
+    },
+    {
+      "guid": "302d8029-1b90-4b31-ad81-106442c37f05",
+      "kind": "mesh",
+      "sourceIndex": 18,
+      "sourceKey": "mesh:18"
+    },
+    {
+      "guid": "8d8e88c4-d358-4bae-862f-4f9451dc832d",
+      "kind": "material",
+      "sourceIndex": 0,
+      "sourceKey": "material:0"
+    },
+    {
+      "guid": "34a37b6d-2039-4406-8472-e5c85e41d9d7",
+      "kind": "material",
+      "sourceIndex": 1,
+      "sourceKey": "material:1"
+    },
+    {
+      "guid": "75a6d954-a1cd-4966-91f3-1a41012b93f1",
+      "kind": "material",
+      "sourceIndex": 2,
+      "sourceKey": "material:2"
+    },
+    {
+      "guid": "8e5e515e-3100-40fc-b110-3a47ed6de8c2",
+      "kind": "material",
+      "sourceIndex": 3,
+      "sourceKey": "material:3"
+    },
+    {
+      "guid": "4abc0097-1807-4da4-b9b1-0f1f7930736f",
+      "kind": "material",
+      "sourceIndex": 4,
+      "sourceKey": "material:4"
+    },
+    {
+      "guid": "b8b690a6-4a5c-4e67-87d7-f3b85c5f57e7",
+      "kind": "material",
+      "sourceIndex": 5,
+      "sourceKey": "material:5"
+    },
+    {
+      "guid": "750b7ddf-6aa0-4c13-9582-d8a61a4eb160",
+      "kind": "material",
+      "sourceIndex": 6,
+      "sourceKey": "material:6"
+    },
+    {
+      "guid": "15f9b5ee-4a99-4bd5-8dc3-f022c945950d",
+      "kind": "material",
+      "sourceIndex": 7,
+      "sourceKey": "material:7"
+    },
+    {
+      "guid": "3b93e215-ae28-4950-a368-586c87216cb5",
+      "kind": "material",
+      "sourceIndex": 8,
+      "sourceKey": "material:8"
+    },
+    {
+      "guid": "06d3b429-3c4a-4221-950e-78770d3b71ce",
+      "kind": "scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:0"
+    },
+    {
+      "guid": "6cac82f3-49ce-4de1-ba5c-ee2ba1fc8cb4",
+      "kind": "texture",
+      "sourceIndex": 0,
+      "sourceKey": "texture:0"
+    }
+  ]
+}

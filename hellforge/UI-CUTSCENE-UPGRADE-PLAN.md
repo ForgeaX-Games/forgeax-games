@@ -86,7 +86,7 @@ provenance：以上 PNG 均为用户自有工程的 AI 生成资产（aidiablo v
 
 ## 4. 明确不做
 
-audio；engine Fog/DoF；DDC；marketplace；stash/merchant/waypoint/gamble/铁匠/成就/聊天/多人 lobby（方案 2 才解锁）；
+audio；engine Fog/DoF；DDC；marketplace；merchant/waypoint/gamble/铁匠/成就/聊天/多人 lobby（方案 2 才解锁）；
 inventory multi-cell；键位重绑 UI；暴雪专有名词；搬 aidiablo 代码；视频过场。
 
 ## 5. 风险与对策
@@ -119,4 +119,4 @@ inventory multi-cell；键位重绑 UI；暴雪专有名词；搬 aidiablo 代�
 3. `new URL(\`…/${rel}\`, import.meta.url)` 被 Vite 转非递归 glob（子目录资产 undefined）；静态目录 URL 会被改写丢尾斜杠——统一 base+concat 并 `replace(/\/?$/,'/')`。
 
 ### R 期明确不做
-商店/仓库/传送点/成就/聊天/多人；多格物品/socket/双持/盾；HoT 药水（只有瞬回）；aidiablo 代码直搬；Courier New 字体（保 Cinzel+宋 身份）。
+商店/传送点/成就/聊天/多人；多格物品/socket/双持/盾；HoT 药水（只有瞬回）；aidiablo 代码直搬；Courier New 字体（保 Cinzel+宋 身份）。

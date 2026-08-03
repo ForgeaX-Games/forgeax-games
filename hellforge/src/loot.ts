@@ -183,6 +183,18 @@ export class LootSystem {
     return this.drops.map((g) => ({ id: g.id, x: g.x, z: g.z }));
   }
 
+  /**
+   * Read-only equipment-drop snapshot for the world nameplate layer (G3) —
+   * per-frame diff by stable id; pickup / despawn drops out on that frame.
+   */
+  itemDropSnapshot(): ReadonlyArray<{ id: string; x: number; y: number; z: number; item: ItemInstance }> {
+    const out: Array<{ id: string; x: number; y: number; z: number; item: ItemInstance }> = [];
+    for (const g of this.drops) {
+      if (g.kind === 'item' && g.item) out.push({ id: g.id, x: g.x, y: g.y, z: g.z, item: g.item });
+    }
+    return out;
+  }
+
   /** Force-collect one drop by stable id (click-interact). Returns event or null. */
   collectById(id: string, canTakeItem: () => boolean = () => true): PickupEvent | null {
     const i = this.drops.findIndex((g) => g.id === id);

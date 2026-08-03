@@ -15,24 +15,28 @@
   "source": "pet_corgi.glb",
   "subAssets": [
     {
-      "guid": "019f8899-a8fd-7e94-9c3a-7fa2cab06e4d",
+      "guid": "019f8899-a8fd-4e94-9c3a-7fa2cab06e4d",
       "kind": "mesh",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "mesh:0"
     },
     {
-      "guid": "019f8899-a8fe-792a-af94-ea4beeca5ff0",
+      "guid": "019f8899-a8fe-492a-af94-ea4beeca5ff0",
       "kind": "material",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "material:0"
     },
     {
-      "guid": "019f8899-a8fe-792a-af94-ea4c97a90cc4",
+      "guid": "019f8899-a8fe-492a-af94-ea4c97a90cc4",
       "kind": "scene",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "scene:0"
     },
     {
-      "guid": "019f8899-a8fe-792a-af94-ea4d2e8255b3",
+      "guid": "019f8899-a8fe-492a-af94-ea4d2e8255b3",
       "kind": "texture",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "texture:0"
     }
   ]
 }

@@ -39,7 +39,8 @@ acceptance and licensed audio remain open human gates** — see Open gates.
 | Left-click | ground → path; enemy → pursue + Frost Fang; npc/loot/exit → interact |
 | Right-click | cast selected hotbar skill · showcase: drag orbit |
 | 1 / 2 / 3 / 4 | **select** hotbar slot only (do not cast) |
-| B / I | inventory |
+| B | camp: stash dual-open (仓库+背包) · wilderness/den: inventory |
+| I | inventory |
 | K | skill tree |
 | C | character / combat-stat sheet |
 | Q | quest log |
@@ -49,6 +50,9 @@ acceptance and licensed audio remain open human gates** — see Open gates.
 | F | forge / 熔炉方块 (salvage / re-roll / fuse) |
 | F10 | render-settings panel |
 | Esc | close major panels / automap |
+
+- **N-Stash:** 营地专属个人仓库 (camp-only personal stash, 12×10 grid) — drag
+  items both ways between 背包 ⇄ 仓库 (B opens the dual-open pair in camp).
 
 ## Open gates
 

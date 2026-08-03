@@ -407,6 +407,32 @@ export function emptyEquipment(): Equipment {
   };
 }
 
+/**
+ * Starter kit piece (N3R-N3): deterministic common white item — no affixes,
+ * ilvl 1 / reqLevel 1. Named from BASE_NAMES tier 0 so new-character gear
+ * matches the drop 词表 (布兜帽/灰布袍/布手套/布腰带/布纹法器 …). `rollItem`
+ * would roll a weak implicit on commons, so starters use a dedicated builder.
+ */
+export function rollStarterItem(slot: ItemSlot): ItemInstance {
+  return withInstanceId({
+    slot,
+    rarity: 'common',
+    name: BASE_NAMES[slot][0]!,
+    ilvl: 1,
+    reqLevel: 1,
+    affixes: [],
+    score: 0,
+    size: { ...SLOT_FOOTPRINT[slot] },
+  });
+}
+
+/** Ten-piece starter kit: one common per EquipSlot (rings split to ring1/ring2). */
+export function starterKitEquipment(): Equipment {
+  const eq = emptyEquipment();
+  for (const slot of EQUIP_SLOT_ORDER) eq[slot] = rollStarterItem(itemSlotForEquip(slot));
+  return eq;
+}
+
 export function computeBonus(eq: Readonly<Equipment>): EquipBonus {
   const b: EquipBonus = {
     dmgPct: 0, fireDmg: 0, frostDmg: 0, arcDmg: 0, critChance: 0, critDmg: 0,

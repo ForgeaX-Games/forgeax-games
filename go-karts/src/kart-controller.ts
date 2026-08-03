@@ -29,6 +29,13 @@ export interface KartController {
   readonly track: TrackCurve;
   /** Current drift charge 0..~2 for HUD/VFX hooks. */
   getDriftT(): number;
+  /** Temporary item/pad boost. Repeated boosts extend the stronger effect. */
+  applyBoost(duration: number, extraSpeed?: number): void;
+  /** External hit reaction used by traps and star collisions. */
+  applyStun(duration: number): void;
+  /** Coins increase top speed up to the original 10-coin cap. */
+  setCoinCount(count: number): void;
+  isBoosting(): boolean;
 }
 
 export interface KartControllerOptions {
@@ -40,7 +47,6 @@ export interface KartControllerOptions {
 
 /** Original MainScene arcade driving baselines. */
 const BASE_MAX_SPEED = 24;
-const BOOST_EXTRA = 0;
 const ACCEL = 16;
 const BRAKE_DECEL = 26;
 const REVERSE_ACCEL = 10;
@@ -88,6 +94,9 @@ export function createKartController(options: KartControllerOptions): KartContro
   let outT = 0;
   let stunT = 0;
   let driftT = 0;
+  let boostT = 0;
+  let boostExtra = 0;
+  let coinCount = 0;
 
   const writeTransform = (): void => {
     const rotation = quat.create();
@@ -111,6 +120,8 @@ export function createKartController(options: KartControllerOptions): KartContro
     outT = 0;
     stunT = 0;
     driftT = 0;
+    boostT = 0;
+    boostExtra = 0;
     writeTransform();
     return pose();
   };
@@ -138,6 +149,8 @@ export function createKartController(options: KartControllerOptions): KartContro
       if (input.action('resetKart').justPressed()) return reset();
 
       stunT = Math.max(0, stunT - dt);
+      boostT = Math.max(0, boostT - dt);
+      if (boostT <= 0) boostExtra = 0;
       wallHitCd = Math.max(0, wallHitCd - dt);
 
       const accelerate = input.action('accelerate').isPressed();
@@ -154,7 +167,8 @@ export function createKartController(options: KartControllerOptions): KartContro
       const offroad = info.dist > track.roadWidth / 2 + 0.7;
       const stunned = stunT > 0;
 
-      let maxSpeed = BASE_MAX_SPEED + BOOST_EXTRA;
+      const coinBonus = Math.min(Math.max(coinCount, 0), 10) * 0.35;
+      let maxSpeed = BASE_MAX_SPEED + coinBonus + (boostT > 0 ? boostExtra : 0);
       if (offroad) maxSpeed = OFFROAD_MAX;
       if (stunned) maxSpeed = 3;
 
@@ -246,5 +260,19 @@ export function createKartController(options: KartControllerOptions): KartContro
     getPose: pose,
     getSpeedKph: () => Math.abs(speed) * 3.6,
     getDriftT: () => driftT,
+    applyBoost(duration: number, extraSpeed = 9) {
+      boostT = Math.max(boostT, Math.max(0, duration));
+      boostExtra = Math.max(boostExtra, Math.max(0, extraSpeed));
+      const impulse = Math.max(4, boostExtra * 0.65);
+      speed = Math.max(speed, Math.min(BASE_MAX_SPEED + boostExtra, speed + impulse));
+    },
+    applyStun(duration: number) {
+      stunT = Math.max(stunT, Math.max(0, duration));
+      speed *= 0.55;
+    },
+    setCoinCount(count: number) {
+      coinCount = Math.max(0, Math.floor(count));
+    },
+    isBoosting: () => boostT > 0,
   };
 }

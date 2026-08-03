@@ -19,9 +19,9 @@ import {
   FONT_UI,
   Ui,
   Z,
-  forgeEmblemSvg,
   metalGoldTextStyle,
 } from './ui-theme';
+import { ShellArt } from './shell-art';
 
 export type ShellState = 'title' | 'charSelect' | 'charList' | 'inGame';
 
@@ -187,6 +187,11 @@ export function installShell(mount: HTMLElement, cb: ShellCallbacks): ShellHandl
 //   strings are inlined directly instead of key-lookup.
 // - Settings button opens the shared render-settings panel (same LS + F10
 //   panel in-game): light knobs, render scale, and FPS cap.
+// - Title layout: brand block + buttons flow as ONE centered vertical flex
+//   column (was absolute top:50% / calc(50%+128px)); atmosphere deepened with
+//   a molten wash + ember bloom under a heavier cinematic vignette, so the
+//   1280×720 / 1920×1080 first paint can neither clip buttons nor overlap
+//   the subtitle (visual-polish #11; the button dock + wings now ride HudArt art).
 // - No footer changelog/version row — no changelog content exists to show.
 // - `resetTransition()`/`showLimitToast()` dropped: the former undoes a
 //   transition-lock this port has no reason to ever get stuck in (only one
@@ -226,26 +231,6 @@ function installTitle(
     const s = document.createElement('style');
     s.id = 'hellforge-title-style';
     s.textContent = `
-      @keyframes hf-torch-l {
-        0%, 100% { opacity:0.8; transform:translate(-50%,-50%) scale(1); }
-        25%      { opacity:1;   transform:translate(-50%,-50%) scale(1.1); }
-        50%      { opacity:0.7; transform:translate(-50%,-50%) scale(0.95); }
-        75%      { opacity:0.9; transform:translate(-50%,-50%) scale(1.05); }
-      }
-      @keyframes hf-torch-r {
-        0%, 100% { opacity:0.85; transform:translate(-50%,-50%) scale(1.02); }
-        30%      { opacity:0.7;  transform:translate(-50%,-50%) scale(0.96); }
-        60%      { opacity:1;    transform:translate(-50%,-50%) scale(1.08); }
-        80%      { opacity:0.75; transform:translate(-50%,-50%) scale(0.98); }
-      }
-      @keyframes hf-torch-core {
-        0%, 100% { opacity:0.9; transform:translate(-50%,-50%) scaleY(1); }
-        50%      { opacity:1;   transform:translate(-50%,-50%) scaleY(1.2); }
-      }
-      @keyframes hf-logo-halo {
-        0%, 100% { opacity:0.7; transform:translate(-50%,-50%) scale(1); }
-        50%      { opacity:1;   transform:translate(-50%,-50%) scale(1.05); }
-      }
       @keyframes hf-title-fade-in {
         from { opacity:0; transform:translateY(20px); }
         to   { opacity:1; transform:translateY(0); }
@@ -264,161 +249,122 @@ function installTitle(
     overflow:hidden; cursor:default; animation:hf-title-fade-in 1s ease-out;
   `;
 
-  // Painted backdrop (user-owned aidiablo AI art) — was a plain radial gradient.
+  // A2: frame-f5-3 (2048×1152, no baked UI) — brand + buttons ride DOM chrome.
+  // Cache-bust rev, mirroring HudArt's HUD_ART_REV pattern: bump ?titlebg-*
+  // whenever title_bg.jpg is re-exported so browsers drop the stale frame.
+  const titleBgUrl = `${new URL('../assets/ui/title_bg.jpg', import.meta.url).href}?titlebg-f5-3`;
   const bgImg = document.createElement('div');
   bgImg.style.cssText = `
     position:absolute; inset:0; pointer-events:none;
-    background:url('${new URL('../assets/ui/title_bg.jpg', import.meta.url).href}') center/cover no-repeat;
-    filter:brightness(0.55) saturate(0.8);
+    background:url('${titleBgUrl}') center/cover no-repeat;
+    filter:brightness(0.88) saturate(0.95);
   `;
   root.appendChild(bgImg);
+
+  const moltenWash = document.createElement('div');
+  moltenWash.style.cssText = `
+    position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 90% 45% at 50% 100%, rgba(196,64,20,0.18) 0%, transparent 64%),
+      linear-gradient(0deg, rgba(20,8,4,0.35) 0%, transparent 30%);
+  `;
+  root.appendChild(moltenWash);
 
   const vignette = document.createElement('div');
   vignette.style.cssText = `
     position:absolute; inset:0; pointer-events:none;
-    background:radial-gradient(ellipse 70% 60% at 50% 40%, transparent 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.85) 100%);
+    background:radial-gradient(ellipse 78% 70% at 50% 40%, transparent 0%, rgba(0,0,0,0.22) 62%, rgba(0,0,0,0.62) 100%);
   `;
   root.appendChild(vignette);
-
-  const topFade = document.createElement('div');
-  topFade.style.cssText = `
-    position:absolute; top:0; left:0; right:0; height:30%; pointer-events:none;
-    background:linear-gradient(180deg, rgba(5,4,4,0.7) 0%, transparent 100%);
-  `;
-  root.appendChild(topFade);
-
-  const bottomFade = document.createElement('div');
-  bottomFade.style.cssText = `
-    position:absolute; bottom:0; left:0; right:0; height:25%; pointer-events:none;
-    background:linear-gradient(0deg, rgba(5,4,4,0.8) 0%, transparent 100%);
-  `;
-  root.appendChild(bottomFade);
-
-  function torchGlow(side: 'left' | 'right'): void {
-    const x = side === 'left' ? '18%' : '82%';
-    const glow = document.createElement('div');
-    glow.style.cssText = `
-      position:absolute; top:32%; left:${x}; width:220px; height:300px;
-      transform:translate(-50%,-50%); pointer-events:none; z-index:1;
-      background:radial-gradient(ellipse at center, rgba(255,120,20,0.18) 0%, rgba(255,80,10,0.08) 35%, transparent 70%);
-      animation:hf-torch-${side === 'left' ? 'l' : 'r'} 3s ease-in-out infinite;
-    `;
-    root.appendChild(glow);
-
-    const core = document.createElement('div');
-    core.style.cssText = `
-      position:absolute; top:30%; left:${x}; width:8px; height:14px;
-      transform:translate(-50%,-50%); pointer-events:none; z-index:1;
-      background:radial-gradient(ellipse, #ffcc44 0%, #ff6600 50%, transparent 100%);
-      border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
-      box-shadow:0 0 20px 8px rgba(255,140,30,0.4), 0 0 60px 20px rgba(255,80,10,0.15);
-      animation:hf-torch-core 2s ease-in-out infinite;
-    `;
-    root.appendChild(core);
-  }
-  torchGlow('left');
-  torchGlow('right');
 
   const canvas = document.createElement('canvas');
   canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;';
   root.appendChild(canvas);
   const pctx = canvas.getContext('2d')!;
 
-  // ── content: forge emblem + metallic logo; buttons sit just below ──
-  const logoArea = document.createElement('div');
-  logoArea.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);' +
-    'z-index:10;text-align:center;pointer-events:none;';
-  const halo = document.createElement('div');
-  halo.style.cssText = `
-    position:absolute; top:42%; left:50%; width:520px; height:280px; transform:translate(-50%,-50%);
-    background:radial-gradient(ellipse, ${Ui.crimsonGlow} 0%, transparent 68%); pointer-events:none;
-    animation:hf-logo-halo 4s ease-in-out infinite;
+  // Brand mid-upper / buttons low — leave the silhouette open.
+  const content = document.createElement('div');
+  content.style.cssText = `
+    position:absolute; inset:0; z-index:10; display:flex; flex-direction:column;
+    align-items:center; justify-content:space-between;
+    padding:clamp(96px,16vh,160px) 16px clamp(56px,10vh,96px);
+    pointer-events:none; text-align:center;
   `;
-  logoArea.appendChild(halo);
+  root.appendChild(content);
 
-  const emblem = document.createElement('div');
-  emblem.style.cssText = 'position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);' +
-    'width:min(220px,38vw);height:min(220px,38vw);opacity:0.92;z-index:0;';
-  emblem.innerHTML = forgeEmblemSvg(220);
-  logoArea.appendChild(emblem);
-
+  const brand = document.createElement('div');
+  brand.style.cssText = 'position:relative;display:flex;flex-direction:column;align-items:center;';
+  const wordmarkWrap = document.createElement('div');
+  wordmarkWrap.style.cssText = 'position:relative;display:flex;align-items:center;justify-content:center;';
   const logoTitle = document.createElement('div');
-  logoTitle.style.cssText = metalGoldTextStyle('clamp(48px,7vw,80px)') + 'position:relative;z-index:1;';
+  // metalGoldTextStyle uses background-clip:text — do NOT add text-shadow here
+  // (it paints a dark slab and kills the gold fill).
+  logoTitle.style.cssText = metalGoldTextStyle('clamp(46px,7vw,80px)') + 'position:relative;z-index:1;';
   logoTitle.textContent = 'HELLFORGE';
-  logoArea.appendChild(logoTitle);
-
+  wordmarkWrap.appendChild(logoTitle);
+  brand.appendChild(wordmarkWrap);
   const logoLine = document.createElement('div');
   logoLine.style.cssText = `
-    width:300px; height:2px; margin:14px auto 14px; position:relative; z-index:1;
+    width:280px; height:1px; margin:12px auto 10px; position:relative; z-index:1;
     background:linear-gradient(90deg,transparent,${Ui.goldDeep} 18%,${Ui.goldBright} 50%,${Ui.goldDeep} 82%,transparent);
-    box-shadow:0 0 10px ${Ui.crimsonGlow};
   `;
-  logoArea.appendChild(logoLine);
-
+  brand.appendChild(logoLine);
   const logoSub = document.createElement('div');
   logoSub.style.cssText = `
-    font-size:clamp(13px,1.8vw,17px); color:${Ui.textMuted}; letter-spacing:6px;
-    text-shadow:0 1px 3px rgba(0,0,0,0.85); font-weight:400; position:relative; z-index:1;
+    font-size:clamp(14px,1.8vw,17px); color:#e8d2a0; letter-spacing:6px;
+    text-shadow:0 2px 6px rgba(0,0,0,0.95); font-weight:500; position:relative; z-index:1;
   `;
   logoSub.textContent = '大熔炉的余烬，正在侵蚀这片土地';
-  logoArea.appendChild(logoSub);
-  root.appendChild(logoArea);
+  brand.appendChild(logoSub);
+  content.appendChild(brand);
 
-  // Below the centered title block (~half logo height + subtitle clearance).
+  // Button column only — no S5 plaque underlay (owner: 底板去掉).
   const buttonsWrap = document.createElement('div');
-  buttonsWrap.style.cssText = 'position:absolute;top:calc(50% + 128px);left:50%;transform:translateX(-50%);' +
-    'z-index:11;display:flex;flex-direction:column;gap:12px;pointer-events:auto;';
-  root.appendChild(buttonsWrap);
+  buttonsWrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:12px;' +
+    'pointer-events:auto;flex:none;';
+  content.appendChild(buttonsWrap);
 
+  // S1–S3 plates are 640×225 — lock the hit box to that ratio so the art
+  // never stretches (center/100% 100% is safe once aspect matches).
+  const BTN_INK = '#1a1208';
+  const BTN_INK_MUTED = '#2e2214';
   function ornateButton(text: string, primary: boolean, onClick: () => void): HTMLButtonElement {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.textContent = text;
-    const gold = primary;
-    const face = gold ? Ui.goldBright : Ui.textMuted;
-    const corner = gold ? Ui.gold : Ui.goldDim;
+    const face = primary ? BTN_INK : BTN_INK_MUTED;
+    const plate = (state: 'idle' | 'hover' | 'pressed') =>
+      state === 'hover' ? ShellArt.btnHover()
+        : state === 'pressed' ? ShellArt.btnPressed()
+          : ShellArt.btnIdle();
     btn.style.cssText = `
-      position:relative; width:300px; padding:15px 0; font-family:inherit;
-      font-size:17px; font-weight:700; letter-spacing:5px; cursor:pointer;
-      pointer-events:auto; z-index:11;
-      color:${face};
-      background:linear-gradient(180deg, ${gold ? Ui.goldFill : 'rgba(28,22,16,0.94)'} 0%, ${gold ? 'rgba(28,18,8,0.96)' : 'rgba(14,11,8,0.96)'} 100%);
-      border:none; text-shadow:0 1px 3px rgba(0,0,0,0.9); transition:all 0.25s ease; overflow:hidden;
+      position:relative; width:min(320px,72vw); aspect-ratio:640/225; height:auto; flex:none;
+      box-sizing:border-box; padding:0; font-family:inherit;
+      font-size:clamp(18px,2.1vw,22px); font-weight:${primary ? '800' : '700'};
+      letter-spacing:${primary ? '8px' : '6px'}; cursor:pointer;
+      pointer-events:auto; color:${face}; border:none;
+      text-shadow:0 1px 0 rgba(255,244,210,0.55),0 0 1px rgba(255,244,210,0.35);
+      background:url('${plate('idle')}') center/100% 100% no-repeat; background-color:transparent;
+      transition:color 0.15s ease, filter 0.15s ease;
+      filter:${primary ? 'none' : 'brightness(0.94) saturate(0.92)'};
     `;
-    const borderColor = gold ? Ui.goldLine : Ui.goldLineSoft;
-    const borderHighlight = gold ? 'rgba(245,216,120,0.45)' : 'rgba(168,132,64,0.28)';
-    const restBoxShadow = `inset 0 1px 0 ${borderHighlight}, inset 0 -1px 0 rgba(0,0,0,0.5), 0 0 0 1px ${borderColor}, 0 0 0 2px ${Ui.goldDeep}, 0 4px 12px rgba(0,0,0,0.55)`;
-    btn.style.boxShadow = restBoxShadow;
-
-    const corners = ['top:0;left:0;', 'top:0;right:0;transform:scaleX(-1);', 'bottom:0;left:0;transform:scaleY(-1);', 'bottom:0;right:0;transform:scale(-1,-1);'];
-    for (const pos of corners) {
-      const c = document.createElement('div');
-      c.className = 'hf-btn-corner';
-      c.style.cssText = `
-        position:absolute; ${pos} width:12px; height:12px;
-        border-top:2px solid ${corner};
-        border-left:2px solid ${corner};
-        pointer-events:none; transition:border-color 0.25s;
-      `;
-      btn.appendChild(c);
-    }
-
     btn.addEventListener('mouseenter', () => {
-      btn.style.color = gold ? '#fff8e0' : Ui.text;
-      btn.style.background = `linear-gradient(180deg, ${gold ? 'rgba(72,52,20,0.96)' : 'rgba(40,32,22,0.96)'} 0%, ${gold ? 'rgba(40,28,12,0.98)' : 'rgba(22,16,12,0.98)'} 100%)`;
-      btn.style.boxShadow = `inset 0 1px 0 ${Ui.goldBright}55, inset 0 -1px 0 rgba(0,0,0,0.5), 0 0 0 1px ${Ui.gold}, 0 0 0 2px ${Ui.goldDeep}, 0 4px 16px rgba(0,0,0,0.65), 0 0 18px ${Ui.crimsonGlow}`;
-      btn.style.transform = 'scale(1.02)';
-      btn.querySelectorAll<HTMLElement>('.hf-btn-corner').forEach((el) => { el.style.borderColor = Ui.goldBright; });
+      btn.style.color = BTN_INK;
+      btn.style.backgroundImage = `url('${plate('hover')}')`;
     });
     btn.addEventListener('mouseleave', () => {
       btn.style.color = face;
-      btn.style.background = `linear-gradient(180deg, ${gold ? Ui.goldFill : 'rgba(28,22,16,0.94)'} 0%, ${gold ? 'rgba(28,18,8,0.96)' : 'rgba(14,11,8,0.96)'} 100%)`;
-      btn.style.boxShadow = restBoxShadow;
-      btn.style.transform = 'scale(1)';
-      btn.querySelectorAll<HTMLElement>('.hf-btn-corner').forEach((el) => { el.style.borderColor = corner; });
+      btn.style.backgroundImage = `url('${plate('idle')}')`;
+      btn.style.transform = '';
     });
-    btn.addEventListener('mousedown', () => { btn.style.transform = 'scale(0.98)'; });
-    btn.addEventListener('mouseup', () => { btn.style.transform = 'scale(1.02)'; });
+    btn.addEventListener('mousedown', () => {
+      btn.style.backgroundImage = `url('${plate('pressed')}')`;
+      btn.style.transform = 'scale(0.985)';
+    });
+    btn.addEventListener('mouseup', () => {
+      btn.style.backgroundImage = `url('${plate('hover')}')`;
+      btn.style.transform = '';
+    });
     btn.addEventListener('click', () => { onClick(); });
     return btn;
   }
@@ -464,11 +410,11 @@ function installTitle(
         size: 1 + Math.random() * 2.5, type: 'snow', opacity: 0.15 + Math.random() * 0.35,
       });
     }
-    if (Math.random() < 0.2) {
+    if (Math.random() < 0.24) {
       const side = Math.random() < 0.5;
       const baseX = side ? w * 0.18 : w * 0.82;
       particles.push({
-        x: baseX + (Math.random() - 0.5) * 80, y: h * 0.35 + Math.random() * 40,
+        x: baseX + (Math.random() - 0.5) * 96, y: h * 0.35 + Math.random() * 40,
         vx: (Math.random() - 0.5) * 1.5, vy: -(1 + Math.random() * 2.5),
         life: 0, maxLife: 80 + Math.random() * 100,
         size: 1.5 + Math.random() * 3, type: 'ember', opacity: 0.6 + Math.random() * 0.4,

@@ -286,9 +286,13 @@ export function buildRoadsideFill(track, parent) {
     treeAt(t, 11.2, 0.95 + rnd(Math.floor(t * 200), 1) * 0.2);
     treeAt(t, -11.2, 0.9 + rnd(Math.floor(t * 200), 2) * 0.25);
   }
-  for (const t of [0.036, 0.052, 0.072, 0.092, 0.108]) {
+  for (const t of [0.032, 0.042, 0.052, 0.062, 0.072, 0.082, 0.092, 0.102, 0.112]) {
     flowerAt(t, 10.3);
     flowerAt(t, -10.3);
+  }
+  for (const t of [0.04, 0.06, 0.08, 0.1]) {
+    flowerAt(t, 12.4);
+    flowerAt(t, -12.4);
   }
 
   // Approach / midground A
@@ -298,7 +302,7 @@ export function buildRoadsideFill(track, parent) {
     treeAt(t, 11.4, 0.95);
     treeAt(t, -11.4, 1.0);
   }
-  for (const t of [0.125, 0.14, 0.155, 0.17]) {
+  for (const t of [0.122, 0.132, 0.142, 0.152, 0.162, 0.172]) {
     flowerAt(t, 10.3);
     flowerAt(t, -10.4);
   }
@@ -311,8 +315,11 @@ export function buildRoadsideFill(track, parent) {
   for (const t of [0.2, 0.235, 0.26]) flowerAt(t, -11.0);
   for (const t of [0.205, 0.24, 0.27]) treeAt(t, 12.8, 1.15);
 
-  // City — planters added in buildCityDetails; only sparse far trees here
-  for (let t = 0.29; t < 0.47; t += 0.04) flowerAt(t, 10.0);
+  // City — denser roadside color pops (recording lawns looked empty).
+  for (let t = 0.29; t < 0.47; t += 0.018) {
+    flowerAt(t, 10.0);
+    flowerAt(t, -10.2);
+  }
 
   // S-curve / midground B
   for (let t = 0.483; t < 0.545; t += 0.008) {
@@ -922,9 +929,9 @@ export function buildPearlTower(track, parent) {
 }
 
 /**
- * Track-center visual props (static): wooden ? boxes, yellow boost pads.
- * Coins are NOT baked — positions go to landmarks for runtime collectibles
- * (merged mid_coin mesh cannot hide individuals).
+ * Track-center visual props: yellow boost pads.
+ * Coins and item boxes are NOT baked — positions go to landmarks so runtime
+ * collectibles can hide and respawn independently.
  * No cyan emissive (ForgeaX shows those as cyan slabs). Pads use thick boxes, not planes.
  */
 export function buildTrackCenterProps(track, parent) {
@@ -934,6 +941,7 @@ export function buildTrackCenterProps(track, parent) {
   arrowMat.name = 'mid_boost_arrow';
 
   const coinPositions = [];
+  const itemBoxPositions = [];
   let boxes = 0,
     pads = 0;
 
@@ -952,31 +960,18 @@ export function buildTrackCenterProps(track, parent) {
     }
   }
 
-  // Item boxes — wood + ? (solid-remapped in build-scene so ForgeaX doesn't shade blank)
-  const woodMat = std(0xc48a52, 0.7);
-  woodMat.name = 'mid_itembox_wood';
-  const qMat = std(0xffd23e, 0.4);
-  qMat.name = 'mid_itembox_q';
+  // Item boxes — emitted as independent scene entities by build-scene.
   for (const t of [0.04, 0.12, 0.22, 0.25, 0.36, 0.45, 0.55, 0.62, 0.76, 0.85, 0.95]) {
     const p = track.pointAt(t);
     const side = track.sideAt(t);
     const tan = track.tangentAt(t);
     for (const off of [-2.8, 2.8]) {
-      const g = new THREE.Group();
-      const box = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.0, 1.0), woodMat);
-      g.add(box);
-      const stem = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.5, 0.14), qMat);
-      stem.position.set(0, 0.05, 0.52);
-      g.add(stem);
-      const hook = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.2, 0.14), qMat);
-      hook.position.set(0.04, 0.3, 0.52);
-      g.add(hook);
-      const dot = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.18, 0.14), qMat);
-      dot.position.set(0, -0.28, 0.52);
-      g.add(dot);
-      g.position.set(p.x + side.x * off, p.y + 1.0, p.z + side.z * off);
-      g.rotation.y = Math.atan2(tan.x, tan.z);
-      parent.add(g);
+      itemBoxPositions.push({
+        x: p.x + side.x * off,
+        y: p.y + 1.0,
+        z: p.z + side.z * off,
+        yaw: Math.atan2(tan.x, tan.z),
+      });
       boxes++;
     }
   }
@@ -990,15 +985,15 @@ export function buildTrackCenterProps(track, parent) {
     const pad = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.14, 4.4), padMat);
     pad.position.y = 0.08;
     g.add(pad);
-    // chevron: two slanted bars forming >
+    // Chevron points along local +Z, which is the track tangent after yaw.
     for (const s of [-1, 1]) {
       const bar = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.1, 1.4), arrowMat);
-      bar.position.set(s * 0.45, 0.12, 0.2);
+      bar.position.set(s * 0.45, 0.12, -0.2);
       bar.rotation.y = s * 0.55;
       g.add(bar);
     }
     const tip = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.1, 0.5), arrowMat);
-    tip.position.set(0, 0.12, -0.7);
+    tip.position.set(0, 0.12, 0.7);
     g.add(tip);
     g.position.set(p.x, p.y, p.z);
     g.rotation.y = yaw;
@@ -1006,7 +1001,13 @@ export function buildTrackCenterProps(track, parent) {
     pads++;
   }
 
-  return { coins: coinPositions.length, coinPositions, boxes, pads };
+  return {
+    coins: coinPositions.length,
+    coinPositions,
+    boxes,
+    itemBoxPositions,
+    pads,
+  };
 }
 
 /** Chinatown lantern strings across the road (MainScene 0.5875 / 0.6225). */

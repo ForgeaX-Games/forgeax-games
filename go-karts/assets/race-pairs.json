@@ -552,251 +552,241 @@
   {
     "meshIndex": 110,
     "matIndex": 110,
-    "name": "mid_itembox_wood"
+    "name": "mid_boost_pad"
   },
   {
     "meshIndex": 111,
     "matIndex": 111,
-    "name": "mid_itembox_q"
+    "name": "mid_boost_arrow"
   },
   {
     "meshIndex": 112,
     "matIndex": 112,
-    "name": "mid_boost_pad"
+    "name": "mid_city_rail"
   },
   {
     "meshIndex": 113,
     "matIndex": 113,
-    "name": "mid_boost_arrow"
+    "name": "mid_city_rail_post"
   },
   {
     "meshIndex": 114,
     "matIndex": 114,
-    "name": "mid_city_rail"
+    "name": "mid_planter_pot"
   },
   {
     "meshIndex": 115,
     "matIndex": 115,
-    "name": "mid_city_rail_post"
+    "name": "mid_planter_rim"
   },
   {
     "meshIndex": 116,
     "matIndex": 116,
-    "name": "mid_planter_pot"
+    "name": "col_0.325,0.145,0.060|e0"
   },
   {
     "meshIndex": 117,
     "matIndex": 117,
-    "name": "mid_planter_rim"
+    "name": "col_0.135,0.495,0.145|e0"
   },
   {
     "meshIndex": 118,
     "matIndex": 118,
-    "name": "col_0.325,0.145,0.060|e0"
+    "name": "col_0.340,0.650,0.145|e0"
   },
   {
     "meshIndex": 119,
     "matIndex": 119,
-    "name": "col_0.135,0.495,0.145|e0"
+    "name": "col_0.870,0.790,0.670|e0"
   },
   {
     "meshIndex": 120,
     "matIndex": 120,
-    "name": "col_0.340,0.650,0.145|e0"
+    "name": "col_1.000,0.340,0.205|e0"
   },
   {
     "meshIndex": 121,
     "matIndex": 121,
-    "name": "col_0.870,0.790,0.670|e0"
+    "name": "col_0.145,0.195,0.255|e0"
   },
   {
     "meshIndex": 122,
     "matIndex": 122,
-    "name": "col_1.000,0.340,0.205|e0"
+    "name": "col_0.205,0.660,1.000|e0"
   },
   {
     "meshIndex": 123,
     "matIndex": 123,
-    "name": "col_0.145,0.195,0.255|e0"
+    "name": "col_0.480,0.550,0.630|e0"
   },
   {
     "meshIndex": 124,
     "matIndex": 124,
-    "name": "col_0.205,0.660,1.000|e0"
+    "name": "col_0.630,0.065,0.100|e0"
   },
   {
     "meshIndex": 125,
     "matIndex": 125,
-    "name": "col_0.480,0.550,0.630|e0"
+    "name": "col_0.100,0.130,0.160|e0"
   },
   {
     "meshIndex": 126,
     "matIndex": 126,
-    "name": "col_0.630,0.065,0.100|e0"
+    "name": "col_0.390,0.470,0.550|e0"
   },
   {
     "meshIndex": 127,
     "matIndex": 127,
-    "name": "col_0.100,0.130,0.160|e0"
+    "name": "col_0.070,0.145,0.245|e0"
   },
   {
     "meshIndex": 128,
     "matIndex": 128,
-    "name": "col_0.390,0.470,0.550|e0"
+    "name": "mid_billboard_corgi"
   },
   {
     "meshIndex": 129,
     "matIndex": 129,
-    "name": "col_0.070,0.145,0.245|e0"
+    "name": "col_1.000,0.890,0.605|e0"
   },
   {
     "meshIndex": 130,
     "matIndex": 130,
-    "name": "mid_billboard_corgi"
+    "name": "mid_billboard_panda"
   },
   {
     "meshIndex": 131,
     "matIndex": 131,
-    "name": "col_1.000,0.890,0.605|e0"
+    "name": "mid_sign_go"
   },
   {
     "meshIndex": 132,
     "matIndex": 132,
-    "name": "mid_billboard_panda"
+    "name": "mid_sign_chevron"
   },
   {
     "meshIndex": 133,
     "matIndex": 133,
-    "name": "mid_sign_go"
+    "name": "mid_pond_water"
   },
   {
     "meshIndex": 134,
     "matIndex": 134,
-    "name": "mid_sign_chevron"
+    "name": "col_0.870,0.715,0.550|e0"
   },
   {
     "meshIndex": 135,
     "matIndex": 135,
-    "name": "mid_pond_water"
+    "name": "col_1.000,1.000,1.000|e0"
   },
   {
     "meshIndex": 136,
     "matIndex": 136,
-    "name": "col_0.870,0.715,0.550|e0"
+    "name": "col_0.905,0.905,0.905|e0"
   },
   {
     "meshIndex": 137,
     "matIndex": 137,
-    "name": "col_1.000,1.000,1.000|e0"
+    "name": "col_0.070,0.195,0.435|e0"
   },
   {
     "meshIndex": 138,
     "matIndex": 138,
-    "name": "col_0.905,0.905,0.905|e0"
+    "name": "col_0.025,0.025,0.040|e0"
   },
   {
     "meshIndex": 139,
     "matIndex": 139,
-    "name": "col_0.070,0.195,0.435|e0"
+    "name": "mid_mall_floor"
   },
   {
     "meshIndex": 140,
     "matIndex": 140,
-    "name": "col_0.025,0.025,0.040|e0"
+    "name": "mid_mall_ceil"
   },
   {
     "meshIndex": 141,
     "matIndex": 141,
-    "name": "mid_mall_floor"
+    "name": "mid_mall_wood"
   },
   {
     "meshIndex": 142,
     "matIndex": 142,
-    "name": "mid_mall_ceil"
+    "name": "mid_mall_view"
   },
   {
     "meshIndex": 143,
     "matIndex": 143,
-    "name": "mid_mall_wood"
+    "name": "mid_mall_concrete"
   },
   {
     "meshIndex": 144,
     "matIndex": 144,
-    "name": "mid_mall_view"
+    "name": "mid_mall_skirt"
   },
   {
     "meshIndex": 145,
     "matIndex": 145,
-    "name": "mid_mall_concrete"
+    "name": "mid_mall_shopwood"
   },
   {
     "meshIndex": 146,
     "matIndex": 146,
-    "name": "mid_mall_skirt"
+    "name": "mid_mall_shopwin"
   },
   {
     "meshIndex": 147,
     "matIndex": 147,
-    "name": "mid_mall_shopwood"
+    "name": "col_1.000,0.205,0.105|e0"
   },
   {
     "meshIndex": 148,
     "matIndex": 148,
-    "name": "mid_mall_shopwin"
+    "name": "mid_sign_toys"
   },
   {
     "meshIndex": 149,
     "matIndex": 149,
-    "name": "col_1.000,0.205,0.105|e0"
+    "name": "col_0.125,0.485,0.145|e0"
   },
   {
     "meshIndex": 150,
     "matIndex": 150,
-    "name": "mid_sign_toys"
+    "name": "mid_sign_cafe"
   },
   {
     "meshIndex": 151,
     "matIndex": 151,
-    "name": "col_0.125,0.485,0.145|e0"
+    "name": "col_0.105,0.335,1.000|e0"
   },
   {
     "meshIndex": 152,
     "matIndex": 152,
-    "name": "mid_sign_cafe"
+    "name": "mid_sign_gifts"
   },
   {
     "meshIndex": 153,
     "matIndex": 153,
-    "name": "col_0.105,0.335,1.000|e0"
+    "name": "mid_mall_beam"
   },
   {
     "meshIndex": 154,
     "matIndex": 154,
-    "name": "mid_sign_gifts"
+    "name": "mid_mall_strip"
   },
   {
     "meshIndex": 155,
     "matIndex": 155,
-    "name": "mid_mall_beam"
+    "name": "mid_mall_portal"
   },
   {
     "meshIndex": 156,
     "matIndex": 156,
-    "name": "mid_mall_strip"
+    "name": "mid_sign_petmall"
   },
   {
     "meshIndex": 157,
     "matIndex": 157,
-    "name": "mid_mall_portal"
-  },
-  {
-    "meshIndex": 158,
-    "matIndex": 158,
-    "name": "mid_sign_petmall"
-  },
-  {
-    "meshIndex": 159,
-    "matIndex": 159,
     "name": "mid_sign_seeyou"
   }
 ]

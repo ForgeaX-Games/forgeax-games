@@ -8,6 +8,10 @@
 //
 // Skips: skinned (pbr-skin), transparent (blend / queue≥3000), materials that
 // already carry ShadowCaster.
+//
+// Pass shape dual-read: c0 / Pack-v1 engines use `shader` + top-level `tags`;
+// newer engines use `program.module` + `renderState.tags`. Blind `p.program.module`
+// throws `Cannot read properties of undefined (reading 'module')` on c0.
 
 import {
   MeshRenderer,
@@ -17,32 +21,71 @@ import { resolveAssetHandle } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { MaterialAsset, MaterialPass } from '@forgeax/engine-types';
 
-const SHADOW_CASTER_PASS: MaterialPass = {
-  name: 'ShadowCaster',
-  program: { module: 'forgeax::default-shadow-caster' },
-  renderState: { tags: { LightMode: 'ShadowCaster' }, queue: 2000 },
+type PassLike = {
+  name?: string;
+  program?: { module?: string } | null;
+  shader?: string;
+  tags?: { LightMode?: string };
+  queue?: number;
+  renderState?: {
+    tags?: { LightMode?: string };
+    queue?: number;
+    blend?: unknown;
+  };
 };
 
+function passShaderId(p: PassLike): string {
+  return p.program?.module ?? p.shader ?? '';
+}
+
+function passLightMode(p: PassLike): string | undefined {
+  return p.renderState?.tags?.LightMode ?? p.tags?.LightMode;
+}
+
+function passQueue(p: PassLike): number {
+  return p.renderState?.queue ?? p.queue ?? 0;
+}
+
+function makeShadowCasterPass(existing: readonly PassLike[]): MaterialPass {
+  const useShaderShape = existing.some((p) => typeof p.shader === 'string')
+    || existing.every((p) => p.program == null);
+  if (useShaderShape) {
+    return {
+      name: 'ShadowCaster',
+      shader: 'forgeax::default-shadow-caster',
+      tags: { LightMode: 'ShadowCaster' },
+      passKind: 'shadow-caster',
+      queue: 2000,
+    } as unknown as MaterialPass;
+  }
+  return {
+    name: 'ShadowCaster',
+    program: { module: 'forgeax::default-shadow-caster' },
+    renderState: { tags: { LightMode: 'ShadowCaster' }, queue: 2000 },
+  } as unknown as MaterialPass;
+}
+
 function needsShadowCaster(mat: MaterialAsset): boolean {
-  const passes = mat.passes;
-  if (!passes || passes.length === 0) return false;
-  if (passes.some((p) => p.name === 'ShadowCaster' || (p.renderState?.tags as { LightMode?: string } | undefined)?.LightMode === 'ShadowCaster')) {
+  const passes = (mat.passes ?? []) as PassLike[];
+  if (passes.length === 0) return false;
+  if (passes.some((p) => p.name === 'ShadowCaster' || passLightMode(p) === 'ShadowCaster')) {
     return false;
   }
-  if (passes.some((p) => p.program.module.includes('skin'))) {
+  if (passes.some((p) => passShaderId(p).includes('skin'))) {
     return false;
   }
-  if (passes.some((p) => ((p.renderState?.queue as number | undefined) ?? 0) >= 3000 || p.renderState?.blend !== undefined)) {
+  if (passes.some((p) => passQueue(p) >= 3000 || p.renderState?.blend !== undefined)) {
     return false;
   }
-  return passes.some((p) => p.name === 'Forward' || (p.renderState?.tags as { LightMode?: string } | undefined)?.LightMode === 'Forward');
+  return passes.some((p) => p.name === 'Forward' || passLightMode(p) === 'Forward');
 }
 
 function inject(mat: MaterialAsset): void {
   // Mutate in place — shared MaterialAsset is the registry payload; extract
   // re-reads passes each frame / on dirty. Avoid reallocating every prop.
-  const next = [...(mat.passes ?? []), SHADOW_CASTER_PASS];
-  (mat as unknown as { passes: MaterialPass[] }).passes = next;
+  const existing = (mat.passes ?? []) as PassLike[];
+  const next = [...existing, makeShadowCasterPass(existing)];
+  (mat as unknown as { passes: MaterialPass[] }).passes = next as MaterialPass[];
 }
 
 /** Patch every MeshRenderer material currently in the world. Returns count patched. */

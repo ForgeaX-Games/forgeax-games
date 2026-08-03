@@ -15,7 +15,7 @@ import type { CharacterRecord, ClassId } from './classes';
 import type { DeepReadonly } from './deep-readonly';
 import type { Affix, AffixStat, Equipment, EquipSlot, ItemInstance, ItemSlot, Rarity } from './items';
 import { EQUIP_SLOT_ORDER, equipSlotsFor, itemFootprint, SLOT_ORDER } from './items';
-import { BAG_CELLS, BAG_COLS, BAG_ROWS, canPlace, firstFit, occupancy, type BagAnchor } from './bag-grid';
+import { BAG_COLS, BAG_ROWS, canPlace, firstFit, occupancy, STASH_COLS, STASH_ROWS, type BagAnchor } from './bag-grid';
 import { POTION_CAP } from './character-domain';
 import type { HotbarSlots } from './content-ids';
 import { clampSkillRanks } from './skill-tree';
@@ -49,6 +49,8 @@ export interface InventorySave {
   /** v2 anchor list — one entry per bag item (top-left cell, 0-based). */
   readonly bag: readonly DeepReadonly<BagAnchor>[];
   readonly equipment: DeepReadonly<Equipment>;
+  /** Personal stash (仓库) anchor list — optional on disk, old saves parse as empty. */
+  readonly stash?: readonly DeepReadonly<BagAnchor>[];
 }
 
 export interface CharacterSaveEnvelope {
@@ -220,10 +222,13 @@ function parseEquipment(raw: unknown): Equipment | null {
   return eq;
 }
 
-/** v2 wire shape: anchor list — every entry validated in-bounds + non-overlapping. */
-function parseBag(raw: unknown): BagAnchor[] | null {
+/**
+ * v2 wire shape: anchor list — every entry validated in-bounds + non-overlapping.
+ * `cols`/`rows` scope the grid (bag by default; stash passes STASH_* dims).
+ */
+function parseBag(raw: unknown, cols: number = BAG_COLS, rows: number = BAG_ROWS): BagAnchor[] | null {
   if (!Array.isArray(raw)) return null;
-  if (raw.length > BAG_CELLS) return null;
+  if (raw.length > cols * rows) return null;
   const anchors: BagAnchor[] = [];
   for (const entry of raw) {
     if (!isObject(entry)) return null;
@@ -233,10 +238,25 @@ function parseBag(raw: unknown): BagAnchor[] | null {
     const x = Math.floor(entry.x);
     const y = Math.floor(entry.y);
     const { w, h } = itemFootprint(item);
-    if (!canPlace(occupancy(anchors), w, h, x, y)) return null;
+    if (!canPlace(occupancy(anchors, cols, rows), w, h, x, y, cols, rows)) return null;
     anchors.push({ item, x, y });
   }
   return anchors;
+}
+
+/**
+ * Optional stash — absent → [] (never rejects the envelope, like parsePotions).
+ * A structurally corrupt stash also parses as [] but warns: the next flush
+ * would otherwise overwrite the original bytes with no trace.
+ */
+function parseStash(raw: unknown): BagAnchor[] {
+  if (raw === undefined) return [];
+  const parsed = parseBag(raw, STASH_COLS, STASH_ROWS);
+  if (parsed === null) {
+    console.warn('[hellforge] save: corrupt stash parsed as empty');
+    return [];
+  }
+  return parsed;
 }
 
 /**
@@ -341,7 +361,7 @@ export function parseEnvelope(raw: unknown): CharacterSaveEnvelope | null {
       potions: parsePotions(progression.potions),
       materials: parseMaterials(progression.materials),
     },
-    inventory: { bag, equipment },
+    inventory: { bag, equipment, stash: parseStash(inventory.stash) },
     quests,
     checkpointId: CHECKPOINT_CINDERWATCH,
   };

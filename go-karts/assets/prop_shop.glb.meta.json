@@ -13,24 +13,28 @@
   "source": "prop_shop.glb",
   "subAssets": [
     {
-      "guid": "019f83e3-bbce-7ead-8ab6-aaa60056c997",
+      "guid": "019f83e3-bbce-4ead-8ab6-aaa60056c997",
       "kind": "mesh",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "mesh:0"
     },
     {
-      "guid": "019f83e3-bbce-7ead-8ab6-aaa77fe9c8be",
+      "guid": "019f83e3-bbce-4ead-8ab6-aaa77fe9c8be",
       "kind": "material",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "material:0"
     },
     {
-      "guid": "019f83e3-bbce-7ead-8ab6-aaa8c45fb8b9",
+      "guid": "019f83e3-bbce-4ead-8ab6-aaa8c45fb8b9",
       "kind": "scene",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "scene:0"
     },
     {
-      "guid": "019f83e3-bbce-7ead-8ab6-aaa9ea84a067",
+      "guid": "019f83e3-bbce-4ead-8ab6-aaa9ea84a067",
       "kind": "texture",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "texture:0"
     }
   ]
 }

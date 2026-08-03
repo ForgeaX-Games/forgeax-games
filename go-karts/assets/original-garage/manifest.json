@@ -1,0 +1,130 @@
+{
+  "karts": {
+    "classic": {
+      "label": "原味圆车",
+      "seat": [
+        0,
+        0.55,
+        -0.25
+      ]
+    },
+    "banana": {
+      "label": "香蕉车",
+      "seat": [
+        0,
+        0.5,
+        -0.18
+      ]
+    },
+    "slipper": {
+      "label": "拖鞋车",
+      "seat": [
+        0,
+        0.62,
+        -0.35
+      ]
+    },
+    "box": {
+      "label": "纸箱车",
+      "seat": [
+        0,
+        0.58,
+        -0.3
+      ]
+    },
+    "hotdog": {
+      "label": "热狗车",
+      "seat": [
+        0,
+        0.72,
+        -0.3
+      ]
+    },
+    "melon": {
+      "label": "西瓜车",
+      "seat": [
+        0,
+        0.6,
+        -0.1
+      ]
+    },
+    "duck": {
+      "label": "橡皮鸭车",
+      "seat": [
+        0,
+        0.78,
+        -0.35
+      ]
+    },
+    "donut": {
+      "label": "甜甜圈车",
+      "seat": [
+        0,
+        0.44,
+        0
+      ]
+    },
+    "rocket": {
+      "label": "火箭车",
+      "seat": [
+        0,
+        0.62,
+        -0.25
+      ]
+    },
+    "tub": {
+      "label": "浴缸车",
+      "seat": [
+        0,
+        0.55,
+        -0.2
+      ]
+    }
+  },
+  "accessories": {
+    "none": {
+      "label": "无",
+      "socket": "hat_top"
+    },
+    "straw": {
+      "label": "草帽",
+      "socket": "hat_top"
+    },
+    "shades": {
+      "label": "墨镜",
+      "socket": "glasses_bridge"
+    },
+    "party": {
+      "label": "派对帽",
+      "socket": "hat_top"
+    },
+    "pot": {
+      "label": "锅",
+      "socket": "hat_top"
+    },
+    "halo": {
+      "label": "天使环",
+      "socket": "halo_above"
+    },
+    "booger": {
+      "label": "鼻屎绿眼镜",
+      "socket": "glasses_bridge"
+    },
+    "poop": {
+      "label": "大便头箍",
+      "socket": "hat_top"
+    },
+    "prop": {
+      "label": "螺旋桨帽",
+      "socket": "hat_top"
+    },
+    "crown": {
+      "label": "皇冠",
+      "socket": "hat_top"
+    },
+    "bow": {
+      "label": "蝴蝶结",
+      "socket": "hat_back"
+    }
+  }
+}

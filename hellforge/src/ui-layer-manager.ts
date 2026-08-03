@@ -12,6 +12,8 @@ export type MajorPanel =
   | 'settings'
   /** Forge cube — salvage / re-roll / fuse (KeyF). */
   | 'craft'
+  /** N-Stash — camp stash dual-open pair (left) + inventory (right). */
+  | 'stash'
   /** Cutscene playback — registering it hijacks the exclusivity/input funnel. */
   | 'cutscene';
 

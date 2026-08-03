@@ -36,6 +36,7 @@ import {
   equipSlotsFor,
   itemFootprint,
   meltGoldValue,
+  starterKitEquipment,
   type Equipment,
   type EquipSlot,
   type ItemInstance,
@@ -44,6 +45,8 @@ import {
   BAG_CELLS,
   firstFit,
   occupancy,
+  STASH_COLS,
+  STASH_ROWS,
   type BagAnchor,
 } from './bag-grid';
 import { FINISHER_UNLOCK_LEVEL, grantFinisherHotbar } from './finisher';
@@ -108,6 +111,8 @@ export interface CharacterSnapshot {
   readonly selectedHotbarSlot: 0 | 1 | 2 | 3;
   /** Anchor list (one entry per item, top-left cell) — see bag-grid.ts. */
   readonly bag: readonly DeepReadonly<BagAnchor>[];
+  /** Personal stash (仓库) anchor list — camp-side container, see bag-grid.ts. */
+  readonly stash: readonly DeepReadonly<BagAnchor>[];
   readonly equipment: Readonly<Equipment>;
   readonly quests: Readonly<Record<QuestId, QuestSave>>;
   readonly potions: Readonly<PotionStock>;
@@ -124,6 +129,8 @@ export type CharacterCommand =
   | { op: 'take-item'; item: ItemInstance }
   | { op: 'equip-from-bag'; index: number; target?: EquipSlot }
   | { op: 'unequip'; slot: EquipSlot }
+  | { op: 'stash-bag'; index: number; areaId: AreaId }
+  | { op: 'unstash-bag'; index: number; areaId: AreaId }
   | { op: 'melt-bag'; index: number }
   | { op: 'salvage-bag'; index: number }
   | { op: 'reroll-bag'; index: number }
@@ -168,6 +175,7 @@ export type CharacterResult =
       reason:
         | 'not-playable'
         | 'bag-full'
+        | 'stash-full'
         | 'empty-slot'
         | 'level-req'
         | 'bad-index'
@@ -226,6 +234,8 @@ export interface HydrateSorceressOptions {
   selectedHotbarSlot: 0 | 1 | 2 | 3;
   /** Validated v2 anchor list (save-schema guarantees in-bounds, no overlap). */
   bag: readonly DeepReadonly<BagAnchor>[];
+  /** Stash anchors — old saves lack them; absent means empty. */
+  stash?: readonly DeepReadonly<BagAnchor>[];
   equipment: DeepReadonly<Equipment>;
   quests: Readonly<Record<QuestId, QuestSave>>;
   /** Old saves predate potions — absent means 0/0 (no retroactive stock). */
@@ -244,6 +254,7 @@ class CharacterDomainImpl implements CharacterDomain {
   #hotbar: [ActiveSkillId | null, ActiveSkillId | null, ActiveSkillId | null, ActiveSkillId | null];
   #selectedHotbarSlot: 0 | 1 | 2 | 3;
   #bag: BagAnchor[];
+  #stash: BagAnchor[];
   #equipment: Equipment;
   #quests: Record<QuestId, QuestSave>;
   #potions: PotionStock;
@@ -269,7 +280,10 @@ class CharacterDomainImpl implements CharacterDomain {
     this.#hotbar = ['frost', 'magma', null, null];
     this.#selectedHotbarSlot = 0;
     this.#bag = [];
+    this.#stash = [];
     this.#equipment = emptyEquipment();
+    // N3R-N3: new characters start with the ten-slot common starter kit.
+    this.#grantStarterKitIfEmpty();
     this.#quests = emptyQuests();
     // Starting belt stock (D2 convention: a couple of reds, one blue).
     this.#potions = { life: 2, mana: 1 };
@@ -297,7 +311,11 @@ class CharacterDomainImpl implements CharacterDomain {
     domain.#hotbar = [...opts.hotbar] as [ActiveSkillId | null, ActiveSkillId | null, ActiveSkillId | null, ActiveSkillId | null];
     domain.#selectedHotbarSlot = opts.selectedHotbarSlot;
     domain.#bag = deepClone(opts.bag as BagAnchor[]);
+    domain.#stash = deepClone((opts.stash ?? []) as BagAnchor[]);
     domain.#equipment = deepClone(opts.equipment as Equipment);
+    // N3R-N3 catch-up: grant the starter kit only to old saves with no gear
+    // at all — any equipped piece means the player progressed; never overwrite.
+    domain.#grantStarterKitIfEmpty();
     domain.#quests = deepClone(opts.quests as Record<QuestId, QuestSave>);
     domain.#potions = {
       life: Math.min(POTION_CAP, Math.max(0, Math.floor(opts.potions?.life ?? 0))),
@@ -336,6 +354,10 @@ class CharacterDomainImpl implements CharacterDomain {
         return this.#equipFromBag(command.index, command.target);
       case 'unequip':
         return this.#unequip(command.slot);
+      case 'stash-bag':
+        return this.#stashBag(command.index, command.areaId);
+      case 'unstash-bag':
+        return this.#unstashBag(command.index, command.areaId);
       case 'melt-bag':
         return this.#meltBag(command.index);
       case 'salvage-bag':
@@ -429,6 +451,7 @@ class CharacterDomainImpl implements CharacterDomain {
       hotbar: [...this.#hotbar] as HotbarSlots,
       selectedHotbarSlot: this.#selectedHotbarSlot,
       bag: this.#bag.map((a) => ({ item: deepClone(a.item), x: a.x, y: a.y })),
+      stash: this.#stash.map((a) => ({ item: deepClone(a.item), x: a.x, y: a.y })),
       equipment: deepClone(this.#equipment),
       quests: deepClone(this.#quests),
       potions: { ...this.#potions },
@@ -478,6 +501,17 @@ class CharacterDomainImpl implements CharacterDomain {
     if (this.#hotbar.some((s) => s === skill)) return;
     const empty = this.#hotbar.findIndex((s) => s === null);
     if (empty >= 0) this.#hotbar[empty] = skill;
+  }
+
+  /**
+   * N3R-N3 starter kit: fill all ten EquipSlots with common whites (ilvl 1,
+   * reqLevel 1 — legal at level 1). Grants only when the doll is completely
+   * empty: fresh characters and all-null old saves. A single equipped piece
+   * is treated as player progress and blocks the grant.
+   */
+  #grantStarterKitIfEmpty(): void {
+    if (Object.values(this.#equipment).some((item) => item !== null)) return;
+    this.#equipment = starterKitEquipment();
   }
 
   #takeItem(item: ItemInstance): CharacterResult {
@@ -537,6 +571,35 @@ class CharacterDomainImpl implements CharacterDomain {
     return { ok: true };
   }
 
+  /**
+   * Camp transfer bag → stash (仓库). Atomic: fit validated on the stash grid
+   * BEFORE mutating — a no-fit moves nothing.
+   */
+  #stashBag(index: number, areaId: AreaId): CharacterResult {
+    if (areaId !== 'cinderwatch') return { ok: false, reason: 'not-in-camp' };
+    const got = this.#bagItemAt(index);
+    if ('ok' in got) return got;
+    const { w, h } = itemFootprint(got.item);
+    const fit = firstFit(occupancy(this.#stash, STASH_COLS, STASH_ROWS), w, h, STASH_COLS, STASH_ROWS);
+    if (!fit) return { ok: false, reason: 'stash-full' };
+    this.#bag.splice(index, 1);
+    this.#stash.push({ item: deepClone(got.item), x: fit.x, y: fit.y });
+    return { ok: true };
+  }
+
+  /** Camp transfer stash → bag. Atomic: fit validated on the bag grid first. */
+  #unstashBag(index: number, areaId: AreaId): CharacterResult {
+    if (areaId !== 'cinderwatch') return { ok: false, reason: 'not-in-camp' };
+    const got = this.#stashItemAt(index);
+    if ('ok' in got) return got;
+    const { w, h } = itemFootprint(got.item);
+    const fit = firstFit(occupancy(this.#bag), w, h);
+    if (!fit) return { ok: false, reason: 'bag-full' };
+    this.#stash.splice(index, 1);
+    this.#bag.push({ item: deepClone(got.item), x: fit.x, y: fit.y });
+    return { ok: true };
+  }
+
   #meltBag(index: number): CharacterResult {
     const got = this.#bagItemAt(index);
     if ('ok' in got) return got;
@@ -551,6 +614,14 @@ class CharacterDomainImpl implements CharacterDomain {
   #bagItemAt(index: number): CharacterResult | BagAnchor {
     if (!Number.isInteger(index)) return { ok: false, reason: 'bad-index' };
     const entry = this.#bag[index];
+    if (index < 0 || !entry) return { ok: false, reason: 'bad-index' };
+    return entry;
+  }
+
+  /** Stash indices are LIST indices into the anchor array (no empty cells). */
+  #stashItemAt(index: number): CharacterResult | BagAnchor {
+    if (!Number.isInteger(index)) return { ok: false, reason: 'bad-index' };
+    const entry = this.#stash[index];
     if (index < 0 || !entry) return { ok: false, reason: 'bad-index' };
     return entry;
   }

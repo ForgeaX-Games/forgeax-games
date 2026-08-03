@@ -144,6 +144,7 @@ import {
 } from './src/items';
 import { hasFreeCell, type BagAnchor } from './src/bag-grid';
 import { installInventory } from './src/inventory-ui';
+import { installStashPanel } from './src/stash-ui';
 import { installCubeUI } from './src/cube-ui';
 import { salvageYield } from './src/crafting';
 import {
@@ -187,7 +188,12 @@ import {
   MAX_CHARACTERS,
   saveSnapshot,
 } from './src/save';
-import { installAutomap } from './src/automap';
+import {
+  filterReachedLandmarks,
+  installAutomap,
+  resolveRuntimeExitPosition,
+  type AutomapSnapshot,
+} from './src/automap';
 import { createUiLayerManager, type MajorPanel } from './src/ui-layer-manager';
 import { installFatalOverlay } from './src/fatal-overlay';
 import { ensureUiStyles } from './src/ui-styles';
@@ -267,6 +273,7 @@ import {
 } from './src/camera-fade';
 import type { ActiveSkillId, AreaExitId } from './src/content-ids';
 import {
+  canEnterArea,
   canEnterSlagdeep,
   chooseSeededDecor,
   chooseSeededEncounters,
@@ -917,6 +924,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // seed layout (walkability, monsterSpawns, entry) is constructor-cheap and
     // stays on the boot path, so navigation/automap/camera probes work as before.
     console.log(`[hellforge] den layout ready — ${dungeon.roomCount} rooms, ${dungeon.monsterSpawns.length} monsters (geometry lazy)`);
+    // Session-only information-layer discovery. It is intentionally not part
+    // of save v2 and is consumed by automap as an already-authorized set.
+    const exploredDenCells = new Set<string>();
+    const reachedWildLandmarks = new Set<string>();
 
     // Distant irregular lava cones (ground-only) — camp wild rim + den cavern rim.
     // The camp install loads the shared peak bank (slag material + 8 cone meshes,
@@ -1164,13 +1175,17 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     let moveMul = 1;
     const applyEquipment = (opts: { refill?: boolean } = {}): void => {
       const snap = character.snapshot();
-      const { equipment, bag, level, gold, materials } = snap;
+      const { equipment, bag, level, gold, materials, potions } = snap;
       combatStats = deriveCombatStats({ character: snap, classDef });
       syncRuntimeFromCombatStats(player, combatStats, { refill: opts.refill });
       skills.applyCombatStats(combatStats);
       moveMul = combatStats.moveSpeed;
       const eq = equipment as Equipment;
-      inv.update(eq, bag as BagAnchor[], level, gold, materials);
+      inv.update(eq, bag as BagAnchor[], level, gold, materials, potions);
+      // N-Stash dual-open pair — keep the stash grid on the same refresh beat
+      // as the bag (stashUI is installed just after inv; applyEquipment only
+      // runs after both exist).
+      stashUI.update(snap.stash, level);
       hud.setGold(gold);
       refreshCharacterPanel();
     };
@@ -1263,7 +1278,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       getGroundXZ: groundAimXZ,
     });
 
-    // ── inventory panel (B) — mutations dispatch through CharacterDomain ──
+    // ── inventory panel (I; 营地 B opens the stash dual-open pair) ──────────
+    // Mutations dispatch through CharacterDomain.
     const inv = installInventory({
       onEquipFromBag: (idx, target) => {
         const item = character.snapshot().bag[idx]?.item;
@@ -1299,9 +1315,60 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         applyEquipment();
         persistCharacter();
       },
+      // N-Stash dual-open drop target — bag item dragged onto the stash grid.
+      onStashFromBag: (index) => {
+        const res = character.dispatch({
+          op: 'stash-bag',
+          index,
+          areaId: area === 'camp' ? 'cinderwatch' : area === 'den' ? 'slagdeep-hollow' : 'ashen-reach',
+        });
+        if (!res.ok) {
+          // Domain rejected the transfer — surface it; a silent no-op after the
+          // green drop-glow reads as a bug.
+          if (res.reason === 'stash-full') hud.banner('仓库已满', '#ff6a6a', 1100);
+          else if (res.reason === 'bag-full') hud.banner('背包已满', '#ff6a6a', 1100);
+          return false;
+        }
+        // Stash transfers reorder the bag → drop stale cube selection (mirrors
+        // cube-ui's own heal semantics).
+        cube.clearItems();
+        applyEquipment();
+        persistCharacter();
+        return true;
+      },
+      // Close button must release the manager owner, not only hide DOM. In
+      // dual-open mode active() is 'stash' — closing it hides both panels.
+      onClose: () => { const a = uiLayers.active(); if (a) uiLayers.close(a); },
+    }, uiMount, { tooltip: uiTooltip });
+    // N-Stash personal stash (营地专属 12×10 grid) — left dock of the dual-open
+    // pair; inventory owns the right half. Transfers dispatch domain commands
+    // (stash-bag / unstash-bag) and ride the applyEquipment refresh beat.
+    const stashUI = installStashPanel({
+      onMoveToBag: (index) => {
+        const res = character.dispatch({
+          op: 'unstash-bag',
+          index,
+          areaId: area === 'camp' ? 'cinderwatch' : area === 'den' ? 'slagdeep-hollow' : 'ashen-reach',
+        });
+        if (!res.ok) {
+          // Domain rejected the transfer — surface it; a silent no-op after the
+          // green drop-glow reads as a bug.
+          if (res.reason === 'stash-full') hud.banner('仓库已满', '#ff6a6a', 1100);
+          else if (res.reason === 'bag-full') hud.banner('背包已满', '#ff6a6a', 1100);
+          return false;
+        }
+        // Stash transfers reorder the bag → drop stale cube selection (mirrors
+        // cube-ui's own heal semantics).
+        cube.clearItems();
+        applyEquipment();
+        persistCharacter();
+        return true;
+      },
+      // Same routing as the inventory ✕ — closes whichever layer is active.
+      onClose: () => { const a = uiLayers.active(); if (a) uiLayers.close(a); },
     }, uiMount, { tooltip: uiTooltip });
     const charPanel = installCharacterPanel(uiMount);
-    onCleanup(() => { hud.dispose(); inv.dispose(); charPanel.dispose(); });
+    onCleanup(() => { hud.dispose(); inv.dispose(); stashUI.dispose(); charPanel.dispose(); });
 
     const refreshCharacterPanel = (): void => {
       const snap = character.snapshot();
@@ -1348,6 +1415,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       }
     }
     flatQuad(DEN_EXIT.x, DEN_EXIT.z, 3.0, portalMatBack);
+    const CAMP_GATE = { x: 0, z: 14 } as const;
+    const runtimeExitPosition = (id: AreaExitId): { readonly x: number; readonly z: number } | null =>
+      resolveRuntimeExitPosition(id, {
+        caveMouth: CAVE_MOUTH,
+        campGate: CAMP_GATE,
+        denExit: DEN_EXIT,
+      });
     // Cave-mouth framing: a weathered stone archway (reused camp gate props —
     // two columns + a lintel) so the portal reads as a real gateway from afar.
     // GUIDs are prop-gate-column / prop-gate-lintel mesh+material sub-assets
@@ -1435,12 +1509,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // looks from +z) so the FACE catches light instead of just hair + shoulders,
     // in a near-white warm tone — the old straight-overhead deep-orange torch
     // (1.0/0.55/0.35 @ y3.0) drowned facial detail in red and lit the ground
-    // right where the Sun's shadow falls, washing the shadow out. Tighter range
-    // keeps the ground-shadow contrast.
+    // right where the Sun's shadow falls, washing the shadow out. Range stays
+    // tight enough to preserve ground-shadow contrast.
     // Low fill so CSM from the hero proxy stays readable on the floor.
+    // N4 G2: restrained bump (5.5→6.2 / 3.8→4.2) so the hero reads in the
+    // deliberately dim camp — small enough that the shadow contrast survives.
     const playerLight = world.spawn(
       { component: Transform, data: { pos: [0, 2.4, 6.6] } },
-      { component: PointLight, data: { color: [1.0, 0.78, 0.62], intensity: 5.5, range: 3.8 } },
+      { component: PointLight, data: { color: [1.0, 0.78, 0.62], intensity: 6.2, range: 4.2 } },
     ).unwrap();
 
     // Camp/den glTF props historically had Forward-only materials — inject
@@ -2192,7 +2268,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       }));
       hud.setSkills([...slots, ...belt]);
     };
+    let mapQuestProjection = character.snapshot().quests;
     const refreshQuest = (): void => {
+      mapQuestProjection = character.snapshot().quests;
       const st = questStatus();
       if (st === 'completed') {
         hud.setQuest(`✓ ${QUEST_TITLE} — 已完成`);
@@ -2272,9 +2350,28 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       return denLoadPromise;
     };
 
+    // Major UI ownership (single active surface) — hoisted above enterArea:
+    // its N-Stash camp latch reads uiLayers, and the den-direct boot branch
+    // calls enterArea('den') before the old site → TDZ ReferenceError. The
+    // onOwnershipChange body only runs at runtime (panel open/close), by which
+    // point its later-declared captures (worldInputBlocked / MOVE_INTENT_KEYS /
+    // automap / clearMoveIntent / keys) are all initialized.
+    const uiLayers = createUiLayerManager({
+      onOwnershipChange: (_prev, next) => {
+        worldInputBlocked = next !== null;
+        if (next !== null) automap.collapseExpanded();
+        clearMoveIntent();
+        for (const code of MOVE_INTENT_KEYS) keys[code] = false;
+      },
+    });
+
     const enterArea = (next: Area): void => {
       if (next === area) return;
       area = next;
+      // N-Stash camp latch: the dual-open pair is camp-only — leaving camp
+      // force-closes it (mirrors the showcase force-revert precedent below).
+      // Covers both the per-frame boundary detection and den teleports.
+      if (next !== 'camp' && uiLayers.active() === 'stash') uiLayers.close('stash');
       applyAreaLighting(next);
       ambientFx.setArea(next);
       const areaId = next === 'camp' ? 'cinderwatch' : next === 'den' ? 'slagdeep-hollow' : 'ashen-reach';
@@ -2394,12 +2491,74 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       hud.banner(`部分资产降级：${degraded.join('、')}`, '#ffb070', 5000);
     }
 
-    // ── automap (den) + skill sheet (SPEC §6, uiRoot-mounted) ─────────────
-    const automap = installAutomap(uiMount, {
-      getDungeon: () => dungeon,
-      getPlayerPos: () => ({ x: state.px, z: state.pz }),
-      isInDen: () => area === 'den',
+    // ── automap (persistent minimap + expanded read-only projection) ───────
+    const ASHEN_LANDMARK_LABELS: Readonly<Record<string, string>> = {
+      'slag-bridge': '熔渣石桥',
+      'fallen-forge': '坠落熔炉遗址',
+    };
+    const noteMapDiscovery = (): void => {
+      if (area === 'den') {
+        const cell = dungeon.worldToCell(state.px, state.pz);
+        if (cell) exploredDenCells.add(`${cell.cx},${cell.cy}`);
+      }
+      if (area === 'wild') {
+        for (const landmark of ashenLayout.landmarks) {
+          if (Math.hypot(landmark.pos[0] - state.px, landmark.pos[1] - state.pz) <= 2.75) {
+            reachedWildLandmarks.add(landmark.id);
+          }
+        }
+      }
+    };
+    const mapExitMarkers = (authorizedOnly: boolean): readonly {
+      id: AreaExitId;
+      x: number;
+      z: number;
+      label: string;
+    }[] => {
+      const areaId = area === 'camp'
+        ? 'cinderwatch' as const
+        : area === 'wild'
+          ? 'ashen-reach' as const
+          : 'slagdeep-hollow' as const;
+      const quests = mapQuestProjection;
+      return getAreaDef(areaId).exits
+        .filter((exit) => !authorizedOnly || canEnterArea(exit, quests))
+        .flatMap((exit) => {
+          const pos = runtimeExitPosition(exit.id);
+          if (!pos) return [];
+          return [{
+            id: exit.id,
+            x: pos.x,
+            z: pos.z,
+            label: getAreaDef(exit.to).displayName,
+          }];
+        });
+    };
+    const mapSnapshot = (): AutomapSnapshot => ({
+      area,
+      player: { x: state.px, z: state.pz },
+      exploredDenCells: area === 'den' ? exploredDenCells : undefined,
+      denWalkGrid: area === 'den'
+        ? { cells: dungeon.getWalkGrid(), columns: CELLS, rows: CELLS }
+        : undefined,
+      denPlayerCell: area === 'den'
+        ? dungeon.worldToCell(state.px, state.pz) ?? undefined
+        : undefined,
+      landmarks: area === 'wild'
+        ? filterReachedLandmarks(
+          ashenLayout.landmarks.map((landmark) => ({
+            id: landmark.id,
+            x: landmark.pos[0],
+            z: landmark.pos[1],
+            label: ASHEN_LANDMARK_LABELS[landmark.id] ?? landmark.id,
+          })),
+          reachedWildLandmarks,
+        )
+        : undefined,
+      areaExits: mapExitMarkers(false),
+      questAuthorizedDirections: mapExitMarkers(true),
     });
+    const automap = installAutomap(uiMount, { getSnapshot: mapSnapshot });
     const treeStateFromDomain = () => {
       const snap = character.snapshot();
       return stateFromProgression({
@@ -2577,13 +2736,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         return g ? { x: g.x, z: g.z } : null;
       },
       getExit: (id: AreaExitId) => {
-        if (id === 'reach-to-slagdeep' || id === 'cinderwatch-to-reach') {
-          return { x: CAVE_MOUTH.x, z: CAVE_MOUTH.z };
-        }
-        if (id === 'slagdeep-to-reach' || id === 'reach-to-cinderwatch') {
-          return { x: DEN_EXIT.x, z: DEN_EXIT.z };
-        }
-        return null;
+        return runtimeExitPosition(id);
       },
       listCandidates: () => {
         const out: InteractionCandidate[] = [];
@@ -2605,15 +2758,19 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           out.push({ ref: { kind: 'loot', id: g.id }, position: [g.x, g.z], pickRadius: 1.1 });
         }
         if (area !== 'den') {
+          const exit = runtimeExitPosition('reach-to-slagdeep');
+          if (!exit) return out;
           out.push({
             ref: { kind: 'exit', id: 'reach-to-slagdeep' },
-            position: [CAVE_MOUTH.x, CAVE_MOUTH.z],
+            position: [exit.x, exit.z],
             pickRadius: 2.2,
           });
         } else {
+          const exit = runtimeExitPosition('slagdeep-to-reach');
+          if (!exit) return out;
           out.push({
             ref: { kind: 'exit', id: 'slagdeep-to-reach' },
-            position: [DEN_EXIT.x, DEN_EXIT.z],
+            position: [exit.x, exit.z],
             pickRadius: 2.2,
           });
         }
@@ -2652,14 +2809,18 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
             hud.banner('深窟封锁 — 先与烬守者维拉交谈', '#ffb070', 2200);
             return 'failed';
           }
-          state.px = CAVE_MOUTH.x;
-          state.pz = CAVE_MOUTH.z;
+          const exit = runtimeExitPosition(id);
+          if (!exit) return 'failed';
+          state.px = exit.x;
+          state.pz = exit.z;
           return 'ok';
         }
         if (id === 'slagdeep-to-reach' || id === 'reach-to-cinderwatch') {
           if (area !== 'den') return 'failed';
-          state.px = DEN_EXIT.x;
-          state.pz = DEN_EXIT.z;
+          const exit = runtimeExitPosition(id);
+          if (!exit) return 'failed';
+          state.px = exit.x;
+          state.pz = exit.z;
           return 'ok';
         }
         return 'failed';
@@ -2711,13 +2872,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       'ShiftLeft', 'ShiftRight', 'Space',
     ] as const;
     let worldInputBlocked = false;
-    const uiLayers = createUiLayerManager({
-      onOwnershipChange: (_prev, next) => {
-        worldInputBlocked = next !== null;
-        clearMoveIntent();
-        for (const code of MOVE_INTENT_KEYS) keys[code] = false;
-      },
-    });
     const questLog = installQuestLog(uiMount);
     const refreshQuestLog = (): void => {
       const st = questStatus();
@@ -2861,6 +3015,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     }, uiMount);
 
     uiLayers.register('inventory', { show: () => inv.show(), hide: () => inv.hide() });
+    // N-Stash: dual-open pair surface — one logical owner over two panels
+    // (stash left + inventory right). show refreshes both, then displays both;
+    // hide closes both at once. Manager behavior is unchanged.
+    uiLayers.register('stash', {
+      show: () => { applyEquipment(); stashUI.show(); inv.show(); },
+      hide: () => { stashUI.hide(); inv.hide(); },
+    });
     uiLayers.register('skills', { show: () => skillPanel.show(), hide: () => skillPanel.hide() });
     uiLayers.register('settings', { show: () => rs.open(), hide: () => rs.close() });
     uiLayers.register('character', {
@@ -2995,32 +3156,38 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       }
       // Cutscene owns UI + world input — only Esc (skip) may steal ownership.
       if (!cutsceneBlocksChromeKey(uiLayers.active())) {
-        if (e.code === 'KeyB' || e.code === 'KeyI') {
-          automap.setOpen(false);
+        if (e.code === 'KeyB') {
+          automap.collapseExpanded();
+          applyEquipment();
+          // 营地 B = 仓库双开 (stash+inventory pair); 荒野/地牢 B = 背包 (unchanged).
+          toggleMajorPanel(area === 'camp' ? 'stash' : 'inventory');
+        }
+        if (e.code === 'KeyI') {
+          automap.collapseExpanded();
           applyEquipment();
           toggleMajorPanel('inventory');
         }
         if (e.code === 'KeyF') {
-          automap.setOpen(false);
+          automap.collapseExpanded();
           toggleMajorPanel('craft');
         }
         if (e.code === 'KeyK') {
-          automap.setOpen(false);
+          automap.collapseExpanded();
           toggleMajorPanel('skills');
         }
         if (e.code === 'KeyQ') {
-          automap.setOpen(false);
+          automap.collapseExpanded();
           refreshQuestLog();
           toggleMajorPanel('quests');
         }
         if (e.code === 'KeyC') {
-          automap.setOpen(false);
+          automap.collapseExpanded();
           refreshCharacterPanel();
           toggleMajorPanel('character');
         }
         if (e.code === 'F10') {
           e.preventDefault();
-          automap.setOpen(false);
+          automap.collapseExpanded();
           toggleMajorPanel('settings');
         }
         if (e.code === 'Tab') {
@@ -3129,7 +3296,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           if (cutscene.script.skippable) endCutscene('skip');
           return;
         }
-        if (automap.isOpen()) { automap.setOpen(false); return; }
+        if (automap.isExpanded()) { automap.collapseExpanded(); return; }
         if (uiLayers.active() !== null) { uiLayers.closeAll(); return; }
       }
     };
@@ -3252,7 +3419,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       });
       if (!allowUpdateFrame(dt)) return;
 
-      if (inGame) automap.tick();
+      if (inGame) {
+        noteMapDiscovery();
+        automap.tick(dt);
+      }
 
       // ── shell gate: preview-only frame until CharacterRecord hand-off ──
       if (!inGame) {

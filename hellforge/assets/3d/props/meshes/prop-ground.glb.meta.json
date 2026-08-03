@@ -8,25 +8,25 @@
   },
   "subAssets": [
     {
-      "guid": "6f1a47cc-ef55-b439-7072-5fd888b6d95d",
+      "guid": "1ae7ba09-4d91-4ad1-5c73-7508c15438c6",
       "sourceIndex": 0,
       "kind": "mesh",
       "name": "ground"
     },
     {
-      "guid": "5f4cd2fb-790a-d066-75da-85c51e808acd",
+      "guid": "b629f092-6600-b1d6-c991-b155248d666d",
       "sourceIndex": 0,
       "kind": "material",
       "name": "ground"
     },
     {
-      "guid": "64e951df-a87a-24c9-95db-9de0d626f619",
+      "guid": "ba6ee744-ef06-172b-b4e1-d9f9ca2270d5",
       "sourceIndex": 0,
       "kind": "scene",
       "name": "scene"
     },
     {
-      "guid": "fb5e8aa5-a764-0d9e-ec66-80a58cdbe1d8",
+      "guid": "831987bd-06f3-3fd3-42b0-7c174c6b37e0",
       "sourceIndex": 0,
       "kind": "texture"
     }

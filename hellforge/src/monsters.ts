@@ -41,6 +41,7 @@ import { normalizeClipRoot } from './anim-root';
 import type { BodyVfx, FlightStyle, FxSystem, NovaTelegraphVfx } from './fx';
 import { combatBeat } from './fx/defs';
 import type { ContactShadowKit } from './contact-shadow';
+import { createEnemyRings, type EnemyRingHandle, type EnemyRings } from './enemy-rings';
 
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
 
@@ -282,6 +283,8 @@ export interface Monster {
   animBase: number;
   /** Soft ground contact disc (skinned GLBs cannot cast CSM). */
   contactShadow: EntityHandle | null;
+  /** Under-ring marker (G2-A) — null when rings are off (pool exhausted / Edit mode). */
+  ring: EnemyRingHandle | null;
 }
 
 /** A flamecaller/boss fire bolt in flight (managed by MonsterManager). */
@@ -379,6 +382,12 @@ export class MonsterManager {
   private bolts: HostileBolt[] = [];
   private now = 0;
   private nextStableId = 1;
+  /**
+   * fps compensation hook (main.ts sets when c0 fixed-1/60 anim step is on).
+   * Default 1 = mainline Time.delta path; do not wire default-on compensation
+   * into games main commits.
+   */
+  animRate = 1;
   /** Loaded GLB visuals by kind — empty until loadVisuals() runs. */
   private glb = new Map<MonsterKind, GlbBank>();
   /**
@@ -395,6 +404,8 @@ export class MonsterManager {
   } | null = null;
   /** Soft contact shadows for skinned (and fallback) monsters. */
   private contact: ContactShadowKit | null = null;
+  /** Enemy under-ring pool (G2-A) — null when the fx surface is unavailable. */
+  private rings: EnemyRings | null = null;
 
   /** Wire after installContactShadows — call before first spawn. */
   setContactShadows(kit: ContactShadowKit): void {
@@ -426,6 +437,12 @@ export class MonsterManager {
       }
       this.banks.set(def.kind, bank);
     }
+    // G2-A under-rings: built from the FX persistent-decal surface. Unit-test
+    // fx stubs / Edit-mode shims lack it → rings degrade to off (same
+    // degradation class as contact shadows before the kit is wired).
+    this.rings = typeof fx.persistentDecalSurface === 'function'
+      ? createEnemyRings(fx.persistentDecalSurface())
+      : null;
   }
 
   /**
@@ -524,7 +541,7 @@ export class MonsterManager {
     if (!loop) m.clipUntil = performance.now() + (clip.dur / speed) * 1000;
     this.world.set(m.skinEnt, AnimationPlayer, {
       clips: [clip.h], times: new Float32Array([0]), weights: new Float32Array([1]),
-      speeds: new Float32Array([speed]), looping: loop, paused: false,
+      speeds: new Float32Array([speed * this.animRate]), looping: loop, paused: false,
     });
   }
 
@@ -623,6 +640,9 @@ export class MonsterManager {
 
     const contactR = Math.max(0.35, Math.min(1.2, def.radius * 1.15));
     const contactShadow = this.contact?.spawn(x, z, contactR) ?? null;
+    // G2-A under-ring — common exit for both the GLB and parts-fallback
+    // paths; null when the pool is exhausted (silent skip, no crash).
+    const ring = this.rings?.acquire(kind, x, z) ?? null;
     const m: Monster = {
       id: `m-${this.nextStableId++}`,
       e: root, kind, hp: def.hp, maxHp: def.hp, x, z,
@@ -640,6 +660,7 @@ export class MonsterManager {
       kbX: 0, kbZ: 0,
       animBase: 1,
       contactShadow,
+      ring,
     };
     this.monsters.push(m);
     return m;
@@ -715,8 +736,16 @@ export class MonsterManager {
     m.slam = null;
   }
 
+  /** Exactly-once under-ring cleanup (death / despawn; idempotent). */
+  private releaseRing(m: Monster): void {
+    if (m.ring === null) return;
+    this.rings?.release(m.ring);
+    m.ring = null;
+  }
+
   private kill(m: Monster): void {
     this.releaseSlam(m);
+    this.releaseRing(m);
     this.fx.gibs(m.x, 0.6, m.z, 'blood', m.kind === 'slaglord' ? 22 : 9);
     // Dissolve envelope layers on top of the gibs (PR8 T7): flipbook pop +
     // smoke wisps + embers read as the body disintegrating during the death
@@ -756,6 +785,7 @@ export class MonsterManager {
 
   private despawn(m: Monster): void {
     this.releaseSlam(m);
+    this.releaseRing(m);
     if (m.contactShadow !== null) {
       this.contact?.disposeEntity(m.contactShadow);
       m.contactShadow = null;
@@ -1019,6 +1049,10 @@ export class MonsterManager {
         this.contact?.move(m.contactShadow, m.x, m.z, r);
       }
 
+      // G2-A under-ring rides the final position — knockback and chase both
+      // land before this point.
+      if (m.ring !== null) this.rings?.follow(m.ring, m.x, m.z);
+
       if (isGlb) {
         // Locomotion state machine: one-shots (attack/hit) own the rig until
         // they end, then move/idle resumes. Move clip speed tracks ground
@@ -1033,10 +1067,12 @@ export class MonsterManager {
             m.animBase = 1;
           }
         }
-        // Re-write speeds every frame so animBase changes (chase / attack /
-        // enrage) take effect on the already-playing clip.
+        // Re-write speeds every frame so animBase / animRate changes take
+        // effect on the already-playing clip.
         if (m.skinEnt !== null) {
-          this.world.set(m.skinEnt, AnimationPlayer, { speeds: new Float32Array([m.animBase]) });
+          this.world.set(m.skinEnt, AnimationPlayer, {
+            speeds: new Float32Array([m.animBase * this.animRate]),
+          });
         }
       } else {
         // Hit-flash / slow-tint material swaps (parts fallback only).

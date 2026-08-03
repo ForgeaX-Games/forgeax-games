@@ -8,6 +8,11 @@ import { forwardNegZ } from './orientation';
 export interface FollowCamera {
   snapTo(pose: KartPose): void;
   update(dt: number, pose: KartPose): void;
+  /** Original MainScene intro: high arc down to follow seat (~3s). */
+  beginIntro(pose: KartPose): void;
+  /** Returns true while the intro arc is still playing. */
+  updateIntro(dt: number, pose: KartPose): boolean;
+  isIntroPlaying(): boolean;
 }
 
 export interface FollowCameraOptions {
@@ -44,6 +49,9 @@ export function createFollowCamera(options: FollowCameraOptions): FollowCamera {
   let cameraX = 0;
   let cameraY = 0;
   let cameraZ = 0;
+  let introT = 0;
+  let introPlaying = false;
+  const INTRO_DURATION = 2.8;
 
   const constrainCamera = (
     desired: [number, number, number],
@@ -100,9 +108,73 @@ export function createFollowCamera(options: FollowCameraOptions): FollowCamera {
     writeCamera(pose);
   };
 
+  const writeIntroCamera = (pose: KartPose, s: number): void => {
+    const fwd = forwardNegZ(pose.yaw);
+    // Right-hand side of forwardNegZ on XZ.
+    const sideX = fwd.z;
+    const sideZ = -fwd.x;
+    // Quadratic Bezier: aerial wide → mid → follow seat (original MainScene).
+    const ax = pose.x + fwd.x * 30 + sideX * 16;
+    const ay = pose.y + 26;
+    const az = pose.z + fwd.z * 30 + sideZ * 16;
+    const mx = pose.x + fwd.x * 6 + sideX * 7;
+    const my = pose.y + 12;
+    const mz = pose.z + fwd.z * 6 + sideZ * 7;
+    const bx = pose.x - fwd.x * distance;
+    const by = pose.y + height;
+    const bz = pose.z - fwd.z * distance;
+    const w0 = (1 - s) * (1 - s);
+    const w1 = 2 * (1 - s) * s;
+    const w2 = s * s;
+    cameraX = ax * w0 + mx * w1 + bx * w2;
+    cameraY = ay * w0 + my * w1 + by * w2;
+    cameraZ = az * w0 + mz * w1 + bz * w2;
+    const lookFarX = pose.x + fwd.x * 60;
+    const lookFarY = pose.y + 10;
+    const lookFarZ = pose.z + fwd.z * 60;
+    const lookNearX = pose.x + fwd.x * lookAhead;
+    const lookNearY = pose.y + lookHeight;
+    const lookNearZ = pose.z + fwd.z * lookAhead;
+    const lx = lookFarX + (lookNearX - lookFarX) * s;
+    const ly = lookFarY + (lookNearY - lookFarY) * s;
+    const lz = lookFarZ + (lookNearZ - lookFarZ) * s;
+    const rotation = quat.create();
+    quat.fromLookAt(rotation, [cameraX, cameraY, cameraZ], [lx, ly, lz], [0, 1, 0]);
+    world.set(camera, Transform, {
+      pos: [cameraX, cameraY, cameraZ],
+      quat: [rotation[0]!, rotation[1]!, rotation[2]!, rotation[3]!],
+    });
+  };
+
+  const updateIntro = (dtRaw: number, pose: KartPose): boolean => {
+    if (!introPlaying) return false;
+    const dt = Math.min(Math.max(dtRaw, 0), 0.05);
+    introT += dt;
+    const u = Math.min(1, introT / INTRO_DURATION);
+    const s = u * u * (3 - 2 * u);
+    writeIntroCamera(pose, s);
+    if (u >= 1) {
+      introPlaying = false;
+      snapTo(pose);
+      return false;
+    }
+    return true;
+  };
+
   return {
     snapTo,
+    beginIntro(pose) {
+      introT = 0;
+      introPlaying = true;
+      writeIntroCamera(pose, 0);
+    },
+    updateIntro,
+    isIntroPlaying: () => introPlaying,
     update(dtRaw: number, pose: KartPose): void {
+      if (introPlaying) {
+        updateIntro(dtRaw, pose);
+        return;
+      }
       const dt = Math.min(Math.max(dtRaw, 0), 0.05);
       const desired = desiredPosition(pose);
       const alpha = 1 - Math.exp(-positionSharpness * dt);

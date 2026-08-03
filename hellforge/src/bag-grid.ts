@@ -10,6 +10,11 @@ export const BAG_COLS = 12;
 export const BAG_ROWS = 5;
 export const BAG_CELLS = BAG_COLS * BAG_ROWS;
 
+/** Personal stash (仓库): a second per-character grid beside the bag. */
+export const STASH_COLS = 12;
+export const STASH_ROWS = 10;
+export const STASH_CELLS = STASH_COLS * STASH_ROWS;
+
 /** One bag item: the instance plus its top-left anchor cell (0-based). */
 export interface BagAnchor {
   readonly item: ItemInstance;
@@ -17,17 +22,27 @@ export interface BagAnchor {
   readonly y: number; // 0..BAG_ROWS-1 (top edge)
 }
 
+/**
+ * Grid helpers below share one caller contract: the `cells` array passed to
+ * occupancy/canPlace/firstFit must have exactly `cols*rows` entries — hot-path
+ * pure functions, so the invariant is documented, not asserted.
+ */
+
 /** Derive the occupancy grid (row-major boolean cells) from anchors. */
-export function occupancy(anchors: readonly BagAnchor[]): boolean[] {
-  const cells = new Array<boolean>(BAG_CELLS).fill(false);
+export function occupancy(
+  anchors: readonly BagAnchor[],
+  cols: number = BAG_COLS,
+  rows: number = BAG_ROWS,
+): boolean[] {
+  const cells = new Array<boolean>(cols * rows).fill(false);
   for (const a of anchors) {
     const { w, h } = itemFootprint(a.item);
     for (let dy = 0; dy < h; dy++) {
       for (let dx = 0; dx < w; dx++) {
         const cx = a.x + dx;
         const cy = a.y + dy;
-        if (cx >= 0 && cx < BAG_COLS && cy >= 0 && cy < BAG_ROWS) {
-          cells[cy * BAG_COLS + cx] = true;
+        if (cx >= 0 && cx < cols && cy >= 0 && cy < rows) {
+          cells[cy * cols + cx] = true;
         }
       }
     }
@@ -42,12 +57,14 @@ export function canPlace(
   h: number,
   x: number,
   y: number,
+  cols: number = BAG_COLS,
+  rows: number = BAG_ROWS,
 ): boolean {
   if (w < 1 || h < 1 || x < 0 || y < 0) return false;
-  if (x + w > BAG_COLS || y + h > BAG_ROWS) return false;
+  if (x + w > cols || y + h > rows) return false;
   for (let dy = 0; dy < h; dy++) {
     for (let dx = 0; dx < w; dx++) {
-      if (cells[(y + dy) * BAG_COLS + (x + dx)]) return false;
+      if (cells[(y + dy) * cols + (x + dx)]) return false;
     }
   }
   return true;
@@ -58,10 +75,12 @@ export function firstFit(
   cells: readonly boolean[],
   w: number,
   h: number,
+  cols: number = BAG_COLS,
+  rows: number = BAG_ROWS,
 ): { x: number; y: number } | null {
-  for (let y = 0; y <= BAG_ROWS - h; y++) {
-    for (let x = 0; x <= BAG_COLS - w; x++) {
-      if (canPlace(cells, w, h, x, y)) return { x, y };
+  for (let y = 0; y <= rows - h; y++) {
+    for (let x = 0; x <= cols - w; x++) {
+      if (canPlace(cells, w, h, x, y, cols, rows)) return { x, y };
     }
   }
   return null;
@@ -71,17 +90,27 @@ export function firstFit(
 export function firstFitFor(
   anchors: readonly BagAnchor[],
   item: Readonly<ItemInstance>,
+  cols: number = BAG_COLS,
+  rows: number = BAG_ROWS,
 ): { x: number; y: number } | null {
   const { w, h } = itemFootprint(item);
-  return firstFit(occupancy(anchors), w, h);
+  return firstFit(occupancy(anchors, cols, rows), w, h, cols, rows);
 }
 
 /** Coarse "any space left" probe (a 1×1 fit) — loot magnet gating. */
-export function hasFreeCell(anchors: readonly BagAnchor[]): boolean {
-  return occupancy(anchors).some((c) => !c);
+export function hasFreeCell(
+  anchors: readonly BagAnchor[],
+  cols: number = BAG_COLS,
+  rows: number = BAG_ROWS,
+): boolean {
+  return occupancy(anchors, cols, rows).some((c) => !c);
 }
 
 /** Count of occupied cells (bag-title "used/total" display). */
-export function occupiedCellCount(anchors: readonly BagAnchor[]): number {
-  return occupancy(anchors).filter(Boolean).length;
+export function occupiedCellCount(
+  anchors: readonly BagAnchor[],
+  cols: number = BAG_COLS,
+  rows: number = BAG_ROWS,
+): number {
+  return occupancy(anchors, cols, rows).filter(Boolean).length;
 }

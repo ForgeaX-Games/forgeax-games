@@ -9,11 +9,14 @@ import {
   equipSlotsFor,
   EQUIP_SLOT_ORDER,
   itemFootprint,
+  itemSlotForEquip,
   meltGoldValue,
   rollDrop,
   rollItem,
+  rollStarterItem,
   SLOT_FOOTPRINT,
   SLOT_ORDER,
+  starterKitEquipment,
   type EquipSlot,
   type Item,
   type ItemInstance,
@@ -106,6 +109,8 @@ describe('item instance persistence', () => {
       name: '背包杖',
       affixes: [{ stat: 'dmgPct', v: 0.1, label: '+10% 伤害' }],
     });
+    // Starter kit fills the weapon slot — free it so the wand auto-equips.
+    domain.dispatch({ op: 'unequip', slot: 'weapon' });
     // First take equips into empty weapon slot; second goes to bag.
     domain.dispatch({ op: 'take-item', item: wand });
     domain.dispatch({ op: 'take-item', item: bagFiller });
@@ -119,6 +124,33 @@ describe('item instance persistence', () => {
     expect(restored.equipment.weapon?.name).toBe('霜铸魔杖');
     expect(restored.equipment.weapon?.affixes).toEqual(wand.affixes);
     expect(restored.bag.find((a) => a.item.instanceId === 'bag-stable-42')?.item.name).toBe('背包杖');
+  });
+});
+
+describe('rollStarterItem / starterKitEquipment (N3R-N3)', () => {
+  test('starter pieces are common whites: no affixes, ilvl 1, reqLevel 1, tier-0 name', () => {
+    const item = rollStarterItem('helm');
+    expect(item.rarity).toBe('common');
+    expect(item.name).toBe('布兜帽');
+    expect(item.ilvl).toBe(1);
+    expect(item.reqLevel).toBe(1);
+    expect(item.affixes).toEqual([]);
+    expect(item.score).toBe(0);
+    expect(item.instanceId).toBeTruthy();
+    // Fresh instanceId per call (真 ItemInstance).
+    expect(rollStarterItem('helm').instanceId).not.toBe(item.instanceId);
+  });
+
+  test('starterKitEquipment covers all ten EquipSlots with one piece each', () => {
+    const eq = starterKitEquipment();
+    for (const slot of EQUIP_SLOT_ORDER) {
+      const item = eq[slot];
+      expect(item).not.toBeNull();
+      expect(item!.slot).toBe(itemSlotForEquip(slot));
+      expect(item!.reqLevel).toBe(1);
+    }
+    expect(equipSlotsFor(eq.ring1!.slot)).toEqual(['ring1', 'ring2']);
+    expect(eq.ring1!.name).toBe(eq.ring2!.name); // both rings share 铜环
   });
 });
 

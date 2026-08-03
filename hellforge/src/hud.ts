@@ -14,12 +14,116 @@
 
 import type { HudViewModel, SkillSlotState, TargetViewModel } from './hud-view-model';
 import { HudArt } from './hud-art';
+import { KeyBindings } from './key-bindings';
 import { FONT_DISPLAY, FONT_UI, FONT_MONO, Ui, Z } from './ui-theme';
 import { ensureUiStyles } from './ui-styles';
 import { potionIconSvg, skillIconImg } from './ui-icons';
 import type { UiTooltipHandle } from './ui-tooltip';
 
 export type { HudViewModel, SkillSlotState, TargetViewModel } from './hud-view-model';
+
+// ── G6 / G7 / G9 — float-text tiers + slot badge contracts ─────────────────
+// Pure style resolution so hud.test.ts can assert the visual contracts without
+// a DOM. installHud() consumes these; main.ts only passes tier at call sites.
+
+/** G6: float-text weight tiers — combat numbers vs ambient pickups. */
+export type FloatTextTier = 'combat' | 'ambient';
+
+export interface FloatTextOptions {
+  color?: string;
+  size?: number;
+  /** Defaults to 'ambient' — legacy {color,size} callers stay unchanged. */
+  tier?: FloatTextTier;
+}
+
+export interface FloatTextStyleSpec {
+  fontSize: number;
+  fontWeight: number;
+  textShadow: string;
+  color: string;
+  animation: string;
+  durationSec: number;
+}
+
+/**
+ * G6 three-level hierarchy (handoff G6): event banners stay untouched
+ * (banner()); combat tier = larger + heavier + layered outline + longer
+ * dwell; ambient tier = small + type/rarity color + light outline. Animation
+ * stays in the hf-float-rise family; combat rises a little farther.
+ */
+export const FLOAT_TEXT_TIERS: Record<FloatTextTier, FloatTextStyleSpec> = {
+  combat: {
+    fontSize: 20,
+    fontWeight: 900,
+    textShadow: '0 0 3px #000,0 0 8px #000,0 2px 3px #000,0 0 14px rgba(0,0,0,0.6)',
+    color: Ui.text,
+    animation: 'hf-float-rise-combat',
+    durationSec: 1.05,
+  },
+  ambient: {
+    fontSize: 13,
+    fontWeight: 800,
+    textShadow: '0 1px 3px #000',
+    color: Ui.goldBright,
+    animation: 'hf-float-rise',
+    durationSec: 0.85,
+  },
+};
+
+/** Resolve a floatText call to concrete CSS values (explicit color/size win). */
+export function resolveFloatTextStyle(style?: FloatTextOptions): FloatTextStyleSpec {
+  const tier = FLOAT_TEXT_TIERS[style?.tier ?? 'ambient'];
+  return {
+    ...tier,
+    fontSize: style?.size ?? tier.fontSize,
+    color: style?.color ?? tier.color,
+  };
+}
+
+/** G7: key-bindings action ids for the four hotbar slots (never hardcoded digits). */
+const SKILL_KEY_ACTIONS = ['skill1', 'skill2', 'skill3', 'skill4'] as const;
+
+/**
+ * G7: skill-slot key badge text resolves from the CURRENT binding in
+ * key-bindings.ts (KeyBindings.getKey), formatted for display. Out-of-range
+ * slots (belt cells) yield '' so callers fall back to the slot's own key.
+ */
+export function skillSlotBadgeKey(slotIndex: number, getKey: (actionId: string) => string): string {
+  const actionId = SKILL_KEY_ACTIONS[slotIndex];
+  return actionId ? KeyBindings.formatKey(getKey(actionId)) : '';
+}
+
+/**
+ * G7: castable-but-mana-starved skills desaturate the icon (mana < cost) and
+ * restore the moment affordable flips back. Locked/empty keep the existing
+ * root-level grey — this filter never touches the cooldown veil, which is a
+ * separate child rendered above the icon.
+ */
+export function skillIconAffordCss(affordable: boolean, locked: boolean, empty: boolean): string {
+  if (locked || empty) return '';
+  return affordable ? '' : 'grayscale(0.85) brightness(0.72)';
+}
+
+/** G9: corner badge baseline — skill key labels and potion counts share size + outline. */
+export const SLOT_BADGE_FONT_PX = 12;
+
+/**
+ * Shared corner-badge css (dark ink chip keeps it off the icon's main visual;
+ * multi-layer text-shadow = the 1080p outline both G7 and G9 require).
+ * Default corner is bottom-right (count badges); potion key badges use
+ * 'top-left' — the pre-G9 corner, kept.
+ */
+export function slotBadgeCss(
+  color: string,
+  initialDisplay = '',
+  corner: 'bottom-right' | 'top-left' = 'bottom-right',
+): string {
+  const pos = corner === 'top-left' ? 'top:0;left:2px' : 'bottom:2px;right:2px';
+  return `position:absolute;${pos};font-size:${SLOT_BADGE_FONT_PX}px;font-weight:800;` +
+    'text-shadow:0 0 2px #000,0 1px 2px #000,0 0 6px rgba(0,0,0,0.85);' +
+    'background:rgba(10,7,6,0.62);border-radius:2px;padding:0 2px;line-height:1.3;' +
+    `color:${color};` + (initialDisplay ? `display:${initialDisplay};` : '');
+}
 
 export interface HudHandle {
   /** Batch-apply the engine-agnostic snapshot (optional).
@@ -40,7 +144,7 @@ export interface HudHandle {
   setAreaLabel(name: string): void;
   showArea(name: string, sub?: string): void;
   banner(text: string, color?: string, ms?: number): void;
-  floatText(text: string, screenX: number, screenY: number, style?: { color?: string; size?: number }): void;
+  floatText(text: string, screenX: number, screenY: number, style?: FloatTextOptions): void;
   damageFlash(): void;
   showDeath(show: boolean): void;
   /** Animated orb liquid (transform-only waves) on/off — perf escape hatch. */
@@ -73,6 +177,14 @@ function tipTextToHtml(text: string): string {
 export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): HudHandle {
   // Injects .hf-orb-wave* / .hf-orb-glow — required for liquid motion.
   ensureUiStyles();
+  // G7: skill-slot key badges read the CURRENT binding (rebind UI lands later;
+  // defaults '1'-'4' until then — never hardcoded digits in the HUD).
+  // Latent constraint: this display path follows KeyBindings (e.key semantics)
+  // while main.ts's onKeyDown still dispatches on e.code — identical under
+  // default bindings, but a future rebind UI must sync both paths (see the
+  // key-bindings.ts wiring note) or rebound keys would show one key and act
+  // on another.
+  const keyBindings = new KeyBindings();
   document.getElementById(HUD_ID)?.remove();
   const root = document.createElement('div');
   root.id = HUD_ID;
@@ -92,6 +204,10 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
       @keyframes hf-float-rise {
         0% { opacity:1; transform:translate(-50%,-100%) scale(1.1); }
         100% { opacity:0; transform:translate(-50%,-100%) translateY(-46px) scale(0.9); }
+      }
+      @keyframes hf-float-rise-combat {
+        0% { opacity:1; transform:translate(-50%,-100%) scale(1.15); }
+        100% { opacity:0; transform:translate(-50%,-100%) translateY(-58px) scale(0.9); }
       }
       @keyframes hf-banner {
         0% { opacity:0; transform:translate(-50%,-50%) scale(0.92); }
@@ -410,11 +526,14 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
       d.icon.style.cssText = 'display:flex;align-items:center;justify-content:center;width:100%;height:100%;' +
         `font-size:${isPotion ? '14px' : '22px'};color:${Ui.textDim};`;
       d.key.style.cssText = isPotion
-        ? 'position:absolute;top:0;left:2px;font-size:8px;color:#886644;text-shadow:0 1px 1px #000;'
-        : 'position:absolute;bottom:1px;right:2px;font-size:9px;color:#8a7a5a;text-shadow:0 1px 1px #000;';
+        // G9: potion key badge joins the slotBadgeCss chip (12px + layered
+        // outline, same as the skill key badges) — goldDim hue keeps it
+        // distinct from the count badge (#c8a84e); top-left corner kept.
+        ? slotBadgeCss(Ui.goldDim, '', 'top-left')
+        : slotBadgeCss(Ui.goldDim);
       d.cost.style.cssText = 'position:absolute;top:1px;left:3px;font-size:9px;font-weight:bold;color:#7da2ff;text-shadow:0 1px 2px #000;';
       d.veil.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:0%;background:rgba(0,0,0,0.62);pointer-events:none;';
-      d.badge.style.cssText = 'position:absolute;bottom:0;right:1px;font-size:8px;color:#c8a84e;text-shadow:0 1px 1px #000;display:none;';
+      d.badge.style.cssText = slotBadgeCss('#c8a84e', 'none');
       root.append(d.icon, d.key, d.cost, d.veil, d.badge);
       // Global tooltip (native title never fires under pointer-events:none HUD).
       root.addEventListener('mousemove', (e) => {
@@ -458,7 +577,7 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
   const QUICK: Array<{ action: string; key: string; name: string; color: string }> = [
     { action: 'character', key: 'C', name: '角色', color: '#c8a84e' },
     { action: 'skills', key: 'K', name: '技能', color: '#88cc88' },
-    { action: 'inventory', key: 'B', name: '背包', color: '#c8a84e' },
+    { action: 'inventory', key: 'I', name: '背包', color: '#c8a84e' },
     { action: 'craft', key: 'F', name: '熔炉', color: '#ff9a5a' },
     { action: 'quests', key: 'Q', name: '任务', color: '#ffd700' },
     { action: 'map', key: 'Tab', name: '地图', color: '#88aacc' },
@@ -708,13 +827,16 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
           }
         }
       }
-      d.key.textContent = s.key;
+      d.key.textContent = skillSlotBadgeKey(i, (actionId) => keyBindings.getKey(actionId)) || s.key;
       d.badge.style.display = 'none';
       // PR6 painted rim: empty vs selected/active plate; keep opacity for lock/afford.
       d.root.style.backgroundImage = `url('${s.selected ? HudArt.hotbarSlotActive() : HudArt.hotbarSlotEmpty()}')`;
       d.root.style.boxShadow = s.selected ? `0 0 10px rgba(255,80,30,0.35)` : '';
       d.root.style.filter = (s.locked || s.empty) ? 'grayscale(0.9) brightness(0.55)' : '';
       d.root.style.opacity = (s.locked || s.empty) ? '0.3' : (!s.affordable ? '0.5' : '1');
+      // G7: mana < cost → icon desaturates; restored on the next setSkills pass.
+      // The cooldown veil is a separate child above the icon — never covered.
+      d.icon.style.filter = skillIconAffordCss(!!s.affordable, !!s.locked, !!s.empty);
       if (s.empty) {
         d.cost.textContent = '';
         d.veil.style.height = '0%';
@@ -821,16 +943,18 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
     bannerTimer = window.setTimeout(() => { bannerEl.style.display = 'none'; }, ms);
   };
 
-  const floatText = (text: string, sx: number, sy: number, style?: { color?: string; size?: number }) => {
+  const floatText = (text: string, sx: number, sy: number, style?: FloatTextOptions) => {
     // screenX/Y are canvas-local (== mount-local when uiRoot matches viewport).
+    // G6: tier presets own weight/shadow/animation; explicit color/size win.
+    const st = resolveFloatTextStyle(style);
     const p = document.createElement('div');
     p.textContent = text;
     p.style.cssText = `position:absolute;left:${sx}px;top:${sy}px;transform:translate(-50%,-100%);` +
-      `color:${style?.color ?? '#ffe28a'};font:800 ${style?.size ?? 18}px ${FONT_UI};` +
-      'text-shadow:0 1px 3px #000;white-space:nowrap;pointer-events:none;' +
-      'animation:hf-float-rise 0.85s ease-out forwards;';
+      `color:${st.color};font:${st.fontWeight} ${st.fontSize}px ${FONT_UI};` +
+      `text-shadow:${st.textShadow};white-space:nowrap;pointer-events:none;` +
+      `animation:${st.animation} ${st.durationSec}s ease-out forwards;`;
     popups.appendChild(p);
-    setTimeout(() => p.remove(), 900);
+    setTimeout(() => p.remove(), Math.round(st.durationSec * 1000) + 80);
   };
 
   const damageFlash = () => {

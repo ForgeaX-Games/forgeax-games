@@ -202,6 +202,7 @@ export function serializeCharacter(
     inventory: {
       bag: deepClone(snapshot.bag as Array<unknown>) as CharacterSaveEnvelope['inventory']['bag'],
       equipment: deepClone(snapshot.equipment as object) as CharacterSaveEnvelope['inventory']['equipment'],
+      stash: deepClone(snapshot.stash as Array<unknown>) as CharacterSaveEnvelope['inventory']['stash'],
     },
     quests: deepClone(snapshot.quests as object) as CharacterSaveEnvelope['quests'],
     checkpointId: CHECKPOINT_CINDERWATCH,
@@ -239,6 +240,7 @@ export function hydrateCharacter(
     selectedHotbarSlot: parsed.progression.selectedHotbarSlot,
     bag: parsed.inventory.bag,
     equipment: parsed.inventory.equipment,
+    stash: parsed.inventory.stash,
     quests: parsed.quests,
     potions: parsed.progression.potions,
     materials: parsed.progression.materials,

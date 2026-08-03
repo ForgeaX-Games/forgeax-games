@@ -13,24 +13,28 @@
   "source": "prop_clocktower.glb",
   "subAssets": [
     {
-      "guid": "019f83e3-b986-7339-a337-5c28d9aae173",
+      "guid": "019f83e3-b986-4339-a337-5c28d9aae173",
       "kind": "mesh",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "mesh:0"
     },
     {
-      "guid": "019f83e3-b986-7339-a337-5c29a96cd005",
+      "guid": "019f83e3-b986-4339-a337-5c29a96cd005",
       "kind": "material",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "material:0"
     },
     {
-      "guid": "019f83e3-b986-7339-a337-5c2a42d93ddc",
+      "guid": "019f83e3-b986-4339-a337-5c2a42d93ddc",
       "kind": "scene",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "scene:0"
     },
     {
-      "guid": "019f83e3-b986-7339-a337-5c2b91e16c48",
+      "guid": "019f83e3-b986-4339-a337-5c2b91e16c48",
       "kind": "texture",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "texture:0"
     }
   ]
 }

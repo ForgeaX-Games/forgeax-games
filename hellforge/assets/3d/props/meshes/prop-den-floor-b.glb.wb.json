@@ -5,8 +5,8 @@
     "pluginVersion": "0.1.0"
   },
   "createdAt": "2026-07-04T04:53:26.367Z",
-  "contentHash": "sha256:a7c15aae4bdcadb9d2d48e161d359c872e1ec7c2c5c1052daf24838cede5bba2",
-  "size": 9256644,
+  "contentHash": "sha256:17b652777be9c7a332cd61d1af47e54abadfcd47c8eaa39acd76f008f7a4a9ee",
+  "size": 9285316,
   "type": "aiasset-mesh",
   "dependencies": [
     {
@@ -86,6 +86,10 @@
       "rater": "geometry-check",
       "notes": "topology=degraded, faces=1374, components=1, boundaryEdges=8, nonManifoldEdges=34, reasons: 34 non-manifold edge(s)",
       "scoredAt": "2026-07-04T04:53:26.579Z"
+    },
+    "engineImport": {
+      "sourceHash": "sha256:17b652777be9c7a332cd61d1af47e54abadfcd47c8eaa39acd76f008f7a4a9ee",
+      "importedAt": "2026-08-02T13:33:59.885Z"
     }
   }
 }

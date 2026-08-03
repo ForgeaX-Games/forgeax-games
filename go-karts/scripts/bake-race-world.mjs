@@ -27,6 +27,31 @@ import {
   buildDriveThroughDetails,
 } from './bake-scenery-fill.mjs';
 
+// Three's browser exporter still expects FileReader when run under Node.
+if (typeof globalThis.FileReader === 'undefined') {
+  globalThis.FileReader = class {
+    result = null;
+    onloadend = null;
+
+    readAsArrayBuffer(blob) {
+      return blob.arrayBuffer().then((value) => {
+        this.result = value;
+        this.onloadend?.({ target: this });
+        return value;
+      });
+    }
+
+    readAsDataURL(blob) {
+      return blob.arrayBuffer().then((value) => {
+        const mime = blob.type || 'application/octet-stream';
+        this.result = `data:${mime};base64,${Buffer.from(value).toString('base64')}`;
+        this.onloadend?.({ target: this });
+        return this.result;
+      });
+    }
+  };
+}
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = '/Users/you/Desktop/forgeax/forgeax-studio/.forgeax/games/go-karts/assets';
 const TEX_DIR =
@@ -872,12 +897,17 @@ function buildScenery(track, root) {
   );
 
   root.add(scenery);
-  return { coinPositions: centerProps.coinPositions };
+  return {
+    coinPositions: centerProps.coinPositions,
+    itemBoxPositions: centerProps.itemBoxPositions,
+  };
 }
 
 function buildGround(root) {
   // Use a thin box (not PlaneGeometry): ForgeaX / glTF flatten can leave
   // rotated planes vertical after join, which makes the grass disappear.
+  // Keep UNNAMED solid green → pack PBR remap. Do NOT name mid_* or inject
+  // textures here: ForgeaX often shows white film when glTF tex fails to bind.
   const grass = new THREE.Mesh(
     new THREE.BoxGeometry(500, 0.2, 500),
     std(0xa8d878, 0.95),
@@ -917,12 +947,19 @@ function landmarkPlacements(track) {
     PropTower5: { ...at(0.82, -36), scale: 1.0, targetH: 21 },
     PropTower6: { ...at(0.85, 37), scale: 1.0, targetH: 28 },
     PropTower7: { ...at(0.88, -34), scale: 1.0, targetH: 17 },
-    PropTree0: { x: 10, y: 0, z: -28, yaw: 1.1, scale: 1.0, targetH: 3.4 },
-    PropTree1: { x: 42, y: 0, z: 16, yaw: 2.2, scale: 1.0, targetH: 4.1 },
-    PropTree2: { x: -42, y: 0, z: 12, yaw: 0.5, scale: 1.0, targetH: 3.4 },
-    PropTree3: { ...at(0.22, 13), scale: 1.0, targetH: 3.8 },
-    PropTree4: { ...at(0.4, -12), scale: 1.0, targetH: 4.2 },
-    PropTree5: { ...at(0.7, 12), scale: 1.0, targetH: 3.6 },
+    // Keep |lat| ≥ roadHalf+4.5 so prop_tree canopy (~1.2m×scale) never sits on asphalt.
+    PropTree0: { ...at(0.08, 14.5), scale: 1.0, targetH: 3.4 },
+    PropTree1: { ...at(0.15, -14.5), scale: 1.0, targetH: 4.1 },
+    PropTree2: { ...at(0.35, 15.0), scale: 1.0, targetH: 3.4 },
+    PropTree3: { ...at(0.22, 14.0), scale: 1.0, targetH: 3.8 },
+    PropTree4: { ...at(0.4, -14.0), scale: 1.0, targetH: 4.2 },
+    PropTree5: { ...at(0.7, 14.0), scale: 1.0, targetH: 3.6 },
+    PropTree6: { ...at(0.02, -14.5), scale: 1.0, targetH: 3.7 },
+    PropTree7: { ...at(0.5, 15.5), scale: 1.0, targetH: 4.0 },
+    PropTree8: { ...at(0.62, -15.0), scale: 1.0, targetH: 3.9 },
+    PropTree9: { ...at(0.78, 14.5), scale: 1.0, targetH: 4.3 },
+    PropTree10: { ...at(0.9, -14.5), scale: 1.0, targetH: 3.5 },
+    PropTree11: { ...at(0.96, 15.0), scale: 1.0, targetH: 4.1 },
     // 14 main lamps alternating sides (original density)
     ...Object.fromEntries(
       Array.from({ length: 14 }, (_, i) => {
@@ -948,7 +985,7 @@ async function main() {
   // Solid-color ground + procedural streetscape. Postprocess only textures
   // asphalt/sidewalk (not grass/wood) so trees stay separate from the lawn.
   buildGround(root);
-  const { coinPositions } = buildScenery(track, root);
+  const { coinPositions, itemBoxPositions } = buildScenery(track, root);
 
   const placements = landmarkPlacements(track);
   const spawn = (() => {
@@ -972,6 +1009,7 @@ async function main() {
         placements,
         corrTRange: corridorTRange(),
         coins: coinPositions,
+        itemBoxes: itemBoxPositions,
       },
       null,
       2,

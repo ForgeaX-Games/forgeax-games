@@ -13,24 +13,28 @@
   "source": "prop_bridge.glb",
   "subAssets": [
     {
-      "guid": "019f83e3-b907-7da4-b374-d2a2a25f3237",
+      "guid": "019f83e3-b907-4da4-b374-d2a2a25f3237",
       "kind": "mesh",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "mesh:0"
     },
     {
-      "guid": "019f83e3-b907-7da4-b374-d2a3edd55127",
+      "guid": "019f83e3-b907-4da4-b374-d2a3edd55127",
       "kind": "material",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "material:0"
     },
     {
-      "guid": "019f83e3-b907-7da4-b374-d2a4231fd915",
+      "guid": "019f83e3-b907-4da4-b374-d2a4231fd915",
       "kind": "scene",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "scene:0"
     },
     {
-      "guid": "019f83e3-b907-7da4-b374-d2a50d267bbb",
+      "guid": "019f83e3-b907-4da4-b374-d2a50d267bbb",
       "kind": "texture",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "texture:0"
     }
   ]
 }

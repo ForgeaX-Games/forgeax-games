@@ -288,9 +288,106 @@ export function buildChevronPng(w = 256, h = 128) {
   return PNG.sync.write(png);
 }
 
+/**
+ * Seamless cartoon lawn tile: mottled greens + tiny flower confetti.
+ * Reference kart games read grass as patterned, not a flat lime slab.
+ */
+export function buildGrassTilePng(size = 512) {
+  const w = size;
+  const h = size;
+  const data = Buffer.alloc(w * h * 4);
+  // Soft base mottling (tileable via wrap-around samples).
+  const hash = (x, y) => {
+    const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+    return n - Math.floor(n);
+  };
+  const sample = (x, y) => {
+    const xi = ((x % w) + w) % w;
+    const yi = ((y % h) + h) % h;
+    return hash(xi, yi);
+  };
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const n0 = sample(x, y);
+      const n1 = sample(x * 0.37 + 20, y * 0.37 + 11);
+      const n2 = sample(x * 0.13 + 3, y * 0.13 + 7);
+      const blade = sample(x * 2.1, y * 2.1);
+      const tone = 0.55 + n0 * 0.22 + n1 * 0.12 + n2 * 0.08;
+      let r = 72 + tone * 48 + blade * 18;
+      let g = 150 + tone * 55 + blade * 22;
+      let b = 48 + tone * 28;
+      // Occasional darker soil / shadow flecks.
+      if (n0 > 0.92 && n1 > 0.55) {
+        r *= 0.78;
+        g *= 0.82;
+        b *= 0.7;
+      }
+      // Lighter sun patches.
+      if (n2 > 0.88) {
+        r = Math.min(255, r + 18);
+        g = Math.min(255, g + 22);
+        b = Math.min(255, b + 10);
+      }
+      const o = (y * w + x) * 4;
+      data[o] = Math.min(255, Math.max(0, r));
+      data[o + 1] = Math.min(255, Math.max(0, g));
+      data[o + 2] = Math.min(255, Math.max(0, b));
+      data[o + 3] = 255;
+    }
+  }
+  // Flower confetti (small clusters, wrapped for seamless tiling).
+  const flowers = [
+    [255, 120, 150],
+    [255, 220, 70],
+    [255, 160, 70],
+    [240, 100, 210],
+    [255, 255, 245],
+    [255, 90, 110],
+  ];
+  const stampFlower = (cx, cy, rad, rgb) => {
+    for (let dy = -rad; dy <= rad; dy++) {
+      for (let dx = -rad; dx <= rad; dx++) {
+        if (dx * dx + dy * dy > rad * rad) continue;
+        const x = ((cx + dx) % w + w) % w;
+        const y = ((cy + dy) % h + h) % h;
+        const o = (y * w + x) * 4;
+        const edge = Math.sqrt(dx * dx + dy * dy) / rad;
+        const k = edge > 0.7 ? 0.65 : 1;
+        data[o] = Math.round(rgb[0] * k + data[o] * (1 - k));
+        data[o + 1] = Math.round(rgb[1] * k + data[o + 1] * (1 - k));
+        data[o + 2] = Math.round(rgb[2] * k + data[o + 2] * (1 - k));
+      }
+    }
+    // Tiny yellow center.
+    const o = ((((cy % h) + h) % h) * w + (((cx % w) + w) % w)) * 4;
+    data[o] = 255;
+    data[o + 1] = 230;
+    data[o + 2] = 90;
+  };
+  for (let i = 0; i < 90; i++) {
+    const fx = Math.floor(hash(i, 1.3) * w);
+    const fy = Math.floor(hash(i, 2.7) * h);
+    const rad = 2 + Math.floor(hash(i, 4.1) * 3);
+    stampFlower(fx, fy, rad, flowers[i % flowers.length]);
+  }
+  // Soft clover / leaf dots (darker green blobs).
+  for (let i = 0; i < 40; i++) {
+    const fx = Math.floor(hash(i, 8.2) * w);
+    const fy = Math.floor(hash(i, 9.5) * h);
+    const rad = 3 + Math.floor(hash(i, 3.3) * 4);
+    stampFlower(fx, fy, rad, [90, 170, 70]);
+  }
+  const png = new PNG({ width: w, height: h });
+  png.data = data;
+  return PNG.sync.write(png);
+}
+
 export function writeAllMidTextures() {
   if (!existsSync(MID_TEX_DIR)) mkdirSync(MID_TEX_DIR, { recursive: true });
   const out = {};
+  const grass = buildGrassTilePng(512);
+  writeFileSync(join(MID_TEX_DIR, 'grass_tile.png'), grass);
+  out.grass_tile = grass;
   for (const kind of Object.keys(SHOPS)) {
     const sign = buildShopSignPng(kind);
     const awn = buildAwningPng(SHOPS[kind].board);

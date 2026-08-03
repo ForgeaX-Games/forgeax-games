@@ -50,7 +50,7 @@ import {
   type FxSpawnLease,
 } from './fx/executor';
 import type { EffectDef, SpriteDef } from './fx/effect-def';
-import { SpriteSystem, type SpriteHandle } from './fx/sprite';
+import { SpriteSystem, type SpriteHandle, type SpriteSpawnOpts } from './fx/sprite';
 import { combatBeat } from './fx/defs';
 
 export type MatHandle = Handle<'MaterialAsset', 'shared'>;
@@ -227,6 +227,8 @@ export class FxSystem {
   /** Pooled materials + params (one slot per concurrent ping). */
   private moveClickPool: Array<{ mat: MatHandle; params: ShaderParams }> = [];
   private moveClickFree: number[] = [];
+  /** true = c0/Pack-v1 pass shape (`shader` + `paramValues`). */
+  private customPassShaderShape = false;
   /** Pure counts for __hf / tests (entities stay in this class). */
   readonly lifecycle = new FxLifecycleTracker();
   /** Declarative EffectDef runner (PR2b T2). Spawns via burst/pop/rise. */
@@ -263,6 +265,42 @@ export class FxSystem {
     }
 
     // ── custom shaders (graceful fallback to plain emissive if unavailable) ──
+    // c0 engines expect MaterialPass.shader + paramValues; newer engines use
+    // program.module + values. Blind Pack-v2 shape makes move-click / FX mats
+    // allocate but never paint → click guidance looks "removed".
+    const probePass = Materials.standard({
+      baseColor: [1, 1, 1, 1],
+      roughness: 0.5,
+      metallic: 0,
+    }).passes?.[0] as { shader?: string; program?: unknown } | undefined;
+    this.customPassShaderShape = typeof probePass?.shader === 'string';
+
+    const mkCustomMat = (shaderId: string, params: ShaderParams): MatHandle => {
+      if (this.customPassShaderShape) {
+        return world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
+          kind: 'material',
+          passes: [{
+            name: 'Forward',
+            shader: shaderId,
+            tags: { LightMode: 'Forward' },
+            queue: 3000,
+            passKind: 'forward',
+            renderState: FX_RENDER_STATE,
+          }],
+          paramValues: params as never,
+        } as unknown as MaterialAsset);
+      }
+      return world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
+        kind: 'material',
+        passes: [{
+          name: 'Forward',
+          program: { module: shaderId },
+          renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'Forward' }, queue: 3000 },
+        }],
+        values: params as never,
+      });
+    };
+
     const renderer = (app as {
       renderer?: {
         shader?: {
@@ -301,11 +339,7 @@ export class FxSystem {
         safeRegister(FROST_SLOW_SHADER_ID, frostSlowShader.wgsl);
         safeRegister(MOVE_CLICK_SHADER_ID, moveClickShader.wgsl);
         const fbParams: ShaderParams = { baseColor: [1.0, 0.18, 0.03, 1], metallic: 0, roughness: 1.35 };
-        this.fireBoltMat = this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
-          kind: 'material',
-          passes: [{ name: 'Forward', program: { module: FIRE_BOLT_SHADER_ID }, renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'Forward' }, queue: 3000 } }],
-          values: fbParams as never,
-        });
+        this.fireBoltMat = mkCustomMat(FIRE_BOLT_SHADER_ID, fbParams);
         this.fireBoltParams = fbParams;
 
         const mkFrost = (shader: string, tint: [number, number, number], intensity: number): MatHandle => {
@@ -315,11 +349,7 @@ export class FxSystem {
             roughness: intensity,
           };
           this.frostParams.push(params);
-          return this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
-            kind: 'material',
-            passes: [{ name: 'Forward', program: { module: shader }, renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'Forward' }, queue: 3000 } }],
-            values: params as never,
-          });
+          return mkCustomMat(shader, params);
         };
         this.frostHandles = {
           projectile: mkFrost(FROST_FANG_SHADER_ID, [0.42, 0.78, 1.0], 1.15),
@@ -334,15 +364,7 @@ export class FxSystem {
             metallic: 0,
             roughness: 0.9,
           };
-          const mat = world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
-            kind: 'material',
-            passes: [{
-              name: 'Forward',
-              program: { module: MOVE_CLICK_SHADER_ID },
-              renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'Forward' }, queue: 3000 },
-            }],
-            values: params as never,
-          });
+          const mat = mkCustomMat(MOVE_CLICK_SHADER_ID, params);
           this.moveClickPool.push({ mat, params });
           this.moveClickFree.push(i);
         }
@@ -352,6 +374,30 @@ export class FxSystem {
         this.frostParams = [];
         this.moveClickPool = [];
         this.moveClickFree = [];
+      }
+    }
+
+    // If custom move-click pool never filled (shader registry missing / setup
+    // threw), seed emissive magma slabs so click-to-move guidance still reads.
+    if (this.moveClickPool.length === 0) {
+      for (let i = 0; i < MOVE_CLICK_MAX; i++) {
+        const params: ShaderParams = {
+          baseColor: [1.0, 0.42, 0.12, 1],
+          metallic: 0,
+          roughness: 0.9,
+        };
+        const mat = world.allocSharedRef<'MaterialAsset', MaterialAsset>(
+          'MaterialAsset',
+          Materials.standard({
+            baseColor: [1.0, 0.42, 0.12, 1],
+            roughness: 0.45,
+            metallic: 0.05,
+            emissive: [1.0, 0.35, 0.08],
+            emissiveIntensity: 1.8,
+          }),
+        );
+        this.moveClickPool.push({ mat, params });
+        this.moveClickFree.push(i);
       }
     }
   }
@@ -369,11 +415,28 @@ export class FxSystem {
   portalMaterial(tint: [number, number, number]): MatHandle | null {
     if (!this.fireBoltMat) return null;   // shader registry unavailable
     const params: ShaderParams = { baseColor: [tint[0], tint[1], tint[2], 1], metallic: 0, roughness: 1.0 };
-    const mat = this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
-      kind: 'material',
-      passes: [{ name: 'Forward', program: { module: PORTAL_SHADER_ID }, renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'Forward' }, queue: 3000 } }],
-      values: params as never,
-    });
+    const mat = this.customPassShaderShape
+      ? this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
+          kind: 'material',
+          passes: [{
+            name: 'Forward',
+            shader: PORTAL_SHADER_ID,
+            tags: { LightMode: 'Forward' },
+            queue: 3000,
+            passKind: 'forward',
+            renderState: FX_RENDER_STATE,
+          }],
+          paramValues: params as never,
+        } as unknown as MaterialAsset)
+      : this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
+          kind: 'material',
+          passes: [{
+            name: 'Forward',
+            program: { module: PORTAL_SHADER_ID },
+            renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'Forward' }, queue: 3000 },
+          }],
+          values: params as never,
+        });
     this.portalMats.push({ mat, params });
     return mat;
   }
@@ -667,6 +730,26 @@ export class FxSystem {
   /** Exactly-once persistent sprite release (owner cleanup). */
   releaseSprite(h: SpriteHandle): void {
     this.sprites.release(h);
+  }
+
+  /**
+   * Persistent-decal surface for satellite FX systems (G2-A enemy under-rings).
+   * Narrowed 3-method adapter over SpriteSystem so consumers stay
+   * implementation-agnostic and unit-testable, and can't touch the wider FX
+   * surface (spawn/tick/clear); absent from fx stubs in tests (rings degrade
+   * to off).
+   */
+  persistentDecalSurface(): {
+    spawnPersistentDecal(x: number, y: number, z: number, opts: SpriteSpawnOpts): SpriteHandle;
+    move(h: SpriteHandle, x: number, y: number, z: number): void;
+    release(h: SpriteHandle): void;
+  } {
+    const sprites = this.sprites;
+    return {
+      spawnPersistentDecal: (x, y, z, opts) => sprites.spawnPersistentDecal(x, y, z, opts),
+      move: (h, x, y, z) => sprites.move(h, x, y, z),
+      release: (h) => sprites.release(h),
+    };
   }
 
   // ── Projectile flight presentation (PR8 T3/T4/T5) ────────────────────────

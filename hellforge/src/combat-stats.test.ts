@@ -78,6 +78,9 @@ describe('deriveCombatStats', () => {
 
   test('equipment affixes feed multipliers and resource caps', () => {
     const domain = createSorceressDomain({ playerName: '装备' });
+    // Starter kit fills weapon/armor — free them so the test gear auto-equips.
+    domain.dispatch({ op: 'unequip', slot: 'weapon' });
+    domain.dispatch({ op: 'unequip', slot: 'armor' });
     domain.dispatch({ op: 'take-item', item: frostWeapon(0.2) });
     domain.dispatch({ op: 'take-item', item: hpItem(25) });
     const stats = deriveCombatStats({ character: domain.snapshot(), classDef: sorceress });
@@ -104,6 +107,8 @@ describe('deriveCombatStats', () => {
       ],
       score: 99,
     };
+    // Starter kit fills the boots slot — free it so the cap boots auto-equip.
+    domain.dispatch({ op: 'unequip', slot: 'boots' });
     domain.dispatch({ op: 'take-item', item: boots });
     const stats = deriveCombatStats({ character: domain.snapshot(), classDef: sorceress });
     expect(stats.moveSpeed).toBeCloseTo(1.4, 5);

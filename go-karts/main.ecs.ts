@@ -2,17 +2,17 @@
  * ForgeaX native entry — distilled Three MainScene → ECS bootstrap.
  *
  * Static world: assets/scene.pack.json (defaultScene).
- * Dynamic: InputSnapshot + registerUpdate (kart / AI / camera / session / HUD).
+ * Dynamic: InputSnapshot + ECS Update system (kart / AI / camera / session / HUD).
  */
+import { Transform } from '@forgeax/engine-scene';
 import {
   ANTIALIAS_FXAA,
   BLOOM_ENABLED,
   Camera,
-  TONEMAP_ACES_FILMIC,
-  Transform,
+  TONEMAP_NEUTRAL,
   perspective,
-} from '@forgeax/engine-runtime';
-import type { World } from '@forgeax/engine-ecs';
+} from '@forgeax/engine-render';
+import { Time, Update, type World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
 import {
   createInputSnapshot,
@@ -82,10 +82,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
             near: 0.1,
             far: 500,
           }),
-          tonemap: TONEMAP_ACES_FILMIC,
+          tonemap: TONEMAP_NEUTRAL,
+          exposure: 0.88,
           bloom: BLOOM_ENABLED,
+          bloomThreshold: 1.75,
+          bloomIntensity: 0.3,
+          bloomBlurRadius: 2.2,
           antialias: ANTIALIAS_FXAA,
-          clearColor: [0.55, 0.82, 1.0, 1],
+          clearColor: [0.3, 0.66, 1.0, 1],
         },
       },
     )
@@ -128,23 +132,24 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const hud = installKartHud(ctx?.uiRoot);
   ctx?.registerCleanup?.(() => hud.dispose());
 
-  if (!ctx?.registerUpdate) {
-    console.error('[go-karts] registerUpdate unavailable; driving loop not started');
-    return;
-  }
+  world.addSystem(Update, {
+    name: 'go-karts-update',
+    queries: [],
+    resources: ['Time'],
+    fn: () => {
+      const dt = world.getResource(Time).delta;
+      const input = readInput();
+      const pose = kart.update(dt, input, { driftHeld: hud.isDriftHeld() });
+      const playerProg = session.playerProgress(pose.trackT);
+      ais.update(dt, session.elapsed, playerProg);
+      session.update(dt, pose.trackT, ais.getProgresses());
+      followCamera.update(dt, pose);
 
-  ctx.registerUpdate((dt: number) => {
-    const input = readInput();
-    const pose = kart.update(dt, input, { driftHeld: hud.isDriftHeld() });
-    const playerProg = session.playerProgress(pose.trackT);
-    ais.update(dt, session.elapsed, playerProg);
-    session.update(dt, pose.trackT, ais.getProgresses());
-    followCamera.update(dt, pose);
-
-    hud.setSpeed(kart.getSpeedKph());
-    hud.setLap(session.lap, session.totalLaps);
-    hud.setRank(session.rank, 1 + aiList.length);
-    hud.setTime(session.elapsed);
-    hud.setPhase(session.phase);
+      hud.setSpeed(kart.getSpeedKph());
+      hud.setLap(session.lap, session.totalLaps);
+      hud.setRank(session.rank, 1 + aiList.length);
+      hud.setTime(session.elapsed);
+      hud.setPhase(session.phase);
+    },
   });
 }

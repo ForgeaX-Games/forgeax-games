@@ -4,6 +4,7 @@
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import {
   createSorceressDomain,
+  hydrateSorceressDomain,
   type CharacterSnapshot,
 } from './character-domain';
 import {
@@ -12,10 +13,12 @@ import {
   __setSaveStorageForTests,
   flushCharacterSaves,
   flushReturnToTitle,
+  hydrateCharacter,
   installSaveLifecycleHooks,
   listCharacters,
   loadEnvelope,
   saveSnapshot,
+  serializeCharacter,
   type SaveStorage,
 } from './save';
 
@@ -158,5 +161,67 @@ describe('memory fallback warning', () => {
     }
     const fallbackWarns = warns.filter((a) => String(a[0]).includes('in-memory fallback'));
     expect(fallbackWarns).toHaveLength(1);
+  });
+});
+
+describe('personal stash (N-Stash) save round trip', () => {
+  test('serialize→hydrate preserves stash anchors and item identity', () => {
+    const base = createSorceressDomain({ playerName: '仓库往返', id: 'stash-rt-1' }).snapshot();
+    const domain = hydrateSorceressDomain({
+      identity: base.identity,
+      level: base.level,
+      xp: base.xp,
+      gold: base.gold,
+      unspentSkillPoints: base.unspentSkillPoints,
+      skillRanks: base.skillRanks,
+      hotbar: base.hotbar,
+      selectedHotbarSlot: base.selectedHotbarSlot,
+      bag: base.bag,
+      equipment: base.equipment,
+      quests: base.quests,
+      stash: [
+        {
+          item: {
+            instanceId: 'stash-armor',
+            slot: 'armor',
+            rarity: 'magic',
+            name: '仓甲',
+            ilvl: 3,
+            reqLevel: 1,
+            affixes: [{ stat: 'maxHp', v: 4, label: '+4 HP' }],
+            score: 9,
+            size: { w: 2, h: 3 },
+          },
+          x: 10,
+          y: 7, // flush against the 12×10 stash edges
+        },
+        {
+          item: {
+            instanceId: 'stash-ring',
+            slot: 'ring',
+            rarity: 'common',
+            name: '仓戒',
+            ilvl: 1,
+            reqLevel: 1,
+            affixes: [],
+            score: 0,
+            size: { w: 1, h: 1 },
+          },
+          x: 0,
+          y: 0,
+        },
+      ],
+    });
+    const env = serializeCharacter(domain.snapshot());
+    expect(env.inventory.stash).toHaveLength(2);
+    expect(env.inventory.stash!.map((a) => a.item.instanceId)).toEqual(['stash-armor', 'stash-ring']);
+
+    const restored = hydrateCharacter(env).snapshot();
+    expect(restored.stash).toHaveLength(2);
+    expect(restored.stash[0]!.item.instanceId).toBe('stash-armor');
+    expect(restored.stash[0]).toMatchObject({ x: 10, y: 7 });
+    expect(restored.stash[0]!.item.size).toEqual({ w: 2, h: 3 });
+    expect(restored.stash[1]!.item.instanceId).toBe('stash-ring');
+    expect(restored.stash[1]).toMatchObject({ x: 0, y: 0 });
   });
 });
