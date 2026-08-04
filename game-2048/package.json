@@ -1,0 +1,53 @@
+{
+  "name": "@forgeax/game-2048",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "A polished 2048 game authored and verified through ForgeaX Studio.",
+  "scripts": {
+    "test": "bun run typecheck && bun test src/__tests__",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "forgeax": {
+    "assets": {
+      "roots": [
+        "assets"
+      ]
+    },
+    "metrics": {
+      "bundle-size": {
+        "enabled": false,
+        "reason": "template bundle is downstream of the host app (apps/preview)"
+      },
+      "fps": {
+        "enabled": false,
+        "reason": "template has no independent smoke gate"
+      },
+      "bench": {
+        "enabled": false,
+        "reason": "template scaffold; bench focus stays on engine packages"
+      },
+      "gate": {
+        "enabled": false,
+        "reason": "no CI gate on template scaffold; apps/preview hosts acceptance"
+      },
+      "spike-report": {
+        "enabled": false,
+        "reason": "not a spike app"
+      }
+    }
+  },
+  "dependencies": {
+    "@forgeax/engine-app": "workspace:*",
+    "@forgeax/engine-ecs": "workspace:*",
+    "@forgeax/engine-input": "workspace:*",
+    "@forgeax/engine-render": "workspace:*",
+    "@forgeax/engine-runtime": "workspace:*",
+    "@forgeax/engine-scene": "workspace:*",
+    "@forgeax/engine-ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@webgpu/types": "^0.1.71"
+  }
+}

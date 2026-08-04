@@ -40,9 +40,15 @@ const MATS: Record<GeoKind, {
   bone:      { guid: '60d7f2c4-3a85-4c96-9e07-8c4b1e5a72e8', name: 'DenBone', base: [0.62, 0.56, 0.44, 1], rough: 0.7 },
   slag:      { guid: 'b52e8a07-4d93-4e60-a3f9-1a6d0c9b53f9', name: 'DenSlag', base: [0.40, 0.06, 0.02, 1], rough: 0.5, emissive: [0.55, 0.06, 0.01], ei: 0.35 },
   crate:     { guid: '9a1c3b5e-2d4f-4e8a-9c01-7b3f6d8e0a12', name: 'DenCrate', base: [0.45, 0.30, 0.18, 1], rough: 0.85 },
+  woodPile:  { guid: '7c4e2a91-5b3d-4f60-9a27-1e8c5d0b3f94', name: 'DenWoodPile', base: [0.32, 0.22, 0.13, 1], rough: 0.85 },
+  stonePile: { guid: '2f9d6b38-4c71-4e05-b83a-6d1f9a2e57c0', name: 'DenStonePile', base: [0.35, 0.33, 0.31, 1], rough: 0.9 },
+  deadtreeTrunk:  { guid: '8d3e7b52-1a6c-4d08-9f41-2c7b5e9a63d1', name: 'DenDeadTrunk', base: [0.20, 0.13, 0.08, 1], rough: 0.95 },
+  deadtreeBranch: { guid: '4f6a9d17-3c58-4e92-b7a0-5d1e8f2b46c9', name: 'DenDeadBranch', base: [0.22, 0.14, 0.09, 1], rough: 0.95 },
+  campfireBase:   { guid: 'b1d4e8a3-6f92-4c7b-8e05-3a9f2c6d18e4', name: 'DenCampfireBase', base: [0.28, 0.24, 0.22, 1], rough: 0.9 },
+  fence:          { guid: 'e5f8b2c7-9d14-4a63-8b20-7c3e1f9d42a8', name: 'DenFence', base: [0.24, 0.16, 0.10, 1], rough: 0.9 },
 };
 
-type Policy = 'cube' | 'ground' | 'keep' | 'tile' | 'floorGrid' | 'post';
+type Policy = 'cube' | 'ground' | 'keep' | 'tile' | 'floorGrid' | 'post' | 'pile';
 
 // Per-kind de-stretch policy.
 const POLICY: Record<GeoKind, Policy> = {
@@ -56,6 +62,12 @@ const POLICY: Record<GeoKind, Policy> = {
   rubble: 'ground',
   bone: 'ground',
   crate: 'ground',
+  woodPile: 'pile',
+  stonePile: 'pile',
+  deadtreeTrunk: 'pile',
+  deadtreeBranch: 'pile',
+  campfireBase: 'pile',
+  fence: 'pile',
 };
 
 // Per-kind asset POOL (variant selection breaks mesh repetition). Walls use only
@@ -80,6 +92,15 @@ const PROP_POOL: Record<GeoKind, string[]> = {
   bone: ['prop-den-bone'],
   slag: ['prop-den-slag', 'prop-embercrack'],
   crate: ['prop-crate'],
+  // N4 #17 maze piles reuse camp scatter assets (dungeon-ified by scale/tint):
+  // wood = campfire logs, stone = camp boulder.
+  woodPile: ['prop-campfire-log'],
+  stonePile: ['prop-boulder'],
+  // N4 #17A pool expansion — camp scatter assets, dungeon-ified by scale/tint
+  deadtreeTrunk: ['prop-deadtree-trunk'],
+  deadtreeBranch: ['prop-deadtree-branch'],
+  campfireBase: ['prop-campfire-base'],
+  fence: ['prop-fence'],
 };
 
 const layout = resolveDungeonLayout(DUNGEON_SEED);
@@ -159,7 +180,7 @@ const boxTransform = (g: { x: number; y: number; z: number; sx: number; sy: numb
   return t;
 };
 
-const entities = layout.geometry.flatMap((g) => {
+const rawEntities = layout.geometry.flatMap((g) => {
   const policy = POLICY[g.kind];
   const n = (counters[g.kind] = (counters[g.kind] ?? 0) + 1);
   const makeEntity = (suffix: string, t: BakeTransform, meshIdx: number, mat?: number) => ({
@@ -312,8 +333,128 @@ const entities = layout.geometry.flatMap((g) => {
     return [makeEntity('', t, propIdx(g.kind, vi))];
   }
 
+  if (policy === 'pile') {
+    // Pile heaps (wood/stone): like 'ground' (uniform scale + ±20% jitter), but
+    // honour the item's g.y LIFT above the floor and g.rotY fan, so the pack
+    // shows the multi-piece heap exactly as authored in the layout (the runtime
+    // fallback mirrors g.y directly). Pieces stay small — telegraphs/loot read
+    // over the pile.
+    const pool = PROP_POOL[g.kind];
+    const vi = Math.floor(vrand() * pool.length);
+    const bbV = poolBBox(g.kind, vi);
+    const bMax = Math.max(bbV.size[0], bbV.size[1], bbV.size[2]);
+    const sMax = Math.max(g.sx, g.sy, g.sz);
+    let us = bMax > 0 ? sMax / bMax : 1;
+    // Piles keep size jitter DOWNWARD only (0.8–1.0): an up-jittered boulder
+    // (near-cubic GLB, scaled top = 1.764·us) would push past the ≤0.55 m
+    // read-over budget for telegraphs/loot. Other ground decor keeps ±20%.
+    us *= 0.8 + vrand() * 0.2;
+    const us4 = +us.toFixed(4);
+    const q = quatY(g.rotY ?? vrand() * Math.PI * 2);
+    return [makeEntity('', {
+      pos: [+g.x.toFixed(4), +(-bbV.min[1] * us + g.y).toFixed(4), +g.z.toFixed(4)],
+      scale: [us4, us4, us4],
+      quat: [+q[0].toFixed(6), +q[1].toFixed(6), +q[2].toFixed(6), +q[3].toFixed(6)],
+    }, propIdx(g.kind, vi))];
+  }
+
   return [makeEntity('', boxTransform(g), propIdx(g.kind, 0))];
 });
+
+// ── N4 #17A: decor instancing ───────────────────────────────────────────────
+// Decor pieces merge into ONE Instances entity per (mesh, material) batch —
+// a single multi-instance draw per decor kind instead of one entity per piece.
+// Floors/walls stay per-entity (edit-grade tiles). The pack keeps v2 schema
+// (program+values); Instances is an engine component { transforms: f32[] }.
+const DECOR_KINDS = new Set<GeoKind>([
+  'torchPost', 'flame', 'brazier', 'rubble', 'bone', 'slag', 'crate',
+  'woodPile', 'stonePile', 'deadtreeTrunk', 'deadtreeBranch', 'campfireBase', 'fence',
+]);
+/** Bake-time height discipline (owner contract): stone top ≤0.55 / wood ≤0.50. */
+const PILE_TOP_LIMITS: Partial<Record<GeoKind, number>> = { woodPile: 0.5, stonePile: 0.55 };
+
+type InstBatch = { kind: GeoKind; meshIdx: number; matIdx: number; transforms: number[] };
+
+const meshBBox = new Map<number, ReturnType<typeof readPropBBox>>();
+for (const k of kinds) {
+  for (let vi = 0; vi < poolEntries[k].length; vi++) {
+    meshBBox.set(propIdx(k, vi), poolEntries[k][vi]!.bbox);
+  }
+}
+
+const mat4FromTransform = (t: { pos: number[]; scale: number[]; quat?: number[] }): number[] => {
+  const [x, y, z] = t.pos;
+  const [sx, sy, sz] = t.scale;
+  const q = t.quat ?? [0, 0, 0, 1];
+  const theta = 2 * Math.atan2(q[1], q[3]);
+  const c = +Math.cos(theta).toFixed(4);
+  const s = +Math.sin(theta).toFixed(4);
+  // column-major T·R·S: col0 = [sx·c, 0, -sx·s], col1 = [0, sy, 0], col2 = [sz·s, 0, sz·c], col3 = translation
+  return [
+    +(sx * c).toFixed(4), 0, +(-sx * s).toFixed(4), 0,
+    0, +sy.toFixed(4), 0, 0,
+    +(sz * s).toFixed(4), 0, +(sz * c).toFixed(4), 0,
+    +x.toFixed(4), +y.toFixed(4), +z.toFixed(4), 1,
+  ];
+};
+
+const batches = new Map<string, InstBatch>();
+const kept = [];
+let merged = 0;
+for (const e of rawEntities) {
+  const name = e.components.Name.value as string;
+  const m = /^Den_([A-Za-z]+)_/.exec(name);
+  const kind = m?.[1] as GeoKind | undefined;
+  if (kind === undefined || !DECOR_KINDS.has(kind)) {
+    kept.push(e);
+    continue;
+  }
+  const meshIdx = e.components.MeshFilter.assetHandle as number;
+  const matIdx = (e.components.MeshRenderer.materials as number[])[0]!;
+  const t = e.components.Transform;
+  const limit = PILE_TOP_LIMITS[kind];
+  if (limit !== undefined) {
+    const bb = meshBBox.get(meshIdx);
+    if (bb) {
+      const top = t.pos[1] + (bb.min[1] + bb.size[1]) * t.scale[0];
+      if (top > limit) {
+        throw new Error(
+          `bake-dungeon: ${name} top ${top.toFixed(3)}m > ${limit}m (${kind} height discipline) — shrink the generator slot`,
+        );
+      }
+    }
+  }
+  const key = `${meshIdx}:${matIdx}`;
+  let b = batches.get(key);
+  if (!b) {
+    b = { kind, meshIdx, matIdx, transforms: [] };
+    batches.set(key, b);
+  }
+  b.transforms.push(...mat4FromTransform(t));
+  merged += 1;
+}
+
+let batchIdx = 0;
+for (const b of batches.values()) {
+  if (b.transforms.length === 0 || b.transforms.length % 16 !== 0) {
+    throw new Error(`bake-dungeon: batch ${b.kind} has malformed transform count ${b.transforms.length}`);
+  }
+  kept.push({
+    localId: -1, // renumbered below
+    components: {
+      Name: { value: `Den_${b.kind}_batch_${batchIdx++}` },
+      Transform: { pos: [0, 0, 0], scale: [1, 1, 1] },
+      MeshFilter: { assetHandle: b.meshIdx },
+      MeshRenderer: { materials: [b.matIdx] },
+      Instances: { transforms: b.transforms },
+    },
+  });
+}
+
+// localId MUST stay continuous 0..N-1 (engine maps by index — holes silently
+// drop entities). Floors/walls keep their order; batches append after them.
+const entities = kept.map((e, i) => ({ ...e, localId: i }));
+console.log(`  decor instancing: ${merged} pieces → ${batches.size} batches (${rawEntities.length - merged} per-entity tiles kept)`);
 
 const pack = {
   schemaVersion: '1.0.0',

@@ -104,6 +104,143 @@ describe('antechamber fade label extension', () => {
   });
 });
 
+describe('N4 #17B two-layer decor (wall band + combat ring)', () => {
+  const den = resolveDungeonLayout(DUNGEON_SEED);
+  const layout = buildAntechamberLayout({
+    widthM: den.bossSize.w,
+    depthM: den.bossSize.h,
+    doorTowardX: den.entry.x - den.bossAt.x,
+    doorTowardZ: den.entry.z - den.bossAt.z,
+  });
+  const half = (layout.tilesX * ANTECHAMBER_TILE) / 2;
+  const DECOR = new Set(['kit-rubble', 'den-log', 'den-boulder', 'den-fence']);
+  const decor = layout.pieces.filter((p) => DECOR.has(p.moduleId));
+  type Decor = (typeof decor)[number];
+  const radius = (p: Decor): number => Math.hypot(p.x, p.z);
+  const wallDist = (p: Decor): number =>
+    Math.min(half - Math.abs(p.x), half - Math.abs(p.z));
+  const ring = decor.filter((p) => radius(p) >= 3.5 && radius(p) <= 7.0);
+  const wallBand = decor.filter((p) => wallDist(p) <= 1.2);
+
+  test('total 28–36, split wall band 14–18 / second ring 12–16', () => {
+    expect(decor.length).toBeGreaterThanOrEqual(28);
+    expect(decor.length).toBeLessThanOrEqual(36);
+    expect(wallBand.length).toBeGreaterThanOrEqual(14);
+    expect(wallBand.length).toBeLessThanOrEqual(18);
+    expect(ring.length).toBeGreaterThanOrEqual(12);
+    expect(ring.length).toBeLessThanOrEqual(16);
+  });
+
+  test('every piece is ring (3.5≤r≤7.0) XOR wall band (≤1.2 m to wall) — no gap-zone decor', () => {
+    for (const p of decor) {
+      const inRing = radius(p) >= 3.5 && radius(p) <= 7.0;
+      const inWall = wallDist(p) <= 1.2;
+      expect(inRing !== inWall).toBe(true);
+    }
+  });
+
+  test('centre disc r<2.8 holds ZERO decor', () => {
+    expect(decor.filter((p) => radius(p) < 2.8)).toHaveLength(0);
+  });
+
+  test('doorway channel (3.6 m wide) holds ZERO decor', () => {
+    const door = layout.pieces.find((p) => p.moduleId === 'kit-doorframe');
+    expect(door).toBeDefined();
+    // channel = 3.6 m wide strip from the doorframe inward as far as the
+    // clearance disc edge (door centre → circle edge ≈ 8.1 m for the 22 m room)
+    const doorDist = Math.hypot(door!.x, door!.z);
+    const axisX = -(door!.x) / doorDist;
+    const axisZ = -(door!.z) / doorDist;
+    const channelLen = doorDist - 2.8;
+    for (const p of decor) {
+      const rx = p.x - door!.x;
+      const rz = p.z - door!.z;
+      const distToAxis = Math.abs(rx * axisZ - rz * axisX);
+      const inward = rx * axisX + rz * axisZ;
+      expect(distToAxis > 1.8 || inward < 0 || inward > channelLen).toBe(true);
+    }
+  });
+
+  test('second ring = 4 uneven clusters of 3–4 pieces, no fence in the ring', () => {
+    const clusterIds = new Set<string>();
+    for (const p of ring) {
+      const m = /^Antechamber_ringC(\d+)_/.exec(p.name);
+      expect(m).not.toBeNull();
+      clusterIds.add(m![1]!);
+      expect(p.moduleId).not.toBe('den-fence');
+    }
+    expect(clusterIds.size).toBe(4);
+    for (const id of clusterIds) {
+      const count = ring.filter((p) => p.name.startsWith(`Antechamber_ringC${id}_`)).length;
+      expect(count).toBeGreaterThanOrEqual(3);
+      expect(count).toBeLessThanOrEqual(4);
+    }
+  });
+
+  test('clear of pillars (REAL mesh half-width 0.65 m) and the corner blocks', () => {
+    const inset = 1.6;
+    const pillarHalf = 0.65;   // kit-pillar.glb measured half-width (probe uses 0.28 — too small)
+    const decorHalf = 0.75;    // kit-rubble @0.7 half-extent ≈ 0.7 + margin
+    for (const p of decor) {
+      for (const [px, pz] of [
+        [-half + inset, -half + inset], [half - inset, -half + inset],
+        [-half + inset, half - inset], [half - inset, half - inset],
+      ] as const) {
+        expect(Math.hypot(p.x - px, p.z - pz)).toBeGreaterThanOrEqual(pillarHalf + decorHalf);
+      }
+      // kit-corner is a SOLID block reaching half−1.4 inward — the literal corner
+      // square (both |coord| ≥ half−1.5) must hold no decor.
+      expect(Math.abs(p.x) >= half - 1.5 && Math.abs(p.z) >= half - 1.5).toBe(false);
+    }
+  });
+
+  test('den-prop sizes keep stone ≤0.55 m / wood ≤0.50 m tops', () => {
+    // tops = bbox.height × scale (bottom-aligned bake): boulder 1.764·s, log 0.657·s
+    for (const p of decor) {
+      if (p.moduleId === 'den-boulder') expect(p.sx).toBeLessThanOrEqual(0.31);
+      if (p.moduleId === 'den-log') expect(p.sx).toBeLessThanOrEqual(0.51);
+    }
+  });
+
+  test('ring invariants hold for ALL door bearings (n/e/s/w rotation sweep)', () => {
+    // Ring offsets are absolute (not rotated per door side) — adversarial
+    // rotation must not push any piece out of the combat ring. Regression
+    // lock for the doorBearing math (caught cluster drift r>7.0 at e/w).
+    for (const [dx, dz] of [[0, 20], [20, 0], [0, -20], [-20, 0]] as const) {
+      const l = buildAntechamberLayout({
+        widthM: den.bossSize.w,
+        depthM: den.bossSize.h,
+        doorTowardX: dx,
+        doorTowardZ: dz,
+      });
+      const h = (l.tilesX * ANTECHAMBER_TILE) / 2;
+      const dd = l.pieces.filter((p) => DECOR.has(p.moduleId));
+      const door = l.pieces.find((p) => p.moduleId === 'kit-doorframe');
+      expect(door).toBeDefined();
+      const doorDist = Math.hypot(door!.x, door!.z);
+      const axisX = -(door!.x) / doorDist;
+      const axisZ = -(door!.z) / doorDist;
+      const channelLen = doorDist - 2.8;
+      let ringCount = 0;
+      for (const p of dd) {
+        const r = Math.hypot(p.x, p.z);
+        const wd = Math.min(h - Math.abs(p.x), h - Math.abs(p.z));
+        const inRing = r >= 3.5 && r <= 7.0;
+        expect(inRing !== (wd <= 1.2)).toBe(true);
+        expect(r).toBeGreaterThanOrEqual(2.8);
+        if (inRing) ringCount++;
+        const rx = p.x - door!.x;
+        const rz = p.z - door!.z;
+        const distToAxis = Math.abs(rx * axisZ - rz * axisX);
+        const inward = rx * axisX + rz * axisZ;
+        expect(distToAxis > 1.8 || inward < 0 || inward > channelLen).toBe(true);
+      }
+      expect(ringCount).toBeGreaterThanOrEqual(12);
+      expect(ringCount).toBeLessThanOrEqual(16);
+    }
+  });
+});
+
 describe('ANTECHAMBER_SCENE_GUID', () => {
   test('is a fixed UUID distinct from slagdeep pack', () => {
     expect(ANTECHAMBER_SCENE_GUID).toMatch(

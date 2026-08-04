@@ -21,8 +21,11 @@ export type KitModuleId =
   | 'kit-trim'
   | 'kit-rubble';
 
+/** Den-prop accents (N4 #17B) — camp scatter assets, dungeon-ified by scale. */
+export type DenPropId = 'den-log' | 'den-boulder' | 'den-fence';
+
 export type AntechamberPiece = {
-  readonly moduleId: KitModuleId;
+  readonly moduleId: KitModuleId | DenPropId;
   /** Entity Name — Doorframe* prefixes feed fade/probe registry. */
   readonly name: string;
   readonly x: number;
@@ -92,7 +95,7 @@ export function buildAntechamberLayout(p: AntechamberPlacement): AntechamberLayo
   const pieces: AntechamberPiece[] = [];
   let n = 0;
   const push = (
-    moduleId: KitModuleId,
+    moduleId: KitModuleId | DenPropId,
     name: string,
     x: number,
     y: number,
@@ -197,16 +200,106 @@ export function buildAntechamberLayout(p: AntechamberPlacement): AntechamberLayo
     push('kit-pillar', `Antechamber_pillar_${++n}`, x, wallY, z, 0);
   }
 
-  // Sparse rubble
-  for (const [x, z, rot] of [
-    [-2.2, -1.4, 0.4],
-    [2.5, 1.8, -0.9],
-    [0.8, -2.6, 1.2],
-    [-1.5, 2.3, 0.2],
-  ] as const) {
-    if (Math.abs(x) < halfX - 1 && Math.abs(z) < halfZ - 1) {
-      push('kit-rubble', `Antechamber_rubble_${++n}`, x, 0, z, rot);
+  // ── N4 #17B: two-layer decor (owner Play contract 2026-08-04) ────────────
+  // Layer 1 wall band: 14–18 pieces hugging the outer walls (every piece
+  // within 1.2 m of a wall). Layer 2 second ring: 12–16 pieces inside the
+  // combat ring (3.5 ≤ r ≤ 7.0 m) as 4 uneven low clusters of 3–4 — the layer
+  // the fight camera actually sees (wall-only placement played as "no change").
+  // Hard clearances: centre disc r<2.8 and the 3.6 m doorway channel hold ZERO
+  // decor; fence stays in the wall band (never crosses the battlefield).
+  // Pillar/corner-block footprints are avoided with the REAL mesh extents
+  // (kit-pillar half-width 0.65 m, kit-corner solid block reaches half−1.4
+  // inward — the literal corner is un-placeable). Fully deterministic (no rng).
+  const wallInset = 0.8;   // piece centre → outer wall distance
+  // band end = pillar centre (half−1.6) + pillar half (0.65) + decor half (0.75)
+  const bandEnd = Math.min(halfX, halfZ) - 3.0;
+  const propCycle: Array<KitModuleId | DenPropId> = [
+    'kit-rubble', 'kit-rubble', 'den-log', 'kit-rubble', 'den-boulder',
+    'kit-rubble', 'den-fence', 'kit-rubble',
+  ];
+  const denPropScale: Record<DenPropId, number> = {
+    'den-log': 0.5,      // top = 0.657·s = 0.33 m ≤ 0.50 (wood discipline)
+    'den-boulder': 0.3,  // top = 1.764·s = 0.53 m ≤ 0.55 (stone discipline)
+    'den-fence': 0.4,    // top = 1.2·s = 0.48 m
+  };
+  const wallSlots = (n: number): number[] => {
+    if (n <= 1) return [0];
+    const out: number[] = [];
+    for (let k = 0; k < n; k++) out.push(-bandEnd + (2 * bandEnd * k) / (n - 1));
+    return out;
+  };
+  const placeBand = (side: 'n' | 's' | 'e' | 'w', isDoorSide: boolean): void => {
+    const alongX = side === 'n' || side === 's';
+    const wallCoord = side === 'n' || side === 's'
+      ? (side === 'n' ? halfZ - wallInset : -halfZ + wallInset)
+      : (side === 'e' ? halfX - wallInset : -halfX + wallInset);
+    const slots = wallSlots(Math.min(4, Math.max(3, Math.round(bandEnd / 2))));
+    for (const coord of slots) {
+      if (isDoorSide && Math.abs(coord) <= 1.8) continue; // doorway channel stays clear
+      const x = alongX ? coord : wallCoord;
+      const z = alongX ? wallCoord : coord;
+      const alongWall = alongX ? 0 : Math.PI / 2;
+      const mod = propCycle[decorSlot++ % propCycle.length];
+      if (mod === 'kit-rubble') {
+        push('kit-rubble', `Antechamber_rubble_${++n}`, x, 0, z, alongWall + 0.35, [0.7, 0.7, 0.7]);
+      } else {
+        const s = denPropScale[mod as DenPropId];
+        push(mod, `Antechamber_${mod}_${++n}`, x, 0, z, alongWall, [s, s, s]);
+      }
     }
+  };
+  let decorSlot = 0;
+  placeBand('n', doorSide === 'n');
+  placeBand('s', doorSide === 's');
+  placeBand('e', doorSide === 'e');
+  placeBand('w', doorSide === 'w');
+
+  // Layer 2 — second ring. Cluster bearings are door-relative (|phi| ≥ 100°
+  // off the doorway axis → the 3.6 m channel is untouched). Offsets are
+  // absolute (not rotated per door side), so radii must hold the ring band
+  // under ANY door bearing: max offset magnitude is 0.9434 m, hence every
+  // rho stays inside [3.5 + 0.9434, 7.0 − 0.9434] ≈ [4.44, 6.06] and each
+  // piece keeps 3.5 ≤ r ≤ 7.0 m for n/e/s/w alike. rubble/log/boulder only.
+  const doorBearing = doorSide === 'n' ? 0
+    : doorSide === 'e' ? Math.PI / 2
+    : doorSide === 's' ? Math.PI
+    : -Math.PI / 2;
+  // Ring needs half ≥ ~8.75 m (rho 6.06 + offset 0.95 + decor half 0.75 + wall);
+  // smaller rooms keep the wall band only.
+  if (Math.min(halfX, halfZ) >= 9) {
+    const clusters: ReadonlyArray<{ phi: number; rho: number; size: number }> = [
+      { phi: 1.9, rho: 4.55, size: 4 },
+      { phi: -1.75, rho: 5.8, size: 3 },
+      { phi: 3.05, rho: 5.95, size: 4 },
+      { phi: -2.55, rho: 5.1, size: 3 },
+    ];
+    const ringOffsets: ReadonlyArray<readonly [number, number]> = [
+      [0, 0], [0.85, 0.35], [-0.5, 0.8], [-0.75, -0.55],
+    ];
+    const ringCycle: Array<KitModuleId | DenPropId> = [
+      'kit-rubble', 'den-boulder', 'kit-rubble', 'den-log',
+    ];
+    let ringIdx = 0;
+    clusters.forEach((c, ci) => {
+      const theta = doorBearing + c.phi;
+      const cx = c.rho * Math.sin(theta);
+      const cz = c.rho * Math.cos(theta);
+      for (let k = 0; k < c.size; k++) {
+        const [ox, oz] = ringOffsets[k]!;
+        const x = cx + ox;
+        const z = cz + oz;
+        const mod = ringCycle[ringIdx % ringCycle.length];
+        // Golden-angle yaw spread — deterministic variety, no rng.
+        const rotY = (ringIdx * 2.399963) % (Math.PI * 2);
+        if (mod === 'kit-rubble') {
+          push('kit-rubble', `Antechamber_ringC${ci}_rubble_${++n}`, x, 0, z, rotY, [0.7, 0.7, 0.7]);
+        } else {
+          const s = denPropScale[mod as DenPropId];
+          push(mod, `Antechamber_ringC${ci}_${mod}_${++n}`, x, 0, z, rotY, [s, s, s]);
+        }
+        ringIdx++;
+      }
+    });
   }
 
   // Light seats (runtime PointLight pool) — factor glow, no emissive textures.
@@ -239,7 +332,7 @@ export function buildAntechamberLayout(p: AntechamberPlacement): AntechamberLayo
 
 /** Authored kit footprints (metres) for probe/fade AABBs — see assets/kit README. */
 function occluderFootprint(
-  moduleId: KitModuleId,
+  moduleId: KitModuleId | DenPropId,
   x: number,
   z: number,
   rotY: number,

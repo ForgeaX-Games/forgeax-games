@@ -318,7 +318,7 @@ function buildGeometryFromNav(
     ];
     const nSpots = r.w >= 5 && r.h >= 5 ? 4 : 2;
     for (const s of corners.slice(0, nSpots)) {
-      if (dRnd() < 0.2) continue;
+      if (dRnd() < 0.1) continue;
       geometry.push({
         kind: 'torchPost',
         x: s.x,
@@ -340,8 +340,17 @@ function buildGeometryFromNav(
     }
   }
 
+  // room decor — N4 #17A: density pushed to the ceiling (decorN ≈ 22% of room
+  // area, capped 14) with a rich weighted table; every multi-piece heap gets a
+  // `cluster` id (exactly 3 pieces) so bake + tests can verify pile structure.
+  // Piles cap at 3 each per room; once a cap is hit the roll falls through to
+  // the next band (intentional distribution shift, not a bug).
+  let pileSerial = 0;
   for (const r of rooms) {
-    const decorN = Math.min(6, Math.max(2, Math.round(r.w * r.h * 0.1)));
+    const decorN = Math.min(14, Math.max(5, Math.round(r.w * r.h * 0.22)));
+    let woodPiles = 0;
+    let stonePiles = 0;
+    let campfireBases = 0;
     for (let k = 0; k < decorN; k++) {
       const cx = r.x + 1 + Math.floor(dRnd() * Math.max(1, r.w - 2));
       const cy = r.y + 1 + Math.floor(dRnd() * Math.max(1, r.h - 2));
@@ -349,7 +358,7 @@ function buildGeometryFromNav(
       const jx = s.x + (dRnd() - 0.5) * CELL * 0.6;
       const jz = s.z + (dRnd() - 0.5) * CELL * 0.6;
       const roll = dRnd();
-      if (roll < 0.28) {
+      if (roll < 0.18) {
         geometry.push({
           kind: 'rubble',
           x: jx,
@@ -369,7 +378,7 @@ function buildGeometryFromNav(
           sz: 0.3,
           rotY: 0.63,
         });
-      } else if (roll < 0.5) {
+      } else if (roll < 0.34) {
         geometry.push({
           kind: 'bone',
           x: jx,
@@ -390,7 +399,7 @@ function buildGeometryFromNav(
           sz: 0.12,
           rotY: -0.87,
         });
-      } else if (roll < 0.68) {
+      } else if (roll < 0.46) {
         const ry = (dRnd() - 0.5) * 1.4;
         geometry.push({
           kind: 'slag',
@@ -402,7 +411,7 @@ function buildGeometryFromNav(
           sz: 0.7 + dRnd() * 0.6,
           rotY: ry,
         });
-      } else if (roll < 0.85) {
+      } else if (roll < 0.56) {
         geometry.push({
           kind: 'crate',
           x: jx,
@@ -425,6 +434,152 @@ function buildGeometryFromNav(
             rotY: (dRnd() - 0.5) * 1.2,
           });
         }
+      } else if (roll < 0.68 && woodPiles < 3) {
+        // wood pile — THREE logs fanned out (y = lift above floor; the 'pile'
+        // bake policy honours it, the runtime fallback mirrors it)
+        woodPiles++;
+        const cluster = ++pileSerial;
+        geometry.push({
+          kind: 'woodPile',
+          x: jx,
+          y: 0,
+          z: jz,
+          sx: 0.9,
+          sy: 0.45,
+          sz: 0.5,
+          rotY: (dRnd() - 0.5) * 0.8,
+          cluster,
+        });
+        geometry.push({
+          kind: 'woodPile',
+          x: jx + 0.35,
+          y: 0.1,
+          z: jz + 0.2,
+          sx: 0.7,
+          sy: 0.35,
+          sz: 0.4,
+          rotY: (dRnd() - 0.5) * 1.6,
+          cluster,
+        });
+        geometry.push({
+          kind: 'woodPile',
+          x: jx - 0.25,
+          y: 0.07,
+          z: jz + 0.3,
+          sx: 0.6,
+          sy: 0.3,
+          sz: 0.35,
+          rotY: (dRnd() - 0.5) * 1.6,
+          cluster,
+        });
+      } else if (roll < 0.8 && stonePiles < 3) {
+        // stone pile — boulder + two companions (near-cubic GLB: uniform-scale
+        // top = sx×0.66 with pile down-only jitter, keeps every top ≤0.55 m)
+        stonePiles++;
+        const cluster = ++pileSerial;
+        geometry.push({
+          kind: 'stonePile',
+          x: jx,
+          y: 0,
+          z: jz,
+          sx: 0.4,
+          sy: 0.32,
+          sz: 0.38,
+          rotY: (dRnd() - 0.5) * 0.8,
+          cluster,
+        });
+        geometry.push({
+          kind: 'stonePile',
+          x: jx + 0.45,
+          y: 0.05,
+          z: jz - 0.2,
+          sx: 0.28,
+          sy: 0.22,
+          sz: 0.26,
+          rotY: (dRnd() - 0.5) * 1.6,
+          cluster,
+        });
+        geometry.push({
+          kind: 'stonePile',
+          x: jx - 0.15,
+          y: 0.03,
+          z: jz + 0.45,
+          sx: 0.22,
+          sy: 0.18,
+          sz: 0.2,
+          rotY: (dRnd() - 0.5) * 1.6,
+          cluster,
+        });
+      } else if (roll < 0.9) {
+        // dead tree branch — low sprawl piece (h ≈ sx×0.65)
+        geometry.push({
+          kind: 'deadtreeBranch',
+          x: jx,
+          y: 0,
+          z: jz,
+          sx: 0.5,
+          sy: 0.33,
+          sz: 0.3,
+          rotY: dRnd() * Math.PI,
+        });
+      } else if (roll < 0.97 && campfireBases < 2) {
+        // abandoned campfire — stone base ring + two dead logs (cap 2/room)
+        campfireBases++;
+        const cluster = ++pileSerial;
+        geometry.push({
+          kind: 'campfireBase',
+          x: jx,
+          y: 0,
+          z: jz,
+          sx: 0.7,
+          sy: 0.32,
+          sz: 0.65,
+          rotY: (dRnd() - 0.5) * 0.6,
+          cluster,
+        });
+        geometry.push({
+          kind: 'woodPile',
+          x: jx + 0.35,
+          y: 0.03,
+          z: jz + 0.25,
+          sx: 0.5,
+          sy: 0.26,
+          sz: 0.3,
+          rotY: (dRnd() - 0.5) * 1.4,
+          cluster,
+        });
+        geometry.push({
+          kind: 'woodPile',
+          x: jx - 0.3,
+          y: 0.02,
+          z: jz - 0.15,
+          sx: 0.45,
+          sy: 0.23,
+          sz: 0.28,
+          rotY: (dRnd() - 0.5) * 1.4,
+          cluster,
+        });
+      } else if (roll < 0.97) {
+        // campfire cap hit — rubble pair fallback
+        geometry.push({
+          kind: 'rubble',
+          x: jx,
+          y: 0.16,
+          z: jz,
+          sx: 0.55,
+          sy: 0.32,
+          sz: 0.45,
+        });
+        geometry.push({
+          kind: 'rubble',
+          x: jx + 0.35,
+          y: 0.1,
+          z: jz + 0.2,
+          sx: 0.3,
+          sy: 0.2,
+          sz: 0.3,
+          rotY: 0.63,
+        });
       } else {
         geometry.push({
           kind: 'brazier',
@@ -437,7 +592,11 @@ function buildGeometryFromNav(
         });
       }
     }
-    const hugN = Math.round((r.w + r.h) * 0.2);
+    // wall-hug clutter — bones / rubble / dead tree trunks / fence panels
+    // against the room's inner edge (debris collects at the walls)
+    const hugN = Math.round((r.w + r.h) * 0.35);
+    let trunks = 0;
+    let fences = 0;
     for (let k = 0; k < hugN; k++) {
       const side = Math.floor(dRnd() * 4);
       const along =
@@ -463,7 +622,8 @@ function buildGeometryFromNav(
             ? push
             : (dRnd() - 0.5) * 0.5);
       const alongWall = side < 2 ? 0 : Math.PI / 2;
-      if (dRnd() < 0.5) {
+      const hroll = dRnd();
+      if (hroll < 0.3) {
         geometry.push({
           kind: 'bone',
           x: jx,
@@ -473,6 +633,43 @@ function buildGeometryFromNav(
           sy: 0.1,
           sz: 0.12,
           rotY: alongWall + (dRnd() - 0.5) * 0.5,
+        });
+      } else if (hroll < 0.6) {
+        geometry.push({
+          kind: 'rubble',
+          x: jx,
+          y: 0.11,
+          z: jz,
+          sx: 0.4,
+          sy: 0.22,
+          sz: 0.34,
+          rotY: alongWall + (dRnd() - 0.5) * 0.8,
+        });
+      } else if (hroll < 0.8 && trunks < 2) {
+        // dead tree trunk — short wall-hug bole (h ≈ sx)
+        trunks++;
+        geometry.push({
+          kind: 'deadtreeTrunk',
+          x: jx,
+          y: 0,
+          z: jz,
+          sx: 0.45,
+          sy: 0.45,
+          sz: 0.4,
+          rotY: alongWall + (dRnd() - 0.5) * 0.4,
+        });
+      } else if (hroll < 1 && fences < 3) {
+        // fence panel — low palisade against the wall (h ≈ sx×0.6)
+        fences++;
+        geometry.push({
+          kind: 'fence',
+          x: jx,
+          y: 0,
+          z: jz,
+          sx: 0.55,
+          sy: 0.3,
+          sz: 0.25,
+          rotY: alongWall + (dRnd() - 0.5) * 0.4,
         });
       } else {
         geometry.push({
@@ -492,11 +689,12 @@ function buildGeometryFromNav(
   for (let cy = 0; cy < CELLS; cy++) {
     for (let cx = 0; cx < CELLS; cx++) {
       if (!walk[cy * CELLS + cx] || inRoom(cx, cy)) continue;
-      if (dRnd() >= 0.05) continue;
+      if (dRnd() >= 0.15) continue;
       const s = cellToLocal(cx, cy);
       const jx = s.x + (dRnd() - 0.5) * CELL * 0.4;
       const jz = s.z + (dRnd() - 0.5) * CELL * 0.4;
-      if (dRnd() < 0.5) {
+      const croll = dRnd();
+      if (croll < 0.3) {
         geometry.push({
           kind: 'slag',
           x: jx,
@@ -507,7 +705,7 @@ function buildGeometryFromNav(
           sz: 0.5 + dRnd() * 0.4,
           rotY: (dRnd() - 0.5) * 1.4,
         });
-      } else {
+      } else if (croll < 0.6) {
         geometry.push({
           kind: 'rubble',
           x: jx,
@@ -516,6 +714,90 @@ function buildGeometryFromNav(
           sx: 0.35,
           sy: 0.2,
           sz: 0.3,
+          rotY: dRnd() * Math.PI,
+        });
+      } else if (croll < 0.75) {
+        // corridor stone heap — 3 small pieces hugging the walkway
+        const cluster = ++pileSerial;
+        geometry.push({
+          kind: 'stonePile',
+          x: jx,
+          y: 0,
+          z: jz,
+          sx: 0.32,
+          sy: 0.26,
+          sz: 0.3,
+          rotY: dRnd() * Math.PI,
+          cluster,
+        });
+        geometry.push({
+          kind: 'stonePile',
+          x: jx + 0.3,
+          y: 0.03,
+          z: jz + 0.15,
+          sx: 0.22,
+          sy: 0.18,
+          sz: 0.2,
+          rotY: dRnd() * Math.PI,
+          cluster,
+        });
+        geometry.push({
+          kind: 'stonePile',
+          x: jx - 0.22,
+          y: 0.02,
+          z: jz - 0.12,
+          sx: 0.18,
+          sy: 0.14,
+          sz: 0.16,
+          rotY: dRnd() * Math.PI,
+          cluster,
+        });
+      } else if (croll < 0.85) {
+        // corridor wood heap — 3 small logs
+        const cluster = ++pileSerial;
+        geometry.push({
+          kind: 'woodPile',
+          x: jx,
+          y: 0,
+          z: jz,
+          sx: 0.55,
+          sy: 0.32,
+          sz: 0.4,
+          rotY: dRnd() * Math.PI,
+          cluster,
+        });
+        geometry.push({
+          kind: 'woodPile',
+          x: jx + 0.25,
+          y: 0.06,
+          z: jz - 0.2,
+          sx: 0.4,
+          sy: 0.24,
+          sz: 0.3,
+          rotY: dRnd() * Math.PI,
+          cluster,
+        });
+        geometry.push({
+          kind: 'woodPile',
+          x: jx - 0.2,
+          y: 0.03,
+          z: jz + 0.15,
+          sx: 0.32,
+          sy: 0.2,
+          sz: 0.24,
+          rotY: dRnd() * Math.PI,
+          cluster,
+        });
+      } else {
+        // sprawled dead branch
+        geometry.push({
+          kind: 'deadtreeBranch',
+          x: jx,
+          y: 0,
+          z: jz,
+          sx: 0.4,
+          sy: 0.26,
+          sz: 0.25,
           rotY: dRnd() * Math.PI,
         });
       }

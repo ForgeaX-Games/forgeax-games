@@ -25,7 +25,12 @@ export type ParticleStyle = 'auto' | 'ash' | 'snow' | 'off';
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
 type LayerKind = 'ember' | 'ash' | 'snow';
 
-const BASE: Record<LayerKind, number> = { ember: 240, ash: 180, snow: 220 };
+// N4 #6 particle budget (density default 1.15, range 0–2): the per-layer clamp
+// min(BASE[k], round(BASE[k]*mult*density)) is the real ceiling — auto/den at
+// default ≈ 245 ≤ 320; global worst path (snow style, den) = 296 ≤ 320; density
+// 2 across all styles/areas ≤ 389 ≤ 500; low path ≤ 40×3 = 120; high path stays
+// 3 instanced draws. MAX_TOTAL stays as a defensive rescale, not the active cap.
+const BASE: Record<LayerKind, number> = { ember: 200, ash: 130, snow: 170 };
 const BOX_X = 12;
 const BOX_Y = 4.6;
 const BOX_Z = 12;
@@ -33,7 +38,7 @@ const HALF_X = BOX_X * 0.5;
 const HALF_Z = BOX_Z * 0.5;
 const Y_MIN = 0.15;
 const Y_MAX = Y_MIN + BOX_Y;
-const MAX_TOTAL = 900;
+const MAX_TOTAL = 500;
 const LOW_END_CAP = 40;
 
 const COLOR: Record<LayerKind, readonly [number, number, number, number]> = {
@@ -311,7 +316,8 @@ export class AmbientFx {
     const raw: Record<LayerKind, number> = { ember: 0, ash: 0, snow: 0 };
     let total = 0;
     for (const k of kinds) {
-      // round (not floor) so 180×0.7 → 126 and camp@density=1 ≈ 246 as planned
+      // round (not floor) so fractional multipliers don't systematically shred
+      // the budget (e.g. ash 130×0.5×1.15 → 75, not 74)
       const n = Math.round(BASE[k] * mult[k] * this.density);
       raw[k] = Math.max(0, Math.min(BASE[k], n));
       total += raw[k];

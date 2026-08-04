@@ -316,6 +316,12 @@ export class Dungeon {
       bone:      mkMat([0.62, 0.56, 0.44, 1], { rough: 0.7 }),
       slag:      mkMat([0.40, 0.06, 0.02, 1], { rough: 0.5, emissive: [1, 0.10, 0.02], ei: 1.0 }),
       crate:     mkMat([0.45, 0.30, 0.18, 1], { rough: 0.85 }),
+      woodPile:  mkMat([0.32, 0.22, 0.13, 1], { rough: 0.85 }),
+      stonePile: mkMat([0.35, 0.33, 0.31, 1], { rough: 0.9 }),
+      deadtreeTrunk:  mkMat([0.20, 0.13, 0.08, 1], { rough: 0.95 }),
+      deadtreeBranch: mkMat([0.22, 0.14, 0.09, 1], { rough: 0.95 }),
+      campfireBase:   mkMat([0.28, 0.24, 0.22, 1], { rough: 0.9 }),
+      fence:          mkMat([0.24, 0.16, 0.10, 1], { rough: 0.9 }),
     };
     for (const g of this.layout.geometry) {
       const t: { pos: number[]; scale: number[]; quat?: number[] } = {

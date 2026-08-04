@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "2.0.0",
+  "schemaVersion": "1.0.0",
   "kind": "internal-text-package",
   "assets": [
     {
@@ -7360,20 +7360,20 @@
               },
               "Transform": {
                 "pos": [
-                  -2.2,
-                  0.3229,
-                  -1.4
+                  -8,
+                  0.226,
+                  10.2
                 ],
                 "scale": [
-                  1,
-                  1,
-                  1
+                  0.7,
+                  0.7,
+                  0.7
                 ],
                 "quat": [
                   0,
-                  0.198669,
+                  0.174108,
                   0,
-                  0.980067
+                  0.984727
                 ]
               },
               "MeshFilter": {
@@ -7394,20 +7394,20 @@
               },
               "Transform": {
                 "pos": [
-                  2.5,
-                  0.3229,
-                  1.8
+                  -2.6667,
+                  0.226,
+                  10.2
                 ],
                 "scale": [
-                  1,
-                  1,
-                  1
+                  0.7,
+                  0.7,
+                  0.7
                 ],
                 "quat": [
                   0,
-                  -0.434966,
+                  0.174108,
                   0,
-                  0.900447
+                  0.984727
                 ]
               },
               "MeshFilter": {
@@ -7424,24 +7424,58 @@
             "localId": 218,
             "components": {
               "Name": {
-                "value": "Antechamber_rubble_175"
+                "value": "Antechamber_den-log_175"
               },
               "Transform": {
                 "pos": [
-                  0.8,
-                  0.3229,
-                  -2.6
+                  2.6667,
+                  0.1642,
+                  10.2
                 ],
                 "scale": [
-                  1,
-                  1,
-                  1
+                  0.5,
+                  0.5,
+                  0.5
                 ],
                 "quat": [
                   0,
-                  0.564642,
                   0,
-                  0.825336
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 14
+              },
+              "MeshRenderer": {
+                "materials": [
+                  15
+                ]
+              }
+            }
+          },
+          {
+            "localId": 219,
+            "components": {
+              "Name": {
+                "value": "Antechamber_rubble_176"
+              },
+              "Transform": {
+                "pos": [
+                  8,
+                  0.226,
+                  10.2
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0.174108,
+                  0,
+                  0.984727
                 ]
               },
               "MeshFilter": {
@@ -7455,27 +7489,61 @@
             }
           },
           {
-            "localId": 219,
+            "localId": 220,
             "components": {
               "Name": {
-                "value": "Antechamber_rubble_176"
+                "value": "Antechamber_den-boulder_177"
               },
               "Transform": {
                 "pos": [
-                  -1.5,
-                  0.3229,
-                  2.3
+                  -8,
+                  0.2646,
+                  -10.2
                 ],
                 "scale": [
-                  1,
-                  1,
-                  1
+                  0.3,
+                  0.3,
+                  0.3
                 ],
                 "quat": [
                   0,
-                  0.099833,
                   0,
-                  0.995004
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 16
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 221,
+            "components": {
+              "Name": {
+                "value": "Antechamber_rubble_178"
+              },
+              "Transform": {
+                "pos": [
+                  -2.6667,
+                  0.226,
+                  -10.2
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0.174108,
+                  0,
+                  0.984727
                 ]
               },
               "MeshFilter": {
@@ -7484,6 +7552,822 @@
               "MeshRenderer": {
                 "materials": [
                   13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 222,
+            "components": {
+              "Name": {
+                "value": "Antechamber_den-fence_179"
+              },
+              "Transform": {
+                "pos": [
+                  2.6667,
+                  0.24,
+                  -10.2
+                ],
+                "scale": [
+                  0.4,
+                  0.4,
+                  0.4
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 18
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 223,
+            "components": {
+              "Name": {
+                "value": "Antechamber_rubble_180"
+              },
+              "Transform": {
+                "pos": [
+                  8,
+                  0.226,
+                  -10.2
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0.174108,
+                  0,
+                  0.984727
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 12
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 224,
+            "components": {
+              "Name": {
+                "value": "Antechamber_rubble_181"
+              },
+              "Transform": {
+                "pos": [
+                  10.2,
+                  0.226,
+                  -8
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0.81942,
+                  0,
+                  0.573194
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 12
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 225,
+            "components": {
+              "Name": {
+                "value": "Antechamber_rubble_182"
+              },
+              "Transform": {
+                "pos": [
+                  10.2,
+                  0.226,
+                  -2.6667
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0.81942,
+                  0,
+                  0.573194
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 12
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 226,
+            "components": {
+              "Name": {
+                "value": "Antechamber_den-log_183"
+              },
+              "Transform": {
+                "pos": [
+                  10.2,
+                  0.1642,
+                  2.6667
+                ],
+                "scale": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 14
+              },
+              "MeshRenderer": {
+                "materials": [
+                  15
+                ]
+              }
+            }
+          },
+          {
+            "localId": 227,
+            "components": {
+              "Name": {
+                "value": "Antechamber_rubble_184"
+              },
+              "Transform": {
+                "pos": [
+                  10.2,
+                  0.226,
+                  8
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0.81942,
+                  0,
+                  0.573194
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 12
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 228,
+            "components": {
+              "Name": {
+                "value": "Antechamber_den-boulder_185"
+              },
+              "Transform": {
+                "pos": [
+                  -10.2,
+                  0.2646,
+                  -8
+                ],
+                "scale": [
+                  0.3,
+                  0.3,
+                  0.3
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 16
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 229,
+            "components": {
+              "Name": {
+                "value": "Antechamber_rubble_186"
+              },
+              "Transform": {
+                "pos": [
+                  -10.2,
+                  0.226,
+                  -2.6667
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0.81942,
+                  0,
+                  0.573194
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 12
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 230,
+            "components": {
+              "Name": {
+                "value": "Antechamber_den-fence_187"
+              },
+              "Transform": {
+                "pos": [
+                  -10.2,
+                  0.24,
+                  2.6667
+                ],
+                "scale": [
+                  0.4,
+                  0.4,
+                  0.4
+                ],
+                "quat": [
+                  0,
+                  0.707107,
+                  0,
+                  0.707107
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 18
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 231,
+            "components": {
+              "Name": {
+                "value": "Antechamber_rubble_188"
+              },
+              "Transform": {
+                "pos": [
+                  -10.2,
+                  0.226,
+                  8
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0.81942,
+                  0,
+                  0.573194
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 12
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 232,
+            "components": {
+              "Name": {
+                "value": "Antechamber_ringC0_rubble_189"
+              },
+              "Transform": {
+                "pos": [
+                  4.3057,
+                  0.226,
+                  -1.471
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 12
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 233,
+            "components": {
+              "Name": {
+                "value": "Antechamber_ringC0_den-boulder_190"
+              },
+              "Transform": {
+                "pos": [
+                  5.1557,
+                  0.2646,
+                  -1.121
+                ],
+                "scale": [
+                  0.3,
+                  0.3,
+                  0.3
+                ],
+                "quat": [
+                  0,
+                  0.932032,
+                  0,
+                  0.362375
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 16
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 234,
+            "components": {
+              "Name": {
+                "value": "Antechamber_ringC0_rubble_191"
+              },
+              "Transform": {
+                "pos": [
+                  3.8057,
+                  0.226,
+                  -0.671
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0.67549,
+                  0,
+                  -0.737369
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 12
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 235,
+            "components": {
+              "Name": {
+                "value": "Antechamber_ringC0_den-log_192"
+              },
+              "Transform": {
+                "pos": [
+                  3.5557,
+                  0.1642,
+                  -2.021
+                ],
+                "scale": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "quat": [
+                  0,
+                  0.442471,
+                  0,
+                  0.896783
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 14
+              },
+              "MeshRenderer": {
+                "materials": [
+                  15
+                ]
+              }
+            }
+          },
+          {
+            "localId": 236,
+            "components": {
+              "Name": {
+                "value": "Antechamber_ringC1_rubble_193"
+              },
+              "Transform": {
+                "pos": [
+                  -5.7071,
+                  0.226,
+                  -1.0338
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0.996171,
+                  0,
+                  -0.087425
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 12
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 237,
+            "components": {
+              "Name": {
+                "value": "Antechamber_ringC1_den-boulder_194"
+              },
+              "Transform": {
+                "pos": [
+                  -4.8571,
+                  0.2646,
+                  -0.6838
+                ],
+                "scale": [
+                  0.3,
+                  0.3,
+                  0.3
+                ],
+                "quat": [
+                  0,
+                  0.279504,
+                  0,
+                  -0.960144
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 16
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 238,
+            "components": {
+              "Name": {
+                "value": "Antechamber_ringC1_rubble_195"
+              },
+              "Transform": {
+                "pos": [
+                  -6.2071,
+                  0.226,
+                  -0.2338
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0.7936,
+                  0,
+                  0.608439
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 12
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 239,
+            "components": {
+              "Name": {
+                "value": "Antechamber_ringC2_den-log_196"
+              },
+              "Transform": {
+                "pos": [
+                  0.5442,
+                  0.1642,
+                  -5.9251
+                ],
+                "scale": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "quat": [
+                  0,
+                  0.854666,
+                  0,
+                  -0.519178
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 14
+              },
+              "MeshRenderer": {
+                "materials": [
+                  15
+                ]
+              }
+            }
+          },
+          {
+            "localId": 240,
+            "components": {
+              "Name": {
+                "value": "Antechamber_ringC2_rubble_197"
+              },
+              "Transform": {
+                "pos": [
+                  1.3942,
+                  0.226,
+                  -5.5751
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0.174181,
+                  0,
+                  0.984714
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 12
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 241,
+            "components": {
+              "Name": {
+                "value": "Antechamber_ringC2_den-boulder_198"
+              },
+              "Transform": {
+                "pos": [
+                  0.0442,
+                  0.2646,
+                  -5.1251
+                ],
+                "scale": [
+                  0.3,
+                  0.3,
+                  0.3
+                ],
+                "quat": [
+                  0,
+                  0.980904,
+                  0,
+                  0.194493
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 16
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 242,
+            "components": {
+              "Name": {
+                "value": "Antechamber_ringC2_rubble_199"
+              },
+              "Transform": {
+                "pos": [
+                  -0.2058,
+                  0.226,
+                  -6.4751
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0.536729,
+                  0,
+                  -0.843755
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 12
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 243,
+            "components": {
+              "Name": {
+                "value": "Antechamber_ringC3_den-log_200"
+              },
+              "Transform": {
+                "pos": [
+                  -2.8442,
+                  0.1642,
+                  -4.2333
+                ],
+                "scale": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "quat": [
+                  0,
+                  0.59191,
+                  0,
+                  0.806004
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 14
+              },
+              "MeshRenderer": {
+                "materials": [
+                  15
+                ]
+              }
+            }
+          },
+          {
+            "localId": 244,
+            "components": {
+              "Name": {
+                "value": "Antechamber_ringC3_rubble_201"
+              },
+              "Transform": {
+                "pos": [
+                  -1.9942,
+                  0.226,
+                  -3.8833
+                ],
+                "scale": [
+                  0.7,
+                  0.7,
+                  0.7
+                ],
+                "quat": [
+                  0,
+                  0.965715,
+                  0,
+                  -0.259603
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 12
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 245,
+            "components": {
+              "Name": {
+                "value": "Antechamber_ringC3_den-boulder_202"
+              },
+              "Transform": {
+                "pos": [
+                  -3.3442,
+                  0.2646,
+                  -3.4333
+                ],
+                "scale": [
+                  0.3,
+                  0.3,
+                  0.3
+                ],
+                "quat": [
+                  0,
+                  0.107993,
+                  0,
+                  -0.994152
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 16
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
                 ]
               }
             }
@@ -7504,9 +8388,14 @@
         "97afbcfa-fea7-fe03-8cf3-c64e557290d4",
         "66aa9c53-708d-cb30-c352-8673e8841672",
         "a15a9701-c7e6-9a99-b71e-aee1a95fb562",
-        "e86c9b35-c284-2a8f-1a7c-ee77e053e54f"
-      ],
-      "artifacts": {}
+        "e86c9b35-c284-2a8f-1a7c-ee77e053e54f",
+        "c7c1600e-d970-bb1c-5cbc-96e442ca9793",
+        "2d6bf6c2-6d4f-3394-a74c-d2f323c59a7a",
+        "6b7d4106-61a6-310b-d930-9a30239a13f7",
+        "f2162617-5d1a-4767-560f-2163b1aad943",
+        "305476ce-0274-607c-2375-03d297f2f1f4",
+        "5a4a7873-5e5b-fd74-91cc-f91dd190031c"
+      ]
     }
   ]
 }

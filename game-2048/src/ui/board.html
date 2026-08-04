@@ -1,0 +1,45 @@
+<section class="fx2048-shell">
+  <div class="fx2048-ambient one"></div>
+  <div class="fx2048-ambient two"></div>
+  <main class="fx2048-card" aria-label="2048 game">
+    <header class="fx2048-header">
+      <div>
+        <div class="fx2048-kicker">FORGEAX ORIGINAL</div>
+        <h1>2048</h1>
+        <p>Join the numbers. Find your flow.</p>
+      </div>
+      <div class="fx2048-stats">
+        <div class="fx2048-score"><span>SCORE</span><strong data-score>0</strong><em data-score-delta aria-hidden="true"></em></div>
+        <div><span>BEST</span><strong data-best>0</strong></div>
+      </div>
+    </header>
+    <div class="fx2048-toolbar">
+      <span data-status>Swipe or use arrow keys to begin</span>
+      <div>
+        <button data-ui-action="undo" data-undo type="button">↶ Undo</button>
+        <button data-ui-action="restart" type="button">New game</button>
+      </div>
+    </div>
+    <div class="fx2048-board-wrap">
+      <div class="fx2048-board" data-board aria-live="polite">
+        <div class="fx2048-cells">
+          <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+          <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        </div>
+        <div class="fx2048-tiles" data-tiles></div>
+        <div class="fx2048-overlay" data-overlay hidden>
+          <strong data-overlay-title></strong>
+          <span data-overlay-copy></span>
+          <div>
+            <button data-ui-action="continue" data-continue type="button">Keep going</button>
+            <button data-ui-action="restart" type="button">Try again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <span><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> Move</span>
+      <span><kbd>U</kbd> Undo</span><span><kbd>R</kbd> Restart</span>
+    </footer>
+  </main>
+</section>
