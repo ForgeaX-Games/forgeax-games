@@ -1,0 +1,8 @@
+{
+  "id": "game-2048-3d",
+  "name": "Prism 2048",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": "3d",
+  "defaultScene": "20f6fb31-28f2-4238-a425-3d200506c10b"
+}

@@ -8,6 +8,7 @@ import {
   type ItemKind,
   type ItemUseResult,
 } from './item-system';
+import type { RacerResult } from './race-session';
 
 export interface KartHud {
   setSpeed(kph: number): void;
@@ -18,12 +19,15 @@ export interface KartHud {
   coinPickup(amount: number): void;
   setItem(item: ItemKind | null): void;
   showItemUsed(result: ItemUseResult): void;
+  showRivalItemUsed(racer: string, result: ItemUseResult, hitPlayer: boolean): void;
   /** One-shot pointer request from the on-screen item button. */
   consumeItemUse(): boolean;
   setBoostActive(active: boolean): void;
   setStarActive(active: boolean): void;
   setHornActive(active: boolean): void;
-  setPhase(phase: 'race' | 'over' | string): void;
+  setPhase(phase: 'race' | 'waiting' | 'results' | string): void;
+  showPersonalFinish(result: RacerResult, racers: number): void;
+  showResults(results: readonly RacerResult[]): void;
   setVisible(visible: boolean): void;
   /** True while on-screen 漂移 button is held. */
   isDriftHeld(): boolean;
@@ -108,10 +112,58 @@ const STYLE = `
 #${HUD_ID} .pk-finish {
   position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%);
   background: #FFF6E8; color: #FF7043; border: 4px solid #FFB020; border-radius: 24px;
-  padding: 18px 36px; font-weight: 900; font-size: clamp(28px, 6vmin, 48px);
+  padding: 18px 36px; font-weight: 900; text-align: center;
   box-shadow: 0 0 0 4px #fff, 0 8px 0 rgba(200,140,20,.35);
   display: none; pointer-events: none;
 }
+#${HUD_ID} .pk-finish-title {
+  font-size: clamp(28px, 6vmin, 48px); line-height: 1;
+}
+#${HUD_ID} .pk-finish-score {
+  margin-top: 12px; color: #5b4636; font-size: clamp(16px, 3vmin, 24px);
+}
+#${HUD_ID} .pk-finish-wait {
+  margin-top: 7px; color: #9a7256; font-size: clamp(11px, 1.8vmin, 14px);
+}
+#${HUD_ID} .pk-results {
+  position: absolute; inset: 0; display: none; place-items: center;
+  padding: 20px; box-sizing: border-box; pointer-events: auto;
+  background: rgba(29, 46, 68, .66); backdrop-filter: blur(7px);
+}
+#${HUD_ID} .pk-results-card {
+  width: min(520px, calc(100vw - 40px)); max-height: calc(100vh - 40px);
+  overflow: auto; box-sizing: border-box; text-align: center;
+  padding: clamp(20px, 4vmin, 36px); border-radius: 30px;
+  background: #FFF6E8; border: 5px solid #FFB020;
+  box-shadow: 0 0 0 5px #fff, 0 14px 40px rgba(20,35,55,.42);
+}
+#${HUD_ID} .pk-results-kicker {
+  color: #E08A00; font-size: clamp(12px, 2vmin, 16px); font-weight: 900;
+  letter-spacing: 3px;
+}
+#${HUD_ID} .pk-results-title {
+  margin: 5px 0 18px; color: #FF7043; font-size: clamp(28px, 6vmin, 48px);
+  font-weight: 900; line-height: 1.1;
+}
+#${HUD_ID} .pk-result-row {
+  display: grid; grid-template-columns: 64px 1fr auto; align-items: center;
+  gap: 12px; margin: 9px 0; padding: 10px 14px;
+  border-radius: 16px; background: #fff; color: #5b4636;
+  border: 2px solid #f0d8b7; font-weight: 900; text-align: left;
+}
+#${HUD_ID} .pk-result-row.champion {
+  background: linear-gradient(90deg, #fff0a8, #fff9df);
+  border-color: #FFB020; transform: scale(1.02);
+}
+#${HUD_ID} .pk-result-rank { color: #E08A00; font-size: 20px; }
+#${HUD_ID} .pk-result-time { color: #806652; font-variant-numeric: tabular-nums; }
+#${HUD_ID} .pk-retry {
+  margin-top: 16px; padding: 10px 24px; border: 3px solid #fff;
+  border-radius: 999px; background: linear-gradient(#7DD4FF, #36AEEA);
+  box-shadow: 0 0 0 3px #2E9BD6, 0 5px 0 #1B7FB0;
+  color: #fff; font: inherit; font-weight: 900; cursor: pointer;
+}
+#${HUD_ID} .pk-retry:active { transform: translateY(4px); box-shadow: 0 0 0 3px #2E9BD6, 0 1px 0 #1B7FB0; }
 @keyframes pk-rankpop { 0% { transform: scale(1); } 50% { transform: scale(1.22); } 100% { transform: scale(1); } }
 @keyframes pk-slotflash { 0% { transform: scale(.7) rotate(-8deg); } 55% { transform: scale(1.18) rotate(5deg); } 100% { transform: scale(1); } }
 @keyframes pk-coinpop { 0% { transform: scale(1); } 45% { transform: scale(1.4); color: #ff9f1c; } 100% { transform: scale(1); } }
@@ -119,6 +171,17 @@ const STYLE = `
 `;
 
 const ORD = ['1ST', '2ND', '3RD', '4TH', '5TH', '6TH'] as const;
+
+function rankLabel(rank: number): string {
+  return ORD[rank - 1] ?? `${rank}TH`;
+}
+
+function racerName(id: string): string {
+  if (id === 'player') return '你';
+  if (id === 'KartDuck') return '小鸭';
+  if (id === 'KartPanda') return '熊猫';
+  return id;
+}
 
 function fmtTime(sec: number): string {
   const s = Math.max(0, sec);
@@ -228,7 +291,21 @@ export function installKartHud(host?: HTMLElement): KartHud {
 
   const finish = document.createElement('div');
   finish.className = 'pk-finish';
-  finish.textContent = 'FINISH!';
+  const finishTitle = document.createElement('div');
+  finishTitle.className = 'pk-finish-title';
+  finishTitle.textContent = 'FINISH!';
+  const finishScore = document.createElement('div');
+  finishScore.className = 'pk-finish-score';
+  const finishWait = document.createElement('div');
+  finishWait.className = 'pk-finish-wait';
+  finishWait.textContent = '其他选手仍在冲线…';
+  finish.append(finishTitle, finishScore, finishWait);
+
+  const results = document.createElement('div');
+  results.className = 'pk-results';
+  const resultsCard = document.createElement('div');
+  resultsCard.className = 'pk-results-card';
+  results.appendChild(resultsCard);
 
   root.append(
     topLeft,
@@ -241,6 +318,7 @@ export function installKartHud(host?: HTMLElement): KartHud {
     toast,
     hint,
     finish,
+    results,
   );
   mount.appendChild(root);
 
@@ -248,6 +326,8 @@ export function installKartHud(host?: HTMLElement): KartHud {
   let itemUseQueued = false;
   let currentItem: ItemKind | null = null;
   let lastRank = -1;
+  let finishKey = '';
+  let resultsKey = '';
   let toastTimer = 0;
   const showToast = (message: string, duration = 1800) => {
     toast.textContent = message;
@@ -284,15 +364,13 @@ export function installKartHud(host?: HTMLElement): KartHud {
       lapEl.textContent = `🏁 LAP ${lap}/${total}`;
     },
     setRank(rank: number, _racers: number) {
-      const i = Math.max(1, Math.min(rank, ORD.length)) - 1;
-      const label = ORD[i] ?? `${rank}TH`;
       if (rank !== lastRank) {
         rankEl.style.animation = 'none';
         void rankEl.offsetWidth;
         rankEl.style.animation = 'pk-rankpop .35s ease-out';
         lastRank = rank;
       }
-      rankEl.textContent = label;
+      rankEl.textContent = rankLabel(rank);
     },
     setTime(seconds: number) {
       timeEl.textContent = fmtTime(seconds);
@@ -330,6 +408,15 @@ export function installKartHud(host?: HTMLElement): KartHud {
         result.affected > 0 ? ` · 命中 ${result.affected} 名对手` : '';
       showToast(`${present.icon} 使用 ${present.label}${suffix}`, 1600);
     },
+    showRivalItemUsed(racer, result, hitPlayer) {
+      const present = ITEM_PRESENTATION[result.item];
+      const suffix = hitPlayer
+        ? ' · 你被命中！'
+        : result.affected > 0
+          ? ` · 命中 ${result.affected} 名对手`
+          : '';
+      showToast(`${present.icon} ${racerName(racer)}使用了${present.label}${suffix}`, 1800);
+    },
     consumeItemUse() {
       const queued = itemUseQueued;
       itemUseQueued = false;
@@ -345,8 +432,66 @@ export function installKartHud(host?: HTMLElement): KartHud {
       root.classList.toggle('horn-active', active);
     },
     setPhase(phase: string) {
-      finish.style.display = phase === 'over' ? 'block' : 'none';
-      if (phase === 'over') hint.textContent = '比赛结束 · R 可重置车辆';
+      if (phase === 'race') {
+        finish.style.display = 'none';
+        results.style.display = 'none';
+        hint.textContent = 'WASD 驾驶 · Shift 漂移 · Space 使用道具 · R 重置';
+      } else if (phase === 'results') {
+        finish.style.display = 'none';
+        hint.textContent = '';
+      } else if (phase === 'waiting') {
+        results.style.display = 'none';
+        hint.textContent = '成绩已锁定 · 等待其他选手冲线';
+      }
+    },
+    showPersonalFinish(result: RacerResult, racers: number) {
+      const key = `${result.rank}:${result.finishTime}:${racers}`;
+      if (key !== finishKey) {
+        finishKey = key;
+        finishScore.textContent =
+          `${rankLabel(result.rank)} · 第 ${result.rank}/${racers} 名 · ${fmtTime(result.finishTime)}`;
+      }
+      finish.style.display = 'block';
+    },
+    showResults(finalResults: readonly RacerResult[]) {
+      const key = finalResults
+        .map((result) => `${result.id}:${result.rank}:${result.finishTime}`)
+        .join('|');
+      if (key !== resultsKey) {
+        resultsKey = key;
+        resultsCard.replaceChildren();
+
+        const kicker = document.createElement('div');
+        kicker.className = 'pk-results-kicker';
+        kicker.textContent = 'RACE COMPLETE';
+        const title = document.createElement('div');
+        title.className = 'pk-results-title';
+        title.textContent = `🏆 冠军 · ${racerName(finalResults[0]?.id ?? '')}`;
+        resultsCard.append(kicker, title);
+
+        for (const result of finalResults) {
+          const row = document.createElement('div');
+          row.className = `pk-result-row${result.rank === 1 ? ' champion' : ''}`;
+          const place = document.createElement('span');
+          place.className = 'pk-result-rank';
+          place.textContent = rankLabel(result.rank);
+          const name = document.createElement('span');
+          name.textContent = racerName(result.id);
+          const time = document.createElement('span');
+          time.className = 'pk-result-time';
+          time.textContent = fmtTime(result.finishTime);
+          row.append(place, name, time);
+          resultsCard.appendChild(row);
+        }
+
+        const retry = document.createElement('button');
+        retry.className = 'pk-retry';
+        retry.type = 'button';
+        retry.textContent = '再来一局';
+        retry.addEventListener('click', () => window.location.reload());
+        resultsCard.appendChild(retry);
+      }
+      results.style.display = 'grid';
     },
     isDriftHeld: () => driftHeld,
     dispose: () => {

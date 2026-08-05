@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "shader",
+  "source": "depth-of-field.wgsl",
+  "importSettings": {
+    "postProcessIdentifier": "game-default::depth-of-field"
+  },
+  "subAssets": [],
+  "paramSchema": [
+    { "name": "focalDistance", "type": "f32", "default": 7.0 },
+    { "name": "nearClip", "type": "f32", "default": 0.1 },
+    { "name": "farClip", "type": "f32", "default": 200.0 },
+    { "name": "mode", "type": "f32", "default": 0.0 },
+    { "name": "aperture", "type": "f32", "default": 0.8 },
+    { "name": "maxBlurPixels", "type": "f32", "default": 10.0 }
+  ]
+}

@@ -107,8 +107,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   followCamera.snapTo(kart.getPose());
 
   const aiDefs = [
-    { name: 'KartDuck', speed: 15.6, progress: 0.02, lateral: -2.8, phase: 0.4 },
-    { name: 'KartPanda', speed: 16.6, progress: 0.045, lateral: 2.8, phase: 1.7 },
+    { name: 'KartDuck', speed: 25.2, progress: 0.02, lateral: -2.8, phase: 0.4 },
+    { name: 'KartPanda', speed: 26.0, progress: 0.045, lateral: 2.8, phase: 1.7 },
   ] as const;
   const aiList: AiRacer[] = [];
   for (const d of aiDefs) {
@@ -150,6 +150,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       hud.setRank(session.rank, 1 + aiList.length);
       hud.setTime(session.elapsed);
       hud.setPhase(session.phase);
+      if (session.phase === 'waiting' && session.playerResult) {
+        hud.showPersonalFinish(session.playerResult, 1 + aiList.length);
+      } else if (session.phase === 'results') {
+        hud.showResults(session.standings);
+      }
     },
   });
 }

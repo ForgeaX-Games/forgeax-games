@@ -158,23 +158,33 @@ const numberMaterial = new THREE.MeshStandardMaterial({
   emissive: 0x262522,
   emissiveIntensity: 0.18,
 });
+// The stall number is painted signage. Building the "9" from a full torus made
+// it stand 0.12 off the shutter and read as a donut hanging on the wall, so the
+// whole group is squashed on Z. Keep NUMBER_RELIEF in sync with
+// scripts/flatten-garage-number.mjs, which applies the same squash to the
+// already-baked garage-original.glb.
+const NUMBER_RELIEF = 0.2;
+const stallNumber = new THREE.Group();
+stallNumber.position.set(0, 0, -5.24);
+stallNumber.scale.z = NUMBER_RELIEF;
+garage.add(stallNumber);
 const nineRing = new THREE.Mesh(
   new THREE.TorusGeometry(0.48, 0.12, 12, 28),
   numberMaterial,
 );
-nineRing.position.set(1.3, 2.72, -5.24);
-garage.add(nineRing);
+nineRing.position.set(1.3, 2.72, 0);
+stallNumber.add(nineRing);
 const nineStem = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.82, 0.05), numberMaterial);
-nineStem.position.set(1.64, 2.22, -5.24);
+nineStem.position.set(1.64, 2.22, 0);
 nineStem.rotation.z = -0.16;
-garage.add(nineStem);
+stallNumber.add(nineStem);
 const oneStem = new THREE.Mesh(new THREE.BoxGeometry(0.22, 1.45, 0.05), numberMaterial);
-oneStem.position.set(2.42, 2.45, -5.24);
-garage.add(oneStem);
+oneStem.position.set(2.42, 2.45, 0);
+stallNumber.add(oneStem);
 const oneTop = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.62, 0.05), numberMaterial);
-oneTop.position.set(2.23, 2.88, -5.24);
+oneTop.position.set(2.23, 2.88, 0);
 oneTop.rotation.z = -0.7;
-garage.add(oneTop);
+stallNumber.add(oneTop);
 await writeGlb('garage-original', garage);
 console.log('baked original procedural garage');
 

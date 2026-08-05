@@ -308,8 +308,7 @@
         "7322dba8-8e87-4523-9914-b2c3a7186d06",
         "e7a24653-9747-49f1-92a4-c8df45c408cc",
         "40c97134-29e4-44a3-8de5-69b37b9688f9"
-      ],
-      "artifacts": {}
+      ]
     },
     {
       "guid": "7322dba8-8e87-4523-9914-b2c3a7186d06",
@@ -341,8 +340,7 @@
           "roughness": 0.6
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "e7a24653-9747-49f1-92a4-c8df45c408cc",
@@ -374,8 +372,7 @@
           "roughness": 0.5
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "40c97134-29e4-44a3-8de5-69b37b9688f9",
@@ -413,8 +410,7 @@
           "emissiveIntensity": 9
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     }
   ]
 }

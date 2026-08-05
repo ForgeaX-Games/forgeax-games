@@ -5,7 +5,6 @@
     {
       "guid": "279b6439-2794-41bc-97ea-158a7b144f0d",
       "kind": "scene",
-      "artifacts": {},
       "payload": {
         "entities": [
           {
@@ -27593,7 +27592,6 @@
     {
       "guid": "4f208930-d9d0-43ea-9dac-273705f9726d",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -27637,7 +27635,6 @@
     {
       "guid": "39a61a64-d28f-4489-958f-d1b48792410d",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -27681,7 +27678,6 @@
     {
       "guid": "896cf3c9-cf0b-43a1-9232-980098fb8970",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -27725,7 +27721,6 @@
     {
       "guid": "3b73f19c-5a40-4df6-8ce4-b1dfde6edd33",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -27769,7 +27764,6 @@
     {
       "guid": "29bf879e-25e1-4032-9812-715fd163353b",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -27813,7 +27807,6 @@
     {
       "guid": "82bd1d66-b1ab-4c66-bdb2-05c7d369e239",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -27857,7 +27850,6 @@
     {
       "guid": "e0afb4f9-b56b-4902-8caf-1eca208863e6",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -27901,7 +27893,6 @@
     {
       "guid": "833e1764-4e1e-4381-8201-8b91d7d020c2",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -27945,7 +27936,6 @@
     {
       "guid": "02f7fa49-2748-47dc-ae14-64cd7f9cd86d",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -27989,7 +27979,6 @@
     {
       "guid": "3ca2ddf3-462a-4fe0-b256-3769d375036f",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -28033,7 +28022,6 @@
     {
       "guid": "a931fb99-1201-4798-aabd-c78593146383",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -28077,7 +28065,6 @@
     {
       "guid": "b051e04d-a940-4be5-b35a-6ffb93d09ade",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -28121,7 +28108,6 @@
     {
       "guid": "e0cc6b17-2790-4e7b-8bba-ecb927554531",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -28165,7 +28151,6 @@
     {
       "guid": "8fc14ef9-517f-4fbb-9da9-597598294d0f",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -28198,7 +28183,6 @@
     {
       "guid": "aa10b7c2-51d4-4f2e-9c3a-7e8b2d4f6a01",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -28242,7 +28226,6 @@
     {
       "guid": "aa10b7c2-51d4-4f2e-9c3a-7e8b2d4f6a02",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -28286,7 +28269,6 @@
     {
       "guid": "aa10b7c2-51d4-4f2e-9c3a-7e8b2d4f6a03",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -28330,7 +28312,6 @@
     {
       "guid": "aa10b7c2-51d4-4f2e-9c3a-7e8b2d4f6a04",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [
@@ -28374,7 +28355,6 @@
     {
       "guid": "4f2220df-fd06-4dcb-ac06-3eb6bb8371d8",
       "kind": "material",
-      "artifacts": {},
       "payload": {
         "kind": "material",
         "passes": [

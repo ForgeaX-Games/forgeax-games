@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "game-default-target-profile",
+  "source": "target-profile.json",
+  "importSettings": {},
+  "subAssets": [
+    {
+      "guid": "019e2cc6-0c86-79da-aa76-b0984c86d461",
+      "sourceIndex": 0,
+      "name": "game-default-precision-target",
+      "kind": "game-default-target-profile"
+    }
+  ]
+}

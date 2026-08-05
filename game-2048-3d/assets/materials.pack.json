@@ -1,0 +1,498 @@
+{
+  "schemaVersion": "2.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "33df127d-eb9f-43a6-acdc-ae40b0379bc2",
+      "kind": "material",
+      "name": "Prism Pedestal",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "forward",
+            "program": {
+              "module": "forgeax_material::standard",
+              "fragmentEntry": "fs_main"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              }
+            }
+          },
+          {
+            "name": "deferred",
+            "program": {
+              "module": "forgeax_material::standard",
+              "fragmentEntry": "fs_gbuffer"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Deferred"
+              }
+            }
+          },
+          {
+            "name": "shadow-caster",
+            "program": {
+              "module": "forgeax_material::standard"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "baseColor",
+            "type": "color"
+          },
+          {
+            "name": "metallic",
+            "type": "f32"
+          },
+          {
+            "name": "roughness",
+            "type": "f32"
+          },
+          {
+            "name": "metallicChannel",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "roughnessChannel",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "aoChannel",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "extraChannel",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "emissive",
+            "type": "vec3",
+            "colorSpace": "srgb",
+            "optional": true
+          },
+          {
+            "name": "emissiveIntensity",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "occlusionStrength",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "alphaCutoff",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "clearcoat",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "clearcoatRoughness",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "specularTint",
+            "type": "vec3",
+            "colorSpace": "srgb",
+            "optional": true
+          },
+          {
+            "name": "baseColorTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "metallicRoughnessTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "normalTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "specularTintTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "emissiveTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "occlusionTexture",
+            "type": "texture",
+            "optional": true
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.07,
+            0.035,
+            0.14,
+            1
+          ],
+          "metallic": 0.82,
+          "roughness": 0.18,
+          "occlusionStrength": 1,
+          "specularTint": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "e6d7db9c-21cc-400d-bb7d-faca9d9ddf99",
+      "kind": "material",
+      "name": "Prism Board",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "forward",
+            "program": {
+              "module": "forgeax_material::standard",
+              "fragmentEntry": "fs_main"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              }
+            }
+          },
+          {
+            "name": "deferred",
+            "program": {
+              "module": "forgeax_material::standard",
+              "fragmentEntry": "fs_gbuffer"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Deferred"
+              }
+            }
+          },
+          {
+            "name": "shadow-caster",
+            "program": {
+              "module": "forgeax_material::standard"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "baseColor",
+            "type": "color"
+          },
+          {
+            "name": "metallic",
+            "type": "f32"
+          },
+          {
+            "name": "roughness",
+            "type": "f32"
+          },
+          {
+            "name": "metallicChannel",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "roughnessChannel",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "aoChannel",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "extraChannel",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "emissive",
+            "type": "vec3",
+            "colorSpace": "srgb",
+            "optional": true
+          },
+          {
+            "name": "emissiveIntensity",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "occlusionStrength",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "alphaCutoff",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "clearcoat",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "clearcoatRoughness",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "specularTint",
+            "type": "vec3",
+            "colorSpace": "srgb",
+            "optional": true
+          },
+          {
+            "name": "baseColorTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "metallicRoughnessTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "normalTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "specularTintTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "emissiveTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "occlusionTexture",
+            "type": "texture",
+            "optional": true
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.055,
+            0.07,
+            0.12,
+            1
+          ],
+          "metallic": 0.68,
+          "roughness": 0.24,
+          "occlusionStrength": 1,
+          "specularTint": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "7a879709-cabf-4094-9af1-a8c8e42f2f3c",
+      "kind": "material",
+      "name": "Prism Cell",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "forward",
+            "program": {
+              "module": "forgeax_material::standard",
+              "fragmentEntry": "fs_main"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              }
+            }
+          },
+          {
+            "name": "deferred",
+            "program": {
+              "module": "forgeax_material::standard",
+              "fragmentEntry": "fs_gbuffer"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Deferred"
+              }
+            }
+          },
+          {
+            "name": "shadow-caster",
+            "program": {
+              "module": "forgeax_material::standard"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "baseColor",
+            "type": "color"
+          },
+          {
+            "name": "metallic",
+            "type": "f32"
+          },
+          {
+            "name": "roughness",
+            "type": "f32"
+          },
+          {
+            "name": "metallicChannel",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "roughnessChannel",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "aoChannel",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "extraChannel",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "emissive",
+            "type": "vec3",
+            "colorSpace": "srgb",
+            "optional": true
+          },
+          {
+            "name": "emissiveIntensity",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "occlusionStrength",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "alphaCutoff",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "clearcoat",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "clearcoatRoughness",
+            "type": "f32",
+            "optional": true
+          },
+          {
+            "name": "specularTint",
+            "type": "vec3",
+            "colorSpace": "srgb",
+            "optional": true
+          },
+          {
+            "name": "baseColorTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "metallicRoughnessTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "normalTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "specularTintTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "emissiveTexture",
+            "type": "texture",
+            "optional": true
+          },
+          {
+            "name": "occlusionTexture",
+            "type": "texture",
+            "optional": true
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.025,
+            0.035,
+            0.07,
+            1
+          ],
+          "metallic": 0.45,
+          "roughness": 0.32,
+          "occlusionStrength": 1,
+          "specularTint": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    }
+  ]
+}

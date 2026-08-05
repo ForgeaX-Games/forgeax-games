@@ -367,8 +367,7 @@
         "be847c0d-f99f-42ad-985e-1d58328cd5b8",
         "6ba45438-7454-4b30-a773-6e1db1c4a6ee",
         "0fc26590-5687-4d17-9f5c-4aebc5a1dd0e"
-      ],
-      "artifacts": {}
+      ]
     },
     {
       "guid": "2bc7456f-c108-4937-b702-3439d941a316",
@@ -400,8 +399,7 @@
           "roughness": 0.45
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "9b145f63-8772-4874-9852-937545c5c329",
@@ -433,8 +431,7 @@
           "roughness": 0.4
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "06d663fb-df6a-41d9-8795-208e35a6f3d2",
@@ -472,8 +469,7 @@
           "emissiveIntensity": 1.5
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "be847c0d-f99f-42ad-985e-1d58328cd5b8",
@@ -511,8 +507,7 @@
           "emissiveIntensity": 12
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "6ba45438-7454-4b30-a773-6e1db1c4a6ee",
@@ -550,8 +545,7 @@
           "emissiveIntensity": 7
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "0fc26590-5687-4d17-9f5c-4aebc5a1dd0e",
@@ -589,8 +583,7 @@
           "emissiveIntensity": 2.5
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     }
   ]
 }

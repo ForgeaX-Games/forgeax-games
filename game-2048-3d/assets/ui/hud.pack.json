@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "2.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "2a6b806f-126f-4512-a738-5698c4cce8b6",
+      "kind": "ui",
+      "payload": {
+        "guid": "2a6b806f-126f-4512-a738-5698c4cce8b6",
+        "html": "<section class=\"hud\" aria-label=\"Game HUD\">\n  <span data-ui-slot=\"score\" aria-live=\"polite\">Score 0</span>\n  <button type=\"button\" data-ui-action=\"toggle-mode\" aria-label=\"Toggle view mode\">View: top-down</button>\n  <button type=\"button\" class=\"settings-action\" data-ui-action=\"open-settings\" aria-label=\"Open settings\">Settings</button>\n  <span data-ui-slot=\"lock-status\" aria-live=\"polite\"></span>\n  <span data-ui-slot=\"hint\"></span>\n  <span data-ui-slot=\"crosshair\" aria-hidden=\"true\">+</span>\n  <div data-ui-slot=\"popups\" aria-live=\"polite\"></div>\n  <template data-ui-template=\"score-popup\"><span class=\"score-popup\"></span></template>\n</section>\n",
+        "css": ":host { display: block; color: #fff; font: 600 14px ui-sans-serif, system-ui, sans-serif; user-select: none; }\n.hud { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }\n[data-ui-slot=\"score\"] { position: absolute; top: 12px; left: 14px; padding: 4px 10px; background: rgb(0 0 0 / 45%); border-radius: 8px; }\nbutton { position: absolute; top: 12px; right: 14px; pointer-events: auto; padding: 6px 12px; color: #fff; background: rgb(20 28 48 / 78%); border: 1px solid rgb(255 255 255 / 25%); border-radius: 8px; font: inherit; }\n.settings-action { right: 150px; }\n[data-ui-slot=\"crosshair\"] { position: absolute; inset: 50% auto auto 50%; display: none; font-size: 24px; transform: translate(-50%, -50%); }\n[data-ui-slot=\"hint\"] { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); }\n[data-ui-slot=\"lock-status\"] { position: absolute; top: 46px; left: 14px; }\n.score-popup { color: #ffec80; font-size: 22px; }\n"
+      },
+      "refs": [],
+      "artifacts": {}
+    }
+  ]
+}

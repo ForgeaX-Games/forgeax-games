@@ -360,8 +360,7 @@
         "91ab9b49-6937-4de8-af03-7bb06f7c0fad",
         "876636b4-989a-4117-a678-875af5376a54",
         "3a91cd73-f225-4025-a946-f5da278ba33f"
-      ],
-      "artifacts": {}
+      ]
     },
     {
       "guid": "99b2eee0-2ad2-41d9-a29e-0e00df6f28d2",
@@ -393,8 +392,7 @@
           "roughness": 0.95
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "302b766a-5339-4031-9805-dfb1796429c1",
@@ -426,8 +424,7 @@
           "roughness": 0.9
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "91ab9b49-6937-4de8-af03-7bb06f7c0fad",
@@ -459,8 +456,7 @@
           "roughness": 0.6
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "876636b4-989a-4117-a678-875af5376a54",
@@ -498,8 +494,7 @@
           "emissiveIntensity": 3
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "3a91cd73-f225-4025-a946-f5da278ba33f",
@@ -537,8 +532,7 @@
           "emissiveIntensity": 7
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     }
   ]
 }

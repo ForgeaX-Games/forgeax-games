@@ -365,8 +365,7 @@
         "d4eab8cf-24a8-4e09-b5f0-948f7c44cb09",
         "6189009c-2cd5-4d8f-bd98-5760942fb64e",
         "52c762c3-75be-4037-9393-b2755b878bc9"
-      ],
-      "artifacts": {}
+      ]
     },
     {
       "guid": "87b6d6f6-4b99-4a9c-830e-08ed0e70f1cb",
@@ -398,8 +397,7 @@
           "roughness": 0.85
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "d4eab8cf-24a8-4e09-b5f0-948f7c44cb09",
@@ -431,8 +429,7 @@
           "roughness": 0.9
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "6189009c-2cd5-4d8f-bd98-5760942fb64e",
@@ -464,8 +461,7 @@
           "roughness": 0.5
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "52c762c3-75be-4037-9393-b2755b878bc9",
@@ -503,8 +499,7 @@
           "emissiveIntensity": 8
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     }
   ]
 }

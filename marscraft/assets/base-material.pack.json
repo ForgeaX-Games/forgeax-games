@@ -32,8 +32,7 @@
           "roughness": 0.85
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "b1a4c0de-1111-4a2b-9c3d-000000000002",
@@ -63,8 +62,7 @@
           ]
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     }
   ]
 }

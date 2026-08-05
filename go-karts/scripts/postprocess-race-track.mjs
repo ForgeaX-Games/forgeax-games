@@ -23,9 +23,14 @@ import { writeAllMidTextures, MID_TEX_DIR } from './midground-textures.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ASSETS = join(__dirname, '..', 'assets');
+// Bake intermediates live OUTSIDE assets/: the editor's integrity scan imports
+// every sidecar-less .glb under assets/ on boot, and its generated GUIDs are
+// UUIDv7, which the pack scanner rejects — one such sidecar collapses the whole
+// per-game catalog to zero rows (blank scene tree + empty Content Browser).
+const ASSETS_SRC = join(__dirname, '..', 'assets-src');
 const TEX =
   '/Users/you/Desktop/forgeax/claude-fable-5-93/code_rounds/round-34/code/public/assets';
-const RAW = join(ASSETS, '_race_track_raw.glb');
+const RAW = join(ASSETS_SRC, '_race_track_raw.glb');
 const DST = join(ASSETS, 'race_track.glb');
 
 function srgbToLinear(hex) {

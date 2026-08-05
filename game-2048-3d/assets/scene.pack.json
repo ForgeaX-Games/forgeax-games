@@ -1,0 +1,918 @@
+{
+  "schemaVersion": "2.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "20f6fb31-28f2-4238-a425-3d200506c10b",
+      "kind": "scene",
+      "payload": {
+        "entities": [
+          {
+            "localId": 0,
+            "components": {}
+          },
+          {
+            "localId": 1,
+            "components": {
+              "Entity": {
+                "self": 1
+              },
+              "Name": {
+                "value": "Prism 2048 Environment"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 2,
+            "components": {
+              "Entity": {
+                "self": 2
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Board Pedestal"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  -0.11999999731779099,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  5.449999809265137,
+                  0.41999998688697815,
+                  5.449999809265137
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 3,
+            "components": {
+              "Entity": {
+                "self": 3
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Board Surface"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0.1599999964237213,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  4.949999809265137,
+                  0.23999999463558197,
+                  4.949999809265137
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  2
+                ]
+              }
+            }
+          },
+          {
+            "localId": 4,
+            "components": {
+              "Entity": {
+                "self": 4
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-0-0"
+              },
+              "Transform": {
+                "pos": [
+                  -1.649999976158142,
+                  0.36000001430511475,
+                  -1.649999976158142
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 5,
+            "components": {
+              "Entity": {
+                "self": 5
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-0-1"
+              },
+              "Transform": {
+                "pos": [
+                  -0.550000011920929,
+                  0.36000001430511475,
+                  -1.649999976158142
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 6,
+            "components": {
+              "Entity": {
+                "self": 6
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-0-2"
+              },
+              "Transform": {
+                "pos": [
+                  0.550000011920929,
+                  0.36000001430511475,
+                  -1.649999976158142
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 7,
+            "components": {
+              "Entity": {
+                "self": 7
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-0-3"
+              },
+              "Transform": {
+                "pos": [
+                  1.649999976158142,
+                  0.36000001430511475,
+                  -1.649999976158142
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 8,
+            "components": {
+              "Entity": {
+                "self": 8
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-1-0"
+              },
+              "Transform": {
+                "pos": [
+                  -1.649999976158142,
+                  0.36000001430511475,
+                  -0.550000011920929
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 9,
+            "components": {
+              "Entity": {
+                "self": 9
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-1-1"
+              },
+              "Transform": {
+                "pos": [
+                  -0.550000011920929,
+                  0.36000001430511475,
+                  -0.550000011920929
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 10,
+            "components": {
+              "Entity": {
+                "self": 10
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-1-2"
+              },
+              "Transform": {
+                "pos": [
+                  0.550000011920929,
+                  0.36000001430511475,
+                  -0.550000011920929
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 11,
+            "components": {
+              "Entity": {
+                "self": 11
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-1-3"
+              },
+              "Transform": {
+                "pos": [
+                  1.649999976158142,
+                  0.36000001430511475,
+                  -0.550000011920929
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 12,
+            "components": {
+              "Entity": {
+                "self": 12
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-2-0"
+              },
+              "Transform": {
+                "pos": [
+                  -1.649999976158142,
+                  0.36000001430511475,
+                  0.550000011920929
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 13,
+            "components": {
+              "Entity": {
+                "self": 13
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-2-1"
+              },
+              "Transform": {
+                "pos": [
+                  -0.550000011920929,
+                  0.36000001430511475,
+                  0.550000011920929
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 14,
+            "components": {
+              "Entity": {
+                "self": 14
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-2-2"
+              },
+              "Transform": {
+                "pos": [
+                  0.550000011920929,
+                  0.36000001430511475,
+                  0.550000011920929
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 15,
+            "components": {
+              "Entity": {
+                "self": 15
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-2-3"
+              },
+              "Transform": {
+                "pos": [
+                  1.649999976158142,
+                  0.36000001430511475,
+                  0.550000011920929
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 16,
+            "components": {
+              "Entity": {
+                "self": 16
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-3-0"
+              },
+              "Transform": {
+                "pos": [
+                  -1.649999976158142,
+                  0.36000001430511475,
+                  1.649999976158142
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 17,
+            "components": {
+              "Entity": {
+                "self": 17
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-3-1"
+              },
+              "Transform": {
+                "pos": [
+                  -0.550000011920929,
+                  0.36000001430511475,
+                  1.649999976158142
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 18,
+            "components": {
+              "Entity": {
+                "self": 18
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-3-2"
+              },
+              "Transform": {
+                "pos": [
+                  0.550000011920929,
+                  0.36000001430511475,
+                  1.649999976158142
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 19,
+            "components": {
+              "Entity": {
+                "self": 19
+              },
+              "ChildOf": {
+                "parent": 1
+              },
+              "Name": {
+                "value": "Cell-3-3"
+              },
+              "Transform": {
+                "pos": [
+                  1.649999976158142,
+                  0.36000001430511475,
+                  1.649999976158142
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.9399999976158142,
+                  0.1599999964237213,
+                  0.9399999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 20,
+            "components": {
+              "Entity": {
+                "self": 20
+              },
+              "Name": {
+                "value": "Game Camera"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  7.800000190734863,
+                  7.199999809265137
+                ],
+                "quat": [
+                  -0.3569492995738983,
+                  0,
+                  0,
+                  0.9341237545013428
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "Camera": {
+                "fov": 0.7662420868873596,
+                "aspect": 2.417233467102051,
+                "near": 0.10000000149011612,
+                "far": 80,
+                "projection": 0,
+                "left": -1,
+                "right": 1,
+                "bottom": -1,
+                "top": 1,
+                "tonemap": 1,
+                "exposure": 1,
+                "whitePoint": 4,
+                "antialias": 0,
+                "bloom": 0,
+                "bloomThreshold": 1,
+                "bloomIntensity": 1,
+                "bloomBlurRadius": 4,
+                "clearColor": [
+                  0.00800000037997961,
+                  0.012000000104308128,
+                  0.02800000086426735,
+                  1
+                ],
+                "autoAspect": true
+              }
+            }
+          },
+          {
+            "localId": 21,
+            "components": {
+              "Entity": {
+                "self": 21
+              },
+              "Name": {
+                "value": "Cool Directional Light"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "DirectionalLight": {
+                "direction": [
+                  -0.3910309374332428,
+                  -0.8689576387405396,
+                  -0.30413517355918884
+                ],
+                "color": [
+                  0.75,
+                  0.8799999952316284,
+                  1
+                ],
+                "intensity": 3.4000000953674316,
+                "castShadow": true,
+                "cascadeCount": 4,
+                "splitLambda": 0.75,
+                "cascadeBlend": 0.20000000298023224,
+                "mapSize": 2048,
+                "depthBias": 0.004999999888241291,
+                "normalBias": 0.05000000074505806,
+                "shadowDistance": 30,
+                "pcfKernelSize": 3
+              }
+            }
+          },
+          {
+            "localId": 22,
+            "components": {
+              "Entity": {
+                "self": 22
+              },
+              "Name": {
+                "value": "Magenta Point Light"
+              },
+              "Transform": {
+                "pos": [
+                  3.799999952316284,
+                  3.200000047683716,
+                  -2.5999999046325684
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "PointLight": {
+                "color": [
+                  1,
+                  0.20000000298023224,
+                  0.6499999761581421
+                ],
+                "intensity": 34,
+                "range": 14
+              }
+            }
+          }
+        ]
+      },
+      "refs": [
+        "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
+        "33df127d-eb9f-43a6-acdc-ae40b0379bc2",
+        "e6d7db9c-21cc-400d-bb7d-faca9d9ddf99",
+        "7a879709-cabf-4094-9af1-a8c8e42f2f3c"
+      ],
+      "artifacts": {}
+    }
+  ]
+}

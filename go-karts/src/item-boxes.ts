@@ -26,13 +26,15 @@ interface BoxState {
   respawn: number;
 }
 
+export interface ItemBoxCollector {
+  id: string;
+  pose: Pick<KartPose, 'x' | 'y' | 'z'>;
+  canReceive: boolean;
+  onReceive: (box: { x: number; y: number; z: number }) => void;
+}
+
 export interface ItemBoxes {
-  update(
-    dt: number,
-    pose: KartPose,
-    canReceive: boolean,
-    onReceive: (box: { x: number; y: number; z: number }) => void,
-  ): number;
+  update(dt: number, collectors: readonly ItemBoxCollector[]): number;
   reset(): void;
 }
 
@@ -89,7 +91,7 @@ export function createItemBoxes(world: World, scene: LoadedScene): ItemBoxes {
   };
 
   return {
-    update(dt, pose, canReceive, onReceive) {
+    update(dt, collectors) {
       let picked = 0;
       for (const box of boxes) {
         if (box.taken) {
@@ -105,15 +107,22 @@ export function createItemBoxes(world: World, scene: LoadedScene): ItemBoxes {
         }
 
         writeBox(box, true);
-        const dx = pose.x - box.x;
-        const dz = pose.z - box.z;
-        if (dx * dx + dz * dz >= PICKUP_RADIUS * PICKUP_RADIUS) continue;
+        let winner: ItemBoxCollector | undefined;
+        for (const collector of collectors) {
+          if (!collector.canReceive) continue;
+          const dx = collector.pose.x - box.x;
+          const dz = collector.pose.z - box.z;
+          if (dx * dx + dz * dz >= PICKUP_RADIUS * PICKUP_RADIUS) continue;
+          winner = collector;
+          break;
+        }
+        if (!winner) continue;
 
         box.taken = true;
         box.respawn = RESPAWN_SECONDS;
         writeBox(box, false);
         picked++;
-        if (canReceive) onReceive({ x: box.x, y: box.y + 0.6, z: box.z });
+        winner.onReceive({ x: box.x, y: box.y + 0.6, z: box.z });
       }
       return picked;
     },

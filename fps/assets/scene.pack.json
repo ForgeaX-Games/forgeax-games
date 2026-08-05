@@ -9,8 +9,7 @@
       "payload": {
         "kind": "scene",
         "entities": []
-      },
-      "artifacts": {}
+      }
     }
   ]
 }

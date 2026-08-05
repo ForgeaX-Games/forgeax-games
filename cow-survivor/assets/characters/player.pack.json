@@ -184,8 +184,7 @@
         "ddeb3479-aa8e-4acd-8c33-0601d9c4d151",
         "74cb1a23-3d00-492d-a4d6-88b2b34d0edd",
         "a081bea0-44d0-4f55-9b24-5f7f925b2818"
-      ],
-      "artifacts": {}
+      ]
     },
     {
       "guid": "ddeb3479-aa8e-4acd-8c33-0601d9c4d151",
@@ -217,8 +216,7 @@
           "roughness": 0.5
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "74cb1a23-3d00-492d-a4d6-88b2b34d0edd",
@@ -250,8 +248,7 @@
           "roughness": 0.7
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "a081bea0-44d0-4f55-9b24-5f7f925b2818",
@@ -283,8 +280,7 @@
           "roughness": 0.7
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     }
   ]
 }

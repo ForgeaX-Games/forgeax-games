@@ -105,13 +105,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   canvas.height = Math.max(1, Math.floor(canvas.clientHeight * dpr));
   const aspect = canvas.width / canvas.height || 1;
 
-  // Cartoon grade: Neutral keeps midtone chroma that ACES crush. Exposure
-  // stays low so warm keyed sun can sit hot without bleaching albedos.
+  // Cartoon grade: Neutral keeps midtone chroma that ACES crush.
   const SKY_CLEAR: readonly [number, number, number, number] = [0.3, 0.66, 1.0, 1];
   const raceLook = {
     tonemap: TONEMAP_NEUTRAL,
-    // Lift with exposure + warm key — not cool skylight (that washes grey).
-    exposure: 0.88,
+    // Midday look: a neutral key plus real sky fill carry the lift, so exposure
+    // only needs a nudge — pushing it to 1.0 bleaches albedos.
+    exposure: 0.92,
     bloom: BLOOM_ENABLED,
     // Higher threshold so yellow item-box "?" paint does not bloom-strobe.
     bloomThreshold: 1.75,
@@ -172,8 +172,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   followCamera.snapTo(kart.getPose());
 
   const aiDefs = [
-    { name: 'KartDuck', speed: 15.6, progress: 0.02, lateral: -2.8, phase: 0.4 },
-    { name: 'KartPanda', speed: 16.6, progress: 0.045, lateral: 2.8, phase: 1.7 },
+    { name: 'KartDuck', speed: 25.2, progress: 0.02, lateral: -2.8, phase: 0.4 },
+    { name: 'KartPanda', speed: 26.0, progress: 0.045, lateral: 2.8, phase: 1.7 },
   ] as const;
   const aiList: AiRacer[] = [];
   for (const d of aiDefs) {
@@ -242,14 +242,17 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         color: [...sunResult.value.color] as [number, number, number],
       }
     : null;
-  // Small warm-leaning fill + warmer key. Prefer sun over skylight for lift.
+  // Midday key/fill: a near-white sun close to overhead with a proper blue sky
+  // bounce, so shadows read cool-neutral instead of warm golden-hour falloff.
   if (raceSkylightValue !== null) {
-    raceSkylightValue.color = [0.5, 0.68, 0.95];
-    raceSkylightValue.intensity = 0.2;
+    raceSkylightValue.color = [0.62, 0.76, 0.98];
+    raceSkylightValue.intensity = 0.45;
   }
   if (raceSunValue !== null) {
-    raceSunValue.color = [1.0, 0.86, 0.58];
-    raceSunValue.intensity = 2.35;
+    // A white key is far brighter per unit than the old amber one, so the
+    // intensity comes down even though the scene ends up lighter.
+    raceSunValue.color = [1.0, 0.97, 0.92];
+    raceSunValue.intensity = 2.2;
     raceSunValue.castShadow = true;
     raceSunValue.mapSize = 2048;
     raceSunValue.shadowDistance = 180;
@@ -260,7 +263,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     if ('cascadeBlend' in raceSunValue) raceSunValue.cascadeBlend = 0.35;
     if ('splitLambda' in raceSunValue) raceSunValue.splitLambda = 0.82;
     if ('direction' in raceSunValue) {
-      raceSunValue.direction = [-0.55, -0.72, -0.42];
+      raceSunValue.direction = [-0.32, -0.92, -0.24];
     }
   }
   if (skylightEntity !== undefined && raceSkylightValue !== null) {
@@ -536,11 +539,30 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       if (pickedCoins > 0) hud.coinPickup(pickedCoins);
       kart.setCoinCount(coins.getCount());
 
-      boxes.update(dt, pose, !items.hasItem(), (box) => {
-        const item = items.obtainRandom();
-        if (item) hud.setItem(item);
-        vfx.burstAt(box.x, box.y, box.z, 'box');
-      });
+      const playerProg = session.playerProgress(pose.trackT);
+      ais.update(dt, session.elapsed, playerProg);
+      const aiPoses = ais.getPoses();
+      boxes.update(dt, [
+        {
+          id: 'player',
+          pose,
+          canReceive: !items.hasItem(),
+          onReceive: (box) => {
+            const item = items.obtainRandom();
+            if (item) hud.setItem(item);
+            vfx.burstAt(box.x, box.y, box.z, 'box');
+          },
+        },
+        ...aiPoses.map((ai) => ({
+          id: ai.id,
+          pose: ai,
+          canReceive: !items.hasAiItem(ai.id),
+          onReceive: (box: { x: number; y: number; z: number }) => {
+            items.obtainRandomForAi(ai.id);
+            vfx.burstAt(box.x, box.y, box.z, 'box');
+          },
+        })),
+      ]);
 
       if (useItemPressed) {
         const result = items.use(pose);
@@ -553,9 +575,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         }
       }
 
-      const playerProg = session.playerProgress(pose.trackT);
-      ais.update(dt, session.elapsed, playerProg);
-      items.update(dt, pose);
+      for (const event of items.update(dt, pose)) {
+        hud.showRivalItemUsed(event.racer, event, event.hitPlayer);
+        if (event.item === 'boost' || event.item === 'star') {
+          const rival = aiPoses.find((ai) => ai.id === event.racer);
+          if (rival) vfx.burstAt(rival.x, rival.y + 0.5, rival.z, 'spark');
+        }
+      }
       session.update(dt, pose.trackT, ais.getProgresses());
       followCamera.update(dt, pose);
       vfx.update(dt);
@@ -570,6 +596,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       hud.setStarActive(items.isStarActive());
       hud.setHornActive(items.isHornActive());
       hud.setPhase(session.phase);
+      if (session.phase === 'waiting' && session.playerResult) {
+        hud.showPersonalFinish(session.playerResult, 1 + aiList.length);
+      } else if (session.phase === 'results') {
+        hud.showResults(session.standings);
+      }
     },
   });
 }

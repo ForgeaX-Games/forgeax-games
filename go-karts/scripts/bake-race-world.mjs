@@ -54,6 +54,11 @@ if (typeof globalThis.FileReader === 'undefined') {
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = '/Users/you/Desktop/forgeax/forgeax-studio/.forgeax/games/go-karts/assets';
+// Raw bake output is an intermediate consumed by postprocess-race-track.mjs. It
+// must NOT land in assets/ — the editor's integrity scan auto-imports every
+// sidecar-less .glb there with UUIDv7 GUIDs, which the pack scanner rejects and
+// which collapses the entire per-game catalog.
+const RAW_DIR = join(OUT_DIR, '..', 'assets-src');
 const TEX_DIR =
   '/Users/you/Desktop/forgeax/claude-fable-5-93/code_rounds/round-34/code/public/assets';
 
@@ -1026,7 +1031,8 @@ async function main() {
     );
   });
 
-  const rawPath = join(OUT_DIR, '_race_track_raw.glb');
+  const rawPath = join(RAW_DIR, '_race_track_raw.glb');
+  mkdirSync(RAW_DIR, { recursive: true });
   writeFileSync(rawPath, glb);
   console.log('Wrote', rawPath, 'bytes', glb.length);
   console.log('Spawn', spawn);

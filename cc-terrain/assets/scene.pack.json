@@ -3356,8 +3356,7 @@
         "b8915cc0-bee4-46d6-a00b-2ae7ce727e2b",
         "2195193c-bb6f-4f9f-99ff-fd04716a70f1",
         "6fad4ed4-9952-4b9c-8330-044fc64c3336"
-      ],
-      "artifacts": {}
+      ]
     },
     {
       "guid": "6a63356c-ab7d-437c-8d70-31a1d37baa3c",
@@ -3400,8 +3399,7 @@
           "roughness": 0.9
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "1e58d15a-78d4-41b9-849b-d0dc82fd14eb",
@@ -3444,8 +3442,7 @@
           "roughness": 0.92
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "fe2e3d65-a71d-481c-8190-92004b679fb1",
@@ -3488,8 +3485,7 @@
           "roughness": 0.88
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "1a3d5afe-b7af-4b7c-9c80-f42fec836d10",
@@ -3532,8 +3528,7 @@
           "roughness": 0.55
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "2c7f6ab3-46b4-4e1c-828e-8294394a9c0a",
@@ -3576,8 +3571,7 @@
           "roughness": 0.86
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "320116be-2b20-46dd-8372-ff58b36aca6a",
@@ -3620,8 +3614,7 @@
           "roughness": 0.94
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "318a9b34-9353-4881-b9fd-0aa3906093f6",
@@ -3664,8 +3657,7 @@
           "roughness": 0.82
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "c5f83dff-9f52-4911-821c-9e5827e11454",
@@ -3708,8 +3700,7 @@
           "roughness": 0.78
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "6896ecc8-f18b-4333-9d24-aee850b07494",
@@ -3752,8 +3743,7 @@
           "roughness": 0.88
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "b8915cc0-bee4-46d6-a00b-2ae7ce727e2b",
@@ -3796,8 +3786,7 @@
           "roughness": 0.62
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "2195193c-bb6f-4f9f-99ff-fd04716a70f1",
@@ -3840,8 +3829,7 @@
           "roughness": 0.72
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "6fad4ed4-9952-4b9c-8330-044fc64c3336",
@@ -3884,8 +3872,7 @@
           "roughness": 0.7
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     }
   ]
 }

@@ -281,8 +281,7 @@
         "d862fbc8-f723-45fb-829e-04986335276b",
         "95730fd2-9846-5f84-8658-0b3c971eb263",
         "8b0311da-5ea8-46cb-ae74-67c9bb09b36d"
-      ],
-      "artifacts": {}
+      ]
     },
     {
       "guid": "c4d23fc6-b45c-430a-afc7-0cf1cdafd2fd",
@@ -314,8 +313,7 @@
           "roughness": 0.4
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "9a55af6f-5068-4dc2-9c17-f41b3d553f0f",
@@ -353,8 +351,7 @@
           "emissiveIntensity": 12
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "d862fbc8-f723-45fb-829e-04986335276b",
@@ -386,8 +383,7 @@
           "roughness": 0.45
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "8b0311da-5ea8-46cb-ae74-67c9bb09b36d",
@@ -425,8 +421,7 @@
           "emissiveIntensity": 8
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     }
   ]
 }

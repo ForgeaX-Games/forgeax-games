@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "shader",
+  "source": "chromatic-aberration.wgsl",
+  "importSettings": {
+    "postProcessIdentifier": "game-default::chromatic-aberration"
+  },
+  "subAssets": [],
+  "paramSchema": [
+    { "name": "intensity", "type": "f32", "default": 0.0 }
+  ]
+}

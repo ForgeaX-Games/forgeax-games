@@ -11,24 +11,31 @@ import { findEntityByName, type LoadedScene } from './scene';
 
 type SocketId = 'hat_top' | 'hat_back' | 'glasses_bridge' | 'halo_above';
 
-/** Original Pets.ts sockets — calibrated for ~1.35 world-height pets. */
+/**
+ * Original Pets.ts sockets — calibrated for ~1.35 world-height pets.
+ *
+ * glasses_bridge is re-measured against the GLBs this project actually ships
+ * (pet-dog / pet_duck / pet_panda), whose eyes sit much lower on the head than
+ * the original fallback pets. Values are the eye-ball centers projected into
+ * the same 1.35-tall space: raw model y * (1.35 / model height).
+ */
 const PET_SOCKETS: Record<PetKind, Record<SocketId, readonly [number, number, number]>> = {
   dog: {
     hat_top: [0, 1.3, 0.02],
     hat_back: [0, 1.13, -0.3],
-    glasses_bridge: [0, 1.08, 0.32],
+    glasses_bridge: [0, 0.95, 0.32],
     halo_above: [0, 1.5, 0.02],
   },
   duck: {
     hat_top: [0, 1.17, -0.03],
     hat_back: [0, 1.12, -0.31],
-    glasses_bridge: [0, 0.92, 0.37],
+    glasses_bridge: [0, 0.87, 0.35],
     halo_above: [0, 1.42, -0.03],
   },
   panda: {
     hat_top: [0, 1.3, 0],
     hat_back: [0, 1.14, -0.3],
-    glasses_bridge: [0, 1.07, 0.32],
+    glasses_bridge: [0, 0.89, 0.33],
     halo_above: [0, 1.52, 0],
   },
 };

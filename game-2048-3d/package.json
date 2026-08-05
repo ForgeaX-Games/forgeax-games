@@ -1,0 +1,64 @@
+{
+  "name": "@forgeax/game-2048-3d",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "A 3D 2048 game with a Scene-authored board, camera, and lighting plus ECS-rendered animated tiles.",
+  "scripts": {
+    "test": "bun test ./src/game-2048.test.ts"
+  },
+  "forgeax": {
+    "assets": {
+      "roots": [
+        "assets"
+      ]
+    },
+    "metrics": {
+      "bundle-size": {
+        "enabled": false,
+        "reason": "template bundle is downstream of the host app (apps/preview)"
+      },
+      "fps": {
+        "enabled": false,
+        "reason": "template has no independent smoke gate"
+      },
+      "bench": {
+        "enabled": false,
+        "reason": "template scaffold; bench focus stays on engine packages"
+      },
+      "gate": {
+        "enabled": false,
+        "reason": "no CI gate on template scaffold; apps/preview hosts acceptance"
+      },
+      "spike-report": {
+        "enabled": false,
+        "reason": "not a spike app"
+      }
+    }
+  },
+  "dependencies": {
+    "@forgeax/engine-app": "workspace:*",
+    "@forgeax/engine-audio": "workspace:*",
+    "@forgeax/engine-assets-runtime": "workspace:*",
+    "@forgeax/engine-ecs": "workspace:*",
+    "@forgeax/engine-geometry": "workspace:*",
+    "@forgeax/engine-graphics-extras": "workspace:*",
+    "@forgeax/engine-input": "workspace:*",
+    "@forgeax/engine-math": "workspace:*",
+    "@forgeax/engine-ui": "workspace:*",
+    "@forgeax/engine-pack": "workspace:*",
+    "@forgeax/engine-physics": "workspace:*",
+    "@forgeax/engine-picking": "workspace:*",
+    "@forgeax/engine-render": "workspace:*",
+    "@forgeax/engine-runtime": "workspace:*",
+    "@forgeax/engine-scene": "workspace:*",
+    "@forgeax/engine-skinning": "workspace:*",
+    "@forgeax/engine-animation": "workspace:*",
+    "@forgeax/engine-state": "workspace:*",
+    "@forgeax/engine-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@webgpu/types": "^0.1.71"
+  }
+}

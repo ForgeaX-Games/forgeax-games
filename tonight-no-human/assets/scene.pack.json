@@ -660,8 +660,7 @@
         "a37536a0-f4b2-4e86-8234-d6d9d1a93b9b",
         "0237a820-1056-443e-8d40-428d2fddac4b",
         "81eec382-392f-5a93-8998-0ecf11ef7990"
-      ],
-      "artifacts": {}
+      ]
     },
     {
       "guid": "953dcd0a-c702-4f0e-9933-07257d434f5f",
@@ -703,8 +702,7 @@
           "roughness": 0.95
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "e7ac0224-e340-4e25-b108-e9b057fe78fc",
@@ -746,8 +744,7 @@
           "roughness": 0.9
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "628a7d47-1731-4418-9e75-71085ce1aef4",
@@ -789,8 +786,7 @@
           "roughness": 0.85
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "1ef3d40c-425a-4b92-a4f5-083a668e1dca",
@@ -832,8 +828,7 @@
           "roughness": 0.7
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "eb412199-077a-4c22-96b6-aec3fdc9ed91",
@@ -875,8 +870,7 @@
           "roughness": 0.4
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "7c31716a-6575-4e42-908e-212eea2f71c3",
@@ -918,8 +912,7 @@
           "roughness": 0.6
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "d0304941-6eea-4abe-8e28-1ae4b38e890b",
@@ -961,8 +954,7 @@
           "roughness": 0.8
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "05212883-4309-42dd-baa2-a100cbc5d8fc",
@@ -1004,8 +996,7 @@
           "roughness": 0.8
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "d9e8e50c-9f25-46c5-8144-972eeaa20019",
@@ -1047,8 +1038,7 @@
           "roughness": 0.8
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "a37536a0-f4b2-4e86-8234-d6d9d1a93b9b",
@@ -1090,8 +1080,7 @@
           "roughness": 0.8
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     },
     {
       "guid": "0237a820-1056-443e-8d40-428d2fddac4b",
@@ -1133,8 +1122,7 @@
           "roughness": 0.35
         }
       },
-      "refs": [],
-      "artifacts": {}
+      "refs": []
     }
   ]
 }

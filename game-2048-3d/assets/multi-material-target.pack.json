@@ -1,0 +1,71 @@
+{
+ "schemaVersion": "2.0.0",
+ "kind": "internal-text-package",
+ "assets": [
+  {
+   "guid": "5d2b71ec-c138-42e9-a138-df28baaaea9b",
+   "kind": "mesh",
+   "payload": {
+    "vertices": [
+     -0.6, -0.6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+     0.6, -0.6, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,
+     0.6, 0.6, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0,
+     -0.6, 0.6, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0,
+     -0.7, -0.7, 0.02, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+     0.7, -0.7, 0.02, 0, 0, 1, 1, 0, 0, 0, 0, 0,
+     0.7, 0.7, 0.02, 0, 0, 1, 1, 1, 0, 0, 0, 0,
+     -0.7, 0.7, 0.02, 0, 0, 1, 0, 1, 0, 0, 0, 0,
+     -0.35, -0.35, 0.025, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+     0.35, -0.35, 0.025, 0, 0, 1, 1, 0, 0, 0, 0, 0,
+     0.35, 0.35, 0.025, 0, 0, 1, 1, 1, 0, 0, 0, 0,
+     -0.35, 0.35, 0.025, 0, 0, 1, 0, 1, 0, 0, 0, 0
+    ],
+    "indices": [
+     0, 1, 2, 0, 2, 3,
+     4, 5, 5, 6, 6, 7, 7, 4,
+     8, 9, 9, 10, 10, 11, 11, 8
+    ],
+    "attributes": {},
+    "aabb": [-0.7, -0.7, 0, 0.7, 0.7, 0.025],
+    "submeshes": [
+     { "indexOffset": 0, "indexCount": 6, "vertexCount": 4, "topology": "triangle-list" },
+     { "indexOffset": 6, "indexCount": 16, "vertexCount": 8, "topology": "line-list" }
+    ]
+   },
+   "refs": [],
+   "artifacts": {}
+  },
+  {
+   "guid": "b18a737c-5c47-42f8-98e3-98d6e91a9612",
+   "kind": "material",
+   "payload": {
+    "passes": [
+     {
+      "name": "Forward",
+      "program": { "module": "forgeax::default-unlit" },
+      "renderState": { "tags": { "LightMode": "Forward" }, "queue": 2000 }
+     }
+    ],
+    "values": { "baseColor": [1, 0.15, 0.15, 1] }
+   },
+   "refs": [],
+   "artifacts": {}
+  },
+  {
+   "guid": "da3b6b18-f0a4-4010-a4d2-0d0969c4f707",
+   "kind": "material",
+   "payload": {
+    "passes": [
+     {
+      "name": "Forward",
+      "program": { "module": "forgeax::default-unlit" },
+      "renderState": { "tags": { "LightMode": "Forward" }, "queue": 2000 }
+     }
+    ],
+    "values": { "baseColor": [0.1, 0.9, 1, 1] }
+   },
+   "refs": [],
+   "artifacts": {}
+  }
+ ]
+}
