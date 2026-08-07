@@ -1,0 +1,36 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "Cube"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "rock.gltf",
+  "subAssets": [
+    {
+      "guid": "019ea6af-9d77-7776-9e32-58ba7fd3e4cc",
+      "kind": "mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:Cube-Mesh"
+    },
+    {
+      "guid": "019ea6af-9d77-7776-9e32-58bbe8c3c51b",
+      "kind": "material",
+      "sourceIndex": 0,
+      "sourceKey": "material:Material"
+    },
+    {
+      "guid": "019ea6af-9d77-7776-9e32-58bc4d5765d8",
+      "kind": "scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:0"
+    }
+  ]
+}
