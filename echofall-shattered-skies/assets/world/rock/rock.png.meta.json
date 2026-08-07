@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "external-asset-package",
+  "importer": "image",
+  "source": "rock.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "019ea6b1-7e5e-7e6e-99cc-147aeb8c56a8",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}
