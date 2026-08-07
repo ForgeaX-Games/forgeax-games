@@ -1,0 +1,125 @@
+:host {
+  --cyan: #87efff;
+  --cyan-dim: #5d9eaa;
+  --gold: #ffc983;
+  --ink: rgba(3, 12, 21, .82);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: #f1fbfc;
+  font-family: Inter, "SF Pro Display", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+* { box-sizing: border-box; }
+.hud { position: absolute; inset: 0; overflow: hidden; text-shadow: 0 2px 12px rgba(0, 7, 16, .92); }
+.title {
+  position: absolute;
+  top: 18px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 22px 12px 8px;
+  border-left: 2px solid var(--cyan);
+  background: linear-gradient(90deg, rgba(3, 15, 25, .7), transparent);
+  letter-spacing: .18em;
+}
+.sigil {
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(135, 239, 255, .55);
+  color: var(--gold);
+  font: 18px Georgia, serif;
+  transform: rotate(45deg);
+  box-shadow: 0 0 18px rgba(72, 218, 255, .16);
+}
+.title div { display: grid; }
+.title strong { font-size: 13px; line-height: 1; }
+.title small { margin-top: 5px; color: #8db3bd; font-size: 8px; line-height: 1.4; letter-spacing: .15em; }
+.objective {
+  position: absolute;
+  left: 24px;
+  bottom: 16px;
+  width: min(350px, 40vw);
+  padding: 11px 16px 10px;
+  border-left: 3px solid var(--cyan);
+  border-top: 1px solid rgba(135, 239, 255, .22);
+  background: linear-gradient(105deg, var(--ink), rgba(3, 12, 21, .16));
+  box-shadow: 0 12px 34px rgba(0, 5, 12, .24);
+}
+.objective small, .progress small {
+  display: block;
+  color: #86aeb8;
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: .18em;
+}
+.objective b { display: block; margin-top: 8px; color: #fff1d9; font-size: 14px; line-height: 1.2; letter-spacing: .08em; }
+.objective .checkpoint { display: block; margin-top: 9px; color: #a8d3d9; font-size: 9px; letter-spacing: .12em; }
+.progress { position: absolute; top: 18px; right: 24px; display: flex; gap: 8px; }
+.progress div {
+  min-width: 118px;
+  padding: 9px 12px 10px;
+  border-top: 2px solid rgba(135, 239, 255, .52);
+  background: linear-gradient(180deg, rgba(3, 16, 27, .74), rgba(3, 16, 27, .34));
+}
+.progress b { display: block; margin-top: 6px; color: #fff; font-size: 18px; line-height: 1; letter-spacing: .05em; }
+.compass {
+  position: absolute;
+  top: 27px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: #73949d;
+  font-size: 8px;
+  letter-spacing: .19em;
+}
+.compass i { width: 42px; height: 1px; background: linear-gradient(90deg, transparent, rgba(124, 177, 188, .5)); }
+.compass i:last-of-type { transform: rotate(180deg); }
+.compass b { color: #d9f0f2; font-size: 9px; font-weight: 650; }
+.interaction {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  padding: 8px 14px;
+  color: #e4fbfc;
+  border: 1px solid rgba(135, 239, 255, .32);
+  background: rgba(2, 10, 18, .76);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: .12em;
+  white-space: nowrap;
+  box-shadow: 0 10px 28px rgba(0, 4, 10, .24);
+}
+.message {
+  position: absolute;
+  left: 26px;
+  bottom: 128px;
+  max-width: 390px;
+  padding-left: 12px;
+  border-left: 1px solid rgba(255, 201, 131, .72);
+  color: var(--gold);
+  font: 600 12px/1.3 Georgia, serif;
+  letter-spacing: .12em;
+  opacity: .94;
+  transition: opacity .22s ease;
+}
+.message:empty { display: none; }
+.vignette { position: absolute; inset: 0; box-shadow: inset 0 0 110px 16px rgba(0, 6, 14, .25); }
+@media (max-width: 900px) {
+  .title { top: 12px; left: 12px; }
+  .title small { display: none; }
+  .progress { top: 12px; right: 12px; }
+  .progress div { min-width: 102px; padding: 8px 10px; }
+  .progress small { font-size: 7px; }
+  .progress b { font-size: 15px; }
+  .compass { display: none; }
+  .objective { left: 12px; bottom: 12px; width: min(330px, 52vw); }
+  .interaction { right: 12px; left: auto; bottom: 12px; max-width: 44vw; transform: none; overflow: hidden; text-overflow: ellipsis; }
+  .message { left: 14px; bottom: 108px; }
+}
