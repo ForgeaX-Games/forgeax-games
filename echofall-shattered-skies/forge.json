@@ -1,0 +1,8 @@
+{
+  "id": "echofall-shattered-skies",
+  "name": "Echofall: Shattered Skies",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": "3d",
+  "defaultScene": "35a68043-2a2a-5d6e-9271-c84d51139468"
+}
