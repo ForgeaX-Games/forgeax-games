@@ -45,13 +45,10 @@ import {
   perspective,
 } from '@forgeax/engine-render';
 import {
-  ChildOf,
   Name,
   Transform,
 } from '@forgeax/engine-scene';
-import {
-  Skin,
-} from '@forgeax/engine-skinning';
+import { armSkinnedAnimationPlayer, collectRootJointTargetIds } from './src/bind-skinned-animation';
 import {
   quat,
 } from '@forgeax/engine-runtime';
@@ -63,7 +60,16 @@ import {
   HANDLE_QUAD,
 } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import { createQueryState, queryRun, Entity, Time, Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import {
+  createQueryState,
+  queryRun,
+  Entity,
+  ENTITY_NULL_RAW,
+  Time,
+  Update,
+  type EntityHandle,
+  type World,
+} from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
 import type { AnimationClip, EquirectAsset, Handle, MeshAsset, SceneAsset } from '@forgeax/engine-types';
 
@@ -629,6 +635,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     let witchRoot: EntityHandle | null = null;
     let witchSkinEnt: EntityHandle | null = null;
+    /** SceneInstance root — hosts AnimationPlayer (joints stay under this). */
+    let witchAnimPlayer: EntityHandle | null = null;
     /** Face CU eye marker — headfront/Head bone under the hero SceneInstance. */
     let playerEyeFocusEnt: EntityHandle | null = null;
     let playerEyeFocusBone = '';
@@ -646,17 +654,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // PR11 T3: the N clip loads now race each other. Per-clip failure is still
       // warn-and-continue (only the scene load is fatal), and instantiate below
       // still waits for every clip to settle. Each settled clip advances the bar.
+      const clipPayloads: AnimationClip[] = [];
       await Promise.all(hero.gltf.clips.map(async (def) => {
         const g = AssetGuid.parse(def.guid);
         if (!g.ok) { console.warn('[hellforge] clip guid parse:', def.name); bootTracker.complete('hero'); return; }
         const r = await assets.loadByGuid<AnimationClip>(g.value);
         bootTracker.complete('hero');
         if (!r.ok) { console.warn('[hellforge] clip loadByGuid:', def.name, (r.error as { code?: string }).code); return; }
-        // Same normalization monsters get: gen3d motions bake a rig scale onto
-        // Hips (Walking_Woman ships 1.1765 → the hero inflated ~18% while
-        // walking) and bake horizontal root motion (Roll_Dodge travels ~4 m,
-        // which stacked on the dodge stepper and snapped back at clip end).
-        normalizeClipRoot(r.value);
+        clipPayloads.push(r.value);
         const clipHandle = world.allocSharedRef<'AnimationClip', AnimationClip>('AnimationClip', r.value);
         clipHandles.set(def.name, clipHandle);
         // Record clip duration so one-shot clips (attack/hit/death) can auto-end.
@@ -667,17 +672,20 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const instRes = assets.instantiate<SceneAsset>(sceneHandle, world, playerRig);
       if (!instRes.ok) throw new Error('witch instantiate: ' + ((instRes.error as { code?: string }).code ?? '?'));
       witchRoot = instRes.value as EntityHandle;
+      // Same normalization monsters get, and it has to run after instantiate:
+      // clip channels address joints by opaque targetId, so the root is only
+      // identifiable through the scene. gen3d motions bake a rig scale onto Hips
+      // (walk ships 1.17647 → the hero inflates ~18% for exactly as long as that
+      // clip plays) and bake horizontal root motion (dodge travels ~4 m, which
+      // stacks on the dodge stepper and snaps back at clip end).
+      const rootTargetIds = collectRootJointTargetIds(world, witchRoot);
+      for (const payload of clipPayloads) normalizeClipRoot(payload, rootTargetIds);
       const sceneInst = world.get(witchRoot, SceneInstance);
       if (sceneInst.ok) {
-        // Find the Skin entity in the spawned hierarchy (= same idiom as hello-skin).
-        // Only needed to drive the AnimationPlayer clip, never to move her.
         const namedBones: { ent: number; name: string }[] = [];
         for (let i = 0; i < sceneInst.value.mapping.length; i++) {
           const ent = sceneInst.value.mapping[i];
-          if (ent === undefined || ent === 0) continue;
-          if (witchSkinEnt === null && world.get(ent as EntityHandle, Skin).ok) {
-            witchSkinEnt = ent as EntityHandle;
-          }
+          if (ent === undefined || ent === ENTITY_NULL_RAW) continue;
           const nm = world.get(ent as EntityHandle, Name);
           if (nm.ok && typeof nm.value.value === 'string' && nm.value.value.length > 0) {
             namedBones.push({ ent: ent as number, name: nm.value.value });
@@ -692,29 +700,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           console.warn('[hellforge] no headfront/Head bone for Face CU — using Y fallback');
         }
       }
-      if (witchSkinEnt !== null && clipHandles.has('idle')) {
-        world.addComponent(witchSkinEnt, {
-          component: AnimationPlayer,
-          data: { clips: [clipHandles.get('idle')!], times: new Float32Array([0]), weights: new Float32Array([1]), speeds: new Float32Array([1]), paused: false, looping: true },
-        });
-        // ── engine skinning-contract fix ──────────────────────────────────
-        // default-standard-pbr-skin.wgsl computes the final vertex as
-        //   world = meshNode.worldFromLocal * (palette * pos)
-        // and palette already = jointWorld * IBM (full world, incl. ancestors).
-        // The skinned mesh node (CH_Witch_001) is a ChildOf the Armature, so it
-        // shares every ancestor with the joints — any rig transform would be
-        // applied TWICE (once via meshNode.worldFromLocal, once via the palette).
-        // The engine's contract (glTF skinning) is that the mesh node sits at
-        // world identity and the palette carries everything. We enforce that by
-        // detaching the mesh node from the Armature subtree and pinning its local
-        // transform to identity. Movement then lives purely in the palette, which
-        // the playerRig drives through the joints — single, correct transform.
-        world.removeComponent(witchSkinEnt, ChildOf);
-        world.set(witchSkinEnt, Transform, {
-          pos: [0, 0, 0],
-          quat: [0, 0, 0, 1],
-          scale: [1, 1, 1],
-        });
+      const idleClip = clipHandles.get('idle');
+      const armed = idleClip
+        ? armSkinnedAnimationPlayer(world, witchRoot, { clips: [idleClip] })
+        : null;
+      if (armed !== null) {
+        witchSkinEnt = armed.skin;
+        witchAnimPlayer = armed.player;
+        console.log(`[hellforge] witch anim bound — ${armed.targetCount} targets`);
       } else {
         console.warn('[hellforge] witch spawned but Skin entity / idle clip missing — animation off');
       }
@@ -792,36 +785,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         const instRes = assets.instantiate<SceneAsset>(sceneHandle, world, veyraRig);
         if (!instRes.ok) throw new Error('Veyra instantiate failed: ' + ((instRes.error as { code?: string }).code ?? '?'));
         const veyraRoot = instRes.value as EntityHandle;
-        const sceneInst = world.get(veyraRoot, SceneInstance);
-        let veyraSkin: EntityHandle | null = null;
-        if (sceneInst.ok) {
-          for (let i = 0; i < sceneInst.value.mapping.length; i++) {
-            const ent = sceneInst.value.mapping[i];
-            if (ent === undefined || ent === 0) continue;
-            if (world.get(ent as EntityHandle, Skin).ok) {
-              veyraSkin = ent as EntityHandle;
-              break;
-            }
-          }
-        }
-        if (veyraSkin !== null) {
-          world.addComponent(veyraSkin, {
-            component: AnimationPlayer,
-            data: {
-              clips: [idleClip],
-              times: new Float32Array([0]),
-              weights: new Float32Array([1]),
-              speeds: new Float32Array([1]),
-              paused: false,
-              looping: true,
-            },
-          });
-          world.removeComponent(veyraSkin, ChildOf);
-          world.set(veyraSkin, Transform, {
-            pos: [0, 0, 0],
-            quat: [0, 0, 0, 1],
-            scale: [1, 1, 1],
-          });
+        const veyraArmed = armSkinnedAnimationPlayer(world, veyraRoot, { clips: [idleClip] });
+        if (veyraArmed === null) {
+          console.warn('[hellforge] Veyra skinned anim arm failed — static mesh');
+        } else {
+          console.log(`[hellforge] Veyra anim bound — ${veyraArmed.targetCount} targets`);
         }
         console.log('[hellforge] Veyra loaded at', veyraPos, 'scale', VEYRA_SCALE);
       } catch (error) {
@@ -1729,9 +1697,17 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // BLOOD_MOON_SUN_DIR). Den stays ember shaft.
     // Den key light must stay angled (not near-vertical): overhead sun collapses
     // the hero CSM into a tiny under-foot patch that reads as "no shadow".
+    // Intensities are pre-`sunMul` (0.55), so camp lands at 3.2 and den at 3.4.
+    // The old 1.35/1.85 put the key at ~0.74/1.02, which only ever registered on
+    // surfaces the campfire and den braziers were already lighting: step outside
+    // a fixture's range and characters went to black silhouettes. Ambient cannot
+    // pick up that slack — a 10× skylight lift barely moves the frame — so the
+    // floor has to come off the key. Camp also trades the near-monochrome red
+    // (green 0.18 / blue 0.08 leave dark rock with almost no luminance to
+    // reflect) for the den's warmer balance.
     const SUN_LOOK = {
-      camp: { direction: [-0.3853, -0.4258, -0.8187], color: [1.0, 0.18, 0.08], intensity: 1.35 },
-      den:  { direction: [-0.52, -0.58, -0.63], color: [1, 0.48, 0.24], intensity: 1.85 },
+      camp: { direction: [-0.3853, -0.4258, -0.8187], color: [1.0, 0.42, 0.24], intensity: 5.8 },
+      den:  { direction: [-0.52, -0.58, -0.63], color: [1, 0.48, 0.24], intensity: 6.2 },
     } as const;
     const sun = world.spawn(
       { component: DirectionalLight, data: { ...SUN_LOOK.camp, castShadow: true, cascadeCount: 1, mapSize: 2048, shadowDistance: 42 } },
@@ -2118,17 +2094,17 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // off-60 fps — 120 fps camp ×0.5 slow-mo, 30 fps den ×2.0 fast-forward.
     let witchAnimBase = 1;
     const swapClip = (name: string) => {
-      if (witchSkinEnt === null) return;
+      if (witchAnimPlayer === null) return;
       const h = clipHandles.get(name);
       if (h === undefined || state.currentClip === name) return;
       state.currentClip = name;
       witchAnimBase = 1;
-      world.set(witchSkinEnt, AnimationPlayer, {
+      world.set(witchAnimPlayer, AnimationPlayer, {
         clips: [h], times: new Float32Array([0]), weights: new Float32Array([1]), speeds: new Float32Array([1]), looping: true, paused: state.paused,
       });
     };
     const playOnce = (name: string, speed = 1, lockScale = 1) => {
-      if (witchSkinEnt === null) return;
+      if (witchAnimPlayer === null) return;
       if (performance.now() < state.oneShotUntil && name !== 'death') return;
       const h = clipHandles.get(name);
       if (h === undefined) return;
@@ -2138,7 +2114,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // through is cancellable, ARPG-style.
       state.oneShotUntil = performance.now() + ((clipDur.get(name) ?? 1) / speed) * 1000 * lockScale;
       witchAnimBase = speed;
-      world.set(witchSkinEnt, AnimationPlayer, {
+      world.set(witchAnimPlayer, AnimationPlayer, {
         clips: [h], times: new Float32Array([0]), weights: new Float32Array([1]), speeds: new Float32Array([speed]), looping: false, paused: state.paused,
       });
     };
@@ -3426,10 +3402,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
       // ── shell gate: preview-only frame until CharacterRecord hand-off ──
       if (!inGame) {
-        if (witchSkinEnt !== null && !state.paused) {
+        if (witchAnimPlayer !== null && !state.paused) {
           if (state.currentClip !== 'idle') swapClip('idle');
           witchAnimBase = 1;
-          world.set(witchSkinEnt, AnimationPlayer, {
+          world.set(witchAnimPlayer, AnimationPlayer, {
             speeds: new Float32Array([witchAnimBase]),
           });
         }
@@ -3699,8 +3675,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         }
       }
       // fps-compensated speeds write, every frame (base × real-dt rate).
-      if (witchSkinEnt !== null) {
-        world.set(witchSkinEnt, AnimationPlayer, { speeds: new Float32Array([witchAnimBase]) });
+      if (witchAnimPlayer !== null) {
+        world.set(witchAnimPlayer, AnimationPlayer, { speeds: new Float32Array([witchAnimBase]) });
       }
 
       // drive ONLY the player rig (witch parented under it)

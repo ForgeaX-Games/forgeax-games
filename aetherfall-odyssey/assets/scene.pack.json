@@ -1,0 +1,4410 @@
+{
+  "schemaVersion": "2.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "76a15ebd-0d8c-4a0e-ad3f-e27d553f667d",
+      "kind": "scene",
+      "payload": {
+        "entities": [
+          {
+            "localId": 0,
+            "components": {
+              "Entity": {
+                "self": 0
+              },
+              "Name": {
+                "value": "Ground"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  -0.1,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0.0349,
+                  0,
+                  0.9994
+                ],
+                "scale": [
+                  10.8,
+                  0.2,
+                  8.8
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 1,
+            "components": {
+              "Entity": {
+                "self": 1
+              },
+              "Name": {
+                "value": "Sun"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  6,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "DirectionalLight": {
+                "direction": [
+                  -0.42,
+                  -1,
+                  0.26
+                ],
+                "color": [
+                  1,
+                  0.88,
+                  0.74
+                ],
+                "intensity": 1.25,
+                "castShadow": true,
+                "cascadeCount": 4,
+                "splitLambda": 0.75,
+                "cascadeBlend": 0.20000000298023224,
+                "mapSize": 2048,
+                "depthBias": 0.004999999888241291,
+                "normalBias": 0.05000000074505806,
+                "shadowDistance": 70,
+                "pcfKernelSize": 3
+              }
+            }
+          },
+          {
+            "localId": 2,
+            "components": {
+              "Entity": {
+                "self": 2
+              },
+              "Name": {
+                "value": "TreeTrunk"
+              },
+              "Transform": {
+                "pos": [
+                  -10.5,
+                  0.6499999761581421,
+                  -1.7999999523162842
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.2800000011920929,
+                  1.2999999523162842,
+                  0.2800000011920929
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 3,
+            "components": {
+              "Entity": {
+                "self": 3
+              },
+              "Name": {
+                "value": "TreeCanopy"
+              },
+              "Transform": {
+                "pos": [
+                  -10.5,
+                  1.899999976158142,
+                  -1.7999999523162842
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.8999999761581421,
+                  0.8999999761581421,
+                  0.8999999761581421
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  5
+                ]
+              }
+            }
+          },
+          {
+            "localId": 4,
+            "components": {
+              "Entity": {
+                "self": 4
+              },
+              "Name": {
+                "value": "RedBox"
+              },
+              "Transform": {
+                "pos": [
+                  18,
+                  0.5,
+                  14
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 6
+              },
+              "MeshRenderer": {
+                "materials": [
+                  7,
+                  8
+                ]
+              }
+            }
+          },
+          {
+            "localId": 5,
+            "components": {
+              "Entity": {
+                "self": 5
+              },
+              "Name": {
+                "value": "BlueBall"
+              },
+              "Transform": {
+                "pos": [
+                  19.5,
+                  0.800000011920929,
+                  14
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.800000011920929,
+                  0.800000011920929,
+                  0.800000011920929
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  9
+                ]
+              }
+            }
+          },
+          {
+            "localId": 6,
+            "components": {
+              "Entity": {
+                "self": 6
+              },
+              "Name": {
+                "value": "YellowPillar"
+              },
+              "Transform": {
+                "pos": [
+                  18,
+                  0.75,
+                  16
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.6000000238418579,
+                  1.5,
+                  0.6000000238418579
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  10
+                ]
+              }
+            }
+          },
+          {
+            "localId": 7,
+            "components": {
+              "Entity": {
+                "self": 7
+              },
+              "Name": {
+                "value": "Crate14"
+              },
+              "Transform": {
+                "pos": [
+                  21,
+                  0.3100000023841858,
+                  14
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.6200000047683716,
+                  0.6200000047683716,
+                  0.6200000047683716
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 8,
+            "components": {
+              "Entity": {
+                "self": 8
+              },
+              "Name": {
+                "value": "Crate15"
+              },
+              "Transform": {
+                "pos": [
+                  21.6200008392334,
+                  0.3100000023841858,
+                  14
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.6200000047683716,
+                  0.6200000047683716,
+                  0.6200000047683716
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 9,
+            "components": {
+              "Entity": {
+                "self": 9
+              },
+              "Name": {
+                "value": "Crate16"
+              },
+              "Transform": {
+                "pos": [
+                  22.239999771118164,
+                  0.3100000023841858,
+                  14
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.6200000047683716,
+                  0.6200000047683716,
+                  0.6200000047683716
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 10,
+            "components": {
+              "Entity": {
+                "self": 10
+              },
+              "Name": {
+                "value": "Crate17"
+              },
+              "Transform": {
+                "pos": [
+                  21.309999465942383,
+                  0.9300000071525574,
+                  14
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.6200000047683716,
+                  0.6200000047683716,
+                  0.6200000047683716
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 11,
+            "components": {
+              "Entity": {
+                "self": 11
+              },
+              "Name": {
+                "value": "Crate18"
+              },
+              "Transform": {
+                "pos": [
+                  21.93000030517578,
+                  0.9300000071525574,
+                  14
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.6200000047683716,
+                  0.6200000047683716,
+                  0.6200000047683716
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 12,
+            "components": {
+              "Entity": {
+                "self": 12
+              },
+              "Name": {
+                "value": "Crate19"
+              },
+              "Transform": {
+                "pos": [
+                  21.6200008392334,
+                  1.5499999523162842,
+                  14
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.6200000047683716,
+                  0.6200000047683716,
+                  0.6200000047683716
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  11
+                ]
+              }
+            }
+          },
+          {
+            "localId": 13,
+            "components": {
+              "Entity": {
+                "self": 13
+              },
+              "Name": {
+                "value": "BouncyBall"
+              },
+              "Transform": {
+                "pos": [
+                  18.5,
+                  0.550000011920929,
+                  17.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.550000011920929,
+                  0.550000011920929,
+                  0.550000011920929
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  12
+                ]
+              }
+            }
+          },
+          {
+            "localId": 14,
+            "components": {
+              "Entity": {
+                "self": 14
+              },
+              "Name": {
+                "value": "Player"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0.75,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 15,
+            "components": {
+              "Entity": {
+                "self": 15
+              },
+              "ChildOf": {
+                "parent": 14
+              },
+              "Name": {
+                "value": "PlayerTorso"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.5,
+                  0.550000011920929,
+                  0.2800000011920929
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  13
+                ]
+              }
+            }
+          },
+          {
+            "localId": 16,
+            "components": {
+              "Entity": {
+                "self": 16
+              },
+              "ChildOf": {
+                "parent": 14
+              },
+              "Name": {
+                "value": "PlayerHead"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0.5,
+                  0.019999999552965164
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.3199999928474426,
+                  0.3199999928474426,
+                  0.3199999928474426
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  14
+                ]
+              }
+            }
+          },
+          {
+            "localId": 17,
+            "components": {
+              "Entity": {
+                "self": 17
+              },
+              "ChildOf": {
+                "parent": 14
+              },
+              "Name": {
+                "value": "PlayerArmL"
+              },
+              "Transform": {
+                "pos": [
+                  -0.3400000035762787,
+                  0,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.44999998807907104,
+                  0.14000000059604645
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  14
+                ]
+              }
+            }
+          },
+          {
+            "localId": 18,
+            "components": {
+              "Entity": {
+                "self": 18
+              },
+              "ChildOf": {
+                "parent": 14
+              },
+              "Name": {
+                "value": "PlayerArmR"
+              },
+              "Transform": {
+                "pos": [
+                  0.3400000035762787,
+                  0,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.14000000059604645,
+                  0.44999998807907104,
+                  0.14000000059604645
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  14
+                ]
+              }
+            }
+          },
+          {
+            "localId": 19,
+            "components": {
+              "Entity": {
+                "self": 19
+              },
+              "ChildOf": {
+                "parent": 14
+              },
+              "Name": {
+                "value": "PlayerLegL"
+              },
+              "Transform": {
+                "pos": [
+                  -0.11999999731779099,
+                  -0.5,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.18000000715255737,
+                  0.5,
+                  0.18000000715255737
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  15
+                ]
+              }
+            }
+          },
+          {
+            "localId": 20,
+            "components": {
+              "Entity": {
+                "self": 20
+              },
+              "ChildOf": {
+                "parent": 14
+              },
+              "Name": {
+                "value": "PlayerLegR"
+              },
+              "Transform": {
+                "pos": [
+                  0.11999999731779099,
+                  -0.5,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.18000000715255737,
+                  0.5,
+                  0.18000000715255737
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  15
+                ]
+              }
+            }
+          },
+          {
+            "localId": 21,
+            "components": {
+              "Entity": {
+                "self": 21
+              },
+              "Name": {
+                "value": "Skylight"
+              },
+              "Skylight": {
+                "equirect": 16,
+                "color": [
+                  0.72,
+                  0.78,
+                  0.84
+                ],
+                "intensity": 0.4,
+                "rotation": [
+                  0,
+                  0.2419,
+                  0,
+                  0.9703
+                ]
+              }
+            }
+          },
+          {
+            "localId": 22,
+            "components": {
+              "Entity": {
+                "self": 22
+              },
+              "Name": {
+                "value": "Skybox"
+              },
+              "SkyboxBackground": {
+                "equirect": 16,
+                "mode": 0,
+                "rotation": [
+                  0,
+                  0,
+                  0,
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 23,
+            "components": {
+              "Entity": {
+                "self": 23
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0,
+                  0
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1,
+                  1,
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 24,
+            "components": {
+              "Entity": {
+                "self": 24
+              },
+              "Name": {
+                "value": "SanctuaryDais"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0.025,
+                  3.1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.95,
+                  0.04,
+                  0.78
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 25,
+            "components": {
+              "Entity": {
+                "self": 25
+              },
+              "Name": {
+                "value": "SanctuaryReturn"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0.08,
+                  3.1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.34,
+                  0.06,
+                  0.34
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 26,
+            "components": {
+              "Entity": {
+                "self": 26
+              },
+              "Name": {
+                "value": "SanctuaryReturnRing"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0.025,
+                  3.1
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.72,
+                  0.018,
+                  0.72
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 27,
+            "components": {
+              "Entity": {
+                "self": 27
+              },
+              "Name": {
+                "value": "LastLightBeacon"
+              },
+              "Transform": {
+                "pos": [
+                  1.8,
+                  2.45,
+                  -16.8
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.38,
+                  4.4,
+                  0.38
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 28,
+            "components": {
+              "Entity": {
+                "self": 28
+              },
+              "Name": {
+                "value": "LastLightBeaconCrown"
+              },
+              "Transform": {
+                "pos": [
+                  1.8,
+                  4.95,
+                  -16.8
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.62,
+                  0.62,
+                  0.62
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 29,
+            "components": {
+              "Entity": {
+                "self": 29
+              },
+              "Name": {
+                "value": "BeaconObservatoryIsland"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  -1.149999976158142,
+                  -15.600000381469727
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  5.800000190734863,
+                  0.6499999761581421,
+                  4.599999904632568
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 30,
+            "components": {
+              "Entity": {
+                "self": 30
+              },
+              "Name": {
+                "value": "AncientObservatoryDome"
+              },
+              "Transform": {
+                "pos": [
+                  -0.8,
+                  1.1,
+                  -18.2
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  3.4,
+                  1.1,
+                  2.7
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 31,
+            "components": {
+              "Entity": {
+                "self": 31
+              },
+              "Name": {
+                "value": "ObservatoryAperture"
+              },
+              "Transform": {
+                "pos": [
+                  -0.8,
+                  2.7,
+                  -17.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.8,
+                  0.8,
+                  0.8
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 32,
+            "components": {
+              "Entity": {
+                "self": 32
+              },
+              "Name": {
+                "value": "ObservatoryColumnL"
+              },
+              "Transform": {
+                "pos": [
+                  -3.200000047683716,
+                  1.600000023841858,
+                  -15.600000381469727
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.41999998688697815,
+                  3.299999952316284,
+                  0.41999998688697815
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 33,
+            "components": {
+              "Entity": {
+                "self": 33
+              },
+              "Name": {
+                "value": "ObservatoryColumnR"
+              },
+              "Transform": {
+                "pos": [
+                  3.200000047683716,
+                  1.600000023841858,
+                  -15.600000381469727
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.41999998688697815,
+                  3.299999952316284,
+                  0.41999998688697815
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 34,
+            "components": {
+              "Entity": {
+                "self": 34
+              },
+              "Name": {
+                "value": "StormBridgeDeckA"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  0.1,
+                  -4.85
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1.65,
+                  0.16,
+                  1.9
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 35,
+            "components": {
+              "Entity": {
+                "self": 35
+              },
+              "Name": {
+                "value": "StormBridgeDeckB"
+              },
+              "Transform": {
+                "pos": [
+                  0.08,
+                  0.08,
+                  -7.15
+                ],
+                "quat": [
+                  0,
+                  -0.01745240643728351,
+                  0,
+                  0.9998476951563913
+                ],
+                "scale": [
+                  1.38,
+                  0.15,
+                  1.75
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 36,
+            "components": {
+              "Entity": {
+                "self": 36
+              },
+              "Name": {
+                "value": "StormBridgeDeckC"
+              },
+              "Transform": {
+                "pos": [
+                  -0.08,
+                  0.06,
+                  -9.45
+                ],
+                "quat": [
+                  0,
+                  0.01745240643728351,
+                  0,
+                  0.9998476951563913
+                ],
+                "scale": [
+                  1.22,
+                  0.14,
+                  1.55
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 37,
+            "components": {
+              "Entity": {
+                "self": 37
+              },
+              "Name": {
+                "value": "StormBridgePylonL"
+              },
+              "Transform": {
+                "pos": [
+                  -1.350000023841858,
+                  1.399999976158142,
+                  -6.400000095367432
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.18000000715255737,
+                  2.799999952316284,
+                  0.18000000715255737
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 38,
+            "components": {
+              "Entity": {
+                "self": 38
+              },
+              "Name": {
+                "value": "StormBridgePylonR"
+              },
+              "Transform": {
+                "pos": [
+                  1.350000023841858,
+                  1.399999976158142,
+                  -6.400000095367432
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.18000000715255737,
+                  2.799999952316284,
+                  0.18000000715255737
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 39,
+            "components": {
+              "Entity": {
+                "self": 39
+              },
+              "Name": {
+                "value": "StormBridgePylonL2"
+              },
+              "Transform": {
+                "pos": [
+                  -1.0499999523162842,
+                  1.149999976158142,
+                  -9.699999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.15000000596046448,
+                  2.299999952316284,
+                  0.15000000596046448
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 40,
+            "components": {
+              "Entity": {
+                "self": 40
+              },
+              "Name": {
+                "value": "StormBridgePylonR2"
+              },
+              "Transform": {
+                "pos": [
+                  1.0499999523162842,
+                  1.149999976158142,
+                  -9.699999809265137
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.15000000596046448,
+                  2.299999952316284,
+                  0.15000000596046448
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 41,
+            "components": {
+              "Entity": {
+                "self": 41
+              },
+              "Name": {
+                "value": "MemoryShrine_A"
+              },
+              "Transform": {
+                "pos": [
+                  -6.199999809265137,
+                  0.44999998807907104,
+                  -4.900000095367432
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  2.3499999046325684,
+                  0.3199999928474426,
+                  2.0999999046325684
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 42,
+            "components": {
+              "Entity": {
+                "self": 42
+              },
+              "Name": {
+                "value": "ShrineAArchL"
+              },
+              "Transform": {
+                "pos": [
+                  -7.150000095367432,
+                  1.7999999523162842,
+                  -4.900000095367432
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.24,
+                  2.25,
+                  0.24
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 43,
+            "components": {
+              "Entity": {
+                "self": 43
+              },
+              "Name": {
+                "value": "ShrineAArchR"
+              },
+              "Transform": {
+                "pos": [
+                  -5.25,
+                  1.7999999523162842,
+                  -4.900000095367432
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.24,
+                  2.25,
+                  0.24
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 44,
+            "components": {
+              "Entity": {
+                "self": 44
+              },
+              "Name": {
+                "value": "ShrineAMemoryCore"
+              },
+              "Transform": {
+                "pos": [
+                  -6.199999809265137,
+                  2.25,
+                  -4.900000095367432
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.42,
+                  0.42,
+                  0.42
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  21
+                ]
+              }
+            }
+          },
+          {
+            "localId": 45,
+            "components": {
+              "Entity": {
+                "self": 45
+              },
+              "Name": {
+                "value": "MemoryShrine_B"
+              },
+              "Transform": {
+                "pos": [
+                  6.099999904632568,
+                  0.5,
+                  -6.300000190734863
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  2.25,
+                  0.3199999928474426,
+                  2.25
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 46,
+            "components": {
+              "Entity": {
+                "self": 46
+              },
+              "Name": {
+                "value": "ShrineBSpireL"
+              },
+              "Transform": {
+                "pos": [
+                  5.199999809265137,
+                  2.0999999046325684,
+                  -6.300000190734863
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.22,
+                  2.55,
+                  0.22
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 47,
+            "components": {
+              "Entity": {
+                "self": 47
+              },
+              "Name": {
+                "value": "ShrineBSpireR"
+              },
+              "Transform": {
+                "pos": [
+                  7,
+                  2.0999999046325684,
+                  -6.300000190734863
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.22,
+                  2.55,
+                  0.22
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 48,
+            "components": {
+              "Entity": {
+                "self": 48
+              },
+              "Name": {
+                "value": "ShrineBMemoryCore"
+              },
+              "Transform": {
+                "pos": [
+                  6.099999904632568,
+                  2.549999952316284,
+                  -6.300000190734863
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.44,
+                  0.44,
+                  0.44
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  22
+                ]
+              }
+            }
+          },
+          {
+            "localId": 49,
+            "components": {
+              "Entity": {
+                "self": 49
+              },
+              "Name": {
+                "value": "MemoryShrine_C"
+              },
+              "Transform": {
+                "pos": [
+                  -2.6,
+                  0.32,
+                  -11.2
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  2.1500000953674316,
+                  0.30000001192092896,
+                  1.649999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 50,
+            "components": {
+              "Entity": {
+                "self": 50
+              },
+              "Name": {
+                "value": "ShrineCObelisk"
+              },
+              "Transform": {
+                "pos": [
+                  -2.6,
+                  1.9,
+                  -11.2
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.3,
+                  3.2,
+                  0.3
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 51,
+            "components": {
+              "Entity": {
+                "self": 51
+              },
+              "Name": {
+                "value": "ShrineCMemoryCore"
+              },
+              "Transform": {
+                "pos": [
+                  -2.6,
+                  3.65,
+                  -11.2
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.48,
+                  0.48,
+                  0.48
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  23
+                ]
+              }
+            }
+          },
+          {
+            "localId": 52,
+            "components": {
+              "Entity": {
+                "self": 52
+              },
+              "Name": {
+                "value": "LuminousTreeWest01Trunk"
+              },
+              "Transform": {
+                "pos": [
+                  -7.400000095367432,
+                  1.5,
+                  1.2999999523162842
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.3400000035762787,
+                  3,
+                  0.3400000035762787
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 53,
+            "components": {
+              "Entity": {
+                "self": 53
+              },
+              "Name": {
+                "value": "LuminousTreeWest01Canopy"
+              },
+              "Transform": {
+                "pos": [
+                  -7.400000095367432,
+                  4.300000190734863,
+                  1.2999999523162842
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1.649999976158142,
+                  1.649999976158142,
+                  1.649999976158142
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  18
+                ]
+              }
+            }
+          },
+          {
+            "localId": 54,
+            "components": {
+              "Entity": {
+                "self": 54
+              },
+              "Name": {
+                "value": "LuminousTreeWest02Trunk"
+              },
+              "Transform": {
+                "pos": [
+                  -8.600000381469727,
+                  1.149999976158142,
+                  -2.5999999046325684
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.30000001192092896,
+                  2.299999952316284,
+                  0.30000001192092896
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 55,
+            "components": {
+              "Entity": {
+                "self": 55
+              },
+              "Name": {
+                "value": "LuminousTreeWest02Canopy"
+              },
+              "Transform": {
+                "pos": [
+                  -8.600000381469727,
+                  3.450000047683716,
+                  -2.5999999046325684
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1.350000023841858,
+                  1.350000023841858,
+                  1.350000023841858
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  18
+                ]
+              }
+            }
+          },
+          {
+            "localId": 56,
+            "components": {
+              "Entity": {
+                "self": 56
+              },
+              "Name": {
+                "value": "LuminousTreeEast01Trunk"
+              },
+              "Transform": {
+                "pos": [
+                  8,
+                  1.350000023841858,
+                  1.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.3400000035762787,
+                  2.700000047683716,
+                  0.3400000035762787
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 57,
+            "components": {
+              "Entity": {
+                "self": 57
+              },
+              "Name": {
+                "value": "LuminousTreeEast01Canopy"
+              },
+              "Transform": {
+                "pos": [
+                  8,
+                  3.9000000953674316,
+                  1.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1.5499999523162842,
+                  1.5499999523162842,
+                  1.5499999523162842
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  18
+                ]
+              }
+            }
+          },
+          {
+            "localId": 58,
+            "components": {
+              "Entity": {
+                "self": 58
+              },
+              "Name": {
+                "value": "LuminousTreeEast02Trunk"
+              },
+              "Transform": {
+                "pos": [
+                  8.5,
+                  1.0499999523162842,
+                  -3.200000047683716
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.27000001072883606,
+                  2.0999999046325684,
+                  0.27000001072883606
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  3
+                ]
+              }
+            }
+          },
+          {
+            "localId": 59,
+            "components": {
+              "Entity": {
+                "self": 59
+              },
+              "Name": {
+                "value": "LuminousTreeEast02Canopy"
+              },
+              "Transform": {
+                "pos": [
+                  8.5,
+                  3.049999952316284,
+                  -3.200000047683716
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1.25,
+                  1.25,
+                  1.25
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  18
+                ]
+              }
+            }
+          },
+          {
+            "localId": 60,
+            "components": {
+              "Entity": {
+                "self": 60
+              },
+              "Name": {
+                "value": "ForestGlowStoneWest"
+              },
+              "Transform": {
+                "pos": [
+                  -5.800000190734863,
+                  0.44999998807907104,
+                  0.10000000149011612
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.6200000047683716,
+                  0.6200000047683716,
+                  0.6200000047683716
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  18
+                ]
+              }
+            }
+          },
+          {
+            "localId": 61,
+            "components": {
+              "Entity": {
+                "self": 61
+              },
+              "Name": {
+                "value": "ForestGlowStoneEast"
+              },
+              "Transform": {
+                "pos": [
+                  6.900000095367432,
+                  0.41999998688697815,
+                  2.700000047683716
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.5400000214576721,
+                  0.5400000214576721,
+                  0.5400000214576721
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  18
+                ]
+              }
+            }
+          },
+          {
+            "localId": 62,
+            "components": {
+              "Entity": {
+                "self": 62
+              },
+              "Name": {
+                "value": "FloatingRuinWest"
+              },
+              "Transform": {
+                "pos": [
+                  -14,
+                  4.8,
+                  -22
+                ],
+                "quat": [
+                  0,
+                  -0.10452846326765346,
+                  0,
+                  0.9945218953682733
+                ],
+                "scale": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 63,
+            "components": {
+              "Entity": {
+                "self": 63
+              },
+              "Name": {
+                "value": "FloatingRuinWestSpire"
+              },
+              "Transform": {
+                "pos": [
+                  -15.2,
+                  8,
+                  -22
+                ],
+                "quat": [
+                  0,
+                  -0.03489949670250097,
+                  0,
+                  0.9993908270190958
+                ],
+                "scale": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 64,
+            "components": {
+              "Entity": {
+                "self": 64
+              },
+              "Name": {
+                "value": "FloatingRuinEast"
+              },
+              "Transform": {
+                "pos": [
+                  15.5,
+                  6.2,
+                  -27
+                ],
+                "quat": [
+                  0,
+                  0.08715574274765817,
+                  0,
+                  0.9961946980917455
+                ],
+                "scale": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 65,
+            "components": {
+              "Entity": {
+                "self": 65
+              },
+              "Name": {
+                "value": "FloatingRuinEastSpire"
+              },
+              "Transform": {
+                "pos": [
+                  16.8,
+                  9.7,
+                  -27
+                ],
+                "quat": [
+                  0,
+                  0.043619387365336,
+                  0,
+                  0.9990482215818578
+                ],
+                "scale": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 66,
+            "components": {
+              "Entity": {
+                "self": 66
+              },
+              "Name": {
+                "value": "DistantIslandCenter"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  9.8,
+                  -44
+                ],
+                "quat": [
+                  0,
+                  -0.02617694830787315,
+                  0,
+                  0.9996573249755573
+                ],
+                "scale": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 67,
+            "components": {
+              "Entity": {
+                "self": 67
+              },
+              "Name": {
+                "value": "DistantIslandBeacon"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  14.2,
+                  -44
+                ],
+                "quat": [
+                  0,
+                  0.01745240643728351,
+                  0,
+                  0.9998476951563913
+                ],
+                "scale": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 68,
+            "components": {
+              "Entity": {
+                "self": 68
+              },
+              "Name": {
+                "value": "StormShardWest"
+              },
+              "Transform": {
+                "pos": [
+                  -10,
+                  7.4,
+                  -31
+                ],
+                "quat": [
+                  0,
+                  -0.12186934340514748,
+                  0,
+                  0.992546151641322
+                ],
+                "scale": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 69,
+            "components": {
+              "Entity": {
+                "self": 69
+              },
+              "Name": {
+                "value": "StormShardEast"
+              },
+              "Transform": {
+                "pos": [
+                  11,
+                  8,
+                  -34
+                ],
+                "quat": [
+                  0,
+                  0.14780941112961063,
+                  0,
+                  0.9890158633619168
+                ],
+                "scale": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 70,
+            "components": {
+              "Entity": {
+                "self": 70
+              },
+              "Name": {
+                "value": "RuinArchWest"
+              },
+              "Transform": {
+                "pos": [
+                  -9.2,
+                  1.4,
+                  -9.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.42,
+                  2.8,
+                  0.42
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 71,
+            "components": {
+              "Entity": {
+                "self": 71
+              },
+              "Name": {
+                "value": "RuinArchWestCap"
+              },
+              "Transform": {
+                "pos": [
+                  -8.05,
+                  2.8,
+                  -9.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1.55,
+                  0.34,
+                  0.42
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 72,
+            "components": {
+              "Entity": {
+                "self": 72
+              },
+              "Name": {
+                "value": "RuinArchWestR"
+              },
+              "Transform": {
+                "pos": [
+                  -6.9,
+                  1.4,
+                  -9.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.42,
+                  2.8,
+                  0.42
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 73,
+            "components": {
+              "Entity": {
+                "self": 73
+              },
+              "Name": {
+                "value": "AssetLabDeck"
+              },
+              "Transform": {
+                "pos": [
+                  20,
+                  -0.25,
+                  15.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  4.5,
+                  0.25,
+                  3.5999999046325684
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 74,
+            "components": {
+              "Entity": {
+                "self": 74
+              },
+              "Name": {
+                "value": "SanctuaryIslandShelf"
+              },
+              "Transform": {
+                "pos": [
+                  0,
+                  -0.48,
+                  0
+                ],
+                "quat": [
+                  0,
+                  -0.0436,
+                  0,
+                  0.999
+                ],
+                "scale": [
+                  11.6,
+                  0.9,
+                  9.4
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 75,
+            "components": {
+              "Entity": {
+                "self": 75
+              },
+              "Name": {
+                "value": "SanctuaryIslandCore"
+              },
+              "Transform": {
+                "pos": [
+                  0.8,
+                  -2.25,
+                  -0.7
+                ],
+                "quat": [
+                  0,
+                  0.0698,
+                  0,
+                  0.9976
+                ],
+                "scale": [
+                  8.4,
+                  3.5,
+                  6.8
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 76,
+            "components": {
+              "Entity": {
+                "self": 76
+              },
+              "Name": {
+                "value": "SanctuaryCliffWest"
+              },
+              "Transform": {
+                "pos": [
+                  -8.800000190734863,
+                  -2.5,
+                  -2.4000000953674316
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  2.0999999046325684,
+                  3.200000047683716,
+                  3.799999952316284
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 77,
+            "components": {
+              "Entity": {
+                "self": 77
+              },
+              "Name": {
+                "value": "SanctuaryCliffEast"
+              },
+              "Transform": {
+                "pos": [
+                  8.899999618530273,
+                  -2.0999999046325684,
+                  1.7999999523162842
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  1.7999999523162842,
+                  2.5999999046325684,
+                  3.0999999046325684
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 78,
+            "components": {
+              "Entity": {
+                "self": 78
+              },
+              "Name": {
+                "value": "StonePath01"
+              },
+              "Transform": {
+                "pos": [
+                  -0.55,
+                  0.08,
+                  -1.5
+                ],
+                "quat": [
+                  0,
+                  0.06104853953485687,
+                  0,
+                  0.9981347984218669
+                ],
+                "scale": [
+                  1.3,
+                  0.08,
+                  0.95
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 79,
+            "components": {
+              "Entity": {
+                "self": 79
+              },
+              "Name": {
+                "value": "StonePath02"
+              },
+              "Transform": {
+                "pos": [
+                  0.35,
+                  0.09,
+                  -2.75
+                ],
+                "quat": [
+                  0,
+                  -0.08715574274765817,
+                  0,
+                  0.9961946980917455
+                ],
+                "scale": [
+                  1.05,
+                  0.09,
+                  0.78
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 80,
+            "components": {
+              "Entity": {
+                "self": 80
+              },
+              "Name": {
+                "value": "StonePath03"
+              },
+              "Transform": {
+                "pos": [
+                  -0.2,
+                  0.09,
+                  -3.75
+                ],
+                "quat": [
+                  0,
+                  0.043619387365336,
+                  0,
+                  0.9990482215818578
+                ],
+                "scale": [
+                  0.85,
+                  0.08,
+                  0.55
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 81,
+            "components": {
+              "Entity": {
+                "self": 81
+              },
+              "Name": {
+                "value": "PathMarkerWest"
+              },
+              "Transform": {
+                "pos": [
+                  -2.0999999046325684,
+                  0.699999988079071,
+                  -2.4000000953674316
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.2199999988079071,
+                  1.25,
+                  0.2199999988079071
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 82,
+            "components": {
+              "Entity": {
+                "self": 82
+              },
+              "Name": {
+                "value": "PathMarkerEast"
+              },
+              "Transform": {
+                "pos": [
+                  2.5,
+                  0.5799999833106995,
+                  -3.5
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.18000000715255737,
+                  1.0199999809265137,
+                  0.18000000715255737
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 83,
+            "components": {
+              "Entity": {
+                "self": 83
+              },
+              "Name": {
+                "value": "ShrineAWaystone"
+              },
+              "Transform": {
+                "pos": [
+                  -3.700000047683716,
+                  0.6800000071525574,
+                  -3.799999952316284
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.2800000011920929,
+                  1.2999999523162842,
+                  0.2800000011920929
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 84,
+            "components": {
+              "Entity": {
+                "self": 84
+              },
+              "Name": {
+                "value": "ShrineBWaystone"
+              },
+              "Transform": {
+                "pos": [
+                  3.9000000953674316,
+                  0.7200000286102295,
+                  -4.599999904632568
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.2800000011920929,
+                  1.399999976158142,
+                  0.2800000011920929
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 85,
+            "components": {
+              "Entity": {
+                "self": 85
+              },
+              "Name": {
+                "value": "ShrineCWaystone"
+              },
+              "Transform": {
+                "pos": [
+                  -1.55,
+                  0.72,
+                  -8.55
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.23999999463558197,
+                  1.5499999523162842,
+                  0.23999999463558197
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  20
+                ]
+              }
+            }
+          },
+          {
+            "localId": 86,
+            "components": {
+              "Entity": {
+                "self": 86
+              },
+              "Name": {
+                "value": "ForestRuinWestLow"
+              },
+              "Transform": {
+                "pos": [
+                  -9.300000190734863,
+                  0.6499999761581421,
+                  2.5999999046325684
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.800000011920929,
+                  1.2999999523162842,
+                  1.100000023841858
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 87,
+            "components": {
+              "Entity": {
+                "self": 87
+              },
+              "Name": {
+                "value": "ForestRuinEastLow"
+              },
+              "Transform": {
+                "pos": [
+                  9.399999618530273,
+                  0.550000011920929,
+                  -4.800000190734863
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.699999988079071,
+                  1.100000023841858,
+                  0.8999999761581421
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 88,
+            "components": {
+              "Entity": {
+                "self": 88
+              },
+              "Name": {
+                "value": "HangingShardWest"
+              },
+              "Transform": {
+                "pos": [
+                  -12.8,
+                  5.6,
+                  -17.5
+                ],
+                "quat": [
+                  0,
+                  -0.0697564737441253,
+                  0,
+                  0.9975640502598242
+                ],
+                "scale": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 89,
+            "components": {
+              "Entity": {
+                "self": 89
+              },
+              "Name": {
+                "value": "HangingShardEast"
+              },
+              "Transform": {
+                "pos": [
+                  13.6,
+                  6.4,
+                  -20.5
+                ],
+                "quat": [
+                  0,
+                  0.08715574274765817,
+                  0,
+                  0.9961946980917455
+                ],
+                "scale": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          },
+          {
+            "localId": 90,
+            "components": {
+              "Entity": {
+                "self": 90
+              },
+              "Name": {
+                "value": "SkylineRuinWest"
+              },
+              "Transform": {
+                "pos": [
+                  -21,
+                  10.5,
+                  -36
+                ],
+                "quat": [
+                  0,
+                  -0.05233595624294383,
+                  0,
+                  0.9986295347545738
+                ],
+                "scale": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 91,
+            "components": {
+              "Entity": {
+                "self": 91
+              },
+              "Name": {
+                "value": "SkylineRuinEast"
+              },
+              "Transform": {
+                "pos": [
+                  22,
+                  11.8,
+                  -40
+                ],
+                "quat": [
+                  0,
+                  0.06104853953485687,
+                  0,
+                  0.9981347984218669
+                ],
+                "scale": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 2
+              },
+              "MeshRenderer": {
+                "materials": [
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "localId": 92,
+            "components": {
+              "Entity": {
+                "self": 92
+              },
+              "Name": {
+                "value": "BeaconHaloLower"
+              },
+              "Transform": {
+                "pos": [
+                  1.8,
+                  2,
+                  -16.8
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.92,
+                  0.1,
+                  0.92
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 93,
+            "components": {
+              "Entity": {
+                "self": 93
+              },
+              "Name": {
+                "value": "BeaconHaloUpper"
+              },
+              "Transform": {
+                "pos": [
+                  1.8,
+                  3.85,
+                  -16.8
+                ],
+                "quat": [
+                  0,
+                  0,
+                  0,
+                  1
+                ],
+                "scale": [
+                  0.7,
+                  0.08,
+                  0.7
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 4
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          },
+          {
+            "localId": 94,
+            "components": {
+              "Entity": {
+                "self": 94
+              },
+              "Name": {
+                "value": "StormBridgeBreak"
+              },
+              "Transform": {
+                "pos": [
+                  0.55,
+                  -0.5,
+                  -8.45
+                ],
+                "quat": [
+                  0,
+                  0.14780941112961063,
+                  0,
+                  0.9890158633619168
+                ],
+                "scale": [
+                  0,
+                  0,
+                  0
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  19
+                ]
+              }
+            }
+          }
+        ],
+        "mounts": [
+          {
+            "localId": 95,
+            "memberFirst": 96,
+            "memberCount": 1,
+            "source": 24,
+            "parent": 23,
+            "overrides": [
+              {
+                "localId": 96,
+                "comp": "Transform",
+                "field": "scale",
+                "value": [
+                  0.699999988079071,
+                  0.699999988079071,
+                  0.699999988079071
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "refs": [
+        "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
+        "a151d8ba-11c3-4d26-a5f8-724f4d830008",
+        "ab20af21-0764-55be-a7f2-b80ab3d46a0a",
+        "d3906596-7bc0-4ac7-a786-2864849e1f0f",
+        "95730fd2-9846-5f84-8658-0b3c971eb263",
+        "3c4223ab-1f84-4ca9-ae95-919716f0d20d",
+        "e6687df6-a9b8-4659-a814-d290ee06af3c",
+        "ec6d8fb2-1d9d-4789-9d59-b2d05649535f",
+        "0ff80b39-5939-4abb-b94b-2f2edb8f8c98",
+        "3493e56d-0a44-48d0-9a83-26e190d9c0cf",
+        "42f40406-812f-4a69-9939-35eab20e03c5",
+        "129e3024-e1af-4d91-8168-420214557270",
+        "e2196be1-d992-47f1-9ff4-2d9ee938d38c",
+        "d497e110-9b6f-4191-86d6-2dadbc37240c",
+        "7af5616e-2d7e-426f-869d-4aa6cc733b0b",
+        "9669381a-9550-4760-bc73-e4aac374b454",
+        "81eec382-392f-5a93-8998-0ecf11ef7990",
+        "a151d8ba-11c3-4d26-a5f8-724f4d830002",
+        "a151d8ba-11c3-4d26-a5f8-724f4d830003",
+        "a151d8ba-11c3-4d26-a5f8-724f4d830001",
+        "a151d8ba-11c3-4d26-a5f8-724f4d830007",
+        "a151d8ba-11c3-4d26-a5f8-724f4d830004",
+        "a151d8ba-11c3-4d26-a5f8-724f4d830005",
+        "a151d8ba-11c3-4d26-a5f8-724f4d830006",
+        "b584654a-058a-48ed-abaa-09a3f54abc77"
+      ],
+      "artifacts": {}
+    },
+    {
+      "guid": "a151d8ba-11c3-4d26-a5f8-724f4d830008",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.62,
+            0.34,
+            0.07,
+            1
+          ],
+          "metallic": 0.48,
+          "roughness": 0.38,
+          "emissive": [
+            0.42,
+            0.16,
+            0.015
+          ],
+          "emissiveIntensity": 2.2
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "d3906596-7bc0-4ac7-a786-2864849e1f0f",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.5411764705882353,
+            0.35294117647058826,
+            0.16862745098039217,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.9
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "3c4223ab-1f84-4ca9-ae95-919716f0d20d",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.09,
+            0.2,
+            0.12,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.94
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "3493e56d-0a44-48d0-9a83-26e190d9c0cf",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.2901960784313726,
+            0.6392156862745098,
+            0.8745098039215686,
+            1
+          ],
+          "metallic": 0.1,
+          "roughness": 0.4
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "42f40406-812f-4a69-9939-35eab20e03c5",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "game_default::animated_target"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.9568627450980393,
+            0.7725490196078432,
+            0.25882352941176473,
+            1
+          ],
+          "time": 41.34560000000899
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "129e3024-e1af-4d91-8168-420214557270",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.85,
+            0.55,
+            0.2,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.8
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "e2196be1-d992-47f1-9ff4-2d9ee938d38c",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.9,
+            0.2,
+            0.3,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.35
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "d497e110-9b6f-4191-86d6-2dadbc37240c",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.27,
+            0.5,
+            0.86,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.8
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "7af5616e-2d7e-426f-869d-4aa6cc733b0b",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.93,
+            0.74,
+            0.55,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.8
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "9669381a-9550-4760-bc73-e4aac374b454",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.22,
+            0.24,
+            0.3,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.8
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "a151d8ba-11c3-4d26-a5f8-724f4d830002",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.24,
+            0.22,
+            0.19,
+            1
+          ],
+          "metallic": 0.02,
+          "roughness": 0.9
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "a151d8ba-11c3-4d26-a5f8-724f4d830003",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.07,
+            0.34,
+            0.18,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.72
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "a151d8ba-11c3-4d26-a5f8-724f4d830001",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.12,
+            0.15,
+            0.17,
+            1
+          ],
+          "metallic": 0.04,
+          "roughness": 0.92
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "a151d8ba-11c3-4d26-a5f8-724f4d830007",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.12,
+            0.16,
+            0.19,
+            1
+          ],
+          "metallic": 0.42,
+          "roughness": 0.58
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "a151d8ba-11c3-4d26-a5f8-724f4d830004",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.06,
+            0.32,
+            0.55,
+            1
+          ],
+          "metallic": 0.12,
+          "roughness": 0.42,
+          "emissive": [
+            0.02,
+            0.18,
+            0.42
+          ],
+          "emissiveIntensity": 1.6
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "a151d8ba-11c3-4d26-a5f8-724f4d830005",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.55,
+            0.08,
+            0.25,
+            1
+          ],
+          "metallic": 0.1,
+          "roughness": 0.44,
+          "emissive": [
+            0.38,
+            0.02,
+            0.12
+          ],
+          "emissiveIntensity": 1.5
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "a151d8ba-11c3-4d26-a5f8-724f4d830006",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.72,
+            0.27,
+            0.04,
+            1
+          ],
+          "metallic": 0.16,
+          "roughness": 0.4,
+          "emissive": [
+            0.48,
+            0.12,
+            0.01
+          ],
+          "emissiveIntensity": 1.7
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "d523519a-fa1b-45f0-b5e0-8589347a751f",
+      "kind": "material",
+      "payload": {
+        "kind": "material",
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.2,
+            0.3,
+            0.17,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 0.96
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    },
+    {
+      "guid": "b584654a-058a-48ed-abaa-09a3f54abc77",
+      "kind": "scene",
+      "payload": {
+        "entities": [
+          {
+            "localId": 0,
+            "components": {
+              "Name": {
+                "value": "NestedTarget"
+              },
+              "Transform": {
+                "pos": [
+                  20.5,
+                  0.75,
+                  17
+                ],
+                "scale": [
+                  0.8,
+                  0.8,
+                  0.8
+                ]
+              },
+              "MeshFilter": {
+                "assetHandle": 0
+              },
+              "MeshRenderer": {
+                "materials": [
+                  1
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "refs": [
+        "cbe42beb-8975-5096-b3a1-3dda4cb4c077",
+        "ec6d8fb2-1d9d-4789-9d59-b2d05649535f"
+      ],
+      "artifacts": {}
+    }
+  ]
+}

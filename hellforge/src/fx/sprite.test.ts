@@ -51,7 +51,8 @@ function makeApp(registered: string[] = []) {
   return {
     renderer: {
       shader: {
-        registerMaterialShader: (id: string) => { registered.push(id); },
+        // Current Engine API — dual helper prefers this over registerMaterialShader.
+        installMaterialArtifact: (id: string) => { registered.push(id); },
       },
     },
   };

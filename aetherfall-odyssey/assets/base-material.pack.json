@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "2.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "4852b32f-4354-4a61-bd14-a279fd558918",
+      "kind": "material",
+      "payload": {
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-unlit"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          },
+          {
+            "name": "ShadowCaster",
+            "program": {
+              "module": "forgeax::default-shadow-caster"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "ShadowCaster"
+              }
+            }
+          }
+        ],
+        "values": {
+          "baseColor": [
+            0.6,
+            0.6,
+            0.6,
+            1
+          ]
+        }
+      },
+      "refs": [],
+      "artifacts": {}
+    }
+  ]
+}

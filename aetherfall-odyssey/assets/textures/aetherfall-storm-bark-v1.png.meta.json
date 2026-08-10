@@ -1,0 +1,20 @@
+{
+  "kind": "external-asset-package",
+  "importer": "image",
+  "schemaVersion": "1.0.0",
+  "source": "aetherfall-storm-bark-v1.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear",
+    "compressionMode": "none"
+  },
+  "subAssets": [
+    {
+      "guid": "019fdc14-8574-72a6-a490-6b6d2b36ec87",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

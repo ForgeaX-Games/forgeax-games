@@ -43,6 +43,7 @@ import frostFangShader from './shaders/frost-fang.wgsl';
 import frostImpactShader from './shaders/frost-impact.wgsl';
 import frostSlowShader from './shaders/frost-slow.wgsl';
 import moveClickShader from './shaders/move-click.wgsl';
+import { registerMaterialShaderDual } from './register-material-shader';
 import { FxLifecycleTracker, type FxLifecycleSnapshot } from './fx-lifecycle';
 import {
   EffectExecutor,
@@ -297,47 +298,40 @@ export class FxSystem {
           program: { module: shaderId },
           renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'Forward' }, queue: 3000 },
         }],
+        // Restated on the asset because safeRegister below always loses the
+        // race: vite-plugin-shader registers these ids from the manifest with
+        // an empty paramSchema before game code runs. Extract/record prefer the
+        // asset's own `parameters`, so this is what actually sizes the UBO —
+        // otherwise the shader reads the standard-PBR payload, which only
+        // happens to line up for these three fields.
+        parameters: FX_PARAM_SCHEMA as never,
         values: params as never,
       });
     };
 
-    const renderer = (app as {
-      renderer?: {
-        shader?: {
-          registerMaterialShader: (id: string, entry: {
-            source: string;
-            paramSchema: Array<{ name: string; type: 'color' | 'f32' }>;
-            bindingLayout: [];
-          }) => void;
-        } | null;
-      };
-    } | undefined)?.renderer;
-    if (renderer?.shader) {
-      const safeRegister = (id: string, source: string): void => {
-        try {
-          renderer.shader!.registerMaterialShader(id, {
-            source,
-            paramSchema: [
-              { name: 'baseColor', type: 'color' },
-              { name: 'metallic', type: 'f32' },
-              { name: 'roughness', type: 'f32' },
-            ],
-            bindingLayout: [],
-          });
-        } catch (e) {
-          const msg = (e as Error).message ?? '';
-          if (!msg.includes('already registered')) {
-            console.warn(`[hellforge/fx] registerMaterialShader(${id}) threw:`, msg);
-          }
-        }
-      };
-      try {
-        safeRegister(FIRE_BOLT_SHADER_ID, fireBoltShader.wgsl);
-        safeRegister(PORTAL_SHADER_ID, portalShader.wgsl);
-        safeRegister(FROST_FANG_SHADER_ID, frostFangShader.wgsl);
-        safeRegister(FROST_IMPACT_SHADER_ID, frostImpactShader.wgsl);
-        safeRegister(FROST_SLOW_SHADER_ID, frostSlowShader.wgsl);
-        safeRegister(MOVE_CLICK_SHADER_ID, moveClickShader.wgsl);
+    // Dual API: current Engine installMaterialArtifact, Engine c0 registerMaterialShader.
+    const FX_PARAM_SCHEMA = [
+      { name: 'baseColor', type: 'color' as const },
+      { name: 'metallic', type: 'f32' as const },
+      { name: 'roughness', type: 'f32' as const },
+    ];
+    const safeRegister = (id: string, source: string): boolean =>
+      registerMaterialShaderDual(app, id, { source, paramSchema: FX_PARAM_SCHEMA }, 'hellforge/fx');
+    try {
+      const registered = [
+        safeRegister(FIRE_BOLT_SHADER_ID, fireBoltShader.wgsl),
+        safeRegister(PORTAL_SHADER_ID, portalShader.wgsl),
+        safeRegister(FROST_FANG_SHADER_ID, frostFangShader.wgsl),
+        safeRegister(FROST_IMPACT_SHADER_ID, frostImpactShader.wgsl),
+        safeRegister(FROST_SLOW_SHADER_ID, frostSlowShader.wgsl),
+        safeRegister(MOVE_CLICK_SHADER_ID, moveClickShader.wgsl),
+      ].every(Boolean);
+      if (!registered) {
+        this.frostHandles = null;
+        this.frostParams = [];
+        this.moveClickPool = [];
+        this.moveClickFree = [];
+      } else {
         const fbParams: ShaderParams = { baseColor: [1.0, 0.18, 0.03, 1], metallic: 0, roughness: 1.35 };
         this.fireBoltMat = mkCustomMat(FIRE_BOLT_SHADER_ID, fbParams);
         this.fireBoltParams = fbParams;
@@ -368,13 +362,13 @@ export class FxSystem {
           this.moveClickPool.push({ mat, params });
           this.moveClickFree.push(i);
         }
-      } catch (e) {
-        console.warn('[hellforge/fx] custom-shader setup failed; falling back to emissive:', (e as Error).message);
-        this.frostHandles = null;
-        this.frostParams = [];
-        this.moveClickPool = [];
-        this.moveClickFree = [];
       }
+    } catch (e) {
+      console.warn('[hellforge/fx] custom-shader setup failed; falling back to emissive:', (e as Error).message);
+      this.frostHandles = null;
+      this.frostParams = [];
+      this.moveClickPool = [];
+      this.moveClickFree = [];
     }
 
     // If custom move-click pool never filled (shader registry missing / setup

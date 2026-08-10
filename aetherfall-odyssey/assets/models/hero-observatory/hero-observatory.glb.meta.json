@@ -1,0 +1,252 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "Aetherfall Hero Observatory"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "hero-observatory.glb",
+  "subAssets": [
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17d7377162cb",
+      "kind": "mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:Aetherfall Hero Observatory"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17d8033451ae",
+      "kind": "material",
+      "sourceIndex": 0,
+      "sourceKey": "material:Pale Brick"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17d9b9b80637",
+      "kind": "material",
+      "sourceIndex": 1,
+      "sourceKey": "material:Structural Stone"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17da02c1e1b6",
+      "kind": "material",
+      "sourceIndex": 2,
+      "sourceKey": "material:Warm Travertine"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17dbf57d553f",
+      "kind": "material",
+      "sourceIndex": 3,
+      "sourceKey": "material:Aged Ceiling"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17dcd919137d",
+      "kind": "material",
+      "sourceIndex": 4,
+      "sourceKey": "material:Ornate Wall"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17ddc958a338",
+      "kind": "material",
+      "sourceIndex": 5,
+      "sourceKey": "material:Column Wall"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17de3ae4d095",
+      "kind": "material",
+      "sourceIndex": 6,
+      "sourceKey": "material:Patinated Metal"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17df614054a3",
+      "kind": "material",
+      "sourceIndex": 7,
+      "sourceKey": "material:Blue Drape"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17e01ef3117a",
+      "kind": "material",
+      "sourceIndex": 8,
+      "sourceKey": "material:Red Tapestry"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17e1b488382a",
+      "kind": "scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:Aetherfall Hero Observatory"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17e2e5d7c36f",
+      "kind": "texture",
+      "sourceIndex": 0,
+      "sourceKey": "texture:16299174074766089871"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17e383779d9a",
+      "kind": "texture",
+      "sourceIndex": 1,
+      "sourceKey": "texture:5792855332885324923"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17e4dd46d3f5",
+      "kind": "texture",
+      "sourceIndex": 2,
+      "sourceKey": "texture:11968150294050148237"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17e583b49f89",
+      "kind": "texture",
+      "sourceIndex": 3,
+      "sourceKey": "texture:2051777328469649772"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17e606a09bf0",
+      "kind": "texture",
+      "sourceIndex": 4,
+      "sourceKey": "texture:14650633544276105767"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17e77c5f7c34",
+      "kind": "texture",
+      "sourceIndex": 5,
+      "sourceKey": "texture:4871783166746854860"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17e8b622ffda",
+      "kind": "texture",
+      "sourceIndex": 6,
+      "sourceKey": "texture:10388182081421875623"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17e9cde980e4",
+      "kind": "texture",
+      "sourceIndex": 7,
+      "sourceKey": "texture:15295713303328085182"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17ea7f9939d6",
+      "kind": "texture",
+      "sourceIndex": 8,
+      "sourceKey": "texture:9916269861720640319"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17ebdad405bd",
+      "kind": "texture",
+      "sourceIndex": 9,
+      "sourceKey": "texture:15722799267630235092"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17ec4817f996",
+      "kind": "texture",
+      "sourceIndex": 10,
+      "sourceKey": "texture:6047387724914829168"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17ed0dcabb46",
+      "kind": "texture",
+      "sourceIndex": 11,
+      "sourceKey": "texture:8051790464816141987"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17ee4325e8fc",
+      "kind": "texture",
+      "sourceIndex": 12,
+      "sourceKey": "texture:6667038893015345571"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17ef540814e6",
+      "kind": "texture",
+      "sourceIndex": 13,
+      "sourceKey": "texture:7441062115984513793"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17f0f877a160",
+      "kind": "texture",
+      "sourceIndex": 14,
+      "sourceKey": "texture:8114461559286000061"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17f1355541c4",
+      "kind": "texture",
+      "sourceIndex": 15,
+      "sourceKey": "texture:7645212358685992005"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17f234431ddb",
+      "kind": "texture",
+      "sourceIndex": 16,
+      "sourceKey": "texture:6151467286084645207"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17f3ed9c7669",
+      "kind": "texture",
+      "sourceIndex": 17,
+      "sourceKey": "texture:8783994986360286082"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17f406bdd321",
+      "kind": "texture",
+      "sourceIndex": 18,
+      "sourceKey": "texture:2299742237651021498"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17f57cc89af2",
+      "kind": "texture",
+      "sourceIndex": 19,
+      "sourceKey": "texture:4975155472559461469"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17f6867297df",
+      "kind": "texture",
+      "sourceIndex": 20,
+      "sourceKey": "texture:3371964815757888145"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17f75c9c5cce",
+      "kind": "texture",
+      "sourceIndex": 21,
+      "sourceKey": "texture:7815564343179553343"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17f8b43dfccd",
+      "kind": "texture",
+      "sourceIndex": 22,
+      "sourceKey": "texture:2374361008830720677"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17f9f46eabe1",
+      "kind": "texture",
+      "sourceIndex": 23,
+      "sourceKey": "texture:2775690330959970771"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17facbf285b1",
+      "kind": "texture",
+      "sourceIndex": 24,
+      "sourceKey": "texture:466164707995436622"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17fb846f2bf9",
+      "kind": "texture",
+      "sourceIndex": 25,
+      "sourceKey": "texture:4601176305987539675"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17fc27ce2979",
+      "kind": "texture",
+      "sourceIndex": 26,
+      "sourceKey": "texture:11474523244911310074"
+    },
+    {
+      "guid": "019fdca7-6c1f-7287-99b2-17fdf98f0d9e",
+      "kind": "sampler",
+      "sourceIndex": 0,
+      "sourceKey": "sampler"
+    }
+  ]
+}

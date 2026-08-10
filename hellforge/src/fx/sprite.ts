@@ -28,6 +28,7 @@ import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle, MaterialAsset, TextureAsset } from '@forgeax/engine-types';
 
 import spriteShader from '../shaders/sprite.wgsl';
+import { registerMaterialShaderDual } from '../register-material-shader';
 import { erosionAt, frameAt } from './sprite-anim';
 import { spriteSheetById, type SpriteSheetSpec } from './textures';
 
@@ -56,40 +57,35 @@ const SPRITE_PARAM_SCHEMA = [
   { name: 'noise', type: 'texture2d' },
 ] as const;
 
-type ShaderRegistrarApp = {
-  renderer?: {
-    shader?: {
-      registerMaterialShader: (id: string, entry: {
-        source: string;
-        paramSchema: ReadonlyArray<{ name: string; type: 'color' | 'f32' | 'texture2d' }>;
-        bindingLayout: [];
-      }) => void;
-    } | null;
-  };
-} | undefined;
+/**
+ * Same ABI restated on the MaterialAsset, in `MaterialParameter` vocabulary
+ * ('texture', not 'texture2d'). Required: vite-plugin-shader registers
+ * hellforge::sprite from the manifest with an empty paramSchema before game
+ * code runs, so `registerSpriteShader` below loses the race and its schema is
+ * swallowed as 'already registered'. Extract/record prefer an asset-declared
+ * `parameters` over the registry, so this is what actually binds the sheets
+ * and writes the sprite UBO — without it the material reads the standard-PBR
+ * payload (alpha pinned to 1, billboard 0) and draws as an opaque quad.
+ */
+const SPRITE_MATERIAL_PARAMETERS = SPRITE_PARAM_SCHEMA.map((e) => ({
+  name: e.name,
+  type: e.type === 'texture2d' ? 'texture' : e.type,
+}));
 
 /**
  * Idempotent hellforge::sprite registration (safeRegister pattern of
- * fx.ts:160-253 — 'already registered' is swallowed). Returns false when the
- * shader registry is unavailable (Edit mode) → SpriteSystem stays inert.
+ * fx.ts — 'already registered' is swallowed). Dual API: current Engine
+ * `installMaterialArtifact`, Engine c0 `registerMaterialShader`. Returns
+ * false when the shader registry is unavailable (Edit mode) → SpriteSystem
+ * stays inert.
  */
 export function registerSpriteShader(app: unknown): boolean {
-  const renderer = (app as ShaderRegistrarApp)?.renderer;
-  if (!renderer?.shader) return false;
-  try {
-    renderer.shader.registerMaterialShader(SPRITE_SHADER_ID, {
-      source: spriteShader.wgsl,
-      paramSchema: SPRITE_PARAM_SCHEMA,
-      bindingLayout: [],
-    });
-  } catch (e) {
-    const msg = (e as Error).message ?? '';
-    if (!msg.includes('already registered')) {
-      console.warn(`[hellforge/fx] registerMaterialShader(${SPRITE_SHADER_ID}) threw:`, msg);
-      return false;
-    }
-  }
-  return true;
+  return registerMaterialShaderDual(
+    app,
+    SPRITE_SHADER_ID,
+    { source: spriteShader.wgsl, paramSchema: SPRITE_PARAM_SCHEMA },
+    'hellforge/fx',
+  );
 }
 
 /** Additive one/one (glow layers) + premult one/one-minus-src-alpha (residue). */
@@ -528,6 +524,7 @@ export class SpriteSystem {
             ...passCommon,
             program: { module: SPRITE_SHADER_ID },
           }],
+          parameters: SPRITE_MATERIAL_PARAMETERS as never,
           values: params as never,
         });
     return { key, mat, params };

@@ -1,0 +1,20 @@
+{
+  "kind": "external-asset-package",
+  "importer": "image",
+  "schemaVersion": "1.0.0",
+  "source": "aetherfall-basalt-v1.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear",
+    "compressionMode": "none"
+  },
+  "subAssets": [
+    {
+      "guid": "019fdbfe-1f8f-789a-b4a6-6f7fd01d9d30",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

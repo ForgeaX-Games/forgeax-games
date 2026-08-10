@@ -1,0 +1,18 @@
+Sponza Atrium 3D Model — Hero Observatory Derivative
+
+Original model: Crytek's Sponza Atrium (Frank Meinl, August 19, 2010)
+Donated to the public for radiosity testing.
+Corrections by Morgan McGuire (July 14, 2011).
+PBR textures by Alexandre Pestana.
+Converted to glTF 2.0 by the Khronos Group glTF-Sample-Models project
+using glTF-Transform.
+
+This directory contains a modified derivative: a spatially cropped central
+colonnade, reduced material dependency set, meter-scale recentering, and
+high-quality texture recompression. See ATTRIBUTION.md for the exact changes.
+
+License: Creative Commons Attribution 3.0 Unported (CC BY 3.0)
+https://creativecommons.org/licenses/by/3.0/
+
+Source: KhronosGroup/glTF-Sample-Models repository
+https://github.com/KhronosGroup/glTF-Sample-Models/tree/main/2.0/Sponza

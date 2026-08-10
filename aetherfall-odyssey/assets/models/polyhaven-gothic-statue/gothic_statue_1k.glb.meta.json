@@ -1,0 +1,60 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "gothic_statue"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "gothic_statue_1k.glb",
+  "subAssets": [
+    {
+      "guid": "019fdde8-bbe8-778b-816a-5d03c53464bf",
+      "kind": "mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:Plane"
+    },
+    {
+      "guid": "019fdde8-bbe8-778b-816a-5d04b74d8bbb",
+      "kind": "material",
+      "sourceIndex": 0,
+      "sourceKey": "material:gothic_statue"
+    },
+    {
+      "guid": "019fdde8-bbe8-778b-816a-5d058ef3f977",
+      "kind": "scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:Scene"
+    },
+    {
+      "guid": "019fdde8-bbe8-778b-816a-5d06ae4e8352",
+      "kind": "texture",
+      "sourceIndex": 0,
+      "sourceKey": "texture:gothic_statue_nor_gl"
+    },
+    {
+      "guid": "019fdde8-bbe8-778b-816a-5d07ed915b98",
+      "kind": "texture",
+      "sourceIndex": 1,
+      "sourceKey": "texture:gothic_statue_diff"
+    },
+    {
+      "guid": "019fdde8-bbe8-778b-816a-5d081109b3f4",
+      "kind": "texture",
+      "sourceIndex": 2,
+      "sourceKey": "texture:gothic_statue_rough"
+    },
+    {
+      "guid": "019fdde8-bbe8-778b-816a-5d09067794a9",
+      "kind": "sampler",
+      "sourceIndex": 0,
+      "sourceKey": "sampler"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "kind": "external-asset-package",
+  "importer": "image",
+  "schemaVersion": "1.0.0",
+  "source": "aetherfall-ruin-stone-v1-normal.png",
+  "importSettings": {
+    "colorSpace": "linear",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear",
+    "compressionMode": "none"
+  },
+  "subAssets": [
+    {
+      "guid": "019fdc9e-cb3d-73d2-b4cb-49566bd679eb",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

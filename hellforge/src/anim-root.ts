@@ -1,13 +1,23 @@
 // Root-joint normalization for imported (gen3d / Meshy) animation clips.
 // Engine-free: operates on the importer's clip payload shape
-// `{ duration, channels: [{ targetPath: [nodeName], property, sampler: { input, output } }] }`,
+// `{ duration, channels: [{ targetId, property, sampler: { input, output } }] }`,
 // where translation/scale outputs are xyz triples.
+//
+// `targetId` is an opaque hash, not a joint name, so the caller resolves which
+// ids are the rig root through the instantiated scene (every mapping entity
+// carries both `Name` and `AnimationTargetId`) — see
+// `collectRootJointTargetIds` in `bind-skinned-animation.ts`.
 
 /** Root joint of every rig we ship — Meshy short names plus generic `Root`. */
 const ROOT_JOINT_RE = /Hips|Root/i;
 
+/** True when a rig joint name is the root the bakes below hang off. */
+export function isRootJointName(name: string): boolean {
+  return ROOT_JOINT_RE.test(name);
+}
+
 interface RootChannel {
-  readonly targetPath?: readonly string[];
+  readonly targetId?: string;
   readonly property?: string;
   readonly sampler?: { readonly output?: Float32Array };
 }
@@ -17,9 +27,9 @@ export interface RootNormalizableClip {
   readonly channels?: readonly RootChannel[];
 }
 
-function rootJointName(ch: RootChannel): string | null {
-  const name = ch.targetPath?.[0] ?? '';
-  return ROOT_JOINT_RE.test(name) ? name : null;
+function rootTargetId(ch: RootChannel, rootTargetIds: ReadonlySet<string>): string | null {
+  const id = ch.targetId;
+  return id !== undefined && rootTargetIds.has(id) ? id : null;
 }
 
 /** A positive uniform scale held for the whole clip; null when animated or skewed. */
@@ -52,23 +62,26 @@ function constantUniformScale(out: Float32Array | undefined): number | null {
  * Idempotent: after one pass the scale is 1 and X/Z are already pinned, so
  * re-running on a cached shared payload is a no-op.
  */
-export function normalizeClipRoot(clip: RootNormalizableClip): void {
+export function normalizeClipRoot(
+  clip: RootNormalizableClip,
+  rootTargetIds: ReadonlySet<string>,
+): void {
   const channels = clip.channels ?? [];
 
   const rigScale = new Map<string, number>();
   for (const ch of channels) {
-    const name = rootJointName(ch);
-    if (name === null || ch.property !== 'scale') continue;
+    const id = rootTargetId(ch, rootTargetIds);
+    if (id === null || ch.property !== 'scale') continue;
     const s = constantUniformScale(ch.sampler?.output);
-    if (s !== null && s !== 1) rigScale.set(name, s);
+    if (s !== null && s !== 1) rigScale.set(id, s);
   }
 
   for (const ch of channels) {
-    const name = rootJointName(ch);
-    if (name === null) continue;
+    const id = rootTargetId(ch, rootTargetIds);
+    if (id === null) continue;
     const out = ch.sampler?.output;
     if (out === undefined) continue;
-    const s = rigScale.get(name);
+    const s = rigScale.get(id);
     if (ch.property === 'scale') {
       if (s !== undefined) out.fill(1);
       continue;

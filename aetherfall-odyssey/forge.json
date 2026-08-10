@@ -1,0 +1,8 @@
+{
+  "id": "aetherfall-odyssey",
+  "name": "Aetherfall: Odyssey of the Last Light",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": "3d",
+  "defaultScene": "76a15ebd-0d8c-4a0e-ad3f-e27d553f667d"
+}

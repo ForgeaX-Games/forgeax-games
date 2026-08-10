@@ -1,0 +1,8 @@
+{
+  "kind": "game-default-target-profile",
+  "version": 1,
+  "title": "Precision target",
+  "scoreMultiplier": 2,
+  "rotationSpeed": 0.18,
+  "baseColor": [0.12, 0.68, 1, 1]
+}

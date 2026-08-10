@@ -1,10 +1,15 @@
 import { describe, expect, test } from 'bun:test';
 import { normalizeClipRoot } from './anim-root';
 
+// Channels address joints by opaque targetId, so the fixture hashes the joint
+// name the way the scene lookup would resolve it.
+const idOf = (joint: string) => `id:${joint}`;
+const ROOT_IDS = new Set([idOf('Hips')]);
+
 function clip(channels: { joint: string; property: string; out: number[] }[]) {
   return {
     channels: channels.map((c) => ({
-      targetPath: [c.joint],
+      targetId: idOf(c.joint),
       property: c.property,
       sampler: { output: new Float32Array(c.out) },
     })),
@@ -17,7 +22,7 @@ describe('normalizeClipRoot', () => {
     const c = clip([
       { joint: 'Hips', property: 'translation', out: [-0.5, 109, -2, 20, 104, 200, 44.5, 100, 403.5] },
     ]);
-    normalizeClipRoot(c);
+    normalizeClipRoot(c, ROOT_IDS);
     expect(Array.from(c.channels[0]!.sampler.output)).toEqual([
       -0.5, 109, -2,
       -0.5, 104, -2,
@@ -31,7 +36,7 @@ describe('normalizeClipRoot', () => {
       { joint: 'Hips', property: 'scale', out: [s, s, s, s, s, s] },
       { joint: 'Hips', property: 'translation', out: [1.49, 119.49, 1.97, 1.49, 119.49, 1.97] },
     ]);
-    normalizeClipRoot(c);
+    normalizeClipRoot(c, ROOT_IDS);
     expect(Array.from(c.channels[0]!.sampler.output)).toEqual([1, 1, 1, 1, 1, 1]);
     const t = c.channels[1]!.sampler.output;
     expect(t[1]).toBeCloseTo(101.56, 2);
@@ -43,7 +48,7 @@ describe('normalizeClipRoot', () => {
       { joint: 'Spine', property: 'translation', out: [0, 1, 2, 9, 8, 7] },
       { joint: 'Hips', property: 'scale', out: [1, 1, 1, 2, 2, 2] },
     ]);
-    normalizeClipRoot(c);
+    normalizeClipRoot(c, ROOT_IDS);
     expect(Array.from(c.channels[0]!.sampler.output)).toEqual([0, 1, 2, 9, 8, 7]);
     expect(Array.from(c.channels[1]!.sampler.output)).toEqual([1, 1, 1, 2, 2, 2]);
   });
@@ -54,9 +59,9 @@ describe('normalizeClipRoot', () => {
       { joint: 'Hips', property: 'scale', out: [s, s, s] },
       { joint: 'Hips', property: 'translation', out: [3, 150, 6, 30, 300, 60] },
     ]);
-    normalizeClipRoot(c);
+    normalizeClipRoot(c, ROOT_IDS);
     const once = Array.from(c.channels[1]!.sampler.output);
-    normalizeClipRoot(c);
+    normalizeClipRoot(c, ROOT_IDS);
     expect(Array.from(c.channels[1]!.sampler.output)).toEqual(once);
     expect(Array.from(c.channels[0]!.sampler.output)).toEqual([1, 1, 1]);
   });

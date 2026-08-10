@@ -67,6 +67,7 @@ import type { Handle, MaterialAsset } from '@forgeax/engine-types';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 
 import rimOutlineShader from './shaders/rim-outline.wgsl';
+import { registerMaterialShaderDual } from './register-material-shader';
 
 export type MatHandle = Handle<'MaterialAsset', 'shared'>;
 
@@ -117,41 +118,21 @@ const RIM_RENDER_STATE = {
   },
 };
 
-type ShaderRegistrarApp = {
-  renderer?: {
-    shader?: {
-      registerMaterialShader: (id: string, entry: {
-        source: string;
-        paramSchema: ReadonlyArray<{ name: string; type: 'color' | 'f32' }>;
-        bindingLayout: [];
-      }) => void;
-    } | null;
-  };
-} | undefined;
-
 /**
- * Idempotent `hellforge::rim-outline` registration (safeRegister idiom of
- * fx.ts:316-333 — 'already registered' swallowed). Returns true when the
- * registry exists and the shader is (now or already) registered; false when
- * the registry is unavailable (Edit mode) → caller must skip rim materials.
+ * Idempotent `hellforge::rim-outline` registration (safeRegister idiom —
+ * 'already registered' swallowed). Dual API: current Engine
+ * `installMaterialArtifact`, Engine c0 `registerMaterialShader`. Returns
+ * true when the registry exists and the shader is (now or already)
+ * registered; false when the registry is unavailable (Edit mode) → caller
+ * must skip rim materials.
  */
 export function ensureRimOutlineRegistered(app: unknown): boolean {
-  const renderer = (app as ShaderRegistrarApp)?.renderer;
-  if (!renderer?.shader) return false;
-  try {
-    renderer.shader.registerMaterialShader(RIM_OUTLINE_SHADER_ID, {
-      source: rimOutlineShader.wgsl,
-      paramSchema: RIM_OUTLINE_PARAM_SCHEMA,
-      bindingLayout: [],
-    });
-  } catch (e) {
-    const msg = (e as Error).message ?? '';
-    if (!msg.includes('already registered')) {
-      console.warn(`[hellforge/rim-outline] registerMaterialShader(${RIM_OUTLINE_SHADER_ID}) threw:`, msg);
-      return false;
-    }
-  }
-  return true;
+  return registerMaterialShaderDual(
+    app,
+    RIM_OUTLINE_SHADER_ID,
+    { source: rimOutlineShader.wgsl, paramSchema: RIM_OUTLINE_PARAM_SCHEMA },
+    'hellforge/rim-outline',
+  );
 }
 
 /**

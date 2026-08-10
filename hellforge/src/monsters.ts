@@ -25,9 +25,6 @@ import {
   SceneInstance,
 } from '@forgeax/engine-render';
 import {
-  Skin,
-} from '@forgeax/engine-skinning';
-import {
   quat,
 } from '@forgeax/engine-runtime';
 import {
@@ -35,9 +32,10 @@ import {
 } from '@forgeax/engine-types';
 import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
+import { ENTITY_NULL_RAW, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import type { AnimationClip, Handle, SceneAsset } from '@forgeax/engine-types';
 import { normalizeClipRoot } from './anim-root';
+import { armSkinnedAnimationPlayer, collectRootJointTargetIds } from './bind-skinned-animation';
 import type { BodyVfx, FlightStyle, FxSystem, NovaTelegraphVfx } from './fx';
 import { combatBeat } from './fx/defs';
 import type { ContactShadowKit } from './contact-shadow';
@@ -259,6 +257,8 @@ export interface Monster {
   parts: Array<{ e: EntityHandle; matKey: PartMatKey }>;
   /** GLB visual (assets/monsters/*.glb) — null = lowpoly parts fallback. */
   skinEnt: EntityHandle | null;
+  /** SceneInstance root hosting AnimationPlayer (null when parts fallback). */
+  animPlayer: EntityHandle | null;
   /** Every entity the GLB instantiate produced (for despawn). */
   instEntities: EntityHandle[];
   clip: string;
@@ -345,6 +345,12 @@ type ClipHandle = Handle<'AnimationClip', 'shared'>;
 interface GlbBank {
   scene: Handle<'SceneAsset', 'shared'>;
   clips: Map<string, { h: ClipHandle; dur: number }>;
+  /**
+   * Clip payloads still awaiting `normalizeClipRoot`. Root joints are only
+   * identifiable through an instantiated scene, so the first spawn of this kind
+   * normalizes the bank in place and clears this.
+   */
+  rawClips: AnimationClip[];
 }
 
 /** Dead GLB monster playing its death clip; despawned when the clock runs out. */
@@ -508,14 +514,11 @@ export class MonsterManager {
       const bank: GlbBank = {
         scene: this.world.allocSharedRef<'SceneAsset', SceneAsset>('SceneAsset', sceneRes.value),
         clips: new Map(),
+        rawClips: [],
       };
       for (const [name, payload] of clipResults) {
         if (payload === null) { console.warn(`[hellforge] monster clip load failed: ${kind}.${name}`); continue; }
-        // Normalize the root joint before minting the shared clip: some rigs
-        // (zombie: 1.67 m of hips +Z in `move`) translate the root across the
-        // clip, and since WE drive world position from the AI, the animated
-        // offset made monsters glide forward and then SNAP BACK at every loop.
-        normalizeClipRoot(payload);
+        bank.rawClips.push(payload);
         bank.clips.set(name, {
           h: this.world.allocSharedRef<'AnimationClip', AnimationClip>('AnimationClip', payload),
           dur: (payload as unknown as { duration: number }).duration,
@@ -532,14 +535,14 @@ export class MonsterManager {
 
   /** Swap a GLB monster's AnimationPlayer clip (looping locomotion). */
   private setClip(m: Monster, name: string, loop: boolean, speed = 1): void {
-    if (m.skinEnt === null) return;
+    if (m.animPlayer === null) return;
     const bank = this.glb.get(m.kind);
     const clip = bank?.clips.get(name);
     if (!clip) return;
     m.clip = name;
     m.animBase = speed;
     if (!loop) m.clipUntil = performance.now() + (clip.dur / speed) * 1000;
-    this.world.set(m.skinEnt, AnimationPlayer, {
+    this.world.set(m.animPlayer, AnimationPlayer, {
       clips: [clip.h], times: new Float32Array([0]), weights: new Float32Array([1]),
       speeds: new Float32Array([speed * this.animRate]), looping: loop, paused: false,
     });
@@ -547,7 +550,7 @@ export class MonsterManager {
 
   /** One-shot (attack/hit) unless one is already playing. */
   private playOnce(m: Monster, name: string, speed = 1): void {
-    if (m.skinEnt === null) return;
+    if (m.animPlayer === null) return;
     if (performance.now() < m.clipUntil) return;
     this.setClip(m, name, false, speed);
   }
@@ -561,6 +564,7 @@ export class MonsterManager {
     const root = rootRes.value as EntityHandle;
     const parts: Monster['parts'] = [];
     let skinEnt: EntityHandle | null = null;
+    let animPlayer: EntityHandle | null = null;
     const instEntities: EntityHandle[] = [];
 
     // ── preferred: skinned GLB visual (assets/monsters/*.glb) ──
@@ -581,35 +585,33 @@ export class MonsterManager {
       if (instRes.ok) {
         const instRoot = instRes.value as EntityHandle;
         instEntities.push(instRoot);
+        // Some rigs (zombie: 1.67 m of hips +Z in `move`) translate the root
+        // across the clip, and since WE drive world position from the AI, the
+        // animated offset makes monsters glide forward and SNAP BACK at every
+        // loop. Un-bake it now that the scene can name the root joint; the
+        // payloads are shared, so one pass per kind covers every spawn.
+        if (glbBank.rawClips.length > 0) {
+          const rootTargetIds = collectRootJointTargetIds(this.world, instRoot);
+          for (const payload of glbBank.rawClips) normalizeClipRoot(payload, rootTargetIds);
+          glbBank.rawClips.length = 0;
+        }
         const sceneInst = this.world.get(instRoot, SceneInstance);
         if (sceneInst.ok) {
           for (let i = 0; i < sceneInst.value.mapping.length; i++) {
             const ent = sceneInst.value.mapping[i];
-            if (ent === undefined || ent === 0) continue;
+            if (ent === undefined || ent === ENTITY_NULL_RAW) continue;
             instEntities.push(ent as EntityHandle);
-            if (skinEnt === null && this.world.get(ent as EntityHandle, Skin).ok) {
-              skinEnt = ent as EntityHandle;
-            }
           }
         }
-        if (skinEnt !== null) {
-          const idle = glbBank.clips.get('idle')!;
-          this.world.addComponent(skinEnt, {
-            component: AnimationPlayer,
-            data: { clips: [idle.h], times: new Float32Array([0]), weights: new Float32Array([1]), speeds: new Float32Array([1]), paused: false, looping: true },
-          });
-          // Same engine skinning-contract fix as the witch: the skinned mesh
-          // node must sit at world identity — the joint palette (whose bones
-          // live under the monster root) carries the whole transform. Without
-          // the detach, the root transform applies TWICE.
-          this.world.removeComponent(skinEnt, ChildOf);
-          this.world.set(skinEnt, Transform, {
-            pos: [0, 0, 0],
-            quat: [0, 0, 0, 1],
-            scale: [1, 1, 1],
-          });
+        const idle = glbBank.clips.get('idle');
+        const armed = idle
+          ? armSkinnedAnimationPlayer(this.world, instRoot, { clips: [idle.h] })
+          : null;
+        if (armed !== null) {
+          skinEnt = armed.skin;
+          animPlayer = armed.player;
         } else {
-          console.warn(`[hellforge] ${kind} GLB instantiated but no Skin entity — animation off`);
+          console.warn(`[hellforge] ${kind} GLB instantiated but skinned anim arm failed`);
         }
       }
     }
@@ -653,7 +655,7 @@ export class MonsterManager {
       bobPhase: Math.random() * Math.PI * 2,
       matState: 'normal',
       zone, parts,
-      skinEnt, instEntities,
+      skinEnt, animPlayer, instEntities,
       clip: 'idle', clipUntil: 0,
       strikeAt: 0, strikeRanged: false,
       aggro: false, slam: null,
@@ -1069,8 +1071,8 @@ export class MonsterManager {
         }
         // Re-write speeds every frame so animBase / animRate changes take
         // effect on the already-playing clip.
-        if (m.skinEnt !== null) {
-          this.world.set(m.skinEnt, AnimationPlayer, {
+        if (m.animPlayer !== null) {
+          this.world.set(m.animPlayer, AnimationPlayer, {
             speeds: new Float32Array([m.animBase * this.animRate]),
           });
         }

@@ -4,9 +4,6 @@
 // main.ts owns show/hide/tick wiring.
 
 import {
-  AnimationPlayer,
-} from '@forgeax/engine-animation';
-import {
   Camera,
   DirectionalLight,
   Materials,
@@ -17,17 +14,14 @@ import {
   perspective,
 } from '@forgeax/engine-render';
 import {
-  ChildOf,
   Transform,
 } from '@forgeax/engine-scene';
-import {
-  Skin,
-} from '@forgeax/engine-skinning';
 import {
   quat,
 } from '@forgeax/engine-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
+import { ENTITY_NULL_RAW, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { armSkinnedAnimationPlayer } from './bind-skinned-animation';
 import type { AnimationClip, Handle, MaterialAsset, MeshAsset, SceneAsset } from '@forgeax/engine-types';
 import { HANDLE_CUBE, type AssetRegistry } from '@forgeax/engine-assets-runtime';
 
@@ -453,7 +447,7 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
       if (orphanInst.ok) {
         for (let i = 0; i < orphanInst.value.mapping.length; i++) {
           const ent = orphanInst.value.mapping[i];
-          if (ent === undefined || ent === 0) continue;
+          if (ent === undefined || ent === ENTITY_NULL_RAW) continue;
           try { world.despawn(ent as EntityHandle); } catch { /* */ }
         }
       }
@@ -468,32 +462,17 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
     if (sceneInst.ok) {
       for (let i = 0; i < sceneInst.value.mapping.length; i++) {
         const ent = sceneInst.value.mapping[i];
-        if (ent === undefined || ent === 0) continue;
+        if (ent === undefined || ent === ENTITY_NULL_RAW) continue;
         nextInst.push(ent as EntityHandle);
-        if (nextSkin === null && world.get(ent as EntityHandle, Skin).ok) {
-          nextSkin = ent as EntityHandle;
-        }
       }
     }
-    if (nextSkin !== null && idleHandle !== null) {
-      world.addComponent(nextSkin, {
-        component: AnimationPlayer,
-        data: {
-          clips: [idleHandle],
-          times: new Float32Array([0]),
-          weights: new Float32Array([1]),
-          speeds: new Float32Array([1]),
-          paused: false,
-          looping: true,
-        },
-      });
-      // Same skinning contract as gameplay spawn — detach mesh from armature.
-      world.removeComponent(nextSkin, ChildOf);
-      world.set(nextSkin, Transform, {
-        pos: [0, 0, 0],
-        quat: [0, 0, 0, 1],
-        scale: [1, 1, 1],
-      });
+    if (idleHandle !== null) {
+      const armed = armSkinnedAnimationPlayer(world, nextRoot, { clips: [idleHandle] });
+      if (armed !== null) {
+        nextSkin = armed.skin;
+      } else {
+        console.warn(`[hellforge] hero preview ${hero.id}: Skin/idle missing — static mesh`);
+      }
     } else {
       console.warn(`[hellforge] hero preview ${hero.id}: Skin/idle missing — static mesh`);
     }

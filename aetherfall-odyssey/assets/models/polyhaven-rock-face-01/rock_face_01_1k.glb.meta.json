@@ -1,0 +1,60 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "rock_face_01"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "rock_face_01_1k.glb",
+  "subAssets": [
+    {
+      "guid": "019fde01-daea-7c2d-aeab-0b7ed06fc8e4",
+      "kind": "mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:rock_face_section_1_proxy"
+    },
+    {
+      "guid": "019fde01-daea-7c2d-aeab-0b7f4236e20c",
+      "kind": "material",
+      "sourceIndex": 0,
+      "sourceKey": "material:rock_face_01"
+    },
+    {
+      "guid": "019fde01-daea-7c2d-aeab-0b80822a2445",
+      "kind": "scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:Scene"
+    },
+    {
+      "guid": "019fde01-daea-7c2d-aeab-0b813e29fe32",
+      "kind": "texture",
+      "sourceIndex": 0,
+      "sourceKey": "texture:rock_face_01_nor_gl"
+    },
+    {
+      "guid": "019fde01-daea-7c2d-aeab-0b82a8963dd5",
+      "kind": "texture",
+      "sourceIndex": 1,
+      "sourceKey": "texture:rock_face_01_diff"
+    },
+    {
+      "guid": "019fde01-daea-7c2d-aeab-0b83ae552fda",
+      "kind": "texture",
+      "sourceIndex": 2,
+      "sourceKey": "texture:rock_face_01_rough"
+    },
+    {
+      "guid": "019fde01-daea-7c2d-aeab-0b84e16c38d0",
+      "kind": "sampler",
+      "sourceIndex": 0,
+      "sourceKey": "sampler"
+    }
+  ]
+}

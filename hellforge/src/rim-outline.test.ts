@@ -51,7 +51,8 @@ class StubWorld {
 }
 
 function makeApp(register: (id: string, entry: unknown) => void = () => {}) {
-  return { renderer: { shader: { registerMaterialShader: register } } };
+  // Current Engine API — dual helper prefers this over registerMaterialShader.
+  return { renderer: { shader: { installMaterialArtifact: register } } };
 }
 
 describe('rim-outline flag (G2-B spike)', () => {
@@ -101,7 +102,7 @@ describe('ensureRimOutlineRegistered', () => {
       });
       expect(ensureRimOutlineRegistered(app)).toBe(false);
       expect(warn.mock.calls.length).toBe(1);
-      expect(String(warn.mock.calls[0]?.[0] ?? '')).toContain('hellforge/rim-outline');
+      expect(String(warn.mock.calls[0]?.[0] ?? '')).toContain('installMaterialArtifact');
     } finally {
       warn.mockRestore();
     }

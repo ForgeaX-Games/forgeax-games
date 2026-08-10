@@ -1,0 +1,74 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "large_castle_door_frame",
+        "large_castle_door_right",
+        "large_castle_door_left"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "large_castle_door_1k.glb",
+  "subAssets": [
+    {
+      "guid": "019fddf1-5e4b-7578-91fd-66a43597c29b",
+      "kind": "mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:mesh.011"
+    },
+    {
+      "guid": "019fddf1-5e4b-7578-91fd-66a5ce52884b",
+      "kind": "mesh",
+      "sourceIndex": 1,
+      "sourceKey": "mesh:Cylinder.004"
+    },
+    {
+      "guid": "019fddf1-5e4b-7578-91fd-66a690998ff3",
+      "kind": "mesh",
+      "sourceIndex": 2,
+      "sourceKey": "mesh:Cylinder.006"
+    },
+    {
+      "guid": "019fddf1-5e4b-7578-91fd-66a7005ff87b",
+      "kind": "material",
+      "sourceIndex": 0,
+      "sourceKey": "material:large_castle_door"
+    },
+    {
+      "guid": "019fddf1-5e4b-7578-91fd-66a8e526a9a1",
+      "kind": "scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:Scene"
+    },
+    {
+      "guid": "019fddf1-5e4b-7578-91fd-66a970c81fd4",
+      "kind": "texture",
+      "sourceIndex": 0,
+      "sourceKey": "texture:large_castle_door_nor_gl"
+    },
+    {
+      "guid": "019fddf1-5e4b-7578-91fd-66aa002d6f9b",
+      "kind": "texture",
+      "sourceIndex": 1,
+      "sourceKey": "texture:large_castle_door_diff"
+    },
+    {
+      "guid": "019fddf1-5e4b-7578-91fd-66abe8ab05f0",
+      "kind": "texture",
+      "sourceIndex": 2,
+      "sourceKey": "texture:large_castle_door_metal-large_castle_door_rough"
+    },
+    {
+      "guid": "019fddf1-5e4b-7578-91fd-66ac232f7bed",
+      "kind": "sampler",
+      "sourceIndex": 0,
+      "sourceKey": "sampler"
+    }
+  ]
+}

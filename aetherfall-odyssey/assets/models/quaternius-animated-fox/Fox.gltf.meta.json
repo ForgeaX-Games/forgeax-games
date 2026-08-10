@@ -1,0 +1,196 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "Head",
+        "Ear4.L",
+        "Ear3.L",
+        "Ear2.L",
+        "Ear1.L",
+        "Ear4.R",
+        "Ear3.R",
+        "Ear2.R",
+        "Ear1.R",
+        "Neck3",
+        "Neck2",
+        "Neck1",
+        "Torso3",
+        "FrontLowerLeg.L",
+        "FrontUpperLeg.L",
+        "FrontShoulder.L",
+        "FrontLowerLeg.R",
+        "FrontUpperLeg.R",
+        "FrontShoulder.R",
+        "Torso2",
+        "Torso",
+        "BackLowerLeg.L",
+        "BackUpperLeg.L",
+        "BackLeg.L",
+        "BackShoulder.L",
+        "BackLowerLeg.R",
+        "BackUpperLeg.R",
+        "BackLeg.R",
+        "BackShoulder.R",
+        "Tail8",
+        "Tail7",
+        "Tail6",
+        "Tail5",
+        "Tail4",
+        "Tail3",
+        "Tail2",
+        "Tail1",
+        "Back",
+        "PoleTargetBack.L",
+        "PoleTarget.L",
+        "PoleTargetBack.R",
+        "PoleTarget.R",
+        "Body",
+        "FFB.L",
+        "IKBackLeg.L",
+        "FF.L",
+        "IKFrontLeg.L",
+        "FFB.R",
+        "IKBackLeg.R",
+        "FF.R",
+        "IKFrontLeg.R",
+        "Fox",
+        "AnimalArmature"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "Fox.gltf",
+  "subAssets": [
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb7d8063d9ff",
+      "kind": "mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:Cube"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb7e836eba1f",
+      "kind": "material",
+      "sourceIndex": 0,
+      "sourceKey": "material:Main"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb7fba9d6b91",
+      "kind": "material",
+      "sourceIndex": 1,
+      "sourceKey": "material:Black"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb80656a3e4b",
+      "kind": "material",
+      "sourceIndex": 2,
+      "sourceKey": "material:Eyes"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb81f99f7c5b",
+      "kind": "material",
+      "sourceIndex": 3,
+      "sourceKey": "material:Main_Light"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb82bd9435b1",
+      "kind": "material",
+      "sourceIndex": 4,
+      "sourceKey": "material:Grey"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb8340e30734",
+      "kind": "scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:Scene"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb84a357331e",
+      "kind": "skeleton",
+      "sourceIndex": 0,
+      "sourceKey": "skeleton"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb85ced23ce7",
+      "kind": "skin",
+      "sourceIndex": 0,
+      "sourceKey": "skin"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb8610910d59",
+      "kind": "animation-clip",
+      "sourceIndex": 0,
+      "sourceKey": "animation-clip:Attack"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb8744873f4b",
+      "kind": "animation-clip",
+      "sourceIndex": 1,
+      "sourceKey": "animation-clip:Death"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb887571f4b9",
+      "kind": "animation-clip",
+      "sourceIndex": 2,
+      "sourceKey": "animation-clip:Eating"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb8910831820",
+      "kind": "animation-clip",
+      "sourceIndex": 3,
+      "sourceKey": "animation-clip:Gallop"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb8a5484c501",
+      "kind": "animation-clip",
+      "sourceIndex": 4,
+      "sourceKey": "animation-clip:Gallop_Jump"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb8b4d30fdaa",
+      "kind": "animation-clip",
+      "sourceIndex": 5,
+      "sourceKey": "animation-clip:Idle"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb8cf662e01b",
+      "kind": "animation-clip",
+      "sourceIndex": 6,
+      "sourceKey": "animation-clip:Idle_2"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb8d2c641779",
+      "kind": "animation-clip",
+      "sourceIndex": 7,
+      "sourceKey": "animation-clip:Idle_2_HeadLow"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb8e47a5671f",
+      "kind": "animation-clip",
+      "sourceIndex": 8,
+      "sourceKey": "animation-clip:Idle_HitReact1"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb8ffd7bf535",
+      "kind": "animation-clip",
+      "sourceIndex": 9,
+      "sourceKey": "animation-clip:Idle_HitReact2"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb9065d13501",
+      "kind": "animation-clip",
+      "sourceIndex": 10,
+      "sourceKey": "animation-clip:Jump_ToIdle"
+    },
+    {
+      "guid": "019fdd58-2e01-7b74-a568-bb9177671295",
+      "kind": "animation-clip",
+      "sourceIndex": 11,
+      "sourceKey": "animation-clip:Walk"
+    }
+  ]
+}

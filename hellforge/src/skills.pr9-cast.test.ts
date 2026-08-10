@@ -80,6 +80,7 @@ function fakeMonster(overrides: Partial<Monster> = {}): Monster {
     zone: 'wild',
     parts: [],
     skinEnt: null,
+    animPlayer: null,
     instEntities: [],
     clip: 'idle',
     clipUntil: 0,
