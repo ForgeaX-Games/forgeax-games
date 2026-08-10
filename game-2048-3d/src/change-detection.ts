@@ -1,4 +1,4 @@
-import { Entity, Update, defineComponent, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Update, defineComponent, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import type { HudHandle } from './hud';
 
 export const GAME_DEFAULT_SCORE_RESOURCE = 'gameDefaultScore';
@@ -42,16 +42,16 @@ export function installGameplayChangeDetection(args: {
 
   world.addSystem(Update, {
     name: 'game-score-added-targets',
-    queries: [{ with: [TargetHitState, Entity], added: [TargetHitState] }],
+    queries: [{ with: [TargetHitState], added: [TargetHitState] }],
     fn: (_world, queryResults) => {
-      for (const bundle of queryResults[0] ?? []) witness.addedTargets += bundle.Entity.self.length;
+      for (const _row of queryResults[0] ?? []) witness.addedTargets += 1;
     },
   }).unwrap();
   world.addSystem(Update, {
     name: 'game-score-changed-targets',
-    queries: [{ with: [TargetHitState, Entity], changed: [TargetHitState] }],
+    queries: [{ with: [TargetHitState], changed: [TargetHitState] }],
     fn: (_world, queryResults) => {
-      for (const bundle of queryResults[0] ?? []) witness.changedTargets += bundle.Entity.self.length;
+      for (const _row of queryResults[0] ?? []) witness.changedTargets += 1;
     },
   }).unwrap();
   world.addSystem(Update, {

@@ -1,53 +1,33 @@
-import type { AssetRegistry } from "@forgeax/engine-assets-runtime";
+import type { AssetRegistry } from '@forgeax/engine-assets-runtime';
+import type { EntityHandle, World } from '@forgeax/engine-ecs';
+import { mat4, quat, vec3 } from '@forgeax/engine-math';
+import { Camera, type Renderer } from '@forgeax/engine-render';
+import { AssetGuid } from '@forgeax/engine-pack/guid';
+import { Transform } from '@forgeax/engine-scene';
 import {
-  FixedUpdate,
-  type EntityHandle,
-  type SharedHandle,
-  type World,
-} from "@forgeax/engine-ecs";
-import { mat4, quat, vec3 } from "@forgeax/engine-math";
-import { Camera, type Renderer } from "@forgeax/engine-render";
-import { AssetGuid } from "@forgeax/engine-pack/guid";
-import { Transform } from "@forgeax/engine-scene";
-import {
-  loadParticleEffect,
-  PARTICLE_SIMULATION_RESOURCE_KEY,
+  loadVfxGpuEffect,
   ParticleEffectPlayer,
-  particleEffectPackLoader,
-  particleSimulationPlugin,
-  ParticleSimulation,
-  createStockParticleCpuExecutorRegistry,
-} from "@forgeax/engine-vfx";
-import {
-  particleRenderFeature,
-  particleSceneSpaceResolver,
-} from "@forgeax/engine-vfx-render";
+  VFX_GPU_RUNTIME_RESOURCE_KEY,
+  type VfxGpuEffectAsset,
+  type VfxGpuRuntime,
+} from '@forgeax/engine-vfx';
+import { createVfxRuntimeHost } from '@forgeax/engine-vfx-render';
 
-/** Source Pack v2 effect owned by the template; the cooker emits its runtime program. */
-export const GAME_DEFAULT_HIT_VFX_GUID = "28db471c-e3b0-4a92-8a3e-af9d5fe7494d";
-/** A second authored effect that exercises rate scheduling and box spawning. */
-export const GAME_DEFAULT_CHARGE_VFX_GUID =
-  "b77fe5c8-c103-4878-85b2-91768cb5efc2";
+/** GPU Pack v2 effect owned by Aetherfall's hit interaction. */
+export const GAME_DEFAULT_HIT_VFX_GUID = '28db471c-e3b0-4a92-8a3e-af9d5fe7494d';
+/** GPU Pack v2 effect used while the player charges the next attack. */
+export const GAME_DEFAULT_CHARGE_VFX_GUID = 'b77fe5c8-c103-4878-85b2-91768cb5efc2';
 
-/** The renderer owns one particle feature for every World it draws. */
-export const PARTICLE_RENDER_FEATURE_ID = "forgeax.vfx-render.particles";
-const PARTICLE_SIMULATION_SYSTEM_NAME = "vfx-particle-simulation";
+/** Public renderer identity retained for the owner-projection tests. */
+export const PARTICLE_RENDER_FEATURE_ID = 'forgeax.vfx-render.gpu-particles';
 
-/**
- * Find the existing particle RenderFeature owner without coupling gameplay to a
- * concrete host implementation. The Editor carrier owns this feature through
- * ParticleRuntimeHost; a standalone host may leave it absent for this game to
- * assemble locally.
- */
 export function findParticleRenderFeatureOwner<
   T extends { readonly identity: string },
 >(diagnostics: readonly T[]): T | undefined {
-  return diagnostics.find(
-    (diagnostic) => diagnostic.identity === PARTICLE_RENDER_FEATURE_ID,
-  );
+  return diagnostics.find((diagnostic) => diagnostic.identity === PARTICLE_RENDER_FEATURE_ID);
 }
 
-export type VfxHitLoopMode = "hit" | "charge";
+export type VfxHitLoopMode = 'hit' | 'charge';
 
 export interface VfxHitLoopSnapshot {
   readonly available: boolean;
@@ -76,13 +56,10 @@ export interface VfxHitLoop {
   readonly dispose: () => void;
 }
 
-function unavailable(
-  errorCode: string | null,
-  errorHint: string | null,
-): VfxHitLoopSnapshot {
+function unavailable(errorCode: string | null, errorHint: string | null): VfxHitLoopSnapshot {
   return {
     available: false,
-    mode: "hit",
+    mode: 'hit',
     playing: false,
     seed: 0,
     triggers: 0,
@@ -92,10 +69,21 @@ function unavailable(
     batchKinds: [],
     alive: 0,
     bucketCount: 0,
-    readiness: "unavailable",
+    readiness: 'unavailable',
     errorCode,
     errorHint,
   };
+}
+
+function failure(error: unknown): { readonly code: string; readonly hint: string } {
+  if (error !== null && typeof error === 'object') {
+    const value = error as { readonly code?: unknown; readonly hint?: unknown };
+    return {
+      code: typeof value.code === 'string' ? value.code : 'vfx-host-failed',
+      hint: typeof value.hint === 'string' ? value.hint : 'inspect the VFX host failure detail',
+    };
+  }
+  return { code: 'vfx-host-failed', hint: String(error) };
 }
 
 function cameraSource(camera: EntityHandle) {
@@ -113,10 +101,8 @@ function cameraSource(camera: EntityHandle) {
       vec3.add(target, position, forward);
       let viewProjection: Float32Array;
       if (cameraValue.value.projection === 1) {
-        const halfWidth =
-          (cameraValue.value.right - cameraValue.value.left) * 0.5;
-        const halfHeight =
-          (cameraValue.value.top - cameraValue.value.bottom) * 0.5;
+        const halfWidth = (cameraValue.value.right - cameraValue.value.left) * 0.5;
+        const halfHeight = (cameraValue.value.top - cameraValue.value.bottom) * 0.5;
         const projection = mat4.orthographic(
           mat4.create(),
           -halfWidth,
@@ -145,22 +131,19 @@ function cameraSource(camera: EntityHandle) {
   };
 }
 
-function hasFixedSystem(world: World, name: string): boolean {
-  return (
-    world
-      .inspect()
-      .schedules.find((entry) => entry.schedule.name === FixedUpdate.name)
-      ?.systems.some((system) => system.name === name) === true
-  );
+function noOpLoop(snapshot: VfxHitLoopSnapshot): VfxHitLoop {
+  return {
+    trigger: () => undefined,
+    beginCharge: () => undefined,
+    endCharge: () => undefined,
+    triggerCharge: () => undefined,
+    reset: () => undefined,
+    snapshot: () => snapshot,
+    dispose: () => undefined,
+  };
 }
 
-/**
- * Attach one replayable transient effect to the existing scored target.
- *
- * A carrier-owned ParticleRuntimeHost is reused when present. The local
- * simulation and late RenderFeature assembly remain the standalone fallback
- * for hosts that do not provide that owner.
- */
+/** Attach one replayable GPU effect to the scored target. */
 export async function createVfxHitLoop(options: {
   readonly world: World;
   readonly assets?: AssetRegistry;
@@ -170,295 +153,92 @@ export async function createVfxHitLoop(options: {
 }): Promise<VfxHitLoop> {
   const { world, assets, renderer, target, camera } = options;
   if (assets === undefined || renderer === undefined || target === undefined) {
-    return {
-      trigger: () => undefined,
-      beginCharge: () => undefined,
-      endCharge: () => undefined,
-      triggerCharge: () => undefined,
-      reset: () => undefined,
-      snapshot: () =>
-        unavailable(
-          "host-unavailable",
-          "VFX needs the Preview AssetRegistry, Renderer, and a scored target.",
-        ),
-      dispose: () => undefined,
-    };
+    return noOpLoop(unavailable('host-unavailable', 'VFX needs the Preview AssetRegistry, Renderer, and a scored target.'));
   }
   const parsed = AssetGuid.parse(GAME_DEFAULT_HIT_VFX_GUID);
-  if (!parsed.ok) {
-    return {
-      trigger: () => undefined,
-      beginCharge: () => undefined,
-      endCharge: () => undefined,
-      triggerCharge: () => undefined,
-      reset: () => undefined,
-      snapshot: () => unavailable(parsed.error.code, parsed.error.hint),
-      dispose: () => undefined,
-    };
-  }
+  if (!parsed.ok) return noOpLoop(unavailable(parsed.error.code, parsed.error.hint));
   const parsedCharge = AssetGuid.parse(GAME_DEFAULT_CHARGE_VFX_GUID);
-  if (!parsedCharge.ok) {
-    return {
-      trigger: () => undefined,
-      beginCharge: () => undefined,
-      endCharge: () => undefined,
-      triggerCharge: () => undefined,
-      reset: () => undefined,
-      snapshot: () =>
-        unavailable(parsedCharge.error.code, parsedCharge.error.hint),
-      dispose: () => undefined,
-    };
+  if (!parsedCharge.ok) return noOpLoop(unavailable(parsedCharge.error.code, parsedCharge.error.hint));
+
+  const host = createVfxRuntimeHost({ camera: cameraSource(camera) });
+  const attached = await host.attachWorld({ world, assets });
+  if (!attached.ok) {
+    const cause = failure(attached.error);
+    return noOpLoop(unavailable(cause.code, cause.hint));
+  }
+  const loaded = await loadVfxGpuEffect(assets, GAME_DEFAULT_HIT_VFX_GUID);
+  if (!loaded.ok) {
+    const cause = failure(loaded.error);
+    host.detachWorld({ world });
+    return noOpLoop(unavailable(cause.code, cause.hint));
+  }
+  const loadedCharge = await loadVfxGpuEffect(assets, GAME_DEFAULT_CHARGE_VFX_GUID);
+  if (!loadedCharge.ok) {
+    const cause = failure(loadedCharge.error);
+    host.detachWorld({ world });
+    return noOpLoop(unavailable(cause.code, cause.hint));
   }
 
-  // Studio Play supplies ParticleRuntimeHost before game bootstrap. Its feature
-  // observes every ParticleSimulation in the World, so creating another feature
-  // here would collide on the one public RenderFeature identity. The host must
-  // also have attached the matching simulation before a game can use that owner.
-  const hostFeature = findParticleRenderFeatureOwner(
-    renderer.renderFeatureDiagnostics(),
-  );
-  if (
-    hostFeature !== undefined &&
-    !world.hasResource(PARTICLE_SIMULATION_RESOURCE_KEY)
-  ) {
-    return {
-      trigger: () => undefined,
-      beginCharge: () => undefined,
-      endCharge: () => undefined,
-      triggerCharge: () => undefined,
-      reset: () => undefined,
-      snapshot: () =>
-        unavailable(
-          "particle-runtime-host-not-attached",
-          "Renderer owns forgeax.vfx-render.particles, but its ParticleRuntimeHost has not attached this World.",
-        ),
-      dispose: () => undefined,
-    };
+  const hitEffect = world.allocSharedRef('ParticleEffectAsset', loaded.value);
+  const chargeEffect = world.allocSharedRef('ParticleEffectAsset', loadedCharge.value);
+  const player = world.addComponent(target, {
+    component: ParticleEffectPlayer,
+    data: { effect: hitEffect, playing: false, seed: 0, timeScale: 1 },
+  });
+  if (!player.ok) {
+    world.sharedRefs.release(hitEffect);
+    world.sharedRefs.release(chargeEffect);
+    host.detachWorld({ world });
+    return noOpLoop(unavailable(player.error.code, player.error.hint));
   }
-  if (hostFeature === undefined) {
-    assets.loaders.registerPackLoader(particleEffectPackLoader);
-  }
-  const loaded = await loadParticleEffect(assets, GAME_DEFAULT_HIT_VFX_GUID);
-  if (!loaded.ok) {
-    return {
-      trigger: () => undefined,
-      beginCharge: () => undefined,
-      endCharge: () => undefined,
-      triggerCharge: () => undefined,
-      reset: () => undefined,
-      snapshot: () => unavailable(loaded.error.code, loaded.error.hint),
-      dispose: () => undefined,
-    };
-  }
-  const loadedCharge = await loadParticleEffect(
-    assets,
-    GAME_DEFAULT_CHARGE_VFX_GUID,
-  );
-  if (!loadedCharge.ok) {
-    return {
-      trigger: () => undefined,
-      beginCharge: () => undefined,
-      endCharge: () => undefined,
-      triggerCharge: () => undefined,
-      reset: () => undefined,
-      snapshot: () =>
-        unavailable(loadedCharge.error.code, loadedCharge.error.hint),
-      dispose: () => undefined,
-    };
+  const installed = await renderer.installRenderFeature(host.feature);
+  if (!installed.ok) {
+    world.removeComponent(target, ParticleEffectPlayer);
+    world.sharedRefs.release(hitEffect);
+    world.sharedRefs.release(chargeEffect);
+    host.detachWorld({ world });
+    return noOpLoop(unavailable(installed.error.code, installed.error.hint));
   }
 
   let seed = 0;
-  let mode: VfxHitLoopMode = "hit";
+  let mode: VfxHitLoopMode = 'hit';
   let playing = false;
   let triggers = 0;
   let disposed = false;
-  let cleaned = false;
-  const cleanupSteps: Array<() => void> = [];
-  const cleanup = (): void => {
-    if (cleaned) return;
-    cleaned = true;
-    disposed = true;
-    playing = false;
-    for (let index = cleanupSteps.length - 1; index >= 0; index -= 1) {
-      try {
-        cleanupSteps[index]?.();
-      } catch (cleanupError) {
-        console.error("[aetherfall-vfx] cleanup step failed", cleanupError);
-      }
-    }
-  };
-
-  let hitEffect: SharedHandle<"ParticleEffectAsset">;
-  let chargeEffect: SharedHandle<"ParticleEffectAsset">;
-  let localFeature: ReturnType<typeof particleRenderFeature> | undefined;
-  try {
-    hitEffect = world.allocSharedRef("ParticleEffectAsset", loaded.value);
-    cleanupSteps.push(() => world.sharedRefs.release(hitEffect).unwrap());
-    chargeEffect = world.allocSharedRef(
-      "ParticleEffectAsset",
-      loadedCharge.value,
-    );
-    cleanupSteps.push(() => world.sharedRefs.release(chargeEffect).unwrap());
-    const player = world.addComponent(target, {
-      component: ParticleEffectPlayer,
-      data: { effect: hitEffect, playing: false, seed: 0, timeScale: 1 },
-    });
-    if (!player.ok) {
-      cleanup();
-      return {
-        trigger: () => undefined,
-        beginCharge: () => undefined,
-        endCharge: () => undefined,
-        triggerCharge: () => undefined,
-        reset: () => undefined,
-        snapshot: () => unavailable(player.error.code, player.error.hint),
-        dispose: () => undefined,
-      };
-    }
-    cleanupSteps.push(() => {
-      if (world.get(target, ParticleEffectPlayer).ok) {
-        world.removeComponent(target, ParticleEffectPlayer).unwrap();
-      }
-    });
-
-    if (hostFeature === undefined) {
-      const hadSimulation = world.hasResource(PARTICLE_SIMULATION_RESOURCE_KEY);
-      const hadSimulationSystem = hasFixedSystem(
-        world,
-        PARTICLE_SIMULATION_SYSTEM_NAME,
-      );
-      if (!hadSimulation) {
-        cleanupSteps.push(() => {
-          if (!world.hasResource(PARTICLE_SIMULATION_RESOURCE_KEY)) return;
-          const simulation = world.getResource<ParticleSimulation>(
-            PARTICLE_SIMULATION_RESOURCE_KEY,
-          );
-          try {
-            simulation.advance(world, []);
-          } finally {
-            world.removeResource(PARTICLE_SIMULATION_RESOURCE_KEY);
-          }
-        });
-      }
-      if (!hadSimulationSystem) {
-        cleanupSteps.push(() => {
-          if (hasFixedSystem(world, PARTICLE_SIMULATION_SYSTEM_NAME)) {
-            world
-              .removeSystem(FixedUpdate, PARTICLE_SIMULATION_SYSTEM_NAME)
-              .unwrap();
-          }
-        });
-      }
-
-      const simulationPlugin = particleSimulationPlugin({
-        assets,
-        cpuExecutors: createStockParticleCpuExecutorRegistry(),
-        spaceResolver: particleSceneSpaceResolver({
-          world,
-          resolveJoint: () => target,
-        }),
-      });
-      const built = await simulationPlugin.build(world);
-      if (!built.ok) {
-        cleanup();
-        return {
-          trigger: () => undefined,
-          beginCharge: () => undefined,
-          endCharge: () => undefined,
-          triggerCharge: () => undefined,
-          reset: () => undefined,
-          snapshot: () => unavailable(built.error.code, built.error.hint),
-          dispose: () => undefined,
-        };
-      }
-
-      let localFeatureEnabled = true;
-      localFeature = particleRenderFeature({
-        observations: {
-          read(currentWorld) {
-            if (!localFeatureEnabled) return [];
-            const simulation = currentWorld.getResource<ParticleSimulation>(
-              PARTICLE_SIMULATION_RESOURCE_KEY,
-            );
-            const observation = simulation?.read(target);
-            return observation === undefined ? [] : [observation];
-          },
-        },
-        camera: cameraSource(camera),
-      });
-      cleanupSteps.push(() => {
-        localFeatureEnabled = false;
-        localFeature?.dispose?.({} as never).unwrap();
-      });
-      const installed = await renderer.installRenderFeature(localFeature);
-      if (!installed.ok) {
-        cleanup();
-        return {
-          trigger: () => undefined,
-          beginCharge: () => undefined,
-          endCharge: () => undefined,
-          triggerCharge: () => undefined,
-          reset: () => undefined,
-          snapshot: () =>
-            unavailable(installed.error.code, installed.error.hint),
-          dispose: () => undefined,
-        };
-      }
-    }
-  } catch (error) {
-    cleanup();
-    throw error;
-  }
-
   const writePlayer = (): void => {
     if (disposed) return;
     world.set(target, ParticleEffectPlayer, {
-      effect: mode === "hit" ? hitEffect : chargeEffect,
+      effect: mode === 'hit' ? hitEffect : chargeEffect,
       playing,
       seed,
       timeScale: 1,
     });
   };
   const snapshot = (): VfxHitLoopSnapshot => {
-    const observation = world
-      .getResource<ParticleSimulation>(PARTICLE_SIMULATION_RESOURCE_KEY)
-      ?.read(target);
-    const localDiagnostics = localFeature?.diagnostics();
-    const currentHostFeature =
-      hostFeature === undefined
-        ? undefined
-        : findParticleRenderFeatureOwner(renderer.renderFeatureDiagnostics());
-    const hostMissing =
-      hostFeature !== undefined && currentHostFeature === undefined;
-    const error = localDiagnostics?.error ?? currentHostFeature?.latestError;
+    const runtime = world.hasResource(VFX_GPU_RUNTIME_RESOURCE_KEY)
+      ? world.getResource<VfxGpuRuntime>(VFX_GPU_RUNTIME_RESOURCE_KEY)
+      : undefined;
+    const effect: VfxGpuEffectAsset = mode === 'hit' ? loaded.value : loadedCharge.value;
+    const diagnostics = runtime?.diagnostics() ?? [];
+    const error = diagnostics.at(-1);
+    const renderers = effect.program.emitters.flatMap((emitter) =>
+      emitter.renderers.map((rendererEntry) => rendererEntry.kind),
+    );
     return {
-      available: !hostMissing,
+      available: true,
       mode,
       playing,
       seed,
       triggers,
-      guid:
-        mode === "hit"
-          ? GAME_DEFAULT_HIT_VFX_GUID
-          : GAME_DEFAULT_CHARGE_VFX_GUID,
-      emitterCount: observation?.emitters.length ?? 0,
-      emitterStatuses:
-        observation?.emitters.map((emitter) => emitter.status) ?? [],
-      batchKinds: observation?.batches.batches.map((batch) => batch.kind) ?? [],
-      alive: observation?.telemetry.alive ?? 0,
-      bucketCount:
-        localDiagnostics?.bucketCount ??
-        observation?.batches.batches.length ??
-        0,
-      readiness:
-        localDiagnostics?.readiness ??
-        (hostMissing ? "owner-missing" : "host-owned"),
-      errorCode: hostMissing
-        ? "particle-render-feature-owner-missing"
-        : (error?.code ?? null),
-      errorHint: hostMissing
-        ? "The host-owned forgeax.vfx-render.particles feature disappeared after VFX bootstrap."
-        : (error?.hint ?? null),
+      guid: mode === 'hit' ? GAME_DEFAULT_HIT_VFX_GUID : GAME_DEFAULT_CHARGE_VFX_GUID,
+      emitterCount: effect.program.emitters.length,
+      emitterStatuses: effect.program.emitters.map(() => 'gpu'),
+      batchKinds: renderers,
+      alive: 0,
+      bucketCount: new Set(renderers).size,
+      readiness: runtime?.hasPlayer(target) === true ? 'ready' : 'warming',
+      errorCode: error?.code ?? null,
+      errorHint: error?.hint ?? null,
     };
   };
   return {
@@ -466,30 +246,28 @@ export async function createVfxHitLoop(options: {
       if (disposed) return;
       seed = (seed + 1) >>> 0;
       triggers += 1;
-      mode = "hit";
+      mode = 'hit';
       playing = true;
       writePlayer();
     },
     beginCharge: () => {
-      if (disposed) return;
-      if (mode === "charge" && playing) return;
+      if (disposed || (mode === 'charge' && playing)) return;
       seed = (seed + 1) >>> 0;
       triggers += 1;
-      mode = "charge";
+      mode = 'charge';
       playing = true;
       writePlayer();
     },
     endCharge: () => {
-      if (disposed || mode !== "charge") return;
+      if (disposed || mode !== 'charge') return;
       playing = false;
       writePlayer();
     },
     triggerCharge: () => {
-      if (disposed) return;
-      if (mode === "charge" && playing) return;
+      if (disposed || (mode === 'charge' && playing)) return;
       seed = (seed + 1) >>> 0;
       triggers += 1;
-      mode = "charge";
+      mode = 'charge';
       playing = true;
       writePlayer();
     },
@@ -497,11 +275,20 @@ export async function createVfxHitLoop(options: {
       if (disposed) return;
       seed = 0;
       triggers = 0;
-      mode = "hit";
+      mode = 'hit';
       playing = false;
       writePlayer();
     },
     snapshot,
-    dispose: cleanup,
+    dispose: () => {
+      if (disposed) return;
+      disposed = true;
+      playing = false;
+      world.set(target, ParticleEffectPlayer, { playing: false });
+      world.removeComponent(target, ParticleEffectPlayer);
+      world.sharedRefs.release(hitEffect);
+      world.sharedRefs.release(chargeEffect);
+      host.detachWorld({ world });
+    },
   };
 }

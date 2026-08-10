@@ -18,7 +18,7 @@ import {
 import {
   quat,
 } from '@forgeax/engine-runtime';
-import { Time, Update, Entity, type EntityHandle } from '@forgeax/engine-ecs';
+import { Time, Update, type EntityHandle } from '@forgeax/engine-ecs';
 import type { World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
 import { createInputSnapshot, INPUT_SNAPSHOT_RESOURCE_KEY, type InputSnapshot } from '@forgeax/engine-input';
@@ -273,57 +273,67 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // ═══════════════════════════════════════════════════════════════════════
 
   // Background scrolls in +Z direction (toward player = bottom of screen)
-  world.addSystem(Update, { name: 'star-scroll', queries: [{ with: [Entity, Transform, Star] }], fn: (_w, qr) => {
+  world.addSystem(Update, { name: 'star-scroll', queries: [{ read: [Star], write: [Transform] }], fn: (_w, qr) => {
     const dt = world.getResource(Time).delta;
-    for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
-      b.Transform.pos[i * 3 + 2]! += b.Star.speed[i]! * dt;
-      if (b.Transform.pos[i * 3 + 2]! > ARENA_H / 2 + 8) {
-        b.Transform.pos[i * 3 + 2] = -ARENA_H / 2 - 8;
-        b.Transform.pos[i * 3 + 0] = (Math.random() - 0.5) * ARENA_W * 2;
+    for (const row of qr[0] ?? []) {
+      const transform = row.mut(Transform);
+      const star = row.get(Star);
+      transform.pos[2] += star.speed * dt;
+      if (transform.pos[2] > ARENA_H / 2 + 8) {
+        transform.pos[2] = -ARENA_H / 2 - 8;
+        transform.pos[0] = (Math.random() - 0.5) * ARENA_W * 2;
       }
     }
   }});
 
-  world.addSystem(Update, { name: 'particle-tick', queries: [{ with: [Entity, Transform, Particle] }], fn: (_w, qr) => {
+  world.addSystem(Update, { name: 'particle-tick', queries: [{ write: [Transform, Particle] }], fn: (_w, qr) => {
     const dt = world.getResource(Time).delta;
-    for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
-      b.Transform.pos[i * 3 + 0]! += b.Particle.velX[i]! * dt;
-      b.Transform.pos[i * 3 + 1]! += b.Particle.velY[i]! * dt;
-      b.Transform.pos[i * 3 + 2]! += b.Particle.velZ[i]! * dt;
-      b.Particle.velY[i]! -= 6 * dt;
-      b.Particle.life[i]! -= dt;
-      const r = Math.max(0, b.Particle.life[i]! / b.Particle.maxLife[i]!) * 0.6;
-      b.Transform.scale[i * 3 + 0] = r; b.Transform.scale[i * 3 + 1] = r; b.Transform.scale[i * 3 + 2] = r;
+    for (const row of qr[0] ?? []) {
+      const transform = row.mut(Transform);
+      const particle = row.mut(Particle);
+      transform.pos[0] += particle.velX * dt;
+      transform.pos[1] += particle.velY * dt;
+      transform.pos[2] += particle.velZ * dt;
+      particle.velY -= 6 * dt;
+      particle.life -= dt;
+      const r = Math.max(0, particle.life / particle.maxLife) * 0.6;
+      transform.scale[0] = r; transform.scale[1] = r; transform.scale[2] = r;
     }
   }});
 
-  world.addSystem(Update, { name: 'thruster-pulse', queries: [{ with: [Entity, Transform, Thruster] }], fn: (_w, qr) => {
+  world.addSystem(Update, { name: 'thruster-pulse', queries: [{ write: [Transform, Thruster] }], fn: (_w, qr) => {
     const dt = world.getResource(Time).delta;
-    for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
-      b.Thruster.phase[i]! += dt * 14;
-      const p = 0.85 + 0.15 * Math.sin(b.Thruster.phase[i]!);
-      b.Transform.scale[i * 3 + 0]! *= p; b.Transform.scale[i * 3 + 2]! *= p;
+    for (const row of qr[0] ?? []) {
+      const transform = row.mut(Transform);
+      const thruster = row.mut(Thruster);
+      thruster.phase += dt * 14;
+      const p = 0.85 + 0.15 * Math.sin(thruster.phase);
+      transform.scale[0] *= p; transform.scale[2] *= p;
     }
   }});
 
-  world.addSystem(Update, { name: 'trail-fade', queries: [{ with: [Entity, Transform, Trail] }], fn: (_w, qr) => {
+  world.addSystem(Update, { name: 'trail-fade', queries: [{ write: [Transform, Trail] }], fn: (_w, qr) => {
     const dt = world.getResource(Time).delta;
-    for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
-      b.Trail.life[i]! -= dt;
-      const r = Math.max(0, b.Trail.life[i]! / 0.35) * 0.12;
-      b.Transform.scale[i * 3 + 0] = r; b.Transform.scale[i * 3 + 1] = r; b.Transform.scale[i * 3 + 2] = r;
-      b.Transform.pos[i * 3 + 2]! += 2 * dt; // trails drift toward +Z (behind player visually)
+    for (const row of qr[0] ?? []) {
+      const transform = row.mut(Transform);
+      const trail = row.mut(Trail);
+      trail.life -= dt;
+      const r = Math.max(0, trail.life / 0.35) * 0.12;
+      transform.scale[0] = r; transform.scale[1] = r; transform.scale[2] = r;
+      transform.pos[2] += 2 * dt; // trails drift toward +Z (behind player visually)
     }
   }});
 
-  world.addSystem(Update, { name: 'powerup-bob', queries: [{ with: [Entity, Transform, PowerUp] }], fn: (_w, qr) => {
+  world.addSystem(Update, { name: 'powerup-bob', queries: [{ write: [Transform, PowerUp] }], fn: (_w, qr) => {
     const dt = world.getResource(Time).delta;
-    for (const b of qr[0]) for (let i = 0; i < b.Entity.self.length; i++) {
-      b.PowerUp.bobPhase[i]! += dt * 5;
-      b.Transform.pos[i * 3 + 1] = 0.3 + Math.sin(b.PowerUp.bobPhase[i]!) * 0.15;
-      b.Transform.pos[i * 3 + 2]! += b.PowerUp.speed[i]! * dt; // drift toward player (+Z)
-      const pulse = 0.45 + 0.08 * Math.sin(b.PowerUp.bobPhase[i]! * 1.5);
-      b.Transform.scale[i * 3 + 0] = pulse; b.Transform.scale[i * 3 + 1] = pulse; b.Transform.scale[i * 3 + 2] = pulse;
+    for (const row of qr[0] ?? []) {
+      const transform = row.mut(Transform);
+      const powerUp = row.mut(PowerUp);
+      powerUp.bobPhase += dt * 5;
+      transform.pos[1] = 0.3 + Math.sin(powerUp.bobPhase) * 0.15;
+      transform.pos[2] += powerUp.speed * dt; // drift toward player (+Z)
+      const pulse = 0.45 + 0.08 * Math.sin(powerUp.bobPhase * 1.5);
+      transform.scale[0] = pulse; transform.scale[1] = pulse; transform.scale[2] = pulse;
     }
   }});
 

@@ -1,11 +1,9 @@
 import {
   Disabled,
-  Entity,
   World,
-  createQueryState,
   defineComponent,
-  queryRun,
   type EntityHandle,
+  type QueryDescriptor,
 } from '@forgeax/engine-ecs';
 import { ScoringTarget, scoringTargetEntities, type ScoringTargetQuery } from './scoring-target';
 
@@ -24,18 +22,15 @@ export type TargetDisablingHandle = {
   readonly snapshot: () => TargetDisablingWitness;
 };
 
-function count(world: World, query: ReturnType<typeof createQueryState>): number {
+function count(world: World, descriptor: QueryDescriptor): number {
   let total = 0;
-  queryRun(query, world, (bundle) => { total += bundle.Entity?.self?.length ?? 0; });
+  for (const _row of world.query(descriptor).unwrap()) total += 1;
   return total;
 }
 
 export function installTargetDisabling(world: World, targetQuery: ScoringTargetQuery): TargetDisablingHandle {
-  // QueryState caches matched archetype ids and therefore belongs to one
-  // World. Preview may construct a staging World before the live World in the
-  // same module instance; module-global queries would reuse the staging cache.
-  const activeQuery = createQueryState({ with: [TargetDisabling, Entity] });
-  const disabledQuery = createQueryState({ with: [TargetDisabling, Disabled, Entity] });
+  const activeQuery = { with: [TargetDisabling] as const };
+  const disabledQuery = { with: [TargetDisabling, Disabled] as const };
   for (const entity of scoringTargetEntities(world, targetQuery)) world.addComponent(entity, { component: TargetDisabling, data: {} }).unwrap();
   world.insertResource(GAME_DEFAULT_TARGET_DISABLING_WITNESS, { disableEvents: 0 });
   const state = world.getResource<{ disableEvents: number }>(GAME_DEFAULT_TARGET_DISABLING_WITNESS);

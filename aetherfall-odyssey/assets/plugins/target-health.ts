@@ -3,9 +3,7 @@ import {
   Time,
   Update,
   World,
-  createQueryState,
   defineComponent,
-  queryRunContiguous,
   type EntityHandle,
 } from '@forgeax/engine-ecs';
 import { scoringTargetEntities, type ScoringTargetQuery } from './scoring-target';
@@ -18,11 +16,6 @@ export const TargetHealth = defineComponent('GameDefaultTargetHealth', {
   current: 'f32',
   max: 'f32',
 });
-
-const targetHealthQuery = createQueryState<
-  readonly [typeof TargetHealth, typeof Entity],
-  readonly []
->({ with: [TargetHealth, Entity] });
 
 export type TargetHealthWitness = {
   readonly contiguousSupported: boolean;
@@ -74,11 +67,19 @@ export function installTargetHealth(world: World, targetQuery: ScoringTargetQuer
       state.rows = 0;
       state.totalCurrent = 0;
       state.lengthsEqual = true;
-      state.contiguousSupported = queryRunContiguous(targetHealthQuery, world, (bundle) => {
+      const query = world.query({ read: [Entity], write: [TargetHealth] }).unwrap();
+      const spans = query.spans();
+      if (!spans.ok) {
+        state.contiguousSupported = false;
+        return;
+      }
+      state.contiguousSupported = true;
+      for (const span of spans.value) {
         state.contiguousCalls += 1;
-        const current = bundle.GameDefaultTargetHealth.current;
-        const max = bundle.GameDefaultTargetHealth.max;
-        const entities = bundle.Entity.self;
+        const health = span.mut(TargetHealth);
+        const current = health.current;
+        const max = health.max;
+        const entities = span.get(Entity).self;
         state.rows += entities.length;
         state.lengthsEqual = state.lengthsEqual && current.length === max.length && current.length === entities.length;
         for (let index = 0; index < entities.length; index++) {
@@ -86,7 +87,7 @@ export function installTargetHealth(world: World, targetQuery: ScoringTargetQuer
           current[index] = next;
           state.totalCurrent += next;
         }
-      });
+      }
     },
   }).unwrap();
 

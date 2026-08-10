@@ -16,7 +16,7 @@ import {
   type MaterialAsset,
 } from '@forgeax/engine-types';
 import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
-import { Time, Update, defineComponent, Entity, type World } from '@forgeax/engine-ecs';
+import { Time, Update, defineComponent, type World } from '@forgeax/engine-ecs';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { BootstrapContext } from '@forgeax/engine-app';
 
@@ -122,18 +122,17 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const dq = quat.create(), cur = quat.create();
   world.addSystem(Update, {
     name: 'spin',
-    queries: [{ with: [Entity, Transform, Spin] }],
+    queries: [{ read: [Spin], write: [Transform] }],
     resources: ['Time'],
     fn: (_w, qr) => {
       const dt = world.getResource(Time).delta;
-      for (const b of qr[0]) {
-        const n = b.Entity.self.length;
-        for (let i = 0; i < n; i++) {
-          quat.fromAxisAngle(dq, [b.Spin.axisX[i]!, b.Spin.axisY[i]!, b.Spin.axisZ[i]!], dt * b.Spin.speed[i]!);
-          cur[0] = b.Transform.quat[i * 4 + 0]!; cur[1] = b.Transform.quat[i * 4 + 1]!; cur[2] = b.Transform.quat[i * 4 + 2]!; cur[3] = b.Transform.quat[i * 4 + 3]!;
-          quat.multiply(cur, dq, cur);
-          b.Transform.quat[i * 4 + 0] = cur[0]; b.Transform.quat[i * 4 + 1] = cur[1]; b.Transform.quat[i * 4 + 2] = cur[2]; b.Transform.quat[i * 4 + 3] = cur[3];
-        }
+      for (const row of qr[0] ?? []) {
+        const spin = row.get(Spin);
+        const transform = row.mut(Transform);
+        quat.fromAxisAngle(dq, [spin.axisX, spin.axisY, spin.axisZ], dt * spin.speed);
+        cur[0] = transform.quat[0]!; cur[1] = transform.quat[1]!; cur[2] = transform.quat[2]!; cur[3] = transform.quat[3]!;
+        quat.multiply(cur, dq, cur);
+        transform.quat[0] = cur[0]; transform.quat[1] = cur[1]; transform.quat[2] = cur[2]; transform.quat[3] = cur[3];
       }
     },
   });

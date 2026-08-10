@@ -9,19 +9,19 @@ const effectPack = JSON.parse(
   readFileSync(resolve(gameRoot, 'assets/vfx/beacon-aura.pack.json'), 'utf8'),
 ) as {
   schemaVersion: string;
-  assets: Array<{
-    kind: string;
-    execution: string;
-    payload: { emitters: Array<{
-      capacity: number;
-      backendPolicy: { kind: string; backend: string };
-      output: { kind: string; material: string };
-    }> };
+    assets: Array<{
+      kind: string;
+      execution: string;
+      payload: { emitters: Array<{
+        capacity: number;
+        backend: { required: string };
+        renderers: Array<{ kind: string; material: string }>;
+      }> };
   }>;
 };
 
 describe('Echofall native particle contract', () => {
-  test('authors one cooked Pack v2 effect with four bounded CPU billboard layers', () => {
+  test('authors one cooked Pack v2 effect with four bounded GPU billboard layers', () => {
     expect(effectPack.schemaVersion).toBe('2.0.0');
     expect(effectPack.assets).toHaveLength(1);
     const effect = effectPack.assets[0]!;
@@ -33,9 +33,9 @@ describe('Echofall native particle contract', () => {
     ]);
     expect(effect.payload.emitters.reduce((sum, emitter) => sum + emitter.capacity, 0)).toBe(120);
     expect(effect.payload.emitters.every((emitter) =>
-      emitter.backendPolicy.kind === 'required' && emitter.backendPolicy.backend === 'cpu')).toBeTrue();
-    expect(effect.payload.emitters.every((emitter) => emitter.output.kind === 'billboard')).toBeTrue();
-    expect(effect.payload.emitters.map((emitter) => emitter.output.material)).toEqual([
+      emitter.backend.required === 'gpu')).toBeTrue();
+    expect(effect.payload.emitters.every((emitter) => emitter.renderers.every((renderer) => renderer.kind === 'billboard'))).toBeTrue();
+    expect(effect.payload.emitters.map((emitter) => emitter.renderers[0]!.material)).toEqual([
       'cc0c6eaf-086b-4a02-b0d3-ea068b178105',
       '6d901653-687b-4a21-997e-719544fcc106',
       'cc0c6eaf-086b-4a02-b0d3-ea068b178105',
@@ -43,8 +43,9 @@ describe('Echofall native particle contract', () => {
     ]);
   });
 
-  test('reads the engine simulation resource and contains no mesh-particle fallback', () => {
-    expect(mainSource).toContain('PARTICLE_SIMULATION_RESOURCE_KEY');
+  test('reads the engine GPU intent resource and contains no mesh-particle fallback', () => {
+    expect(mainSource).toContain('VFX_GPU_RUNTIME_RESOURCE_KEY');
+    expect(mainSource).toContain('VfxGpuRuntime');
     expect(mainSource).toContain("id: 'echofall.vfx'");
     expect(mainSource).not.toContain('const particles:');
     expect(mainSource).not.toContain('for (const particle of particles)');

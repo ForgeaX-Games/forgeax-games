@@ -1,10 +1,7 @@
 import { Transform } from "@forgeax/engine-scene";
 import {
-  Entity,
   Time,
   Update,
-  createQueryState,
-  queryRun,
   type EntityHandle,
   type World,
 } from "@forgeax/engine-ecs";
@@ -741,17 +738,10 @@ export async function createGameplaySession(
     bulletHalfHeight: projectilePresentation.bulletHalfHeight,
   });
 
-  const projectileQuery = createQueryState({
-    with: [Projectile, Transform, Entity],
-  });
   const projectileEntities = (): EntityHandle[] => {
     const entities: EntityHandle[] = [];
-    queryRun(projectileQuery, world, (bundle) => {
-      for (let index = 0; index < bundle.Entity.self.length; index++) {
-        const entity = bundle.Entity.self[index];
-        if (entity !== undefined) entities.push(entity as EntityHandle);
-      }
-    });
+    const query = world.query({ with: [Projectile, Transform] }).unwrap();
+    for (const row of query) entities.push(row.entity);
     return entities;
   };
   installGameplayCommandCounters(world);

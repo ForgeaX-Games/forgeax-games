@@ -16,9 +16,9 @@ import {
 } from '@forgeax/engine-render';
 import { Name, Transform } from '@forgeax/engine-scene';
 import {
-  PARTICLE_SIMULATION_RESOURCE_KEY,
   ParticleEffectPlayer,
-  type ParticleSimulation,
+  VFX_GPU_RUNTIME_RESOURCE_KEY,
+  type VfxGpuRuntime,
 } from '@forgeax/engine-vfx';
 import {
   BEACON_ORDER,
@@ -111,37 +111,80 @@ export async function bootstrap(world: World, ctx?: BootstrapContext): Promise<v
     catch { return undefined; }
   };
   const readVfxTelemetry = (): GameProjectionValue => {
-    if (!world.hasResource(PARTICLE_SIMULATION_RESOURCE_KEY)) {
+    if (!world.hasResource(VFX_GPU_RUNTIME_RESOURCE_KEY)) {
       return { status: 'unavailable', players: [], totals: { alive: 0, spawned: 0, dropped: 0, cpuUpdateMs: 0 } };
     }
-    const observations = world
-      .getResource<ParticleSimulation>(PARTICLE_SIMULATION_RESOURCE_KEY)
-      .readAll();
-    const players = observations.map((row) => ({
-      player: row.player,
-      tick: row.tick,
-      playing: row.playing,
-      timeScale: row.timeScale,
-      emitters: row.emitters.map((emitter) => ({
-        id: emitter.emitterId,
-        status: emitter.status,
-        alive: emitter.liveCount,
-        capacity: emitter.capacity,
-        spawned: emitter.spawned,
-        dropped: emitter.dropped,
-        overflow: emitter.overflowCount,
-      })),
+    const runtime = world.getResource<VfxGpuRuntime>(VFX_GPU_RUNTIME_RESOURCE_KEY);
+    const intents = runtime.snapshot();
+    const diagnostics = runtime.diagnostics();
+    type VfxTelemetryPlayer = {
+      player: EntityHandle;
+      tick: number;
+      playing: boolean;
+      timeScale: number;
+      emitters: Array<{
+        id: string;
+        status: string;
+        alive: number;
+        capacity: number;
+        spawned: number;
+        dropped: number;
+        overflow: number;
+      }>;
       telemetry: {
-        alive: row.telemetry.alive,
-        spawned: row.telemetry.spawned,
-        dropped: row.telemetry.dropped,
-        backend: row.telemetry.selectedBackend,
-        cpuUpdateMs: row.telemetry.cpuUpdateMs,
-        allocatedBytes: row.telemetry.allocatedBytes,
-      },
-      diagnostics: row.diagnostics.map((diagnostic) => ({ code: diagnostic.code })),
-      spaceDiagnostics: (row.spaceDiagnostics ?? []).map((diagnostic) => ({ code: diagnostic.code })),
-    }));
+        alive: number;
+        spawned: number;
+        dropped: number;
+        backend: string;
+        cpuUpdateMs: number;
+        allocatedBytes: number;
+      };
+      diagnostics: Array<{ code: string }>;
+      spaceDiagnostics: Array<{ code: string }>;
+    };
+    const players: VfxTelemetryPlayer[] = [];
+    for (const row of world.query({ read: [ParticleEffectPlayer] }).unwrap()) {
+      const player = row.get(ParticleEffectPlayer);
+      const playerIntents = intents.filter((intent) => intent.player === row.entity);
+      const emitterMap = new Map<string, {
+        id: string;
+        status: string;
+        alive: number;
+        capacity: number;
+        spawned: number;
+        dropped: number;
+        overflow: number;
+      }>();
+      for (const intent of playerIntents) {
+        const current = emitterMap.get(intent.emitter.id);
+        if (current === undefined) {
+          emitterMap.set(intent.emitter.id, {
+            id: intent.emitter.id,
+            status: 'gpu',
+            alive: 0,
+            capacity: intent.emitter.capacity,
+            spawned: intent.spawnCount,
+            dropped: 0,
+            overflow: 0,
+          });
+        } else {
+          current.spawned += intent.spawnCount;
+        }
+      }
+      const spawned = [...emitterMap.values()].reduce((total, emitter) => total + emitter.spawned, 0);
+      players.push({
+        player: row.entity,
+        tick: playerIntents.at(-1)?.tick ?? 0,
+        playing: player.playing,
+        timeScale: player.timeScale,
+        emitters: [...emitterMap.values()],
+        telemetry: { alive: 0, spawned, dropped: 0, backend: 'gpu', cpuUpdateMs: 0, allocatedBytes: 0 },
+        diagnostics: diagnostics
+          .filter((diagnostic) => diagnostic.detail.player === row.entity)
+          .map((diagnostic) => ({ code: diagnostic.code })),
+        spaceDiagnostics: [],
+      });
+    }
     return {
       status: 'ready',
       players,
@@ -296,7 +339,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext): Promise<v
       }),
       ctx.gameProjection.registerRead({
         id: 'echofall.vfx', title: 'Read Echofall native VFX telemetry',
-        description: 'Read the latest immutable ParticleSimulation fixed-tick observation.',
+        description: 'Read the latest GPU VFX fixed-tick intents and diagnostics.',
         read: readVfxTelemetry,
       }),
     ];

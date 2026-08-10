@@ -61,9 +61,6 @@ import {
 } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import {
-  createQueryState,
-  queryRun,
-  Entity,
   ENTITY_NULL_RAW,
   Time,
   Update,
@@ -729,24 +726,16 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       let anchorEnt: EntityHandle | null = null;
       let anchorPos = [...VEYRA_FALLBACK_POS] as [number, number, number];
       let anchorQuat = [...VEYRA_YAW_QUAT] as [number, number, number, number];
-      const qState = createQueryState({ with: [Name, Transform, Entity] as const });
-      queryRun(qState, world, (bundle) => {
-        const ents = bundle.Entity.self;
-        for (let i = 0; i < ents.length; i++) {
-          const e = ents[i] as EntityHandle | undefined;
-          if (e === undefined) continue;
-          const n = world.get(e, Name);
-          if (!n.ok || n.value.value !== 'NpcVeyraAnchor') continue;
-          const t = world.get(e, Transform);
-          if (!t.ok) continue;
-          anchorEnt = e;
-          anchorPos = [t.value.pos[0]!, t.value.pos[1]!, t.value.pos[2]!];
-          if (t.value.quat) {
-            anchorQuat = [t.value.quat[0]!, t.value.quat[1]!, t.value.quat[2]!, t.value.quat[3]!];
-          }
-          break;
-        }
-      });
+      const query = world.query({ read: [Name, Transform] }).unwrap();
+      for (const row of query) {
+        const n = row.get(Name);
+        if (n.value !== 'NpcVeyraAnchor') continue;
+        const t = row.get(Transform);
+        anchorEnt = row.entity;
+        anchorPos = [t.pos[0]!, t.pos[1]!, t.pos[2]!];
+        anchorQuat = [t.quat[0]!, t.quat[1]!, t.quat[2]!, t.quat[3]!];
+        break;
+      }
       if (anchorEnt === null) {
         // Anchor missing from loaded scene — still place at authored contract.
         console.warn('[hellforge] NpcVeyraAnchor not found in world — using authored [3.2,0,2.0]');
@@ -952,17 +941,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // hardcodes baseColor.a=1 until Track A. Visibility = probe floor only.
     const fadeNamed: Array<{ localId: number; name: string }> = [];
     {
-      const qState = createQueryState({ with: [Name, Entity] as const });
-      queryRun(qState, world, (bundle) => {
-        const ents = bundle.Entity.self;
-        for (let i = 0; i < ents.length; i++) {
-          const e = ents[i] as EntityHandle | undefined;
-          if (e === undefined) continue;
-          const n = world.get(e, Name);
-          if (!n.ok || !n.value.value) continue;
-          fadeNamed.push({ localId: e as unknown as number, name: n.value.value });
-        }
-      });
+      const query = world.query({ read: [Name] }).unwrap();
+      for (const row of query) {
+        const name = row.get(Name).value;
+        if (!name) continue;
+        fadeNamed.push({ localId: row.entity as unknown as number, name });
+      }
     }
     const fadeRegistry = buildCampFadeRegistry(cameraProbeBlockers, fadeNamed);
     const fadeEntries: FadeBlockerEntry[] = [...fadeRegistry.values()];

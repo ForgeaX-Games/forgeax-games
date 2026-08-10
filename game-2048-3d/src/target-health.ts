@@ -1,11 +1,8 @@
 import {
-  Entity,
   Time,
   Update,
   World,
-  createQueryState,
   defineComponent,
-  queryRunContiguous,
   type EntityHandle,
 } from '@forgeax/engine-ecs';
 
@@ -16,11 +13,6 @@ export const TargetHealth = defineComponent('GameDefaultTargetHealth', {
   current: 'f32',
   max: 'f32',
 });
-
-const targetHealthQuery = createQueryState<
-  readonly [typeof TargetHealth, typeof Entity],
-  readonly []
->({ with: [TargetHealth, Entity] });
 
 export type TargetHealthWitness = {
   readonly contiguousSupported: boolean;
@@ -61,19 +53,24 @@ export function installTargetHealth(world: World, targets: readonly EntityHandle
       state.rows = 0;
       state.totalCurrent = 0;
       state.lengthsEqual = true;
-      state.contiguousSupported = queryRunContiguous(targetHealthQuery, world, (bundle) => {
+      const query = world.query({ read: [], write: [TargetHealth] }).unwrap();
+      const spans = query.spans();
+      if (!spans.ok) {
+        state.contiguousSupported = false;
+        return;
+      }
+      state.contiguousSupported = true;
+      for (const span of spans.value) {
         state.contiguousCalls += 1;
-        const current = bundle.GameDefaultTargetHealth.current;
-        const max = bundle.GameDefaultTargetHealth.max;
-        const entities = bundle.Entity.self;
-        state.rows += entities.length;
-        state.lengthsEqual = state.lengthsEqual && current.length === max.length && current.length === entities.length;
-        for (let index = 0; index < entities.length; index++) {
-          const next = Math.min(max[index] ?? INITIAL_HEALTH, (current[index] ?? INITIAL_HEALTH) + HEALTH_REGEN_PER_SECOND * dt);
-          current[index] = next;
+        const health = span.mut(TargetHealth);
+        state.rows += span.length;
+        state.lengthsEqual = state.lengthsEqual && health.current.length === health.max.length;
+        for (let index = 0; index < span.length; index++) {
+          const next = Math.min(health.max[index] ?? INITIAL_HEALTH, (health.current[index] ?? INITIAL_HEALTH) + HEALTH_REGEN_PER_SECOND * dt);
+          health.current[index] = next;
           state.totalCurrent += next;
         }
-      });
+      }
     },
   }).unwrap();
 

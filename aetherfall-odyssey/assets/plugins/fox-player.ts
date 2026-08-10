@@ -6,10 +6,7 @@ import {
 import type { BootstrapContext } from "@forgeax/engine-app";
 import {
   ENTITY_NULL_RAW,
-  Entity,
   Update,
-  createQueryState,
-  queryRun,
   type EntityHandle,
   type World,
 } from "@forgeax/engine-ecs";
@@ -252,30 +249,23 @@ function releaseClipGrants(world: World, clips: readonly ClipHandle[]): void {
 }
 
 function hideAuthoredBlockPlayer(world: World): () => void {
-  const query = createQueryState({ with: [PlayerBodyPart, Transform, Entity] });
   const snapshots: AuthoredPlayerBodyPartSnapshot[] = [];
-  queryRun(query, world, (bundle) => {
-    for (let index = 0; index < bundle.Entity.self.length; index += 1) {
-      const entity = bundle.Entity.self[index] as EntityHandle | undefined;
-      if (entity === undefined) continue;
-      const bodyPart = world.get(entity, PlayerBodyPart);
-      const transform = world.get(entity, Transform);
-      if (!bodyPart.ok || !transform.ok) continue;
-      snapshots.push({
-        entity,
-        baseScale: [
-          bodyPart.value.baseScaleX,
-          bodyPart.value.baseScaleY,
-          bodyPart.value.baseScaleZ,
-        ],
-        transformScale: [
-          transform.value.scale[0] ?? 1,
-          transform.value.scale[1] ?? 1,
-          transform.value.scale[2] ?? 1,
-        ],
-      });
-    }
-  });
+  const query = world.query({ with: [PlayerBodyPart, Transform] }).unwrap();
+  for (const row of query) {
+    const entity = row.entity;
+    const bodyPart = world.get(entity, PlayerBodyPart);
+    const transform = world.get(entity, Transform);
+    if (!bodyPart.ok || !transform.ok) continue;
+    snapshots.push({
+      entity,
+      baseScale: [bodyPart.value.baseScaleX, bodyPart.value.baseScaleY, bodyPart.value.baseScaleZ],
+      transformScale: [
+        transform.value.scale[0] ?? 1,
+        transform.value.scale[1] ?? 1,
+        transform.value.scale[2] ?? 1,
+      ],
+    });
+  }
   let restored = false;
   const restore = (): void => {
     if (restored) return;

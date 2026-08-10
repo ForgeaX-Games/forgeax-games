@@ -1,8 +1,6 @@
 import {
   Entity,
   Update,
-  createQueryState,
-  queryRun,
   type EntityHandle,
   type World,
 } from '@forgeax/engine-ecs';
@@ -147,29 +145,26 @@ export function isTraversalSupportPoint(x: number, z: number, inset = 0): boolea
 
 /** Remove only the exact oversized template floor; unrelated static geometry is untouched. */
 export function removeOversizedTemplateGround(world: World): number {
-  const query = createQueryState({ with: [Collider, RigidBody, Transform, Entity] });
+  const query = world.query({ with: [Collider, RigidBody, Transform] }).unwrap();
   const matches: EntityHandle[] = [];
-  queryRun(query, world, (bundle) => {
-    for (const rawEntity of bundle.Entity.self) {
-      if (rawEntity === undefined) continue;
-      const entity = rawEntity as EntityHandle;
-      const collider = world.get(entity, Collider);
-      const body = world.get(entity, RigidBody);
-      const transform = world.get(entity, Transform);
-      if (!collider.ok || !body.ok || !transform.ok) continue;
-      const halfExtents = collider.value.halfExtents;
-      if (
-        collider.value.shape === ColliderShapeValue.cuboid
-        && body.value.type === RigidBodyTypeValue.static
-        && Math.abs((halfExtents[0] ?? 0) - 60) < 1e-4
-        && Math.abs((halfExtents[1] ?? 0) - 5) < 1e-4
-        && Math.abs((halfExtents[2] ?? 0) - 60) < 1e-4
-        && Math.abs((transform.value.pos[0] ?? 0)) < 1e-4
-        && Math.abs((transform.value.pos[1] ?? 0) + 5) < 1e-4
-        && Math.abs((transform.value.pos[2] ?? 0)) < 1e-4
-      ) matches.push(entity);
-    }
-  });
+  for (const row of query) {
+    const entity = row.entity;
+    const collider = world.get(entity, Collider);
+    const body = world.get(entity, RigidBody);
+    const transform = world.get(entity, Transform);
+    if (!collider.ok || !body.ok || !transform.ok) continue;
+    const halfExtents = collider.value.halfExtents;
+    if (
+      collider.value.shape === ColliderShapeValue.cuboid
+      && body.value.type === RigidBodyTypeValue.static
+      && Math.abs((halfExtents[0] ?? 0) - 60) < 1e-4
+      && Math.abs((halfExtents[1] ?? 0) - 5) < 1e-4
+      && Math.abs((halfExtents[2] ?? 0) - 60) < 1e-4
+      && Math.abs((transform.value.pos[0] ?? 0)) < 1e-4
+      && Math.abs((transform.value.pos[1] ?? 0) + 5) < 1e-4
+      && Math.abs((transform.value.pos[2] ?? 0)) < 1e-4
+    ) matches.push(entity);
+  }
   for (const entity of matches) world.despawn(entity).unwrap();
   return matches.length;
 }

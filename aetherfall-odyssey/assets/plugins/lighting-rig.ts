@@ -1,4 +1,4 @@
-import { Entity, createQueryState, queryRun, type EntityHandle, type World } from '@forgeax/engine-ecs';
+import { Entity, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { Camera, DirectionalLight, PostProcessParams, Skylight, SkyboxBackground, SpotLight } from '@forgeax/engine-render';
 import { Name, Transform } from '@forgeax/engine-scene';
 import { packAtmosphericFogParams, type AtmosphericFogConfig } from './atmospheric-fog-params';
@@ -128,18 +128,12 @@ function namedEntity(loaded: LoadedScene | null, name: string): EntityHandle | u
 }
 
 function findFogParams(world: World): EntityHandle | undefined {
-  const state = createQueryState({ with: [PostProcessParams, Entity] });
-  let result: EntityHandle | undefined;
-  queryRun(state, world, (bundle) => {
-    for (let index = 0; index < bundle.Entity.self.length; index += 1) {
-      const entity = bundle.Entity.self[index] as EntityHandle;
-      const params = world.get(entity, PostProcessParams);
-      if (!params.ok || params.value.shader !== AETHERFALL_FOG_SHADER_ID) continue;
-      result = entity;
-      return;
-    }
-  });
-  return result;
+  const query = world.query({ with: [PostProcessParams] }).unwrap();
+  for (const row of query) {
+    const params = world.get(row.entity, PostProcessParams);
+    if (params.ok && params.value.shader === AETHERFALL_FOG_SHADER_ID) return row.entity;
+  }
+  return undefined;
 }
 
 /**

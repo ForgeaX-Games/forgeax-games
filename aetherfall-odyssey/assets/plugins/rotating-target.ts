@@ -1,8 +1,5 @@
 import {
-  createQueryState,
   defineComponent,
-  Entity,
-  queryRun,
   type EntityHandle,
   type World,
 } from '@forgeax/engine-ecs';
@@ -19,14 +16,9 @@ const Y_AXIS = [0, 1, 0] as const;
 
 /** Advance rotating target transforms during Play; reset restores their initial quaternions. */
 export function stepRotatingTargets(world: World, dt: number): void {
-  const state = createQueryState({ with: [Transform, Rotatable, Entity] });
+  const query = world.query({ with: [Transform, Rotatable] }).unwrap();
   const targets: EntityHandle[] = [];
-  queryRun(state, world, (bundle) => {
-    const entities = bundle.Entity.self;
-    for (let i = 0; i < entities.length; i++) {
-      targets.push((entities[i] ?? 0) as EntityHandle);
-    }
-  });
+  for (const row of query) targets.push(row.entity);
   for (const handle of targets) {
     const current = world.get(handle, Transform);
     const rotating = world.get(handle, Rotatable);

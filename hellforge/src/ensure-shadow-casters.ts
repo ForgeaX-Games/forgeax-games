@@ -13,12 +13,9 @@
 // newer engines use `program.module` + `renderState.tags`. Blind `p.program.module`
 // throws `Cannot read properties of undefined (reading 'module')` on c0.
 
-import {
-  MeshRenderer,
-} from '@forgeax/engine-render';
-import { createQueryState, queryRun, Entity } from '@forgeax/engine-ecs';
+import { MeshRenderer } from '@forgeax/engine-render';
 import { resolveAssetHandle } from '@forgeax/engine-assets-runtime';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
+import type { World } from '@forgeax/engine-ecs';
 import type { MaterialAsset, MaterialPass } from '@forgeax/engine-types';
 
 type PassLike = {
@@ -92,28 +89,23 @@ function inject(mat: MaterialAsset): void {
 export function ensureShadowCasters(world: World): number {
   const seen = new Set<number>();
   let patched = 0;
-  const state = createQueryState({ with: [MeshRenderer, Entity] as const });
-  queryRun(state, world, (bundle) => {
-    const ents = bundle.Entity.self;
-    for (let i = 0; i < ents.length; i++) {
-      const e = ents[i] as EntityHandle | undefined;
-      if (e === undefined) continue;
-      const mr = world.get(e, MeshRenderer);
-      if (!mr.ok) continue;
-      const handles = mr.value.materials;
-      if (!handles) continue;
-      for (const h of handles) {
-        if (h === undefined || h === 0) continue;
-        const key = h as unknown as number;
-        if (seen.has(key)) continue;
-        seen.add(key);
-        const res = resolveAssetHandle<MaterialAsset>(world, h as never);
-        if (!res.ok) continue;
-        if (!needsShadowCaster(res.value)) continue;
-        inject(res.value);
-        patched++;
-      }
+  const query = world.query({ with: [MeshRenderer] }).unwrap();
+  for (const row of query) {
+    const mr = world.get(row.entity, MeshRenderer);
+    if (!mr.ok) continue;
+    const handles = mr.value.materials;
+    if (!handles) continue;
+    for (const h of handles) {
+      if (h === undefined || h === 0) continue;
+      const key = h as unknown as number;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const res = resolveAssetHandle<MaterialAsset>(world, h as never);
+      if (!res.ok) continue;
+      if (!needsShadowCaster(res.value)) continue;
+      inject(res.value);
+      patched++;
     }
-  });
+  }
   return patched;
 }

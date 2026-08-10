@@ -1,8 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
-  createQueryState,
-  Entity,
-  queryRun,
   World,
   type Component,
   type EntityHandle,
@@ -19,11 +16,8 @@ function localId(value: number): LocalEntityId {
 }
 
 function countWith(world: World, component: Component): number {
-  const query = createQueryState({ with: [component, Entity] });
   let count = 0;
-  queryRun(query, world, (bundle) => {
-    count += bundle.Entity.self.length;
-  });
+  for (const _row of world.query({ with: [component] }).unwrap()) count += 1;
   return count;
 }
 

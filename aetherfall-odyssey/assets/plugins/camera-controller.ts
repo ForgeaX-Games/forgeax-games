@@ -1,11 +1,8 @@
 import { AudioListener } from "@forgeax/engine-audio";
 import type { BootstrapContext } from "@forgeax/engine-app";
 import {
-  Entity,
   Time,
   Update,
-  createQueryState,
-  queryRun,
   type EntityHandle,
   type World,
 } from "@forgeax/engine-ecs";
@@ -437,9 +434,6 @@ export async function createCameraController(
     )
     .unwrap();
 
-  const bodyPartQuery = createQueryState({
-    with: [PlayerBodyPart, Transform, Entity],
-  });
   if (loaded) {
     for (const node of loaded.nodes) {
       const name = (node.components.Name as { value?: string } | undefined)
@@ -460,22 +454,15 @@ export async function createCameraController(
     }
   }
   const setPlayerVisible = (visible: boolean): void => {
-    queryRun(bodyPartQuery, world, (bundle) => {
-      for (let index = 0; index < bundle.Entity.self.length; index += 1) {
-        const entity = bundle.Entity.self[index] as EntityHandle | undefined;
-        if (entity === undefined) continue;
-        const part = world.get(entity, PlayerBodyPart);
-        if (!part.ok) continue;
-        const scale: [number, number, number] = visible
-          ? [
-              part.value.baseScaleX,
-              part.value.baseScaleY,
-              part.value.baseScaleZ,
-            ]
-          : [0, 0, 0];
-        world.set(entity, Transform, { scale });
-      }
-    });
+    const query = world.query({ with: [PlayerBodyPart, Transform] }).unwrap();
+    for (const row of query) {
+      const part = world.get(row.entity, PlayerBodyPart);
+      if (!part.ok) continue;
+      const scale: [number, number, number] = visible
+        ? [part.value.baseScaleX, part.value.baseScaleY, part.value.baseScaleZ]
+        : [0, 0, 0];
+      world.set(row.entity, Transform, { scale });
+    }
   };
 
   const [hudLoad, settingsLoad, explorationHudLoad] = await Promise.all([

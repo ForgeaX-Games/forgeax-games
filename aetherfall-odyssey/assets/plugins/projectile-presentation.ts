@@ -2,9 +2,6 @@ import type { BootstrapContext } from "@forgeax/engine-app";
 import { HANDLE_SPHERE } from "@forgeax/engine-assets-runtime";
 import { createCapsuleGeometry } from "@forgeax/engine-geometry";
 import {
-  createQueryState,
-  Entity,
-  queryRun,
   Update,
   type EntityHandle,
   type World,
@@ -316,14 +313,10 @@ export async function createProjectilePresentation(
       args.world.set(entity, HitFlash, { remaining: 0 });
     }
   });
-  const projectileQuery = createQueryState({ with: [Projectile, Entity] });
   cleanupSteps.push(() => {
     const entities: EntityHandle[] = [];
-    queryRun(projectileQuery, args.world, (bundle) => {
-      for (const entity of bundle.Entity.self) {
-        if (entity !== undefined) entities.push(entity as EntityHandle);
-      }
-    });
+    const query = args.world.query({ with: [Projectile] }).unwrap();
+    for (const row of query) entities.push(row.entity);
     for (const entity of entities) args.world.despawn(entity).unwrap();
   });
   for (const systemName of [
