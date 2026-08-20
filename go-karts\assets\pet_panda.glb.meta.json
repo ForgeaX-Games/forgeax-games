@@ -1,0 +1,44 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "node_0"
+      ],
+      "unsupportedExtensions": [
+        "KHR_materials_specular"
+      ]
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": "1.0.0",
+  "source": "pet_panda.glb",
+  "subAssets": [
+    {
+      "guid": "019f889e-a38d-41ed-bf3c-2443c122806c",
+      "kind": "mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:0"
+    },
+    {
+      "guid": "019f889e-a38e-4841-91b4-399542049378",
+      "kind": "material",
+      "sourceIndex": 0,
+      "sourceKey": "material:0"
+    },
+    {
+      "guid": "019f889e-a38e-4841-91b4-39962352ce25",
+      "kind": "scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:0"
+    },
+    {
+      "guid": "019f889e-a38e-4841-91b4-3997d9c5ec45",
+      "kind": "texture",
+      "sourceIndex": 0,
+      "sourceKey": "texture:0"
+    }
+  ]
+}
