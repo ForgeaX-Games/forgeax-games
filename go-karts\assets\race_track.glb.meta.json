@@ -1,0 +1,2293 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "RacePart_0",
+        "RacePart_1",
+        "RacePart_2",
+        "RacePart_3",
+        "RacePart_4",
+        "RacePart_5",
+        "RacePart_6",
+        "RacePart_7",
+        "RacePart_8",
+        "RacePart_9",
+        "RacePart_10",
+        "RacePart_11",
+        "RacePart_12",
+        "RacePart_13",
+        "RacePart_14",
+        "RacePart_15",
+        "RacePart_16",
+        "RacePart_17",
+        "RacePart_18",
+        "RacePart_19",
+        "RacePart_20",
+        "RacePart_21",
+        "RacePart_22",
+        "RacePart_23",
+        "RacePart_24",
+        "RacePart_25",
+        "RacePart_26",
+        "RacePart_27",
+        "RacePart_28",
+        "RacePart_29",
+        "RacePart_30",
+        "RacePart_31",
+        "RacePart_32",
+        "RacePart_33",
+        "RacePart_34",
+        "RacePart_35",
+        "RacePart_36",
+        "RacePart_37",
+        "RacePart_38",
+        "RacePart_39",
+        "RacePart_40",
+        "RacePart_41",
+        "RacePart_42",
+        "RacePart_43",
+        "RacePart_44",
+        "RacePart_45",
+        "RacePart_46",
+        "RacePart_47",
+        "RacePart_48",
+        "RacePart_49",
+        "RacePart_50",
+        "RacePart_51",
+        "RacePart_52",
+        "RacePart_53",
+        "RacePart_54",
+        "RacePart_55",
+        "RacePart_56",
+        "RacePart_57",
+        "RacePart_58",
+        "RacePart_59",
+        "RacePart_60",
+        "RacePart_61",
+        "RacePart_62",
+        "RacePart_63",
+        "RacePart_64",
+        "RacePart_65",
+        "RacePart_66",
+        "RacePart_67",
+        "RacePart_68",
+        "RacePart_69",
+        "RacePart_70",
+        "RacePart_71",
+        "RacePart_72",
+        "RacePart_73",
+        "RacePart_74",
+        "RacePart_75",
+        "RacePart_76",
+        "RacePart_77",
+        "RacePart_78",
+        "RacePart_79",
+        "RacePart_80",
+        "RacePart_81",
+        "RacePart_82",
+        "RacePart_83",
+        "RacePart_84",
+        "RacePart_85",
+        "RacePart_86",
+        "RacePart_87",
+        "RacePart_88",
+        "RacePart_89",
+        "RacePart_90",
+        "RacePart_91",
+        "RacePart_92",
+        "RacePart_93",
+        "RacePart_94",
+        "RacePart_95",
+        "RacePart_96",
+        "RacePart_97",
+        "RacePart_98",
+        "RacePart_99",
+        "RacePart_100",
+        "RacePart_101",
+        "RacePart_102",
+        "RacePart_103",
+        "RacePart_104",
+        "RacePart_105",
+        "RacePart_106",
+        "RacePart_107",
+        "RacePart_108",
+        "RacePart_109",
+        "RacePart_110",
+        "RacePart_111",
+        "RacePart_112",
+        "RacePart_113",
+        "RacePart_114",
+        "RacePart_115",
+        "RacePart_116",
+        "RacePart_117",
+        "RacePart_118",
+        "RacePart_119",
+        "RacePart_120",
+        "RacePart_121",
+        "RacePart_122",
+        "RacePart_123",
+        "RacePart_124",
+        "RacePart_125",
+        "RacePart_126",
+        "RacePart_127",
+        "RacePart_128",
+        "RacePart_129",
+        "RacePart_130",
+        "RacePart_131",
+        "RacePart_132",
+        "RacePart_133",
+        "RacePart_134",
+        "RacePart_135",
+        "RacePart_136",
+        "RacePart_137",
+        "RacePart_138",
+        "RacePart_139",
+        "RacePart_140",
+        "RacePart_141",
+        "RacePart_142",
+        "RacePart_143",
+        "RacePart_144",
+        "RacePart_145",
+        "RacePart_146",
+        "RacePart_147",
+        "RacePart_148",
+        "RacePart_149",
+        "RacePart_150",
+        "RacePart_151",
+        "RacePart_152",
+        "RacePart_153",
+        "RacePart_154",
+        "RacePart_155",
+        "RacePart_156",
+        "RacePart_157"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": "1.0.0",
+  "source": "race_track.glb",
+  "subAssets": [
+    {
+      "guid": "019fa7e4-6158-4532-a90c-ca2686dea916",
+      "kind": "mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:0"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bd8097d9a8a",
+      "kind": "mesh",
+      "sourceIndex": 1,
+      "sourceKey": "mesh:1"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bd98be0d07c",
+      "kind": "mesh",
+      "sourceIndex": 2,
+      "sourceKey": "mesh:2"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bdad36fa978",
+      "kind": "mesh",
+      "sourceIndex": 3,
+      "sourceKey": "mesh:3"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bdb23732308",
+      "kind": "mesh",
+      "sourceIndex": 4,
+      "sourceKey": "mesh:4"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bdcb6439b49",
+      "kind": "mesh",
+      "sourceIndex": 5,
+      "sourceKey": "mesh:5"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bdd2ee5b74f",
+      "kind": "mesh",
+      "sourceIndex": 6,
+      "sourceKey": "mesh:6"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bdee037da7e",
+      "kind": "mesh",
+      "sourceIndex": 7,
+      "sourceKey": "mesh:7"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bdf43df0b3c",
+      "kind": "mesh",
+      "sourceIndex": 8,
+      "sourceKey": "mesh:8"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7be06c67d760",
+      "kind": "mesh",
+      "sourceIndex": 9,
+      "sourceKey": "mesh:9"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7be1d7984c57",
+      "kind": "mesh",
+      "sourceIndex": 10,
+      "sourceKey": "mesh:10"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7be2b2e919fc",
+      "kind": "mesh",
+      "sourceIndex": 11,
+      "sourceKey": "mesh:11"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7be3c2ba12f5",
+      "kind": "mesh",
+      "sourceIndex": 12,
+      "sourceKey": "mesh:12"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7be4e4b5ffa6",
+      "kind": "mesh",
+      "sourceIndex": 13,
+      "sourceKey": "mesh:13"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7be5ba85a937",
+      "kind": "mesh",
+      "sourceIndex": 14,
+      "sourceKey": "mesh:14"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7be68243a05b",
+      "kind": "mesh",
+      "sourceIndex": 15,
+      "sourceKey": "mesh:15"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7be7dc07d9e9",
+      "kind": "mesh",
+      "sourceIndex": 16,
+      "sourceKey": "mesh:16"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7be8f04b4c97",
+      "kind": "mesh",
+      "sourceIndex": 17,
+      "sourceKey": "mesh:17"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7be9269ac5b0",
+      "kind": "mesh",
+      "sourceIndex": 18,
+      "sourceKey": "mesh:18"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bea48fec69b",
+      "kind": "mesh",
+      "sourceIndex": 19,
+      "sourceKey": "mesh:19"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7beb1df0bd0d",
+      "kind": "mesh",
+      "sourceIndex": 20,
+      "sourceKey": "mesh:20"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bec82d52faf",
+      "kind": "mesh",
+      "sourceIndex": 21,
+      "sourceKey": "mesh:21"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7beda82d8787",
+      "kind": "mesh",
+      "sourceIndex": 22,
+      "sourceKey": "mesh:22"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bee66e1fc48",
+      "kind": "mesh",
+      "sourceIndex": 23,
+      "sourceKey": "mesh:23"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bef5affbead",
+      "kind": "mesh",
+      "sourceIndex": 24,
+      "sourceKey": "mesh:24"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bf059f8c470",
+      "kind": "mesh",
+      "sourceIndex": 25,
+      "sourceKey": "mesh:25"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bf1b3ac6a16",
+      "kind": "mesh",
+      "sourceIndex": 26,
+      "sourceKey": "mesh:26"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bf2221be17e",
+      "kind": "mesh",
+      "sourceIndex": 27,
+      "sourceKey": "mesh:27"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bf3a22ef8da",
+      "kind": "mesh",
+      "sourceIndex": 28,
+      "sourceKey": "mesh:28"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bf429b973ea",
+      "kind": "mesh",
+      "sourceIndex": 29,
+      "sourceKey": "mesh:29"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bf5c82de508",
+      "kind": "mesh",
+      "sourceIndex": 30,
+      "sourceKey": "mesh:30"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bf6db306eb3",
+      "kind": "mesh",
+      "sourceIndex": 31,
+      "sourceKey": "mesh:31"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bf7f3e0ab37",
+      "kind": "mesh",
+      "sourceIndex": 32,
+      "sourceKey": "mesh:32"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bf8682f1d06",
+      "kind": "mesh",
+      "sourceIndex": 33,
+      "sourceKey": "mesh:33"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bf92165a771",
+      "kind": "mesh",
+      "sourceIndex": 34,
+      "sourceKey": "mesh:34"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bfaaa392535",
+      "kind": "mesh",
+      "sourceIndex": 35,
+      "sourceKey": "mesh:35"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bfbc63f0a8b",
+      "kind": "mesh",
+      "sourceIndex": 36,
+      "sourceKey": "mesh:36"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bfca98f91bf",
+      "kind": "mesh",
+      "sourceIndex": 37,
+      "sourceKey": "mesh:37"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bfd700db621",
+      "kind": "mesh",
+      "sourceIndex": 38,
+      "sourceKey": "mesh:38"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bfe375cae79",
+      "kind": "mesh",
+      "sourceIndex": 39,
+      "sourceKey": "mesh:39"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7bffcd35f840",
+      "kind": "mesh",
+      "sourceIndex": 40,
+      "sourceKey": "mesh:40"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c0048514fdf",
+      "kind": "mesh",
+      "sourceIndex": 41,
+      "sourceKey": "mesh:41"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c017b65f62b",
+      "kind": "mesh",
+      "sourceIndex": 42,
+      "sourceKey": "mesh:42"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c029ccb1b49",
+      "kind": "mesh",
+      "sourceIndex": 43,
+      "sourceKey": "mesh:43"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c03b1e1307c",
+      "kind": "mesh",
+      "sourceIndex": 44,
+      "sourceKey": "mesh:44"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c045dc3eb1d",
+      "kind": "mesh",
+      "sourceIndex": 45,
+      "sourceKey": "mesh:45"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c05253bf877",
+      "kind": "mesh",
+      "sourceIndex": 46,
+      "sourceKey": "mesh:46"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c061ab9edd0",
+      "kind": "mesh",
+      "sourceIndex": 47,
+      "sourceKey": "mesh:47"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c07a126c67c",
+      "kind": "mesh",
+      "sourceIndex": 48,
+      "sourceKey": "mesh:48"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c085964a160",
+      "kind": "mesh",
+      "sourceIndex": 49,
+      "sourceKey": "mesh:49"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c09e0c71a78",
+      "kind": "mesh",
+      "sourceIndex": 50,
+      "sourceKey": "mesh:50"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c0aa1ef6971",
+      "kind": "mesh",
+      "sourceIndex": 51,
+      "sourceKey": "mesh:51"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c0bd9f32d4f",
+      "kind": "mesh",
+      "sourceIndex": 52,
+      "sourceKey": "mesh:52"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c0c2d04bf6b",
+      "kind": "mesh",
+      "sourceIndex": 53,
+      "sourceKey": "mesh:53"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c0daf820fb0",
+      "kind": "mesh",
+      "sourceIndex": 54,
+      "sourceKey": "mesh:54"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c0e184d2ec8",
+      "kind": "mesh",
+      "sourceIndex": 55,
+      "sourceKey": "mesh:55"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c0fe06ccd79",
+      "kind": "mesh",
+      "sourceIndex": 56,
+      "sourceKey": "mesh:56"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c10334eeac4",
+      "kind": "mesh",
+      "sourceIndex": 57,
+      "sourceKey": "mesh:57"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c11bc4ebb81",
+      "kind": "mesh",
+      "sourceIndex": 58,
+      "sourceKey": "mesh:58"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c12722218a8",
+      "kind": "mesh",
+      "sourceIndex": 59,
+      "sourceKey": "mesh:59"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c13ac29cf5e",
+      "kind": "mesh",
+      "sourceIndex": 60,
+      "sourceKey": "mesh:60"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c14d3146e71",
+      "kind": "mesh",
+      "sourceIndex": 61,
+      "sourceKey": "mesh:61"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c15990b2186",
+      "kind": "mesh",
+      "sourceIndex": 62,
+      "sourceKey": "mesh:62"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c16dac54895",
+      "kind": "mesh",
+      "sourceIndex": 63,
+      "sourceKey": "mesh:63"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c1783b4fe44",
+      "kind": "mesh",
+      "sourceIndex": 64,
+      "sourceKey": "mesh:64"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c1853253339",
+      "kind": "mesh",
+      "sourceIndex": 65,
+      "sourceKey": "mesh:65"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c19ef161ec6",
+      "kind": "mesh",
+      "sourceIndex": 66,
+      "sourceKey": "mesh:66"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c1a08293f72",
+      "kind": "mesh",
+      "sourceIndex": 67,
+      "sourceKey": "mesh:67"
+    },
+    {
+      "guid": "019fa7e4-6159-4a95-a30e-7c1be355b0c7",
+      "kind": "mesh",
+      "sourceIndex": 68,
+      "sourceKey": "mesh:68"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db61c8c6429f",
+      "kind": "mesh",
+      "sourceIndex": 69,
+      "sourceKey": "mesh:69"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db62cf43ea62",
+      "kind": "mesh",
+      "sourceIndex": 70,
+      "sourceKey": "mesh:70"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db63d4ad34c2",
+      "kind": "mesh",
+      "sourceIndex": 71,
+      "sourceKey": "mesh:71"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db642fb06565",
+      "kind": "mesh",
+      "sourceIndex": 72,
+      "sourceKey": "mesh:72"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db655f9b85a5",
+      "kind": "mesh",
+      "sourceIndex": 73,
+      "sourceKey": "mesh:73"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db6619a110a9",
+      "kind": "mesh",
+      "sourceIndex": 74,
+      "sourceKey": "mesh:74"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db6736370970",
+      "kind": "mesh",
+      "sourceIndex": 75,
+      "sourceKey": "mesh:75"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db68ed62cc4d",
+      "kind": "mesh",
+      "sourceIndex": 76,
+      "sourceKey": "mesh:76"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db696687db16",
+      "kind": "mesh",
+      "sourceIndex": 77,
+      "sourceKey": "mesh:77"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db6a02e00ecd",
+      "kind": "mesh",
+      "sourceIndex": 78,
+      "sourceKey": "mesh:78"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db6b5f2dc290",
+      "kind": "mesh",
+      "sourceIndex": 79,
+      "sourceKey": "mesh:79"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db6c14b0ccaa",
+      "kind": "mesh",
+      "sourceIndex": 80,
+      "sourceKey": "mesh:80"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db6dea4fc1c6",
+      "kind": "mesh",
+      "sourceIndex": 81,
+      "sourceKey": "mesh:81"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db6ef148fe1e",
+      "kind": "mesh",
+      "sourceIndex": 82,
+      "sourceKey": "mesh:82"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db6f67c2fcd2",
+      "kind": "mesh",
+      "sourceIndex": 83,
+      "sourceKey": "mesh:83"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db70023b4eb6",
+      "kind": "mesh",
+      "sourceIndex": 84,
+      "sourceKey": "mesh:84"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db715839944e",
+      "kind": "mesh",
+      "sourceIndex": 85,
+      "sourceKey": "mesh:85"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db72c37fc70a",
+      "kind": "mesh",
+      "sourceIndex": 86,
+      "sourceKey": "mesh:86"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db73763dbbf2",
+      "kind": "mesh",
+      "sourceIndex": 87,
+      "sourceKey": "mesh:87"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db74707e940d",
+      "kind": "mesh",
+      "sourceIndex": 88,
+      "sourceKey": "mesh:88"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db7599764484",
+      "kind": "mesh",
+      "sourceIndex": 89,
+      "sourceKey": "mesh:89"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db76d4e64bd6",
+      "kind": "mesh",
+      "sourceIndex": 90,
+      "sourceKey": "mesh:90"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db7724079d59",
+      "kind": "mesh",
+      "sourceIndex": 91,
+      "sourceKey": "mesh:91"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db78984f0eb6",
+      "kind": "mesh",
+      "sourceIndex": 92,
+      "sourceKey": "mesh:92"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db79021bcba7",
+      "kind": "mesh",
+      "sourceIndex": 93,
+      "sourceKey": "mesh:93"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db7a2e2bdd39",
+      "kind": "mesh",
+      "sourceIndex": 94,
+      "sourceKey": "mesh:94"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db7b0a077dd8",
+      "kind": "mesh",
+      "sourceIndex": 95,
+      "sourceKey": "mesh:95"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db7c1cf42710",
+      "kind": "mesh",
+      "sourceIndex": 96,
+      "sourceKey": "mesh:96"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db7dc29ecb6a",
+      "kind": "mesh",
+      "sourceIndex": 97,
+      "sourceKey": "mesh:97"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db7e06d3a857",
+      "kind": "mesh",
+      "sourceIndex": 98,
+      "sourceKey": "mesh:98"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db7f84ba262e",
+      "kind": "mesh",
+      "sourceIndex": 99,
+      "sourceKey": "mesh:99"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db806c327ced",
+      "kind": "mesh",
+      "sourceIndex": 100,
+      "sourceKey": "mesh:100"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db81414540f2",
+      "kind": "mesh",
+      "sourceIndex": 101,
+      "sourceKey": "mesh:101"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db82b808036b",
+      "kind": "mesh",
+      "sourceIndex": 102,
+      "sourceKey": "mesh:102"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db83d3b6899a",
+      "kind": "mesh",
+      "sourceIndex": 103,
+      "sourceKey": "mesh:103"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db84d40518b4",
+      "kind": "mesh",
+      "sourceIndex": 104,
+      "sourceKey": "mesh:104"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db8544a1c80d",
+      "kind": "mesh",
+      "sourceIndex": 105,
+      "sourceKey": "mesh:105"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db8663aa460d",
+      "kind": "mesh",
+      "sourceIndex": 106,
+      "sourceKey": "mesh:106"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db8714bd9a17",
+      "kind": "mesh",
+      "sourceIndex": 107,
+      "sourceKey": "mesh:107"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db886e6f0d52",
+      "kind": "mesh",
+      "sourceIndex": 108,
+      "sourceKey": "mesh:108"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db89740c3856",
+      "kind": "mesh",
+      "sourceIndex": 109,
+      "sourceKey": "mesh:109"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db8aa16744bf",
+      "kind": "mesh",
+      "sourceIndex": 110,
+      "sourceKey": "mesh:110"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db8b48dad6e0",
+      "kind": "mesh",
+      "sourceIndex": 111,
+      "sourceKey": "mesh:111"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db8cfa73cb0c",
+      "kind": "mesh",
+      "sourceIndex": 112,
+      "sourceKey": "mesh:112"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db8d9afefe7c",
+      "kind": "mesh",
+      "sourceIndex": 113,
+      "sourceKey": "mesh:113"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db8e700deb32",
+      "kind": "mesh",
+      "sourceIndex": 114,
+      "sourceKey": "mesh:114"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db8ffe6cae74",
+      "kind": "mesh",
+      "sourceIndex": 115,
+      "sourceKey": "mesh:115"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db90d3f86c40",
+      "kind": "mesh",
+      "sourceIndex": 116,
+      "sourceKey": "mesh:116"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db914f75a019",
+      "kind": "mesh",
+      "sourceIndex": 117,
+      "sourceKey": "mesh:117"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db924da15818",
+      "kind": "mesh",
+      "sourceIndex": 118,
+      "sourceKey": "mesh:118"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db9340b6a869",
+      "kind": "mesh",
+      "sourceIndex": 119,
+      "sourceKey": "mesh:119"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db94d4dd20b9",
+      "kind": "mesh",
+      "sourceIndex": 120,
+      "sourceKey": "mesh:120"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db958f86fecf",
+      "kind": "mesh",
+      "sourceIndex": 121,
+      "sourceKey": "mesh:121"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db96f987742f",
+      "kind": "mesh",
+      "sourceIndex": 122,
+      "sourceKey": "mesh:122"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db9786e63bb1",
+      "kind": "mesh",
+      "sourceIndex": 123,
+      "sourceKey": "mesh:123"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db98ead51200",
+      "kind": "mesh",
+      "sourceIndex": 124,
+      "sourceKey": "mesh:124"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db99e1dc4ca3",
+      "kind": "mesh",
+      "sourceIndex": 125,
+      "sourceKey": "mesh:125"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db9a6f8cacfd",
+      "kind": "mesh",
+      "sourceIndex": 126,
+      "sourceKey": "mesh:126"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db9bda9ff8ea",
+      "kind": "mesh",
+      "sourceIndex": 127,
+      "sourceKey": "mesh:127"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db9c6e403375",
+      "kind": "mesh",
+      "sourceIndex": 128,
+      "sourceKey": "mesh:128"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db9db502f86a",
+      "kind": "mesh",
+      "sourceIndex": 129,
+      "sourceKey": "mesh:129"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db9e54865514",
+      "kind": "mesh",
+      "sourceIndex": 130,
+      "sourceKey": "mesh:130"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-db9fbb5103f2",
+      "kind": "mesh",
+      "sourceIndex": 131,
+      "sourceKey": "mesh:131"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dba0606c4330",
+      "kind": "mesh",
+      "sourceIndex": 132,
+      "sourceKey": "mesh:132"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dba1a6261d6e",
+      "kind": "mesh",
+      "sourceIndex": 133,
+      "sourceKey": "mesh:133"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dba2441520bc",
+      "kind": "mesh",
+      "sourceIndex": 134,
+      "sourceKey": "mesh:134"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dba337b26a78",
+      "kind": "mesh",
+      "sourceIndex": 135,
+      "sourceKey": "mesh:135"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dba4e50d438c",
+      "kind": "mesh",
+      "sourceIndex": 136,
+      "sourceKey": "mesh:136"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dba5c44b7c2b",
+      "kind": "mesh",
+      "sourceIndex": 137,
+      "sourceKey": "mesh:137"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dba6d005c76d",
+      "kind": "mesh",
+      "sourceIndex": 138,
+      "sourceKey": "mesh:138"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dba7941e568a",
+      "kind": "mesh",
+      "sourceIndex": 139,
+      "sourceKey": "mesh:139"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dba887571c37",
+      "kind": "mesh",
+      "sourceIndex": 140,
+      "sourceKey": "mesh:140"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dba91ef1165a",
+      "kind": "mesh",
+      "sourceIndex": 141,
+      "sourceKey": "mesh:141"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbaa847a4791",
+      "kind": "mesh",
+      "sourceIndex": 142,
+      "sourceKey": "mesh:142"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbabc10a7b4a",
+      "kind": "mesh",
+      "sourceIndex": 143,
+      "sourceKey": "mesh:143"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbac2727eb00",
+      "kind": "mesh",
+      "sourceIndex": 144,
+      "sourceKey": "mesh:144"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbad49d3d148",
+      "kind": "mesh",
+      "sourceIndex": 145,
+      "sourceKey": "mesh:145"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbaed669d778",
+      "kind": "mesh",
+      "sourceIndex": 146,
+      "sourceKey": "mesh:146"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbaf49f35bfc",
+      "kind": "mesh",
+      "sourceIndex": 147,
+      "sourceKey": "mesh:147"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbb0ae478747",
+      "kind": "mesh",
+      "sourceIndex": 148,
+      "sourceKey": "mesh:148"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbb15225f6d9",
+      "kind": "mesh",
+      "sourceIndex": 149,
+      "sourceKey": "mesh:149"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbb223388fd2",
+      "kind": "mesh",
+      "sourceIndex": 150,
+      "sourceKey": "mesh:150"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbb349aa473d",
+      "kind": "mesh",
+      "sourceIndex": 151,
+      "sourceKey": "mesh:151"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbb4f806cb88",
+      "kind": "mesh",
+      "sourceIndex": 152,
+      "sourceKey": "mesh:152"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbb5148a95a8",
+      "kind": "mesh",
+      "sourceIndex": 153,
+      "sourceKey": "mesh:153"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbb6a7c357eb",
+      "kind": "mesh",
+      "sourceIndex": 154,
+      "sourceKey": "mesh:154"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbb78a5d4ae0",
+      "kind": "mesh",
+      "sourceIndex": 155,
+      "sourceKey": "mesh:155"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbb8a47eeb74",
+      "kind": "mesh",
+      "sourceIndex": 156,
+      "sourceKey": "mesh:156"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbb93cf4ef85",
+      "kind": "mesh",
+      "sourceIndex": 157,
+      "sourceKey": "mesh:157"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbbc1739492a",
+      "kind": "material",
+      "sourceIndex": 0,
+      "sourceKey": "material:0"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbbd7ed74050",
+      "kind": "material",
+      "sourceIndex": 1,
+      "sourceKey": "material:1"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbbec17bdc3a",
+      "kind": "material",
+      "sourceIndex": 2,
+      "sourceKey": "material:2"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbbf1fb0efe9",
+      "kind": "material",
+      "sourceIndex": 3,
+      "sourceKey": "material:3"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbc09a57564e",
+      "kind": "material",
+      "sourceIndex": 4,
+      "sourceKey": "material:4"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbc14f7a7ff1",
+      "kind": "material",
+      "sourceIndex": 5,
+      "sourceKey": "material:5"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbc2e9d68d67",
+      "kind": "material",
+      "sourceIndex": 6,
+      "sourceKey": "material:6"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbc34b0c239d",
+      "kind": "material",
+      "sourceIndex": 7,
+      "sourceKey": "material:7"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbc413d745b6",
+      "kind": "material",
+      "sourceIndex": 8,
+      "sourceKey": "material:8"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbc5923070a7",
+      "kind": "material",
+      "sourceIndex": 9,
+      "sourceKey": "material:9"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbc6166adcc0",
+      "kind": "material",
+      "sourceIndex": 10,
+      "sourceKey": "material:10"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbc7b133c2b2",
+      "kind": "material",
+      "sourceIndex": 11,
+      "sourceKey": "material:11"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbc8583b5f04",
+      "kind": "material",
+      "sourceIndex": 12,
+      "sourceKey": "material:12"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbc9f2d760a8",
+      "kind": "material",
+      "sourceIndex": 13,
+      "sourceKey": "material:13"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbca6a88f34c",
+      "kind": "material",
+      "sourceIndex": 14,
+      "sourceKey": "material:14"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbcbfa00b2c3",
+      "kind": "material",
+      "sourceIndex": 15,
+      "sourceKey": "material:15"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbcc7b81af66",
+      "kind": "material",
+      "sourceIndex": 16,
+      "sourceKey": "material:16"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbcdc9fcbd9c",
+      "kind": "material",
+      "sourceIndex": 17,
+      "sourceKey": "material:17"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbce778098c9",
+      "kind": "material",
+      "sourceIndex": 18,
+      "sourceKey": "material:18"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbcf0500125f",
+      "kind": "material",
+      "sourceIndex": 19,
+      "sourceKey": "material:19"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbd09509132b",
+      "kind": "material",
+      "sourceIndex": 20,
+      "sourceKey": "material:20"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbd1f5b07ac3",
+      "kind": "material",
+      "sourceIndex": 21,
+      "sourceKey": "material:21"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbd2867baaa5",
+      "kind": "material",
+      "sourceIndex": 22,
+      "sourceKey": "material:22"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbd3c2fce771",
+      "kind": "material",
+      "sourceIndex": 23,
+      "sourceKey": "material:23"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbd45216be0a",
+      "kind": "material",
+      "sourceIndex": 24,
+      "sourceKey": "material:24"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbd5d928b63b",
+      "kind": "material",
+      "sourceIndex": 25,
+      "sourceKey": "material:25"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbd6bcfaa79d",
+      "kind": "material",
+      "sourceIndex": 26,
+      "sourceKey": "material:26"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbd7b08590f4",
+      "kind": "material",
+      "sourceIndex": 27,
+      "sourceKey": "material:27"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbd8fc6dd700",
+      "kind": "material",
+      "sourceIndex": 28,
+      "sourceKey": "material:28"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbd90b06dea9",
+      "kind": "material",
+      "sourceIndex": 29,
+      "sourceKey": "material:29"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbda82436e00",
+      "kind": "material",
+      "sourceIndex": 30,
+      "sourceKey": "material:30"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbdb599de8f7",
+      "kind": "material",
+      "sourceIndex": 31,
+      "sourceKey": "material:31"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbdc7c9efe18",
+      "kind": "material",
+      "sourceIndex": 32,
+      "sourceKey": "material:32"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbdd41f1e08a",
+      "kind": "material",
+      "sourceIndex": 33,
+      "sourceKey": "material:33"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbde5a1b1942",
+      "kind": "material",
+      "sourceIndex": 34,
+      "sourceKey": "material:34"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbdf088df2a0",
+      "kind": "material",
+      "sourceIndex": 35,
+      "sourceKey": "material:35"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbe03e19b973",
+      "kind": "material",
+      "sourceIndex": 36,
+      "sourceKey": "material:36"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbe1e293cf1d",
+      "kind": "material",
+      "sourceIndex": 37,
+      "sourceKey": "material:37"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbe20a958ef5",
+      "kind": "material",
+      "sourceIndex": 38,
+      "sourceKey": "material:38"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbe37d3f8aa2",
+      "kind": "material",
+      "sourceIndex": 39,
+      "sourceKey": "material:39"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbe4678c2a08",
+      "kind": "material",
+      "sourceIndex": 40,
+      "sourceKey": "material:40"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbe59c6a7fa1",
+      "kind": "material",
+      "sourceIndex": 41,
+      "sourceKey": "material:41"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbe6c564cc22",
+      "kind": "material",
+      "sourceIndex": 42,
+      "sourceKey": "material:42"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbe7e4f411bb",
+      "kind": "material",
+      "sourceIndex": 43,
+      "sourceKey": "material:43"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbe80a605f48",
+      "kind": "material",
+      "sourceIndex": 44,
+      "sourceKey": "material:44"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbe9aa78350a",
+      "kind": "material",
+      "sourceIndex": 45,
+      "sourceKey": "material:45"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbeac22ff28c",
+      "kind": "material",
+      "sourceIndex": 46,
+      "sourceKey": "material:46"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbeb62d12a34",
+      "kind": "material",
+      "sourceIndex": 47,
+      "sourceKey": "material:47"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbec847a0279",
+      "kind": "material",
+      "sourceIndex": 48,
+      "sourceKey": "material:48"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbedef5c2f12",
+      "kind": "material",
+      "sourceIndex": 49,
+      "sourceKey": "material:49"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbee564a055b",
+      "kind": "material",
+      "sourceIndex": 50,
+      "sourceKey": "material:50"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbeff49b7a59",
+      "kind": "material",
+      "sourceIndex": 51,
+      "sourceKey": "material:51"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbf0769020a2",
+      "kind": "material",
+      "sourceIndex": 52,
+      "sourceKey": "material:52"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbf1c898430e",
+      "kind": "material",
+      "sourceIndex": 53,
+      "sourceKey": "material:53"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbf27706fff0",
+      "kind": "material",
+      "sourceIndex": 54,
+      "sourceKey": "material:54"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbf35b5c0e19",
+      "kind": "material",
+      "sourceIndex": 55,
+      "sourceKey": "material:55"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbf41377fca3",
+      "kind": "material",
+      "sourceIndex": 56,
+      "sourceKey": "material:56"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbf51e2db3ad",
+      "kind": "material",
+      "sourceIndex": 57,
+      "sourceKey": "material:57"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbf623c099a6",
+      "kind": "material",
+      "sourceIndex": 58,
+      "sourceKey": "material:58"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbf7ecc20a42",
+      "kind": "material",
+      "sourceIndex": 59,
+      "sourceKey": "material:59"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbf8c1e49a5d",
+      "kind": "material",
+      "sourceIndex": 60,
+      "sourceKey": "material:60"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbf9a347f8d4",
+      "kind": "material",
+      "sourceIndex": 61,
+      "sourceKey": "material:61"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbfa387f684d",
+      "kind": "material",
+      "sourceIndex": 62,
+      "sourceKey": "material:62"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbfb4916ae6f",
+      "kind": "material",
+      "sourceIndex": 63,
+      "sourceKey": "material:63"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbfc08e605f8",
+      "kind": "material",
+      "sourceIndex": 64,
+      "sourceKey": "material:64"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbfdefb21a73",
+      "kind": "material",
+      "sourceIndex": 65,
+      "sourceKey": "material:65"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbfea446d30f",
+      "kind": "material",
+      "sourceIndex": 66,
+      "sourceKey": "material:66"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dbff233ae345",
+      "kind": "material",
+      "sourceIndex": 67,
+      "sourceKey": "material:67"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc00a170ce47",
+      "kind": "material",
+      "sourceIndex": 68,
+      "sourceKey": "material:68"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc01db8103f2",
+      "kind": "material",
+      "sourceIndex": 69,
+      "sourceKey": "material:69"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc02957681fe",
+      "kind": "material",
+      "sourceIndex": 70,
+      "sourceKey": "material:70"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc030be75d54",
+      "kind": "material",
+      "sourceIndex": 71,
+      "sourceKey": "material:71"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc04e3453ec5",
+      "kind": "material",
+      "sourceIndex": 72,
+      "sourceKey": "material:72"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc054176097d",
+      "kind": "material",
+      "sourceIndex": 73,
+      "sourceKey": "material:73"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc06ac7e6700",
+      "kind": "material",
+      "sourceIndex": 74,
+      "sourceKey": "material:74"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc07fc6f176e",
+      "kind": "material",
+      "sourceIndex": 75,
+      "sourceKey": "material:75"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc08ecbcec92",
+      "kind": "material",
+      "sourceIndex": 76,
+      "sourceKey": "material:76"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc09643559a2",
+      "kind": "material",
+      "sourceIndex": 77,
+      "sourceKey": "material:77"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc0ab374256a",
+      "kind": "material",
+      "sourceIndex": 78,
+      "sourceKey": "material:78"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc0b232c3d5d",
+      "kind": "material",
+      "sourceIndex": 79,
+      "sourceKey": "material:79"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc0c5af64d17",
+      "kind": "material",
+      "sourceIndex": 80,
+      "sourceKey": "material:80"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc0dd4e83edc",
+      "kind": "material",
+      "sourceIndex": 81,
+      "sourceKey": "material:81"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc0ee0f5e998",
+      "kind": "material",
+      "sourceIndex": 82,
+      "sourceKey": "material:82"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc0f88e46155",
+      "kind": "material",
+      "sourceIndex": 83,
+      "sourceKey": "material:83"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc10144afc46",
+      "kind": "material",
+      "sourceIndex": 84,
+      "sourceKey": "material:84"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc11c91cf53e",
+      "kind": "material",
+      "sourceIndex": 85,
+      "sourceKey": "material:85"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc123e025911",
+      "kind": "material",
+      "sourceIndex": 86,
+      "sourceKey": "material:86"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc1362e8ae25",
+      "kind": "material",
+      "sourceIndex": 87,
+      "sourceKey": "material:87"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc14661c49fe",
+      "kind": "material",
+      "sourceIndex": 88,
+      "sourceKey": "material:88"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc15b1db6d47",
+      "kind": "material",
+      "sourceIndex": 89,
+      "sourceKey": "material:89"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc16d4cc8fe7",
+      "kind": "material",
+      "sourceIndex": 90,
+      "sourceKey": "material:90"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc1713acf3e7",
+      "kind": "material",
+      "sourceIndex": 91,
+      "sourceKey": "material:91"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc184fe91f44",
+      "kind": "material",
+      "sourceIndex": 92,
+      "sourceKey": "material:92"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc19ced87947",
+      "kind": "material",
+      "sourceIndex": 93,
+      "sourceKey": "material:93"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc1a161aa1a8",
+      "kind": "material",
+      "sourceIndex": 94,
+      "sourceKey": "material:94"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc1b27b0bd50",
+      "kind": "material",
+      "sourceIndex": 95,
+      "sourceKey": "material:95"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc1cfb38405c",
+      "kind": "material",
+      "sourceIndex": 96,
+      "sourceKey": "material:96"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc1d119e98cb",
+      "kind": "material",
+      "sourceIndex": 97,
+      "sourceKey": "material:97"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc1e56c9ae76",
+      "kind": "material",
+      "sourceIndex": 98,
+      "sourceKey": "material:98"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc1fc82394bf",
+      "kind": "material",
+      "sourceIndex": 99,
+      "sourceKey": "material:99"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc20fb05b020",
+      "kind": "material",
+      "sourceIndex": 100,
+      "sourceKey": "material:100"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc212484ddea",
+      "kind": "material",
+      "sourceIndex": 101,
+      "sourceKey": "material:101"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc22cb611514",
+      "kind": "material",
+      "sourceIndex": 102,
+      "sourceKey": "material:102"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc232d146114",
+      "kind": "material",
+      "sourceIndex": 103,
+      "sourceKey": "material:103"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc24756d404f",
+      "kind": "material",
+      "sourceIndex": 104,
+      "sourceKey": "material:104"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc2548d6a37a",
+      "kind": "material",
+      "sourceIndex": 105,
+      "sourceKey": "material:105"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc263c5e0c7a",
+      "kind": "material",
+      "sourceIndex": 106,
+      "sourceKey": "material:106"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc27fdcf1e2c",
+      "kind": "material",
+      "sourceIndex": 107,
+      "sourceKey": "material:107"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc282dfd41f7",
+      "kind": "material",
+      "sourceIndex": 108,
+      "sourceKey": "material:108"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc298ac1eb1d",
+      "kind": "material",
+      "sourceIndex": 109,
+      "sourceKey": "material:109"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc2afd93d215",
+      "kind": "material",
+      "sourceIndex": 110,
+      "sourceKey": "material:110"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc2b09298bb5",
+      "kind": "material",
+      "sourceIndex": 111,
+      "sourceKey": "material:111"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc2ceb3dc399",
+      "kind": "material",
+      "sourceIndex": 112,
+      "sourceKey": "material:112"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc2d8dcd515f",
+      "kind": "material",
+      "sourceIndex": 113,
+      "sourceKey": "material:113"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc2e8a2abeb4",
+      "kind": "material",
+      "sourceIndex": 114,
+      "sourceKey": "material:114"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc2faf49bc77",
+      "kind": "material",
+      "sourceIndex": 115,
+      "sourceKey": "material:115"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc30009d5c1a",
+      "kind": "material",
+      "sourceIndex": 116,
+      "sourceKey": "material:116"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc31c2fdf83d",
+      "kind": "material",
+      "sourceIndex": 117,
+      "sourceKey": "material:117"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc3235b81e9e",
+      "kind": "material",
+      "sourceIndex": 118,
+      "sourceKey": "material:118"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc336a0c05d2",
+      "kind": "material",
+      "sourceIndex": 119,
+      "sourceKey": "material:119"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc34fac409bc",
+      "kind": "material",
+      "sourceIndex": 120,
+      "sourceKey": "material:120"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc357315a121",
+      "kind": "material",
+      "sourceIndex": 121,
+      "sourceKey": "material:121"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc36b116f3bf",
+      "kind": "material",
+      "sourceIndex": 122,
+      "sourceKey": "material:122"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc373b3e57e9",
+      "kind": "material",
+      "sourceIndex": 123,
+      "sourceKey": "material:123"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc380c44d8d9",
+      "kind": "material",
+      "sourceIndex": 124,
+      "sourceKey": "material:124"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc392f36f9eb",
+      "kind": "material",
+      "sourceIndex": 125,
+      "sourceKey": "material:125"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc3aa486b48f",
+      "kind": "material",
+      "sourceIndex": 126,
+      "sourceKey": "material:126"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc3b2af9f3c9",
+      "kind": "material",
+      "sourceIndex": 127,
+      "sourceKey": "material:127"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc3cb594dfe7",
+      "kind": "material",
+      "sourceIndex": 128,
+      "sourceKey": "material:128"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc3de9203180",
+      "kind": "material",
+      "sourceIndex": 129,
+      "sourceKey": "material:129"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc3edf4d36e9",
+      "kind": "material",
+      "sourceIndex": 130,
+      "sourceKey": "material:130"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc3f7d749176",
+      "kind": "material",
+      "sourceIndex": 131,
+      "sourceKey": "material:131"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc40dd454a7c",
+      "kind": "material",
+      "sourceIndex": 132,
+      "sourceKey": "material:132"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc4130b4345c",
+      "kind": "material",
+      "sourceIndex": 133,
+      "sourceKey": "material:133"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc42ca0bf3e2",
+      "kind": "material",
+      "sourceIndex": 134,
+      "sourceKey": "material:134"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc43dc4f9a78",
+      "kind": "material",
+      "sourceIndex": 135,
+      "sourceKey": "material:135"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc4432a21cc0",
+      "kind": "material",
+      "sourceIndex": 136,
+      "sourceKey": "material:136"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc458c474415",
+      "kind": "material",
+      "sourceIndex": 137,
+      "sourceKey": "material:137"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc4640788a15",
+      "kind": "material",
+      "sourceIndex": 138,
+      "sourceKey": "material:138"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc474dce2df2",
+      "kind": "material",
+      "sourceIndex": 139,
+      "sourceKey": "material:139"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc48309ca2b2",
+      "kind": "material",
+      "sourceIndex": 140,
+      "sourceKey": "material:140"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc49b3fba933",
+      "kind": "material",
+      "sourceIndex": 141,
+      "sourceKey": "material:141"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc4a5133eb7d",
+      "kind": "material",
+      "sourceIndex": 142,
+      "sourceKey": "material:142"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc4b4ca9cc11",
+      "kind": "material",
+      "sourceIndex": 143,
+      "sourceKey": "material:143"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc4c0b86c4a6",
+      "kind": "material",
+      "sourceIndex": 144,
+      "sourceKey": "material:144"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc4d1170abb2",
+      "kind": "material",
+      "sourceIndex": 145,
+      "sourceKey": "material:145"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc4e7965922c",
+      "kind": "material",
+      "sourceIndex": 146,
+      "sourceKey": "material:146"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc4fd7d5bddf",
+      "kind": "material",
+      "sourceIndex": 147,
+      "sourceKey": "material:147"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc504fcf63a7",
+      "kind": "material",
+      "sourceIndex": 148,
+      "sourceKey": "material:148"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc51d58b56e0",
+      "kind": "material",
+      "sourceIndex": 149,
+      "sourceKey": "material:149"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc529299269b",
+      "kind": "material",
+      "sourceIndex": 150,
+      "sourceKey": "material:150"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc53ea607a34",
+      "kind": "material",
+      "sourceIndex": 151,
+      "sourceKey": "material:151"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc5417d915f7",
+      "kind": "material",
+      "sourceIndex": 152,
+      "sourceKey": "material:152"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc55759c15cf",
+      "kind": "material",
+      "sourceIndex": 153,
+      "sourceKey": "material:153"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc562ab15b1d",
+      "kind": "material",
+      "sourceIndex": 154,
+      "sourceKey": "material:154"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc5730d6c31b",
+      "kind": "material",
+      "sourceIndex": 155,
+      "sourceKey": "material:155"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc581a3eed77",
+      "kind": "material",
+      "sourceIndex": 156,
+      "sourceKey": "material:156"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc599481a134",
+      "kind": "material",
+      "sourceIndex": 157,
+      "sourceKey": "material:157"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc5cc0366e9d",
+      "kind": "scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:0"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc5dbc932507",
+      "kind": "texture",
+      "sourceIndex": 0,
+      "sourceKey": "texture:0"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc5ee44be8ec",
+      "kind": "texture",
+      "sourceIndex": 1,
+      "sourceKey": "texture:1"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc5f2f8be904",
+      "kind": "texture",
+      "sourceIndex": 2,
+      "sourceKey": "texture:2"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc6078d6e1a4",
+      "kind": "texture",
+      "sourceIndex": 3,
+      "sourceKey": "texture:3"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc61e2f74510",
+      "kind": "texture",
+      "sourceIndex": 4,
+      "sourceKey": "texture:4"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc62de23c3ab",
+      "kind": "texture",
+      "sourceIndex": 5,
+      "sourceKey": "texture:5"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc63680595d8",
+      "kind": "texture",
+      "sourceIndex": 6,
+      "sourceKey": "texture:6"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc64168c8f32",
+      "kind": "texture",
+      "sourceIndex": 7,
+      "sourceKey": "texture:7"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc653cb2207b",
+      "kind": "texture",
+      "sourceIndex": 8,
+      "sourceKey": "texture:8"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc661fefb9f1",
+      "kind": "texture",
+      "sourceIndex": 9,
+      "sourceKey": "texture:9"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc676a4ef166",
+      "kind": "texture",
+      "sourceIndex": 10,
+      "sourceKey": "texture:10"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc6875ede99c",
+      "kind": "texture",
+      "sourceIndex": 11,
+      "sourceKey": "texture:11"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc692c6f459c",
+      "kind": "texture",
+      "sourceIndex": 12,
+      "sourceKey": "texture:12"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc6ac6ea91a5",
+      "kind": "texture",
+      "sourceIndex": 13,
+      "sourceKey": "texture:13"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc6b120cc3e6",
+      "kind": "texture",
+      "sourceIndex": 14,
+      "sourceKey": "texture:14"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc6cdeab73d3",
+      "kind": "texture",
+      "sourceIndex": 15,
+      "sourceKey": "texture:15"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc6da453726c",
+      "kind": "texture",
+      "sourceIndex": 16,
+      "sourceKey": "texture:16"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc6e3ace1858",
+      "kind": "texture",
+      "sourceIndex": 17,
+      "sourceKey": "texture:17"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc6f4a98a8e0",
+      "kind": "texture",
+      "sourceIndex": 18,
+      "sourceKey": "texture:18"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc70e8aefa93",
+      "kind": "texture",
+      "sourceIndex": 19,
+      "sourceKey": "texture:19"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc7130720cac",
+      "kind": "texture",
+      "sourceIndex": 20,
+      "sourceKey": "texture:20"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc72ba82b27d",
+      "kind": "texture",
+      "sourceIndex": 21,
+      "sourceKey": "texture:21"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc7381c39187",
+      "kind": "texture",
+      "sourceIndex": 22,
+      "sourceKey": "texture:22"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc741defdb69",
+      "kind": "texture",
+      "sourceIndex": 23,
+      "sourceKey": "texture:23"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc753d2151de",
+      "kind": "texture",
+      "sourceIndex": 24,
+      "sourceKey": "texture:24"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc765f88903f",
+      "kind": "texture",
+      "sourceIndex": 25,
+      "sourceKey": "texture:25"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc773bdfb3dc",
+      "kind": "texture",
+      "sourceIndex": 26,
+      "sourceKey": "texture:26"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc788d3ab502",
+      "kind": "texture",
+      "sourceIndex": 27,
+      "sourceKey": "texture:27"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc79e61ea8e9",
+      "kind": "texture",
+      "sourceIndex": 28,
+      "sourceKey": "texture:28"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc7a4f317246",
+      "kind": "texture",
+      "sourceIndex": 29,
+      "sourceKey": "texture:29"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc7b78973fc3",
+      "kind": "texture",
+      "sourceIndex": 30,
+      "sourceKey": "texture:30"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc7c40751ac8",
+      "kind": "texture",
+      "sourceIndex": 31,
+      "sourceKey": "texture:31"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc7d6a640868",
+      "kind": "texture",
+      "sourceIndex": 32,
+      "sourceKey": "texture:32"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc7e69aad64f",
+      "kind": "texture",
+      "sourceIndex": 33,
+      "sourceKey": "texture:33"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc7fe47b9959",
+      "kind": "texture",
+      "sourceIndex": 34,
+      "sourceKey": "texture:34"
+    },
+    {
+      "guid": "019fa7e4-615a-484f-a97c-dc806e082b89",
+      "kind": "texture",
+      "sourceIndex": 35,
+      "sourceKey": "texture:35"
+    }
+  ]
+}
