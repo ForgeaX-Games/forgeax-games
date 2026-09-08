@@ -1,4 +1,4 @@
-#define_import_path hellforge::frost_fang
+#define_import_path hellforge_source::frost_fang
 
 #import forgeax_view::common::{view, meshes}
 

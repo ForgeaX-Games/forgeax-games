@@ -14,7 +14,6 @@
 // throws `Cannot read properties of undefined (reading 'module')` on c0.
 
 import { MeshRenderer } from '@forgeax/engine-render';
-import { resolveAssetHandle } from '@forgeax/engine-assets-runtime';
 import type { World } from '@forgeax/engine-ecs';
 import type { MaterialAsset, MaterialPass } from '@forgeax/engine-types';
 
@@ -100,7 +99,7 @@ export function ensureShadowCasters(world: World): number {
       const key = h as unknown as number;
       if (seen.has(key)) continue;
       seen.add(key);
-      const res = resolveAssetHandle<MaterialAsset>(world, h as never);
+      const res = world.sharedRefs.resolve<string, MaterialAsset>(h as never);
       if (!res.ok) continue;
       if (!needsShadowCaster(res.value)) continue;
       inject(res.value);

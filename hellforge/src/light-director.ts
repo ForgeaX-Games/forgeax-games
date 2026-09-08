@@ -51,7 +51,7 @@ export const WILD_AMBIENT = {
 } as const;
 
 /**
- * Area exposure scale on F10 base (`RENDER_SETTINGS_DEFAULTS.exposure` = 0.42).
+ * Area exposure scale on F10 base (`RENDER_SETTINGS_DEFAULTS.exposure` = 0.50).
  * Den stays 1.0 (no re-darken); wild lifts outdoor midtones; camp slight dusk lift.
  */
 export const AREA_EXPOSURE_MUL: Record<AreaKind, number> = {

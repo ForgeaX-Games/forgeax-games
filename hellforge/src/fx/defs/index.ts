@@ -15,6 +15,7 @@ import { frostDef } from './frost';
 import { frostNovaDef } from './frost-nova';
 import { infernoNovaDef } from './inferno-nova';
 import { magmaDef } from './magma';
+import { movementDef } from './movement';
 
 /** Combat EffectDef registry (PR2b T3). Call sites play beats via `combatBeat` / full def. */
 export const COMBAT_EFFECT_DEFS = {
@@ -63,6 +64,28 @@ export function combatBeat(
   };
 }
 
+/**
+ * Slice named emitters from the movement def (N6). Kept off COMBAT_EFFECT_DEFS
+ * — that registry's fourteen combat ids are frozen.
+ */
+export function movementBeat(emitterIds: readonly string[]): EffectDef {
+  const want = new Set(emitterIds);
+  const emitters = movementDef.emitters.filter((e) => want.has(e.id));
+  let particles = 0;
+  for (const e of emitters) particles += e.count;
+  return {
+    emitters,
+    behaviors: [],
+    trails: [],
+    subEmitters: [],
+    budget: {
+      maxEmitters: Math.max(emitters.length, 1),
+      maxParticles: Math.max(particles, 1),
+      maxTrails: 0,
+    },
+  };
+}
+
 export {
   arcDef,
   blinkDef,
@@ -78,4 +101,13 @@ export {
   hitFrostDef,
   infernoNovaDef,
   magmaDef,
+  movementDef,
 };
+
+export {
+  CAMPFIRE_SKIP_RADIUS,
+  MOVE_DUST_HZ,
+  MOVE_DUST_MIN_SPEED,
+  MOVE_DUST_PERIOD_S,
+  shouldEmitMoveDust,
+} from './movement';

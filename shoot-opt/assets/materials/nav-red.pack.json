@@ -7,7 +7,6 @@
       "kind": "material",
       "payload": {
         "kind": "material",
-        "parent": 0,
         "values": {
           "baseColor": [
             1,
@@ -22,7 +21,21 @@
             0
           ],
           "emissiveIntensity": 10
-        }
+        },
+        "passes": [
+          {
+            "name": "Forward",
+            "program": {
+              "module": "forgeax::default-standard-pbr"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 2000
+            }
+          }
+        ]
       },
       "refs": [
         "dd9e6e76-c926-43be-b575-bdd26661a939"

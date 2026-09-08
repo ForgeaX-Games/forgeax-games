@@ -10,37 +10,44 @@
     {
       "guid": "e6e053b8-3b74-f18d-4806-7f1899048d5f",
       "sourceIndex": 0,
-      "kind": "mesh"
+      "kind": "mesh",
+      "sourceKey": "mesh"
     },
     {
       "guid": "d18ab113-7a1f-28ce-d719-0ec50aa524cc",
       "sourceIndex": 0,
-      "kind": "material"
+      "kind": "material",
+      "sourceKey": "material"
     },
     {
       "guid": "96eccb55-c56c-d5eb-c1bc-d27101aaf24f",
       "sourceIndex": 0,
-      "kind": "scene"
+      "kind": "scene",
+      "sourceKey": "scene"
     },
     {
       "guid": "ab146a1a-1cc7-c2d3-2783-56b05c75d515",
       "sourceIndex": 0,
-      "kind": "texture"
+      "kind": "texture",
+      "sourceKey": "texture#1"
     },
     {
       "guid": "d877a765-4cc1-9388-0408-03dbf5762b66",
       "sourceIndex": 1,
-      "kind": "texture"
+      "kind": "texture",
+      "sourceKey": "texture#2"
     },
     {
       "guid": "3e638295-b7a7-dbae-0260-cd7911953ba6",
       "sourceIndex": 2,
-      "kind": "texture"
+      "kind": "texture",
+      "sourceKey": "texture#3"
     },
     {
       "guid": "1c29be24-dcc2-8e52-6a35-da8e638a4f28",
       "sourceIndex": 3,
-      "kind": "texture"
+      "kind": "texture",
+      "sourceKey": "texture#4"
     }
   ]
 }

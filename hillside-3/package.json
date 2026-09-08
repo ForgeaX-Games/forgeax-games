@@ -1,0 +1,8 @@
+{
+  "name": "@forgeax/game-hillside-3",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "Procedural pastoral villa scene: first-person exploration, all geometry & textures generated in code."
+}

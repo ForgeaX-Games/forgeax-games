@@ -2,7 +2,12 @@ import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import { MeshFilter, MeshRenderer } from '@forgeax/engine-render';
 import type { AssetRegistry } from '@forgeax/engine-assets-runtime';
-import { Transform } from '@forgeax/engine-scene';
+import {
+  projectSceneAsset,
+  Transform,
+  worldDespawnScene,
+  worldInstantiateScene,
+} from '@forgeax/engine-scene';
 import type { SceneAsset } from '@forgeax/engine-types';
 import type { GarageSelection, KartKind, OutfitKind, PetKind } from './garage';
 import { setProceduralOutfitPieces } from './garage-appearance';
@@ -184,7 +189,7 @@ async function loadSceneAsset(
   try {
     const guid = AssetGuid.parse(guidText);
     if (!guid.ok) return null;
-    const loaded = await assets.loadByGuid<SceneAsset>(guid.value);
+    const loaded = await assets.load(AssetGuid.format(guid.value), 'scene');
     if (!loaded.ok) {
       console.error('[go-karts] original garage asset load failed:', guidText, loaded.error);
       return null;
@@ -234,9 +239,23 @@ export function createOriginalGarageModels(options: {
           }
           return null;
         }
-        const shared = world.allocSharedRef('SceneAsset', asset);
-        const instance = assets.instantiate<SceneAsset>(shared, world);
-        if (instance.ok) return instance.value;
+        const projected = await projectSceneAsset(world, asset, (guid, kind) =>
+          assets.load(guid, kind),
+        );
+        if (!projected.ok) {
+          console.error(
+            '[go-karts] original garage asset project failed:',
+            guidText,
+            projected.error,
+            `attempt=${attempt}`,
+          );
+          sceneAssetCache.delete(guidText);
+          if (attempt < 3) await delay(200 * attempt);
+          continue;
+        }
+        const shared = world.allocSharedRef('SceneAsset', projected.value);
+        const instance = worldInstantiateScene(world, shared);
+        if (instance.ok) return instance.value.root;
         console.error(
           '[go-karts] original garage asset instantiate failed:',
           guidText,
@@ -584,10 +603,10 @@ export function createOriginalGarageModels(options: {
     const token = ++kartLoad;
     const next = await spawnScene(KART_SCENES[selection.kart]);
     if (token !== kartLoad) {
-      if (next !== null) world.despawnScene(next);
+      if (next !== null) worldDespawnScene(world, next);
       return;
     }
-    if (kartRoot !== null) world.despawnScene(kartRoot);
+    if (kartRoot !== null) worldDespawnScene(world, kartRoot);
     kartRoot = next;
     // Prefer original GLB; fall back to authored kart_base mesh if spawn failed.
     setAuthoredKartMeshVisible(next === null);
@@ -600,10 +619,10 @@ export function createOriginalGarageModels(options: {
     const guid = ACCESSORY_SCENES[outfit];
     const next = guid ? await spawnScene(guid) : null;
     if (token !== accessoryLoad) {
-      if (next !== null) world.despawnScene(next);
+      if (next !== null) worldDespawnScene(world, next);
       return;
     }
-    if (accessoryRoot !== null) world.despawnScene(accessoryRoot);
+    if (accessoryRoot !== null) worldDespawnScene(world, accessoryRoot);
     accessoryRoot = next;
     // Prefer original GLB mesh/style; only fall back to pack cubes if import failed.
     if (next === null && PROCEDURAL_FALLBACK.has(outfit)) {
@@ -618,10 +637,10 @@ export function createOriginalGarageModels(options: {
     const token = ++dogLoad;
     const next = selection.pet === 'dog' ? await spawnScene(DOG_SCENE) : null;
     if (token !== dogLoad) {
-      if (next !== null) world.despawnScene(next);
+      if (next !== null) worldDespawnScene(world, next);
       return;
     }
-    if (petRoot !== null) world.despawnScene(petRoot);
+    if (petRoot !== null) worldDespawnScene(world, petRoot);
     petRoot = next;
     writePose();
   };
@@ -673,11 +692,11 @@ export function createOriginalGarageModels(options: {
       kartLoad++;
       accessoryLoad++;
       dogLoad++;
-      if (kartRoot !== null) world.despawnScene(kartRoot);
-      if (accessoryRoot !== null) world.despawnScene(accessoryRoot);
-      if (petRoot !== null) world.despawnScene(petRoot);
-      for (const root of kartThumbs.values()) world.despawnScene(root);
-      for (const root of accessoryThumbs.values()) world.despawnScene(root);
+      if (kartRoot !== null) worldDespawnScene(world, kartRoot);
+      if (accessoryRoot !== null) worldDespawnScene(world, accessoryRoot);
+      if (petRoot !== null) worldDespawnScene(world, petRoot);
+      for (const root of kartThumbs.values()) worldDespawnScene(world, root);
+      for (const root of accessoryThumbs.values()) worldDespawnScene(world, root);
       setAuthoredKartMeshVisible(true);
       if (authoredPet !== undefined) {
         const transform = world.get(authoredPet, Transform);

@@ -13,9 +13,9 @@ import {
 import {
   type MaterialAsset,
 } from '@forgeax/engine-types';
-import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle } from '@forgeax/engine-types';
+import { primitiveMesh } from './primitive-mesh';
 
 import type { Monster } from './monsters';
 import { MONSTERS } from './monsters';
@@ -115,7 +115,7 @@ export class LootSystem {
     const baseY = 0.4;
     const s = kind === 'xp' ? 0.14 : kind === 'gold' ? 0.16 : 0.18;
     const sy = s * (kind === 'xp' ? 1.6 : 1);
-    const shape = kind === 'xp' ? HANDLE_CUBE : HANDLE_SPHERE;
+    const shape = primitiveMesh(this.world, kind === 'xp' ? 'cube' : 'sphere');
     const res = this.world.spawn(
       { component: Transform, data: { pos: [x, baseY, z], scale: [s, sy, s] } },
       { component: MeshFilter, data: { assetHandle: shape } },
@@ -146,7 +146,7 @@ export class LootSystem {
     const baseY = sy / 2 + 0.04;
     const res = this.world.spawn(
       { component: Transform, data: { pos: [x, baseY, z], scale: [sx, sy, sz] } },
-      { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
+      { component: MeshFilter, data: { assetHandle: primitiveMesh(this.world, 'cube') } },
       { component: MeshRenderer, data: { materials: [this.beamMats[item.rarity]] } },
     );
     if (!res.ok) return;

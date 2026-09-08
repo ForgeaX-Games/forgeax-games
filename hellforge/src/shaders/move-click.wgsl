@@ -1,4 +1,4 @@
-#define_import_path hellforge::move_click
+#define_import_path hellforge_source::move_click
 
 #import forgeax_view::common::{view, meshes}
 

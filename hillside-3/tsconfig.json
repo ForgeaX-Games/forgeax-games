@@ -1,0 +1,6 @@
+{
+  "extends": "../../engine-sdk/tsconfig.json",
+  "include": [
+    "**/*.ts"
+  ]
+}

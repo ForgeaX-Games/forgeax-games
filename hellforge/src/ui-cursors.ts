@@ -35,7 +35,7 @@ export function installUiCursors(): UiCursorHandle {
     // One gauntlet everywhere (D2 convention — DOM buttons keep it too);
     // only text fields get the OS caret.
     s.textContent =
-      `body,canvas,#game-ui-root,#game-ui-root *{cursor:${cssUrl(current)};}` +
+      `html,body,#app,canvas,#game-ui-root,#game-ui-root *{cursor:${cssUrl(current)};}` +
       `input,textarea,[contenteditable="true"]{cursor:text !important;}`;
   };
   render();

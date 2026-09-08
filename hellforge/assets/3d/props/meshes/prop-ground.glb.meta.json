@@ -11,24 +11,28 @@
       "guid": "1ae7ba09-4d91-4ad1-5c73-7508c15438c6",
       "sourceIndex": 0,
       "kind": "mesh",
-      "name": "ground"
+      "name": "ground",
+      "sourceKey": "mesh"
     },
     {
       "guid": "b629f092-6600-b1d6-c991-b155248d666d",
       "sourceIndex": 0,
       "kind": "material",
-      "name": "ground"
+      "name": "ground",
+      "sourceKey": "material"
     },
     {
       "guid": "ba6ee744-ef06-172b-b4e1-d9f9ca2270d5",
       "sourceIndex": 0,
       "kind": "scene",
-      "name": "scene"
+      "name": "scene",
+      "sourceKey": "scene"
     },
     {
       "guid": "831987bd-06f3-3fd3-42b0-7c174c6b37e0",
       "sourceIndex": 0,
-      "kind": "texture"
+      "kind": "texture",
+      "sourceKey": "texture"
     }
   ]
 }

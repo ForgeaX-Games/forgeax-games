@@ -7,7 +7,7 @@
 
 | 场景 | SSOT | 怎么改 | 怎么生效 |
 |---|---|---|---|
-| 营地 `rogue-encampment` | pack + **tiles.json** + overrides | 墙/屋顶/围栏改 `tiles.json` → `tile-apply` → `sync-overrides`;散件改 overrides → `apply` | 营地是 `defaultScene`,刷新游戏即见 |
+| 营地 `rogue-encampment` | pack + **tiles.json** + overrides | 墙/屋顶/围栏改 `tiles.json` → `tile-apply` → `sync-overrides`;散件改 overrides → `apply` | Play 在点击门后加载营地 GUID；✎ Edit 从 Assets 打开 pack（无 `defaultScene`，新鲜配置视口为空属 Editor handoff，勿加回 `defaultScene`） |
 | 地牢 `slagdeep-hollow` | `src/dungeon-layout.ts` + bake 策略 | 改布局/策略 → `bake-dungeon.ts` | re-bake 后刷新游戏即见 |
 
 碰撞/可行走与视觉变换**解耦**:地牢走 `src/dungeon.ts` 的 layout 网格,营地走

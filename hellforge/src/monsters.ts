@@ -30,10 +30,10 @@ import {
 import {
   type MaterialAsset,
 } from '@forgeax/engine-types';
-import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import { ENTITY_NULL_RAW, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import type { AnimationClip, Handle, SceneAsset } from '@forgeax/engine-types';
+import { primitiveMesh } from './primitive-mesh';
 import { normalizeClipRoot } from './anim-root';
 import { armSkinnedAnimationPlayer, collectRootJointTargetIds } from './bind-skinned-animation';
 import type { BodyVfx, FlightStyle, FxSystem, NovaTelegraphVfx } from './fx';
@@ -249,6 +249,10 @@ export interface Monster {
   /** Scorch DoT — one stack; refresh replaces amount (Spec §7.2). */
   burnUntil: number;
   burnDps: number;
+  /** Presentation-only burn float-text: damage since last onBurnTick fire. */
+  burnTextAccum: number;
+  /** Wall-clock s when the next onBurnTick should fire. */
+  burnTextAt: number;
   enraged: boolean;
   bobPhase: number;
   matState: 'normal' | 'flash' | 'slow';
@@ -341,6 +345,16 @@ const GLB_VISUALS: Record<MonsterKind, { scene: string; clips: GlbClipGuids; ani
   },
 };
 
+/** Payload GUIDs only — no instantiate / spawn. Used by title-idle preload. */
+export function visualGuidsForKinds(kinds: readonly MonsterKind[]): string[] {
+  const out: string[] = [];
+  for (const kind of kinds) {
+    const def = GLB_VISUALS[kind];
+    out.push(def.scene, def.clips.attack, def.clips.death, def.clips.hit, def.clips.idle, def.clips.move);
+  }
+  return out;
+}
+
 type ClipHandle = Handle<'AnimationClip', 'shared'>;
 interface GlbBank {
   scene: Handle<'SceneAsset', 'shared'>;
@@ -372,6 +386,14 @@ export interface MonsterEvents {
   onAggro?(m: Monster): void;
   /** A melee/ranged strike was INITIATED (wind-up start, not impact). */
   onAttack?(m: Monster): void;
+  /**
+   * Presentation-only burn damage tick (float text). Fires about every
+   * `BURN_TEXT_INTERVAL_SEC` while a burn is active; `damage` is the rounded
+   * amount accumulated since the previous fire (NOT per-frame). Refreshing
+   * Scorch must not reset this cadence — magma's 0.45s CD is shorter than
+   * the interval, so a reset would hide every tick during the keep-burning loop.
+   */
+  onBurnTick?(m: Monster, damage: number): void;
 }
 
 // ── Boss (Slaglord) attack tuning ──────────────────────────────────────────
@@ -381,6 +403,10 @@ const BOSS_SLAM_RADIUS = 2.5;
 const BOSS_SLAM_WINDUP = 1.1;
 /** Ranged volley: 3 bolts fanned ±15° around the player-bearing. */
 const BOSS_FAN_ANGLE = Math.PI / 12;
+
+// ── Scorch burn presentation ──────────────────────────────────────────────
+/** Float-text cadence for burn damage — presentation only (see onBurnTick). */
+export const BURN_TEXT_INTERVAL_SEC = 0.5;
 
 export class MonsterManager {
   monsters: Monster[] = [];
@@ -632,7 +658,7 @@ export class MonsterManager {
         }
         const partRes = this.world.spawn(
           { component: Transform, data: tform },
-          { component: MeshFilter, data: { assetHandle: ps.shape === 'cube' ? HANDLE_CUBE : HANDLE_SPHERE } },
+          { component: MeshFilter, data: { assetHandle: primitiveMesh(this.world, ps.shape === 'cube' ? 'cube' : 'sphere') } },
           { component: MeshRenderer, data: { materials: [slot.normal] } },
           { component: ChildOf, data: { parent: root } },
         );
@@ -651,7 +677,8 @@ export class MonsterManager {
       yaw: Math.random() * Math.PI * 2,
       attackCd: 0.5 + Math.random() * 0.5,
       rangedCd: 1 + Math.random(),
-      slowUntil: 0, flashUntil: 0, burnUntil: 0, burnDps: 0, enraged: false,
+      slowUntil: 0, flashUntil: 0, burnUntil: 0, burnDps: 0,
+      burnTextAccum: 0, burnTextAt: 0, enraged: false,
       bobPhase: Math.random() * Math.PI * 2,
       matState: 'normal',
       zone, parts,
@@ -692,11 +719,33 @@ export class MonsterManager {
   /**
    * Apply/replace Scorch burn. One stack per target: refresh duration and
    * replace stored DPS; does not stack (Spec §7.2).
+   *
+   * Presentation cadence is owned by the *current* burn, not each refresh:
+   * re-applying while already burning keeps `burnTextAccum` / `burnTextAt`
+   * so magma's 0.45s CD cannot starve the 0.5s float-text interval.
    */
   applyBurn(m: Monster, totalDamage: number, durationSec: number): void {
     if (totalDamage <= 0 || durationSec <= 0) return;
+    const alreadyBurning = m.burnUntil > this.now && m.burnDps > 0;
     m.burnUntil = this.now + durationSec;
     m.burnDps = totalDamage / durationSec;
+    if (!alreadyBurning) {
+      m.burnTextAccum = 0;
+      m.burnTextAt = this.now + BURN_TEXT_INTERVAL_SEC;
+    }
+  }
+
+  /**
+   * Emit a burn float-text when the cadence elapses (or on force = death /
+   * expire). Skips `"0"` — leftover sub-1 damage stays in the accumulator
+   * until the next interval or is dropped on force.
+   */
+  private flushBurnText(m: Monster, force: boolean): void {
+    if (!force && this.now < m.burnTextAt) return;
+    const shown = Math.round(m.burnTextAccum);
+    if (shown >= 1) this.events.onBurnTick?.(m, shown);
+    if (shown >= 1 || force) m.burnTextAccum = 0;
+    m.burnTextAt = this.now + BURN_TEXT_INTERVAL_SEC;
   }
 
   damage(m: Monster, dmg: number, slowSec = 0, kdx = 0, kdz = 0, kbForce = 0): boolean {
@@ -746,6 +795,7 @@ export class MonsterManager {
   }
 
   private kill(m: Monster): void {
+    this.flushBurnText(m, true);
     this.releaseSlam(m);
     this.releaseRing(m);
     this.fx.gibs(m.x, 0.6, m.z, 'blood', m.kind === 'slaglord' ? 22 : 9);
@@ -888,14 +938,19 @@ export class MonsterManager {
 
     for (let mi = this.monsters.length - 1; mi >= 0; mi--) {
       const m = this.monsters[mi]!;
-      // Scorch DoT tick (one stack; expires cleanly).
+      // Scorch DoT tick (one stack; expires cleanly). Accumulate and emit the
+      // burn float-text BEFORE the kill check so the killing tick still shows.
       if (m.burnUntil > this.now && m.burnDps > 0) {
-        m.hp -= m.burnDps * dt;
+        const tickDmg = m.burnDps * dt;
+        m.hp -= tickDmg;
+        m.burnTextAccum += tickDmg;
+        this.flushBurnText(m, false);
         if (m.hp <= 0) {
           this.kill(m);
           continue;
         }
-      } else if (m.burnUntil <= this.now) {
+      } else if (m.burnUntil <= this.now && m.burnDps > 0) {
+        this.flushBurnText(m, true);
         m.burnDps = 0;
       }
 

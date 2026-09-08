@@ -13,7 +13,7 @@ import {
   DirectionalLight,
   PointLight,
   Skylight,
-  TONEMAP_NEUTRAL,
+  TONEMAP_REINHARD,
   perspective,
 } from '@forgeax/engine-render';
 import { Time, Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
@@ -56,6 +56,148 @@ const INPUT_MAP: readonly ActionConfig[] = [
   { action: 'resetKart', bindings: [KEY('r'), KEY('R')] },
 ];
 
+interface LoadingScreen {
+  setStage(stage: string): void;
+  fail(message: string): void;
+  dispose(): void;
+}
+
+function installLoadingScreen(host?: HTMLElement): LoadingScreen {
+  const root = document.createElement('div');
+  root.id = 'go-karts-loading';
+  root.setAttribute('role', 'status');
+  root.setAttribute('aria-live', 'polite');
+  root.style.cssText = [
+    'position:fixed',
+    'inset:0',
+    'z-index:2147483000',
+    'display:grid',
+    'place-items:center',
+    'overflow:hidden',
+    'background:#182332',
+    "font-family:'Yuanti SC','STYuanti-SC-Bold','Arial Rounded MT Bold','PingFang SC','Microsoft YaHei',sans-serif",
+  ].join(';');
+  root.innerHTML = `
+    <style>
+      #go-karts-loading {
+        --kg-cream:#fff8e9;
+        --kg-brown:#75462d;
+        --kg-orange:#ff9f2f;
+        --kg-gold:#ffd95a;
+        --kg-sky:#62c9f8;
+        --kg-sky-dark:#2389bd;
+        color:var(--kg-brown);
+      }
+      #go-karts-loading .kl-backdrop {
+        position:absolute;inset:0;
+        background:
+          radial-gradient(circle at 50% 35%,#49617a 0 9%,#2b3a4e 36%,#151d29 72%),
+          #151d29;
+      }
+      #go-karts-loading .kl-rays {
+        position:absolute;left:50%;top:42%;width:120vmax;height:120vmax;
+        transform:translate(-50%,-50%);
+        background:repeating-conic-gradient(from -8deg,#ffffff08 0 9deg,transparent 9deg 18deg);
+        mask-image:radial-gradient(circle,#000 0 32%,transparent 69%);
+      }
+      #go-karts-loading .kl-floor {
+        position:absolute;left:-5%;right:-5%;bottom:-7%;height:31%;
+        transform:perspective(440px) rotateX(57deg);transform-origin:bottom;
+        background:
+          repeating-linear-gradient(90deg,transparent 0 11%,#ffd95a 11% 12%,transparent 12% 24%),
+          linear-gradient(#252d39,#10151d);
+        border-top:6px solid #ffb020;
+        box-shadow:0 -5px 0 #fff2b8,0 -18px 36px #0008;
+      }
+      #go-karts-loading .kl-card {
+        position:relative;width:min(78vw,410px);padding:26px 30px 24px;
+        text-align:center;background:var(--kg-cream);border:5px solid #fff;
+        border-radius:30px;box-shadow:0 0 0 4px var(--kg-orange),0 13px 0 #b86620,0 24px 44px #0008;
+      }
+      #go-karts-loading .kl-chip {
+        position:absolute;right:22px;top:18px;padding:6px 12px;
+        border:3px solid #fff;border-radius:999px;background:var(--kg-sky);color:#fff;
+        box-shadow:0 0 0 2px var(--kg-sky-dark);font-size:12px;font-weight:900;
+      }
+      #go-karts-loading .kl-kart {
+        display:grid;place-items:center;width:82px;height:72px;margin:-4px auto 4px;
+        color:#fff;background:linear-gradient(#ffbd45,var(--kg-orange));
+        border:4px solid #fff;border-radius:24px;box-shadow:0 0 0 3px #dc7d19,0 7px 0 #b86620;
+        animation:go-karts-load-bob .85s ease-in-out infinite alternate;
+      }
+      #go-karts-loading .kl-kart svg { width:58px;height:42px;overflow:visible; }
+      #go-karts-loading .kl-title {
+        margin-top:12px;color:#ec8133;font-size:clamp(24px,5vw,34px);
+        font-weight:900;letter-spacing:.04em;text-shadow:0 2px #fff,0 4px #f2c287;
+      }
+      #go-karts-loading .kl-stage {
+        margin-top:11px;color:var(--kg-brown);font-size:15px;font-weight:900;
+      }
+      #go-karts-loading .kl-track {
+        position:relative;overflow:hidden;height:18px;margin:18px 2px 12px;
+        border:3px solid #fff;border-radius:999px;background:#f1dbc0;
+        box-shadow:0 0 0 3px #e5a12b,inset 0 3px 4px #9f6a3944;
+      }
+      #go-karts-loading .kl-bar {
+        position:absolute;inset:0;width:48%;border-radius:inherit;
+        background:repeating-linear-gradient(135deg,var(--kg-gold) 0 13px,#ffad32 13px 26px);
+        box-shadow:inset 0 3px #fff7a8;
+        animation:go-karts-load-drive 1.15s ease-in-out infinite alternate;
+      }
+      #go-karts-loading .kl-tip {
+        color:#8a715c;font-size:12px;font-weight:800;
+      }
+      @keyframes go-karts-load-bob {
+        from { transform:translateY(1px) rotate(-2deg); }
+        to { transform:translateY(-7px) rotate(2deg); }
+      }
+      @keyframes go-karts-load-drive {
+        from { transform:translateX(-18%); }
+        to { transform:translateX(128%); }
+      }
+      @media (prefers-reduced-motion:reduce) {
+        #go-karts-loading .kl-kart,#go-karts-loading .kl-bar { animation:none; }
+        #go-karts-loading .kl-bar { width:72%; }
+      }
+    </style>
+    <div class="kl-backdrop"></div>
+    <div class="kl-rays"></div>
+    <div class="kl-floor"></div>
+    <div class="kl-card">
+      <div class="kl-chip">车库准备中</div>
+      <div class="kl-kart" aria-hidden="true">
+        <svg viewBox="0 0 64 46" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 30h40l-5-14H20l-8 14Z" fill="#43b8ef"/>
+          <path d="M24 16l3-7h12l4 7M19 30h29"/>
+          <circle cx="19" cy="35" r="6" fill="#27313f"/>
+          <circle cx="47" cy="35" r="6" fill="#27313f"/>
+          <path d="M30 16v14M25 22h10"/>
+        </svg>
+      </div>
+      <div class="kl-title">萌宠大奖赛</div>
+      <div class="kl-stage" data-stage>正在准备游戏引擎…</div>
+      <div class="kl-track"><div class="kl-bar"></div></div>
+      <div class="kl-tip">首次加载会缓存资源，之后进入会更快</div>
+    </div>
+  `;
+  (host ?? document.body).appendChild(root);
+  const stage = root.querySelector<HTMLElement>('[data-stage]');
+  return {
+    setStage(message) {
+      if (stage) stage.textContent = message;
+    },
+    fail(message) {
+      if (stage) {
+        stage.textContent = message;
+        stage.style.color = '#ffd0d0';
+      }
+    },
+    dispose() {
+      root.remove();
+    },
+  };
+}
+
 function setCameraLookAt(
   world: World,
   camera: EntityHandle,
@@ -74,12 +216,16 @@ function setCameraLookAt(
 }
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
+  const loading = installLoadingScreen(ctx?.uiRoot);
+  loading.setStage('正在加载赛道与赛车…');
   let loaded = adoptHostScene(world, ctx);
   if (!loaded) loaded = await loadSceneByGuid(world, ctx?.assets);
   if (!loaded) {
     console.error('[go-karts] defaultScene could not be loaded; KartBase is unavailable');
+    loading.fail('游戏资源加载失败，请刷新后重试');
     return;
   }
+  loading.setStage('正在布置萌宠车库…');
 
   const kartEntity = findEntityByName(loaded, 'KartBase');
   if (kartEntity === undefined) {
@@ -100,23 +246,31 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     console.error('[go-karts] engine canvas #app not found');
     return;
   }
+  // Final display-referred color grade. The engine camera currently exposes
+  // tone mapping but not saturation/contrast controls, so apply those after
+  // Reinhard at the canvas compositor instead of over-lighting grey materials.
+  const GARAGE_COLOR_GRADE = 'saturate(1.18) contrast(1.05) brightness(1.03)';
+  const RACE_COLOR_GRADE = 'saturate(1.4) contrast(1.08) brightness(1.08)';
+  const setDisplayColorGrade = (grade: string): void => {
+    canvas.style.filter = grade;
+  };
+  setDisplayColorGrade(GARAGE_COLOR_GRADE);
   const dpr = window.devicePixelRatio || 1;
   canvas.width = Math.max(1, Math.floor(canvas.clientWidth * dpr));
   canvas.height = Math.max(1, Math.floor(canvas.clientHeight * dpr));
   const aspect = canvas.width / canvas.height || 1;
 
-  // Cartoon grade: Neutral keeps midtone chroma that ACES crush.
-  const SKY_CLEAR: readonly [number, number, number, number] = [0.3, 0.66, 1.0, 1];
+  // Clear cartoon grade: keep enough cool fill for readable shadows without
+  // lifting every midtone into the same milky value range.
+  const SKY_CLEAR: readonly [number, number, number, number] = [0.28, 0.64, 0.96, 1];
   const raceLook = {
-    tonemap: TONEMAP_NEUTRAL,
-    // Midday look: a neutral key plus real sky fill carry the lift, so exposure
-    // only needs a nudge — pushing it to 1.0 bleaches albedos.
-    exposure: 0.92,
+    tonemap: TONEMAP_REINHARD,
+    exposure: 0.94,
     bloom: BLOOM_ENABLED,
-    // Higher threshold so yellow item-box "?" paint does not bloom-strobe.
-    bloomThreshold: 1.75,
-    bloomIntensity: 0.3,
-    bloomBlurRadius: 2.2,
+    // Keep bloom on true highlights only; broad bloom reads as atmospheric fog.
+    bloomThreshold: 1.9,
+    bloomIntensity: 0.2,
+    bloomBlurRadius: 1.8,
     antialias: ANTIALIAS_FXAA,
     clearColor: [...SKY_CLEAR] as [number, number, number, number],
   };
@@ -124,11 +278,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // to bright outdoor reads as the original transition.
   const garageLook = {
     ...raceLook,
-    exposure: 0.76,
+    exposure: 0.9,
     // Bloom + intersecting thin flaps/fins on box & rocket read as strobing
     // while the showroom spins. Keep bloom for the outdoor race only.
     bloom: BLOOM_DISABLED,
-    clearColor: [0.05, 0.06, 0.09, 1] as [number, number, number, number],
+    clearColor: [0.08, 0.1, 0.16, 1] as [number, number, number, number],
   };
   const cameraLook = garageLook;
   const camera = world
@@ -207,15 +361,15 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     ? [
         world.spawn(
           { component: Transform, data: { pos: [170, 5.4, 4.5] } },
-          { component: PointLight, data: { color: [1, 0.62, 0.36], intensity: 42, range: 18 } },
+          { component: PointLight, data: { color: [1, 0.72, 0.48], intensity: 32, range: 18 } },
         ).unwrap(),
         world.spawn(
           { component: Transform, data: { pos: [166, 3.2, 1.5] } },
-          { component: PointLight, data: { color: [0.45, 0.62, 1], intensity: 18, range: 14 } },
+          { component: PointLight, data: { color: [0.5, 0.72, 1], intensity: 24, range: 14 } },
         ).unwrap(),
         world.spawn(
           { component: Transform, data: { pos: [174, 2.5, 0] } },
-          { component: PointLight, data: { color: [1, 0.4, 0.2], intensity: 16, range: 12 } },
+          { component: PointLight, data: { color: [1, 0.5, 0.3], intensity: 10, range: 12 } },
         ).unwrap(),
       ]
     : [];
@@ -245,14 +399,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // Midday key/fill: a near-white sun close to overhead with a proper blue sky
   // bounce, so shadows read cool-neutral instead of warm golden-hour falloff.
   if (raceSkylightValue !== null) {
-    raceSkylightValue.color = [0.62, 0.76, 0.98];
-    raceSkylightValue.intensity = 0.45;
+    raceSkylightValue.color = [0.58, 0.75, 1.0];
+    raceSkylightValue.intensity = 0.65;
   }
   if (raceSunValue !== null) {
-    // A white key is far brighter per unit than the old amber one, so the
-    // intensity comes down even though the scene ends up lighter.
-    raceSunValue.color = [1.0, 0.97, 0.92];
-    raceSunValue.intensity = 2.2;
+    // A stronger key-to-fill ratio restores crisp form separation while the
+    // 0.65 skylight floor keeps racers readable in shadow.
+    raceSunValue.color = [1.0, 0.94, 0.82];
+    raceSunValue.intensity = 2.4;
     raceSunValue.castShadow = true;
     raceSunValue.mapSize = 2048;
     raceSunValue.shadowDistance = 180;
@@ -376,6 +530,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         ...raceLook,
       });
     }
+    setDisplayColorGrade(RACE_COLOR_GRADE);
     hud.setVisible(true);
   }
 
@@ -409,6 +564,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         ...raceLook,
       });
     }
+    setDisplayColorGrade(RACE_COLOR_GRADE);
     hud.setVisible(true);
     followCamera.beginIntro(kart.getPose());
     awaitingCountdown = true;
@@ -474,6 +630,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       });
     },
   });
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => loading.dispose());
+  });
+  ctx?.registerCleanup?.(() => loading.dispose());
   ctx?.registerCleanup?.(() => hud.dispose());
   ctx?.registerCleanup?.(() => garage.dispose());
   ctx?.registerCleanup?.(() => originalGarageModels?.dispose());

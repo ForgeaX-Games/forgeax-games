@@ -5,7 +5,6 @@
   "entry": "main.ts",
   "physics": "3d",
   "pointerLock": false,
-  "defaultScene": "2748fc78-a386-4b9b-b7d5-cd771eaf6a71",
   "preview": {
     "skin": {
       "sceneGuid": "019f41e5-1d62-78b4-81b6-8effb359372c",

@@ -26,6 +26,7 @@ import {
   goldDividerHtml,
   metalGoldTextStyle,
 } from './ui-theme';
+import { markLoading } from './loading-perf';
 
 const INTRO_ROOT_ID = 'hellforge-intro-video';
 
@@ -263,6 +264,7 @@ export function installIntroVideo(
     if (result.alreadyCompleted) return;
     tearDownMedia();
     root.style.display = 'none';
+    markLoading('hf:intro-complete');
     cb.onComplete(result.reason);
   };
 
@@ -359,6 +361,7 @@ export function installIntroVideo(
   });
 
   mount.appendChild(root);
+  markLoading('hf:click-gate-visible');
 
   return {
     dispose(): void {

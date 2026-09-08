@@ -51,57 +51,68 @@
     {
       "guid": "019f23d5-2e17-71cc-ad91-7e0cb154dc4f",
       "kind": "mesh",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "mesh"
     },
     {
       "guid": "019f23d5-2e17-71cc-ad91-7e0d551b09ff",
       "kind": "material",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "material"
     },
     {
       "guid": "019f23d5-2e17-71cc-ad91-7e0ee538db18",
       "kind": "scene",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "scene"
     },
     {
       "guid": "019f23d5-2e17-71cc-ad91-7e0fd2a01489",
       "kind": "texture",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "texture"
     },
     {
       "guid": "019f23d5-2e17-71cc-ad91-7e10c4995b5c",
       "kind": "skeleton",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "skeleton"
     },
     {
       "guid": "019f23d5-2e17-71cc-ad91-7e11752a6d1b",
       "kind": "skin",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "skin"
     },
     {
       "guid": "019f23d5-2e17-71cc-ad91-7e1261dbc77b",
       "kind": "animation-clip",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "animation-clip#1"
     },
     {
       "guid": "019f23d5-2e17-71cc-ad91-7e1313599737",
       "kind": "animation-clip",
-      "sourceIndex": 1
+      "sourceIndex": 1,
+      "sourceKey": "animation-clip#2"
     },
     {
       "guid": "019f23d5-2e17-71cc-ad91-7e14a98b43f4",
       "kind": "animation-clip",
-      "sourceIndex": 2
+      "sourceIndex": 2,
+      "sourceKey": "animation-clip#3"
     },
     {
       "guid": "019f23d5-2e18-79b2-b06a-9a99ee43e9c1",
       "kind": "animation-clip",
-      "sourceIndex": 3
+      "sourceIndex": 3,
+      "sourceKey": "animation-clip#4"
     },
     {
       "guid": "019f23d5-2e18-79b2-b06a-9a9a7159ec9f",
       "kind": "animation-clip",
-      "sourceIndex": 4
+      "sourceIndex": 4,
+      "sourceKey": "animation-clip#5"
     }
   ]
 }

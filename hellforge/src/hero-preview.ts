@@ -23,7 +23,8 @@ import { AssetGuid } from '@forgeax/engine-pack/guid';
 import { ENTITY_NULL_RAW, type EntityHandle, type World } from '@forgeax/engine-ecs';
 import { armSkinnedAnimationPlayer } from './bind-skinned-animation';
 import type { AnimationClip, Handle, MaterialAsset, MeshAsset, SceneAsset } from '@forgeax/engine-types';
-import { HANDLE_CUBE, type AssetRegistry } from '@forgeax/engine-assets-runtime';
+import type { BootstrapContext } from '@forgeax/engine-app';
+import { primitiveMesh } from './primitive-mesh';
 
 import { getHeroDef, type HeroDef } from './heroes';
 import type { ClassId } from './classes';
@@ -48,7 +49,7 @@ export type HeroPreviewHandle = {
 
 export type InstallHeroPreviewArgs = {
   world: World;
-  assets: AssetRegistry;
+  assets: BootstrapContext['assets'];
   /** BootCamera (or any Camera entity) written each tick while shown. */
   camera: EntityHandle;
   getAspect: () => number;
@@ -273,7 +274,7 @@ export function installHeroPreview(args: InstallHeroPreviewArgs): HeroPreviewHan
     const s0 = 0.04 + Math.random() * 0.045;
     const e = world.spawn(
       { component: Transform, data: { pos: [x, y, z], scale: [s0, s0, s0] } },
-      { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
+      { component: MeshFilter, data: { assetHandle: primitiveMesh(world, 'cube') } },
       { component: MeshRenderer, data: { materials: [emberMat] } },
     ).unwrap() as EntityHandle;
     embers.push({

@@ -1,4 +1,4 @@
-#define_import_path hellforge::portal_vortex
+#define_import_path hellforge_source::portal_vortex
 
 #import forgeax_view::common::{view, meshes}
 

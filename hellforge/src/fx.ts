@@ -33,9 +33,9 @@ import {
 import {
   type MaterialAsset,
 } from '@forgeax/engine-types';
-import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle } from '@forgeax/engine-types';
+import { primitiveMesh } from './primitive-mesh';
 
 import fireBoltShader from './shaders/fire-bolt.wgsl';
 import portalShader from './shaders/portal-vortex.wgsl';
@@ -283,9 +283,9 @@ export class FxSystem {
           passes: [{
             name: 'Forward',
             shader: shaderId,
-            tags: { LightMode: 'Forward' },
+            tags: { LightMode: 'HellforgeFx' },
             queue: 3000,
-            passKind: 'forward',
+            passKind: 'post-process',
             renderState: FX_RENDER_STATE,
           }],
           paramValues: params as never,
@@ -296,7 +296,7 @@ export class FxSystem {
         passes: [{
           name: 'Forward',
           program: { module: shaderId },
-          renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'Forward' }, queue: 3000 },
+          renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'HellforgeFx' }, queue: 3000 },
         }],
         // Restated on the asset because safeRegister below always loses the
         // race: vite-plugin-shader registers these ids from the manifest with
@@ -415,9 +415,9 @@ export class FxSystem {
           passes: [{
             name: 'Forward',
             shader: PORTAL_SHADER_ID,
-            tags: { LightMode: 'Forward' },
+            tags: { LightMode: 'HellforgeFx' },
             queue: 3000,
-            passKind: 'forward',
+            passKind: 'post-process',
             renderState: FX_RENDER_STATE,
           }],
           paramValues: params as never,
@@ -427,7 +427,7 @@ export class FxSystem {
           passes: [{
             name: 'Forward',
             program: { module: PORTAL_SHADER_ID },
-            renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'Forward' }, queue: 3000 },
+            renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'HellforgeFx' }, queue: 3000 },
           }],
           values: params as never,
         });
@@ -526,7 +526,7 @@ export class FxSystem {
     if (this.particles.length + this.sprites.count() + this.sprites.persistentCount() >= FX_MAX_PARTICLES) return null;
     const spawned = this.world.spawn(
       { component: Transform, data: { pos: [x, y, z], scale: [s, s, s] } },
-      { component: MeshFilter, data: { assetHandle: shape === 'cube' ? HANDLE_CUBE : HANDLE_SPHERE } },
+      { component: MeshFilter, data: { assetHandle: primitiveMesh(this.world, shape === 'cube' ? 'cube' : 'sphere') } },
       { component: MeshRenderer, data: { materials: [this.mats[color]] } },
     );
     if (!spawned.ok) return null;
@@ -1054,7 +1054,7 @@ export class FxSystem {
     const mat = this.frostHandles?.slow ?? this.mats.ice;
     const spawned = this.world.spawn(
       { component: Transform, data: { pos: [x, y, z], scale: [1.35, 0.08, 1.35] } },
-      { component: MeshFilter, data: { assetHandle: HANDLE_SPHERE } },
+      { component: MeshFilter, data: { assetHandle: primitiveMesh(this.world, 'sphere') } },
       { component: MeshRenderer, data: { materials: [mat] } },
     );
     if (!spawned.ok) return;
@@ -1094,7 +1094,7 @@ export class FxSystem {
     // Thin horizontal slab; shader paints chevrons in local XZ.
     const spawned = this.world.spawn(
       { component: Transform, data: { pos: [x, y, z], scale: [0.7, 0.02, 0.7] } },
-      { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
+      { component: MeshFilter, data: { assetHandle: primitiveMesh(this.world, 'cube') } },
       { component: MeshRenderer, data: { materials: [mat] } },
     );
     if (!spawned.ok) {

@@ -1,4 +1,4 @@
-#define_import_path hellforge::sprite
+#define_import_path hellforge_source::sprite
 
 #import forgeax_view::common::{view, meshes}
 

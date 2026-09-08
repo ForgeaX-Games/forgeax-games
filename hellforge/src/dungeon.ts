@@ -14,20 +14,22 @@
 // spawned directly from the layout as a fallback, so the game never breaks.
 
 import {
+  ChildOf,
   Transform,
 } from '@forgeax/engine-scene';
 import {
+  Instances,
+  Materials,
   MeshFilter,
   MeshRenderer,
-  Materials,
 } from '@forgeax/engine-render';
 import {
   type MaterialAsset,
 } from '@forgeax/engine-types';
-import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle, SceneAsset } from '@forgeax/engine-types';
+import { primitiveMesh } from './primitive-mesh';
 
 import {
   ANTECHAMBER_SCENE_GUID,
@@ -201,9 +203,22 @@ export class Dungeon {
           const handle = this.world.allocSharedRef<'SceneAsset', SceneAsset>('SceneAsset', res.value);
           const inst = assets.instantiate<SceneAsset>(handle, this.world, rootRes.value as EntityHandle);
           if (inst.ok) {
-            console.log('[hellforge] den geometry: baked scene pack (slagdeep-hollow)');
+            let expanded = 0;
+            try {
+              expanded = expandInstancedDecor(this.world);
+            } catch (err) {
+              console.warn('[hellforge] den instanced-prop expand failed:', (err as Error).message);
+            }
+            console.log(
+              '[hellforge] den geometry: baked scene pack (slagdeep-hollow)'
+              + (expanded > 0 ? `; expanded ${expanded} instanced props` : ''),
+            );
             return 'pack';
           }
+          console.warn(
+            '[hellforge] slagdeep instantiate failed:',
+            (inst as { error?: { code?: string } }).error?.code ?? 'unknown',
+          );
         }
       }
     } catch (err) {
@@ -334,9 +349,81 @@ export class Dungeon {
       }
       this.world.spawn(
         { component: Transform, data: t },
-        { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
+        { component: MeshFilter, data: { assetHandle: primitiveMesh(this.world, 'cube') } },
         { component: MeshRenderer, data: { materials: [mats[g.kind]] } },
       );
     }
   }
+}
+
+/**
+ * N4 baked decor as `Instances` (one GPU draw per kind). Custom pipeline /
+ * cook-shrunk materials often skip that path, so entrance/rooms look like
+ * empty floors. Expand non-cube batches into ChildOf copies; skip ambient
+ * particle cubes (HANDLE_CUBE).
+ */
+function expandInstancedDecor(world: World): number {
+  const cubeMesh = primitiveMesh(world, 'cube');
+  const queried = world.query({ with: [Instances, MeshFilter, MeshRenderer] });
+  if (!queried.ok) return 0;
+  const batches: EntityHandle[] = [];
+  for (const row of queried.value) {
+    const mf = world.get(row.entity, MeshFilter);
+    if (!mf.ok) continue;
+    if (mf.value.assetHandle === cubeMesh) continue;
+    batches.push(row.entity as EntityHandle);
+  }
+  let spawned = 0;
+  for (const batch of batches) {
+    const inst = world.get(batch, Instances);
+    const mf = world.get(batch, MeshFilter);
+    const mr = world.get(batch, MeshRenderer);
+    if (!inst.ok || !mf.ok || !mr.ok) continue;
+    const transforms = inst.value.transforms as ArrayLike<number>;
+    if (transforms.length < 16 || transforms.length % 16 !== 0) continue;
+    const parentRes = world.get(batch, ChildOf);
+    const parent = parentRes.ok ? (parentRes.value as { parent: EntityHandle }).parent : undefined;
+    const materials = mr.value.materials;
+    const assetHandle = mf.value.assetHandle;
+    const n = transforms.length / 16;
+    for (let i = 0; i < n; i++) {
+      const t = decomposeInstanceY(transforms, i * 16);
+      const res = parent !== undefined
+        ? world.spawn(
+          { component: Transform, data: t },
+          { component: MeshFilter, data: { assetHandle } },
+          { component: MeshRenderer, data: { materials } },
+          { component: ChildOf, data: { parent } },
+        )
+        : world.spawn(
+          { component: Transform, data: t },
+          { component: MeshFilter, data: { assetHandle } },
+          { component: MeshRenderer, data: { materials } },
+        );
+      if (res.ok) spawned += 1;
+    }
+    world.despawn(batch);
+  }
+  return spawned;
+}
+
+/** Bake writes column-major T·R_y·S. Recover pos / uniform-ish scale / yaw. */
+function decomposeInstanceY(
+  m: ArrayLike<number>,
+  off: number,
+): { pos: number[]; scale: number[]; quat: number[] } {
+  const m0 = m[off] ?? 1;
+  const m2 = m[off + 2] ?? 0;
+  const m5 = m[off + 5] ?? 1;
+  const m8 = m[off + 8] ?? 0;
+  const m10 = m[off + 10] ?? 1;
+  const sx = Math.hypot(m0, m2) || 1;
+  const sy = Math.abs(m5) || 1;
+  const sz = Math.hypot(m8, m10) || 1;
+  const q = quatY(Math.atan2(-(m2), m0));
+  return {
+    pos: [m[off + 12] ?? 0, m[off + 13] ?? 0, m[off + 14] ?? 0],
+    scale: [sx, sy, sz],
+    quat: [q[0], q[1], q[2], q[3]],
+  };
 }

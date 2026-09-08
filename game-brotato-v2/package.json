@@ -1,0 +1,61 @@
+{
+  "name": "@forgeax/game-brotato-v2",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Brotato 3D v2: a faithful 2.5D arena roguelite rebuilt on ForgeaX.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "forgeax": {
+    "assets": {
+      "roots": ["assets"]
+    },
+    "metrics": {
+      "bundle-size": {
+        "enabled": false,
+        "reason": "template bundle is downstream of the SDK verifier host"
+      },
+      "fps": {
+        "enabled": false,
+        "reason": "template has no independent benchmark harness"
+      },
+      "bench": {
+        "enabled": false,
+        "reason": "template scaffold; benchmark ownership stays with engine apps"
+      },
+      "gate": {
+        "enabled": false,
+        "reason": "browser acceptance is owned by the exact SDK verifier"
+      },
+      "spike-report": {
+        "enabled": false,
+        "reason": "not a spike app"
+      }
+    }
+  },
+  "dependencies": {
+    "@forgeax/engine-app": "workspace:*",
+    "@forgeax/engine-assets-runtime": "workspace:*",
+    "@forgeax/engine-audio": "workspace:*",
+    "@forgeax/engine-audio-webaudio": "workspace:*",
+    "@forgeax/engine-ecs": "workspace:*",
+    "@forgeax/engine-geometry": "workspace:*",
+    "@forgeax/engine-input": "workspace:*",
+    "@forgeax/engine-math": "workspace:*",
+    "@forgeax/engine-pack": "workspace:*",
+    "@forgeax/engine-physics": "workspace:*",
+    "@forgeax/engine-plugin": "workspace:*",
+    "@forgeax/engine-render": "workspace:*",
+    "@forgeax/engine-runtime": "workspace:*",
+    "@forgeax/engine-scene": "workspace:*",
+    "@forgeax/engine-types": "workspace:*",
+    "@forgeax/engine-ui": "workspace:*",
+    "@forgeax/engine-vfx": "workspace:*",
+    "@forgeax/engine-vfx-render": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "4.1.5"
+  }
+}

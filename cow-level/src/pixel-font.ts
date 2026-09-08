@@ -11,10 +11,12 @@
 // We register the atlas TextureAsset + a SamplerAsset + the FontAsset and
 // return the FontAsset handle for GlyphText.fontHandle.
 
-import type { AssetRegistry } from '@forgeax/engine-assets-runtime';
 import type { World } from '@forgeax/engine-ecs';
+import type { BootstrapContext } from '@forgeax/engine-app';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { FontAsset, GlyphMetric, Handle, SamplerAsset, TextureAsset } from '@forgeax/engine-types';
+
+type AssetRegistry = BootstrapContext['assets'];
 
 // Deterministic GUIDs the FontAsset's atlas / sampler fields reference. The
 // atlas TextureAsset + SamplerAsset are catalogued under these so the engine's

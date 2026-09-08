@@ -1,0 +1,133 @@
+{
+ "schemaVersion": "2.0.0",
+ "kind": "internal-text-package",
+ "assets": [
+  {
+   "guid": "0071580b-83be-4a22-ae68-2835c0fd1c44",
+   "kind": "scene",
+   "payload": {
+    "entities": [
+     {
+      "localId": 1,
+      "components": {
+       "DirectionalLight": {
+        "direction": [
+         -0.5,
+         -0.699999988079071,
+         -0.4000000059604645
+        ],
+        "color": [
+         1.0,
+         0.975,
+         0.93
+        ],
+        "intensity": 4.6,
+        "castShadow": true,
+        "cascadeCount": 4,
+        "splitLambda": 0.75,
+        "cascadeBlend": 0.20000000298023224,
+        "mapSize": 4096,
+        "depthBias": 0.012,
+        "normalBias": 0.3,
+        "shadowDistance": 70,
+        "pcfKernelSize": 3
+       },
+       "Name": {
+        "value": "Sun"
+       },
+       "Transform": {
+        "pos": [
+         0,
+         10,
+         0
+        ],
+        "quat": [
+         0,
+         0,
+         0,
+         1
+        ],
+        "scale": [
+         1,
+         1,
+         1
+        ]
+       }
+      }
+     },
+     {
+      "localId": 2,
+      "components": {
+       "Name": {
+        "value": "Skylight"
+       },
+       "Skylight": {
+        "equirect": 1,
+        "color": [
+         0.78,
+         0.82,
+         0.92
+        ],
+        "intensity": 0.04
+       }
+      }
+     }
+    ]
+   },
+   "refs": [
+    "d5e6f7a8-1111-4222-8333-444455556666",
+    "81eec382-392f-5a93-8998-0ecf11ef7990"
+   ],
+   "artifacts": {}
+  },
+  {
+   "guid": "d5e6f7a8-1111-4222-8333-444455556666",
+   "kind": "material",
+   "payload": {
+    "passes": [
+     {
+      "name": "Forward",
+      "program": {
+       "module": "forgeax::default-standard-pbr"
+      },
+      "renderState": {
+       "tags": {
+        "LightMode": "Forward"
+       },
+       "queue": 2000
+      }
+     },
+     {
+      "name": "ShadowCaster",
+      "program": {
+       "module": "forgeax::default-shadow-caster"
+      },
+      "renderState": {
+       "tags": {
+        "LightMode": "ShadowCaster"
+       }
+      }
+     }
+    ],
+    "values": {
+     "baseColor": [
+      0.006,
+      0.16,
+      0.2,
+      1
+     ],
+     "metallic": 0,
+     "roughness": 0.26,
+     "emissive": [
+      0.000126,
+      0.00336,
+      0.004200000000000001
+     ],
+     "emissiveIntensity": 1
+    }
+   },
+   "refs": [],
+   "artifacts": {}
+  }
+ ]
+}

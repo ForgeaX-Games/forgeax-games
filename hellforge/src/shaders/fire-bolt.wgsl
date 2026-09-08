@@ -1,4 +1,4 @@
-#define_import_path hellforge::fire_bolt
+#define_import_path hellforge_source::fire_bolt
 
 #import forgeax_view::common::{view, meshes}
 

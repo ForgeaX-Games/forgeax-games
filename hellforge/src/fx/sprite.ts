@@ -22,10 +22,10 @@ import {
 import {
   quat,
 } from '@forgeax/engine-runtime';
-import { HANDLE_QUAD } from '@forgeax/engine-assets-runtime';
 import { unwrapHandle } from '@forgeax/engine-types';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle, MaterialAsset, TextureAsset } from '@forgeax/engine-types';
+import { primitiveMesh } from '../primitive-mesh';
 
 import spriteShader from '../shaders/sprite.wgsl';
 import { registerMaterialShaderDual } from '../register-material-shader';
@@ -339,7 +339,7 @@ export class SpriteSystem {
           scale: [opts.size, opts.size, opts.size],
         },
       },
-      { component: MeshFilter, data: { assetHandle: HANDLE_QUAD } },
+      { component: MeshFilter, data: { assetHandle: primitiveMesh(this.world, 'quad') } },
       { component: MeshRenderer, data: { materials: [slot.mat] } },
     );
     if (!spawned.ok) {
@@ -504,7 +504,7 @@ export class SpriteSystem {
     };
     const passCommon = {
       name: 'Forward' as const,
-      renderState: { ...SPRITE_RENDER_STATES[blend], tags: { LightMode: 'Forward' }, queue: 3000 },
+      renderState: { ...SPRITE_RENDER_STATES[blend], tags: { LightMode: 'HellforgeFx' }, queue: 3000 },
     };
     const mat = this.customPassShaderShape
       ? this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
@@ -512,9 +512,9 @@ export class SpriteSystem {
           passes: [{
             ...passCommon,
             shader: SPRITE_SHADER_ID,
-            tags: { LightMode: 'Forward' },
+            tags: { LightMode: 'HellforgeFx' },
             queue: 3000,
-            passKind: 'forward',
+            passKind: 'post-process',
           }],
           paramValues: params as never,
         } as unknown as MaterialAsset)

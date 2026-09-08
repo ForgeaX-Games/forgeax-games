@@ -62,72 +62,86 @@
     {
       "guid": "019f23d5-2dc8-7884-915f-af6ecc169a47",
       "kind": "mesh",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "mesh#1"
     },
     {
       "guid": "019f23d5-2dc8-7884-915f-af6f5aece4ad",
       "kind": "mesh",
-      "sourceIndex": 1
+      "sourceIndex": 1,
+      "sourceKey": "mesh#2"
     },
     {
       "guid": "019f23d5-2dc8-7884-915f-af702c1bbd72",
       "kind": "material",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "material#1"
     },
     {
       "guid": "019f23d5-2dc8-7884-915f-af71b656ab43",
       "kind": "material",
-      "sourceIndex": 1
+      "sourceIndex": 1,
+      "sourceKey": "material#2"
     },
     {
       "guid": "019f23d5-2dc8-7884-915f-af72d70bf346",
       "kind": "scene",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "scene"
     },
     {
       "guid": "019f23d5-2dc8-7884-915f-af7366922111",
       "kind": "texture",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "texture#1"
     },
     {
       "guid": "019f23d5-2dc8-7884-915f-af74bb064ef7",
       "kind": "texture",
-      "sourceIndex": 1
+      "sourceIndex": 1,
+      "sourceKey": "texture#2"
     },
     {
       "guid": "019f23d5-2dc8-7884-915f-af75ade15c7d",
       "kind": "skeleton",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "skeleton"
     },
     {
       "guid": "019f23d5-2dc8-7884-915f-af76eac8e7d8",
       "kind": "skin",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "skin"
     },
     {
       "guid": "019f23d5-2dc8-7884-915f-af770ada4df4",
       "kind": "animation-clip",
-      "sourceIndex": 0
+      "sourceIndex": 0,
+      "sourceKey": "animation-clip#1"
     },
     {
       "guid": "019f23d5-2dc8-7884-915f-af781cd2b4fe",
       "kind": "animation-clip",
-      "sourceIndex": 1
+      "sourceIndex": 1,
+      "sourceKey": "animation-clip#2"
     },
     {
       "guid": "019f23d5-2dc8-7884-915f-af79a6454a16",
       "kind": "animation-clip",
-      "sourceIndex": 2
+      "sourceIndex": 2,
+      "sourceKey": "animation-clip#3"
     },
     {
       "guid": "019f23d5-2dc8-7884-915f-af7a1a85e5fa",
       "kind": "animation-clip",
-      "sourceIndex": 3
+      "sourceIndex": 3,
+      "sourceKey": "animation-clip#4"
     },
     {
       "guid": "019f23d5-2dc8-7884-915f-af7bd5f4f2e4",
       "kind": "animation-clip",
-      "sourceIndex": 4
+      "sourceIndex": 4,
+      "sourceKey": "animation-clip#5"
     }
   ]
 }

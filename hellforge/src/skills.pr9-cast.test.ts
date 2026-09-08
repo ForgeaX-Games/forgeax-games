@@ -74,6 +74,8 @@ function fakeMonster(overrides: Partial<Monster> = {}): Monster {
     flashUntil: 0,
     burnUntil: 0,
     burnDps: 0,
+    burnTextAccum: 0,
+    burnTextAt: 0,
     enraged: false,
     bobPhase: 0,
     matState: 'normal',

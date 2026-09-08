@@ -22,6 +22,7 @@ import {
   metalGoldTextStyle,
 } from './ui-theme';
 import { ShellArt } from './shell-art';
+import { markLoading } from './loading-perf';
 
 export type ShellState = 'title' | 'charSelect' | 'charList' | 'inGame';
 
@@ -40,18 +41,25 @@ export interface ShellHandle {
   state(): ShellState;
   /** Programmatic transition — screens call back into this via their own callbacks. */
   goTo(state: ShellState): void;
-  /** Noninteractive cover while heavy runtime boots after character selection. */
+  /**
+   * Noninteractive cover while heavy runtime boots after character selection.
+   */
   showLoading(message: string): void;
+  /**
+   * Loading cover in a failed state. Title stays hidden; 重试 is clickable.
+   * Does not fake progress to 100%.
+   */
+  showLoadingFailure(message: string, onRetry: () => void): void;
   /**
    * Drive the DETERMINATE loading bar (0..1). Wired to a LoadTracker by the
    * caller; monotonic by tracker contract. No-op value clamping applied here.
    */
   setLoadingProgress(fraction: number): void;
   /**
-   * Hide the loading cover WITHOUT a shell state change. Used by the den
-   * zone-transition (we are already 'inGame'); restores the hidden shell root
-   * so gameplay HUD re-owns the viewport.
+   * Update the cover message without resetting the bar. `showLoading` starts a
+   * fresh cover at 0%; phase labels must use this or the bar jumps backward.
    */
+  setLoadingMessage(message: string): void;
   hideLoading(): void;
   /** Drive Title Canvas2D particles — call from ctx.registerUpdate (SPEC §3.2). */
   tick(dt: number): void;
@@ -115,9 +123,19 @@ export function installShell(mount: HTMLElement, cb: ShellCallbacks): ShellHandl
   const loadingTip = document.createElement('div');
   loadingTip.style.cssText = `font:500 12px ${FONT_UI};color:${Ui.textDim};letter-spacing:2px;`;
   loadingTip.textContent = '余烬正在重燃……';
-  loadingCol.append(loadingMessage, loadingBar, loadingTip);
+  const loadingRetry = document.createElement('button');
+  loadingRetry.type = 'button';
+  loadingRetry.textContent = '重试';
+  loadingRetry.style.cssText =
+    `display:none;margin-top:8px;padding:10px 24px;cursor:pointer;pointer-events:auto;` +
+    `font:700 14px ${FONT_DISPLAY};letter-spacing:4px;color:${Ui.goldBright};` +
+    `background:${Ui.inkWell};border:1px solid ${Ui.goldLineSoft};`;
+  loadingCol.append(loadingMessage, loadingBar, loadingTip, loadingRetry);
   loading.appendChild(loadingCol);
   root.appendChild(loading);
+
+  let retryHandler: (() => void) | null = null;
+  loadingRetry.addEventListener('click', () => { retryHandler?.(); });
 
   function goTo(next: ShellState): void {
     loading.style.display = 'none';
@@ -150,10 +168,23 @@ export function installShell(mount: HTMLElement, cb: ShellCallbacks): ShellHandl
       title.hide();
       root.style.display = '';
       loadingMessage.textContent = message;
+      loadingRetry.style.display = 'none';
+      retryHandler = null;
       setFill(0); // fresh cover starts empty; tracker drives it up
       loading.style.display = 'flex';
     },
+    showLoadingFailure: (message, onRetry) => {
+      title.hide();
+      root.style.display = '';
+      loadingMessage.textContent = message;
+      loadingRetry.style.display = '';
+      retryHandler = onRetry;
+      loading.style.display = 'flex';
+    },
     setLoadingProgress: setFill,
+    setLoadingMessage: (message) => {
+      loadingMessage.textContent = message;
+    },
     hideLoading: () => {
       loading.style.display = 'none';
       // In-game the shell root is display:none (goTo('inGame')) so the HUD owns
@@ -513,6 +544,8 @@ function installTitle(
     resizeCanvas();
     visible = true;
     window.addEventListener('resize', resizeCanvas);
+    markLoading('hf:title-visible');
+    markLoading('hf:title-interactive');
   }
   function hide(): void {
     root.style.display = 'none';

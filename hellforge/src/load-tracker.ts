@@ -72,6 +72,13 @@ export class LoadTracker {
     return Math.min(1, w / this.totalWeight);
   }
 
+  /** True when every item in `id` has settled (or the phase was never registered). */
+  phaseComplete(id: string): boolean {
+    const p = this.phases.get(id);
+    if (p === undefined) return false;
+    return p.done >= p.items;
+  }
+
   /** Current progress + raw item counts (tests / diagnostics). */
   snapshot(): LoadTrackerSnapshot {
     let total = 0;

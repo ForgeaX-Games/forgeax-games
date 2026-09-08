@@ -15,9 +15,9 @@ import {
   Instances,
   Materials,
 } from '@forgeax/engine-render';
-import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle, MaterialAsset } from '@forgeax/engine-types';
+import { primitiveMesh } from './primitive-mesh';
 
 export type AmbientArea = 'camp' | 'wild' | 'den';
 export type ParticleStyle = 'auto' | 'ash' | 'snow' | 'off';
@@ -222,7 +222,7 @@ export class AmbientFx {
         layer.setPayload.transforms = layer.transforms.subarray(0, 16);
         const spawned = world.spawn(
           { component: Transform, data: {} },
-          { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
+          { component: MeshFilter, data: { assetHandle: primitiveMesh(world, 'cube') } },
           { component: MeshRenderer, data: { materials: [layer.mat] } },
           { component: Instances, data: { transforms: layer.setPayload.transforms } },
         );
@@ -362,7 +362,7 @@ export class AmbientFx {
             scale: [layer.scale[i]!, layer.scale[i]!, layer.scale[i]!],
           },
         },
-        { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
+        { component: MeshFilter, data: { assetHandle: primitiveMesh(world, 'cube') } },
         { component: MeshRenderer, data: { materials: [layer.mat] } },
       );
       if (!spawned.ok) break;

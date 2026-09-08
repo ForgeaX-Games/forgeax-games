@@ -78,6 +78,8 @@ describe('LoadTracker (PR11 T2)', () => {
     expect(t.fraction()).toBeLessThan(1);
     t.complete('ready'); // final item right before the cover hides
     expect(t.fraction()).toBe(1);
+    expect(t.phaseComplete('hero')).toBe(true);
+    expect(t.phaseComplete('missing')).toBe(false);
   });
 
   test('unsubscribe stops further notifications', () => {

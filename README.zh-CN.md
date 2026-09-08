@@ -33,9 +33,9 @@
 
 ## 发现与隔离机制
 
-- **磁盘即真相。** 游戏作为受版控的源码存放在 `packages/games/<slug>/`。启动时,启动器幂等地
-  把每个含 `forge.json` 的目录 symlink 进 `.forgeax/games/<slug>/`,引擎的发现链
-  (`listAllGames` / `detectActiveSlug`)即可零注册识别。
+- **磁盘即真相。** 游戏源码受本独立仓版本控制。选择接入时,Studio 会把本仓物化为被忽略的
+  浮动 checkout `packages/games/`,启动器再幂等地把每个含 `forge.json` 的目录 symlink 进
+  `.forgeax/games/<slug>/`,引擎的发现链(`listAllGames` / `detectActiveSlug`)即可零注册识别。
 - **设计上安全。** 从 Studio UI 删除游戏只移除 `.forgeax/games/<slug>` 这个 symlink——受版控的
   真实源码绝不被动。要真正移除游戏,在本仓 `git rm` 该目录并 push。
 - **无跨游戏碰撞。** per-game pack-index 隔离让两个共享资产 GUID 的游戏可以共存,而不会让全局
@@ -56,14 +56,13 @@
 1. 新建 `<slug>/`(slug 匹配 `^[a-z0-9][a-z0-9-]{1,40}$`)。
 2. 放入脚手架:`forge.json`(必需)、`package.json`(`@forgeax/game-<slug>`)、`tsconfig.json`、
    代码入口、一个 `assets/` 包,以及可选的 `FORGE.md` 设计说明。
-3. 在这里 commit + push,然后在 studio 侧 `git submodule update --remote packages/games` 并启动
-   ——启动器会把它 symlink 进来。
+3. 在这里 commit + push,然后从 Studio 根目录运行 `bun games:sync` 再启动——启动器会把浮动
+   checkout 中的游戏 symlink 进来。`bun fx update` 会刷新已有 checkout。
 
-> 首次 checkout 必须执行 `git submodule update --init packages/games`,否则库为空,启动器会优雅
-> 跳过所有游戏。
+> Studio 不会把本仓 pin 成 git submodule。CI 会设置 `FORGEAX_SKIP_GAMES=1`;本地 Studio 可用
+> `bun games:sync` 接入；如需覆盖 URL 或分支，在 Studio 根目录使用 `.packages.local`。
 
 ---
 
-本仓是 **ForgeaX Studio** 的一个子模块,隶属
-[`ForgeaX-Games/forgeax-studio`](https://github.com/ForgeaX-Games/forgeax-studio) ——
-用 `--recurse-submodules` 克隆超级仓即可运行完整 studio。许可:Apache-2.0。
+本仓是 **ForgeaX Studio** 的独立消费者仓。Studio 的 `.gitmodules`、workspace、镜像与 CI
+都不包含本仓。许可:Apache-2.0。

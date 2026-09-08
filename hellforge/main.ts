@@ -55,10 +55,6 @@ import {
 import {
   type MaterialAsset,
 } from '@forgeax/engine-types';
-import {
-  HANDLE_CUBE,
-  HANDLE_QUAD,
-} from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import {
   ENTITY_NULL_RAW,
@@ -69,6 +65,7 @@ import {
 } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
 import type { AnimationClip, EquirectAsset, Handle, MeshAsset, SceneAsset } from '@forgeax/engine-types';
+import { primitiveMesh } from './src/primitive-mesh';
 
 import {
   createPlayerFromCombatStats,
@@ -80,9 +77,28 @@ import {
 import { deriveCombatStats, type CombatStats } from './src/combat-stats';
 import { resolveIncomingDamage } from './src/damage';
 import { FxSystem } from './src/fx';
-import { COMBAT_EFFECT_DEFS, combatBeat } from './src/fx/defs';
+import {
+  COMBAT_EFFECT_DEFS,
+  combatBeat,
+  movementBeat,
+  shouldEmitMoveDust,
+} from './src/fx/defs';
 import { upgradeFxSheetsFromPacks } from './src/fx/texture-packs';
-import { createPerfProbe, readFoldedDraws } from './src/perf-probe';
+import { readFoldedDraws } from './src/perf-probe';
+import {
+  attachLoadingPerfToHf,
+  beginLoadingPerfSession,
+  detachHellforgeHf,
+  endLoadingPerfSession,
+  markLoading,
+  preserveShellHfKeys,
+  scheduleFirstStableFrame,
+} from './src/loading-perf';
+import {
+  CampSceneError,
+  createCampSceneLoader,
+  formatCampSceneError,
+} from './src/camp-scene-load';
 import { createOwnerLedger, HELLFORGE_UPDATE_SYSTEMS } from './src/owner-ledger';
 import { cutsceneBlocksChromeKey } from './src/cutscene-input';
 import { MonsterManager, MONSTERS, DEN_MONSTER_KINDS, WILD_MONSTER_KINDS, type Monster } from './src/monsters';
@@ -102,7 +118,13 @@ import {
   type SkillTreeResult,
 } from './src/skill-tree';
 import { installSkillFixture } from './src/dev-skill-fixture';
-import { getHeroDef } from './src/heroes';
+import { DEFAULT_HERO_ID, getHeroDef } from './src/heroes';
+import {
+  bootCoverLabel,
+  createAssetPreloader,
+  VEYRA_IDLE_GUID,
+  VEYRA_SCENE_GUID,
+} from './src/preload';
 import { LOCOMOTION_IDLE_SPEED, selectLocomotionClip } from './src/locomotion';
 import {
   abortDodge,
@@ -201,6 +223,7 @@ import { createUiLayerManager, type MajorPanel } from './src/ui-layer-manager';
 import { installFatalOverlay } from './src/fatal-overlay';
 import { ensureUiStyles } from './src/ui-styles';
 import { installUiCursors } from './src/ui-cursors';
+import { installPointerLockGuard } from './src/pointer-lock-guard';
 import { installUiTooltip } from './src/ui-tooltip';
 import { installUiTransition } from './src/ui-transition';
 import { installCutsceneUi } from './src/cutscene-ui';
@@ -343,10 +366,37 @@ const SKY_CLEAR = { clearR: 0.055, clearG: 0.018, clearB: 0.012 } as const;
 // 'ready' (spawning earlier samples unready GPU memory → rainbow garbage).
 // Pack must not declare Skylight/SkyboxBackground equirect — Edit≠Play.
 const SKY_HDR_GUID = 'c4061caa-8127-42a8-a1bb-54ef1a83d6d2';
+// Hellforge-owned camp Scene GUID (rogue-encampment.pack.json).
+// Not forge.json defaultScene — Host skips camp when that field is omitted.
+const CAMP_SCENE_GUID = '2748fc78-a386-4b9b-b7d5-cd771eaf6a71';
+
+function standalonePackIndexUrl(): string {
+  if (typeof location === 'undefined') return './pack-index.json';
+  const href = location.href;
+  const base = /\/$|\.html(?:[?#]|$)/i.test(href) ? href : `${href}/`;
+  return new URL('pack-index.json', base).href;
+}
+
+function gameAssetUrl(relativePath: string): string {
+  const url = new URL(relativePath, import.meta.url);
+  url.pathname = url.pathname.replace('/assets/assets/', '/assets/');
+  return url.href;
+}
+
+function formatAssetError(error: unknown): string {
+  if (error !== null && typeof error === 'object') {
+    const e = error as { expected?: string; hint?: string; message?: string };
+    const parts = [e.expected, e.hint, e.message].filter(
+      (part): part is string => typeof part === 'string' && part.length > 0,
+    );
+    if (parts.length > 0) return parts.join(' — ');
+  }
+  return error instanceof Error ? error.message : String(error);
+}
 
 type SkyCtx = {
   world: World;
-  assets?: import('@forgeax/engine-assets-runtime').AssetRegistry;
+  assets?: BootstrapContext['assets'];
   app?: import('@forgeax/engine-app').App;
 };
 
@@ -397,12 +447,30 @@ async function readLaunchMode(): Promise<'campaign' | 'den'> {
   }
 }
 
+// Standalone website imports this module before createApp attaches input.
+// Install the watcher now so a click during Loading cannot keep the cursor
+// hidden; bootstrap below also closes the engine gate.
+if (typeof document !== 'undefined') {
+  installPointerLockGuard();
+}
+
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
+  const perfSession = beginLoadingPerfSession();
+  attachLoadingPerfToHf();
+  markLoading('hf:bootstrap-start');
   const { assets, app } = ctx ?? {};
   // Host-controlled UI mount + cleanup sink (■ Stop teardown). UI must attach
   // to uiMount (not document.body); non-DOM side effects register via onCleanup.
   const uiMount: HTMLElement = ctx?.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
   const onCleanup = ctx?.registerCleanup ?? (() => {});
+  onCleanup(() => {
+    endLoadingPerfSession();
+    detachHellforgeHf();
+  });
+
+  // Close the engine click→lock gate before pipeline / title work. Loading
+  // overlay is pointer-events:none, so clicks already reach the canvas.
+  onCleanup(installPointerLockGuard({ ctx }));
 
   // ── HDR-chain atmosphere pipeline (T1 / PR2c) ───────────────────────────
   // Clone URP + pre-tonemap hellforge::atmosphere. Must run before first frame
@@ -419,7 +487,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       atmosphereApi = installed;
       onCleanup(() => atmosphereApi?.dispose());
       console.log(
-        '[hellforge] pipeline: shadow* → skybox → main → bloom* → atmosphere → tonemap → fxaa',
+        '[hellforge] pipeline: shadow* → skybox → main → hellforge-fx → bloom* → atmosphere → tonemap → fxaa',
       );
     } else {
       console.warn('[hellforge] atmosphere pipeline install failed:', installed.error);
@@ -448,10 +516,35 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     disposeFatal = installFatalOverlay(uiMount, title, detail);
   };
 
-  if (ctx?.defaultSceneRoot === undefined || ctx.defaultScene === undefined) {
-    failBoot('营地场景加载失败', 'defaultScene 未实例化。请检查资产目录后重新加载。');
-    return;
-  }
+  // Host skips camp when forge.json has no defaultScene. Hellforge preloads
+  // via ensureCampSceneLoaded after the click-gate; initializeRuntime
+  // instantiates once. ctx.defaultSceneRoot is reused only when the host tree
+  // is the encampment (NpcVeyraAnchor / matching GUID) — a den pack injected
+  // as Play defaultScene must not be treated as camp.
+  let campRoot = ctx?.defaultSceneRoot;
+  let campScene = ctx?.defaultScene;
+  const campLoader = createCampSceneLoader<SceneAsset, EntityHandle>({
+    assets,
+    world: {
+      allocSharedRef: (kind, value) => world.allocSharedRef(kind, value),
+    },
+    instantiateWorld: world,
+    parseGuid: (guid) => AssetGuid.parse(guid),
+    campSceneGuid: CAMP_SCENE_GUID,
+    standalonePackIndexUrl,
+    mark: (name) => markLoading(name),
+    preloaded: { scene: ctx?.defaultScene, root: ctx?.defaultSceneRoot },
+  });
+  onCleanup(() => campLoader.dispose());
+  const assetPreload = assets
+    ? createAssetPreloader({
+        loader: {
+          parseGuid: (guid) => AssetGuid.parse(guid),
+          loadByGuid: (guid) => assets.loadByGuid(guid),
+        },
+      })
+    : null;
+  onCleanup(() => assetPreload?.dispose());
 
   // ── canvas ────────────────────────────────────────────────────────────
   const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
@@ -484,6 +577,20 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     return true;
   };
 
+  // BootCamera before any camp await so Host rAF cannot hit render-system-no-camera.
+  const BOOT_FOV = Math.PI / 2.4;
+  let bootCamera: EntityHandle | null = world.spawn(
+    { component: Name, data: { value: 'BootCamera' } },
+    { component: Transform, data: { pos: [0, 12, 18] } },
+    { component: Camera, data: perspective({ fov: BOOT_FOV, aspect, near: 0.05, far: 200 }) },
+  ).unwrap() as EntityHandle;
+  onCleanup(() => {
+    if (bootCamera !== null) {
+      world.despawn(bootCamera);
+      bootCamera = null;
+    }
+  });
+
   const startedInDen = await readLaunchMode() === 'den';
   let shellPhase: 'title' | 'charSelect' | 'charList' | 'inGame' =
     startedInDen ? 'inGame' : 'title';
@@ -492,7 +599,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   let charList: CharListHandle | null = null;
   let heroPreview: HeroPreviewHandle | null = null;
   let runtimeStart: Promise<void> | null = null;
-  let bootCamera: EntityHandle | null = null;
   /** Title-era F10 panel; disposed when gameplay camera settings take over. */
   let titleRs: RenderSettingsApi | null = null;
   // Scene BGM (camp/den mp3) — lives outside startRuntime so title UI gets camp
@@ -518,8 +624,60 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   let stopped = false;
   onCleanup(() => { stopped = true; });
 
+  const continueHeroClassId = (): ClassId => {
+    const list = listCharacters();
+    if (list.length === 0) return DEFAULT_HERO_ID;
+    const newest = [...list].sort((a, b) => b.lastPlayedAt - a.lastPlayedAt)[0]!;
+    try {
+      getHeroDef(newest.classId);
+      return newest.classId;
+    } catch {
+      return DEFAULT_HERO_ID;
+    }
+  };
+
+  const startBackgroundPreload = (): void => {
+    void campLoader.ensureCampSceneLoaded()
+      .then(() => {
+        if (stopped) return;
+        return assetPreload?.whenCampReady(continueHeroClassId());
+      })
+      .catch((error) => {
+        console.error('[hellforge] background preload failed:', formatCampSceneError(error));
+      });
+  };
+
+  async function requireCampScene(): Promise<{ scene: SceneAsset; root: EntityHandle }> {
+    while (!stopped) {
+      try {
+        const camp = await campLoader.ensureCampSceneInstantiated();
+        campScene = camp.scene;
+        campRoot = camp.root;
+        return camp;
+      } catch (error) {
+        if (stopped) throw error;
+        if (startedInDen || shell === null) {
+          failBoot('营地场景加载失败', formatCampSceneError(error));
+          throw error;
+        }
+        await new Promise<void>((resolve) => {
+          shell!.showLoadingFailure(formatCampSceneError(error), () => {
+            campLoader.retryAfterFailure();
+            shell!.showLoading('正在加载角色与场景…');
+            resolve();
+          });
+        });
+      }
+    }
+    throw new CampSceneError({
+      code: 'camp-scene-stopped',
+      hint: 'Play 已停止，营地实例化已取消。',
+    });
+  }
+
   async function initializeRuntime(selectedRecord: CharacterRecord | null): Promise<void> {
     if (stopped) return;
+    markLoading('hf:runtime-load-start');
     // Den-direct play-config skips title UI but must still construct a Sorceress
     // domain through the same factory (ephemeral — no localStorage projection).
     const ephemeral = selectedRecord === null;
@@ -566,19 +724,39 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // completes last, right before the cover hides, so the bar hits 100%
     // exactly on hide (§5.4). Den packs are NOT here — they moved to the lazy
     // ensureDenLoaded() transition tracker (T4).
+    //
+    // `camp` is one logical wait (payload + instantiate) but it now runs
+    // inside initializeRuntime, so skip-intro would sit at 0% without it.
+    // Weight ~other boot items so completing camp is a real jump, not 2%.
+    // Register every phase before any await so completing camp cannot hit 1.0
+    // and then drop when later phases register (onChange is increase-only).
+    const CAMP_BOOT_TRACKER_WEIGHT = 32;
     const bootTracker = new LoadTracker()
+      .register('camp', 1, CAMP_BOOT_TRACKER_WEIGHT)
       .register('hero', 1 + hero.gltf.clips.length)          // scene + N clips
       .register('veyra', 2)                                   // scene + idle clip
       .register('monsters-wild', WILD_MONSTER_KINDS.length * 6) // kind × (scene + 5 clips)
       .register('volcano', 1 + 8)                             // slag material + 8 cone meshes
       .register('jsons', 2)                                   // obstacles + ashen layout
       .register('ready', 1);                                  // finalize — completes last
-    const unbindBootProgress = bootTracker.onChange((f) => shell?.setLoadingProgress(f));
+    const unbindBootProgress = bootTracker.onChange((f) => {
+      shell?.setLoadingProgress(f);
+      shell?.setLoadingMessage(bootCoverLabel(bootTracker, {
+        campAssetsReady: campLoader.isLoaded(),
+      }));
+    });
     onCleanup(unbindBootProgress);
 
+    const camp = await requireCampScene();
+    if (stopped) return;
+    bootTracker.completePhase('camp');
+    campRoot = camp.root;
+    campScene = camp.scene;
+
     // ── 1. encampment scene (engine-native pack) ──────────────────────────
-    // The host resolves + instantiates the defaultScene before entry runs; the
-    // encampment root is a side-effect spawn (hellforge never reads its mapping).
+    // Root comes from ensureCampSceneInstantiated(). Host defaultSceneRoot is
+    // reused only when it is the encampment; otherwise camp is instantiated
+    // here so a den-as-default Play config cannot become camp.
     //
     // The pack carries EditAmbient (Skylight) + EditSun (DirectionalLight) so the
     // editor viewport can see authored meshes (editor no longer injects a fill
@@ -586,8 +764,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // strip those edit-only entities first: engine lighting is first-hit-wins,
     // and a leftover pack Skylight would block installHdrSky / sun retunes.
     {
-      const root = ctx?.defaultSceneRoot;
-      const sceneAsset = ctx?.defaultScene;
+      const root = campRoot;
+      const sceneAsset = campScene;
       if (root !== undefined && sceneAsset?.entities) {
         const inst = world.get(root, SceneInstance);
         if (inst.ok) {
@@ -716,8 +894,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     if (stopped) return;
 
     // ── Veyra quest NPC (authored NpcVeyraAnchor + witch.glb) ─────────────
-    const VEYRA_SCENE_GUID = '5e3028dd-ddf6-4104-86d9-318d3e8fb5a6';
-    const VEYRA_IDLE_GUID = 'c530adf2-8de6-486a-afaa-9af3a6e6dfd1';
     const VEYRA_SCALE = 1.15;
     const VEYRA_FALLBACK_POS: readonly [number, number, number] = [3.2, 0, 2.0];
     const VEYRA_YAW_QUAT: readonly [number, number, number, number] = [0, 1, 0, 0]; // yaw π
@@ -811,7 +987,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       [-2.5, 1.75, -9], [2.5, 1.75, -9],
     ] as const;
     await upgradeFxSheetsFromPacks(
-      new URL('./assets/vfx/packs/kenney-particle-pack', import.meta.url).href,
+      gameAssetUrl('./assets/vfx/packs/kenney-particle-pack'),
     );
     if (stopped) return;
     const fx = new FxSystem(world, app);
@@ -913,7 +1089,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const emptyAshen: AshenReachLayout = { version: 1, route: [], blockers: [], landmarks: [] };
     const loadSceneJson = async <T>(rel: string, fallback: T): Promise<T> => {
       try {
-        const res = await fetch(new URL(rel, import.meta.url), { cache: 'no-store' });
+        const res = await fetch(gameAssetUrl(rel), { cache: 'no-store' });
         if (!res.ok) return fallback;
         return await res.json() as T;
       } catch {
@@ -1004,6 +1180,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const monsters = new MonsterManager(world, fx, {
       onAggro: () => { sfx.play('monster-aggro'); },
       onAttack: () => { sfx.play('monster-attack'); },
+      // N5: Scorch DOT presentation — small number per ~0.5s tick (damage
+      // accumulated by MonsterManager; HP drain itself stays per-frame).
+      onBurnTick: (m, dmg) => {
+        const s = worldToScreen(m.x, 1.4, m.z);
+        if (s) hud.floatText(`${Math.round(dmg)}`, s.x, s.y, {
+          tier: 'combat', color: '#ff9a4a', size: 22,
+        });
+      },
       onPlayerHit: (rawDmg, source) => {
         if (area === 'camp') return;                       // camp is sacred
         // PR4a T2: den cinematic invuln (Boss / Hero Shot) via owner policy.
@@ -1198,10 +1382,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           hud.floatText(
             crit ? `${Math.round(dmg)}!` : `${Math.round(dmg)}`,
             s.x, s.y,
-            {
-              color: killed ? '#ff8a3c' : crit ? '#ffb028' : '#ffe28a',
-              size: killed ? 24 : crit ? 24 : 17,
-            },
+            crit
+              ? { tier: 'combat', color: '#ffd060', size: 40 }
+              : killed
+                ? { tier: 'combat', color: '#ff8a3c', size: 32 }
+                : { tier: 'combat', color: '#ffe28a', size: 26 },
           );
         }
         if (!killed) sfx.play(crit ? 'crit' : 'hit');
@@ -1350,7 +1535,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       quat.fromAxisAngle(q, [1, 0, 0], -Math.PI / 2);
       world.spawn(
         { component: Transform, data: { pos: [x, 0.06, z], quat: [q[0]!, q[1]!, q[2]!, q[3]!], scale: [s, s, s] } },
-        { component: MeshFilter, data: { assetHandle: HANDLE_QUAD } },
+        { component: MeshFilter, data: { assetHandle: primitiveMesh(world, 'quad') } },
         { component: MeshRenderer, data: { materials: [mat] } },
       );
     };
@@ -1500,7 +1685,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           scale: [0.42 * playerScale, 1.55 * playerScale, 0.32 * playerScale],
         },
       },
-      { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
+      { component: MeshFilter, data: { assetHandle: primitiveMesh(world, 'cube') } },
       { component: MeshRenderer, data: { materials: [shadowProxyMat] } },
     ).unwrap();
 
@@ -1873,8 +2058,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     // faceX/faceZ: witch facing on XZ (also drives showcase stub yaw).
     let faceX = 0, faceZ = -1;
-    const perfProbe = createPerfProbe(600);
-    (window as unknown as { __hf?: unknown }).__hf = {
+    const perfProbe = perfSession.probe;
+    (window as unknown as { __hf?: unknown }).__hf = preserveShellHfKeys({
       state,
       player,
       playerRig,
@@ -1930,7 +2115,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           return exposureMulForArea(area);
         },
       },
-    };
+    } as Record<string, unknown>);
     onCleanup(() => { delete (window as unknown as { __hf?: unknown }).__hf; });
 
     // ── camera + runtime render-settings (F10) ────────────────────────────
@@ -2051,10 +2236,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     };
 
     // ── mouse policy: NO pointer lock, gauntlet cursor ─────────────────────
-    // The cursor stays free and visible (forge.json pointerLock:false keeps
-    // the host shell from grabbing it either). Aiming reads the cursor's
-    // ground point from the camera rig. Cursor skin is the ui-cursors.ts
-    // gauntlet stylesheet installed at bootstrap (shell + in-game unified).
+    // Gate is already closed at bootstrap via setPointerLockAllowed(false).
+    // These two calls clear any stale lock from a previous Play session.
+    // Aiming reads the cursor's ground point from the camera rig. Cursor
+    // skin is the ui-cursors.ts gauntlet stylesheet (shell + in-game).
     const releaseHostCapture = () => {
       try { window.parent.postMessage({ type: 'fx-pointer-capture', capture: false }, '*'); } catch { /* not embedded */ }
     };
@@ -2128,11 +2313,20 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         refreshSkillBar();
       } else if (res === 'mana') {
         const s = worldToScreen(state.px, 2.0, state.pz);
-        if (s) hud.floatText('法力不足', s.x, s.y, { color: '#7da2ff', size: 14 });
+        if (s) hud.floatText('法力不足', s.x, s.y, {
+          tier: 'combat', color: '#7da2ff', size: 24,
+        });
+      } else if (res === 'cooldown') {
+        const s = worldToScreen(state.px, 2.0, state.pz);
+        if (s) hud.floatText('冷却中', s.x, s.y, {
+          tier: 'combat', color: '#d8e2f0', size: 24,
+        });
       } else if (res === 'locked') {
         const s = worldToScreen(state.px, 2.0, state.pz);
         if (s) {
-          hud.floatText('技能未学习', s.x, s.y, { color: '#caa', size: 14 });
+          hud.floatText('技能未学习', s.x, s.y, {
+            tier: 'combat', color: '#e0b8b8', size: 24,
+          });
         }
       }
     };
@@ -2140,9 +2334,21 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     const tryCastSkillId = (id: ActiveSkillId, aimOverride?: { x: number; z: number }): CastResult => {
       if (player.dead || camMode !== 'arpg') return 'dead';
       // L3: no cast during dodge buildup/movement (recover cancel window ok).
-      if (!dodgeAllowsSkillOrMove(dodgeState)) return 'cooldown';
+      if (!dodgeAllowsSkillOrMove(dodgeState)) {
+        const s = worldToScreen(state.px, 2.0, state.pz);
+        if (s) hud.floatText('翻滚中', s.x, s.y, {
+          tier: 'combat', color: '#ffd789', size: 24,
+        });
+        return 'cooldown';
+      }
       // L5: finisher windup locks further casts.
-      if (skills.isFinisherInputLocked()) return 'cooldown';
+      if (skills.isFinisherInputLocked()) {
+        const s = worldToScreen(state.px, 2.0, state.pz);
+        if (s) hud.floatText('冷却中', s.x, s.y, {
+          tier: 'combat', color: '#d8e2f0', size: 24,
+        });
+        return 'cooldown';
+      }
       const aim = aimOverride ?? aimDir();
       const groundXZ = id === FINISHER_ID ? groundAimXZ() ?? undefined : undefined;
       const res = skillCaster.cast(id, [aim.x, aim.z], groundXZ ? { groundXZ } : undefined);
@@ -2436,16 +2642,22 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       state.pz = dungeon.entry.z;
       camRig = snapCameraFocus(camRig, [state.px, 0, state.pz]);
       enterArea('den');
+      markLoading('hf:runtime-assets-ready');
+      markLoading('hf:camp-playable');
+      scheduleFirstStableFrame();
     } else {
       persistCharacter();
       charSelect?.hide();
       charList?.hide();
       bootTracker.complete('ready'); // 100% exactly as the cover hides (§5.4)
+      markLoading('hf:runtime-assets-ready');
       shell?.goTo('inGame');
       shellPhase = 'inGame';
       inGame = true;
       hud.show();
       queuedCampIntro = true; // area title rides the intro cutscene caption instead
+      markLoading('hf:camp-playable');
+      scheduleFirstStableFrame();
     }
     if (degraded.length > 0) {
       hud.banner(`部分资产降级：${degraded.join('、')}`, '#ffb070', 5000);
@@ -2583,6 +2795,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     let stuckAcc = 0;
     let stuckOrigin: readonly [number, number] | null = null;
     let stuckRepathed = false;
+    let moveDustAcc = 0;
     const STUCK_WINDOW_SEC = 0.75;
     const STUCK_DISPLACE_M = 0.05;
     const CLICK_PICK_R = 1.6;
@@ -3591,6 +3804,30 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       }
       // Actual ground speed after collision slide (not key/sprint flags).
       const groundSpeed = Math.hypot(state.px - prevPx, state.pz - prevPz) / Math.max(dt, 1e-6);
+      // N6: foot dust + sprint trail — after slide, via playEffect (FX_MAX_PARTICLES).
+      {
+        const dust = shouldEmitMoveDust({
+          dt,
+          acc: moveDustAcc,
+          groundSpeed,
+          sprint,
+          paused: state.paused,
+          dead: player.dead,
+          dodgeOwnsMove,
+          inCamp: area === 'camp',
+          px: state.px,
+          pz: state.pz,
+        });
+        moveDustAcc = dust.acc;
+        if (dust.walk) {
+          const ids = dust.sprintTrail ? (['puff', 'trail'] as const) : (['puff'] as const);
+          // Heels / wake: spawn slightly behind facing so it reads as 脚下/身后,
+          // not a burst inside the mesh. spriteBurst itself is isotropic.
+          const footX = state.px - faceX * 0.28;
+          const footZ = state.pz - faceZ * 0.28;
+          fx.playEffect(movementBeat(ids), footX, 0.12, footZ);
+        }
+      }
       const isPathDriven = moveIntent.kind === 'point' || moveIntent.kind === 'target';
 
       // Stuck detection (PR12 T4): geometry-jam safety net for point/target intents.
@@ -4006,22 +4243,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   }
 
   if (!startedInDen) {
-    // Title returns before gameplay camera exists — keep a stub so the host
-    // renderer does not fault with render-system-no-camera over the shell.
-    // Title/boot stub FOV — gameplay replaces this with CameraRigState FOV.
-    const BOOT_FOV = Math.PI / 2.4;
-    bootCamera = world.spawn(
-      { component: Name, data: { value: 'BootCamera' } },
-      { component: Transform, data: { pos: [0, 12, 18] } },
-      { component: Camera, data: perspective({ fov: BOOT_FOV, aspect, near: 0.05, far: 200 }) },
-    ).unwrap() as EntityHandle;
-    onCleanup(() => {
-      if (bootCamera !== null) {
-        world.despawn(bootCamera);
-        bootCamera = null;
-      }
-    });
-
     // Title can open the same settings panel before gameplay camera exists.
     titleRs = installRenderSettings({
       mount: uiMount,
@@ -4066,12 +4287,14 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const selection = createCharacterSelectionGate();
       const acceptSelection = (record: CharacterRecord): void => {
         if (!selection.select(record)) return;
+        markLoading('hf:character-confirmed');
         heroPreview?.hide();
         dimAtmosphereForPreview(false);
         charSelect?.hide();
         charList?.hide();
         titleRs?.close();
-        shell!.showLoading('正在加载角色与场景…');
+        assetPreload?.onCharacterConfirmed();
+        shell!.showLoading(campLoader.isLoaded() ? '角色' : '营地');
       };
       const dimAtmosphereForPreview = (on: boolean): void => {
         // Keep CharSelect readable — drive HDR pass params, never CSS overlays (L3).
@@ -4129,7 +4352,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           });
         },
         onClassChange: (classId: ClassId) => {
-          void heroPreview?.show(previewClassId(classId));
+          const id = previewClassId(classId);
+          void assetPreload?.whenClassSelected(id);
+          void heroPreview?.show(id);
         },
       });
       charSelect.hide();
@@ -4150,10 +4375,15 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
             heroPreview?.hide();
             return;
           }
-          void heroPreview?.show(previewClassId(rec.classId));
+          const id = previewClassId(rec.classId);
+          void assetPreload?.whenClassSelected(id);
+          void heroPreview?.show(id);
         },
       });
       charList.hide();
+      void assetPreload?.whenTitleIdle().catch((error) => {
+        console.error('[hellforge] title-idle preload failed:', formatCampSceneError(error));
+      });
       // Title particles uncapped; CharSelect/CharList drive 360° idle preview yaw.
       onCleanup(ownerLedger.trackSystem('hellforge-shell-update'));
       world.addSystem(Update, { name: 'hellforge-shell-update', queries: [], fn: () => {
@@ -4182,12 +4412,19 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       },
     });
     onCleanup(() => intro.dispose());
+    startBackgroundPreload();
     return;
   }
 
+  markLoading('hf:character-confirmed');
+  startBackgroundPreload();
   try {
     await startRuntime(null);
   } catch (error) {
     failBoot('游戏初始化失败', error);
   }
 }
+
+// Current standalone host validates the module's default export as a callable
+// plugin, then invokes it with the same (world, BootstrapContext) arguments.
+export default bootstrap;

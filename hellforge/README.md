@@ -4,6 +4,21 @@ An original dark-fantasy action RPG sample on the forgeax engine. The dying
 embers of a great Hellforge corrupt the land. UI layout is D2R-*inspired*
 (visual language only — no Blizzard assets or owned world terms).
 
+## Play 启动前提
+
+Until engine [#2078](https://github.com/ForgeaX-Games/forgeax-engine/issues/2078) lands, **Node heap must be ≥ 16GB** or Play cook OOMs and the camp never loads.
+
+```bash
+# in forgeax-studio/.env (gitignored — do not commit)
+NODE_OPTIONS=--max-old-space-size=16384
+
+# then from Terminal.app in the studio repo root — `start` reuses the old process:
+bun fx restart
+# browser: http://localhost:18920 → hellforge → Play
+```
+
+Do not raise the heap further to restore 2K textures. See [`docs/handoff/2026-08-13-1k-textures-and-2k-restore.md`](./docs/handoff/2026-08-13-1k-textures-and-2k-restore.md).
+
 ## Pitch
 
 You play a female **Sorceress** in an Act-1 vertical slice: spawn in **余烬哨站
@@ -97,3 +112,4 @@ as Hellforge source gates (see SPEC / plan notes).
 - [`ARPG-VERTICAL-SLICE-PLAN.md`](./ARPG-VERTICAL-SLICE-PLAN.md)
 - [`PLAY_EXPERIENCE.md`](./PLAY_EXPERIENCE.md)
 - [`AGENTS.md`](./AGENTS.md)
+- [`docs/handoff/2026-08-13-1k-textures-and-2k-restore.md`](./docs/handoff/2026-08-13-1k-textures-and-2k-restore.md) — 1K cook 权宜与 2K 恢复

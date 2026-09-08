@@ -1,0 +1,269 @@
+{
+  "region": "grassland",
+  "style": "卡通低多边形、硬折面、高饱和的黄绿与暖土色，边缘干净无渐变",
+  "planned": {
+    "objects": [
+      {
+        "category": "低多边形巨型蒲公英种球",
+        "count": 4,
+        "note": "比树还高的卡通蒲公英，半透明绒球顶端，蛇可从茎秆间穿过，散布在草原开阔处"
+      },
+      {
+        "category": "倾斜风化的孤立土柱",
+        "count": 3,
+        "note": "草原上被风侵蚀出的黄褐色扁平土柱，硬折面顶部盖着一撮草皮，像天然的界碑"
+      },
+      {
+        "category": "环形蘑菇圈石台",
+        "count": 2,
+        "note": "一圈矮圆石围成的浅台，中央长出一朵超大低多边形红伞菇，作为草原地标"
+      }
+    ],
+    "style": "卡通低多边形、硬折面、高饱和的黄绿与暖土色，边缘干净无渐变",
+    "reason": "草原区已有各类松树阔叶树和灌木石块，这里补充的是词表没有的巨型植物和地质奇观：夸张的蒲公英种球和红伞菇给出鲜明的卡通地标感，风化土柱提供竖向剪影引导蛇的路线，三类共9个中挑其显眼者散布，既独特又不与现有树石重复。"
+  },
+  "detections": [
+    {
+      "label": "giant glowing dandelion with snake-like roots",
+      "box_2d": [
+        192,
+        168,
+        775,
+        439
+      ]
+    },
+    {
+      "label": "leaning stone pillar with grass on top",
+      "box_2d": [
+        414,
+        690,
+        906,
+        951
+      ]
+    },
+    {
+      "label": "giant glowing dandelion with snake-like roots",
+      "box_2d": [
+        111,
+        658,
+        626,
+        878
+      ]
+    },
+    {
+      "label": "giant glowing dandelion with snake-like roots",
+      "box_2d": [
+        115,
+        395,
+        513,
+        532
+      ]
+    },
+    {
+      "label": "circular stone border",
+      "box_2d": [
+        662,
+        318,
+        897,
+        508
+      ]
+    },
+    {
+      "label": "leaning stone pillar with grass on top",
+      "box_2d": [
+        338,
+        321,
+        576,
+        416
+      ]
+    },
+    {
+      "label": "red and white spotted mushroom",
+      "box_2d": [
+        628,
+        355,
+        786,
+        467
+      ]
+    },
+    {
+      "label": "circular stone border",
+      "box_2d": [
+        468,
+        542,
+        567,
+        666
+      ]
+    },
+    {
+      "label": "leaning stone pillar with grass on top",
+      "box_2d": [
+        299,
+        602,
+        452,
+        655
+      ]
+    },
+    {
+      "label": "red and white spotted mushroom",
+      "box_2d": [
+        421,
+        570,
+        526,
+        642
+      ]
+    }
+  ],
+  "placements": [
+    {
+      "label": "giant glowing dandelion with snake-like roots",
+      "dir": [
+        0.8687667114985569,
+        0.122576014830201,
+        -0.4798119648157282
+      ],
+      "sizeWorld": 9.498120351386449,
+      "distance": 15.648129875501251,
+      "box": [
+        0.168,
+        0.192,
+        0.439,
+        0.775
+      ]
+    },
+    {
+      "label": "leaning stone pillar with grass on top",
+      "dir": [
+        0.8124279919318317,
+        -0.09447932796162167,
+        -0.5753559024756172
+      ],
+      "sizeWorld": 8.133778393346557,
+      "distance": 15.87890540484043,
+      "box": [
+        0.69,
+        0.414,
+        0.951,
+        0.906
+      ]
+    },
+    {
+      "label": "giant glowing dandelion with snake-like roots",
+      "dir": [
+        0.72672167164519,
+        -0.047552475614983186,
+        -0.685284155678582
+      ],
+      "sizeWorld": 11.896178176186188,
+      "distance": 22.186743355066127,
+      "box": [
+        0.658,
+        0.111,
+        0.878,
+        0.626
+      ]
+    },
+    {
+      "label": "giant glowing dandelion with snake-like roots",
+      "dir": [
+        0.7660737464066543,
+        0.16140413787925356,
+        -0.6221573107678862
+      ],
+      "sizeWorld": 9.218876946991337,
+      "distance": 22.247861615473454,
+      "box": [
+        0.395,
+        0.115,
+        0.532,
+        0.513
+      ]
+    },
+    {
+      "label": "circular stone border",
+      "dir": [
+        0.873609389363515,
+        0.05011322325461535,
+        -0.48404059713100445
+      ],
+      "sizeWorld": 3.2833968366347284,
+      "distance": 13.419886465806337,
+      "box": [
+        0.318,
+        0.662,
+        0.508,
+        0.897
+      ]
+    },
+    {
+      "label": "leaning stone pillar with grass on top",
+      "dir": [
+        0.8100542628343564,
+        0.18227845955701602,
+        -0.5573030185145318
+      ],
+      "sizeWorld": 5.0406644292434155,
+      "distance": 20.34249217780655,
+      "box": [
+        0.321,
+        0.338,
+        0.416,
+        0.576
+      ]
+    },
+    {
+      "label": "red and white spotted mushroom",
+      "dir": [
+        0.8591420975964862,
+        0.07630797023465045,
+        -0.506015760442476
+      ],
+      "sizeWorld": 2.429215833030124,
+      "distance": 14.767342398121011,
+      "box": [
+        0.355,
+        0.628,
+        0.467,
+        0.786
+      ]
+    },
+    {
+      "label": "circular stone border",
+      "dir": [
+        0.755989198947817,
+        0.05700709073008083,
+        -0.6520970193772783
+      ],
+      "sizeWorld": 2.1674095653376275,
+      "distance": 21.028055741615805,
+      "box": [
+        0.542,
+        0.468,
+        0.666,
+        0.567
+      ]
+    },
+    {
+      "label": "red and white spotted mushroom",
+      "dir": [
+        0.7225673663490775,
+        0.07664285692551989,
+        -0.687038771518502
+      ],
+      "sizeWorld": 2.582472243767071,
+      "distance": 23.62325249369365,
+      "box": [
+        0.57,
+        0.421,
+        0.642,
+        0.526
+      ]
+    }
+  ],
+  "assets": {
+    "giant glowing dandelion with snake-like roots": "tools/wc-stage3/grassland/assets/giant_glowing_dandelion_with_snake_like_roots.glb",
+    "leaning stone pillar with grass on top": "tools/wc-stage3/grassland/assets/leaning_stone_pillar_with_grass_on_top.glb",
+    "circular stone border": "tools/wc-stage3/grassland/assets/circular_stone_border.glb",
+    "red and white spotted mushroom": "tools/wc-stage3/grassland/assets/red_and_white_spotted_mushroom.glb"
+  }
+}

@@ -7,18 +7,39 @@
       "passes": [
         {
           "name": "Forward",
-          "shader": "forgeax::default-standard-pbr",
-          "tags": { "LightMode": "Forward" },
-          "queue": 2000
+          "program": {
+            "module": "forgeax::default-standard-pbr"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
         },
         {
           "name": "ShadowCaster",
-          "shader": "forgeax::default-shadow-caster",
-          "tags": { "LightMode": "ShadowCaster" },
-          "passKind": "shadow-caster"
+          "program": {
+            "module": "forgeax::default-shadow-caster"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
         }
       ],
-      "paramValues": { "baseColor": [1, 1, 1, 1], "metallic": 0.05, "roughness": 0.45 }
+      "values": {
+        "baseColor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallic": 0.05,
+        "roughness": 0.45
+      }
     },
     "refs": []
   },
@@ -30,18 +51,39 @@
       "passes": [
         {
           "name": "Forward",
-          "shader": "forgeax::default-standard-pbr",
-          "tags": { "LightMode": "Forward" },
-          "queue": 2000
+          "program": {
+            "module": "forgeax::default-standard-pbr"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
         },
         {
           "name": "ShadowCaster",
-          "shader": "forgeax::default-shadow-caster",
-          "tags": { "LightMode": "ShadowCaster" },
-          "passKind": "shadow-caster"
+          "program": {
+            "module": "forgeax::default-shadow-caster"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
         }
       ],
-      "paramValues": { "baseColor": [0.188, 0.204, 0.247, 1], "metallic": 0, "roughness": 0.5 }
+      "values": {
+        "baseColor": [
+          0.188,
+          0.204,
+          0.247,
+          1
+        ],
+        "metallic": 0,
+        "roughness": 0.5
+      }
     },
     "refs": []
   },
@@ -53,18 +95,39 @@
       "passes": [
         {
           "name": "Forward",
-          "shader": "forgeax::default-standard-pbr",
-          "tags": { "LightMode": "Forward" },
-          "queue": 2000
+          "program": {
+            "module": "forgeax::default-standard-pbr"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
         },
         {
           "name": "ShadowCaster",
-          "shader": "forgeax::default-shadow-caster",
-          "tags": { "LightMode": "ShadowCaster" },
-          "passKind": "shadow-caster"
+          "program": {
+            "module": "forgeax::default-shadow-caster"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
         }
       ],
-      "paramValues": { "baseColor": [1, 0.824, 0.243, 1], "metallic": 0.2, "roughness": 0.35 }
+      "values": {
+        "baseColor": [
+          1,
+          0.824,
+          0.243,
+          1
+        ],
+        "metallic": 0.2,
+        "roughness": 0.35
+      }
     },
     "refs": []
   },
@@ -76,18 +139,39 @@
       "passes": [
         {
           "name": "Forward",
-          "shader": "forgeax::default-standard-pbr",
-          "tags": { "LightMode": "Forward" },
-          "queue": 2000
+          "program": {
+            "module": "forgeax::default-standard-pbr"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
         },
         {
           "name": "ShadowCaster",
-          "shader": "forgeax::default-shadow-caster",
-          "tags": { "LightMode": "ShadowCaster" },
-          "passKind": "shadow-caster"
+          "program": {
+            "module": "forgeax::default-shadow-caster"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
         }
       ],
-      "paramValues": { "baseColor": [0.165, 0.176, 0.208, 1], "metallic": 0, "roughness": 0.9 }
+      "values": {
+        "baseColor": [
+          0.165,
+          0.176,
+          0.208,
+          1
+        ],
+        "metallic": 0,
+        "roughness": 0.9
+      }
     },
     "refs": []
   },
@@ -99,18 +183,39 @@
       "passes": [
         {
           "name": "Forward",
-          "shader": "forgeax::default-standard-pbr",
-          "tags": { "LightMode": "Forward" },
-          "queue": 2000
+          "program": {
+            "module": "forgeax::default-standard-pbr"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
         },
         {
           "name": "ShadowCaster",
-          "shader": "forgeax::default-shadow-caster",
-          "tags": { "LightMode": "ShadowCaster" },
-          "passKind": "shadow-caster"
+          "program": {
+            "module": "forgeax::default-shadow-caster"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
         }
       ],
-      "paramValues": { "baseColor": [1, 0.824, 0.243, 1], "metallic": 0.05, "roughness": 0.45 }
+      "values": {
+        "baseColor": [
+          1,
+          0.824,
+          0.243,
+          1
+        ],
+        "metallic": 0.05,
+        "roughness": 0.45
+      }
     },
     "refs": []
   },
@@ -122,18 +227,39 @@
       "passes": [
         {
           "name": "Forward",
-          "shader": "forgeax::default-standard-pbr",
-          "tags": { "LightMode": "Forward" },
-          "queue": 2000
+          "program": {
+            "module": "forgeax::default-standard-pbr"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
         },
         {
           "name": "ShadowCaster",
-          "shader": "forgeax::default-shadow-caster",
-          "tags": { "LightMode": "ShadowCaster" },
-          "passKind": "shadow-caster"
+          "program": {
+            "module": "forgeax::default-shadow-caster"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
         }
       ],
-      "paramValues": { "baseColor": [1, 0.541, 0.239, 1], "metallic": 0, "roughness": 0.5 }
+      "values": {
+        "baseColor": [
+          1,
+          0.541,
+          0.239,
+          1
+        ],
+        "metallic": 0,
+        "roughness": 0.5
+      }
     },
     "refs": []
   },
@@ -145,18 +271,39 @@
       "passes": [
         {
           "name": "Forward",
-          "shader": "forgeax::default-standard-pbr",
-          "tags": { "LightMode": "Forward" },
-          "queue": 2000
+          "program": {
+            "module": "forgeax::default-standard-pbr"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
         },
         {
           "name": "ShadowCaster",
-          "shader": "forgeax::default-shadow-caster",
-          "tags": { "LightMode": "ShadowCaster" },
-          "passKind": "shadow-caster"
+          "program": {
+            "module": "forgeax::default-shadow-caster"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
         }
       ],
-      "paramValues": { "baseColor": [1, 1, 1, 1], "metallic": 0.2, "roughness": 0.35 }
+      "values": {
+        "baseColor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallic": 0.2,
+        "roughness": 0.35
+      }
     },
     "refs": []
   },
@@ -168,18 +315,39 @@
       "passes": [
         {
           "name": "Forward",
-          "shader": "forgeax::default-standard-pbr",
-          "tags": { "LightMode": "Forward" },
-          "queue": 2000
+          "program": {
+            "module": "forgeax::default-standard-pbr"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
         },
         {
           "name": "ShadowCaster",
-          "shader": "forgeax::default-shadow-caster",
-          "tags": { "LightMode": "ShadowCaster" },
-          "passKind": "shadow-caster"
+          "program": {
+            "module": "forgeax::default-shadow-caster"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
         }
       ],
-      "paramValues": { "baseColor": [0.188, 0.204, 0.247, 1], "metallic": 0.05, "roughness": 0.45 }
+      "values": {
+        "baseColor": [
+          0.188,
+          0.204,
+          0.247,
+          1
+        ],
+        "metallic": 0.05,
+        "roughness": 0.45
+      }
     },
     "refs": []
   },
@@ -191,18 +359,39 @@
       "passes": [
         {
           "name": "Forward",
-          "shader": "forgeax::default-standard-pbr",
-          "tags": { "LightMode": "Forward" },
-          "queue": 2000
+          "program": {
+            "module": "forgeax::default-standard-pbr"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
         },
         {
           "name": "ShadowCaster",
-          "shader": "forgeax::default-shadow-caster",
-          "tags": { "LightMode": "ShadowCaster" },
-          "passKind": "shadow-caster"
+          "program": {
+            "module": "forgeax::default-shadow-caster"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
         }
       ],
-      "paramValues": { "baseColor": [1, 1, 1, 1], "metallic": 0, "roughness": 0.5 }
+      "values": {
+        "baseColor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallic": 0,
+        "roughness": 0.5
+      }
     },
     "refs": []
   },
@@ -214,18 +403,39 @@
       "passes": [
         {
           "name": "Forward",
-          "shader": "forgeax::default-standard-pbr",
-          "tags": { "LightMode": "Forward" },
-          "queue": 2000
+          "program": {
+            "module": "forgeax::default-standard-pbr"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "Forward"
+            },
+            "queue": 2000
+          }
         },
         {
           "name": "ShadowCaster",
-          "shader": "forgeax::default-shadow-caster",
-          "tags": { "LightMode": "ShadowCaster" },
-          "passKind": "shadow-caster"
+          "program": {
+            "module": "forgeax::default-shadow-caster"
+          },
+          "renderState": {
+            "tags": {
+              "LightMode": "ShadowCaster"
+            },
+            "passKind": "shadow-caster"
+          }
         }
       ],
-      "paramValues": { "baseColor": [1, 0.353, 0.431, 1], "metallic": 0.2, "roughness": 0.35 }
+      "values": {
+        "baseColor": [
+          1,
+          0.353,
+          0.431,
+          1
+        ],
+        "metallic": 0.2,
+        "roughness": 0.35
+      }
     },
     "refs": []
   }

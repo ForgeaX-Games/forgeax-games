@@ -1,4 +1,4 @@
-#define_import_path hellforge::frost_slow
+#define_import_path hellforge_source::frost_slow
 
 #import forgeax_view::common::{view, meshes}
 

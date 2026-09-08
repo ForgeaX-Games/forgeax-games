@@ -16,17 +16,17 @@ import {
 describe('render-settings defaults (PR2c T1 + T4 grade)', () => {
   test('grade defaults match hellforge dark baseline', () => {
     expect(RENDER_SETTINGS_DEFAULTS.tonemap).toBe('aces');
-    expect(RENDER_SETTINGS_DEFAULTS.exposure).toBe(0.42);
+    expect(RENDER_SETTINGS_DEFAULTS.exposure).toBe(0.50);
     expect(RENDER_SETTINGS_DEFAULTS.bloom).toBe(true);
     expect(RENDER_SETTINGS_DEFAULTS.vignette).toBe(0.65);
-    expect(RENDER_SETTINGS_DEFAULTS.haze).toBe(0.70);
+    expect(RENDER_SETTINGS_DEFAULTS.haze).toBe(0.25);
     expect(RENDER_SETTINGS_DEFAULTS.atmoTemp).toBe(0.50);
   });
 
   test('T4 locked grade table: tonemap/exposure/whitePoint/bloom', () => {
     // L4: keep ACES until AgX A/B has Play evidence (do not silently flip).
     expect(RENDER_SETTINGS_DEFAULTS.tonemap).toBe('aces');
-    expect(RENDER_SETTINGS_DEFAULTS.exposure).toBe(0.42);
+    expect(RENDER_SETTINGS_DEFAULTS.exposure).toBe(0.50);
     expect(RENDER_SETTINGS_DEFAULTS.whitePoint).toBe(4.5);
     expect(RENDER_SETTINGS_DEFAULTS.bloom).toBe(true);
     // Threshold above frost-fang ampSafe (≤1.05); below fixture/fire peaks.

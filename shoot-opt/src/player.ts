@@ -18,7 +18,6 @@ import {
 import {
   quat,
 } from '@forgeax/engine-runtime';
-import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import { defineComponent, type EntityHandle } from '@forgeax/engine-ecs';
 import type { World } from '@forgeax/engine-ecs';
 import type { Geo, Mat } from './setup';

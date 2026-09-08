@@ -15,5 +15,10 @@ sessions/
 # Playwright CLI test artifacts (console/snapshot logs), not source
 .playwright-cli/
 
+# Hellforge local 2K originals + deferred cook copies (~330MB). Engine scanner
+# already blacklists this dirname; never commit. Remote 2K SSOT is git tag
+# hellforge-textures-2k-20260813 — see hellforge/docs/handoff/2026-08-13-1k-textures-and-2k-restore.md
+hellforge/.forgeax-asset-cache/
+
 # Shell UI raw masters (Downloads cutouts kept local)
 hellforge/assets/ui/shell/_masters/

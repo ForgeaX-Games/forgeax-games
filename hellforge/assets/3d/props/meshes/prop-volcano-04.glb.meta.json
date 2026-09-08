@@ -11,19 +11,22 @@
       "guid": "36bcf83d-f5d0-d855-5ae1-55fced4f2f8a",
       "sourceIndex": 0,
       "kind": "mesh",
-      "name": "volcano"
+      "name": "volcano",
+      "sourceKey": "mesh"
     },
     {
       "guid": "ddc1f5a0-bafc-9b07-d049-047467054dd6",
       "sourceIndex": 0,
       "kind": "material",
-      "name": "volcano-stub"
+      "name": "volcano-stub",
+      "sourceKey": "material"
     },
     {
       "guid": "37ba03ff-c7a4-f235-5a40-2e33fb9ad2cb",
       "sourceIndex": 0,
       "kind": "scene",
-      "name": "scene"
+      "name": "scene",
+      "sourceKey": "scene"
     }
   ]
 }

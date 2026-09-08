@@ -16,10 +16,13 @@ import {
 import {
   type MaterialAsset,
 } from '@forgeax/engine-types';
-import { HANDLE_CUBE, type AssetRegistry } from '@forgeax/engine-assets-runtime';
+import type { BootstrapContext } from '@forgeax/engine-app';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle, MeshAsset } from '@forgeax/engine-types';
+import { primitiveMesh } from './primitive-mesh';
+
+type AssetRegistry = BootstrapContext['assets'];
 
 import { mulberry32 } from './dungeon-layout';
 import { SLAG_MATERIAL_GUID, VOLCANO_VARIANTS, type VolcanoVariant } from './volcano-assets';
@@ -168,7 +171,7 @@ export async function installWildTerrain(
         component: Transform,
         data: { pos: [origin.x, -0.55, origin.z], scale: [apron, 0.4, apron] },
       },
-      { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
+      { component: MeshFilter, data: { assetHandle: primitiveMesh(world, 'cube') } },
       { component: MeshRenderer, data: { materials: [apronMat] } },
     );
   }

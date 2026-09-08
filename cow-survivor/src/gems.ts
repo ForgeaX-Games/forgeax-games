@@ -34,9 +34,9 @@ import {
   type MaterialAsset,
   type Handle,
 } from '@forgeax/engine-types';
-import { HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
+import { primitiveMesh } from './primitive-mesh';
 
 import type { EnemyKind, Tier } from './enemies';
 import { ENEMIES } from './enemies';
@@ -123,7 +123,7 @@ export class GemSystem {
     const r = tier === 'BOSS' ? 0.32 : tier === 'T3' ? 0.22 : tier === 'T2' ? 0.18 : 0.15;
     const e = this.ctx.world.spawn(
       { component: Transform, data: { pos: [x, baseY, z], scale: [r, r, r] } },
-      { component: MeshFilter, data: { assetHandle: HANDLE_SPHERE } },
+      { component: MeshFilter, data: { assetHandle: primitiveMesh(this.ctx.world, 'sphere') } },
       { component: MeshRenderer, data: { materials: [this.mats[tier]] } },
     ).unwrap();
     this.gems.push({

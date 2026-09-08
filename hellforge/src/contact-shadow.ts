@@ -19,10 +19,10 @@ import {
 import {
   quat,
 } from '@forgeax/engine-runtime';
-import { HANDLE_QUAD } from '@forgeax/engine-assets-runtime';
 import { unwrapHandle } from '@forgeax/engine-types';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle, MaterialAsset, TextureAsset } from '@forgeax/engine-types';
+import { primitiveMesh } from './primitive-mesh';
 
 export type ContactShadowKit = {
   /** Spawn a soft disc at (x,z). `radius` is world half-extent of the quad. */
@@ -123,7 +123,7 @@ export function installContactShadows(world: World): ContactShadowKit {
           scale: [radius * 2, radius * 2, radius * 2],
         },
       },
-      { component: MeshFilter, data: { assetHandle: HANDLE_QUAD } },
+      { component: MeshFilter, data: { assetHandle: primitiveMesh(world, 'quad') } },
       { component: MeshRenderer, data: { materials: [mat] } },
     ).unwrap() as EntityHandle;
     live.add(e);

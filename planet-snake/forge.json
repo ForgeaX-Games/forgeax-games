@@ -1,0 +1,7 @@
+{
+  "id": "planet-snake",
+  "name": "星球贪吃蛇",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "defaultScene": "0071580b-83be-4a22-ae68-2835c0fd1c44"
+}

@@ -127,20 +127,18 @@ function makeSolidMat(guid, r, g, b, roughness = 0.72) {
       passes: [
         {
           name: 'Forward',
-          shader: 'forgeax::default-standard-pbr',
-          tags: { LightMode: 'Forward' },
-          queue: 2000,
+          program: { module: 'forgeax::default-standard-pbr' },
+          renderState: { tags: { LightMode: 'Forward' }, queue: 2000 },
         },
         {
           name: 'ShadowCaster',
-          shader: 'forgeax::default-shadow-caster',
-          tags: { LightMode: 'ShadowCaster' },
-          passKind: 'shadow-caster',
+          program: { module: 'forgeax::default-shadow-caster' },
+          renderState: { tags: { LightMode: 'ShadowCaster' }, passKind: 'shadow-caster' },
         },
       ],
       // ForgeaX PBR expects RGB (3), not RGBA
       // Rich cartoon albedos + mid-matte roughness so sun shading still reads.
-      paramValues: {
+      values: {
         baseColor: [r, g, b],
         metallic: 0,
         roughness,
@@ -159,12 +157,11 @@ function makeUnlitMat(guid, r, g, b) {
       passes: [
         {
           name: 'Forward',
-          shader: 'forgeax::default-unlit',
-          tags: { LightMode: 'Forward' },
-          queue: 2000,
+          program: { module: 'forgeax::default-unlit' },
+          renderState: { tags: { LightMode: 'Forward' }, queue: 2000 },
         },
       ],
-      paramValues: {
+      values: {
         baseColor: [r, g, b],
         metallic: 0,
         roughness: 1,
@@ -968,7 +965,7 @@ for (let i = 0; i < 48; i++) {
 }
 
 const pack = {
-  schemaVersion: '1.0.0',
+  schemaVersion: '2.0.0',
   kind: 'internal-text-package',
   assets: [
     {
@@ -977,6 +974,11 @@ const pack = {
       payload: { kind: 'scene', entities, mounts: [] },
       refs,
     },
+    // Engine builtin primitives are runtime-only in the editor host, but a
+    // standalone build must publish them (no host pre-instantiation). Same
+    // GUIDs + procedural payloads as templates/game-default/assets/scene.pack.json.
+    { guid: SPHERE, kind: 'mesh', payload: { geometry: 'procedural-sphere' }, refs: [] },
+    { guid: CUBE, kind: 'mesh', payload: { geometry: 'procedural-cube' }, refs: [] },
     ...groundSkyMats,
     ...solidMats,
     ...vfxMats,

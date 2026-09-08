@@ -23,8 +23,7 @@ import {
   type MaterialAsset,
   type Handle,
 } from '@forgeax/engine-types';
-import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
-import { createCylinderGeometry, createSphereGeometry } from '@forgeax/engine-geometry';
+import { createCylinderGeometry, createPrimitiveMesh, createSphereGeometry } from '@forgeax/engine-geometry';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import { Time, Update, type EntityHandle, type World } from '@forgeax/engine-ecs';
@@ -196,11 +195,11 @@ function attachPackPhysics(ctx: CtxWorld, loaded: { mapping: ReadonlyMap<number,
   }
 }
 
-function spawnFallbackScene(ctx: CtxWorld): void {
+function spawnFallbackScene(ctx: CtxWorld, cubeMesh: Handle<'MeshAsset', 'shared'>): void {
   const mat = ctx.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', Materials.standard({ baseColor: [0.18, 0.08, 0.08, 1], roughness: 0.95 }));
   ctx.world.spawn(
     { component: Transform, data: { pos: [0, -0.08, 0], scale: [36, 0.16, 36] } },
-    { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
+    { component: MeshFilter, data: { assetHandle: cubeMesh } },
     { component: MeshRenderer, data: { materials: [mat] } },
   );
 }
@@ -213,6 +212,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   canvas.width = Math.max(1, Math.floor(canvas.clientWidth * dpr));
   canvas.height = Math.max(1, Math.floor(canvas.clientHeight * dpr));
   const aspect = canvas.width / canvas.height || 1;
+  const primitiveCube = world.internSharedRef('MeshAsset', createPrimitiveMesh('cube').unwrap());
+  const primitiveSphere = world.internSharedRef('MeshAsset', createPrimitiveMesh('sphere').unwrap());
 
   // M3c: the host resolves + instantiates the defaultScene before entry runs
   // and exposes the synthetic root (ctx.defaultSceneRoot) plus the loaded
@@ -244,7 +245,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   }
   if (!loaded) {
     console.error('[cowhell] FALLBACK scene active — only ground will render (scene pack returned null or threw)');
-    spawnFallbackScene({ world });
+    spawnFallbackScene({ world }, primitiveCube);
   }
   spawnGroundCollider({ world });
   void installHdrSky({ world, assets: ctx?.assets });
@@ -306,11 +307,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   const orbitMat = mkMat(Materials.unlit([1, 0.05, 0.14, 1], { castShadow: false }));
   const sparkMat = mkMat(Materials.unlit([1, 0.58, 0.12, 1], { castShadow: false }));
   const smallSphere = createSphereGeometry(0.16, 10, 6);
-  const bulletMesh = smallSphere.ok ? world.allocSharedRef('MeshAsset', smallSphere.value) : HANDLE_SPHERE;
+  const bulletMesh = smallSphere.ok ? world.allocSharedRef('MeshAsset', smallSphere.value) : primitiveSphere;
   const tinySphere = createSphereGeometry(0.08, 8, 5);
-  const sparkMesh = tinySphere.ok ? world.allocSharedRef('MeshAsset', tinySphere.value) : HANDLE_SPHERE;
+  const sparkMesh = tinySphere.ok ? world.allocSharedRef('MeshAsset', tinySphere.value) : primitiveSphere;
   const cyl = createCylinderGeometry(0.35, 0.35, 1, 14);
-  const cylinderMesh = cyl.ok ? world.allocSharedRef('MeshAsset', cyl.value) : HANDLE_CUBE;
+  const cylinderMesh = cyl.ok ? world.allocSharedRef('MeshAsset', cyl.value) : primitiveCube;
 
   const hud = installHud({
     initialMode: 'topdown',
@@ -479,12 +480,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     };
     const s = type.scale;
     const parts = [
-      part(0, 0.05 * s, 0, 0.9 * s, 0.58 * s, 1.15 * s, HANDLE_CUBE, mat),
-      part(0, 0.36 * s, -0.58 * s, 0.52 * s, 0.46 * s, 0.45 * s, HANDLE_CUBE, mat),
-      part(-0.27 * s, -0.36 * s, -0.35 * s, 0.18 * s, 0.52 * s, 0.18 * s, HANDLE_CUBE, hoofMat),
-      part(0.27 * s, -0.36 * s, -0.35 * s, 0.18 * s, 0.52 * s, 0.18 * s, HANDLE_CUBE, hoofMat),
-      part(-0.27 * s, -0.36 * s, 0.36 * s, 0.18 * s, 0.52 * s, 0.18 * s, HANDLE_CUBE, hoofMat),
-      part(0.27 * s, -0.36 * s, 0.36 * s, 0.18 * s, 0.52 * s, 0.18 * s, HANDLE_CUBE, hoofMat),
+      part(0, 0.05 * s, 0, 0.9 * s, 0.58 * s, 1.15 * s, primitiveCube, mat),
+      part(0, 0.36 * s, -0.58 * s, 0.52 * s, 0.46 * s, 0.45 * s, primitiveCube, mat),
+      part(-0.27 * s, -0.36 * s, -0.35 * s, 0.18 * s, 0.52 * s, 0.18 * s, primitiveCube, hoofMat),
+      part(0.27 * s, -0.36 * s, -0.35 * s, 0.18 * s, 0.52 * s, 0.18 * s, primitiveCube, hoofMat),
+      part(-0.27 * s, -0.36 * s, 0.36 * s, 0.18 * s, 0.52 * s, 0.18 * s, primitiveCube, hoofMat),
+      part(0.27 * s, -0.36 * s, 0.36 * s, 0.18 * s, 0.52 * s, 0.18 * s, primitiveCube, hoofMat),
       part(-0.22 * s, 0.68 * s, -0.72 * s, 0.13 * s, 0.32 * s, 0.13 * s, cylinderMesh, hornMat),
       part(0.22 * s, 0.68 * s, -0.72 * s, 0.13 * s, 0.32 * s, 0.13 * s, cylinderMesh, hornMat),
     ];
@@ -540,7 +541,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     spawnSparks(en.x, en.y + 0.2, en.z, en.type.boss ? 26 : 10, bloodMat);
     const gem = world.spawn(
       { component: Transform, data: { pos: [en.x, 0.2, en.z], scale: [0.32, 0.32, 0.32] } },
-      { component: MeshFilter, data: { assetHandle: HANDLE_SPHERE } },
+      { component: MeshFilter, data: { assetHandle: primitiveSphere } },
       { component: MeshRenderer, data: { materials: [xpMat] } },
       { component: RigidBody, data: { type: RigidBodyTypeValue.dynamic, mass: 0.2, linearDamping: 0.85 } },
       { component: Collider, data: { shape: ColliderShapeValue.sphere, radius: 0.18, restitution: 0.2 } },

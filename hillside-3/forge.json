@@ -1,0 +1,7 @@
+{
+  "id": "hillside-3",
+  "name": "hillside-3",
+  "schemaVersion": "1.0.0",
+  "entry": "main.ts",
+  "physics": "3d"
+}

@@ -1,4 +1,4 @@
-#define_import_path hellforge::frost_impact
+#define_import_path hellforge_source::frost_impact
 
 #import forgeax_view::common::{view, meshes}
 

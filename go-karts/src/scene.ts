@@ -6,7 +6,7 @@ import type { AssetRegistry } from '@forgeax/engine-assets-runtime';
 import { AssetGuid } from '@forgeax/engine-pack/guid';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { BootstrapContext } from '@forgeax/engine-app';
-import type { SceneAsset } from '@forgeax/engine-types';
+import { projectSceneAsset, worldInstantiateScene } from '@forgeax/engine-scene';
 
 export const SCENE_GUID = '8e21f04f-e29b-464b-8b6f-2a001f4f18ad';
 
@@ -62,20 +62,28 @@ export async function loadSceneByGuid(
     return null;
   }
 
-  const loadResult = await assets.loadByGuid<SceneAsset>(sceneGuid.value);
+  const loadResult = await assets.load(AssetGuid.format(sceneGuid.value), 'scene');
   if (!loadResult.ok) {
-    console.error('[go-karts] scene loadByGuid failed:', loadResult.error);
+    console.error('[go-karts] scene load failed:', loadResult.error);
     return null;
   }
 
-  const sceneHandle = world.allocSharedRef('SceneAsset', loadResult.value);
-  const instantiateResult = assets.instantiate<SceneAsset>(sceneHandle, world);
+  const projected = await projectSceneAsset(world, loadResult.value, (guid, kind) =>
+    assets.load(guid, kind),
+  );
+  if (!projected.ok) {
+    console.error('[go-karts] scene project failed:', projected.error);
+    return null;
+  }
+
+  const sceneHandle = world.allocSharedRef('SceneAsset', projected.value);
+  const instantiateResult = worldInstantiateScene(world, sceneHandle);
   if (!instantiateResult.ok) {
     console.error('[go-karts] scene instantiate failed:', instantiateResult.error);
     return null;
   }
 
-  const sceneInstance = world.get(instantiateResult.value, SceneInstance);
+  const sceneInstance = world.get(instantiateResult.value.root, SceneInstance);
   if (!sceneInstance.ok) {
     console.error('[go-karts] SceneInstance lookup failed:', sceneInstance.error);
     return null;
@@ -85,7 +93,7 @@ export async function loadSceneByGuid(
     mapping: mappingFromArray(
       sceneInstance.value.mapping as unknown as { length: number; [index: number]: number },
     ),
-    nodes: loadResult.value.entities as unknown as PackNode[],
+    nodes: projected.value.entities as unknown as PackNode[],
   };
 }
 

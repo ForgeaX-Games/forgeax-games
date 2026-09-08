@@ -47,9 +47,9 @@ import {
   type MaterialAsset,
   type Handle,
 } from '@forgeax/engine-types';
-import { HANDLE_SPHERE, HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
+import { primitiveMesh } from './primitive-mesh';
 
 import lightningShader from './shaders/lightning.wgsl';
 import shockwaveShader from './shaders/shockwave.wgsl';
@@ -603,7 +603,7 @@ export class FxSystem {
     const d = radius;                    // sphere mesh has unit-radius * 0.5? scale=2*radius for visual size
     const e = this.ctx.world.spawn(
       { component: Transform, data: { pos: [x, y, z], scale: [d, d, d] } },
-      { component: MeshFilter, data: { assetHandle: HANDLE_SPHERE } },
+      { component: MeshFilter, data: { assetHandle: primitiveMesh(this.ctx.world, 'sphere') } },
       { component: MeshRenderer, data: { materials: [pool.mat] } },
     ).unwrap();
     this.fireballs.push({ e, slot, age: 0, life: lifetime });
@@ -641,7 +641,7 @@ export class FxSystem {
     matOverride?: MatHandle,
   ): void {
     const mat = matOverride ?? this.mats[color];
-    const handle = shape === 'cube' ? HANDLE_CUBE : HANDLE_SPHERE;
+    const handle = primitiveMesh(this.ctx.world, shape === 'cube' ? 'cube' : 'sphere');
     const data: Record<string, number[]> = {
       pos: [x, y, z], scale: [sx, sy, sz],
     };
@@ -963,7 +963,7 @@ export class FxSystem {
     const yPos = a?.yPos ?? 0.06;
     const e = this.ctx.world.spawn(
       { component: Transform, data: { pos: [x, yPos, z], scale: [sx, sy, sz] } },
-      { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
+      { component: MeshFilter, data: { assetHandle: primitiveMesh(this.ctx.world, 'cube') } },
       { component: MeshRenderer, data: { materials: [pool.mat] } },
     ).unwrap();
     this.shockwaves.push({ e, slot, age: 0, life: lf, baseSx: sx, baseSy: sy, baseSz: sz });

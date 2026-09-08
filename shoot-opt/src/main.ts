@@ -1030,3 +1030,18 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     storyUi.showEnding(gs.score);
   }
 }
+
+// Preview/standalone host contract: expose the game entry as a Cordis plugin.
+const shootOptPlugin = {
+  name: 'shoot-opt',
+  inject: ['world', 'assets', 'renderer', 'gameHost'],
+  async apply(pluginCtx: { world: World; gameHost: BootstrapContext & { app: { registerUpdate: (fn: (dt: number) => void) => void } } }) {
+    await bootstrap(pluginCtx.world, {
+      ...pluginCtx.gameHost,
+      registerUpdate: (fn) => pluginCtx.gameHost.app.registerUpdate(fn),
+      registerCleanup: () => {},
+    });
+  },
+};
+
+export default shootOptPlugin;

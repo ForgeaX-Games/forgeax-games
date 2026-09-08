@@ -42,10 +42,10 @@ import {
   type MaterialAsset,
   type Handle,
 } from '@forgeax/engine-types';
-import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
+import { primitiveMesh } from './primitive-mesh';
 
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
 type Ctx = Parameters<GameEntry>[0];
@@ -447,7 +447,7 @@ export class WeaponSystem {
     const partsSpec = BULLET_VISUALS[def.kind];
     for (const p of partsSpec) {
       const mat = p.mat === 'main' ? w.mainMat : w.accentMat;
-      const handle = p.shape === 'cube' ? HANDLE_CUBE : HANDLE_SPHERE;
+      const handle = primitiveMesh(world, p.shape === 'cube' ? 'cube' : 'sphere');
       const partT: Record<string, number[]> = {
         pos: [p.px, p.py, p.pz],
         scale: [p.sx, p.sy, p.sz],

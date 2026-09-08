@@ -35,9 +35,9 @@ import {
   type MaterialAsset,
   type Handle,
 } from '@forgeax/engine-types';
-import { HANDLE_SPHERE, HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
+import { primitiveMesh } from './primitive-mesh';
 
 // Trigger vite-plugin-shader registration by importing the .wgsl source
 // (the .wgsl.meta.json sidecar declares materialShaderIdentifier =
@@ -188,7 +188,7 @@ export class ParticleEmitter {
     // so we leave it zeroed out.
     this.setPayload = { transforms: this.transforms };
 
-    const handle = opts.geometry === 'sphere' ? HANDLE_SPHERE : HANDLE_CUBE;
+    const handle = primitiveMesh(ctx.world, opts.geometry === 'sphere' ? 'sphere' : 'cube');
     // Emitter entity Transform = scale 0 below the floor. Our particle
     // material's `vs_main` IGNORES `meshes[0].worldFromLocal` and reads
     // only `instances[i].localFromInstance`, so the entity Transform does

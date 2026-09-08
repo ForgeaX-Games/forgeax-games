@@ -33,7 +33,7 @@ export type RenderSettingsDefaults = {
  * | Knob              | Value  | Notes |
  * |-------------------|--------|-------|
  * | tonemap           | aces   | L4 keep — AgX A/B BLOCKED (no Play/screenshots on this stack); do not flip without evidence |
- * | exposure          | 0.42   | F10 base; per-area × `exposureMulForArea` (den 1.0 / camp 1.05 / wild 1.18) |
+ * | exposure          | 0.50   | F10 base (+20% from 0.42); per-area × `exposureMulForArea` (den 1.0 / camp 1.05 / wild 1.18) |
  * | whitePoint        | 4.5    | Belfast HDR crush — sky not blown white |
  * | bloom             | true   | |
  * | bloomThreshold    | 1.20   | Above frost-fang custom-shader `ampSafe` ≤1.05; catches fire-bolt peaks (~1.1–1.3) + fixture ei≥2 |
@@ -49,7 +49,7 @@ export type RenderSettingsDefaults = {
  */
 export const RENDER_SETTINGS_DEFAULTS: RenderSettingsDefaults = {
   tonemap: 'aces',
-  exposure: 0.42,
+  exposure: 0.50,
   whitePoint: 4.5,
   antialias: 'fxaa',
   bloom: true,
@@ -62,7 +62,7 @@ export const RENDER_SETTINGS_DEFAULTS: RenderSettingsDefaults = {
   fillMul: 0.70,
   atmoTemp: 0.50,
   vignette: 0.65,
-  haze: 0.70,
+  haze: 0.25,
   particleDensity: 1.15,
   particleStyle: 'auto',
   renderScale: 1,

@@ -86,7 +86,10 @@ export type RenderSettingsApi = {
 
 // v3: dark hellforge grade — Belfast HDR peaks crushed so sky isn't blown white.
 // Grade table SSOT (tonemap / exposure / whitePoint / bloom): render-settings-defaults.ts (PR2c T4).
-const LS_KEY = 'hellforge.render.v3';
+// v4: brighter default grade (exposure +20%, haze ~25%). Bump the key so
+// website / returning Play sessions pick up the new defaults instead of a
+// stale v3 blob.
+const LS_KEY = 'hellforge.render.v4';
 const STYLE_ID = 'hf-rs-style';
 const PANEL_ID = 'hf-rs';
 
@@ -379,7 +382,7 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
         { value: 'linear', label: 'Linear' },
       ],
     } },
-    { row: { kind: 'range', key: 'exposure', label: 'Exposure', min: 0.2, max: 3, step: 0.05, group: 'camera' } },
+    { row: { kind: 'range', key: 'exposure', label: '亮度', min: 0.2, max: 3, step: 0.05, group: 'camera' } },
     { row: { kind: 'range', key: 'whitePoint', label: 'White point', min: 1, max: 8, step: 0.1, group: 'camera' } },
     { row: {
       kind: 'select', key: 'antialias', label: '抗锯齿', group: 'camera',

@@ -26,9 +26,9 @@ import {
 import {
   type MaterialAsset,
 } from '@forgeax/engine-types';
-import { HANDLE_CUBE, HANDLE_SPHERE } from '@forgeax/engine-assets-runtime';
 import type { EntityHandle, World } from '@forgeax/engine-ecs';
 import type { Handle } from '@forgeax/engine-types';
+import { primitiveMesh } from './primitive-mesh';
 
 import type { ActiveSkillId, SkillNodeId } from './content-ids';
 import { isSkillAvailable } from './skill-availability';
@@ -555,7 +555,7 @@ export class SkillSystem {
       }
       const partRes = this.world.spawn(
         { component: Transform, data: tform },
-        { component: MeshFilter, data: { assetHandle: p.shape === 'cube' ? HANDLE_CUBE : HANDLE_SPHERE } },
+        { component: MeshFilter, data: { assetHandle: primitiveMesh(this.world, p.shape === 'cube' ? 'cube' : 'sphere') } },
         { component: MeshRenderer, data: { materials: [p.mat === 'main' ? pair.main : pair.accent] } },
         { component: ChildOf, data: { parent: root } },
       );

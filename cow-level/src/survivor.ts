@@ -34,7 +34,7 @@ import {
   type MaterialAsset,
   type Handle,
 } from '@forgeax/engine-types';
-import { HANDLE_CUBE } from '@forgeax/engine-assets-runtime';
+import { createPrimitiveMesh } from '@forgeax/engine-geometry';
 import { Collider, ColliderShapeValue, RigidBody, RigidBodyTypeValue } from '@forgeax/engine-physics';
 import type { EntityHandle } from '@forgeax/engine-ecs';
 import type { GameEntry } from '@forgeax/engine-app';
@@ -163,10 +163,12 @@ export class Survivor {
 
   // material / mesh palette
   private mats: Record<string, MatHandle> = {};
+  private cubeMesh: Handle<'MeshAsset', 'shared'>;
   private px = 0; private pz = 0; private py = 0.75;
 
   constructor(deps: SurvivorDeps) {
     this.w = deps.world; this.hud = deps.hud; this.project = deps.project;
+    this.cubeMesh = this.w.internSharedRef('MeshAsset', createPrimitiveMesh('cube').unwrap());
     this.buildPalette();
     // starting loadout: the flamebolt
     this.weapons.set('flame', { cfg: WEAPONS.flame, level: 1, cd: 0 });
@@ -209,7 +211,7 @@ export class Survivor {
   private cube(mat: MatHandle, x: number, y: number, z: number, sx: number, sy: number, sz: number, q?: [number, number, number, number]): EntityHandle {
     return this.w.spawn(
       { component: Transform, data: { pos: [x, y, z], scale: [sx, sy, sz], ...(q ? { quat: [q[0], q[1], q[2], q[3]] } : {}) } },
-      { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
+      { component: MeshFilter, data: { assetHandle: this.cubeMesh } },
       { component: MeshRenderer, data: { materials: [mat] } },
     ).unwrap();
   }
@@ -610,7 +612,7 @@ export class Survivor {
         const ox = (Math.random() - 0.5) * en.cfg.sx, oz = (Math.random() - 0.5) * en.cfg.sz;
         this.w.spawn(
           { component: Transform, data: { pos: [en.x + ox, en.y + 0.6 + Math.random(), en.z + oz], scale: [0.4, 0.4, 0.4] } },
-          { component: MeshFilter, data: { assetHandle: HANDLE_CUBE } },
+          { component: MeshFilter, data: { assetHandle: this.cubeMesh } },
           { component: MeshRenderer, data: { materials: [this.mats.debris!] } },
           { component: RigidBody, data: { type: RigidBodyTypeValue.dynamic, mass: 1, linearDamping: 0.1, angularDamping: 0.2 } },
           { component: Collider, data: { shape: ColliderShapeValue.cuboid, halfExtents: [0.2, 0.2, 0.2], restitution: 0.4, friction: 0.8 } },

@@ -19,11 +19,15 @@
 import { mock } from 'bun:test';
 
 export const AnimationPlayer = Symbol('AnimationPlayer');
+export const AnimationTargetId = Symbol('AnimationTargetId');
+/** Engine-current skinned arming: bindAnimationTargets(world, root, targets). */
+export const bindAnimationTargets = () => undefined;
 export const Camera = Symbol('Camera');
 export const ChildOf = Symbol('ChildOf');
 export const DirectionalLight = Symbol('DirectionalLight');
 export const MeshFilter = Symbol('MeshFilter');
 export const MeshRenderer = Symbol('MeshRenderer');
+export const Name = Symbol('Name');
 export const PointLight = Symbol('PointLight');
 export const SceneInstance = Symbol('SceneInstance');
 export const Skin = Symbol('Skin');
@@ -55,7 +59,7 @@ export const AssetGuid = {
 
 export const unwrapHandle = (h: unknown) => h;
 
-mock.module('@forgeax/engine-animation', () => ({ AnimationPlayer }));
+mock.module('@forgeax/engine-animation', () => ({ AnimationPlayer, AnimationTargetId, bindAnimationTargets }));
 
 mock.module('@forgeax/engine-render', () => ({
   Camera,
@@ -68,7 +72,7 @@ mock.module('@forgeax/engine-render', () => ({
   perspective,
 }));
 
-mock.module('@forgeax/engine-scene', () => ({ ChildOf, Transform }));
+mock.module('@forgeax/engine-scene', () => ({ ChildOf, Name, Transform }));
 
 mock.module('@forgeax/engine-skinning', () => ({ Skin }));
 
@@ -81,5 +85,7 @@ mock.module('@forgeax/engine-assets-runtime', () => ({
   HANDLE_SPHERE,
   HANDLE_QUAD,
 }));
-
-mock.module('@forgeax/engine-types', () => ({ unwrapHandle }));
+// NOTE: no mock.module for '@forgeax/engine-types' — the real module must
+// flow through (engine-ecs / engine-pack dist import err/ok/toShared/... from
+// it; a hand-rolled mock broke module linking with "export 'err' not found").
+// The real unwrapHandle is a runtime passthrough, identical to the old mock.

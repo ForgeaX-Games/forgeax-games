@@ -38,10 +38,11 @@ contain one. READMEs, scripts, and tooling dirs are skipped automatically.
 
 ## How discovery & isolation work
 
-- **Disk is the source of truth.** Games live as version-controlled source under
-  `packages/games/<slug>/`. At startup the launcher idempotently symlinks each
-  `forge.json`-bearing directory into `.forgeax/games/<slug>/`, where the engine's discovery
-  chain (`listAllGames` / `detectActiveSlug`) finds it with zero registration.
+- **Disk is the source of truth.** Games live as version-controlled source in this standalone
+  repository. When opted in, Studio materialises this repository as the ignored floating
+  checkout `packages/games/` and the launcher idempotently symlinks each `forge.json`-bearing
+  directory into `.forgeax/games/<slug>/`, where the engine's discovery chain
+  (`listAllGames` / `detectActiveSlug`) finds it with zero registration.
 - **Safe by design.** Deleting a game from the Studio UI removes only the
   `.forgeax/games/<slug>` symlink — the real, version-controlled source is never touched. To
   truly remove a game you `git rm` it here and push.
@@ -64,14 +65,13 @@ contain one. READMEs, scripts, and tooling dirs are skipped automatically.
 2. Add the scaffold: a `forge.json` (required), `package.json`
    (`@forgeax/game-<slug>`), `tsconfig.json`, the code entry, an `assets/` pack, and an
    optional `FORGE.md` design note.
-3. Commit + push here, then on the studio side
-   `git submodule update --remote packages/games` and start — the launcher symlinks it in.
+3. Commit + push here, then from the Studio root run `bun games:sync` and start — the launcher
+   symlinks the floating checkout in. `bun fx update` refreshes an existing checkout.
 
-> First checkout must run `git submodule update --init packages/games`, or the library is empty
-> and the launcher gracefully skips every game.
+> Studio does not pin this repository as a git submodule. CI sets `FORGEAX_SKIP_GAMES=1`; a local
+> Studio checkout can opt in with `bun games:sync`; use the Studio root `.packages.local` to override its URL or branch.
 
 ---
 
-Part of the **ForgeaX Studio** monorepo. This repo is a submodule of
-[`ForgeaX-Games/forgeax-studio`](https://github.com/ForgeaX-Games/forgeax-studio) — clone that
-with `--recurse-submodules` to run the full studio. License: Apache-2.0.
+This is an independent consumer repository for **ForgeaX Studio**. Studio does not include it in
+its `.gitmodules`, workspace graph, mirror payload, or CI inputs. License: Apache-2.0.

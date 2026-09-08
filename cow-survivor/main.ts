@@ -37,7 +37,7 @@ import type { SceneAsset, EquirectAsset } from '@forgeax/engine-types';
 type HostFedContext = BootstrapContext;
 
 // Narrowed context for helper functions that need world + assets.
-type Sctx = { world: World; assets: import('@forgeax/engine-assets-runtime').AssetRegistry };
+type Sctx = { world: World; assets: BootstrapContext['assets'] };
 
 import { installHud, type ViewMode, type WeaponIconState } from './src/hud';
 import {

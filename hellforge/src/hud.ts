@@ -58,7 +58,7 @@ export const FLOAT_TEXT_TIERS: Record<FloatTextTier, FloatTextStyleSpec> = {
     textShadow: '0 0 3px #000,0 0 8px #000,0 2px 3px #000,0 0 14px rgba(0,0,0,0.6)',
     color: Ui.text,
     animation: 'hf-float-rise-combat',
-    durationSec: 1.05,
+    durationSec: 1.4,
   },
   ambient: {
     fontSize: 13,
@@ -197,17 +197,20 @@ export function installHud(mount: HTMLElement = document.body, deps?: HudDeps): 
   document.getElementById('hellforge-hud-style')?.remove();
   document.getElementById('hellforge-hud-style-v4')?.remove();
   document.getElementById('hellforge-hud-style-v5')?.remove();
-  if (!document.getElementById('hellforge-hud-style-v5')) {
+  document.getElementById('hellforge-hud-style-v6')?.remove();
+  if (!document.getElementById('hellforge-hud-style-v6')) {
     const s = document.createElement('style');
-    s.id = 'hellforge-hud-style-v5';
+    s.id = 'hellforge-hud-style-v6';
     s.textContent = `
       @keyframes hf-float-rise {
-        0% { opacity:1; transform:translate(-50%,-100%) scale(1.1); }
-        100% { opacity:0; transform:translate(-50%,-100%) translateY(-46px) scale(0.9); }
+        0% { opacity:1; transform:translate(-50%,-100%) scale(1.12); }
+        40% { opacity:1; transform:translate(-50%,-100%) translateY(-18px) scale(1.02); }
+        100% { opacity:0; transform:translate(-50%,-100%) translateY(-52px) scale(0.92); }
       }
       @keyframes hf-float-rise-combat {
-        0% { opacity:1; transform:translate(-50%,-100%) scale(1.15); }
-        100% { opacity:0; transform:translate(-50%,-100%) translateY(-58px) scale(0.9); }
+        0% { opacity:1; transform:translate(-50%,-100%) scale(1.4); }
+        40% { opacity:1; transform:translate(-50%,-100%) translateY(-28px) scale(1.12); }
+        100% { opacity:0; transform:translate(-50%,-100%) translateY(-92px) scale(0.96); }
       }
       @keyframes hf-banner {
         0% { opacity:0; transform:translate(-50%,-50%) scale(0.92); }

@@ -1,0 +1,51 @@
+{
+  "name": "@forgeax/game-planet-snake",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "星球贪吃蛇 — a snake crawling the surface of a procedurally generated sphere. Terrain, scatter and the surface shader are game-owned; draw submission, ECS, scene graph and GPU resources are the engine's.",
+  "scripts": {},
+  "forgeax": {
+    "assets": {
+      "roots": [
+        "assets"
+      ]
+    },
+    "metrics": {
+      "bundle-size": {
+        "enabled": false,
+        "reason": "game bundle is downstream of the host app (play-runtime)"
+      },
+      "fps": {
+        "enabled": false,
+        "reason": "no independent smoke gate; acceptance is manual in Studio Play"
+      },
+      "bench": {
+        "enabled": false,
+        "reason": "game project; bench focus stays on engine packages"
+      },
+      "gate": {
+        "enabled": false,
+        "reason": "no CI gate on this game; play-runtime hosts acceptance"
+      },
+      "spike-report": {
+        "enabled": false,
+        "reason": "not a spike app"
+      }
+    }
+  },
+  "dependencies": {
+    "@forgeax/engine-app": "workspace:*",
+    "@forgeax/engine-ecs": "workspace:*",
+    "@forgeax/engine-geometry": "workspace:*",
+    "@forgeax/engine-input": "workspace:*",
+    "@forgeax/engine-render": "workspace:*",
+    "@forgeax/engine-runtime": "workspace:*",
+    "@forgeax/engine-scene": "workspace:*",
+    "@forgeax/engine-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@webgpu/types": "^0.1.71"
+  }
+}

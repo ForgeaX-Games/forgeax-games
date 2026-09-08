@@ -1,0 +1,18 @@
+{
+  "id": "game-brotato-v2",
+  "name": "Brotato 3D v2",
+  "schemaVersion": "1.0.0",
+  "entry": "src/main.ts",
+  "canvas": {
+    "width": 1600,
+    "height": 900
+  },
+  "physics": "3d",
+  "plugins": [
+    {
+      "id": "gameplay",
+      "name": "./src/main.ts",
+      "realm": "engine"
+    }
+  ]
+}
