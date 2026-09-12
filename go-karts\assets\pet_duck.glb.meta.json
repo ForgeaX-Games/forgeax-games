@@ -1,0 +1,44 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "node_0"
+      ],
+      "unsupportedExtensions": [
+        "KHR_materials_specular"
+      ]
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": "1.0.0",
+  "source": "pet_duck.glb",
+  "subAssets": [
+    {
+      "guid": "019f889e-a0f3-49ab-9629-90b604544ed3",
+      "kind": "mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:0"
+    },
+    {
+      "guid": "019f889e-a0f4-4636-bc8c-9860c9898d9f",
+      "kind": "material",
+      "sourceIndex": 0,
+      "sourceKey": "material:0"
+    },
+    {
+      "guid": "019f889e-a0f4-4636-bc8c-9861709fde35",
+      "kind": "scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:0"
+    },
+    {
+      "guid": "019f889e-a0f4-4636-bc8c-986261492cd8",
+      "kind": "texture",
+      "sourceIndex": 0,
+      "sourceKey": "texture:0"
+    }
+  ]
+}
