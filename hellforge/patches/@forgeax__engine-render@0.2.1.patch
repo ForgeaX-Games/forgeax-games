@@ -1,0 +1,175 @@
+diff --git a/dist/chunk-VOR7NNQR.mjs b/dist/chunk-VOR7NNQR.mjs
+index 1e20847634cad8f838107ef1efbf3efb755056b6..18d0a21eb86bdbfb4d19d50bc59b4d0820a00e7f 100644
+--- a/dist/chunk-VOR7NNQR.mjs
++++ b/dist/chunk-VOR7NNQR.mjs
+@@ -12434,7 +12434,6 @@ function recordMainPass(c, selector, options, graphPass) {
+       }
+     }
+     const resolveMaterialBindGroup = (materialSlot, material, entityKey, materialWorld = world, materialShaderId = material.materialShaderId) => !hasProbeBindings && materialShaderId === material.materialShaderId && materialShaderId !== POINTS_LINES_MATERIAL_SHADER_ID ? preparedMaterialBindGroups[materialSlot] ?? buildPerSubmeshMaterialBg2(material, entityKey, materialWorld, materialShaderId) : buildPerSubmeshMaterialBg2(material, entityKey, materialWorld, materialShaderId);
+-    pass.setBindGroup(0, viewBindGroup, [viewBindGroupDynamicOffset, 0]);
+     const recordGeometry = () => {
+       recordGeometryDraws(
+         recordContext,
+@@ -12454,15 +12453,6 @@ function recordMainPass(c, selector, options, graphPass) {
+         options?.transparentDepthWrite ?? false
+       );
+     };
+-    if (c.profilePhase === void 0) {
+-      recordGeometry();
+-    } else {
+-      const passName = passKind === "deferred" ? "g-buffer" : "forward";
+-      c.profilePhase(
+-        `record/graph-execute/${passName}/geometry-loop`,
+-        recordGeometry
+-      );
+-    }
+     if (options?.gpuDriven !== void 0) {
+       if (viewBindGroup === null) {
+         throw new RhiError({
+@@ -12487,6 +12477,16 @@ function recordMainPass(c, selector, options, graphPass) {
+         options?.fragmentEntryPoint
+       );
+     }
++    pass.setBindGroup(0, viewBindGroup, [viewBindGroupDynamicOffset, 0]);
++    if (c.profilePhase === void 0) {
++      recordGeometry();
++    } else {
++      const passName = passKind === "deferred" ? "g-buffer" : "forward";
++      c.profilePhase(
++        `record/graph-execute/${passName}/geometry-loop`,
++        recordGeometry
++      );
++    }
+     if (passKind === "forward" && recordMode === void 0) {
+       geometryPassEnded = recordSpritePass(
+         c,
+@@ -14099,8 +14099,12 @@ function addTypedScenePass(graph, options) {
+       const surfaceRawDepth = options.surfacePair?.rawDepth.status === "available" ? resolvedView(resources, options.surfacePair.rawDepth.view) : null;
+       const surfaceNearestLayer = options.surfaceNearestLayer === void 0 ? null : resolvedView(resources, options.surfaceNearestLayer);
+       const surfaceNearestDepth = options.surfaceNearestDepth === void 0 ? null : resolvedView(resources, options.surfaceNearestDepth);
+-      internal.frameState.currentDirectionalShadowView = directionalShadow ?? null;
+-      internal.frameState.currentSpotShadowView = spotShadow ?? null;
++      if (!options.coverageOnly || directionalShadow !== void 0) {
++        internal.frameState.currentDirectionalShadowView = directionalShadow ?? null;
++      }
++      if (!options.coverageOnly || spotShadow !== void 0) {
++        internal.frameState.currentSpotShadowView = spotShadow ?? null;
++      }
+       const groups = buildPerFrameBindGroups(
+         internal.runtime,
+         internal.frameState,
+diff --git a/dist/construct-renderer.mjs b/dist/construct-renderer.mjs
+index 73ac21cc479020fc0250d5209916ba7af21f9db9..8dde01e04efb8a139ab31ba31e645477eb8fb4c0 100644
+--- a/dist/construct-renderer.mjs
++++ b/dist/construct-renderer.mjs
+@@ -42473,7 +42473,7 @@ async function buildReadyWebGPU(rhiDevice, rendererScope, getShader, gpuStore, a
+       const idToVariantWgsl = /* @__PURE__ */ new Map();
+       for (const ms of registry.materialShaderManifestEntries()) {
+         const exact = ms.variants.find(
+-          (v2) => v2.defines.STORAGE_BUFFER_AVAILABLE === false && v2.defines.COVERAGE_ONLY !== true && (!("CLUSTER_FORWARD_AVAILABLE" in v2.defines) || v2.defines.CLUSTER_FORWARD_AVAILABLE === false) && (!("VERTEX_COLOR_AVAILABLE" in v2.defines) || v2.defines.VERTEX_COLOR_AVAILABLE === false) && (!("DIRECTIONAL_PCSS_AVAILABLE" in v2.defines) || v2.defines.DIRECTIONAL_PCSS_AVAILABLE === directionalPcssAvailable) && (!("PROJECTOR_AVAILABLE" in v2.defines) || v2.defines.PROJECTOR_AVAILABLE === projectorAvailable) && (!("REFLECTION_FALLBACK_AVAILABLE" in v2.defines) || v2.defines.REFLECTION_FALLBACK_AVAILABLE === false) && v2.defines.PROBE_BLEND_AVAILABLE !== true && (!("SKINNING_DISABLED" in v2.defines) || v2.defines.SKINNING_DISABLED === true)
++          (v2) => v2.defines.STORAGE_BUFFER_AVAILABLE === false && v2.defines.GPU_DRIVEN_SCENE_INDEX_AVAILABLE !== true && v2.defines.GPU_DRIVEN_SCENE_INDEX_EXPLICIT !== true && v2.defines.COVERAGE_ONLY !== true && (!("CLUSTER_FORWARD_AVAILABLE" in v2.defines) || v2.defines.CLUSTER_FORWARD_AVAILABLE === false) && (!("VERTEX_COLOR_AVAILABLE" in v2.defines) || v2.defines.VERTEX_COLOR_AVAILABLE === false) && (!("DIRECTIONAL_PCSS_AVAILABLE" in v2.defines) || v2.defines.DIRECTIONAL_PCSS_AVAILABLE === directionalPcssAvailable) && (!("PROJECTOR_AVAILABLE" in v2.defines) || v2.defines.PROJECTOR_AVAILABLE === projectorAvailable) && (!("REFLECTION_FALLBACK_AVAILABLE" in v2.defines) || v2.defines.REFLECTION_FALLBACK_AVAILABLE === false) && v2.defines.PROBE_BLEND_AVAILABLE !== true && (!("SKINNING_DISABLED" in v2.defines) || v2.defines.SKINNING_DISABLED === true)
+         );
+         const v = exact === void 0 ? void 0 : findVariantByKey(ms, exact.definesKey);
+         if (v !== void 0) {
+@@ -42499,7 +42499,7 @@ async function buildReadyWebGPU(rhiDevice, rendererScope, getShader, gpuStore, a
+     const idToRuntimeVariantWgsl = /* @__PURE__ */ new Map();
+     for (const ms of registry.materialShaderManifestEntries()) {
+       const exact = ms.variants.find(
+-        (variant2) => variant2.defines.STORAGE_BUFFER_AVAILABLE === storageBufferCapable && variant2.defines.COVERAGE_ONLY !== true && (!("CLUSTER_FORWARD_AVAILABLE" in variant2.defines) || variant2.defines.CLUSTER_FORWARD_AVAILABLE === false) && (!("VERTEX_COLOR_AVAILABLE" in variant2.defines) || variant2.defines.VERTEX_COLOR_AVAILABLE === false) && (!("DIRECTIONAL_PCSS_AVAILABLE" in variant2.defines) || variant2.defines.DIRECTIONAL_PCSS_AVAILABLE === directionalPcssAvailable) && (!("PROJECTOR_AVAILABLE" in variant2.defines) || variant2.defines.PROJECTOR_AVAILABLE === projectorAvailable) && (!("EXTENDED_LIGHTING_AVAILABLE" in variant2.defines) || variant2.defines.EXTENDED_LIGHTING_AVAILABLE === extendedLightingShaderAvailable) && variant2.defines.PROBE_BLEND_AVAILABLE !== true && (!("SKINNING_DISABLED" in variant2.defines) || variant2.defines.SKINNING_DISABLED === true) && (!("TRANSMISSION_AVAILABLE" in variant2.defines) || variant2.defines.TRANSMISSION_AVAILABLE === false) && (!("REFLECTION_FALLBACK_AVAILABLE" in variant2.defines) || variant2.defines.REFLECTION_FALLBACK_AVAILABLE === false)
++        (variant2) => variant2.defines.STORAGE_BUFFER_AVAILABLE === storageBufferCapable && variant2.defines.GPU_DRIVEN_SCENE_INDEX_AVAILABLE !== true && variant2.defines.GPU_DRIVEN_SCENE_INDEX_EXPLICIT !== true && variant2.defines.COVERAGE_ONLY !== true && (!("CLUSTER_FORWARD_AVAILABLE" in variant2.defines) || variant2.defines.CLUSTER_FORWARD_AVAILABLE === false) && (!("VERTEX_COLOR_AVAILABLE" in variant2.defines) || variant2.defines.VERTEX_COLOR_AVAILABLE === false) && (!("DIRECTIONAL_PCSS_AVAILABLE" in variant2.defines) || variant2.defines.DIRECTIONAL_PCSS_AVAILABLE === directionalPcssAvailable) && (!("PROJECTOR_AVAILABLE" in variant2.defines) || variant2.defines.PROJECTOR_AVAILABLE === projectorAvailable) && (!("EXTENDED_LIGHTING_AVAILABLE" in variant2.defines) || variant2.defines.EXTENDED_LIGHTING_AVAILABLE === extendedLightingShaderAvailable) && variant2.defines.PROBE_BLEND_AVAILABLE !== true && (!("SKINNING_DISABLED" in variant2.defines) || variant2.defines.SKINNING_DISABLED === true) && (!("TRANSMISSION_AVAILABLE" in variant2.defines) || variant2.defines.TRANSMISSION_AVAILABLE === false) && (!("REFLECTION_FALLBACK_AVAILABLE" in variant2.defines) || variant2.defines.REFLECTION_FALLBACK_AVAILABLE === false)
+       );
+       const variant = exact === void 0 ? void 0 : findVariantByKey(ms, exact.definesKey);
+       if (variant !== void 0) {
+diff --git a/src/assembly/webgpu-ready.ts b/src/assembly/webgpu-ready.ts
+index cb613ccec542f8fcb697ef705402505f02c3d355..8c2bf8cb873d39d52a72c5f3a0dfb1e6a9c3daec 100644
+--- a/src/assembly/webgpu-ready.ts
++++ b/src/assembly/webgpu-ready.ts
+@@ -520,6 +520,8 @@ export async function buildReadyWebGPU(
+         const exact = ms.variants.find(
+           (v) =>
+             v.defines.STORAGE_BUFFER_AVAILABLE === false &&
++            v.defines.GPU_DRIVEN_SCENE_INDEX_AVAILABLE !== true &&
++            v.defines.GPU_DRIVEN_SCENE_INDEX_EXPLICIT !== true &&
+             v.defines.COVERAGE_ONLY !== true &&
+             (!('CLUSTER_FORWARD_AVAILABLE' in v.defines) ||
+               v.defines.CLUSTER_FORWARD_AVAILABLE === false) &&
+@@ -563,6 +565,8 @@ export async function buildReadyWebGPU(
+       const exact = ms.variants.find(
+         (variant) =>
+           variant.defines.STORAGE_BUFFER_AVAILABLE === storageBufferCapable &&
++          variant.defines.GPU_DRIVEN_SCENE_INDEX_AVAILABLE !== true &&
++          variant.defines.GPU_DRIVEN_SCENE_INDEX_EXPLICIT !== true &&
+           variant.defines.COVERAGE_ONLY !== true &&
+           (!('CLUSTER_FORWARD_AVAILABLE' in variant.defines) ||
+             variant.defines.CLUSTER_FORWARD_AVAILABLE === false) &&
+diff --git a/src/record/main-pass.ts b/src/record/main-pass.ts
+index b7b86cc6dc02b42dbc62eba331987b0f0a6438cd..bcbe0b1289b00a7d1ef46c07966d0048effd7b41 100644
+--- a/src/record/main-pass.ts
++++ b/src/record/main-pass.ts
+@@ -770,8 +770,6 @@ export function recordMainPass(
+           buildPerSubmeshMaterialBg(material, entityKey, materialWorld, materialShaderId))
+         : buildPerSubmeshMaterialBg(material, entityKey, materialWorld, materialShaderId);
+ 
+-    pass.setBindGroup(0, viewBindGroup as BindGroup, [viewBindGroupDynamicOffset, 0]);
+-
+     // Track which (mesh-vertex-buffer, mesh-index-buffer, pipeline) combo
+     // was last bound so consecutive entities sharing the same combo skip
+     // the redundant rebinds (cheap GPU cost; net wins on workloads where
+@@ -801,16 +799,6 @@ export function recordMainPass(
+         options?.transparentDepthWrite ?? false,
+       );
+     };
+-    if (c.profilePhase === undefined) {
+-      recordGeometry();
+-    } else {
+-      const passName = passKind === 'deferred' ? 'g-buffer' : 'forward';
+-      c.profilePhase(
+-        `record/graph-execute/${passName}/geometry-loop` as RenderRecordPhase,
+-        recordGeometry,
+-      );
+-    }
+-
+     if (options?.gpuDriven !== undefined) {
+       if (viewBindGroup === null) {
+         throw new RhiError({
+@@ -839,6 +827,21 @@ export function recordMainPass(
+       );
+     }
+ 
++    // Indirect encoding owns group 0 while it submits GPU-driven batches.
++    // Restore this pass's direct view binding, including its dynamic offset,
++    // before recording CPU fallback geometry.
++    pass.setBindGroup(0, viewBindGroup as BindGroup, [viewBindGroupDynamicOffset, 0]);
++
++    if (c.profilePhase === undefined) {
++      recordGeometry();
++    } else {
++      const passName = passKind === 'deferred' ? 'g-buffer' : 'forward';
++      c.profilePhase(
++        `record/graph-execute/${passName}/geometry-loop` as RenderRecordPhase,
++        recordGeometry,
++      );
++    }
++
+     // D-2: LDR sprite pass. Runs after the geometry pass when there are
+     // sprite entities in the draw list and the LDR path is active.
+     // The geometry pass used the bgra8unorm-srgb sRGB view (hardware sRGB
+diff --git a/src/typed-render-graph-primitives.ts b/src/typed-render-graph-primitives.ts
+index 90030cddc595dedd40dc7a56c4d9f035a515ba19..c4a9ac8a3f1e048e492e916b272bfa158776b2e3 100644
+--- a/src/typed-render-graph-primitives.ts
++++ b/src/typed-render-graph-primitives.ts
+@@ -425,8 +425,12 @@ export function addTypedScenePass(
+         options.surfaceNearestDepth === undefined
+           ? null
+           : resolvedView(resources, options.surfaceNearestDepth);
+-      internal.frameState.currentDirectionalShadowView = directionalShadow ?? null;
+-      internal.frameState.currentSpotShadowView = spotShadow ?? null;
++      if (!options.coverageOnly || directionalShadow !== undefined) {
++        internal.frameState.currentDirectionalShadowView = directionalShadow ?? null;
++      }
++      if (!options.coverageOnly || spotShadow !== undefined) {
++        internal.frameState.currentSpotShadowView = spotShadow ?? null;
++      }
+       const groups = buildPerFrameBindGroups(
+         internal.runtime as RenderSystemInternals,
+         internal.frameState,

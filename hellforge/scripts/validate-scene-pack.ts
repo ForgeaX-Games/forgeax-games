@@ -23,7 +23,7 @@ type Entity = {
 type SceneAsset = {
   kind: string;
   refs?: string[];
-  payload?: { entities?: Entity[] };
+  payload?: { entities?: Record<string, Entity> };
 };
 
 function fail(msg: string): never {
@@ -47,7 +47,7 @@ function main(): void {
   const scene = pack.assets?.find((a) => a.kind === 'scene');
   if (!scene?.payload?.entities) fail('no scene asset with entities');
 
-  const entities = scene.payload.entities;
+  const entities = Object.entries(scene.payload.entities).map(([key, entity]) => ({ ...entity, localId: Number(key) }));
   const refs = scene.refs ?? [];
   const ids = entities.map((e) => e.localId);
 

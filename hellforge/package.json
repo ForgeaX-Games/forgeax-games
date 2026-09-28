@@ -4,8 +4,17 @@
   "private": true,
   "type": "module",
   "license": "Apache-2.0",
-  "description": "ForgeaX: Hellforge — original dark-fantasy ARPG sample. Sorceress Act-1 slice: Cinderwatch hub, isometric arpg combat, camp showcase camera, skill-tree casting, loot and quests. Loaded by apps/preview via loadGame dynamic import.",
-  "scripts": {},
+  "description": "Hellforge — standalone dark-fantasy ARPG on Engine SDK 0.2.1",
+  "packageManager": "pnpm@11.7.0",
+  "scripts": {
+    "dev": "node scripts/run-sdk.mjs dev start",
+    "build": "node scripts/run-sdk.mjs project build --base /games/hellforge/ --json",
+    "preview": "forgeax project preview",
+    "doctor": "forgeax project check",
+    "test": "bun test src scripts/lib",
+    "typecheck": "tsc -p tsconfig.check.json",
+    "validate:scene": "bun scripts/validate-scene-pack.ts assets/scenes/rogue-encampment.pack.json && bun scripts/validate-blocker-prop-consistency.ts"
+  },
   "forgeax": {
     "assets": {
       "roots": [
@@ -13,31 +22,36 @@
       ]
     },
     "metrics": {
-      "bundle-size": { "enabled": false, "reason": "sample game; size is downstream of apps/preview" },
-      "fps": { "enabled": false, "reason": "sample game; no independent smoke gate yet" },
-      "bench": { "enabled": false, "reason": "sample game; bench focus is on engine packages" },
-      "gate": { "enabled": false, "reason": "no CI gate on sample games" },
-      "spike-report": { "enabled": false, "reason": "not a spike app" }
+      "bundle-size": {
+        "enabled": false,
+        "reason": "sample game; size is downstream of apps/preview"
+      },
+      "fps": {
+        "enabled": false,
+        "reason": "sample game; no independent smoke gate yet"
+      },
+      "bench": {
+        "enabled": false,
+        "reason": "sample game; bench focus is on engine packages"
+      },
+      "gate": {
+        "enabled": false,
+        "reason": "no CI gate on sample games"
+      },
+      "spike-report": {
+        "enabled": false,
+        "reason": "not a spike app"
+      }
     }
   },
   "dependencies": {
-    "@forgeax/engine-app": "workspace:*",
-    "@forgeax/engine-animation": "workspace:*",
-    "@forgeax/engine-runtime": "workspace:*",
-    "@forgeax/engine-assets-runtime": "workspace:*",
-    "@forgeax/engine-geometry": "workspace:*",
-    "@forgeax/engine-ecs": "workspace:*",
-    "@forgeax/engine-math": "workspace:*",
-    "@forgeax/engine-pack": "workspace:*",
-    "@forgeax/engine-physics": "workspace:*",
-    "@forgeax/engine-render-graph": "workspace:*",
-    "@forgeax/engine-render": "workspace:*",
-    "@forgeax/engine-scene": "workspace:*",
-    "@forgeax/engine-skinning": "workspace:*",
-    "@forgeax/engine-types": "workspace:*"
+    "@forgeax/engine": "0.2.1"
   },
   "devDependencies": {
-    "@webgpu/types": "^0.1.70",
-    "bun-types": "^1.3.14"
+    "@types/node": "20.19.40",
+    "@webgpu/types": "0.1.71",
+    "bun-types": "1.3.14",
+    "sharp": "0.34.5",
+    "typescript": "6.0.3"
   }
 }

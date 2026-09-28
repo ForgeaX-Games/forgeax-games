@@ -1,0 +1,2 @@
+# Historical Markdown is preserved byte-for-byte, including hard line breaks.
+docs/archive/** -whitespace

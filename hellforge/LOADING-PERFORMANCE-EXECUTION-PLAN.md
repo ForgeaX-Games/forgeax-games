@@ -1,6 +1,12 @@
+<!-- context-audit:2026-09-10 -->
+> 文档核对：2026-09-10。设计/规划参考；不作为当前实现或验收完成的证明。
+> 接手先读 [当前状态与入口](CURRENT.md)；[整理前原文](docs/archive/pre-management/LOADING-PERFORMANCE-EXECUTION-PLAN.md) 保留来源与原始内容。
+
 # Hellforge 官网 Demo 加载性能 Production-Ready 执行计划
 
-状态：`EXECUTION_SPEC`
+状态：`HISTORICAL_EXECUTION_SPEC / PARTIALLY_IMPLEMENTED`
+
+2026-09-10 核对：开发基线 e166d293 已移除 forge.json.defaultScene，并在 main.ts 接入点击门后的 campLoader、预加载与性能 marks。下面 §1.2 的阻塞链是实施前根因，不是当前状态。其余阶段不因这些代码存在而视为完成；当前证据边界见 CURRENT.md 和 docs/evidence/loading-performance/INDEX.md。
 
 执行者：Grok 4.6
 
@@ -79,7 +85,7 @@
 这些数字只作为历史基线。阶段 0 必须在同一机器、同一浏览器和固定网络配置下重新采样，
 得到可比较的正式 baseline。
 
-### 1.2 当前启动阻塞
+### 1.2 实施前的启动阻塞（历史根因）
 
 关键代码：
 
@@ -87,7 +93,7 @@
 - `hellforge/main.ts`
 - Engine `packages/devkit/src/host.ts`
 
-当前 `forge.json.defaultScene` 指向营地场景
+实施前 `forge.json.defaultScene` 指向营地场景
 `2748fc78-a386-4b9b-b7d5-cd771eaf6a71`。
 
 Standalone Host 的执行顺序是：
@@ -1280,4 +1286,3 @@ Remaining risks
 ```
 
 只有报告完整且第 2.3 节全部通过，才可宣称 `production-ready`。
-

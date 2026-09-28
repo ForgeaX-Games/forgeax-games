@@ -62,9 +62,9 @@
 // Everything in this module is new-file spike code; integration hooks (main.ts
 // wiring) are intentionally left to the main agent. Flag defaults OFF.
 
-import { MeshRenderer, Materials } from '@forgeax/engine-render';
-import type { Handle, MaterialAsset } from '@forgeax/engine-types';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
+import { MeshRenderer, Materials } from '@forgeax/engine/render';
+import type { Handle, MaterialAsset } from '@forgeax/engine/types';
+import type { EntityHandle, World } from '@forgeax/engine/ecs';
 
 import rimOutlineShader from './shaders/rim-outline.wgsl';
 import { registerMaterialShaderDual } from './register-material-shader';

@@ -1,0 +1,19 @@
+{
+  "kind": "external-asset-package",
+  "importer": "image",
+  "schemaVersion": "1.0.0",
+  "source": "kowloon-storm.hdr",
+  "importSettings": {
+    "colorSpace": "linear",
+    "mipmap": "auto",
+    "addressMode": "clamp-to-edge",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "8b090a6e-8d44-41ea-8d88-8aa593e9b195",
+      "sourceIndex": 0,
+      "kind": "equirect"
+    }
+  ]
+}

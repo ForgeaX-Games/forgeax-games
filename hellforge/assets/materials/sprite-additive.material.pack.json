@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "2.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "96609630-726b-4564-9713-000000000008",
+      "kind": "material",
+      "sourceKey": "../../src/shaders/sprite.wgsl",
+      "refs": [],
+      "payload": {
+        "kind": "material",
+        "colorSpace": "linear",
+        "passes": [
+          {
+            "name": "forward",
+            "program": {
+              "module": "hellforge::sprite_additive"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 3000,
+              "depthWriteEnabled": false,
+              "depthCompare": "less",
+              "cullMode": "none",
+              "blend": {
+                "color": {
+                  "srcFactor": "one",
+                  "dstFactor": "one",
+                  "operation": "add"
+                },
+                "alpha": {
+                  "srcFactor": "one",
+                  "dstFactor": "one",
+                  "operation": "add"
+                }
+              }
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "baseColor",
+            "type": "color",
+            "colorSpace": "linear"
+          },
+          {
+            "name": "frame",
+            "type": "f32"
+          },
+          {
+            "name": "frames",
+            "type": "f32"
+          },
+          {
+            "name": "cols",
+            "type": "f32"
+          },
+          {
+            "name": "rows",
+            "type": "f32"
+          },
+          {
+            "name": "billboard",
+            "type": "f32"
+          },
+          {
+            "name": "distort",
+            "type": "f32"
+          },
+          {
+            "name": "time",
+            "type": "f32"
+          },
+          {
+            "name": "erosion",
+            "type": "f32"
+          },
+          {
+            "name": "blendFrames",
+            "type": "f32"
+          },
+          {
+            "name": "sheet",
+            "type": "texture"
+          },
+          {
+            "name": "noise",
+            "type": "texture"
+          }
+        ],
+        "values": {
+          "baseColor": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "frame": 0,
+          "distort": 0,
+          "time": 0,
+          "erosion": 0,
+          "frames": 1,
+          "cols": 1,
+          "rows": 1,
+          "billboard": 1,
+          "blendFrames": 1
+        }
+      }
+    }
+  ]
+}

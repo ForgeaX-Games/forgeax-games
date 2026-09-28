@@ -35,10 +35,10 @@ interface PackEntity {
 
 const packPath = join(import.meta.dir, '..', 'assets', 'scenes', 'slagdeep-hollow.pack.json');
 const pack = JSON.parse(readFileSync(packPath, 'utf8')) as {
-  assets: Array<{ kind: string; payload?: { entities?: PackEntity[] } }>;
+  assets: Array<{ kind: string; payload?: { entities?: Record<string, PackEntity> } }>;
 };
 const scene = pack.assets.find((a) => a.kind === 'scene');
-const entities = scene?.payload?.entities;
+const entities = Object.entries(scene?.payload?.entities ?? {}).map(([key, entity]) => ({ ...entity, localId: Number(key) }));
 if (!entities || entities.length < 1) {
   throw new Error('slagdeep-hollow.pack.json: no scene entities — pack missing or corrupt');
 }
@@ -127,7 +127,7 @@ describe('baked slagdeep pack (trench fix)', () => {
     expect(tiles).toBe(stripPrefix.length); // one tile per strip slab
   });
 
-  test('localIds are contiguous (engine indexes by localId)', () => {
+  test('stable scene keys preserve every legacy entity without reindexing', () => {
     const ids = entities.map((e) => e.localId).sort((a, b) => a - b);
     for (let i = 0; i < ids.length; i++) {
       expect(ids[i]).toBe(i);

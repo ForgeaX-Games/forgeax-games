@@ -13,9 +13,9 @@
 // newer engines use `program.module` + `renderState.tags`. Blind `p.program.module`
 // throws `Cannot read properties of undefined (reading 'module')` on c0.
 
-import { MeshRenderer } from '@forgeax/engine-render';
-import type { World } from '@forgeax/engine-ecs';
-import type { MaterialAsset, MaterialPass } from '@forgeax/engine-types';
+import { MeshRenderer } from '@forgeax/engine/render';
+import type { World } from '@forgeax/engine/ecs';
+import type { MaterialAsset, MaterialPass } from '@forgeax/engine/types';
 
 type PassLike = {
   name?: string;

@@ -1,0 +1,26 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+index a3836b277d03ac43e3aca25fe08ec32860ac0390..4082d91e2908da679d8bb0ab4f8863dc3e50e947 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -600,7 +600,7 @@ function assembleAssetRuntime(registry, contributions, options = {}) {
+     if (options.runtimeBinding !== void 0) {
+       registry.configureRuntimeBinding(options.runtimeBinding);
+     } else if (registry.packIndexUrl === void 0) {
+-      registry.configurePackIndex(DEFAULT_ASSET_CATALOG_URL);
++      registry.configurePackIndex(options.catalogSource?.url ?? DEFAULT_ASSET_CATALOG_URL);
+     }
+     catalogSource = options.catalogSource ?? createDefaultAssetCatalogSource(options.runtimeBinding, registry.packIndexUrl);
+     registry.setCatalogSource(catalogSource);
+diff --git a/src/assets-runtime-assembly.ts b/src/assets-runtime-assembly.ts
+index 92612e510f4159a26687c027f5255949da48b94a..d9b4954b98819b84da18cf685928031d4addd2bb 100644
+--- a/src/assets-runtime-assembly.ts
++++ b/src/assets-runtime-assembly.ts
+@@ -83,7 +83,7 @@ export function assembleAssetRuntime(
+     if (options.runtimeBinding !== undefined) {
+       registry.configureRuntimeBinding(options.runtimeBinding);
+     } else if (registry.packIndexUrl === undefined) {
+-      registry.configurePackIndex(DEFAULT_ASSET_CATALOG_URL);
++      registry.configurePackIndex(options.catalogSource?.url ?? DEFAULT_ASSET_CATALOG_URL);
+     }
+     catalogSource =
+       options.catalogSource ??

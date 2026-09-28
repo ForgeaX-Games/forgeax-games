@@ -1,3 +1,7 @@
+<!-- context-audit:2026-09-10 -->
+> 文档核对：2026-09-10。按源码使用的参考文档；文中的验收结果仅适用于其记录的版本和日期。
+> 接手先读 [当前状态与入口](CURRENT.md)；[整理前原文](docs/archive/pre-management/SHELL-PORT-PROGRESS.md) 保留来源与原始内容。
+
 # SHELL port progress — handoff
 
 > SSOT design: [`SHELL-AND-UI-PORT-SPEC.md`](./SHELL-AND-UI-PORT-SPEC.md) §6.

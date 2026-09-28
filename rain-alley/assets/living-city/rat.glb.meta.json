@@ -1,0 +1,119 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "rat__BODY"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "rat.glb",
+  "sourceOverrideDescriptors": [
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:rat__BODY"
+    }
+  ],
+  "sourceOverrides": {
+    "mesh:rat__BODY": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a0812c-141f-7a93-a361-b793afec88a4",
+          "slotName": "LC_fur",
+          "sourceKey": "material:LC_fur"
+        }
+      ]
+    }
+  },
+  "subAssets": [
+    {
+      "guid": "01a0812c-141f-7a93-a361-b78a3fff9737",
+      "kind": "mesh",
+      "name": "rat__BODY",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:rat__BODY"
+    },
+    {
+      "guid": "01a0812c-141f-7a93-a361-b793afec88a4",
+      "kind": "material",
+      "name": "LC_fur",
+      "sourceIndex": 0,
+      "sourceKey": "material:LC_fur"
+    },
+    {
+      "guid": "01a0812c-141f-7a93-a361-b794114a8559",
+      "kind": "scene",
+      "name": "Scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:Scene"
+    },
+    {
+      "guid": "01a0812c-141f-7a93-a361-b795e59689ce",
+      "kind": "texture",
+      "name": "fur-normal",
+      "sourceIndex": 0,
+      "sourceKey": "texture:fur-normal"
+    },
+    {
+      "guid": "01a0812c-141f-7a93-a361-b796b0615142",
+      "kind": "texture",
+      "name": "fur-base",
+      "sourceIndex": 1,
+      "sourceKey": "texture:fur-base"
+    },
+    {
+      "guid": "01a0812c-141f-7a93-a361-b797c7e33233",
+      "kind": "texture",
+      "name": "fur-orm",
+      "sourceIndex": 2,
+      "sourceKey": "texture:fur-orm"
+    },
+    {
+      "guid": "01a0812c-141f-7a93-a361-b798e5db4f8b",
+      "kind": "sampler",
+      "sourceIndex": 0,
+      "sourceKey": "sampler"
+    }
+  ]
+}

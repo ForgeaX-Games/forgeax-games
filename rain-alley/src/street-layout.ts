@@ -1,0 +1,1848 @@
+/** District layout exported from Blender; metres, Y up. The v2 GLB stays separate. */
+export const STREET_SCENE_GUID = '01a071c5-d5b2-7092-abea-bc73dd0b93bc';
+
+export const STREET_PLAYER_SPAWN = [
+  0.0,
+  0.88,
+  -3.0
+] as const;
+
+export const STREET_PHASE_STARTS = {
+  "alley": [
+    0.0,
+    0.88,
+    -3.0
+  ],
+  "kitchen": [
+    28,
+    0.88,
+    -48
+  ],
+  "hall": [
+    8,
+    0.88,
+    -61
+  ],
+  "coat-standoff": [
+    8,
+    0.88,
+    -67
+  ]
+} as const;
+
+/** Existing progression markers along the longer district route. */
+export const STREET_DOOR_Z = {
+  "alley": -48,
+  "kitchen": -61,
+  "hall": -68
+} as const;
+
+export const STREET_PEEKER_PLACEMENTS = [
+  {
+    "covered": [
+      -3.7,
+      1.23,
+      -8.6
+    ],
+    "exposed": [
+      -2.0,
+      0.88,
+      -8.6
+    ]
+  },
+  {
+    "covered": [
+      2.2,
+      1.23,
+      -27.75
+    ],
+    "exposed": [
+      2.2,
+      0.88,
+      -26.0
+    ]
+  },
+  {
+    "covered": [
+      0.3,
+      1.23,
+      -34.6
+    ],
+    "exposed": [
+      0.3,
+      1.23,
+      -31.5
+    ]
+  },
+  {
+    "covered": [
+      -16.6,
+      1.23,
+      -47.45
+    ],
+    "exposed": [
+      -16.6,
+      0.88,
+      -45.5
+    ]
+  },
+  {
+    "covered": [
+      -2.6,
+      1.23,
+      -40.5
+    ],
+    "exposed": [
+      -2.6,
+      0.88,
+      -42.5
+    ]
+  }
+] as const;
+
+export const STREET_KNIFE_PLACEMENTS = [
+  {
+    "wave": 1,
+    "position": [
+      28.0,
+      0.88,
+      -59.0
+    ]
+  },
+  {
+    "wave": 1,
+    "position": [
+      28.0,
+      0.88,
+      -48.5
+    ]
+  },
+  {
+    "wave": 2,
+    "position": [
+      32.0,
+      1.23,
+      -52.0
+    ]
+  },
+  {
+    "wave": 2,
+    "position": [
+      34.0,
+      1.23,
+      -53.8
+    ]
+  }
+] as const;
+
+export const STREET_HALL_PLACEMENTS = [
+  [
+    -18.0,
+    0.88,
+    -43.0
+  ],
+  [
+    -5.0,
+    0.88,
+    -45.0
+  ],
+  [
+    16.0,
+    0.88,
+    -43.0
+  ],
+  [
+    25.0,
+    0.88,
+    -45.0
+  ],
+  [
+    -16.6,
+    0.88,
+    -45.5
+  ],
+  [
+    20.6,
+    0.88,
+    -42.5
+  ]
+] as const;
+
+export const STREET_COAT_SPAWN = [
+  8.0,
+  0.88,
+  -70.0
+] as const;
+
+export type StreetCollisionProxy = {
+  readonly name: string;
+  readonly center: readonly [number, number, number];
+  readonly size: readonly [number, number, number];
+  readonly rotation?: readonly [number, number, number, number];
+  readonly blocksSight: boolean;
+};
+
+export const STREET_COLLISION_PROXIES: readonly StreetCollisionProxy[] = [
+  {
+    "name": "COL_Road_00",
+    "center": [
+      0.0,
+      -0.125,
+      -13.5
+    ],
+    "size": [
+      6.0,
+      0.25,
+      27.0
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Road_01",
+    "center": [
+      7.0,
+      -0.125,
+      -24.0
+    ],
+    "size": [
+      8.0,
+      0.25,
+      6.0
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Road_02",
+    "center": [
+      8.0,
+      -0.125,
+      -34.125
+    ],
+    "size": [
+      6.0,
+      0.25,
+      14.25
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Road_03",
+    "center": [
+      4.0,
+      -0.125,
+      -44.0
+    ],
+    "size": [
+      50.0,
+      0.25,
+      5.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Road_04",
+    "center": [
+      29.25,
+      -0.125,
+      -54.75
+    ],
+    "size": [
+      0.5,
+      0.25,
+      21.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Road_05",
+    "center": [
+      8.0,
+      -0.125,
+      -59.375
+    ],
+    "size": [
+      6.0,
+      0.25,
+      25.25
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Road_06",
+    "center": [
+      27.75,
+      -0.125,
+      -56.125
+    ],
+    "size": [
+      2.5,
+      0.25,
+      18.75
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Road_07",
+    "center": [
+      18.75,
+      -0.125,
+      -64.0
+    ],
+    "size": [
+      15.5,
+      0.25,
+      3.0
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_00",
+    "center": [
+      -3.75,
+      0.05,
+      -14.25
+    ],
+    "size": [
+      1.5,
+      0.6,
+      28.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_01",
+    "center": [
+      3.75,
+      0.05,
+      -10.5
+    ],
+    "size": [
+      1.5,
+      0.6,
+      21.0
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_02",
+    "center": [
+      8.5,
+      0.05,
+      -20.25
+    ],
+    "size": [
+      8.0,
+      0.6,
+      1.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_03",
+    "center": [
+      11.75,
+      0.05,
+      -31.125
+    ],
+    "size": [
+      1.5,
+      0.6,
+      20.25
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_04",
+    "center": [
+      1.0,
+      0.05,
+      -27.75
+    ],
+    "size": [
+      8.0,
+      0.6,
+      1.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_05",
+    "center": [
+      4.25,
+      0.05,
+      -34.125
+    ],
+    "size": [
+      1.5,
+      0.6,
+      11.25
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_06",
+    "center": [
+      -8.0,
+      0.05,
+      -40.5
+    ],
+    "size": [
+      26.0,
+      0.6,
+      1.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_07",
+    "center": [
+      21.5,
+      0.05,
+      -40.5
+    ],
+    "size": [
+      18.0,
+      0.6,
+      1.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_08",
+    "center": [
+      29.75,
+      0.05,
+      -42.625
+    ],
+    "size": [
+      1.5,
+      0.6,
+      2.75
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_09",
+    "center": [
+      30.0,
+      0.05,
+      -55.25
+    ],
+    "size": [
+      1.0,
+      0.6,
+      22.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_10",
+    "center": [
+      -8.0,
+      0.05,
+      -47.5
+    ],
+    "size": [
+      26.0,
+      0.6,
+      1.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_11",
+    "center": [
+      18.75,
+      0.05,
+      -47.5
+    ],
+    "size": [
+      15.5,
+      0.6,
+      1.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_12",
+    "center": [
+      4.25,
+      0.05,
+      -60.125
+    ],
+    "size": [
+      1.5,
+      0.6,
+      23.75
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_13",
+    "center": [
+      11.75,
+      0.05,
+      -55.375
+    ],
+    "size": [
+      1.5,
+      0.6,
+      14.25
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_14",
+    "center": [
+      26.0,
+      0.05,
+      -55.375
+    ],
+    "size": [
+      1.0,
+      0.6,
+      14.25
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_15",
+    "center": [
+      19.0,
+      0.05,
+      -62.0
+    ],
+    "size": [
+      13.0,
+      0.6,
+      1.0
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_16",
+    "center": [
+      20.25,
+      0.05,
+      -66.0
+    ],
+    "size": [
+      18.5,
+      0.6,
+      1.0
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_Sidewalk_17",
+    "center": [
+      11.75,
+      0.05,
+      -69.25
+    ],
+    "size": [
+      1.5,
+      0.6,
+      5.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_INT_Pawn_Floor",
+    "center": [
+      -7.25,
+      0.225,
+      -13.0
+    ],
+    "size": [
+      5.5,
+      0.25,
+      6.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_INT_Pawn_Wall_00",
+    "center": [
+      -9.875,
+      1.95,
+      -13.0
+    ],
+    "size": [
+      0.25,
+      3.2,
+      6.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Pawn_Wall_01",
+    "center": [
+      -7.25,
+      1.95,
+      -9.875
+    ],
+    "size": [
+      5.5,
+      3.2,
+      0.25
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Pawn_Wall_02",
+    "center": [
+      -7.25,
+      1.95,
+      -16.125
+    ],
+    "size": [
+      5.5,
+      3.2,
+      0.25
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Pawn_Wall_03",
+    "center": [
+      -4.625,
+      1.95,
+      -10.65
+    ],
+    "size": [
+      0.25,
+      3.2,
+      1.3
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Pawn_Wall_04",
+    "center": [
+      -4.625,
+      1.95,
+      -14.35
+    ],
+    "size": [
+      0.25,
+      3.2,
+      3.3
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Pawn_Wall_05",
+    "center": [
+      -4.625,
+      3.15,
+      -12.0
+    ],
+    "size": [
+      0.25,
+      0.8,
+      1.4
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_GB_Pawn_Upper",
+    "center": [
+      -7.25,
+      6.475,
+      -13.0
+    ],
+    "size": [
+      5.5,
+      5.85,
+      6.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_DOOR_Pawn_Open",
+    "center": [
+      -5.325,
+      1.525,
+      -11.255
+    ],
+    "size": [
+      1.4,
+      2.35,
+      0.07
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Tea_Floor",
+    "center": [
+      0.25,
+      0.225,
+      -33.0
+    ],
+    "size": [
+      6.5,
+      0.25,
+      8.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_INT_Tea_Wall_00",
+    "center": [
+      -2.875,
+      1.95,
+      -33.0
+    ],
+    "size": [
+      0.25,
+      3.2,
+      8.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Tea_Wall_01",
+    "center": [
+      0.25,
+      1.95,
+      -28.875
+    ],
+    "size": [
+      6.5,
+      3.2,
+      0.25
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Tea_Wall_02",
+    "center": [
+      0.25,
+      1.95,
+      -37.125
+    ],
+    "size": [
+      6.5,
+      3.2,
+      0.25
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Tea_Wall_03",
+    "center": [
+      3.375,
+      1.95,
+      -29.8
+    ],
+    "size": [
+      0.25,
+      3.2,
+      1.6
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Tea_Wall_04",
+    "center": [
+      3.375,
+      1.95,
+      -34.7
+    ],
+    "size": [
+      0.25,
+      3.2,
+      4.6
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Tea_Wall_05",
+    "center": [
+      3.375,
+      3.15,
+      -31.5
+    ],
+    "size": [
+      0.25,
+      0.8,
+      1.8
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_GB_Tea_Upper",
+    "center": [
+      0.25,
+      7.175,
+      -33.0
+    ],
+    "size": [
+      6.5,
+      7.25,
+      8.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_DOOR_Tea_Open",
+    "center": [
+      2.475,
+      1.525,
+      -30.555
+    ],
+    "size": [
+      1.8,
+      2.35,
+      0.07
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Grocery_Floor",
+    "center": [
+      17.75,
+      0.225,
+      -54.0
+    ],
+    "size": [
+      10.5,
+      0.25,
+      4.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_INT_Grocery_Wall_00",
+    "center": [
+      22.875,
+      1.95,
+      -54.0
+    ],
+    "size": [
+      0.25,
+      3.2,
+      4.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Grocery_Wall_01",
+    "center": [
+      17.75,
+      1.95,
+      -51.875
+    ],
+    "size": [
+      10.5,
+      3.2,
+      0.25
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Grocery_Wall_02",
+    "center": [
+      17.75,
+      1.95,
+      -56.125
+    ],
+    "size": [
+      10.5,
+      3.2,
+      0.25
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Grocery_Wall_03",
+    "center": [
+      12.625,
+      1.95,
+      -52.35
+    ],
+    "size": [
+      0.25,
+      3.2,
+      0.7
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Grocery_Wall_04",
+    "center": [
+      12.625,
+      1.95,
+      -55.15
+    ],
+    "size": [
+      0.25,
+      3.2,
+      1.7
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Grocery_Wall_05",
+    "center": [
+      12.625,
+      3.15,
+      -53.5
+    ],
+    "size": [
+      0.25,
+      0.8,
+      1.6
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_GB_Grocery_Upper",
+    "center": [
+      17.75,
+      6.675,
+      -54.0
+    ],
+    "size": [
+      10.5,
+      6.25,
+      4.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_DOOR_Grocery_Open",
+    "center": [
+      13.425,
+      1.525,
+      -52.655
+    ],
+    "size": [
+      1.6,
+      2.35,
+      0.07
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Kitchen_Floor",
+    "center": [
+      33.25,
+      0.225,
+      -54.0
+    ],
+    "size": [
+      5.5,
+      0.25,
+      8.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_INT_Kitchen_Wall_00",
+    "center": [
+      35.875,
+      1.95,
+      -54.0
+    ],
+    "size": [
+      0.25,
+      3.2,
+      8.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Kitchen_Wall_01",
+    "center": [
+      33.25,
+      1.95,
+      -49.875
+    ],
+    "size": [
+      5.5,
+      3.2,
+      0.25
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Kitchen_Wall_02",
+    "center": [
+      33.25,
+      1.95,
+      -58.125
+    ],
+    "size": [
+      5.5,
+      3.2,
+      0.25
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Kitchen_Wall_03",
+    "center": [
+      30.625,
+      1.95,
+      -50.65
+    ],
+    "size": [
+      0.25,
+      3.2,
+      1.3
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Kitchen_Wall_04",
+    "center": [
+      30.625,
+      1.95,
+      -55.35
+    ],
+    "size": [
+      0.25,
+      3.2,
+      5.3
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_INT_Kitchen_Wall_05",
+    "center": [
+      30.625,
+      3.15,
+      -52.0
+    ],
+    "size": [
+      0.25,
+      0.8,
+      1.4
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_GB_Kitchen_Upper",
+    "center": [
+      33.25,
+      6.075,
+      -54.0
+    ],
+    "size": [
+      5.5,
+      5.05,
+      8.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_DOOR_Kitchen_Open",
+    "center": [
+      31.325,
+      1.525,
+      -51.255
+    ],
+    "size": [
+      1.4,
+      2.35,
+      0.07
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_01",
+    "center": [
+      -7.5,
+      4.7,
+      -4.875
+    ],
+    "size": [
+      6.0,
+      9.4,
+      9.75
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_02",
+    "center": [
+      -7.5,
+      5.1,
+      -22.375
+    ],
+    "size": [
+      6.0,
+      10.2,
+      12.25
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_03",
+    "center": [
+      8.0,
+      4.4,
+      -5.0
+    ],
+    "size": [
+      7.0,
+      8.8,
+      10.0
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_04",
+    "center": [
+      8.0,
+      5.25,
+      -14.75
+    ],
+    "size": [
+      7.0,
+      10.5,
+      9.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_05",
+    "center": [
+      16.25,
+      5.6,
+      -24.75
+    ],
+    "size": [
+      7.5,
+      11.2,
+      10.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_06",
+    "center": [
+      16.25,
+      4.9,
+      -34.875
+    ],
+    "size": [
+      7.5,
+      9.8,
+      9.75
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_07",
+    "center": [
+      -16.5,
+      5.2,
+      -36.75
+    ],
+    "size": [
+      9.0,
+      10.4,
+      6.0
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_08",
+    "center": [
+      -7.5,
+      4.45,
+      -36.75
+    ],
+    "size": [
+      9.0,
+      8.9,
+      6.0
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_09",
+    "center": [
+      -15.5,
+      4.8,
+      -51.75
+    ],
+    "size": [
+      11.0,
+      9.6,
+      7.0
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_10",
+    "center": [
+      -3.25,
+      5.7,
+      -51.75
+    ],
+    "size": [
+      13.5,
+      11.4,
+      7.0
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_11",
+    "center": [
+      0.0,
+      5.3,
+      -59.375
+    ],
+    "size": [
+      7.0,
+      10.6,
+      8.25
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_12",
+    "center": [
+      0.0,
+      4.6,
+      -67.75
+    ],
+    "size": [
+      7.0,
+      9.2,
+      8.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_13",
+    "center": [
+      19.0,
+      4.9,
+      -50.0
+    ],
+    "size": [
+      13.0,
+      9.8,
+      3.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_14",
+    "center": [
+      24.25,
+      4.9,
+      -54.0
+    ],
+    "size": [
+      2.5,
+      9.8,
+      4.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_15",
+    "center": [
+      19.0,
+      5.25,
+      -58.875
+    ],
+    "size": [
+      13.0,
+      10.5,
+      5.25
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_16",
+    "center": [
+      17.75,
+      5.4,
+      -69.75
+    ],
+    "size": [
+      10.5,
+      10.8,
+      6.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_17",
+    "center": [
+      26.75,
+      4.8,
+      -69.75
+    ],
+    "size": [
+      7.5,
+      9.6,
+      6.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_18",
+    "center": [
+      33.5,
+      4.3,
+      -49.0
+    ],
+    "size": [
+      6.0,
+      8.6,
+      1.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_19",
+    "center": [
+      33.5,
+      4.7,
+      -62.375
+    ],
+    "size": [
+      6.0,
+      9.4,
+      8.25
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_StairLanding",
+    "center": [
+      1.75,
+      0.225,
+      -38.5
+    ],
+    "size": [
+      3.5,
+      0.25,
+      2.5
+    ],
+    "blocksSight": false
+  },
+  {
+    "name": "COL_GB_StairRearWall",
+    "center": [
+      -0.125,
+      1.95,
+      -38.5
+    ],
+    "size": [
+      0.25,
+      3.2,
+      2.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_SouthEnd",
+    "center": [
+      0.0,
+      1.5,
+      0.175
+    ],
+    "size": [
+      9.0,
+      3.0,
+      0.35
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_NorthEnd",
+    "center": [
+      8.0,
+      1.5,
+      -72.175
+    ],
+    "size": [
+      9.0,
+      3.0,
+      0.35
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_CrossWestEnd",
+    "center": [
+      -21.175,
+      1.5,
+      -44.0
+    ],
+    "size": [
+      0.35,
+      3.0,
+      8.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_CrossEastEnd",
+    "center": [
+      30.675,
+      1.5,
+      -44.0
+    ],
+    "size": [
+      0.35,
+      3.0,
+      8.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_COVER_01_South",
+    "center": [
+      -3.7,
+      0.9,
+      -7.0
+    ],
+    "size": [
+      1.1,
+      1.1,
+      1.7
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_COVER_02_Dogleg",
+    "center": [
+      4.0,
+      0.9,
+      -27.75
+    ],
+    "size": [
+      1.7,
+      1.1,
+      1.1
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_COVER_03_TeaCounter",
+    "center": [
+      1.7,
+      0.9,
+      -34.6
+    ],
+    "size": [
+      1.1,
+      1.1,
+      1.7
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_COVER_04_Van",
+    "center": [
+      7.8,
+      1.125,
+      -51.5
+    ],
+    "size": [
+      2.1,
+      2.25,
+      4.8
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_COVER_05_North",
+    "center": [
+      4.25,
+      0.9,
+      -69.0
+    ],
+    "size": [
+      1.1,
+      1.1,
+      1.7
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_COVER_06_CrossWest",
+    "center": [
+      -15.0,
+      0.9,
+      -47.45
+    ],
+    "size": [
+      1.7,
+      1.1,
+      1.1
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_COVER_07_CrossMid",
+    "center": [
+      -1.0,
+      0.9,
+      -40.5
+    ],
+    "size": [
+      1.7,
+      1.1,
+      1.1
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_COVER_08_CrossEast",
+    "center": [
+      19.0,
+      0.9,
+      -40.5
+    ],
+    "size": [
+      1.7,
+      1.1,
+      1.1
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_COVER_09_Alley",
+    "center": [
+      18.0,
+      0.9,
+      -66.0
+    ],
+    "size": [
+      1.7,
+      1.1,
+      0.89999
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_COVER_10_KitchenCounter",
+    "center": [
+      33.5,
+      0.9,
+      -55.5
+    ],
+    "size": [
+      1.1,
+      1.1,
+      1.7
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_COVER_11_PawnCounter",
+    "center": [
+      -8.0,
+      0.9,
+      -14.6
+    ],
+    "size": [
+      1.1,
+      1.1,
+      1.7
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_COVER_12_GroceryShelf",
+    "center": [
+      19.5,
+      0.9,
+      -55.2
+    ],
+    "size": [
+      1.7,
+      1.1,
+      0.8
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GB_Block_20",
+    "center": [
+      -1.625,
+      4.3,
+      -38.5
+    ],
+    "size": [
+      2.75,
+      8.6,
+      2.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_PawnCabinet_10.5",
+    "center": [
+      -7.25,
+      0.845,
+      -10.5
+    ],
+    "size": [
+      3.6,
+      0.99,
+      0.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_PawnCabinet_15.55",
+    "center": [
+      -7.25,
+      0.845,
+      -15.55
+    ],
+    "size": [
+      3.6,
+      0.99,
+      0.5
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_TeaBooth_30.6",
+    "center": [
+      -2.125,
+      0.975,
+      -30.6
+    ],
+    "size": [
+      1.21,
+      1.25,
+      1.76
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_TeaTable_30.6",
+    "center": [
+      -1.24,
+      0.745,
+      -30.6
+    ],
+    "size": [
+      0.7,
+      0.79,
+      1.15
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_TeaBooth_33.3",
+    "center": [
+      -2.125,
+      0.975,
+      -33.3
+    ],
+    "size": [
+      1.21,
+      1.25,
+      1.76
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_TeaTable_33.3",
+    "center": [
+      -1.24,
+      0.745,
+      -33.3
+    ],
+    "size": [
+      0.7,
+      0.79,
+      1.15
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_TeaBooth_35.8",
+    "center": [
+      -2.125,
+      0.975,
+      -35.8
+    ],
+    "size": [
+      1.21,
+      1.25,
+      1.76
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_TeaTable_35.8",
+    "center": [
+      -1.24,
+      0.745,
+      -35.8
+    ],
+    "size": [
+      0.7,
+      0.79,
+      1.15
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GroceryShelf_52.27",
+    "center": [
+      17.1,
+      1.325,
+      -52.27
+    ],
+    "size": [
+      5.6,
+      1.95,
+      0.46
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GroceryShelf_55.73",
+    "center": [
+      17.1,
+      1.325,
+      -55.73
+    ],
+    "size": [
+      5.6,
+      1.95,
+      0.46
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_GroceryFridge",
+    "center": [
+      21.7,
+      1.36,
+      -54.6
+    ],
+    "size": [
+      0.92,
+      2.02,
+      0.76
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_KitchenWorktop_50.65",
+    "center": [
+      33.4,
+      0.8,
+      -50.65
+    ],
+    "size": [
+      3.0,
+      0.9,
+      0.76
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_KitchenWorktop_57.25",
+    "center": [
+      33.4,
+      0.8,
+      -57.25
+    ],
+    "size": [
+      3.0,
+      0.9,
+      0.76
+    ],
+    "blocksSight": true
+  },
+  {
+    "name": "COL_RAMP_Pawn",
+    "center": [
+      -2.4,
+      0.12592,
+      -12.0
+    ],
+    "size": [
+      1.8337120820892248,
+      0.1,
+      1.85
+    ],
+    "blocksSight": false,
+    "rotation": [
+      0.0,
+      0.0,
+      -0.09587650746107101,
+      0.9953932166099548
+    ]
+  },
+  {
+    "name": "COL_RAMP_Tea",
+    "center": [
+      5.6,
+      0.12592,
+      -31.5
+    ],
+    "size": [
+      1.8337120820892248,
+      0.1,
+      1.85
+    ],
+    "blocksSight": false,
+    "rotation": [
+      0.0,
+      0.0,
+      -0.09587650746107101,
+      0.9953932166099548
+    ]
+  },
+  {
+    "name": "COL_RAMP_Grocery",
+    "center": [
+      10.4,
+      0.12592,
+      -53.5
+    ],
+    "size": [
+      1.8337120820892248,
+      0.1,
+      1.85
+    ],
+    "blocksSight": false,
+    "rotation": [
+      0.0,
+      0.0,
+      0.09587650746107101,
+      0.9953932166099548
+    ]
+  },
+  {
+    "name": "COL_RAMP_Kitchen",
+    "center": [
+      28.9,
+      0.12592,
+      -52.0
+    ],
+    "size": [
+      1.8337120820892248,
+      0.1,
+      1.85
+    ],
+    "blocksSight": false,
+    "rotation": [
+      0.0,
+      0.0,
+      0.09587650746107101,
+      0.9953932166099548
+    ]
+  }
+];

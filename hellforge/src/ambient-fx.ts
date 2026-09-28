@@ -1,22 +1,23 @@
 // AmbientFx — three-layer ambient particles (ember / ash / snow).
 //
-// High path: ONE ECS entity per layer with Instances{transforms} (GPU SSBO).
-// Low path:  per-entity pool ≤40/layer when caps.storageBuffer === false
-//            (WebKit / older devices), matching hellforge/src/fx.ts style.
+// ONE ECS entity per layer with Instances{transforms}. Engine 0.1.38 owns the
+// storage/uniform fallback and chunks uniform batches when the device lacks a
+// storage buffer, so the game keeps one authoritative transform array and the
+// same instance count on every renderer backend.
 //
 // ZERO lights — particles are unlit HDR cubes only (ember blooms via HDR).
 
 import {
   Transform,
-} from '@forgeax/engine-scene';
+} from '@forgeax/engine/scene';
 import {
   MeshFilter,
   MeshRenderer,
   Instances,
   Materials,
-} from '@forgeax/engine-render';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
-import type { Handle, MaterialAsset } from '@forgeax/engine-types';
+} from '@forgeax/engine/render';
+import type { EntityHandle, World } from '@forgeax/engine/ecs';
+import type { Handle, MaterialAsset } from '@forgeax/engine/types';
 import { primitiveMesh } from './primitive-mesh';
 
 export type AmbientArea = 'camp' | 'wild' | 'den';
@@ -28,8 +29,8 @@ type LayerKind = 'ember' | 'ash' | 'snow';
 // N4 #6 particle budget (density default 1.15, range 0–2): the per-layer clamp
 // min(BASE[k], round(BASE[k]*mult*density)) is the real ceiling — auto/den at
 // default ≈ 245 ≤ 320; global worst path (snow style, den) = 296 ≤ 320; density
-// 2 across all styles/areas ≤ 389 ≤ 500; low path ≤ 40×3 = 120; high path stays
-// 3 instanced draws. MAX_TOTAL stays as a defensive rescale, not the active cap.
+// 2 across all styles/areas ≤ 389 ≤ 500; MAX_TOTAL stays as a defensive rescale,
+// not the active cap.
 const BASE: Record<LayerKind, number> = { ember: 200, ash: 130, snow: 170 };
 const BOX_X = 12;
 const BOX_Y = 4.6;
@@ -39,11 +40,10 @@ const HALF_Z = BOX_Z * 0.5;
 const Y_MIN = 0.15;
 const Y_MAX = Y_MIN + BOX_Y;
 const MAX_TOTAL = 500;
-const LOW_END_CAP = 40;
 
 const COLOR: Record<LayerKind, readonly [number, number, number, number]> = {
   // Soft ember glow (still blooms) — avoid harsh neon squares on dark vault.
-  ember: [1.35, 0.48, 0.14, 1],
+  ember: [1.05, 0.21, 0.045, 1],
   // Dim warm ash dust against dark sky (not bright chalk cubes).
   ash: [0.38, 0.28, 0.22, 1],
   snow: [0.85, 0.90, 1.05, 1],
@@ -56,21 +56,6 @@ const AUTO_MULT: Record<AmbientArea, Record<LayerKind, number>> = {
   wild: { ember: 0.55, ash: 0.50, snow: 0 },
   den: { ember: 1.1, ash: 0.30, snow: 0 },
 };
-
-function detectStorageBuffer(app: unknown): boolean {
-  try {
-    // Prefer renderer.caps; fall back to device.caps. Unreachable → true.
-    const a = app as {
-      renderer?: { caps?: { storageBuffer?: boolean } };
-      device?: { caps?: { storageBuffer?: boolean } };
-    } | null | undefined;
-    const caps = a?.renderer?.caps ?? a?.device?.caps;
-    if (caps?.storageBuffer === false) return false;
-    return true;
-  } catch {
-    return true;
-  }
-}
 
 function rand(a: number, b: number): number {
   return a + Math.random() * (b - a);
@@ -112,11 +97,8 @@ interface LayerSoA {
   rot: Float32Array;
   sway: Float32Array;
   transforms: Float32Array;
-  setPayload: { transforms: Float32Array };
   entity: EntityHandle | null;
   mat: MatHandle;
-  /** Low-end per-entity pool (null on Instances path). */
-  pool: EntityHandle[] | null;
 }
 
 function allocLayer(kind: LayerKind, capacity: number, mat: MatHandle): LayerSoA {
@@ -136,10 +118,8 @@ function allocLayer(kind: LayerKind, capacity: number, mat: MatHandle): LayerSoA
     rot: new Float32Array(capacity),
     sway: new Float32Array(capacity),
     transforms: new Float32Array(Math.max(capacity, 1) * 16),
-    setPayload: { transforms: new Float32Array(16) },
     entity: null,
     mat,
-    pool: null,
   };
 }
 
@@ -148,7 +128,9 @@ function seedParticle(layer: LayerSoA, i: number, cx: number, cz: number): void 
   layer.py[i] = rand(Y_MIN, Y_MAX);
   layer.pz[i] = cz + rand(-HALF_Z, HALF_Z);
   // Ash used to be 0.02–0.05 — large enough to silhouette as black tiles on HDR sky.
-  layer.scale[i] = layer.kind === 'ash' ? rand(0.006, 0.014) : rand(0.02, 0.05);
+  layer.scale[i] = layer.kind === 'ash' ? rand(0.006, 0.014)
+    : layer.kind === 'ember' ? rand(0.007, 0.022)
+      : rand(0.02, 0.05);
   layer.phase[i] = rand(0, Math.PI * 2);
   layer.rot[i] = rand(0, Math.PI * 2);
   layer.vx[i] = 0;
@@ -190,7 +172,6 @@ function wrapY(y: number): number {
 
 export class AmbientFx {
   private world: World;
-  private useInstances: boolean;
   private density = 1;
   private style: ParticleStyle = 'auto';
   private area: AmbientArea = 'wild';
@@ -200,9 +181,8 @@ export class AmbientFx {
   private lastCz = 0;
   private disposed = false;
 
-  constructor(world: World, app?: unknown) {
+  constructor(world: World) {
     this.world = world;
-    this.useInstances = detectStorageBuffer(app);
 
     const mkMat = (rgba: readonly [number, number, number, number]): MatHandle =>
       world.allocSharedRef<'MaterialAsset', MaterialAsset>(
@@ -216,22 +196,15 @@ export class AmbientFx {
       snow: allocLayer('snow', BASE.snow, mkMat(COLOR.snow)),
     };
 
-    if (this.useInstances) {
-      for (const layer of Object.values(this.layers)) {
-        writeDummyMat(layer.transforms, 0);
-        layer.setPayload.transforms = layer.transforms.subarray(0, 16);
-        const spawned = world.spawn(
-          { component: Transform, data: {} },
-          { component: MeshFilter, data: { assetHandle: primitiveMesh(world, 'cube') } },
-          { component: MeshRenderer, data: { materials: [layer.mat] } },
-          { component: Instances, data: { transforms: layer.setPayload.transforms } },
-        );
-        if (spawned.ok) layer.entity = spawned.value as EntityHandle;
-      }
-    } else {
-      for (const layer of Object.values(this.layers)) {
-        layer.pool = [];
-      }
+    for (const layer of Object.values(this.layers)) {
+      writeDummyMat(layer.transforms, 0);
+      const spawned = world.spawn(
+        { component: Transform, data: {} },
+        { component: MeshFilter, data: { assetHandle: primitiveMesh(this.world, 'cube') } },
+        { component: MeshRenderer, data: { materials: [layer.mat] } },
+        { component: Instances, data: { transforms: layer.transforms.subarray(0, 16) } },
+      );
+      if (spawned.ok) layer.entity = spawned.value as EntityHandle;
     }
 
     this.applyCounts(0, 0);
@@ -270,8 +243,7 @@ export class AmbientFx {
         layer.py[i] = wrapY(layer.py[i]!);
       }
 
-      if (this.useInstances) this.uploadInstances(layer);
-      else this.uploadPool(layer);
+      this.uploadInstances(layer);
     }
   }
 
@@ -288,10 +260,6 @@ export class AmbientFx {
       if (layer.entity !== null) {
         this.world.despawn(layer.entity);
         layer.entity = null;
-      }
-      if (layer.pool) {
-        for (const e of layer.pool) this.world.despawn(e);
-        layer.pool.length = 0;
       }
       layer.active = 0;
     }
@@ -332,9 +300,7 @@ export class AmbientFx {
     }
 
     for (const k of kinds) {
-      let n = raw[k];
-      if (!this.useInstances) n = Math.min(n, LOW_END_CAP);
-      this.resizeLayer(this.layers[k], n, cx, cz);
+      this.resizeLayer(this.layers[k], raw[k], cx, cz);
     }
   }
 
@@ -344,35 +310,7 @@ export class AmbientFx {
       for (let i = prev; i < n; i++) seedParticle(layer, i, cx, cz);
     }
     layer.active = n;
-
-    if (this.useInstances) {
-      this.uploadInstances(layer);
-      return;
-    }
-
-    // Low-end: grow/shrink entity pool to match active count (≤40).
-    const pool = layer.pool!;
-    while (pool.length < n) {
-      const i = pool.length;
-      const spawned = this.world.spawn(
-        {
-          component: Transform,
-          data: {
-            pos: [layer.px[i]!, layer.py[i]!, layer.pz[i]!],
-            scale: [layer.scale[i]!, layer.scale[i]!, layer.scale[i]!],
-          },
-        },
-        { component: MeshFilter, data: { assetHandle: primitiveMesh(world, 'cube') } },
-        { component: MeshRenderer, data: { materials: [layer.mat] } },
-      );
-      if (!spawned.ok) break;
-      pool.push(spawned.value as EntityHandle);
-    }
-    while (pool.length > n) {
-      const e = pool.pop()!;
-      this.world.despawn(e);
-    }
-    this.uploadPool(layer);
+    this.uploadInstances(layer);
   }
 
   private uploadInstances(layer: LayerSoA): void {
@@ -391,23 +329,7 @@ export class AmbientFx {
         );
       }
     }
-    layer.setPayload.transforms = layer.transforms.subarray(0, count * 16);
-    this.world.set(layer.entity, Instances, layer.setPayload);
-  }
-
-  private uploadPool(layer: LayerSoA): void {
-    const pool = layer.pool;
-    if (!pool) return;
-    const n = Math.min(layer.active, pool.length);
-    for (let i = 0; i < n; i++) {
-      const s = layer.scale[i]!;
-      this.world.set(pool[i]!, Transform, {
-        pos: [layer.px[i]!, layer.py[i]!, layer.pz[i]!],
-        scale: [s, s, s],
-        // Spin is visual-only on Instances path (mat4 rotY). Per-entity
-        // Transform has no cheap yaw field used by unlit cubes here — position
-        // + scale is enough for the low-end fallback.
-      });
-    }
+    const transforms = layer.transforms.subarray(0, count * 16);
+    this.world.set(layer.entity, Instances, { transforms }).unwrap();
   }
 }

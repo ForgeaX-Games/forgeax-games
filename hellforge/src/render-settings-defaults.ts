@@ -7,7 +7,7 @@ export type RenderSettingsDefaults = {
   tonemap: 'aces' | 'agx' | 'neutral' | 'cineon' | 'reinhard' | 'linear';
   exposure: number;
   whitePoint: number;
-  antialias: 'none' | 'fxaa' | 'msaa';
+  antialias: 'none' | 'fxaa' | 'taa';
   bloom: boolean;
   bloomThreshold: number;
   bloomIntensity: number;

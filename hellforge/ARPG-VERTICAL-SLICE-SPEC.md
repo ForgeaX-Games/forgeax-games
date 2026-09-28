@@ -1,3 +1,7 @@
+<!-- context-audit:2026-09-10 -->
+> 文档核对：2026-09-10。设计/规划参考；不作为当前实现或验收完成的证明。
+> 接手先读 [当前状态与入口](CURRENT.md)；[整理前原文](docs/archive/pre-management/ARPG-VERTICAL-SLICE-SPEC.md) 保留来源与原始内容。
+
 # Hellforge ARPG Vertical Slice Specification
 
 > Status: **APPROVED DESIGN BASELINE**

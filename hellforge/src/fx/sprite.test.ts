@@ -11,6 +11,7 @@ import '../../tools/engine-test-mocks';
 mock.module('../shaders/sprite.wgsl', () => ({ default: { wgsl: '// stub' } }));
 
 const { SpriteSystem } = await import('./sprite');
+const { createFxMaterial } = await import('./material-library');
 
 interface SpawnRecord {
   entity: number;
@@ -40,35 +41,27 @@ class StubWorld {
     this.sets.push({ e, data });
   }
 
+  internSharedRef(kind: string, asset: unknown): unknown { return this.allocSharedRef(kind, asset); }
+
   allocSharedRef(kind: string, asset: unknown): unknown {
     if (kind === 'TextureAsset') this.textures.push(asset);
-    else this.materials.push(asset);
+    else if (kind === 'MaterialAsset') this.materials.push(asset);
     return { fake: kind };
   }
 }
 
-function makeApp(registered: string[] = []) {
-  return {
-    renderer: {
-      shader: {
-        // Current Engine API — dual helper prefers this over registerMaterialShader.
-        installMaterialArtifact: (id: string) => { registered.push(id); },
-      },
-    },
-  };
-}
-
 function makeSystem(canSpawn: () => boolean = () => true) {
   const world = new StubWorld();
-  const registered: string[] = [];
-  const sys = new SpriteSystem(world as never, makeApp(registered), canSpawn);
-  return { world, sys, registered };
+  const sys = new SpriteSystem(world as never, { create: createFxMaterial }, canSpawn);
+  return { world, sys };
 }
 
 describe('SpriteSystem spawn/lifecycle (PR8 T1)', () => {
-  test('registers the uber shader and becomes available', () => {
-    const { sys, registered } = makeSystem();
-    expect(registered).toEqual(['hellforge::sprite']);
+  test('uses cooked material parents without a runtime shader registry', () => {
+    const { sys, world } = makeSystem();
+    sys.spawn({ pos: [0, 0, 0], size: 1, sheet: 'glow' });
+    expect(world.materials.at(-1)).toHaveProperty('parent');
+    expect(world.materials.at(-1)).not.toHaveProperty('passes');
     expect(sys.available()).toBe(true);
   });
 
@@ -158,7 +151,7 @@ describe('SpriteSystem spawn/lifecycle (PR8 T1)', () => {
     expect(sys.count()).toBe(0);
   });
 
-  test('inert when the shader registry is unavailable (Edit mode)', () => {
+  test('inert until the cooked material library is loaded', () => {
     const world = new StubWorld();
     const sys = new SpriteSystem(world as never, undefined);
     expect(sys.available()).toBe(false);

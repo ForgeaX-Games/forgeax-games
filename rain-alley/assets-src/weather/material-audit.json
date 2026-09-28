@@ -1,0 +1,86 @@
+{
+  "source": "assets/district/district.glb",
+  "output": "assets/weather/district-rain.glb",
+  "sourceSha256": "cc5d1dce16b8e5235c1c832881baffe6e0f2186c58298a0e21ffd093b4eccf0f",
+  "outputSha256": "09d70c2f70f0b40461383c7f1c0673eb5b0a424c2ac792649d8d148b25e47e05",
+  "geometryAndNodeTablesIdentical": true,
+  "originalBinaryPrefixIdentical": true,
+  "materials": 27,
+  "addedImages": 27,
+  "recipes": {
+    "PlasterIvory": {
+      "family": "concrete",
+      "keepBase": true
+    },
+    "AgedConcreteTrim": {
+      "family": "concrete",
+      "keepBase": false
+    },
+    "BrickBrown": {
+      "family": "concrete",
+      "keepBase": true
+    },
+    "PaintBlue": {
+      "family": "paint",
+      "keepBase": false
+    },
+    "PaintOchre": {
+      "family": "paint",
+      "keepBase": false
+    },
+    "PlasticBlue": {
+      "family": "paint",
+      "keepBase": false
+    },
+    "PlasticRed": {
+      "family": "paint",
+      "keepBase": false
+    },
+    "WetPaving": {
+      "family": "paving",
+      "keepBase": false
+    },
+    "WetAsphalt": {
+      "family": "asphalt",
+      "keepBase": false
+    },
+    "BoothVinyl": {
+      "family": "vinyl",
+      "keepBase": false
+    },
+    "OpaqueWindowGlass": {
+      "family": "glass",
+      "keepBase": false
+    },
+    "CeramicIvory": {
+      "family": "ceramic",
+      "keepBase": false
+    },
+    "BottleGreen": {
+      "family": "ceramic",
+      "keepBase": false
+    },
+    "BottleAmber": {
+      "family": "ceramic",
+      "keepBase": false
+    },
+    "DarkRecess": {
+      "family": "recess",
+      "keepBase": false
+    },
+    "FluorescentWarmWhite": {
+      "family": "lamp",
+      "keepBase": false
+    },
+    "NeonCyan": {
+      "family": "lamp",
+      "keepBase": false
+    },
+    "NeonWarmRed": {
+      "family": "lamp",
+      "keepBase": false
+    }
+  },
+  "baseTextureCoverage": 27,
+  "wetTexelsRoughnessBelowPoint15": 0.5503196716308594
+}

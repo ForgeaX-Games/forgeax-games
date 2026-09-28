@@ -1,0 +1,152 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "gear__BODY"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "pistol.glb",
+  "sourceOverrideDescriptors": [
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:gear__BODY"
+    }
+  ],
+  "sourceOverrides": {
+    "mesh:gear__BODY": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a0812c-13f8-720c-b5c0-a818d1c2404a",
+          "slotName": "LC_iron",
+          "sourceKey": "material:LC_iron"
+        },
+        {
+          "defaultMaterialGuid": "01a0812c-13f8-720c-b5c0-a8193093093d",
+          "slotName": "LC_trash",
+          "sourceKey": "material:LC_trash"
+        }
+      ]
+    }
+  },
+  "subAssets": [
+    {
+      "guid": "01a0812c-13f8-720c-b5c0-a8176b7b98a5",
+      "kind": "mesh",
+      "name": "gear__BODY",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:gear__BODY"
+    },
+    {
+      "guid": "01a0812c-13f8-720c-b5c0-a818d1c2404a",
+      "kind": "material",
+      "name": "LC_iron",
+      "sourceIndex": 0,
+      "sourceKey": "material:LC_iron"
+    },
+    {
+      "guid": "01a0812c-13f8-720c-b5c0-a8193093093d",
+      "kind": "material",
+      "name": "LC_trash",
+      "sourceIndex": 1,
+      "sourceKey": "material:LC_trash"
+    },
+    {
+      "guid": "01a0812c-13f8-720c-b5c0-a81a951e61f2",
+      "kind": "scene",
+      "name": "Scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:Scene"
+    },
+    {
+      "guid": "01a0812c-13f8-720c-b5c0-a81baad14dc1",
+      "kind": "texture",
+      "name": "iron-normal",
+      "sourceIndex": 0,
+      "sourceKey": "texture:iron-normal"
+    },
+    {
+      "guid": "01a0812c-13f8-720c-b5c0-a81c162700e5",
+      "kind": "texture",
+      "name": "iron-base",
+      "sourceIndex": 1,
+      "sourceKey": "texture:iron-base"
+    },
+    {
+      "guid": "01a0812c-13f8-720c-b5c0-a81d7d52e8cd",
+      "kind": "texture",
+      "name": "iron-orm",
+      "sourceIndex": 2,
+      "sourceKey": "texture:iron-orm"
+    },
+    {
+      "guid": "01a0812c-13f8-720c-b5c0-a81e67afb1f2",
+      "kind": "texture",
+      "name": "trash-normal",
+      "sourceIndex": 3,
+      "sourceKey": "texture:trash-normal"
+    },
+    {
+      "guid": "01a0812c-13f8-720c-b5c0-a81f2500ae93",
+      "kind": "texture",
+      "name": "trash-base",
+      "sourceIndex": 4,
+      "sourceKey": "texture:trash-base"
+    },
+    {
+      "guid": "01a0812c-13f8-720c-b5c0-a820d2f5746c",
+      "kind": "texture",
+      "name": "trash-orm",
+      "sourceIndex": 5,
+      "sourceKey": "texture:trash-orm"
+    },
+    {
+      "guid": "01a0812c-13f8-720c-b5c0-a8214e1b2025",
+      "kind": "sampler",
+      "sourceIndex": 0,
+      "sourceKey": "sampler"
+    }
+  ]
+}

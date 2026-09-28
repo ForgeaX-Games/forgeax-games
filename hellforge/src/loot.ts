@@ -4,17 +4,17 @@
 
 import {
   Transform,
-} from '@forgeax/engine-scene';
+} from '@forgeax/engine/scene';
 import {
   MeshFilter,
   MeshRenderer,
   Materials,
-} from '@forgeax/engine-render';
+} from '@forgeax/engine/render';
 import {
   type MaterialAsset,
-} from '@forgeax/engine-types';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
-import type { Handle } from '@forgeax/engine-types';
+} from '@forgeax/engine/types';
+import type { EntityHandle, World } from '@forgeax/engine/ecs';
+import type { Handle } from '@forgeax/engine/types';
 import { primitiveMesh } from './primitive-mesh';
 
 import type { Monster } from './monsters';

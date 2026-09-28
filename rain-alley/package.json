@@ -1,0 +1,57 @@
+{
+  "name": "@forgeax/game-rain-alley",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "A minimal over-the-shoulder whitebox for Rain Alley.",
+  "scripts": {
+    "typecheck": "bunx tsc -p tsconfig.json",
+    "test": "bun test tests"
+  },
+  "forgeax": {
+    "assets": {
+      "roots": ["assets"]
+    },
+    "metrics": {
+      "bundle-size": {
+        "enabled": false,
+        "reason": "whitebox game"
+      },
+      "fps": {
+        "enabled": false,
+        "reason": "whitebox game"
+      },
+      "bench": {
+        "enabled": false,
+        "reason": "whitebox game"
+      },
+      "gate": {
+        "enabled": false,
+        "reason": "Studio Play owns runtime acceptance"
+      },
+      "spike-report": {
+        "enabled": false,
+        "reason": "not a spike app"
+      }
+    }
+  },
+  "dependencies": {
+    "@forgeax/engine-app": "workspace:*",
+    "@forgeax/engine-assets-runtime": "workspace:*",
+    "@forgeax/engine-ecs": "workspace:*",
+    "@forgeax/engine-input": "workspace:*",
+    "@forgeax/engine-math": "workspace:*",
+    "@forgeax/engine-pack": "workspace:*",
+    "@forgeax/engine-physics": "workspace:*",
+    "@forgeax/engine-render": "workspace:*",
+    "@forgeax/engine-runtime": "workspace:*",
+    "@forgeax/engine-scene": "workspace:*",
+    "@forgeax/engine-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@webgpu/types": "^0.1.71",
+    "bun-types": "1.3.14",
+    "typescript": "^5.9.2"
+  }
+}

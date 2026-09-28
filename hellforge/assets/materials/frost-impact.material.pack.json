@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "2.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "96609630-726b-4564-9713-000000000004",
+      "kind": "material",
+      "sourceKey": "../../src/shaders/frost-impact.wgsl",
+      "refs": [],
+      "payload": {
+        "kind": "material",
+        "colorSpace": "linear",
+        "passes": [
+          {
+            "name": "forward",
+            "program": {
+              "module": "hellforge::frost_impact"
+            },
+            "renderState": {
+              "tags": {
+                "LightMode": "Forward"
+              },
+              "queue": 3000,
+              "depthWriteEnabled": false,
+              "depthCompare": "less",
+              "cullMode": "none",
+              "blend": {
+                "color": {
+                  "srcFactor": "one",
+                  "dstFactor": "one-minus-src-alpha",
+                  "operation": "add"
+                },
+                "alpha": {
+                  "srcFactor": "one",
+                  "dstFactor": "one-minus-src-alpha",
+                  "operation": "add"
+                }
+              }
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "baseColor",
+            "type": "color",
+            "colorSpace": "linear"
+          },
+          {
+            "name": "metallic",
+            "type": "f32"
+          },
+          {
+            "name": "roughness",
+            "type": "f32"
+          }
+        ],
+        "values": {
+          "baseColor": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "metallic": 0,
+          "roughness": 1
+        }
+      }
+    }
+  ]
+}

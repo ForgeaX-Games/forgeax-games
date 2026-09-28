@@ -1,0 +1,66 @@
+diff --git a/dist/cli.mjs b/dist/cli.mjs
+index 9abc77b3a8d9e3da32d192bc3618668b4cd18c6e..30badb31980971cb4b2c7b632bf6c92bcb811884 100755
+--- a/dist/cli.mjs
++++ b/dist/cli.mjs
+@@ -3674,6 +3674,7 @@ const appBootstrapPlugin = {
+             ...(workspaceGame ? { input: ctx.engineWorkspaceInput.game } : {}),
+             plugins: [${plugins.join(", ")}${plugins.length > 0 ? ", " : ""}...(workspaceMode ? [physicsComponentsPlugin()] : [])],
+             ...(workspaceMode ? { features: [ensureVfxRuntimeHost().feature] } : {}),
++            ...(import.meta.env.DEV ? {} : { assetCatalog }),
+             ...(import.meta.env.DEV ? { assetRuntimeBinding: runtimeScopeBinding } : {}),
+             ...(pointerLockAllowed === undefined ? {} : { pointerLockAllowed }),
+           },
+@@ -4155,7 +4156,7 @@ function htmlSource(title, startupScreen = true) {
+       #forgeax-loading-status { margin: 0; color: rgb(230 235 245 / 72%); }
+       #forgeax-loading-slow, #forgeax-loading-reload { display: none; }
+       #forgeax-loading-reload, #forgeax-fatal-reload { border: 1px solid rgb(230 235 245 / 35%); border-radius: 5px; padding: 7px 14px; background: transparent; color: inherit; cursor: pointer; font: inherit; }
+-      #forgeax-fatal { position: absolute; inset: 0; z-index: 2147483647; display: none; place-items: center; padding: 24px; box-sizing: border-box; background: #0b0d10; color: #e6e6e6; font: 15px/1.6 system-ui, sans-serif; text-align: center; }
++      #forgeax-fatal { position: fixed; inset: 0; z-index: 2147483647; display: none; place-items: center; padding: 24px; box-sizing: border-box; background: #0b0d10; color: #e6e6e6; font: 15px/1.6 system-ui, sans-serif; text-align: center; }
+       #forgeax-fatal-content { display: grid; gap: 12px; width: min(680px, 100%); text-align: left; }
+       #forgeax-fatal-message { margin: 0; font-size: 18px; }
+       #forgeax-fatal-details { max-height: 45vh; overflow: auto; white-space: pre-wrap; }
+@@ -4174,6 +4175,7 @@ function htmlSource(title, startupScreen = true) {
+         <button id="forgeax-loading-reload" type="button">Reload</button>
+       </div>
+     </div>
++    </div>
+     <div id="forgeax-fatal" role="alert">
+       <div id="forgeax-fatal-content">
+         <p id="forgeax-fatal-message">Unable to start the game.</p>
+@@ -4181,7 +4183,6 @@ function htmlSource(title, startupScreen = true) {
+         <button id="forgeax-fatal-reload" type="button">Reload</button>
+       </div>
+     </div>
+-    </div>
+     <noscript>JavaScript is required to start this game. Please enable JavaScript and reload.</noscript>
+     <script>
+       (() => {
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 257771610dae7e114a53e610ed6c8baa1004c61c..8ef4a8089e8614f41efbd289603704ca84ce72ff 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -3974,7 +3974,7 @@ function htmlSource(title, startupScreen = true) {
+       #forgeax-loading-status { margin: 0; color: rgb(230 235 245 / 72%); }
+       #forgeax-loading-slow, #forgeax-loading-reload { display: none; }
+       #forgeax-loading-reload, #forgeax-fatal-reload { border: 1px solid rgb(230 235 245 / 35%); border-radius: 5px; padding: 7px 14px; background: transparent; color: inherit; cursor: pointer; font: inherit; }
+-      #forgeax-fatal { position: absolute; inset: 0; z-index: 2147483647; display: none; place-items: center; padding: 24px; box-sizing: border-box; background: #0b0d10; color: #e6e6e6; font: 15px/1.6 system-ui, sans-serif; text-align: center; }
++      #forgeax-fatal { position: fixed; inset: 0; z-index: 2147483647; display: none; place-items: center; padding: 24px; box-sizing: border-box; background: #0b0d10; color: #e6e6e6; font: 15px/1.6 system-ui, sans-serif; text-align: center; }
+       #forgeax-fatal-content { display: grid; gap: 12px; width: min(680px, 100%); text-align: left; }
+       #forgeax-fatal-message { margin: 0; font-size: 18px; }
+       #forgeax-fatal-details { max-height: 45vh; overflow: auto; white-space: pre-wrap; }
+@@ -3993,6 +3993,7 @@ function htmlSource(title, startupScreen = true) {
+         <button id="forgeax-loading-reload" type="button">Reload</button>
+       </div>
+     </div>
++    </div>
+     <div id="forgeax-fatal" role="alert">
+       <div id="forgeax-fatal-content">
+         <p id="forgeax-fatal-message">Unable to start the game.</p>
+@@ -4000,7 +4001,6 @@ function htmlSource(title, startupScreen = true) {
+         <button id="forgeax-fatal-reload" type="button">Reload</button>
+       </div>
+     </div>
+-    </div>
+     <noscript>JavaScript is required to start this game. Please enable JavaScript and reload.</noscript>
+     <script>
+       (() => {

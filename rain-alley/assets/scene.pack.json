@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "2.0.0",
+  "kind": "internal-text-package",
+  "assets": [
+    {
+      "guid": "226d8c75-4301-45d0-a8e4-7f62f552313d",
+      "kind": "scene",
+      "payload": {
+        "entities": [
+          {
+            "localId": 0,
+            "components": {
+              "Entity": {
+                "self": 0
+              },
+              "Name": {
+                "value": "RainAlleyRoot"
+              },
+              "Transform": {
+                "pos": [0, 0, 0],
+                "quat": [0, 0, 0, 1],
+                "scale": [1, 1, 1]
+              }
+            }
+          }
+        ]
+      },
+      "refs": []
+    }
+  ]
+}

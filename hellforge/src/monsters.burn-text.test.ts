@@ -8,7 +8,7 @@ import { describe, expect, mock, test } from 'bun:test';
 
 import '../tools/engine-test-mocks';
 
-mock.module('@forgeax/engine-pack/guid', () => ({
+mock.module('@forgeax/engine/pack/guid', () => ({
   AssetGuid: {
     parse: (dash: string) =>
       /^[0-9a-f-]{36}$/i.test(dash)
@@ -44,6 +44,7 @@ function makeWorld() {
     },
     addComponent(e: number, entry: Comp) { live.get(e)?.set(entry.component, entry.data); },
     removeComponent(e: number, component: unknown) { live.get(e)?.delete(component); },
+    internSharedRef(_kind: string, value: unknown) { return value ?? {}; },
     allocSharedRef(_kind: string, value: unknown) { return value ?? {}; },
   };
 }

@@ -105,11 +105,11 @@ interface PackEntity {
 
 function loadPack(): { refs: string[]; entities: PackEntity[] } {
   const pack = JSON.parse(readFileSync(packPath, 'utf8')) as {
-    assets: Array<{ kind: string; refs?: string[]; payload?: { entities?: PackEntity[] } }>;
+    assets: Array<{ kind: string; refs?: string[]; payload?: { entities?: Record<string, PackEntity> } }>;
   };
   const scene = pack.assets.find((a) => a.kind === 'scene');
   const refs = scene?.refs ?? [];
-  const entities = scene?.payload?.entities ?? [];
+  const entities = Object.values(scene?.payload?.entities ?? {});
   if (entities.length < 1) throw new Error('slagdeep pack: no entities');
   return { refs, entities };
 }

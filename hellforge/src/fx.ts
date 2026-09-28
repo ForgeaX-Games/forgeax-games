@@ -24,26 +24,20 @@
 
 import {
   Transform,
-} from '@forgeax/engine-scene';
+} from '@forgeax/engine/scene';
 import {
   MeshFilter,
   MeshRenderer,
   Materials,
-} from '@forgeax/engine-render';
+} from '@forgeax/engine/render';
 import {
   type MaterialAsset,
-} from '@forgeax/engine-types';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
-import type { Handle } from '@forgeax/engine-types';
+} from '@forgeax/engine/types';
+import type { EntityHandle, World } from '@forgeax/engine/ecs';
+import type { Handle } from '@forgeax/engine/types';
 import { primitiveMesh } from './primitive-mesh';
 
-import fireBoltShader from './shaders/fire-bolt.wgsl';
-import portalShader from './shaders/portal-vortex.wgsl';
-import frostFangShader from './shaders/frost-fang.wgsl';
-import frostImpactShader from './shaders/frost-impact.wgsl';
-import frostSlowShader from './shaders/frost-slow.wgsl';
-import moveClickShader from './shaders/move-click.wgsl';
-import { registerMaterialShaderDual } from './register-material-shader';
+import type { FxMaterialLibrary } from './fx/material-library';
 import { FxLifecycleTracker, type FxLifecycleSnapshot } from './fx-lifecycle';
 import {
   EffectExecutor,
@@ -229,7 +223,7 @@ export class FxSystem {
   private moveClickPool: Array<{ mat: MatHandle; params: ShaderParams }> = [];
   private moveClickFree: number[] = [];
   /** true = c0/Pack-v1 pass shape (`shader` + `paramValues`). */
-  private customPassShaderShape = false;
+
   /** Pure counts for __hf / tests (entities stay in this class). */
   readonly lifecycle = new FxLifecycleTracker();
   /** Declarative EffectDef runner (PR2b T2). Spawns via burst/pop/rise. */
@@ -245,7 +239,7 @@ export class FxSystem {
   /** Live loot beams — capped at MAX_LOOT_BEAMS (PR8 T7). */
   private lootBeamCount = 0;
 
-  constructor(private world: World, app?: unknown) {
+  constructor(private world: World, private readonly materials?: FxMaterialLibrary) {
     this.executor = new EffectExecutor({
       burst: (x, y, z, color, count, speed) => this.burst(x, y, z, color, count, speed),
       pop: (x, y, z, color, size) => this.pop(x, y, z, color, size),
@@ -254,7 +248,7 @@ export class FxSystem {
     });
     // Note: burst/pop/rise return FxSpawnLease; executor tracks them for release.
     // Combined ceiling: geometric particles + sprites share FX_MAX_PARTICLES.
-    this.sprites = new SpriteSystem(world, app, () =>
+    this.sprites = new SpriteSystem(world, materials, () =>
       this.particles.length + this.sprites.count() + this.sprites.persistentCount() < FX_MAX_PARTICLES);
 
     this.mats = {} as Record<FxColor, MatHandle>;
@@ -265,67 +259,11 @@ export class FxSystem {
       }));
     }
 
-    // ── custom shaders (graceful fallback to plain emissive if unavailable) ──
-    // c0 engines expect MaterialPass.shader + paramValues; newer engines use
-    // program.module + values. Blind Pack-v2 shape makes move-click / FX mats
-    // allocate but never paint → click guidance looks "removed".
-    const probePass = Materials.standard({
-      baseColor: [1, 1, 1, 1],
-      roughness: 0.5,
-      metallic: 0,
-    }).passes?.[0] as { shader?: string; program?: unknown } | undefined;
-    this.customPassShaderShape = typeof probePass?.shader === 'string';
-
-    const mkCustomMat = (shaderId: string, params: ShaderParams): MatHandle => {
-      if (this.customPassShaderShape) {
-        return world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
-          kind: 'material',
-          passes: [{
-            name: 'Forward',
-            shader: shaderId,
-            tags: { LightMode: 'HellforgeFx' },
-            queue: 3000,
-            passKind: 'post-process',
-            renderState: FX_RENDER_STATE,
-          }],
-          paramValues: params as never,
-        } as unknown as MaterialAsset);
-      }
-      return world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
-        kind: 'material',
-        passes: [{
-          name: 'Forward',
-          program: { module: shaderId },
-          renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'HellforgeFx' }, queue: 3000 },
-        }],
-        // Restated on the asset because safeRegister below always loses the
-        // race: vite-plugin-shader registers these ids from the manifest with
-        // an empty paramSchema before game code runs. Extract/record prefer the
-        // asset's own `parameters`, so this is what actually sizes the UBO —
-        // otherwise the shader reads the standard-PBR payload, which only
-        // happens to line up for these three fields.
-        parameters: FX_PARAM_SCHEMA as never,
-        values: params as never,
-      });
-    };
-
-    // Dual API: current Engine installMaterialArtifact, Engine c0 registerMaterialShader.
-    const FX_PARAM_SCHEMA = [
-      { name: 'baseColor', type: 'color' as const },
-      { name: 'metallic', type: 'f32' as const },
-      { name: 'roughness', type: 'f32' as const },
-    ];
-    const safeRegister = (id: string, source: string): boolean =>
-      registerMaterialShaderDual(app, id, { source, paramSchema: FX_PARAM_SCHEMA }, 'hellforge/fx');
+    // Shader roots are cooked and loaded before runtime creation.
+    const mkCustomMat = (shaderId: string, params: ShaderParams): MatHandle =>
+      world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', materials!.create(shaderId, params));
     try {
-      const registered = [
-        safeRegister(FIRE_BOLT_SHADER_ID, fireBoltShader.wgsl),
-        safeRegister(PORTAL_SHADER_ID, portalShader.wgsl),
-        safeRegister(FROST_FANG_SHADER_ID, frostFangShader.wgsl),
-        safeRegister(FROST_IMPACT_SHADER_ID, frostImpactShader.wgsl),
-        safeRegister(FROST_SLOW_SHADER_ID, frostSlowShader.wgsl),
-        safeRegister(MOVE_CLICK_SHADER_ID, moveClickShader.wgsl),
-      ].every(Boolean);
+      const registered = materials !== undefined;
       if (!registered) {
         this.frostHandles = null;
         this.frostParams = [];
@@ -409,28 +347,9 @@ export class FxSystem {
   portalMaterial(tint: [number, number, number]): MatHandle | null {
     if (!this.fireBoltMat) return null;   // shader registry unavailable
     const params: ShaderParams = { baseColor: [tint[0], tint[1], tint[2], 1], metallic: 0, roughness: 1.0 };
-    const mat = this.customPassShaderShape
-      ? this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
-          kind: 'material',
-          passes: [{
-            name: 'Forward',
-            shader: PORTAL_SHADER_ID,
-            tags: { LightMode: 'HellforgeFx' },
-            queue: 3000,
-            passKind: 'post-process',
-            renderState: FX_RENDER_STATE,
-          }],
-          paramValues: params as never,
-        } as unknown as MaterialAsset)
-      : this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
-          kind: 'material',
-          passes: [{
-            name: 'Forward',
-            program: { module: PORTAL_SHADER_ID },
-            renderState: { ...FX_RENDER_STATE, tags: { LightMode: 'HellforgeFx' }, queue: 3000 },
-          }],
-          values: params as never,
-        });
+    const mat = this.world.allocSharedRef<'MaterialAsset', MaterialAsset>(
+      'MaterialAsset', this.materials!.create(PORTAL_SHADER_ID, params),
+    );
     this.portalMats.push({ mat, params });
     return mat;
   }

@@ -1,0 +1,2286 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "CELL_0_0",
+        "CELL_0_1",
+        "CELL_0_2",
+        "CELL_0_3",
+        "CELL_0_-1",
+        "CELL_1_1",
+        "CELL_1_2",
+        "CELL_-1_0",
+        "CELL_-1_1",
+        "CELL_-1_2",
+        "DOOR_Grocery",
+        "DOOR_Kitchen",
+        "DOOR_Pawn",
+        "DOOR_Tea",
+        "HINGE_Grocery",
+        "HINGE_Kitchen",
+        "HINGE_Pawn",
+        "HINGE_Tea",
+        "PORTAL_Enter_Stair",
+        "PORTAL_Exit_Stair",
+        "SPAWN_Coat",
+        "SPAWN_Knife_01",
+        "SPAWN_Knife_02",
+        "SPAWN_Knife_03",
+        "SPAWN_Knife_04",
+        "SPAWN_Peeker_01",
+        "SPAWN_Peeker_02",
+        "SPAWN_Peeker_03",
+        "SPAWN_Peeker_04",
+        "SPAWN_Peeker_05",
+        "SPAWN_Peeker_06",
+        "SPAWN_Peeker_07",
+        "SPAWN_Peeker_08",
+        "SPAWN_PeekExit_01",
+        "SPAWN_PeekExit_02",
+        "SPAWN_PeekExit_03",
+        "SPAWN_PeekExit_04",
+        "SPAWN_PeekExit_05",
+        "SPAWN_PeekExit_06",
+        "SPAWN_PeekExit_07",
+        "SPAWN_PeekExit_08",
+        "SPAWN_Photo",
+        "SPAWN_Player",
+        "SPAWN_Smg_01",
+        "SPAWN_Smg_02",
+        "SPAWN_Smg_03",
+        "SPAWN_Smg_04",
+        "SPAWN_Talker"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "district-batched.glb",
+  "sourceOverrideDescriptors": [
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:CELL_0_0"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:CELL_0_1"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:CELL_0_2"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:CELL_0_3"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:CELL_0_-1"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:CELL_1_1"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:CELL_1_2"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:CELL_-1_0"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:CELL_-1_1"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:CELL_-1_2"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:DOOR_Grocery"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:DOOR_Kitchen"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:DOOR_Pawn"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:DOOR_Tea"
+    }
+  ],
+  "sourceOverrides": {
+    "mesh:CELL_-1_0": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1670e2b57a",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c29f5bd1e8e",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c20f9c7298b",
+          "slotName": "LC_iron",
+          "sourceKey": "material:LC_iron"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c31d04216eb",
+          "slotName": "PlasterIvory",
+          "sourceKey": "material:PlasterIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c230c421e6f",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c249610c438",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1b6bb67e59",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1d7a8bd858",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c261b1a5780",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1704e7fcef",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1c7e125d18",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c30d4a12d56",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2b2d36f8b5",
+          "slotName": "AwningPetrol",
+          "sourceKey": "material:AwningPetrol"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c182428d35c",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2733313f31",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c28eac7ec6a",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1e972ec9e8",
+          "slotName": "LC_brick",
+          "sourceKey": "material:LC_brick"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c21b1525cb1",
+          "slotName": "LC_plaster",
+          "sourceKey": "material:LC_plaster"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2d5b5a9a17",
+          "slotName": "LC_couplet-left",
+          "sourceKey": "material:LC_couplet-left"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1fe23b42db",
+          "slotName": "LC_cloth",
+          "sourceKey": "material:LC_cloth"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2e27080639",
+          "slotName": "LC_couplet-right",
+          "sourceKey": "material:LC_couplet-right"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c221790bfde",
+          "slotName": "LC_trash",
+          "sourceKey": "material:LC_trash"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2f2a459deb",
+          "slotName": "NeonWarmRed",
+          "sourceKey": "material:NeonWarmRed"
+        }
+      ]
+    },
+    "mesh:CELL_-1_1": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1670e2b57a",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1c7e125d18",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1fe23b42db",
+          "slotName": "LC_cloth",
+          "sourceKey": "material:LC_cloth"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c360f6e642d",
+          "slotName": "BrickBrown",
+          "sourceKey": "material:BrickBrown"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c230c421e6f",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c249610c438",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1b6bb67e59",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c29f5bd1e8e",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1d7a8bd858",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c261b1a5780",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1704e7fcef",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2596ed1911",
+          "slotName": "PaintOchre",
+          "sourceKey": "material:PaintOchre"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c191f2cc6d2",
+          "slotName": "AwningOxideRed",
+          "sourceKey": "material:AwningOxideRed"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c182428d35c",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c31d04216eb",
+          "slotName": "PlasterIvory",
+          "sourceKey": "material:PlasterIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c28eac7ec6a",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2733313f31",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c374fc39a37",
+          "slotName": "BoothVinyl",
+          "sourceKey": "material:BoothVinyl"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2cacd16a67",
+          "slotName": "CeramicIvory",
+          "sourceKey": "material:CeramicIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c30d4a12d56",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c20f9c7298b",
+          "slotName": "LC_iron",
+          "sourceKey": "material:LC_iron"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c221790bfde",
+          "slotName": "LC_trash",
+          "sourceKey": "material:LC_trash"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c21b1525cb1",
+          "slotName": "LC_plaster",
+          "sourceKey": "material:LC_plaster"
+        }
+      ]
+    },
+    "mesh:CELL_-1_2": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1670e2b57a",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c29f5bd1e8e",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c31d04216eb",
+          "slotName": "PlasterIvory",
+          "sourceKey": "material:PlasterIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c230c421e6f",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c249610c438",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1b6bb67e59",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1d7a8bd858",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c261b1a5780",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1704e7fcef",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1c7e125d18",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        }
+      ]
+    },
+    "mesh:CELL_0_-1": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1670e2b57a",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        }
+      ]
+    },
+    "mesh:CELL_0_0": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1670e2b57a",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c29f5bd1e8e",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c20f9c7298b",
+          "slotName": "LC_iron",
+          "sourceKey": "material:LC_iron"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1fe23b42db",
+          "slotName": "LC_cloth",
+          "sourceKey": "material:LC_cloth"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2733313f31",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2596ed1911",
+          "slotName": "PaintOchre",
+          "sourceKey": "material:PaintOchre"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c230c421e6f",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c249610c438",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1b6bb67e59",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1d7a8bd858",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c261b1a5780",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1704e7fcef",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c191f2cc6d2",
+          "slotName": "AwningOxideRed",
+          "sourceKey": "material:AwningOxideRed"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c182428d35c",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1c7e125d18",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1e972ec9e8",
+          "slotName": "LC_brick",
+          "sourceKey": "material:LC_brick"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c21b1525cb1",
+          "slotName": "LC_plaster",
+          "sourceKey": "material:LC_plaster"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c221790bfde",
+          "slotName": "LC_trash",
+          "sourceKey": "material:LC_trash"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c28eac7ec6a",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1a177e47e1",
+          "slotName": "BottleGreen",
+          "sourceKey": "material:BottleGreen"
+        }
+      ]
+    },
+    "mesh:CELL_0_1": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1670e2b57a",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c261b1a5780",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c3217e5abc6",
+          "slotName": "WetAsphalt",
+          "sourceKey": "material:WetAsphalt"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c339e56c9d2",
+          "slotName": "WetPaving",
+          "sourceKey": "material:WetPaving"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c20f9c7298b",
+          "slotName": "LC_iron",
+          "sourceKey": "material:LC_iron"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2596ed1911",
+          "slotName": "PaintOchre",
+          "sourceKey": "material:PaintOchre"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c30d4a12d56",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c230c421e6f",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c249610c438",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1b6bb67e59",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c29f5bd1e8e",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1704e7fcef",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2b2d36f8b5",
+          "slotName": "AwningPetrol",
+          "sourceKey": "material:AwningPetrol"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c182428d35c",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1c7e125d18",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1d7a8bd858",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c31d04216eb",
+          "slotName": "PlasterIvory",
+          "sourceKey": "material:PlasterIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2ab3924423",
+          "slotName": "AgedSeafoamTiles",
+          "sourceKey": "material:AgedSeafoamTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2733313f31",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c28eac7ec6a",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2cacd16a67",
+          "slotName": "CeramicIvory",
+          "sourceKey": "material:CeramicIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1e972ec9e8",
+          "slotName": "LC_brick",
+          "sourceKey": "material:LC_brick"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c21b1525cb1",
+          "slotName": "LC_plaster",
+          "sourceKey": "material:LC_plaster"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2d5b5a9a17",
+          "slotName": "LC_couplet-left",
+          "sourceKey": "material:LC_couplet-left"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1fe23b42db",
+          "slotName": "LC_cloth",
+          "sourceKey": "material:LC_cloth"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2e27080639",
+          "slotName": "LC_couplet-right",
+          "sourceKey": "material:LC_couplet-right"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c221790bfde",
+          "slotName": "LC_trash",
+          "sourceKey": "material:LC_trash"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1a177e47e1",
+          "slotName": "BottleGreen",
+          "sourceKey": "material:BottleGreen"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2f2a459deb",
+          "slotName": "NeonWarmRed",
+          "sourceKey": "material:NeonWarmRed"
+        }
+      ]
+    },
+    "mesh:CELL_0_2": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1670e2b57a",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c261b1a5780",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c31d04216eb",
+          "slotName": "PlasterIvory",
+          "sourceKey": "material:PlasterIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c20f9c7298b",
+          "slotName": "LC_iron",
+          "sourceKey": "material:LC_iron"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c30d4a12d56",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c29f5bd1e8e",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c249610c438",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1b6bb67e59",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c230c421e6f",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1704e7fcef",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2b2d36f8b5",
+          "slotName": "AwningPetrol",
+          "sourceKey": "material:AwningPetrol"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c182428d35c",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1c7e125d18",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1d7a8bd858",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2ab3924423",
+          "slotName": "AgedSeafoamTiles",
+          "sourceKey": "material:AgedSeafoamTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2596ed1911",
+          "slotName": "PaintOchre",
+          "sourceKey": "material:PaintOchre"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c191f2cc6d2",
+          "slotName": "AwningOxideRed",
+          "sourceKey": "material:AwningOxideRed"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2cacd16a67",
+          "slotName": "CeramicIvory",
+          "sourceKey": "material:CeramicIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2733313f31",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c28eac7ec6a",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1a177e47e1",
+          "slotName": "BottleGreen",
+          "sourceKey": "material:BottleGreen"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c349038fac9",
+          "slotName": "BottleAmber",
+          "sourceKey": "material:BottleAmber"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1e972ec9e8",
+          "slotName": "LC_brick",
+          "sourceKey": "material:LC_brick"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c21b1525cb1",
+          "slotName": "LC_plaster",
+          "sourceKey": "material:LC_plaster"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2d5b5a9a17",
+          "slotName": "LC_couplet-left",
+          "sourceKey": "material:LC_couplet-left"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1fe23b42db",
+          "slotName": "LC_cloth",
+          "sourceKey": "material:LC_cloth"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2e27080639",
+          "slotName": "LC_couplet-right",
+          "sourceKey": "material:LC_couplet-right"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c221790bfde",
+          "slotName": "LC_trash",
+          "sourceKey": "material:LC_trash"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c353596c1f5",
+          "slotName": "NeonCyan",
+          "sourceKey": "material:NeonCyan"
+        }
+      ]
+    },
+    "mesh:CELL_0_3": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1670e2b57a",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        }
+      ]
+    },
+    "mesh:CELL_1_1": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1670e2b57a",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        }
+      ]
+    },
+    "mesh:CELL_1_2": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1670e2b57a",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1c7e125d18",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c20f9c7298b",
+          "slotName": "LC_iron",
+          "sourceKey": "material:LC_iron"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2733313f31",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c360f6e642d",
+          "slotName": "BrickBrown",
+          "sourceKey": "material:BrickBrown"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c230c421e6f",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c249610c438",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1b6bb67e59",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c29f5bd1e8e",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1d7a8bd858",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c261b1a5780",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1704e7fcef",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c31d04216eb",
+          "slotName": "PlasterIvory",
+          "sourceKey": "material:PlasterIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2cacd16a67",
+          "slotName": "CeramicIvory",
+          "sourceKey": "material:CeramicIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c30d4a12d56",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c182428d35c",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1e972ec9e8",
+          "slotName": "LC_brick",
+          "sourceKey": "material:LC_brick"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c21b1525cb1",
+          "slotName": "LC_plaster",
+          "sourceKey": "material:LC_plaster"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2d5b5a9a17",
+          "slotName": "LC_couplet-left",
+          "sourceKey": "material:LC_couplet-left"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1fe23b42db",
+          "slotName": "LC_cloth",
+          "sourceKey": "material:LC_cloth"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c2e27080639",
+          "slotName": "LC_couplet-right",
+          "sourceKey": "material:LC_couplet-right"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c221790bfde",
+          "slotName": "LC_trash",
+          "sourceKey": "material:LC_trash"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c28eac7ec6a",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c1a177e47e1",
+          "slotName": "BottleGreen",
+          "sourceKey": "material:BottleGreen"
+        }
+      ]
+    },
+    "mesh:DOOR_Grocery": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c20f9c7298b",
+          "slotName": "LC_iron",
+          "sourceKey": "material:LC_iron"
+        }
+      ]
+    },
+    "mesh:DOOR_Kitchen": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c20f9c7298b",
+          "slotName": "LC_iron",
+          "sourceKey": "material:LC_iron"
+        }
+      ]
+    },
+    "mesh:DOOR_Pawn": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c20f9c7298b",
+          "slotName": "LC_iron",
+          "sourceKey": "material:LC_iron"
+        }
+      ]
+    },
+    "mesh:DOOR_Tea": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08470-5586-751e-b8c4-4c20f9c7298b",
+          "slotName": "LC_iron",
+          "sourceKey": "material:LC_iron"
+        }
+      ]
+    }
+  },
+  "subAssets": [
+    {
+      "guid": "01a08470-5584-7bd4-81e7-1dcf883b0b58",
+      "kind": "mesh",
+      "name": "CELL_0_0",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:CELL_0_0"
+    },
+    {
+      "guid": "01a08470-5585-77ae-a00f-81035cb069a7",
+      "kind": "mesh",
+      "name": "CELL_0_1",
+      "sourceIndex": 1,
+      "sourceKey": "mesh:CELL_0_1"
+    },
+    {
+      "guid": "01a08470-5585-77ae-a00f-8104f3c6c34e",
+      "kind": "mesh",
+      "name": "CELL_0_2",
+      "sourceIndex": 2,
+      "sourceKey": "mesh:CELL_0_2"
+    },
+    {
+      "guid": "01a08470-5585-77ae-a00f-8105b985dd5c",
+      "kind": "mesh",
+      "name": "CELL_0_3",
+      "sourceIndex": 3,
+      "sourceKey": "mesh:CELL_0_3"
+    },
+    {
+      "guid": "01a08470-5585-77ae-a00f-8106bf25473f",
+      "kind": "mesh",
+      "name": "CELL_0_-1",
+      "sourceIndex": 4,
+      "sourceKey": "mesh:CELL_0_-1"
+    },
+    {
+      "guid": "01a08470-5585-77ae-a00f-810753cf0f1b",
+      "kind": "mesh",
+      "name": "CELL_1_1",
+      "sourceIndex": 5,
+      "sourceKey": "mesh:CELL_1_1"
+    },
+    {
+      "guid": "01a08470-5585-77ae-a00f-8108f25e747d",
+      "kind": "mesh",
+      "name": "CELL_1_2",
+      "sourceIndex": 6,
+      "sourceKey": "mesh:CELL_1_2"
+    },
+    {
+      "guid": "01a08470-5585-77ae-a00f-8109565d0013",
+      "kind": "mesh",
+      "name": "CELL_-1_0",
+      "sourceIndex": 7,
+      "sourceKey": "mesh:CELL_-1_0"
+    },
+    {
+      "guid": "01a08470-5585-77ae-a00f-810a1515c53b",
+      "kind": "mesh",
+      "name": "CELL_-1_1",
+      "sourceIndex": 8,
+      "sourceKey": "mesh:CELL_-1_1"
+    },
+    {
+      "guid": "01a08470-5585-77ae-a00f-810b3d29cce8",
+      "kind": "mesh",
+      "name": "CELL_-1_2",
+      "sourceIndex": 9,
+      "sourceKey": "mesh:CELL_-1_2"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c1254034842",
+      "kind": "mesh",
+      "name": "DOOR_Grocery",
+      "sourceIndex": 10,
+      "sourceKey": "mesh:DOOR_Grocery"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c13b6bff88b",
+      "kind": "mesh",
+      "name": "DOOR_Kitchen",
+      "sourceIndex": 11,
+      "sourceKey": "mesh:DOOR_Kitchen"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c14c3bb86ef",
+      "kind": "mesh",
+      "name": "DOOR_Pawn",
+      "sourceIndex": 12,
+      "sourceKey": "mesh:DOOR_Pawn"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c15eb4d098a",
+      "kind": "mesh",
+      "name": "DOOR_Tea",
+      "sourceIndex": 13,
+      "sourceKey": "mesh:DOOR_Tea"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c1670e2b57a",
+      "kind": "material",
+      "name": "AgedConcreteTrim",
+      "sourceIndex": 0,
+      "sourceKey": "material:AgedConcreteTrim"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c29f5bd1e8e",
+      "kind": "material",
+      "name": "WarmWindow",
+      "sourceIndex": 1,
+      "sourceKey": "material:WarmWindow"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c20f9c7298b",
+      "kind": "material",
+      "name": "LC_iron",
+      "sourceIndex": 2,
+      "sourceKey": "material:LC_iron"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c1fe23b42db",
+      "kind": "material",
+      "name": "LC_cloth",
+      "sourceIndex": 3,
+      "sourceKey": "material:LC_cloth"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c2733313f31",
+      "kind": "material",
+      "name": "PlasticBlue",
+      "sourceIndex": 4,
+      "sourceKey": "material:PlasticBlue"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c2596ed1911",
+      "kind": "material",
+      "name": "PaintOchre",
+      "sourceIndex": 5,
+      "sourceKey": "material:PaintOchre"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c230c421e6f",
+      "kind": "material",
+      "name": "OpaqueWindowGlass",
+      "sourceIndex": 6,
+      "sourceKey": "material:OpaqueWindowGlass"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c249610c438",
+      "kind": "material",
+      "name": "OxidizedMetal",
+      "sourceIndex": 7,
+      "sourceKey": "material:OxidizedMetal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c1b6bb67e59",
+      "kind": "material",
+      "name": "DarkRecess",
+      "sourceIndex": 8,
+      "sourceKey": "material:DarkRecess"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c1d7a8bd858",
+      "kind": "material",
+      "name": "FurnitureWood",
+      "sourceIndex": 9,
+      "sourceKey": "material:FurnitureWood"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c261b1a5780",
+      "kind": "material",
+      "name": "PeriodPrintAtlas",
+      "sourceIndex": 10,
+      "sourceKey": "material:PeriodPrintAtlas"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c1704e7fcef",
+      "kind": "material",
+      "name": "AgedIvoryTiles",
+      "sourceIndex": 11,
+      "sourceKey": "material:AgedIvoryTiles"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c191f2cc6d2",
+      "kind": "material",
+      "name": "AwningOxideRed",
+      "sourceIndex": 12,
+      "sourceKey": "material:AwningOxideRed"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c182428d35c",
+      "kind": "material",
+      "name": "AwningCream",
+      "sourceIndex": 13,
+      "sourceKey": "material:AwningCream"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c1c7e125d18",
+      "kind": "material",
+      "name": "FluorescentWarmWhite",
+      "sourceIndex": 14,
+      "sourceKey": "material:FluorescentWarmWhite"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c1e972ec9e8",
+      "kind": "material",
+      "name": "LC_brick",
+      "sourceIndex": 15,
+      "sourceKey": "material:LC_brick"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c21b1525cb1",
+      "kind": "material",
+      "name": "LC_plaster",
+      "sourceIndex": 16,
+      "sourceKey": "material:LC_plaster"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c221790bfde",
+      "kind": "material",
+      "name": "LC_trash",
+      "sourceIndex": 17,
+      "sourceKey": "material:LC_trash"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c28eac7ec6a",
+      "kind": "material",
+      "name": "PlasticRed",
+      "sourceIndex": 18,
+      "sourceKey": "material:PlasticRed"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c1a177e47e1",
+      "kind": "material",
+      "name": "BottleGreen",
+      "sourceIndex": 19,
+      "sourceKey": "material:BottleGreen"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c3217e5abc6",
+      "kind": "material",
+      "name": "WetAsphalt",
+      "sourceIndex": 20,
+      "sourceKey": "material:WetAsphalt"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c339e56c9d2",
+      "kind": "material",
+      "name": "WetPaving",
+      "sourceIndex": 21,
+      "sourceKey": "material:WetPaving"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c30d4a12d56",
+      "kind": "material",
+      "name": "PaintBlue",
+      "sourceIndex": 22,
+      "sourceKey": "material:PaintBlue"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c2b2d36f8b5",
+      "kind": "material",
+      "name": "AwningPetrol",
+      "sourceIndex": 23,
+      "sourceKey": "material:AwningPetrol"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c31d04216eb",
+      "kind": "material",
+      "name": "PlasterIvory",
+      "sourceIndex": 24,
+      "sourceKey": "material:PlasterIvory"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c2ab3924423",
+      "kind": "material",
+      "name": "AgedSeafoamTiles",
+      "sourceIndex": 25,
+      "sourceKey": "material:AgedSeafoamTiles"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c2cacd16a67",
+      "kind": "material",
+      "name": "CeramicIvory",
+      "sourceIndex": 26,
+      "sourceKey": "material:CeramicIvory"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c2d5b5a9a17",
+      "kind": "material",
+      "name": "LC_couplet-left",
+      "sourceIndex": 27,
+      "sourceKey": "material:LC_couplet-left"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c2e27080639",
+      "kind": "material",
+      "name": "LC_couplet-right",
+      "sourceIndex": 28,
+      "sourceKey": "material:LC_couplet-right"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c2f2a459deb",
+      "kind": "material",
+      "name": "NeonWarmRed",
+      "sourceIndex": 29,
+      "sourceKey": "material:NeonWarmRed"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c349038fac9",
+      "kind": "material",
+      "name": "BottleAmber",
+      "sourceIndex": 30,
+      "sourceKey": "material:BottleAmber"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c353596c1f5",
+      "kind": "material",
+      "name": "NeonCyan",
+      "sourceIndex": 31,
+      "sourceKey": "material:NeonCyan"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c360f6e642d",
+      "kind": "material",
+      "name": "BrickBrown",
+      "sourceIndex": 32,
+      "sourceKey": "material:BrickBrown"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c374fc39a37",
+      "kind": "material",
+      "name": "BoothVinyl",
+      "sourceIndex": 33,
+      "sourceKey": "material:BoothVinyl"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c3803ed78c3",
+      "kind": "scene",
+      "name": "Scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:Scene"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c39ac8fc0fc",
+      "kind": "texture",
+      "name": "Rain_concrete_normal",
+      "sourceIndex": 0,
+      "sourceKey": "texture:Rain_concrete_normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c3a8dbd577f",
+      "kind": "texture",
+      "name": "Rain_concrete_orm",
+      "sourceIndex": 1,
+      "sourceKey": "texture:Rain_concrete_orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c3b7bce74d5",
+      "kind": "texture",
+      "name": "Rain_concrete_base",
+      "sourceIndex": 2,
+      "sourceKey": "texture:Rain_concrete_base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c641bd73971",
+      "kind": "texture",
+      "name": "WarmWindow-dusty-blinds",
+      "sourceIndex": 3,
+      "sourceKey": "texture:WarmWindow-dusty-blinds"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c51f17d0946",
+      "kind": "texture",
+      "name": "iron-normal",
+      "sourceIndex": 4,
+      "sourceKey": "texture:iron-normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c526a65365a",
+      "kind": "texture",
+      "name": "iron-base",
+      "sourceIndex": 5,
+      "sourceKey": "texture:iron-base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c5395e24701",
+      "kind": "texture",
+      "name": "iron-orm",
+      "sourceIndex": 6,
+      "sourceKey": "texture:iron-orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c4e06db1cc6",
+      "kind": "texture",
+      "name": "cloth-normal",
+      "sourceIndex": 7,
+      "sourceKey": "texture:cloth-normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c4f99f4232a",
+      "kind": "texture",
+      "name": "cloth-base",
+      "sourceIndex": 8,
+      "sourceKey": "texture:cloth-base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c5044f75731",
+      "kind": "texture",
+      "name": "cloth-orm",
+      "sourceIndex": 9,
+      "sourceKey": "texture:cloth-orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c60e57af170",
+      "kind": "texture",
+      "name": "Rain_paint_normal",
+      "sourceIndex": 10,
+      "sourceKey": "texture:Rain_paint_normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c612292c3ef",
+      "kind": "texture",
+      "name": "Rain_paint_orm",
+      "sourceIndex": 11,
+      "sourceKey": "texture:Rain_paint_orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c62550c3fa2",
+      "kind": "texture",
+      "name": "Rain_paint_base",
+      "sourceIndex": 12,
+      "sourceKey": "texture:Rain_paint_base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c5ae7b62190",
+      "kind": "texture",
+      "name": "Rain_glass_normal",
+      "sourceIndex": 13,
+      "sourceKey": "texture:Rain_glass_normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c5b4e66f8a0",
+      "kind": "texture",
+      "name": "Rain_glass_orm",
+      "sourceIndex": 14,
+      "sourceKey": "texture:Rain_glass_orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c5c0024e712",
+      "kind": "texture",
+      "name": "Rain_glass_base",
+      "sourceIndex": 15,
+      "sourceKey": "texture:Rain_glass_base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c5d4612ba6f",
+      "kind": "texture",
+      "name": "metal-worn-normal",
+      "sourceIndex": 16,
+      "sourceKey": "texture:metal-worn-normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c5e2f7ec490",
+      "kind": "texture",
+      "name": "metal-worn-albedo",
+      "sourceIndex": 17,
+      "sourceKey": "texture:metal-worn-albedo"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c5fdefd83f1",
+      "kind": "texture",
+      "name": "metal-worn-orm",
+      "sourceIndex": 18,
+      "sourceKey": "texture:metal-worn-orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c4497472ba4",
+      "kind": "texture",
+      "name": "Rain_recess_normal",
+      "sourceIndex": 19,
+      "sourceKey": "texture:Rain_recess_normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c45aa6ad71b",
+      "kind": "texture",
+      "name": "Rain_recess_orm",
+      "sourceIndex": 20,
+      "sourceKey": "texture:Rain_recess_orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c463b419321",
+      "kind": "texture",
+      "name": "Rain_recess_base",
+      "sourceIndex": 21,
+      "sourceKey": "texture:Rain_recess_base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c4ad0839541",
+      "kind": "texture",
+      "name": "wood-aged",
+      "sourceIndex": 22,
+      "sourceKey": "texture:wood-aged"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c630a02e2a0",
+      "kind": "texture",
+      "name": "period-print-atlas",
+      "sourceIndex": 23,
+      "sourceKey": "texture:period-print-atlas"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c3cef40cdfe",
+      "kind": "texture",
+      "name": "ivory-aged-normal",
+      "sourceIndex": 24,
+      "sourceKey": "texture:ivory-aged-normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c3d719c8c6c",
+      "kind": "texture",
+      "name": "ivory-aged-albedo",
+      "sourceIndex": 25,
+      "sourceKey": "texture:ivory-aged-albedo"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c3e4f8fda2f",
+      "kind": "texture",
+      "name": "ivory-aged-orm",
+      "sourceIndex": 26,
+      "sourceKey": "texture:ivory-aged-orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c408732d4f8",
+      "kind": "texture",
+      "name": "AwningOxideRed-faded-fabric",
+      "sourceIndex": 27,
+      "sourceKey": "texture:AwningOxideRed-faded-fabric"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c3f794131f0",
+      "kind": "texture",
+      "name": "AwningCream-faded-fabric",
+      "sourceIndex": 28,
+      "sourceKey": "texture:AwningCream-faded-fabric"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c4749cc0ab7",
+      "kind": "texture",
+      "name": "Rain_lamp_normal",
+      "sourceIndex": 29,
+      "sourceKey": "texture:Rain_lamp_normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c4823476cf7",
+      "kind": "texture",
+      "name": "Rain_lamp_orm",
+      "sourceIndex": 30,
+      "sourceKey": "texture:Rain_lamp_orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c4987a62fe5",
+      "kind": "texture",
+      "name": "Rain_lamp_base",
+      "sourceIndex": 31,
+      "sourceKey": "texture:Rain_lamp_base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c4b1a79af72",
+      "kind": "texture",
+      "name": "brick-normal",
+      "sourceIndex": 32,
+      "sourceKey": "texture:brick-normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c4cf3fe922c",
+      "kind": "texture",
+      "name": "brick-base",
+      "sourceIndex": 33,
+      "sourceKey": "texture:brick-base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c4d65e13b21",
+      "kind": "texture",
+      "name": "brick-orm",
+      "sourceIndex": 34,
+      "sourceKey": "texture:brick-orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c5427f2436b",
+      "kind": "texture",
+      "name": "plaster-normal",
+      "sourceIndex": 35,
+      "sourceKey": "texture:plaster-normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c5541ab9743",
+      "kind": "texture",
+      "name": "plaster-base",
+      "sourceIndex": 36,
+      "sourceKey": "texture:plaster-base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c564f5b000a",
+      "kind": "texture",
+      "name": "plaster-orm",
+      "sourceIndex": 37,
+      "sourceKey": "texture:plaster-orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c5790d66636",
+      "kind": "texture",
+      "name": "trash-normal",
+      "sourceIndex": 38,
+      "sourceKey": "texture:trash-normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c580aeacd0f",
+      "kind": "texture",
+      "name": "trash-base",
+      "sourceIndex": 39,
+      "sourceKey": "texture:trash-base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c591bef3311",
+      "kind": "texture",
+      "name": "trash-orm",
+      "sourceIndex": 40,
+      "sourceKey": "texture:trash-orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c41b24dfae0",
+      "kind": "texture",
+      "name": "Rain_ceramic_normal",
+      "sourceIndex": 41,
+      "sourceKey": "texture:Rain_ceramic_normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c42a0b3ee74",
+      "kind": "texture",
+      "name": "Rain_ceramic_orm",
+      "sourceIndex": 42,
+      "sourceKey": "texture:Rain_ceramic_orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c4337448174",
+      "kind": "texture",
+      "name": "Rain_ceramic_base",
+      "sourceIndex": 43,
+      "sourceKey": "texture:Rain_ceramic_base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c6ce7969560",
+      "kind": "texture",
+      "name": "Rain_asphalt_normal",
+      "sourceIndex": 44,
+      "sourceKey": "texture:Rain_asphalt_normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c6d415203e8",
+      "kind": "texture",
+      "name": "Rain_asphalt_orm",
+      "sourceIndex": 45,
+      "sourceKey": "texture:Rain_asphalt_orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c6efc99b0ad",
+      "kind": "texture",
+      "name": "Rain_asphalt_base",
+      "sourceIndex": 46,
+      "sourceKey": "texture:Rain_asphalt_base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c6fe1b83b14",
+      "kind": "texture",
+      "name": "Rain_paving_normal",
+      "sourceIndex": 47,
+      "sourceKey": "texture:Rain_paving_normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c7074e0d9e4",
+      "kind": "texture",
+      "name": "Rain_paving_orm",
+      "sourceIndex": 48,
+      "sourceKey": "texture:Rain_paving_orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c7191823e8e",
+      "kind": "texture",
+      "name": "Rain_paving_base",
+      "sourceIndex": 49,
+      "sourceKey": "texture:Rain_paving_base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c68836a5be5",
+      "kind": "texture",
+      "name": "AwningPetrol-faded-fabric",
+      "sourceIndex": 50,
+      "sourceKey": "texture:AwningPetrol-faded-fabric"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c6b426a0c8c",
+      "kind": "texture",
+      "name": "plaster-aged",
+      "sourceIndex": 51,
+      "sourceKey": "texture:plaster-aged"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c65998d20ca",
+      "kind": "texture",
+      "name": "seafoam-aged-normal",
+      "sourceIndex": 52,
+      "sourceKey": "texture:seafoam-aged-normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c66a0bee8f6",
+      "kind": "texture",
+      "name": "seafoam-aged-albedo",
+      "sourceIndex": 53,
+      "sourceKey": "texture:seafoam-aged-albedo"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c670771771a",
+      "kind": "texture",
+      "name": "seafoam-aged-orm",
+      "sourceIndex": 54,
+      "sourceKey": "texture:seafoam-aged-orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c69ca386890",
+      "kind": "texture",
+      "name": "couplet-left-base",
+      "sourceIndex": 55,
+      "sourceKey": "texture:couplet-left-base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c6a8a74af10",
+      "kind": "texture",
+      "name": "couplet-right-base",
+      "sourceIndex": 56,
+      "sourceKey": "texture:couplet-right-base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c7236db9076",
+      "kind": "texture",
+      "name": "brick-aged",
+      "sourceIndex": 57,
+      "sourceKey": "texture:brick-aged"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c7338104827",
+      "kind": "texture",
+      "name": "Rain_vinyl_normal",
+      "sourceIndex": 58,
+      "sourceKey": "texture:Rain_vinyl_normal"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c74757f0b7b",
+      "kind": "texture",
+      "name": "Rain_vinyl_orm",
+      "sourceIndex": 59,
+      "sourceKey": "texture:Rain_vinyl_orm"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c75e136335b",
+      "kind": "texture",
+      "name": "Rain_vinyl_base",
+      "sourceIndex": 60,
+      "sourceKey": "texture:Rain_vinyl_base"
+    },
+    {
+      "guid": "01a08470-5586-751e-b8c4-4c76e7ecbad2",
+      "kind": "sampler",
+      "sourceIndex": 0,
+      "sourceKey": "sampler"
+    }
+  ]
+}

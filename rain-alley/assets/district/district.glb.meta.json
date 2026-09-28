@@ -1,0 +1,6230 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "BLD_Block_01_ivory_pawn_house",
+        "BLD_Block_02_enclosed_balconies",
+        "BLD_Block_03_ochre_shop_house",
+        "BLD_Block_04_scalloped_veranda",
+        "BLD_Block_05_enclosed_balconies",
+        "BLD_Block_06_ivory_pawn_house",
+        "BLD_Block_07_brick_service_house",
+        "BLD_Block_08_ochre_shop_house",
+        "BLD_Block_09_ivory_pawn_house",
+        "BLD_Block_10_scalloped_veranda",
+        "BLD_Block_11_enclosed_balconies",
+        "BLD_Block_12_corner_tile_bands",
+        "BLD_Block_13_ochre_shop_house",
+        "BLD_Block_14_brick_service_house",
+        "BLD_Block_15_enclosed_balconies",
+        "BLD_Block_16_scalloped_veranda",
+        "BLD_Block_17_ivory_pawn_house",
+        "BLD_Block_18_brick_service_house",
+        "BLD_Block_19_brick_service_house",
+        "BLD_Block_20_ivory_pawn_house",
+        "BLD_Grocery_ochre_shop_house",
+        "BLD_Kitchen_brick_service_house",
+        "BLD_Pawn_ivory_pawn_house",
+        "BLD_Tea_corner_tile_bands",
+        "COVER_01_South",
+        "COVER_02_Dogleg",
+        "COVER_03_TeaCounter",
+        "COVER_04_Van",
+        "COVER_05_North",
+        "COVER_06_CrossWest",
+        "COVER_07_CrossMid",
+        "COVER_08_CrossEast",
+        "COVER_09_Alley",
+        "COVER_10_KitchenCounter",
+        "COVER_11_PawnCounter",
+        "COVER_12_GroceryShelf",
+        "GB_CrossEastEnd",
+        "GB_CrossWestEnd",
+        "GB_NorthEnd",
+        "GB_Road",
+        "GB_Sidewalk",
+        "GB_SouthEnd",
+        "GB_StairLanding",
+        "GB_StairRearWall",
+        "DOOR_Grocery",
+        "HINGE_Grocery",
+        "DOOR_Kitchen",
+        "HINGE_Kitchen",
+        "DOOR_Pawn",
+        "HINGE_Pawn",
+        "DOOR_Tea",
+        "HINGE_Tea",
+        "INT_Grocery_Floor",
+        "INT_Grocery_Furniture",
+        "INT_Grocery_Walls",
+        "INT_Kitchen_Floor",
+        "INT_Kitchen_Furniture",
+        "INT_Kitchen_Walls",
+        "INT_Pawn_Floor",
+        "INT_Pawn_Furniture",
+        "INT_Pawn_Walls",
+        "INT_Tea_Floor",
+        "INT_Tea_Furniture",
+        "INT_Tea_Walls",
+        "PORTAL_Enter_Stair",
+        "PORTAL_Exit_Stair",
+        "PROP_Alley_Cluster",
+        "PROP_Cross_Cluster",
+        "PROP_Grocery_Cluster",
+        "PROP_North_Cluster",
+        "PROP_South_Cluster",
+        "PROP_Tea_Cluster",
+        "RAMP_Grocery",
+        "RAMP_Kitchen",
+        "RAMP_Pawn",
+        "RAMP_Tea",
+        "SHOP_Grocery_Frontage",
+        "SHOP_Kitchen_Frontage",
+        "SHOP_Pawn_Frontage",
+        "SHOP_Tea_Frontage",
+        "SPAWN_Coat",
+        "SPAWN_Knife_01",
+        "SPAWN_Knife_02",
+        "SPAWN_Knife_03",
+        "SPAWN_Knife_04",
+        "SPAWN_Peeker_01",
+        "SPAWN_Peeker_02",
+        "SPAWN_Peeker_03",
+        "SPAWN_Peeker_04",
+        "SPAWN_Peeker_05",
+        "SPAWN_Peeker_06",
+        "SPAWN_Peeker_07",
+        "SPAWN_Peeker_08",
+        "SPAWN_PeekExit_01",
+        "SPAWN_PeekExit_02",
+        "SPAWN_PeekExit_03",
+        "SPAWN_PeekExit_04",
+        "SPAWN_PeekExit_05",
+        "SPAWN_PeekExit_06",
+        "SPAWN_PeekExit_07",
+        "SPAWN_PeekExit_08",
+        "SPAWN_Photo",
+        "SPAWN_Player",
+        "SPAWN_Smg_01",
+        "SPAWN_Smg_02",
+        "SPAWN_Smg_03",
+        "SPAWN_Smg_04",
+        "SPAWN_Talker",
+        "STREET_Wires_Laundry_Drains"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "district.glb",
+  "sourceOverrideDescriptors": [
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_01_ivory_pawn_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_02_enclosed_balconies_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_03_ochre_shop_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_04_scalloped_veranda_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_05_enclosed_balconies_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_06_ivory_pawn_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_07_brick_service_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_08_ochre_shop_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_09_ivory_pawn_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_10_scalloped_veranda_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_11_enclosed_balconies_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_12_corner_tile_bands_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_13_ochre_shop_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_14_brick_service_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_15_enclosed_balconies_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_16_scalloped_veranda_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_17_ivory_pawn_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_18_brick_service_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_19_brick_service_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Block_20_ivory_pawn_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Grocery_ochre_shop_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Kitchen_brick_service_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Pawn_ivory_pawn_house_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:BLD_Tea_corner_tile_bands_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:COVER_01_South_Mesh.001"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:COVER_02_Dogleg_Mesh.001"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:COVER_03_TeaCounter_Mesh.001"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:COVER_04_Van_Mesh.001"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:COVER_05_North_Mesh.001"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:COVER_06_CrossWest_Mesh.001"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:COVER_07_CrossMid_Mesh.001"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:COVER_08_CrossEast_Mesh.001"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:COVER_09_Alley_Mesh.001"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:COVER_10_KitchenCounter_Mesh.001"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:COVER_11_PawnCounter_Mesh.001"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:COVER_12_GroceryShelf_Mesh.001"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:GB_CrossEastEnd_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:GB_CrossWestEnd_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:GB_NorthEnd_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:GB_Road_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:GB_Sidewalk_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:GB_SouthEnd_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:GB_StairLanding_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:GB_StairRearWall_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:DOOR_Grocery_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:DOOR_Kitchen_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:DOOR_Pawn_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:DOOR_Tea_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:INT_Grocery_Floor_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:INT_Grocery_Furniture_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:INT_Grocery_Walls_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:INT_Kitchen_Floor_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:INT_Kitchen_Furniture_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:INT_Kitchen_Walls_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:INT_Pawn_Floor_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:INT_Pawn_Furniture_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:INT_Pawn_Walls_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:INT_Tea_Floor_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:INT_Tea_Furniture_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:INT_Tea_Walls_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:PROP_Alley_Cluster_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:PROP_Cross_Cluster_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:PROP_Grocery_Cluster_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:PROP_North_Cluster_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:PROP_South_Cluster_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:PROP_Tea_Cluster_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:RAMP_Grocery_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:RAMP_Kitchen_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:SHOP_Grocery_Frontage_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:SHOP_Kitchen_Frontage_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:SHOP_Pawn_Frontage_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:SHOP_Tea_Frontage_Mesh"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:STREET_Wires_Laundry_Drains_Mesh"
+    }
+  ],
+  "sourceOverrides": {
+    "mesh:BLD_Block_01_ivory_pawn_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5860ae6f54",
+          "slotName": "PlasterIvory",
+          "sourceKey": "material:PlasterIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        }
+      ]
+    },
+    "mesh:BLD_Block_02_enclosed_balconies_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc62e97771b4",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc63fe967e17",
+          "slotName": "AwningPetrol",
+          "sourceKey": "material:AwningPetrol"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        }
+      ]
+    },
+    "mesh:BLD_Block_03_ochre_shop_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc65ec2e7bb0",
+          "slotName": "PaintOchre",
+          "sourceKey": "material:PaintOchre"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc667eb2015e",
+          "slotName": "AwningOxideRed",
+          "sourceKey": "material:AwningOxideRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        }
+      ]
+    },
+    "mesh:BLD_Block_04_scalloped_veranda_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        }
+      ]
+    },
+    "mesh:BLD_Block_05_enclosed_balconies_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc62e97771b4",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc63fe967e17",
+          "slotName": "AwningPetrol",
+          "sourceKey": "material:AwningPetrol"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        }
+      ]
+    },
+    "mesh:BLD_Block_06_ivory_pawn_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5860ae6f54",
+          "slotName": "PlasterIvory",
+          "sourceKey": "material:PlasterIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        }
+      ]
+    },
+    "mesh:BLD_Block_07_brick_service_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc672325c6c3",
+          "slotName": "BrickBrown",
+          "sourceKey": "material:BrickBrown"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        }
+      ]
+    },
+    "mesh:BLD_Block_08_ochre_shop_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc65ec2e7bb0",
+          "slotName": "PaintOchre",
+          "sourceKey": "material:PaintOchre"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc667eb2015e",
+          "slotName": "AwningOxideRed",
+          "sourceKey": "material:AwningOxideRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        }
+      ]
+    },
+    "mesh:BLD_Block_09_ivory_pawn_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5860ae6f54",
+          "slotName": "PlasterIvory",
+          "sourceKey": "material:PlasterIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        }
+      ]
+    },
+    "mesh:BLD_Block_10_scalloped_veranda_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        }
+      ]
+    },
+    "mesh:BLD_Block_11_enclosed_balconies_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc62e97771b4",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc63fe967e17",
+          "slotName": "AwningPetrol",
+          "sourceKey": "material:AwningPetrol"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        }
+      ]
+    },
+    "mesh:BLD_Block_12_corner_tile_bands_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc689a61b0e6",
+          "slotName": "AgedSeafoamTiles",
+          "sourceKey": "material:AgedSeafoamTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc63fe967e17",
+          "slotName": "AwningPetrol",
+          "sourceKey": "material:AwningPetrol"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        }
+      ]
+    },
+    "mesh:BLD_Block_13_ochre_shop_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc65ec2e7bb0",
+          "slotName": "PaintOchre",
+          "sourceKey": "material:PaintOchre"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc667eb2015e",
+          "slotName": "AwningOxideRed",
+          "sourceKey": "material:AwningOxideRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        }
+      ]
+    },
+    "mesh:BLD_Block_14_brick_service_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc672325c6c3",
+          "slotName": "BrickBrown",
+          "sourceKey": "material:BrickBrown"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        }
+      ]
+    },
+    "mesh:BLD_Block_15_enclosed_balconies_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc62e97771b4",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc63fe967e17",
+          "slotName": "AwningPetrol",
+          "sourceKey": "material:AwningPetrol"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        }
+      ]
+    },
+    "mesh:BLD_Block_16_scalloped_veranda_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        }
+      ]
+    },
+    "mesh:BLD_Block_17_ivory_pawn_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5860ae6f54",
+          "slotName": "PlasterIvory",
+          "sourceKey": "material:PlasterIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        }
+      ]
+    },
+    "mesh:BLD_Block_18_brick_service_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc672325c6c3",
+          "slotName": "BrickBrown",
+          "sourceKey": "material:BrickBrown"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        }
+      ]
+    },
+    "mesh:BLD_Block_19_brick_service_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc672325c6c3",
+          "slotName": "BrickBrown",
+          "sourceKey": "material:BrickBrown"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        }
+      ]
+    },
+    "mesh:BLD_Block_20_ivory_pawn_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5860ae6f54",
+          "slotName": "PlasterIvory",
+          "sourceKey": "material:PlasterIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        }
+      ]
+    },
+    "mesh:BLD_Grocery_ochre_shop_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc65ec2e7bb0",
+          "slotName": "PaintOchre",
+          "sourceKey": "material:PaintOchre"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        }
+      ]
+    },
+    "mesh:BLD_Kitchen_brick_service_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc672325c6c3",
+          "slotName": "BrickBrown",
+          "sourceKey": "material:BrickBrown"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        }
+      ]
+    },
+    "mesh:BLD_Pawn_ivory_pawn_house_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5860ae6f54",
+          "slotName": "PlasterIvory",
+          "sourceKey": "material:PlasterIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        }
+      ]
+    },
+    "mesh:BLD_Tea_corner_tile_bands_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc689a61b0e6",
+          "slotName": "AgedSeafoamTiles",
+          "sourceKey": "material:AgedSeafoamTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+          "slotName": "WarmWindow",
+          "sourceKey": "material:WarmWindow"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        }
+      ]
+    },
+    "mesh:COVER_01_South_Mesh.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc691611a40e",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        }
+      ]
+    },
+    "mesh:COVER_02_Dogleg_Mesh.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc691611a40e",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        }
+      ]
+    },
+    "mesh:COVER_03_TeaCounter_Mesh.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6b5ef4de0a",
+          "slotName": "CeramicIvory",
+          "sourceKey": "material:CeramicIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc62e97771b4",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        }
+      ]
+    },
+    "mesh:COVER_04_Van_Mesh.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc62e97771b4",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+          "slotName": "OpaqueWindowGlass",
+          "sourceKey": "material:OpaqueWindowGlass"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6b5ef4de0a",
+          "slotName": "CeramicIvory",
+          "sourceKey": "material:CeramicIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc65ec2e7bb0",
+          "slotName": "PaintOchre",
+          "sourceKey": "material:PaintOchre"
+        }
+      ]
+    },
+    "mesh:COVER_05_North_Mesh.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc691611a40e",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        }
+      ]
+    },
+    "mesh:COVER_06_CrossWest_Mesh.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc691611a40e",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        }
+      ]
+    },
+    "mesh:COVER_07_CrossMid_Mesh.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc691611a40e",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        }
+      ]
+    },
+    "mesh:COVER_08_CrossEast_Mesh.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc691611a40e",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        }
+      ]
+    },
+    "mesh:COVER_09_Alley_Mesh.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc691611a40e",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        }
+      ]
+    },
+    "mesh:COVER_10_KitchenCounter_Mesh.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        }
+      ]
+    },
+    "mesh:COVER_11_PawnCounter_Mesh.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        }
+      ]
+    },
+    "mesh:COVER_12_GroceryShelf_Mesh.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        }
+      ]
+    },
+    "mesh:DOOR_Grocery_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc62e97771b4",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        }
+      ]
+    },
+    "mesh:DOOR_Kitchen_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc62e97771b4",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        }
+      ]
+    },
+    "mesh:DOOR_Pawn_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        }
+      ]
+    },
+    "mesh:DOOR_Tea_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        }
+      ]
+    },
+    "mesh:GB_CrossEastEnd_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        }
+      ]
+    },
+    "mesh:GB_CrossWestEnd_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        }
+      ]
+    },
+    "mesh:GB_NorthEnd_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        }
+      ]
+    },
+    "mesh:GB_Road_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6c36ebd1a8",
+          "slotName": "WetAsphalt",
+          "sourceKey": "material:WetAsphalt"
+        }
+      ]
+    },
+    "mesh:GB_Sidewalk_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6d05616dfa",
+          "slotName": "WetPaving",
+          "sourceKey": "material:WetPaving"
+        }
+      ]
+    },
+    "mesh:GB_SouthEnd_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        }
+      ]
+    },
+    "mesh:GB_StairLanding_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        }
+      ]
+    },
+    "mesh:GB_StairRearWall_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        }
+      ]
+    },
+    "mesh:INT_Grocery_Floor_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        }
+      ]
+    },
+    "mesh:INT_Grocery_Furniture_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6b5ef4de0a",
+          "slotName": "CeramicIvory",
+          "sourceKey": "material:CeramicIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6e88f19e5b",
+          "slotName": "BottleGreen",
+          "sourceKey": "material:BottleGreen"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6f6194abca",
+          "slotName": "BottleAmber",
+          "sourceKey": "material:BottleAmber"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        }
+      ]
+    },
+    "mesh:INT_Grocery_Walls_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5860ae6f54",
+          "slotName": "PlasterIvory",
+          "sourceKey": "material:PlasterIvory"
+        }
+      ]
+    },
+    "mesh:INT_Kitchen_Floor_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        }
+      ]
+    },
+    "mesh:INT_Kitchen_Furniture_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6b5ef4de0a",
+          "slotName": "CeramicIvory",
+          "sourceKey": "material:CeramicIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc62e97771b4",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        }
+      ]
+    },
+    "mesh:INT_Kitchen_Walls_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc672325c6c3",
+          "slotName": "BrickBrown",
+          "sourceKey": "material:BrickBrown"
+        }
+      ]
+    },
+    "mesh:INT_Pawn_Floor_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        }
+      ]
+    },
+    "mesh:INT_Pawn_Furniture_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        }
+      ]
+    },
+    "mesh:INT_Pawn_Walls_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5860ae6f54",
+          "slotName": "PlasterIvory",
+          "sourceKey": "material:PlasterIvory"
+        }
+      ]
+    },
+    "mesh:INT_Tea_Floor_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        }
+      ]
+    },
+    "mesh:INT_Tea_Furniture_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc7065733579",
+          "slotName": "BoothVinyl",
+          "sourceKey": "material:BoothVinyl"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6b5ef4de0a",
+          "slotName": "CeramicIvory",
+          "sourceKey": "material:CeramicIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc62e97771b4",
+          "slotName": "PaintBlue",
+          "sourceKey": "material:PaintBlue"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+          "slotName": "FurnitureWood",
+          "sourceKey": "material:FurnitureWood"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        }
+      ]
+    },
+    "mesh:INT_Tea_Walls_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc689a61b0e6",
+          "slotName": "AgedSeafoamTiles",
+          "sourceKey": "material:AgedSeafoamTiles"
+        }
+      ]
+    },
+    "mesh:PROP_Alley_Cluster_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6e88f19e5b",
+          "slotName": "BottleGreen",
+          "sourceKey": "material:BottleGreen"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc691611a40e",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        }
+      ]
+    },
+    "mesh:PROP_Cross_Cluster_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6e88f19e5b",
+          "slotName": "BottleGreen",
+          "sourceKey": "material:BottleGreen"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc691611a40e",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        }
+      ]
+    },
+    "mesh:PROP_Grocery_Cluster_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6e88f19e5b",
+          "slotName": "BottleGreen",
+          "sourceKey": "material:BottleGreen"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6b5ef4de0a",
+          "slotName": "CeramicIvory",
+          "sourceKey": "material:CeramicIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc691611a40e",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        }
+      ]
+    },
+    "mesh:PROP_North_Cluster_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6e88f19e5b",
+          "slotName": "BottleGreen",
+          "sourceKey": "material:BottleGreen"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc691611a40e",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        }
+      ]
+    },
+    "mesh:PROP_South_Cluster_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6e88f19e5b",
+          "slotName": "BottleGreen",
+          "sourceKey": "material:BottleGreen"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc691611a40e",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        }
+      ]
+    },
+    "mesh:PROP_Tea_Cluster_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+          "slotName": "PlasticRed",
+          "sourceKey": "material:PlasticRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6e88f19e5b",
+          "slotName": "BottleGreen",
+          "sourceKey": "material:BottleGreen"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc6b5ef4de0a",
+          "slotName": "CeramicIvory",
+          "sourceKey": "material:CeramicIvory"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc691611a40e",
+          "slotName": "PlasticBlue",
+          "sourceKey": "material:PlasticBlue"
+        }
+      ]
+    },
+    "mesh:RAMP_Grocery_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        }
+      ]
+    },
+    "mesh:RAMP_Kitchen_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+          "slotName": "AgedConcreteTrim",
+          "sourceKey": "material:AgedConcreteTrim"
+        }
+      ]
+    },
+    "mesh:SHOP_Grocery_Frontage_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc667eb2015e",
+          "slotName": "AwningOxideRed",
+          "sourceKey": "material:AwningOxideRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc711affd762",
+          "slotName": "NeonCyan",
+          "sourceKey": "material:NeonCyan"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        }
+      ]
+    },
+    "mesh:SHOP_Kitchen_Frontage_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        }
+      ]
+    },
+    "mesh:SHOP_Pawn_Frontage_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc72e8a9d103",
+          "slotName": "NeonWarmRed",
+          "sourceKey": "material:NeonWarmRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        }
+      ]
+    },
+    "mesh:SHOP_Tea_Frontage_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+          "slotName": "AgedIvoryTiles",
+          "sourceKey": "material:AgedIvoryTiles"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc63fe967e17",
+          "slotName": "AwningPetrol",
+          "sourceKey": "material:AwningPetrol"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+          "slotName": "FluorescentWarmWhite",
+          "sourceKey": "material:FluorescentWarmWhite"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc72e8a9d103",
+          "slotName": "NeonWarmRed",
+          "sourceKey": "material:NeonWarmRed"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+          "slotName": "PeriodPrintAtlas",
+          "sourceKey": "material:PeriodPrintAtlas"
+        }
+      ]
+    },
+    "mesh:STREET_Wires_Laundry_Drains_Mesh": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+          "slotName": "DarkRecess",
+          "sourceKey": "material:DarkRecess"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc63fe967e17",
+          "slotName": "AwningPetrol",
+          "sourceKey": "material:AwningPetrol"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+          "slotName": "AwningCream",
+          "sourceKey": "material:AwningCream"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+          "slotName": "OxidizedMetal",
+          "sourceKey": "material:OxidizedMetal"
+        },
+        {
+          "defaultMaterialGuid": "01a071c5-d5b2-7092-abea-bc65ec2e7bb0",
+          "slotName": "PaintOchre",
+          "sourceKey": "material:PaintOchre"
+        }
+      ]
+    }
+  },
+  "subAssets": [
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc11acfacd17",
+      "kind": "mesh",
+      "name": "BLD_Block_01_ivory_pawn_house_Mesh",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:BLD_Block_01_ivory_pawn_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc12c936e820",
+      "kind": "mesh",
+      "name": "BLD_Block_02_enclosed_balconies_Mesh",
+      "sourceIndex": 1,
+      "sourceKey": "mesh:BLD_Block_02_enclosed_balconies_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc13c38f46f7",
+      "kind": "mesh",
+      "name": "BLD_Block_03_ochre_shop_house_Mesh",
+      "sourceIndex": 2,
+      "sourceKey": "mesh:BLD_Block_03_ochre_shop_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc141e0cbcb6",
+      "kind": "mesh",
+      "name": "BLD_Block_04_scalloped_veranda_Mesh",
+      "sourceIndex": 3,
+      "sourceKey": "mesh:BLD_Block_04_scalloped_veranda_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc15c83f957d",
+      "kind": "mesh",
+      "name": "BLD_Block_05_enclosed_balconies_Mesh",
+      "sourceIndex": 4,
+      "sourceKey": "mesh:BLD_Block_05_enclosed_balconies_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc1676381af8",
+      "kind": "mesh",
+      "name": "BLD_Block_06_ivory_pawn_house_Mesh",
+      "sourceIndex": 5,
+      "sourceKey": "mesh:BLD_Block_06_ivory_pawn_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc17628e6eb5",
+      "kind": "mesh",
+      "name": "BLD_Block_07_brick_service_house_Mesh",
+      "sourceIndex": 6,
+      "sourceKey": "mesh:BLD_Block_07_brick_service_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc18251cc0d1",
+      "kind": "mesh",
+      "name": "BLD_Block_08_ochre_shop_house_Mesh",
+      "sourceIndex": 7,
+      "sourceKey": "mesh:BLD_Block_08_ochre_shop_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc19f40c35ae",
+      "kind": "mesh",
+      "name": "BLD_Block_09_ivory_pawn_house_Mesh",
+      "sourceIndex": 8,
+      "sourceKey": "mesh:BLD_Block_09_ivory_pawn_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc1aec2cbf07",
+      "kind": "mesh",
+      "name": "BLD_Block_10_scalloped_veranda_Mesh",
+      "sourceIndex": 9,
+      "sourceKey": "mesh:BLD_Block_10_scalloped_veranda_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc1b8aea7d16",
+      "kind": "mesh",
+      "name": "BLD_Block_11_enclosed_balconies_Mesh",
+      "sourceIndex": 10,
+      "sourceKey": "mesh:BLD_Block_11_enclosed_balconies_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc1ca648fea7",
+      "kind": "mesh",
+      "name": "BLD_Block_12_corner_tile_bands_Mesh",
+      "sourceIndex": 11,
+      "sourceKey": "mesh:BLD_Block_12_corner_tile_bands_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc1d10bf6cf9",
+      "kind": "mesh",
+      "name": "BLD_Block_13_ochre_shop_house_Mesh",
+      "sourceIndex": 12,
+      "sourceKey": "mesh:BLD_Block_13_ochre_shop_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc1ec2bf25fc",
+      "kind": "mesh",
+      "name": "BLD_Block_14_brick_service_house_Mesh",
+      "sourceIndex": 13,
+      "sourceKey": "mesh:BLD_Block_14_brick_service_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc1f40ab57d4",
+      "kind": "mesh",
+      "name": "BLD_Block_15_enclosed_balconies_Mesh",
+      "sourceIndex": 14,
+      "sourceKey": "mesh:BLD_Block_15_enclosed_balconies_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc20cc95e8ac",
+      "kind": "mesh",
+      "name": "BLD_Block_16_scalloped_veranda_Mesh",
+      "sourceIndex": 15,
+      "sourceKey": "mesh:BLD_Block_16_scalloped_veranda_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc21f1f2710d",
+      "kind": "mesh",
+      "name": "BLD_Block_17_ivory_pawn_house_Mesh",
+      "sourceIndex": 16,
+      "sourceKey": "mesh:BLD_Block_17_ivory_pawn_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc226698bf70",
+      "kind": "mesh",
+      "name": "BLD_Block_18_brick_service_house_Mesh",
+      "sourceIndex": 17,
+      "sourceKey": "mesh:BLD_Block_18_brick_service_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc235ae710f8",
+      "kind": "mesh",
+      "name": "BLD_Block_19_brick_service_house_Mesh",
+      "sourceIndex": 18,
+      "sourceKey": "mesh:BLD_Block_19_brick_service_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc24f0df3d92",
+      "kind": "mesh",
+      "name": "BLD_Block_20_ivory_pawn_house_Mesh",
+      "sourceIndex": 19,
+      "sourceKey": "mesh:BLD_Block_20_ivory_pawn_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc253df29636",
+      "kind": "mesh",
+      "name": "BLD_Grocery_ochre_shop_house_Mesh",
+      "sourceIndex": 20,
+      "sourceKey": "mesh:BLD_Grocery_ochre_shop_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc26336be5d3",
+      "kind": "mesh",
+      "name": "BLD_Kitchen_brick_service_house_Mesh",
+      "sourceIndex": 21,
+      "sourceKey": "mesh:BLD_Kitchen_brick_service_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc27b5ca0c77",
+      "kind": "mesh",
+      "name": "BLD_Pawn_ivory_pawn_house_Mesh",
+      "sourceIndex": 22,
+      "sourceKey": "mesh:BLD_Pawn_ivory_pawn_house_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc28a8ac1e7e",
+      "kind": "mesh",
+      "name": "BLD_Tea_corner_tile_bands_Mesh",
+      "sourceIndex": 23,
+      "sourceKey": "mesh:BLD_Tea_corner_tile_bands_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc29811aca62",
+      "kind": "mesh",
+      "name": "COVER_01_South_Mesh.001",
+      "sourceIndex": 24,
+      "sourceKey": "mesh:COVER_01_South_Mesh.001"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc2ae5e3229b",
+      "kind": "mesh",
+      "name": "COVER_02_Dogleg_Mesh.001",
+      "sourceIndex": 25,
+      "sourceKey": "mesh:COVER_02_Dogleg_Mesh.001"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc2ba06c721e",
+      "kind": "mesh",
+      "name": "COVER_03_TeaCounter_Mesh.001",
+      "sourceIndex": 26,
+      "sourceKey": "mesh:COVER_03_TeaCounter_Mesh.001"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc2c7834a901",
+      "kind": "mesh",
+      "name": "COVER_04_Van_Mesh.001",
+      "sourceIndex": 27,
+      "sourceKey": "mesh:COVER_04_Van_Mesh.001"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc2df57a33ee",
+      "kind": "mesh",
+      "name": "COVER_05_North_Mesh.001",
+      "sourceIndex": 28,
+      "sourceKey": "mesh:COVER_05_North_Mesh.001"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc2ee1869ad1",
+      "kind": "mesh",
+      "name": "COVER_06_CrossWest_Mesh.001",
+      "sourceIndex": 29,
+      "sourceKey": "mesh:COVER_06_CrossWest_Mesh.001"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc2f31365b3a",
+      "kind": "mesh",
+      "name": "COVER_07_CrossMid_Mesh.001",
+      "sourceIndex": 30,
+      "sourceKey": "mesh:COVER_07_CrossMid_Mesh.001"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc3009a3e4c0",
+      "kind": "mesh",
+      "name": "COVER_08_CrossEast_Mesh.001",
+      "sourceIndex": 31,
+      "sourceKey": "mesh:COVER_08_CrossEast_Mesh.001"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc310405d99c",
+      "kind": "mesh",
+      "name": "COVER_09_Alley_Mesh.001",
+      "sourceIndex": 32,
+      "sourceKey": "mesh:COVER_09_Alley_Mesh.001"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc32ef12f53e",
+      "kind": "mesh",
+      "name": "COVER_10_KitchenCounter_Mesh.001",
+      "sourceIndex": 33,
+      "sourceKey": "mesh:COVER_10_KitchenCounter_Mesh.001"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc33d930e247",
+      "kind": "mesh",
+      "name": "COVER_11_PawnCounter_Mesh.001",
+      "sourceIndex": 34,
+      "sourceKey": "mesh:COVER_11_PawnCounter_Mesh.001"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc34a6594fb8",
+      "kind": "mesh",
+      "name": "COVER_12_GroceryShelf_Mesh.001",
+      "sourceIndex": 35,
+      "sourceKey": "mesh:COVER_12_GroceryShelf_Mesh.001"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc35e033c2f4",
+      "kind": "mesh",
+      "name": "GB_CrossEastEnd_Mesh",
+      "sourceIndex": 36,
+      "sourceKey": "mesh:GB_CrossEastEnd_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc3686a2c909",
+      "kind": "mesh",
+      "name": "GB_CrossWestEnd_Mesh",
+      "sourceIndex": 37,
+      "sourceKey": "mesh:GB_CrossWestEnd_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc373cecd2b8",
+      "kind": "mesh",
+      "name": "GB_NorthEnd_Mesh",
+      "sourceIndex": 38,
+      "sourceKey": "mesh:GB_NorthEnd_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc38b2f073c7",
+      "kind": "mesh",
+      "name": "GB_Road_Mesh",
+      "sourceIndex": 39,
+      "sourceKey": "mesh:GB_Road_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc391c8eb8ea",
+      "kind": "mesh",
+      "name": "GB_Sidewalk_Mesh",
+      "sourceIndex": 40,
+      "sourceKey": "mesh:GB_Sidewalk_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc3ae8cf0061",
+      "kind": "mesh",
+      "name": "GB_SouthEnd_Mesh",
+      "sourceIndex": 41,
+      "sourceKey": "mesh:GB_SouthEnd_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc3b4ac74678",
+      "kind": "mesh",
+      "name": "GB_StairLanding_Mesh",
+      "sourceIndex": 42,
+      "sourceKey": "mesh:GB_StairLanding_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc3c623e30f6",
+      "kind": "mesh",
+      "name": "GB_StairRearWall_Mesh",
+      "sourceIndex": 43,
+      "sourceKey": "mesh:GB_StairRearWall_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc3d949c2e79",
+      "kind": "mesh",
+      "name": "DOOR_Grocery_Mesh",
+      "sourceIndex": 44,
+      "sourceKey": "mesh:DOOR_Grocery_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc3e5c1f13e3",
+      "kind": "mesh",
+      "name": "DOOR_Kitchen_Mesh",
+      "sourceIndex": 45,
+      "sourceKey": "mesh:DOOR_Kitchen_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc3f7c8282a3",
+      "kind": "mesh",
+      "name": "DOOR_Pawn_Mesh",
+      "sourceIndex": 46,
+      "sourceKey": "mesh:DOOR_Pawn_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc407c029423",
+      "kind": "mesh",
+      "name": "DOOR_Tea_Mesh",
+      "sourceIndex": 47,
+      "sourceKey": "mesh:DOOR_Tea_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc419344233f",
+      "kind": "mesh",
+      "name": "INT_Grocery_Floor_Mesh",
+      "sourceIndex": 48,
+      "sourceKey": "mesh:INT_Grocery_Floor_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc4237bd4387",
+      "kind": "mesh",
+      "name": "INT_Grocery_Furniture_Mesh",
+      "sourceIndex": 49,
+      "sourceKey": "mesh:INT_Grocery_Furniture_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc43d5d6174e",
+      "kind": "mesh",
+      "name": "INT_Grocery_Walls_Mesh",
+      "sourceIndex": 50,
+      "sourceKey": "mesh:INT_Grocery_Walls_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc44c4d1a876",
+      "kind": "mesh",
+      "name": "INT_Kitchen_Floor_Mesh",
+      "sourceIndex": 51,
+      "sourceKey": "mesh:INT_Kitchen_Floor_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc4583806d36",
+      "kind": "mesh",
+      "name": "INT_Kitchen_Furniture_Mesh",
+      "sourceIndex": 52,
+      "sourceKey": "mesh:INT_Kitchen_Furniture_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc466481d70f",
+      "kind": "mesh",
+      "name": "INT_Kitchen_Walls_Mesh",
+      "sourceIndex": 53,
+      "sourceKey": "mesh:INT_Kitchen_Walls_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc477c45037f",
+      "kind": "mesh",
+      "name": "INT_Pawn_Floor_Mesh",
+      "sourceIndex": 54,
+      "sourceKey": "mesh:INT_Pawn_Floor_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc48d4fe7238",
+      "kind": "mesh",
+      "name": "INT_Pawn_Furniture_Mesh",
+      "sourceIndex": 55,
+      "sourceKey": "mesh:INT_Pawn_Furniture_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc49b9522b08",
+      "kind": "mesh",
+      "name": "INT_Pawn_Walls_Mesh",
+      "sourceIndex": 56,
+      "sourceKey": "mesh:INT_Pawn_Walls_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc4a8115716a",
+      "kind": "mesh",
+      "name": "INT_Tea_Floor_Mesh",
+      "sourceIndex": 57,
+      "sourceKey": "mesh:INT_Tea_Floor_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc4b7d0a4a4f",
+      "kind": "mesh",
+      "name": "INT_Tea_Furniture_Mesh",
+      "sourceIndex": 58,
+      "sourceKey": "mesh:INT_Tea_Furniture_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc4c4affddd4",
+      "kind": "mesh",
+      "name": "INT_Tea_Walls_Mesh",
+      "sourceIndex": 59,
+      "sourceKey": "mesh:INT_Tea_Walls_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc4df176d75c",
+      "kind": "mesh",
+      "name": "PROP_Alley_Cluster_Mesh",
+      "sourceIndex": 60,
+      "sourceKey": "mesh:PROP_Alley_Cluster_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc4e1e651c1b",
+      "kind": "mesh",
+      "name": "PROP_Cross_Cluster_Mesh",
+      "sourceIndex": 61,
+      "sourceKey": "mesh:PROP_Cross_Cluster_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc4f65f36d32",
+      "kind": "mesh",
+      "name": "PROP_Grocery_Cluster_Mesh",
+      "sourceIndex": 62,
+      "sourceKey": "mesh:PROP_Grocery_Cluster_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc501ba95603",
+      "kind": "mesh",
+      "name": "PROP_North_Cluster_Mesh",
+      "sourceIndex": 63,
+      "sourceKey": "mesh:PROP_North_Cluster_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc51bc4f1035",
+      "kind": "mesh",
+      "name": "PROP_South_Cluster_Mesh",
+      "sourceIndex": 64,
+      "sourceKey": "mesh:PROP_South_Cluster_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc52144d851d",
+      "kind": "mesh",
+      "name": "PROP_Tea_Cluster_Mesh",
+      "sourceIndex": 65,
+      "sourceKey": "mesh:PROP_Tea_Cluster_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc53c7301952",
+      "kind": "mesh",
+      "name": "RAMP_Grocery_Mesh",
+      "sourceIndex": 66,
+      "sourceKey": "mesh:RAMP_Grocery_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc5454144edf",
+      "kind": "mesh",
+      "name": "RAMP_Kitchen_Mesh",
+      "sourceIndex": 67,
+      "sourceKey": "mesh:RAMP_Kitchen_Mesh"
+    },
+    {
+      "guid": "deeea05c-24a5-4c2e-af6b-54a71efa4fac",
+      "kind": "mesh",
+      "name": "SHOP_Grocery_Frontage_Mesh",
+      "sourceIndex": 68,
+      "sourceKey": "mesh:SHOP_Grocery_Frontage_Mesh"
+    },
+    {
+      "guid": "cfa5d33c-4846-4239-b103-7a8137260794",
+      "kind": "mesh",
+      "name": "SHOP_Kitchen_Frontage_Mesh",
+      "sourceIndex": 69,
+      "sourceKey": "mesh:SHOP_Kitchen_Frontage_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc554a52072d",
+      "kind": "mesh",
+      "name": "SHOP_Pawn_Frontage_Mesh",
+      "sourceIndex": 70,
+      "sourceKey": "mesh:SHOP_Pawn_Frontage_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc56633888db",
+      "kind": "mesh",
+      "name": "SHOP_Tea_Frontage_Mesh",
+      "sourceIndex": 71,
+      "sourceKey": "mesh:SHOP_Tea_Frontage_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc57f16081ca",
+      "kind": "mesh",
+      "name": "STREET_Wires_Laundry_Drains_Mesh",
+      "sourceIndex": 72,
+      "sourceKey": "mesh:STREET_Wires_Laundry_Drains_Mesh"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc5860ae6f54",
+      "kind": "material",
+      "name": "PlasterIvory",
+      "sourceIndex": 0,
+      "sourceKey": "material:PlasterIvory"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc59d76452bc",
+      "kind": "material",
+      "name": "OpaqueWindowGlass",
+      "sourceIndex": 1,
+      "sourceKey": "material:OpaqueWindowGlass"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc5a3d67fa49",
+      "kind": "material",
+      "name": "OxidizedMetal",
+      "sourceIndex": 2,
+      "sourceKey": "material:OxidizedMetal"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc5ba427634b",
+      "kind": "material",
+      "name": "AgedConcreteTrim",
+      "sourceIndex": 3,
+      "sourceKey": "material:AgedConcreteTrim"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc5cdc1b50af",
+      "kind": "material",
+      "name": "DarkRecess",
+      "sourceIndex": 4,
+      "sourceKey": "material:DarkRecess"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc5d9ed98c2b",
+      "kind": "material",
+      "name": "FurnitureWood",
+      "sourceIndex": 5,
+      "sourceKey": "material:FurnitureWood"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc5e893df1c7",
+      "kind": "material",
+      "name": "PeriodPrintAtlas",
+      "sourceIndex": 6,
+      "sourceKey": "material:PeriodPrintAtlas"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc5fdc6304f2",
+      "kind": "material",
+      "name": "AgedIvoryTiles",
+      "sourceIndex": 7,
+      "sourceKey": "material:AgedIvoryTiles"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc60af52fb93",
+      "kind": "material",
+      "name": "FluorescentWarmWhite",
+      "sourceIndex": 8,
+      "sourceKey": "material:FluorescentWarmWhite"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc61129566ed",
+      "kind": "material",
+      "name": "WarmWindow",
+      "sourceIndex": 9,
+      "sourceKey": "material:WarmWindow"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc62e97771b4",
+      "kind": "material",
+      "name": "PaintBlue",
+      "sourceIndex": 10,
+      "sourceKey": "material:PaintBlue"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc63fe967e17",
+      "kind": "material",
+      "name": "AwningPetrol",
+      "sourceIndex": 11,
+      "sourceKey": "material:AwningPetrol"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc643f6e19b4",
+      "kind": "material",
+      "name": "AwningCream",
+      "sourceIndex": 12,
+      "sourceKey": "material:AwningCream"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc65ec2e7bb0",
+      "kind": "material",
+      "name": "PaintOchre",
+      "sourceIndex": 13,
+      "sourceKey": "material:PaintOchre"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc667eb2015e",
+      "kind": "material",
+      "name": "AwningOxideRed",
+      "sourceIndex": 14,
+      "sourceKey": "material:AwningOxideRed"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc672325c6c3",
+      "kind": "material",
+      "name": "BrickBrown",
+      "sourceIndex": 15,
+      "sourceKey": "material:BrickBrown"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc689a61b0e6",
+      "kind": "material",
+      "name": "AgedSeafoamTiles",
+      "sourceIndex": 16,
+      "sourceKey": "material:AgedSeafoamTiles"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc691611a40e",
+      "kind": "material",
+      "name": "PlasticBlue",
+      "sourceIndex": 17,
+      "sourceKey": "material:PlasticBlue"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc6a7ee38b87",
+      "kind": "material",
+      "name": "PlasticRed",
+      "sourceIndex": 18,
+      "sourceKey": "material:PlasticRed"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc6b5ef4de0a",
+      "kind": "material",
+      "name": "CeramicIvory",
+      "sourceIndex": 19,
+      "sourceKey": "material:CeramicIvory"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc6c36ebd1a8",
+      "kind": "material",
+      "name": "WetAsphalt",
+      "sourceIndex": 20,
+      "sourceKey": "material:WetAsphalt"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc6d05616dfa",
+      "kind": "material",
+      "name": "WetPaving",
+      "sourceIndex": 21,
+      "sourceKey": "material:WetPaving"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc6e88f19e5b",
+      "kind": "material",
+      "name": "BottleGreen",
+      "sourceIndex": 22,
+      "sourceKey": "material:BottleGreen"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc6f6194abca",
+      "kind": "material",
+      "name": "BottleAmber",
+      "sourceIndex": 23,
+      "sourceKey": "material:BottleAmber"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc7065733579",
+      "kind": "material",
+      "name": "BoothVinyl",
+      "sourceIndex": 24,
+      "sourceKey": "material:BoothVinyl"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc711affd762",
+      "kind": "material",
+      "name": "NeonCyan",
+      "sourceIndex": 25,
+      "sourceKey": "material:NeonCyan"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc72e8a9d103",
+      "kind": "material",
+      "name": "NeonWarmRed",
+      "sourceIndex": 26,
+      "sourceKey": "material:NeonWarmRed"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc73dd0b93bc",
+      "kind": "scene",
+      "name": "RainAlleyDistrict",
+      "sourceIndex": 0,
+      "sourceKey": "scene:RainAlleyDistrict"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc747be33d15",
+      "kind": "texture",
+      "name": "plaster-aged",
+      "sourceIndex": 0,
+      "sourceKey": "texture:plaster-aged"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc755d49a381",
+      "kind": "texture",
+      "name": "metal-worn-normal",
+      "sourceIndex": 1,
+      "sourceKey": "texture:metal-worn-normal"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc769ee5be13",
+      "kind": "texture",
+      "name": "metal-worn-albedo",
+      "sourceIndex": 2,
+      "sourceKey": "texture:metal-worn-albedo"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc778bd8f0ed",
+      "kind": "texture",
+      "name": "metal-worn-orm",
+      "sourceIndex": 3,
+      "sourceKey": "texture:metal-worn-orm"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc78f85ad750",
+      "kind": "texture",
+      "name": "wood-aged",
+      "sourceIndex": 4,
+      "sourceKey": "texture:wood-aged"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc79c54d1947",
+      "kind": "texture",
+      "name": "period-print-atlas",
+      "sourceIndex": 5,
+      "sourceKey": "texture:period-print-atlas"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc7a069b9829",
+      "kind": "texture",
+      "name": "ivory-aged-normal",
+      "sourceIndex": 6,
+      "sourceKey": "texture:ivory-aged-normal"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc7be02f110d",
+      "kind": "texture",
+      "name": "ivory-aged-albedo",
+      "sourceIndex": 7,
+      "sourceKey": "texture:ivory-aged-albedo"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc7c55829986",
+      "kind": "texture",
+      "name": "ivory-aged-orm",
+      "sourceIndex": 8,
+      "sourceKey": "texture:ivory-aged-orm"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc7d8955c6c0",
+      "kind": "texture",
+      "name": "WarmWindow-dusty-blinds",
+      "sourceIndex": 9,
+      "sourceKey": "texture:WarmWindow-dusty-blinds"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc7ebd5f8635",
+      "kind": "texture",
+      "name": "AwningPetrol-faded-fabric",
+      "sourceIndex": 10,
+      "sourceKey": "texture:AwningPetrol-faded-fabric"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc7f5c5989a5",
+      "kind": "texture",
+      "name": "AwningCream-faded-fabric",
+      "sourceIndex": 11,
+      "sourceKey": "texture:AwningCream-faded-fabric"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc8044090934",
+      "kind": "texture",
+      "name": "AwningOxideRed-faded-fabric",
+      "sourceIndex": 12,
+      "sourceKey": "texture:AwningOxideRed-faded-fabric"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc81c97e01b0",
+      "kind": "texture",
+      "name": "brick-aged",
+      "sourceIndex": 13,
+      "sourceKey": "texture:brick-aged"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc8204aa5000",
+      "kind": "texture",
+      "name": "seafoam-aged-normal",
+      "sourceIndex": 14,
+      "sourceKey": "texture:seafoam-aged-normal"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc83c40d0458",
+      "kind": "texture",
+      "name": "seafoam-aged-albedo",
+      "sourceIndex": 15,
+      "sourceKey": "texture:seafoam-aged-albedo"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc845372f049",
+      "kind": "texture",
+      "name": "seafoam-aged-orm",
+      "sourceIndex": 16,
+      "sourceKey": "texture:seafoam-aged-orm"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc8587ef55af",
+      "kind": "texture",
+      "name": "asphalt-aged-normal",
+      "sourceIndex": 17,
+      "sourceKey": "texture:asphalt-aged-normal"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc86e96cbf01",
+      "kind": "texture",
+      "name": "asphalt-aged-albedo",
+      "sourceIndex": 18,
+      "sourceKey": "texture:asphalt-aged-albedo"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc87946ffa91",
+      "kind": "texture",
+      "name": "asphalt-aged-orm",
+      "sourceIndex": 19,
+      "sourceKey": "texture:asphalt-aged-orm"
+    },
+    {
+      "guid": "01a071c5-d5b2-7092-abea-bc8895e54fad",
+      "kind": "sampler",
+      "sourceIndex": 0,
+      "sourceKey": "sampler"
+    }
+  ]
+}

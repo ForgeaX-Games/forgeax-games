@@ -13,22 +13,21 @@
 
 import {
   Transform,
-} from '@forgeax/engine-scene';
+} from '@forgeax/engine/scene';
 import {
   MeshFilter,
   MeshRenderer,
   Materials,
-} from '@forgeax/engine-render';
+} from '@forgeax/engine/render';
 import {
   quat,
-} from '@forgeax/engine-runtime';
-import { unwrapHandle } from '@forgeax/engine-types';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
-import type { Handle, MaterialAsset, TextureAsset } from '@forgeax/engine-types';
+} from '@forgeax/engine/runtime';
+import { unwrapHandle } from '@forgeax/engine/types';
+import type { EntityHandle, World } from '@forgeax/engine/ecs';
+import type { Handle, MaterialAsset, TextureAsset } from '@forgeax/engine/types';
 import { primitiveMesh } from '../primitive-mesh';
 
-import spriteShader from '../shaders/sprite.wgsl';
-import { registerMaterialShaderDual } from '../register-material-shader';
+import type { FxMaterialLibrary } from './material-library';
 import { erosionAt, frameAt } from './sprite-anim';
 import { spriteSheetById, type SpriteSheetSpec } from './textures';
 
@@ -40,53 +39,6 @@ type MatHandle = Handle<'MaterialAsset', 'shared'>;
 type TexHandle = Handle<'TextureAsset', 'shared'>;
 
 const SPRITE_SHADER_ID = 'hellforge::sprite';
-
-/** Registration ABI — declaration order is the binding/UBO layout (see wgsl). */
-const SPRITE_PARAM_SCHEMA = [
-  { name: 'baseColor', type: 'color' },
-  { name: 'frame', type: 'f32' },
-  { name: 'frames', type: 'f32' },
-  { name: 'cols', type: 'f32' },
-  { name: 'rows', type: 'f32' },
-  { name: 'billboard', type: 'f32' },
-  { name: 'distort', type: 'f32' },
-  { name: 'time', type: 'f32' },
-  { name: 'erosion', type: 'f32' },
-  { name: 'blendFrames', type: 'f32' },
-  { name: 'sheet', type: 'texture2d' },
-  { name: 'noise', type: 'texture2d' },
-] as const;
-
-/**
- * Same ABI restated on the MaterialAsset, in `MaterialParameter` vocabulary
- * ('texture', not 'texture2d'). Required: vite-plugin-shader registers
- * hellforge::sprite from the manifest with an empty paramSchema before game
- * code runs, so `registerSpriteShader` below loses the race and its schema is
- * swallowed as 'already registered'. Extract/record prefer an asset-declared
- * `parameters` over the registry, so this is what actually binds the sheets
- * and writes the sprite UBO — without it the material reads the standard-PBR
- * payload (alpha pinned to 1, billboard 0) and draws as an opaque quad.
- */
-const SPRITE_MATERIAL_PARAMETERS = SPRITE_PARAM_SCHEMA.map((e) => ({
-  name: e.name,
-  type: e.type === 'texture2d' ? 'texture' : e.type,
-}));
-
-/**
- * Idempotent hellforge::sprite registration (safeRegister pattern of
- * fx.ts — 'already registered' is swallowed). Dual API: current Engine
- * `installMaterialArtifact`, Engine c0 `registerMaterialShader`. Returns
- * false when the shader registry is unavailable (Edit mode) → SpriteSystem
- * stays inert.
- */
-export function registerSpriteShader(app: unknown): boolean {
-  return registerMaterialShaderDual(
-    app,
-    SPRITE_SHADER_ID,
-    { source: spriteShader.wgsl, paramSchema: SPRITE_PARAM_SCHEMA },
-    'hellforge/fx',
-  );
-}
 
 /** Additive one/one (glow layers) + premult one/one-minus-src-alpha (residue). */
 const SPRITE_RENDER_STATES: Record<SpriteBlend, {
@@ -208,7 +160,7 @@ const FLAT_QUAT = ((): readonly [number, number, number, number] => {
 export class SpriteSystem {
   private readonly ok: boolean;
   /** true = c0/Pack-v1 pass shape (`shader` + `paramValues`). */
-  private readonly customPassShaderShape: boolean;
+
   private particles: SpriteParticle[] = [];
   private readonly persistentByHandle = new Map<SpriteHandle, SpriteParticle>();
   private nextHandle = 1;
@@ -218,7 +170,7 @@ export class SpriteSystem {
 
   constructor(
     private world: World,
-    app: unknown,
+    private readonly materials: FxMaterialLibrary | undefined,
     /**
      * Combined-cap gate for ONE-SHOT spawns (FxSystem injects the
      * geometric-particle headroom). Persistent sprites bypass it — they are
@@ -226,15 +178,7 @@ export class SpriteSystem {
      */
     private canSpawn: () => boolean = () => true,
   ) {
-    this.ok = registerSpriteShader(app);
-    // Same probe as fx.ts custom mats — blind program/values leaves every
-    // sprite (enemy rings, telegraph, loot beams…) invisible on c0.
-    const probePass = Materials.standard({
-      baseColor: [1, 1, 1, 1],
-      roughness: 0.5,
-      metallic: 0,
-    }).passes?.[0] as { shader?: string } | undefined;
-    this.customPassShaderShape = typeof probePass?.shader === 'string';
+    this.ok = materials !== undefined;
   }
 
   /** Shader registry unavailable / bad sheet id → spawn no-ops (Edit safe). */
@@ -452,13 +396,11 @@ export class SpriteSystem {
     const mipLevelCount = Math.floor(Math.log2(Math.max(width, height))) + 1;
     const tex = this.world.allocSharedRef<'TextureAsset', TextureAsset>('TextureAsset', {
       kind: 'texture',
-      width,
-      height,
+      shape: { viewDimension: '2d', extent: { width, height } },
       format: 'rgba8unorm',
-      data,
+      data: new Uint8Array(data.buffer, data.byteOffset, data.byteLength),
       colorSpace: 'linear',
-      mipmap: true,
-      mipLevelCount,
+      mips: { kind: 'generate' },
     });
     this.sheetTex.set(spec.id, tex);
     return tex;
@@ -502,31 +444,9 @@ export class SpriteSystem {
       sheet: unwrapHandle(this.textureFor(spec)),
       noise: unwrapHandle(this.textureFor(noise)),
     };
-    const passCommon = {
-      name: 'Forward' as const,
-      renderState: { ...SPRITE_RENDER_STATES[blend], tags: { LightMode: 'HellforgeFx' }, queue: 3000 },
-    };
-    const mat = this.customPassShaderShape
-      ? this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
-          kind: 'material',
-          passes: [{
-            ...passCommon,
-            shader: SPRITE_SHADER_ID,
-            tags: { LightMode: 'HellforgeFx' },
-            queue: 3000,
-            passKind: 'post-process',
-          }],
-          paramValues: params as never,
-        } as unknown as MaterialAsset)
-      : this.world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
-          kind: 'material',
-          passes: [{
-            ...passCommon,
-            program: { module: SPRITE_SHADER_ID },
-          }],
-          parameters: SPRITE_MATERIAL_PARAMETERS as never,
-          values: params as never,
-        });
+    const mat = this.world.allocSharedRef<'MaterialAsset', MaterialAsset>(
+      'MaterialAsset', this.materials!.create(SPRITE_SHADER_ID, params as unknown as Record<string, import('@forgeax/engine/types').MaterialValue>, blend),
+    );
     return { key, mat, params };
   }
 

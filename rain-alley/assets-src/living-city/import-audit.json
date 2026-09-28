@@ -1,0 +1,38 @@
+[
+  {
+    "asset": "cleaver.glb",
+    "removedObsoleteGeneratedOverrides": [],
+    "sceneGuidPreserved": true,
+    "duplicateMeshIdentitiesRepaired": []
+  },
+  {
+    "asset": "crow.glb",
+    "removedObsoleteGeneratedOverrides": [],
+    "sceneGuidPreserved": true,
+    "duplicateMeshIdentitiesRepaired": []
+  },
+  {
+    "asset": "district-lived.glb",
+    "removedObsoleteGeneratedOverrides": [],
+    "sceneGuidPreserved": true,
+    "duplicateMeshIdentitiesRepaired": []
+  },
+  {
+    "asset": "pistol.glb",
+    "removedObsoleteGeneratedOverrides": [],
+    "sceneGuidPreserved": true,
+    "duplicateMeshIdentitiesRepaired": []
+  },
+  {
+    "asset": "rat.glb",
+    "removedObsoleteGeneratedOverrides": [],
+    "sceneGuidPreserved": true,
+    "duplicateMeshIdentitiesRepaired": []
+  },
+  {
+    "asset": "roach.glb",
+    "removedObsoleteGeneratedOverrides": [],
+    "sceneGuidPreserved": true,
+    "duplicateMeshIdentitiesRepaired": []
+  }
+]

@@ -75,11 +75,11 @@ function loadCampEntities(packPath: string): PackEntityTransform[] {
   const pack = JSON.parse(readFileSync(packPath, 'utf8')) as {
     assets?: Array<{
       kind?: string;
-      payload?: { entities?: SceneEntity[] };
+      payload?: { entities?: Record<string, SceneEntity> };
     }>;
   };
   const scene = pack.assets?.find((a) => a.kind === 'scene');
-  const entities = scene?.payload?.entities;
+  const entities = Object.entries(scene?.payload?.entities ?? {}).map(([key, entity]) => ({ ...entity, localId: Number(key) }));
   if (!entities?.length) fail(`no scene entities in ${packPath}`);
   const out: PackEntityTransform[] = [];
   for (const e of entities) {

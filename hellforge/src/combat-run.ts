@@ -145,11 +145,13 @@ export function createCombatRunDomain(
 }
 
 export interface EncounterReset {
-  clear(): void;
+  /** Clear only the failed area; other prefetched encounters remain live. */
+  clear(areaId: AreaId): void;
   reset(areaId: AreaId, seed: number): void;
 }
 
 export interface CombatTransientResetters {
+  movement: { clear(): void };
   encounters: EncounterReset;
   enemyAttacks: { clear(): void };
   playerSkills: { clearProjectilesAndCooldowns(): void };
@@ -176,7 +178,9 @@ export function resetCombatRun(input: {
     input.run.dispatch({ op: 'reset' });
   }
 
-  input.resetters.encounters.clear();
+  // Old world-space click targets must not resume from the camp spawn point.
+  input.resetters.movement.clear();
+  input.resetters.encounters.clear(input.failedAreaId);
   input.resetters.enemyAttacks.clear();
   input.resetters.playerSkills.clearProjectilesAndCooldowns();
   input.resetters.loot.clearGroundDrops();

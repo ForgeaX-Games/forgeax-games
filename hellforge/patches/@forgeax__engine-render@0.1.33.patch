@@ -1,0 +1,121 @@
+diff --git a/dist/chunk-VOZWDM3L.mjs b/dist/chunk-VOZWDM3L.mjs
+index 053c439ccacee24401f66bb454bb2957a38b847c..18c51b03acaee5b4424396759af59f5516fb3b89 100644
+--- a/dist/chunk-VOZWDM3L.mjs
++++ b/dist/chunk-VOZWDM3L.mjs
+@@ -11646,6 +11646,31 @@ function recordMainPass(c, selector, options, graphPass) {
+       }
+     }
+     const resolveMaterialBindGroup = (materialSlot, material, entityKey, materialWorld = world, materialShaderId = material.materialShaderId) => !hasProbeBindings && materialShaderId === material.materialShaderId && materialShaderId !== POINTS_LINES_MATERIAL_SHADER_ID ? preparedMaterialBindGroups[materialSlot] ?? buildPerSubmeshMaterialBg2(material, entityKey, materialWorld, materialShaderId) : buildPerSubmeshMaterialBg2(material, entityKey, materialWorld, materialShaderId);
++    // GPU admission is opaque-only. Record it before the sorted CPU remainder,
++    // which includes alpha-blended geometry that must see the opaque depth/color.
++    if (options?.gpuDriven !== void 0) {
++      if (viewBindGroup === null) {
++        throw new RhiError({
++          code: "rhi-not-available",
++          expected: "main-pass Standard PBR view bind group for GPU-driven encode",
++          hint: "publish the current frame view/light/shadow bind group before GPU raster"
++        });
++      }
++      if (gpuDrivenStandardPbrFrameResources === void 0) {
++        throw new RhiError({
++          code: "rhi-not-available",
++          expected: "complete main-pass Standard PBR material bind-group receipt",
++          hint: "finish frame material producer assembly before GPU-driven encode"
++        });
++      }
++      options.gpuDriven.projection.encode(
++        viewBindGroup,
++        pass,
++        options.gpuDriven.resources,
++        gpuDrivenStandardPbrFrameResources
++      );
++    }
++    // The indirect encoder changes bindings; restore the direct view offsets.
+     pass.setBindGroup(0, viewBindGroup, [viewBindGroupDynamicOffset, 0]);
+     const recordGeometry = () => {
+       recordGeometryDraws(
+@@ -11672,28 +11697,6 @@ function recordMainPass(c, selector, options, graphPass) {
+         recordGeometry
+       );
+     }
+-    if (options?.gpuDriven !== void 0) {
+-      if (viewBindGroup === null) {
+-        throw new RhiError({
+-          code: "rhi-not-available",
+-          expected: "main-pass Standard PBR view bind group for GPU-driven encode",
+-          hint: "publish the current frame view/light/shadow bind group before GPU raster"
+-        });
+-      }
+-      if (gpuDrivenStandardPbrFrameResources === void 0) {
+-        throw new RhiError({
+-          code: "rhi-not-available",
+-          expected: "complete main-pass Standard PBR material bind-group receipt",
+-          hint: "finish frame material producer assembly before GPU-driven encode"
+-        });
+-      }
+-      options.gpuDriven.projection.encode(
+-        viewBindGroup,
+-        pass,
+-        options.gpuDriven.resources,
+-        gpuDrivenStandardPbrFrameResources
+-      );
+-    }
+     if (passKind === "forward" && recordMode === void 0) {
+       geometryPassEnded = recordSpritePass(
+         c,
+@@ -13179,8 +13182,11 @@ function addTypedScenePass(graph, options) {
+       const spotShadow = options.spotShadow === void 0 ? void 0 : resolvedView(resources, options.spotShadow.view);
+       const ssao = options.ssao === void 0 ? void 0 : resolvedView(resources, options.ssao.view);
+       const transmissionBackdrop = options.transmissionBackdrop === void 0 ? null : resolvedView(resources, options.transmissionBackdrop);
+-      internal.frameState.currentDirectionalShadowView = directionalShadow ?? null;
+-      internal.frameState.currentSpotShadowView = spotShadow ?? null;
++      // Coverage/temporal passes have no shadow inputs and must not erase
++      // the atlas observed by scene color earlier in this frame. The frame
++      // recorder clears these observations at the beginning of each frame.
++      if (directionalShadow !== void 0) internal.frameState.currentDirectionalShadowView = directionalShadow;
++      if (spotShadow !== void 0) internal.frameState.currentSpotShadowView = spotShadow;
+       const groups = buildPerFrameBindGroups(
+         internal.runtime,
+         internal.frameState,
+diff --git a/dist/construct-renderer.mjs b/dist/construct-renderer.mjs
+index e0d09cd9443ef6df9c8d3af5fd6f64df2b65d093..ed75238039a64d4ec6ae67b3962f7252cbffb785 100644
+--- a/dist/construct-renderer.mjs
++++ b/dist/construct-renderer.mjs
+@@ -13839,7 +13839,7 @@ var GpuDrivenProduction = class _GpuDrivenProduction {
+         artifact: representative.artifact,
+         candidates: representative.batch.candidates.flatMap((candidate) => {
+           const slot = slotsByPrimitive2.get(candidate.primitiveIndex);
+-          return slot === void 0 ? [] : [sceneCandidate(slot, candidate)];
++          return slot === void 0 ? [] : [sceneCandidate(slot, candidate, scene.scene.materialIndexForSlot(candidate.primitiveIndex, representative.batch.key.materialSlot))];
+         })
+       });
+       if (!projection.ok) {
+@@ -14014,7 +14014,7 @@ var GpuDrivenProduction = class _GpuDrivenProduction {
+       raster.noteProjectionKey(projectionKey);
+       const candidates = admittedCandidates.flatMap((candidate) => {
+         const slot = projectionSlot(candidate.primitiveIndex);
+-        return slot === void 0 ? [] : [sceneCandidate(slot, candidate)];
++        return slot === void 0 ? [] : [sceneCandidate(slot, candidate, scene.scene.materialIndexForSlot(candidate.primitiveIndex, prepared.batch.key.materialSlot))];
+       });
+       const projection = projectStandardPbrScene({ artifact, candidates });
+       if (!projection.ok) {
+@@ -14194,7 +14194,7 @@ var GpuDrivenProduction = class _GpuDrivenProduction {
+             }
+             const candidates = admittedCandidates.flatMap((candidate) => {
+               const slot = projectionSlot(candidate.primitiveIndex);
+-              return slot === void 0 ? [] : [sceneCandidate(slot, candidate)];
++              return slot === void 0 ? [] : [sceneCandidate(slot, candidate, scene.scene.materialIndexForSlot(candidate.primitiveIndex, prepared.batch.key.materialSlot))];
+             });
+             const projection = projectStandardPbrScene({
+               artifact,
+@@ -39123,7 +39123,9 @@ async function buildReadyWebGPU(rhiDevice, rendererScope, getShader, gpuStore, a
+     const idToRuntimeVariantWgsl = /* @__PURE__ */ new Map();
+     for (const ms of registry.materialShaderManifestEntries()) {
+       const exact = ms.variants.find(
+-        (variant2) => variant2.defines.STORAGE_BUFFER_AVAILABLE === storageBufferCapable && variant2.defines.COVERAGE_ONLY !== true && (!("CLUSTER_FORWARD_AVAILABLE" in variant2.defines) || variant2.defines.CLUSTER_FORWARD_AVAILABLE === false) && (!("VERTEX_COLOR_AVAILABLE" in variant2.defines) || variant2.defines.VERTEX_COLOR_AVAILABLE === false) && (!("DIRECTIONAL_PCSS_AVAILABLE" in variant2.defines) || variant2.defines.DIRECTIONAL_PCSS_AVAILABLE === directionalPcssAvailable) && (!("PROJECTOR_AVAILABLE" in variant2.defines) || variant2.defines.PROJECTOR_AVAILABLE === projectorAvailable) && (!("EXTENDED_LIGHTING_AVAILABLE" in variant2.defines) || variant2.defines.EXTENDED_LIGHTING_AVAILABLE === extendedLightingShaderAvailable) && variant2.defines.PROBE_BLEND_AVAILABLE !== true && (!("SKINNING_DISABLED" in variant2.defines) || variant2.defines.SKINNING_DISABLED === true) && (!("TRANSMISSION_AVAILABLE" in variant2.defines) || variant2.defines.TRANSMISSION_AVAILABLE === false) && (!("REFLECTION_FALLBACK_AVAILABLE" in variant2.defines) || variant2.defines.REFLECTION_FALLBACK_AVAILABLE === false)
++        // Direct draws bind per-material uniforms, not a GPU-driven scene index.
++        // Selecting an indirect variant here aliases unrelated skinned materials.
++        (variant2) => variant2.defines.GPU_DRIVEN_SCENE_INDEX_AVAILABLE !== true && variant2.defines.GPU_DRIVEN_SCENE_INDEX_EXPLICIT !== true && variant2.defines.STORAGE_BUFFER_AVAILABLE === storageBufferCapable && variant2.defines.COVERAGE_ONLY !== true && (!("CLUSTER_FORWARD_AVAILABLE" in variant2.defines) || variant2.defines.CLUSTER_FORWARD_AVAILABLE === false) && (!("VERTEX_COLOR_AVAILABLE" in variant2.defines) || variant2.defines.VERTEX_COLOR_AVAILABLE === false) && (!("DIRECTIONAL_PCSS_AVAILABLE" in variant2.defines) || variant2.defines.DIRECTIONAL_PCSS_AVAILABLE === directionalPcssAvailable) && (!("PROJECTOR_AVAILABLE" in variant2.defines) || variant2.defines.PROJECTOR_AVAILABLE === projectorAvailable) && (!("EXTENDED_LIGHTING_AVAILABLE" in variant2.defines) || variant2.defines.EXTENDED_LIGHTING_AVAILABLE === extendedLightingShaderAvailable) && variant2.defines.PROBE_BLEND_AVAILABLE !== true && (!("SKINNING_DISABLED" in variant2.defines) || variant2.defines.SKINNING_DISABLED === true) && (!("TRANSMISSION_AVAILABLE" in variant2.defines) || variant2.defines.TRANSMISSION_AVAILABLE === false) && (!("REFLECTION_FALLBACK_AVAILABLE" in variant2.defines) || variant2.defines.REFLECTION_FALLBACK_AVAILABLE === false)
+       );
+       const variant = exact === void 0 ? void 0 : findVariantByKey(ms, exact.definesKey);
+       if (variant !== void 0) {

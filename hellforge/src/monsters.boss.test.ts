@@ -14,7 +14,7 @@ import { describe, expect, mock, test } from 'bun:test';
 
 import '../tools/engine-test-mocks';
 
-mock.module('@forgeax/engine-pack/guid', () => ({
+mock.module('@forgeax/engine/pack/guid', () => ({
   AssetGuid: {
     parse: (dash: string) =>
       /^[0-9a-f-]{36}$/i.test(dash)
@@ -53,6 +53,7 @@ function makeWorld() {
     },
     addComponent(e: number, entry: Comp) { live.get(e)?.set(entry.component, entry.data); },
     removeComponent(e: number, component: unknown) { live.get(e)?.delete(component); },
+    internSharedRef(_kind: string, value: unknown) { return value ?? {}; },
     allocSharedRef(_kind: string, value: unknown) { return value ?? {}; },
   };
 }
@@ -113,15 +114,44 @@ function makeEvents() {
 }
 
 /** spawn() without a GLB load fires the sequencing guard — silence it. */
-function quietSpawn(mgr: InstanceType<typeof MonsterManager>, kind: 'imp' | 'flamecaller' | 'slaglord', x: number, z: number) {
+function quietSpawn(mgr: InstanceType<typeof MonsterManager>, kind: 'imp' | 'flamecaller' | 'slaglord', x: number, z: number, zone: 'wild' | 'den' = 'den') {
   const orig = console.error;
   console.error = () => {};
   try {
-    return mgr.spawn(kind, x, z, 'den')!;
+    return mgr.spawn(kind, x, z, zone)!;
   } finally {
     console.error = orig;
   }
 }
+
+describe('area-scoped death reset', () => {
+  test('wild reset preserves prefetched den minions and boss', () => {
+    const mgr = new MonsterManager(makeWorld() as never, makeFx() as never, makeEvents());
+    quietSpawn(mgr, 'imp', 0, 0, 'wild');
+    const minion = quietSpawn(mgr, 'imp', 300, 300);
+    quietSpawn(mgr, 'imp', 2, 0, 'wild');
+    const boss = quietSpawn(mgr, 'slaglord', 320, 320);
+    mgr.clearZone('wild');
+    expect(mgr.monsters).toEqual([minion, boss]);
+    expect(mgr.denAliveCount()).toBe(2);
+    expect(mgr.boss()).toBe(boss);
+    // A second reset must not erode the other area's encounter or duplicate it.
+    mgr.clearZone('wild');
+    expect(mgr.denAliveCount()).toBe(2);
+  });
+
+  test('den reset preserves wild encounter and remains idempotent', () => {
+    const mgr = new MonsterManager(makeWorld() as never, makeFx() as never, makeEvents());
+    const wild = quietSpawn(mgr, 'imp', 0, 0, 'wild');
+    quietSpawn(mgr, 'imp', 300, 300);
+    quietSpawn(mgr, 'slaglord', 320, 320);
+    mgr.clearZone('den');
+    mgr.clearZone('den');
+    expect(mgr.monsters).toEqual([wild]);
+    expect(mgr.denAliveCount()).toBe(0);
+    expect(mgr.boss()).toBeNull();
+  });
+});
 
 /** Structural view of the manager's private bolt list (test-only). */
 interface BoltView { x: number; z: number; dx: number; dz: number; speed: number; source: string; style: string }
@@ -276,6 +306,44 @@ describe('boss ranged volley', () => {
 });
 
 describe('hostile bolt VFX + attribution', () => {
+  test('cannot initiate a cast or melee strike through a wall', () => {
+    const events = makeEvents();
+    const mgr = new MonsterManager(makeWorld() as never, makeFx() as never, events);
+    const m = quietSpawn(mgr, 'flamecaller', 0, 0);
+    m.rangedCd = 0; m.attackCd = 0;
+    mgr.tick(0.01, 8, 0, false, x => x < 3 || x > 4);
+    expect(events.attacks).toEqual([]);
+    expect(m.strikeAt).toBe(0);
+    mgr.tick(0.01, 0.8, 0, false, x => x < 0.3 || x > 0.5);
+    expect(events.attacks).toEqual([]);
+  });
+
+  test('a player breaking line of sight during wind-up cancels the release', () => {
+    const fx = makeFx();
+    const mgr = new MonsterManager(makeWorld() as never, fx as never, makeEvents());
+    const m = quietSpawn(mgr, 'flamecaller', 0, 0);
+    m.rangedCd = 0;
+    mgr.tick(0.01, 8, 0, false, WALKABLE);
+    expect(m.strikeAt).toBeGreaterThan(0);
+    mgr.tick(0.25, 8, 0, false, x => x < 3 || x > 4);
+    expect(fx.flightBodies).toHaveLength(0);
+  });
+
+  test('an in-flight bolt hits intervening terrain before the player and releases once', () => {
+    const fx = makeFx(); const events = makeEvents();
+    const mgr = new MonsterManager(makeWorld() as never, fx as never, events);
+    const m = quietSpawn(mgr, 'flamecaller', 0, 0);
+    m.rangedCd = 0;
+    mgr.tick(0.01, 8, 0, false, WALKABLE);
+    mgr.tick(0.25, 8, 0, false, WALKABLE);
+    expect(boltsOf(mgr)).toHaveLength(1);
+    mgr.tick(0.6, 8, 0, false, x => x < 4 || x > 4.3);
+    expect(boltsOf(mgr)).toHaveLength(0);
+    expect(events.playerHits).toEqual([]);
+    expect(fx.releasedBodies).toHaveLength(1);
+    expect(fx.bursts.at(-1)!.x).toBeLessThan(4.15);
+  });
+
   test('flamecaller bolt: magma flight body + trail puffs; impact beat + release', () => {
     const world = makeWorld();
     const fx = makeFx();

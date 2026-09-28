@@ -22,12 +22,12 @@ import {
   AnimationPlayer,
   AnimationTargetId,
   bindAnimationTargets,
-} from '@forgeax/engine-animation';
-import { ENTITY_NULL_RAW, type EntityHandle, type World } from '@forgeax/engine-ecs';
-import { Name } from '@forgeax/engine-scene';
-import { SceneInstance } from '@forgeax/engine-render';
-import { Skin } from '@forgeax/engine-skinning';
-import type { AnimationClip, Handle } from '@forgeax/engine-types';
+} from '@forgeax/engine/animation';
+import { ENTITY_NULL_RAW, type EntityHandle, type World } from '@forgeax/engine/ecs';
+import { Name } from '@forgeax/engine/scene';
+import { SceneInstance } from '@forgeax/engine/render';
+import { Skin } from '@forgeax/engine/skinning';
+import type { AnimationClip, Handle } from '@forgeax/engine/types';
 import { isRootJointName } from './anim-root';
 
 export type SkinnedAnimArmResult = {

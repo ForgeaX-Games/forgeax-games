@@ -1,0 +1,192 @@
+{
+  "recipes": {
+    "RA_BluedSteel": [
+      "steel",
+      [
+        0.18,
+        0.215,
+        0.25,
+        1
+      ],
+      0.96
+    ],
+    "RA_WornEdges": [
+      "steel",
+      [
+        0.44,
+        0.47,
+        0.49,
+        1
+      ],
+      0.94
+    ],
+    "RA_Brass": [
+      "steel",
+      [
+        0.64,
+        0.39,
+        0.12,
+        1
+      ],
+      0.93
+    ],
+    "RA_Walnut": [
+      "wood",
+      [
+        0.42,
+        0.18,
+        0.065,
+        1
+      ],
+      0
+    ],
+    "RA_Leather": [
+      "leather",
+      [
+        0.09,
+        0.05,
+        0.035,
+        1
+      ],
+      0
+    ],
+    "RA_MouldedRubber": [
+      "rubber",
+      [
+        0.043,
+        0.048,
+        0.046,
+        1
+      ],
+      0
+    ],
+    "RA_SightPaint": [
+      "paint",
+      [
+        0.68,
+        0.71,
+        0.58,
+        1
+      ],
+      0
+    ],
+    "RA_Skin": [
+      "skin",
+      [
+        0.48,
+        0.285,
+        0.19,
+        1
+      ],
+      0
+    ],
+    "RA_FadedOlive": [
+      "paint",
+      [
+        0.16,
+        0.18,
+        0.075,
+        1
+      ],
+      0
+    ]
+  },
+  "assets": [
+    {
+      "asset": "car15",
+      "geometryAndPivotsIdentical": true,
+      "originalBinaryPrefixIdentical": true,
+      "materials": 6,
+      "baseNormalOrmCoverage": 6,
+      "sha256": "ecb82ec4cf6846dd095705a157977c96065e6c6a99a06f4a535219f6204d0e74"
+    },
+    {
+      "asset": "type56",
+      "geometryAndPivotsIdentical": true,
+      "originalBinaryPrefixIdentical": true,
+      "materials": 7,
+      "baseNormalOrmCoverage": 7,
+      "sha256": "4c696f6596bb3f2bb6ee234d7595ed43eb69c9009a8e75ba8575440aefe7ced4"
+    },
+    {
+      "asset": "mp5",
+      "geometryAndPivotsIdentical": true,
+      "originalBinaryPrefixIdentical": true,
+      "materials": 6,
+      "baseNormalOrmCoverage": 6,
+      "sha256": "36cc04012484e6ad2bab4d8d176827ed1761daf5fedb1dc59ac35e2d5c16685d"
+    },
+    {
+      "asset": "uzi",
+      "geometryAndPivotsIdentical": true,
+      "originalBinaryPrefixIdentical": true,
+      "materials": 6,
+      "baseNormalOrmCoverage": 6,
+      "sha256": "01f986c0a51349c9e557c1b04cc306fe44c8e6ba16afe8160a17c1182cb4d73a"
+    },
+    {
+      "asset": "hipower",
+      "geometryAndPivotsIdentical": true,
+      "originalBinaryPrefixIdentical": true,
+      "materials": 7,
+      "baseNormalOrmCoverage": 7,
+      "sha256": "3221630105ba2d11954d26db047a96f4da6dd38885e878273cde395afa9efb8f"
+    },
+    {
+      "asset": "model10",
+      "geometryAndPivotsIdentical": true,
+      "originalBinaryPrefixIdentical": true,
+      "materials": 7,
+      "baseNormalOrmCoverage": 7,
+      "sha256": "929c173941c2182d922fce561b82b307999d541d7c8ec1fd1a74070ffeee3b26"
+    },
+    {
+      "asset": "m16",
+      "geometryAndPivotsIdentical": true,
+      "originalBinaryPrefixIdentical": true,
+      "materials": 6,
+      "baseNormalOrmCoverage": 6,
+      "sha256": "e273919b6be072dbee2df1e07946aab2ab1206bd124e71900c27bedf6aef7b00"
+    },
+    {
+      "asset": "minimi",
+      "geometryAndPivotsIdentical": true,
+      "originalBinaryPrefixIdentical": true,
+      "materials": 8,
+      "baseNormalOrmCoverage": 8,
+      "sha256": "e0f24ab2553c8a2dfad331c0cc757f8ffdbe70916c855f0d76ce8c447a5feb4c"
+    },
+    {
+      "asset": "sks",
+      "geometryAndPivotsIdentical": true,
+      "originalBinaryPrefixIdentical": true,
+      "materials": 7,
+      "baseNormalOrmCoverage": 7,
+      "sha256": "ab262003f74423636b75debf04433b97ef3b1d35deafd3734a12242980184acb"
+    },
+    {
+      "asset": "l96",
+      "geometryAndPivotsIdentical": true,
+      "originalBinaryPrefixIdentical": true,
+      "materials": 6,
+      "baseNormalOrmCoverage": 6,
+      "sha256": "4ef6ce46a3c29fdab03b0215eed491ee232d97071620025ddf7086bbbecebef7"
+    },
+    {
+      "asset": "m870",
+      "geometryAndPivotsIdentical": true,
+      "originalBinaryPrefixIdentical": true,
+      "materials": 8,
+      "baseNormalOrmCoverage": 8,
+      "sha256": "9da7e2b93264acfd802d63d6dd410e7e02b07cf0efa2b3b11ee3f764d5bce26f"
+    },
+    {
+      "asset": "spas12",
+      "geometryAndPivotsIdentical": true,
+      "originalBinaryPrefixIdentical": true,
+      "materials": 7,
+      "baseNormalOrmCoverage": 7,
+      "sha256": "331d784f8206f5587288d56cbec074975cf646cad98f640fadb030c077f0741b"
+    }
+  ]
+}

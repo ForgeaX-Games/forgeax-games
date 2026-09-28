@@ -9,10 +9,10 @@ import { FONT_DISPLAY, FONT_UI, Ui, Z } from './ui-theme';
 const STYLE_ID = 'hellforge-ui-style';
 
 // See ui-icons.ts uiIconUrl for why base+concat (not a dynamic template URL).
-const FONT_BASE = new URL('../assets/ui/fonts/', import.meta.url).href.replace(/\/?$/, '/');
+import { gameAssetUrl } from './asset-urls';
 
 function fontUrl(file: string): string {
-  return FONT_BASE + file;
+  return gameAssetUrl('assets/ui/fonts/' + file);
 }
 
 // Google Fonts unicode-range splits (see assets/ui/fonts/LICENSE-CINZEL.txt).

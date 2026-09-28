@@ -282,7 +282,9 @@ describe('char-select chrome contract', () => {
     expect(heroCard.style['background']).toContain('panel-frame-character.webp');
     expect(heroCard.style['background']).toContain('center/100% 100% no-repeat');
     expect(heroCard.style['aspect-ratio']).toBe('3/4');
-    expect(heroCard.style.height).toBe('300px');
+    expect(heroCard.style.height).toBe('320px');
+    expect(copy!.innerHTML).toContain(Ui.goldBright);
+    expect(copy!.innerHTML).toContain(Ui.text);
     expect(heroCard.style.overflow).toBe('hidden');
     // classEmblemSvg kept, inside its own goldMetal bezel.
     const emblem = heroCard.children[0]!;

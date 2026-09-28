@@ -1,0 +1,1309 @@
+{
+  "source": "assets/living-city/district-lived.glb",
+  "sourceSha256": "18b967b3511dccee2b6eedcdc9452361133727caf3681db0e90186a18837f261",
+  "cellMeters": 24,
+  "polygonsBefore": 393412,
+  "polygonsAfter": 393412,
+  "materialGroups": [
+    {
+      "node": "BATCH_-1_0_AgedConcreteTrim",
+      "sources": [
+        "BLD_Block_01_ivory_pawn_house",
+        "BLD_Block_02_enclosed_balconies",
+        "BLD_Pawn_ivory_pawn_house",
+        "RAMP_Pawn"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_AgedIvoryTiles",
+      "sources": [
+        "BLD_Block_01_ivory_pawn_house",
+        "BLD_Block_02_enclosed_balconies",
+        "COVER_11_PawnCounter",
+        "INT_Pawn_Floor",
+        "SHOP_Pawn_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_AwningCream",
+      "sources": [
+        "BLD_Block_02_enclosed_balconies",
+        "COVER_01_South"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_AwningPetrol",
+      "sources": [
+        "BLD_Block_02_enclosed_balconies"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_DarkRecess",
+      "sources": [
+        "BLD_Block_01_ivory_pawn_house",
+        "BLD_Block_02_enclosed_balconies",
+        "BLD_Pawn_ivory_pawn_house",
+        "SHOP_Pawn_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_FluorescentWarmWhite",
+      "sources": [
+        "BLD_Block_01_ivory_pawn_house",
+        "BLD_Block_02_enclosed_balconies",
+        "INT_Pawn_Furniture",
+        "SHOP_Pawn_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_FurnitureWood",
+      "sources": [
+        "BLD_Block_01_ivory_pawn_house",
+        "BLD_Block_02_enclosed_balconies",
+        "COVER_11_PawnCounter",
+        "INT_Pawn_Furniture"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_LC_brick",
+      "sources": [
+        "LC_Damage_00",
+        "LC_Damage_03"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_LC_cloth",
+      "sources": [
+        "LC_Entrance_Pawn",
+        "LC_Refuse_0"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_LC_couplet-left",
+      "sources": [
+        "LC_Entrance_Pawn"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_LC_couplet-right",
+      "sources": [
+        "LC_Entrance_Pawn"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_LC_iron",
+      "sources": [
+        "LC_Damage_00",
+        "LC_Damage_03",
+        "LC_Entrance_Pawn",
+        "LC_Refuse_0",
+        "LC_Rooftop_01"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_LC_plaster",
+      "sources": [
+        "LC_Damage_00",
+        "LC_Damage_03",
+        "LC_Entrance_Pawn",
+        "LC_Rooftop_01"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_LC_trash",
+      "sources": [
+        "LC_Refuse_0"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_NeonWarmRed",
+      "sources": [
+        "SHOP_Pawn_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_OpaqueWindowGlass",
+      "sources": [
+        "BLD_Block_01_ivory_pawn_house",
+        "BLD_Block_02_enclosed_balconies",
+        "BLD_Pawn_ivory_pawn_house"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_OxidizedMetal",
+      "sources": [
+        "BLD_Block_01_ivory_pawn_house",
+        "BLD_Block_02_enclosed_balconies",
+        "BLD_Pawn_ivory_pawn_house",
+        "COVER_11_PawnCounter",
+        "INT_Pawn_Furniture",
+        "SHOP_Pawn_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_PaintBlue",
+      "sources": [
+        "BLD_Block_02_enclosed_balconies"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_PeriodPrintAtlas",
+      "sources": [
+        "BLD_Block_01_ivory_pawn_house",
+        "BLD_Block_02_enclosed_balconies",
+        "COVER_01_South",
+        "SHOP_Pawn_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_PlasterIvory",
+      "sources": [
+        "BLD_Block_01_ivory_pawn_house",
+        "BLD_Pawn_ivory_pawn_house",
+        "INT_Pawn_Walls"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_PlasticBlue",
+      "sources": [
+        "COVER_01_South"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_PlasticRed",
+      "sources": [
+        "COVER_01_South"
+      ]
+    },
+    {
+      "node": "BATCH_-1_0_WarmWindow",
+      "sources": [
+        "BLD_Block_01_ivory_pawn_house",
+        "BLD_Block_02_enclosed_balconies",
+        "BLD_Pawn_ivory_pawn_house"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_AgedConcreteTrim",
+      "sources": [
+        "BLD_Block_07_brick_service_house",
+        "BLD_Block_08_ochre_shop_house",
+        "BLD_Block_20_ivory_pawn_house",
+        "GB_CrossWestEnd",
+        "GB_StairRearWall"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_AgedIvoryTiles",
+      "sources": [
+        "BLD_Block_07_brick_service_house",
+        "BLD_Block_08_ochre_shop_house",
+        "BLD_Block_20_ivory_pawn_house",
+        "INT_Tea_Furniture"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_AwningCream",
+      "sources": [
+        "BLD_Block_08_ochre_shop_house",
+        "COVER_06_CrossWest",
+        "COVER_07_CrossMid"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_AwningOxideRed",
+      "sources": [
+        "BLD_Block_08_ochre_shop_house"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_BoothVinyl",
+      "sources": [
+        "INT_Tea_Furniture"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_BrickBrown",
+      "sources": [
+        "BLD_Block_07_brick_service_house"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_CeramicIvory",
+      "sources": [
+        "INT_Tea_Furniture"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_DarkRecess",
+      "sources": [
+        "BLD_Block_07_brick_service_house",
+        "BLD_Block_08_ochre_shop_house",
+        "BLD_Block_20_ivory_pawn_house"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_FluorescentWarmWhite",
+      "sources": [
+        "BLD_Block_07_brick_service_house",
+        "BLD_Block_08_ochre_shop_house",
+        "BLD_Block_20_ivory_pawn_house",
+        "INT_Tea_Furniture"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_FurnitureWood",
+      "sources": [
+        "BLD_Block_07_brick_service_house",
+        "BLD_Block_08_ochre_shop_house",
+        "BLD_Block_20_ivory_pawn_house",
+        "INT_Tea_Furniture"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_LC_cloth",
+      "sources": [
+        "LC_Refuse_3"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_LC_iron",
+      "sources": [
+        "LC_Refuse_3",
+        "LC_Rooftop_08"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_LC_plaster",
+      "sources": [
+        "LC_Rooftop_08"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_LC_trash",
+      "sources": [
+        "LC_Refuse_3"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_OpaqueWindowGlass",
+      "sources": [
+        "BLD_Block_07_brick_service_house",
+        "BLD_Block_08_ochre_shop_house",
+        "BLD_Block_20_ivory_pawn_house"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_OxidizedMetal",
+      "sources": [
+        "BLD_Block_07_brick_service_house",
+        "BLD_Block_08_ochre_shop_house",
+        "BLD_Block_20_ivory_pawn_house",
+        "INT_Tea_Furniture"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_PaintBlue",
+      "sources": [
+        "INT_Tea_Furniture"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_PaintOchre",
+      "sources": [
+        "BLD_Block_08_ochre_shop_house"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_PeriodPrintAtlas",
+      "sources": [
+        "BLD_Block_07_brick_service_house",
+        "BLD_Block_08_ochre_shop_house",
+        "BLD_Block_20_ivory_pawn_house",
+        "COVER_06_CrossWest",
+        "COVER_07_CrossMid",
+        "INT_Tea_Furniture"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_PlasterIvory",
+      "sources": [
+        "BLD_Block_20_ivory_pawn_house"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_PlasticBlue",
+      "sources": [
+        "COVER_06_CrossWest",
+        "COVER_07_CrossMid"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_PlasticRed",
+      "sources": [
+        "COVER_06_CrossWest",
+        "COVER_07_CrossMid"
+      ]
+    },
+    {
+      "node": "BATCH_-1_1_WarmWindow",
+      "sources": [
+        "BLD_Block_07_brick_service_house",
+        "BLD_Block_08_ochre_shop_house",
+        "BLD_Block_20_ivory_pawn_house"
+      ]
+    },
+    {
+      "node": "BATCH_-1_2_AgedConcreteTrim",
+      "sources": [
+        "BLD_Block_09_ivory_pawn_house",
+        "BLD_Block_10_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_-1_2_AgedIvoryTiles",
+      "sources": [
+        "BLD_Block_09_ivory_pawn_house",
+        "BLD_Block_10_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_-1_2_DarkRecess",
+      "sources": [
+        "BLD_Block_09_ivory_pawn_house",
+        "BLD_Block_10_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_-1_2_FluorescentWarmWhite",
+      "sources": [
+        "BLD_Block_09_ivory_pawn_house",
+        "BLD_Block_10_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_-1_2_FurnitureWood",
+      "sources": [
+        "BLD_Block_09_ivory_pawn_house",
+        "BLD_Block_10_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_-1_2_OpaqueWindowGlass",
+      "sources": [
+        "BLD_Block_09_ivory_pawn_house",
+        "BLD_Block_10_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_-1_2_OxidizedMetal",
+      "sources": [
+        "BLD_Block_09_ivory_pawn_house",
+        "BLD_Block_10_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_-1_2_PeriodPrintAtlas",
+      "sources": [
+        "BLD_Block_09_ivory_pawn_house",
+        "BLD_Block_10_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_-1_2_PlasterIvory",
+      "sources": [
+        "BLD_Block_09_ivory_pawn_house"
+      ]
+    },
+    {
+      "node": "BATCH_-1_2_WarmWindow",
+      "sources": [
+        "BLD_Block_09_ivory_pawn_house",
+        "BLD_Block_10_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_0_-1_AgedConcreteTrim",
+      "sources": [
+        "GB_SouthEnd"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_AgedConcreteTrim",
+      "sources": [
+        "BLD_Block_03_ochre_shop_house",
+        "BLD_Block_04_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_AgedIvoryTiles",
+      "sources": [
+        "BLD_Block_03_ochre_shop_house",
+        "BLD_Block_04_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_AwningCream",
+      "sources": [
+        "BLD_Block_03_ochre_shop_house",
+        "PROP_South_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_AwningOxideRed",
+      "sources": [
+        "BLD_Block_03_ochre_shop_house"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_BottleGreen",
+      "sources": [
+        "PROP_South_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_DarkRecess",
+      "sources": [
+        "BLD_Block_03_ochre_shop_house",
+        "BLD_Block_04_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_FluorescentWarmWhite",
+      "sources": [
+        "BLD_Block_03_ochre_shop_house",
+        "BLD_Block_04_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_FurnitureWood",
+      "sources": [
+        "BLD_Block_03_ochre_shop_house",
+        "BLD_Block_04_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_LC_brick",
+      "sources": [
+        "LC_Damage_01",
+        "LC_Damage_02"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_LC_cloth",
+      "sources": [
+        "LC_Refuse_1"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_LC_iron",
+      "sources": [
+        "LC_Damage_01",
+        "LC_Damage_02",
+        "LC_Refuse_1",
+        "LC_Rooftop_03",
+        "LC_WalkableGallery"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_LC_plaster",
+      "sources": [
+        "LC_Damage_01",
+        "LC_Damage_02",
+        "LC_Rooftop_03"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_LC_trash",
+      "sources": [
+        "LC_Refuse_1"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_OpaqueWindowGlass",
+      "sources": [
+        "BLD_Block_03_ochre_shop_house",
+        "BLD_Block_04_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_OxidizedMetal",
+      "sources": [
+        "BLD_Block_03_ochre_shop_house",
+        "BLD_Block_04_scalloped_veranda",
+        "PROP_South_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_PaintOchre",
+      "sources": [
+        "BLD_Block_03_ochre_shop_house"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_PeriodPrintAtlas",
+      "sources": [
+        "BLD_Block_03_ochre_shop_house",
+        "BLD_Block_04_scalloped_veranda",
+        "PROP_South_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_PlasticBlue",
+      "sources": [
+        "PROP_South_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_PlasticRed",
+      "sources": [
+        "PROP_South_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_0_0_WarmWindow",
+      "sources": [
+        "BLD_Block_03_ochre_shop_house",
+        "BLD_Block_04_scalloped_veranda"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_AgedConcreteTrim",
+      "sources": [
+        "BLD_Block_05_enclosed_balconies",
+        "BLD_Block_06_ivory_pawn_house",
+        "BLD_Tea_corner_tile_bands",
+        "GB_StairLanding",
+        "RAMP_Tea"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_AgedIvoryTiles",
+      "sources": [
+        "BLD_Block_05_enclosed_balconies",
+        "BLD_Block_06_ivory_pawn_house",
+        "COVER_03_TeaCounter",
+        "INT_Tea_Floor",
+        "SHOP_Tea_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_AgedSeafoamTiles",
+      "sources": [
+        "BLD_Tea_corner_tile_bands",
+        "INT_Tea_Walls"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_AwningCream",
+      "sources": [
+        "BLD_Block_05_enclosed_balconies",
+        "COVER_02_Dogleg",
+        "COVER_08_CrossEast",
+        "PROP_Cross_Cluster",
+        "PROP_Tea_Cluster",
+        "SHOP_Tea_Frontage",
+        "STREET_Wires_Laundry_Drains"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_AwningPetrol",
+      "sources": [
+        "BLD_Block_05_enclosed_balconies",
+        "SHOP_Tea_Frontage",
+        "STREET_Wires_Laundry_Drains"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_BottleGreen",
+      "sources": [
+        "PROP_Cross_Cluster",
+        "PROP_Tea_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_CeramicIvory",
+      "sources": [
+        "COVER_03_TeaCounter",
+        "PROP_Tea_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_DarkRecess",
+      "sources": [
+        "BLD_Block_05_enclosed_balconies",
+        "BLD_Block_06_ivory_pawn_house",
+        "BLD_Tea_corner_tile_bands",
+        "COVER_03_TeaCounter",
+        "SHOP_Tea_Frontage",
+        "STREET_Wires_Laundry_Drains"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_FluorescentWarmWhite",
+      "sources": [
+        "BLD_Block_05_enclosed_balconies",
+        "BLD_Block_06_ivory_pawn_house",
+        "SHOP_Tea_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_FurnitureWood",
+      "sources": [
+        "BLD_Block_05_enclosed_balconies",
+        "BLD_Block_06_ivory_pawn_house",
+        "COVER_03_TeaCounter"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_LC_brick",
+      "sources": [
+        "LC_Damage_04",
+        "LC_Damage_05"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_LC_cloth",
+      "sources": [
+        "LC_Entrance_Tea",
+        "LC_Refuse_2"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_LC_couplet-left",
+      "sources": [
+        "LC_Entrance_Tea"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_LC_couplet-right",
+      "sources": [
+        "LC_Entrance_Tea"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_LC_iron",
+      "sources": [
+        "LC_Damage_04",
+        "LC_Damage_05",
+        "LC_Entrance_Tea",
+        "LC_Refuse_2"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_LC_plaster",
+      "sources": [
+        "LC_Damage_04",
+        "LC_Damage_05",
+        "LC_Entrance_Tea"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_LC_trash",
+      "sources": [
+        "LC_Refuse_2"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_NeonWarmRed",
+      "sources": [
+        "SHOP_Tea_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_OpaqueWindowGlass",
+      "sources": [
+        "BLD_Block_05_enclosed_balconies",
+        "BLD_Block_06_ivory_pawn_house",
+        "BLD_Tea_corner_tile_bands"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_OxidizedMetal",
+      "sources": [
+        "BLD_Block_05_enclosed_balconies",
+        "BLD_Block_06_ivory_pawn_house",
+        "BLD_Tea_corner_tile_bands",
+        "COVER_03_TeaCounter",
+        "PROP_Cross_Cluster",
+        "PROP_Tea_Cluster",
+        "SHOP_Tea_Frontage",
+        "STREET_Wires_Laundry_Drains"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_PaintBlue",
+      "sources": [
+        "BLD_Block_05_enclosed_balconies",
+        "COVER_03_TeaCounter"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_PaintOchre",
+      "sources": [
+        "STREET_Wires_Laundry_Drains"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_PeriodPrintAtlas",
+      "sources": [
+        "BLD_Block_05_enclosed_balconies",
+        "BLD_Block_06_ivory_pawn_house",
+        "COVER_02_Dogleg",
+        "COVER_08_CrossEast",
+        "PROP_Cross_Cluster",
+        "PROP_Tea_Cluster",
+        "SHOP_Tea_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_PlasterIvory",
+      "sources": [
+        "BLD_Block_06_ivory_pawn_house"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_PlasticBlue",
+      "sources": [
+        "COVER_02_Dogleg",
+        "COVER_08_CrossEast",
+        "PROP_Cross_Cluster",
+        "PROP_Tea_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_PlasticRed",
+      "sources": [
+        "COVER_02_Dogleg",
+        "COVER_08_CrossEast",
+        "PROP_Cross_Cluster",
+        "PROP_Tea_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_WarmWindow",
+      "sources": [
+        "BLD_Block_05_enclosed_balconies",
+        "BLD_Tea_corner_tile_bands"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_WetAsphalt",
+      "sources": [
+        "GB_Road"
+      ]
+    },
+    {
+      "node": "BATCH_0_1_WetPaving",
+      "sources": [
+        "GB_Sidewalk"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_AgedConcreteTrim",
+      "sources": [
+        "BLD_Block_11_enclosed_balconies",
+        "BLD_Block_12_corner_tile_bands",
+        "BLD_Block_13_ochre_shop_house",
+        "BLD_Block_15_enclosed_balconies",
+        "BLD_Block_16_scalloped_veranda",
+        "BLD_Grocery_ochre_shop_house",
+        "RAMP_Grocery"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_AgedIvoryTiles",
+      "sources": [
+        "BLD_Block_11_enclosed_balconies",
+        "BLD_Block_12_corner_tile_bands",
+        "BLD_Block_13_ochre_shop_house",
+        "BLD_Block_15_enclosed_balconies",
+        "BLD_Block_16_scalloped_veranda",
+        "COVER_04_Van",
+        "INT_Grocery_Floor",
+        "SHOP_Grocery_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_AgedSeafoamTiles",
+      "sources": [
+        "BLD_Block_12_corner_tile_bands"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_AwningCream",
+      "sources": [
+        "BLD_Block_11_enclosed_balconies",
+        "BLD_Block_12_corner_tile_bands",
+        "BLD_Block_13_ochre_shop_house",
+        "BLD_Block_15_enclosed_balconies",
+        "COVER_05_North",
+        "COVER_09_Alley",
+        "INT_Grocery_Furniture",
+        "PROP_Grocery_Cluster",
+        "PROP_North_Cluster",
+        "SHOP_Grocery_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_AwningOxideRed",
+      "sources": [
+        "BLD_Block_13_ochre_shop_house",
+        "SHOP_Grocery_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_AwningPetrol",
+      "sources": [
+        "BLD_Block_11_enclosed_balconies",
+        "BLD_Block_12_corner_tile_bands",
+        "BLD_Block_15_enclosed_balconies"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_BottleAmber",
+      "sources": [
+        "INT_Grocery_Furniture"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_BottleGreen",
+      "sources": [
+        "INT_Grocery_Furniture",
+        "PROP_Grocery_Cluster",
+        "PROP_North_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_CeramicIvory",
+      "sources": [
+        "COVER_04_Van",
+        "INT_Grocery_Furniture",
+        "PROP_Grocery_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_DarkRecess",
+      "sources": [
+        "BLD_Block_11_enclosed_balconies",
+        "BLD_Block_12_corner_tile_bands",
+        "BLD_Block_13_ochre_shop_house",
+        "BLD_Block_15_enclosed_balconies",
+        "BLD_Block_16_scalloped_veranda",
+        "BLD_Grocery_ochre_shop_house",
+        "COVER_04_Van",
+        "INT_Grocery_Furniture",
+        "SHOP_Grocery_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_FluorescentWarmWhite",
+      "sources": [
+        "BLD_Block_11_enclosed_balconies",
+        "BLD_Block_12_corner_tile_bands",
+        "BLD_Block_13_ochre_shop_house",
+        "BLD_Block_15_enclosed_balconies",
+        "BLD_Block_16_scalloped_veranda",
+        "INT_Grocery_Furniture",
+        "SHOP_Grocery_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_FurnitureWood",
+      "sources": [
+        "BLD_Block_11_enclosed_balconies",
+        "BLD_Block_12_corner_tile_bands",
+        "BLD_Block_13_ochre_shop_house",
+        "BLD_Block_15_enclosed_balconies",
+        "BLD_Block_16_scalloped_veranda",
+        "COVER_12_GroceryShelf",
+        "INT_Grocery_Furniture"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_LC_brick",
+      "sources": [
+        "LC_Damage_06"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_LC_cloth",
+      "sources": [
+        "LC_Entrance_Grocery",
+        "LC_Refuse_4",
+        "LC_Refuse_6"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_LC_couplet-left",
+      "sources": [
+        "LC_Entrance_Grocery"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_LC_couplet-right",
+      "sources": [
+        "LC_Entrance_Grocery"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_LC_iron",
+      "sources": [
+        "LC_Damage_06",
+        "LC_Entrance_Grocery",
+        "LC_Refuse_4",
+        "LC_Refuse_6",
+        "LC_Rooftop_12"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_LC_plaster",
+      "sources": [
+        "LC_Damage_06",
+        "LC_Entrance_Grocery",
+        "LC_Rooftop_12"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_LC_trash",
+      "sources": [
+        "LC_Refuse_4",
+        "LC_Refuse_6"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_NeonCyan",
+      "sources": [
+        "SHOP_Grocery_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_OpaqueWindowGlass",
+      "sources": [
+        "BLD_Block_11_enclosed_balconies",
+        "BLD_Block_12_corner_tile_bands",
+        "BLD_Block_13_ochre_shop_house",
+        "BLD_Block_15_enclosed_balconies",
+        "BLD_Block_16_scalloped_veranda",
+        "BLD_Grocery_ochre_shop_house",
+        "COVER_04_Van"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_OxidizedMetal",
+      "sources": [
+        "BLD_Block_11_enclosed_balconies",
+        "BLD_Block_12_corner_tile_bands",
+        "BLD_Block_13_ochre_shop_house",
+        "BLD_Block_15_enclosed_balconies",
+        "BLD_Block_16_scalloped_veranda",
+        "BLD_Grocery_ochre_shop_house",
+        "COVER_04_Van",
+        "COVER_12_GroceryShelf",
+        "INT_Grocery_Furniture",
+        "PROP_Grocery_Cluster",
+        "PROP_North_Cluster",
+        "SHOP_Grocery_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_PaintBlue",
+      "sources": [
+        "BLD_Block_11_enclosed_balconies",
+        "BLD_Block_15_enclosed_balconies",
+        "COVER_04_Van"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_PaintOchre",
+      "sources": [
+        "BLD_Block_13_ochre_shop_house",
+        "BLD_Grocery_ochre_shop_house",
+        "COVER_04_Van"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_PeriodPrintAtlas",
+      "sources": [
+        "BLD_Block_11_enclosed_balconies",
+        "BLD_Block_12_corner_tile_bands",
+        "BLD_Block_13_ochre_shop_house",
+        "BLD_Block_15_enclosed_balconies",
+        "BLD_Block_16_scalloped_veranda",
+        "COVER_05_North",
+        "COVER_09_Alley",
+        "COVER_12_GroceryShelf",
+        "INT_Grocery_Furniture",
+        "PROP_Grocery_Cluster",
+        "PROP_North_Cluster",
+        "SHOP_Grocery_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_PlasterIvory",
+      "sources": [
+        "INT_Grocery_Walls"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_PlasticBlue",
+      "sources": [
+        "COVER_05_North",
+        "COVER_09_Alley",
+        "PROP_Grocery_Cluster",
+        "PROP_North_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_PlasticRed",
+      "sources": [
+        "COVER_05_North",
+        "COVER_09_Alley",
+        "INT_Grocery_Furniture",
+        "PROP_Grocery_Cluster",
+        "PROP_North_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_0_2_WarmWindow",
+      "sources": [
+        "BLD_Block_11_enclosed_balconies",
+        "BLD_Block_12_corner_tile_bands",
+        "BLD_Block_13_ochre_shop_house",
+        "BLD_Block_15_enclosed_balconies",
+        "BLD_Block_16_scalloped_veranda",
+        "BLD_Grocery_ochre_shop_house"
+      ]
+    },
+    {
+      "node": "BATCH_0_3_AgedConcreteTrim",
+      "sources": [
+        "GB_NorthEnd"
+      ]
+    },
+    {
+      "node": "BATCH_1_1_AgedConcreteTrim",
+      "sources": [
+        "GB_CrossEastEnd"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_AgedConcreteTrim",
+      "sources": [
+        "BLD_Block_14_brick_service_house",
+        "BLD_Block_17_ivory_pawn_house",
+        "BLD_Block_18_brick_service_house",
+        "BLD_Block_19_brick_service_house",
+        "BLD_Kitchen_brick_service_house",
+        "RAMP_Kitchen"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_AgedIvoryTiles",
+      "sources": [
+        "BLD_Block_14_brick_service_house",
+        "BLD_Block_17_ivory_pawn_house",
+        "BLD_Block_18_brick_service_house",
+        "BLD_Block_19_brick_service_house",
+        "INT_Kitchen_Floor",
+        "SHOP_Kitchen_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_AwningCream",
+      "sources": [
+        "INT_Kitchen_Furniture",
+        "PROP_Alley_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_BottleGreen",
+      "sources": [
+        "PROP_Alley_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_BrickBrown",
+      "sources": [
+        "BLD_Block_14_brick_service_house",
+        "BLD_Block_18_brick_service_house",
+        "BLD_Block_19_brick_service_house",
+        "BLD_Kitchen_brick_service_house",
+        "INT_Kitchen_Walls"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_CeramicIvory",
+      "sources": [
+        "INT_Kitchen_Furniture"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_DarkRecess",
+      "sources": [
+        "BLD_Block_14_brick_service_house",
+        "BLD_Block_17_ivory_pawn_house",
+        "BLD_Block_18_brick_service_house",
+        "BLD_Block_19_brick_service_house",
+        "BLD_Kitchen_brick_service_house",
+        "COVER_10_KitchenCounter",
+        "INT_Kitchen_Furniture",
+        "SHOP_Kitchen_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_FluorescentWarmWhite",
+      "sources": [
+        "BLD_Block_14_brick_service_house",
+        "BLD_Block_17_ivory_pawn_house",
+        "BLD_Block_18_brick_service_house",
+        "BLD_Block_19_brick_service_house",
+        "INT_Kitchen_Furniture",
+        "SHOP_Kitchen_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_FurnitureWood",
+      "sources": [
+        "BLD_Block_14_brick_service_house",
+        "BLD_Block_17_ivory_pawn_house",
+        "BLD_Block_18_brick_service_house",
+        "BLD_Block_19_brick_service_house",
+        "COVER_10_KitchenCounter",
+        "INT_Kitchen_Furniture"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_LC_brick",
+      "sources": [
+        "LC_Damage_07"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_LC_cloth",
+      "sources": [
+        "LC_Entrance_Kitchen",
+        "LC_Refuse_5"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_LC_couplet-left",
+      "sources": [
+        "LC_Entrance_Kitchen"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_LC_couplet-right",
+      "sources": [
+        "LC_Entrance_Kitchen"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_LC_iron",
+      "sources": [
+        "LC_Damage_07",
+        "LC_Entrance_Kitchen",
+        "LC_Refuse_5",
+        "LC_Rooftop_14",
+        "LC_Rooftop_18"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_LC_plaster",
+      "sources": [
+        "LC_Damage_07",
+        "LC_Entrance_Kitchen",
+        "LC_Rooftop_14",
+        "LC_Rooftop_18"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_LC_trash",
+      "sources": [
+        "LC_Refuse_5"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_OpaqueWindowGlass",
+      "sources": [
+        "BLD_Block_14_brick_service_house",
+        "BLD_Block_17_ivory_pawn_house",
+        "BLD_Block_18_brick_service_house",
+        "BLD_Block_19_brick_service_house",
+        "BLD_Kitchen_brick_service_house"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_OxidizedMetal",
+      "sources": [
+        "BLD_Block_14_brick_service_house",
+        "BLD_Block_17_ivory_pawn_house",
+        "BLD_Block_18_brick_service_house",
+        "BLD_Block_19_brick_service_house",
+        "BLD_Kitchen_brick_service_house",
+        "COVER_10_KitchenCounter",
+        "INT_Kitchen_Furniture",
+        "PROP_Alley_Cluster",
+        "SHOP_Kitchen_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_PaintBlue",
+      "sources": [
+        "INT_Kitchen_Furniture"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_PeriodPrintAtlas",
+      "sources": [
+        "BLD_Block_14_brick_service_house",
+        "BLD_Block_17_ivory_pawn_house",
+        "BLD_Block_18_brick_service_house",
+        "BLD_Block_19_brick_service_house",
+        "INT_Kitchen_Furniture",
+        "PROP_Alley_Cluster",
+        "SHOP_Kitchen_Frontage"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_PlasterIvory",
+      "sources": [
+        "BLD_Block_17_ivory_pawn_house"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_PlasticBlue",
+      "sources": [
+        "PROP_Alley_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_PlasticRed",
+      "sources": [
+        "PROP_Alley_Cluster"
+      ]
+    },
+    {
+      "node": "BATCH_1_2_WarmWindow",
+      "sources": [
+        "BLD_Block_14_brick_service_house",
+        "BLD_Block_17_ivory_pawn_house",
+        "BLD_Block_18_brick_service_house",
+        "BLD_Block_19_brick_service_house",
+        "BLD_Kitchen_brick_service_house"
+      ]
+    }
+  ],
+  "cells": [
+    "CELL_-1_0",
+    "CELL_-1_1",
+    "CELL_-1_2",
+    "CELL_0_-1",
+    "CELL_0_0",
+    "CELL_0_1",
+    "CELL_0_2",
+    "CELL_0_3",
+    "CELL_1_1",
+    "CELL_1_2"
+  ]
+}

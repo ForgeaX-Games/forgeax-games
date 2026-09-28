@@ -1,0 +1,220 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "lookout",
+        "lookout__LEG_L",
+        "lookout__LEG_R",
+        "lookout_lod__BODY"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "lookout-lod.glb",
+  "sourceOverrideDescriptors": [
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:lookout__LEG_L"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:lookout__LEG_R"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:lookout_lod__BODY"
+    }
+  ],
+  "sourceOverrides": {
+    "mesh:lookout__LEG_L": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08480-49e9-77cc-aaa9-b6430eef7bf8",
+          "slotName": "RA_CharacterCloth",
+          "sourceKey": "material:RA_CharacterCloth"
+        }
+      ]
+    },
+    "mesh:lookout__LEG_R": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08480-49e9-77cc-aaa9-b6430eef7bf8",
+          "slotName": "RA_CharacterCloth",
+          "sourceKey": "material:RA_CharacterCloth"
+        }
+      ]
+    },
+    "mesh:lookout_lod__BODY": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a08480-49e9-77cc-aaa9-b6430eef7bf8",
+          "slotName": "RA_CharacterCloth",
+          "sourceKey": "material:RA_CharacterCloth"
+        }
+      ]
+    }
+  },
+  "subAssets": [
+    {
+      "guid": "01a08480-49e8-753e-86d4-5f8c7531bd35",
+      "kind": "mesh",
+      "name": "lookout__LEG_L",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:lookout__LEG_L"
+    },
+    {
+      "guid": "01a08480-49e9-77cc-aaa9-b641171c2973",
+      "kind": "mesh",
+      "name": "lookout__LEG_R",
+      "sourceIndex": 1,
+      "sourceKey": "mesh:lookout__LEG_R"
+    },
+    {
+      "guid": "01a08480-49e9-77cc-aaa9-b6424f8f3ef8",
+      "kind": "mesh",
+      "name": "lookout_lod__BODY",
+      "sourceIndex": 2,
+      "sourceKey": "mesh:lookout_lod__BODY"
+    },
+    {
+      "guid": "01a08480-49e9-77cc-aaa9-b6430eef7bf8",
+      "kind": "material",
+      "name": "RA_CharacterCloth",
+      "sourceIndex": 0,
+      "sourceKey": "material:RA_CharacterCloth"
+    },
+    {
+      "guid": "01a08480-49e9-77cc-aaa9-b6441ffd34b6",
+      "kind": "scene",
+      "name": "Scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:Scene"
+    },
+    {
+      "guid": "01a08480-49e9-77cc-aaa9-b645e9af6271",
+      "kind": "texture",
+      "name": "RA_CharacterPalette",
+      "sourceIndex": 0,
+      "sourceKey": "texture:RA_CharacterPalette"
+    },
+    {
+      "guid": "01a08480-49e9-77cc-aaa9-b6463118caa5",
+      "kind": "sampler",
+      "sourceIndex": 0,
+      "sourceKey": "sampler"
+    }
+  ]
+}

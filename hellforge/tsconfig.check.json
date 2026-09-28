@@ -10,5 +10,6 @@
     "allowImportingTsExtensions": true,
     "noEmit": true
   },
-  "include": ["main.ts", "src/**/*.ts", "scripts/**/*.ts"]
+  "include": ["main.ts", "src/**/*.ts", "assets/plugin.ts"],
+  "exclude": ["src/**/*.test.ts"]
 }

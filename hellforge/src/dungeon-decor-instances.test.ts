@@ -48,7 +48,7 @@ const packPath = join(import.meta.dir, '..', 'assets', 'scenes', 'slagdeep-hollo
 const pack = JSON.parse(readFileSync(packPath, 'utf8')) as {
   assets: Array<{
     kind: string;
-    payload: { kind: string; entities?: Array<{
+    payload: { kind: string; entities?: Record<string, {
       localId: number;
       components: Record<string, { value?: unknown; assetHandle?: number; materials?: number[]; transforms?: number[] }>;
     }> };
@@ -57,7 +57,12 @@ const pack = JSON.parse(readFileSync(packPath, 'utf8')) as {
 };
 const scene = pack.assets.find((a) => a.kind === 'scene');
 if (!scene?.payload.entities) throw new Error('slagdeep pack: no scene entities');
-const ents = scene.payload.entities;
+// The matrix sidecar is the authored source for renderer-owned collections.
+const instanceMatrices = JSON.parse(readFileSync(join(import.meta.dir, '../assets/scenes/slagdeep.instances.json'), 'utf8')) as Record<string, number[]>;
+const ents = Object.entries(scene.payload.entities).map(([key, e]) => {
+  const matrices = instanceMatrices[String(e.components.Name?.value)];
+  return { ...e, localId: Number(key), components: { ...e.components, ...(matrices ? { Instances: { transforms: matrices } } : {}) } };
+});
 const refs = scene.refs ?? [];
 
 describe('decor never moves the grid (N4 #17A)', () => {

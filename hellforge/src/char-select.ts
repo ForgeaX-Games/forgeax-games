@@ -212,8 +212,8 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
   // overflow:hidden is the hard guard — copy never paints over the rim.
   const heroCard = document.createElement('div');
   heroCard.style.cssText = 'flex:none;' +
-    'height:300px;aspect-ratio:3/4;width:auto;box-sizing:border-box;' +
-    'padding:58px 26px 28px;overflow:hidden;' +
+    'height:320px;aspect-ratio:3/4;width:auto;box-sizing:border-box;' +
+    'padding:40px 24px 24px;overflow:hidden;' +
     'display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;' +
     `background:url('${HudArt.panelCharacter()}') center/100% 100% no-repeat;` +
     'box-shadow:0 6px 18px rgba(0,0,0,0.55);';
@@ -229,12 +229,12 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
   heroCopy.style.cssText = 'flex:1;min-width:0;display:flex;flex-direction:column;' +
     'align-items:center;gap:3px;';
   heroCopy.innerHTML =
-    `<div style="font:800 18px ${FONT_DISPLAY};letter-spacing:4px;color:#1a1208;` +
-    `text-shadow:0 1px 0 rgba(255,244,210,0.5)">${EMBERWALKER_DISPLAY_NAME}</div>` +
-    `<div style="font:700 12px ${FONT_DISPLAY};letter-spacing:3px;color:#3a2810">暗法师 · SORCERESS</div>` +
-    `<div style="font:500 13px ${FONT_UI};color:#2a1c10;line-height:1.45;margin-top:4px">${def.description}</div>` +
-    `<div style="font:500 12px ${FONT_UI};color:#3a2a14;line-height:1.45;margin-top:2px">` +
-    `<b style="color:#1a1208">${def.coreMechanic}</b> — ${def.coreMechanicDesc}</div>`;
+    `<div style="font:800 18px ${FONT_DISPLAY};letter-spacing:4px;color:${Ui.goldBright};` +
+    `text-shadow:0 2px 3px #000">${EMBERWALKER_DISPLAY_NAME}</div>` +
+    `<div style="font:700 11px ${FONT_DISPLAY};letter-spacing:2px;color:${Ui.gold}">暗法师 · SORCERESS</div>` +
+    `<div style="font:500 13px ${FONT_UI};color:${Ui.text};line-height:1.45;margin-top:4px">${def.description}</div>` +
+    `<div style="font:500 12px ${FONT_UI};color:${Ui.textMuted};line-height:1.45;margin-top:2px">` +
+    `<b style="color:${Ui.gold}">${def.coreMechanic}</b> — ${def.coreMechanicDesc}</div>`;
 
   heroCard.append(emblem, heroCopy);
 
@@ -276,13 +276,13 @@ export function installCharSelect(mount: HTMLElement, cb: CharSelectCallbacks): 
     const txt = document.createElement('div');
     txt.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:2px;';
     txt.innerHTML =
-      `<div style="font:800 11px/1.25 ${FONT_UI};letter-spacing:1px;color:#1a1208;white-space:nowrap">` +
+      `<div style="font:800 11px/1.25 ${FONT_UI};letter-spacing:1px;color:${Ui.goldBright};white-space:nowrap">` +
       `${c.nameCn}</div>` +
-      `<div style="font:700 9px/1.25 ${FONT_UI};letter-spacing:1px;color:#3a2810;white-space:nowrap">` +
+      `<div style="font:700 9px/1.25 ${FONT_UI};letter-spacing:1px;color:${Ui.text};white-space:nowrap">` +
       `${c.titleCn}</div>` +
-      `<div style="font:600 7px/1.2 ${FONT_DISPLAY};letter-spacing:0.5px;color:#5a4020;white-space:nowrap">` +
+      `<div style="font:600 7px/1.2 ${FONT_DISPLAY};letter-spacing:0.5px;color:${Ui.textMuted};white-space:nowrap">` +
       `${c.nameEn}</div>` +
-      `<div style="font:600 7px/1.2 ${FONT_DISPLAY};letter-spacing:0.5px;color:#5a4020;white-space:nowrap">` +
+      `<div style="font:600 7px/1.2 ${FONT_DISPLAY};letter-spacing:0.5px;color:${Ui.textMuted};white-space:nowrap">` +
       `${c.titleEn}</div>`;
 
     col.append(sig, txt);

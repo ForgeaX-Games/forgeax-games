@@ -14,21 +14,22 @@
 import {
   Transform,
   ChildOf,
-} from '@forgeax/engine-scene';
+} from '@forgeax/engine/scene';
 import {
   MeshFilter,
   MeshRenderer,
   Materials,
-} from '@forgeax/engine-render';
+} from '@forgeax/engine/render';
 import {
   quat,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine/runtime';
 import {
   type MaterialAsset,
-} from '@forgeax/engine-types';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
-import type { Handle } from '@forgeax/engine-types';
+} from '@forgeax/engine/types';
+import type { EntityHandle, World } from '@forgeax/engine/ecs';
+import type { Handle } from '@forgeax/engine/types';
 import { primitiveMesh } from './primitive-mesh';
+import { firstCombatBlock, type CombatWalkable } from './combat-occlusion';
 
 import type { ActiveSkillId, SkillNodeId } from './content-ids';
 import { isSkillAvailable } from './skill-availability';
@@ -668,7 +669,7 @@ export class SkillSystem {
     }
   }
 
-  tick(dt: number, monsters: MonsterManager): void {
+  tick(dt: number, monsters: MonsterManager, projectileWalkable: CombatWalkable = () => true): void {
     for (let i = 0; i < this.cooldowns.length; i++) {
       if (this.cooldowns[i]! > 0) this.cooldowns[i] = Math.max(0, this.cooldowns[i]! - dt);
     }
@@ -706,8 +707,17 @@ export class SkillSystem {
           p.dx = ndx;
         }
       }
-      p.x += p.dx * (r.projectileSpeed || 10) * dt;
-      p.z += p.dz * (r.projectileSpeed || 10) * dt;
+      const nextX = p.x + p.dx * (r.projectileSpeed || 10) * dt;
+      const nextZ = p.z + p.dz * (r.projectileSpeed || 10) * dt;
+      const wall = firstCombatBlock(p.x, p.z, nextX, nextZ, projectileWalkable);
+      if (wall) {
+        if (p.skillId === 'frost') this.fx.frostImpact(wall[0], p.y, wall[1], false);
+        else this.fx.playEffect(combatBeat(p.skillId === 'magma' ? 'hit-fire' : 'hit-arc', [p.skillId === 'magma' ? 'sparks' : 'arcs']), wall[0], p.y, wall[1]);
+        kill(p);
+        this.projectiles.splice(i, 1);
+        continue;
+      }
+      p.x = nextX; p.z = nextZ;
 
       let dead = false;
       for (const m of monsters.monsters) {
@@ -715,6 +725,7 @@ export class SkillSystem {
         const mdx = m.x - p.x, mdz = m.z - p.z;
         const hitR = MONSTERS[m.kind].radius + 0.35;
         if (mdx * mdx + mdz * mdz > hitR * hitR) continue;
+        if (firstCombatBlock(p.x, p.z, m.x, m.z, projectileWalkable)) continue;
         p.hits.add(m);
         // Winter's Grasp / Deep Freeze: check slow BEFORE this hit resolves.
         const wasSlowed = monsters.isSlowed(m);

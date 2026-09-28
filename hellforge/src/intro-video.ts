@@ -1,3 +1,4 @@
+import { gameAssetUrl } from './asset-urls';
 /**
  * Intro / PV boot gate (N1).
  *
@@ -44,7 +45,7 @@ export type IntroVideoHandle = {
 
 function resolveAssetUrl(relativeFromSrc: string): string | null {
   try {
-    return new URL(relativeFromSrc, import.meta.url).href;
+    return gameAssetUrl(relativeFromSrc);
   } catch {
     return null;
   }

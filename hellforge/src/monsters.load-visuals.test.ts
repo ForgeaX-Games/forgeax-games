@@ -17,10 +17,10 @@ import {
   Transform,
 } from '../tools/engine-test-mocks';
 
-// NOTE: '@forgeax/engine-pack/guid' must be mocked from THIS file — a mock
+// NOTE: '@forgeax/engine/pack/guid' must be mocked from THIS file — a mock
 // registered from the shared helper does not intercept this subpath specifier
 // (AssetGuid.parse would return the real 16-byte form and break guid equality).
-mock.module('@forgeax/engine-pack/guid', () => ({
+mock.module('@forgeax/engine/pack/guid', () => ({
   AssetGuid: {
     parse: (dash: string) =>
       /^[0-9a-f-]{36}$/i.test(dash)
@@ -56,6 +56,7 @@ function makeWorld() {
     },
     addComponent(e: number, entry: Comp) { live.get(e)?.set(entry.component, entry.data); },
     removeComponent(e: number, component: unknown) { live.get(e)?.delete(component); },
+    internSharedRef(_kind: string, value: unknown) { return value ?? {}; },
     allocSharedRef(_kind: string, value: unknown) { return value ?? {}; },
   };
 }

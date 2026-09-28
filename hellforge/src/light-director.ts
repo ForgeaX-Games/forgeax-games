@@ -60,6 +60,28 @@ export const AREA_EXPOSURE_MUL: Record<AreaKind, number> = {
   wild: 1.18,
 };
 
+/**
+ * Camp-only directional-key lift on top of the public F10 `sunMul`.
+ *
+ * A global exposure lift brightens the camp fire at the same time as the
+ * hero, route, and hut.  The camp key gives those midtones a local lift while
+ * keeping the den and wild key unchanged, and preserves the dusk grade.
+ */
+export const CAMP_DIRECTIONAL_MUL = 1.75;
+
+export function directionalMulForArea(area: AreaKind): number {
+  return area === 'camp' ? CAMP_DIRECTIONAL_MUL : 1;
+}
+
+/** Final directional intensity written to the world; F10 remains the user's multiplier. */
+export function directionalIntensityForArea(
+  area: AreaKind,
+  baseIntensity: number,
+  sunMul: number,
+): number {
+  return baseIntensity * sunMul * directionalMulForArea(area);
+}
+
 /** Den fixture SpotLight look — warm downward pools; castShadow false (no public caster pass). */
 export const DEN_FIXTURE_SPOT = {
   color: [1.0, 0.48, 0.16] as [number, number, number],

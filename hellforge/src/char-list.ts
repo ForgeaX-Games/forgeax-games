@@ -57,16 +57,16 @@ function shellPlateButton(
   });
   btn.addEventListener('mouseleave', () => {
     btn.style.backgroundImage = `url('${plate('idle')}')`;
-    btn.style.transform = '';
+    btn.style.scale = '';
   });
   btn.addEventListener('mousedown', () => {
     if (btn.disabled) return;
     btn.style.backgroundImage = `url('${plate('pressed')}')`;
-    btn.style.transform = 'scale(0.985)';
+    btn.style.scale = '0.985';
   });
   btn.addEventListener('mouseup', () => {
     btn.style.backgroundImage = `url('${plate('hover')}')`;
-    btn.style.transform = '';
+    btn.style.scale = '';
   });
   btn.addEventListener('click', () => {
     if (!btn.disabled) opts.onClick();
@@ -175,8 +175,8 @@ export function installCharList(mount: HTMLElement, cb: CharListCallbacks): Char
   header.style.cssText = 'text-align:center;padding:10px 0 12px;';
   const headerText = document.createElement('div');
   headerText.textContent = '选择角色';
-  headerText.style.cssText = `font:800 20px ${FONT_DISPLAY};letter-spacing:6px;color:${BTN_INK};` +
-    'text-shadow:0 1px 0 rgba(255,244,210,0.45);';
+  headerText.style.cssText = `font:800 20px ${FONT_DISPLAY};letter-spacing:6px;color:${Ui.goldBright};` +
+    'text-shadow:0 2px 3px #000;';
   const headerLine = document.createElement('div');
   headerLine.style.cssText = `margin-top:10px;height:1px;background:linear-gradient(90deg,transparent,${Ui.goldDeep},${Ui.goldDim},${Ui.goldDeep},transparent);`;
   header.append(headerText, headerLine);

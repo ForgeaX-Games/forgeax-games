@@ -1,0 +1,587 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "m16__BODY",
+        "m16__BOLT",
+        "m16__COLLIDER_WORLD",
+        "m16__GRIP_L",
+        "m16__GRIP_R",
+        "m16__HAND_L",
+        "m16__HAND_R",
+        "m16__MAGAZINE",
+        "m16__MUZZLE",
+        "m16__TRIGGER",
+        "m16"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "m16.glb",
+  "sourceOverrideDescriptors": [
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Receiver.004"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Cube.008"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Sphere.012"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Sphere.013"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Box magazine.004"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Cylinder.007"
+    }
+  ],
+  "sourceOverrides": {
+    "mesh:Box magazine.004": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5ce811c3af59",
+          "slotName": "RA_BluedSteel",
+          "sourceKey": "material:RA_BluedSteel"
+        },
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5ceb7f78d0bf",
+          "slotName": "RA_WornEdges",
+          "sourceKey": "material:RA_WornEdges"
+        }
+      ]
+    },
+    "mesh:Cube.008": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5ceb7f78d0bf",
+          "slotName": "RA_WornEdges",
+          "sourceKey": "material:RA_WornEdges"
+        },
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5ce811c3af59",
+          "slotName": "RA_BluedSteel",
+          "sourceKey": "material:RA_BluedSteel"
+        }
+      ]
+    },
+    "mesh:Cylinder.007": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5ceb7f78d0bf",
+          "slotName": "RA_WornEdges",
+          "sourceKey": "material:RA_WornEdges"
+        }
+      ]
+    },
+    "mesh:Receiver.004": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5ce811c3af59",
+          "slotName": "RA_BluedSteel",
+          "sourceKey": "material:RA_BluedSteel"
+        },
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5ce9d80021a8",
+          "slotName": "RA_MouldedRubber",
+          "sourceKey": "material:RA_MouldedRubber"
+        },
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5cea321597a7",
+          "slotName": "RA_SightPaint",
+          "sourceKey": "material:RA_SightPaint"
+        },
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5ceb7f78d0bf",
+          "slotName": "RA_WornEdges",
+          "sourceKey": "material:RA_WornEdges"
+        }
+      ]
+    },
+    "mesh:Sphere.012": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5cecae6ebe93",
+          "slotName": "RA_Skin",
+          "sourceKey": "material:RA_Skin"
+        },
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5cedbf47967b",
+          "slotName": "RA_Leather",
+          "sourceKey": "material:RA_Leather"
+        },
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5ce9d80021a8",
+          "slotName": "RA_MouldedRubber",
+          "sourceKey": "material:RA_MouldedRubber"
+        }
+      ]
+    },
+    "mesh:Sphere.013": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5cecae6ebe93",
+          "slotName": "RA_Skin",
+          "sourceKey": "material:RA_Skin"
+        },
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5cedbf47967b",
+          "slotName": "RA_Leather",
+          "sourceKey": "material:RA_Leather"
+        },
+        {
+          "defaultMaterialGuid": "01a07f02-af54-7eab-aa95-5ce9d80021a8",
+          "slotName": "RA_MouldedRubber",
+          "sourceKey": "material:RA_MouldedRubber"
+        }
+      ]
+    }
+  },
+  "subAssets": [
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5ce27d9cb639",
+      "kind": "mesh",
+      "name": "Receiver.004",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:Receiver.004"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5ce3354d4456",
+      "kind": "mesh",
+      "name": "Cube.008",
+      "sourceIndex": 1,
+      "sourceKey": "mesh:Cube.008"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5ce41cd5ead5",
+      "kind": "mesh",
+      "name": "Sphere.012",
+      "sourceIndex": 2,
+      "sourceKey": "mesh:Sphere.012"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5ce5d5907e37",
+      "kind": "mesh",
+      "name": "Sphere.013",
+      "sourceIndex": 3,
+      "sourceKey": "mesh:Sphere.013"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5ce6755d45f6",
+      "kind": "mesh",
+      "name": "Box magazine.004",
+      "sourceIndex": 4,
+      "sourceKey": "mesh:Box magazine.004"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5ce7fc1b399b",
+      "kind": "mesh",
+      "name": "Cylinder.007",
+      "sourceIndex": 5,
+      "sourceKey": "mesh:Cylinder.007"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5ce811c3af59",
+      "kind": "material",
+      "name": "RA_BluedSteel",
+      "sourceIndex": 0,
+      "sourceKey": "material:RA_BluedSteel"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5ce9d80021a8",
+      "kind": "material",
+      "name": "RA_MouldedRubber",
+      "sourceIndex": 1,
+      "sourceKey": "material:RA_MouldedRubber"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5cea321597a7",
+      "kind": "material",
+      "name": "RA_SightPaint",
+      "sourceIndex": 2,
+      "sourceKey": "material:RA_SightPaint"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5ceb7f78d0bf",
+      "kind": "material",
+      "name": "RA_WornEdges",
+      "sourceIndex": 3,
+      "sourceKey": "material:RA_WornEdges"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5cecae6ebe93",
+      "kind": "material",
+      "name": "RA_Skin",
+      "sourceIndex": 4,
+      "sourceKey": "material:RA_Skin"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5cedbf47967b",
+      "kind": "material",
+      "name": "RA_Leather",
+      "sourceIndex": 5,
+      "sourceKey": "material:RA_Leather"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5cee987b222a",
+      "kind": "scene",
+      "name": "RainAlleyArsenal_20260908_v2",
+      "sourceIndex": 0,
+      "sourceKey": "scene:RainAlleyArsenal_20260908_v2"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5cefa05b657f",
+      "kind": "texture",
+      "name": "RA_BluedSteel_Color",
+      "sourceIndex": 0,
+      "sourceKey": "texture:RA_BluedSteel_Color"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5cf0ba322906",
+      "kind": "texture",
+      "name": "RA_Leather_Color",
+      "sourceIndex": 1,
+      "sourceKey": "texture:RA_Leather_Color"
+    },
+    {
+      "guid": "01a07f7b-b2dc-7c62-882c-8b9598b9cd4d",
+      "kind": "texture",
+      "name": "Storm_steel_base",
+      "sourceIndex": 2,
+      "sourceKey": "texture:Storm_steel_base"
+    },
+    {
+      "guid": "01a07f7b-b2dd-7292-b5ea-95a8e2278c70",
+      "kind": "texture",
+      "name": "Storm_steel_normal",
+      "sourceIndex": 3,
+      "sourceKey": "texture:Storm_steel_normal"
+    },
+    {
+      "guid": "01a07f7b-b2dd-7292-b5ea-95a9e84b1e0b",
+      "kind": "texture",
+      "name": "Storm_steel_orm",
+      "sourceIndex": 4,
+      "sourceKey": "texture:Storm_steel_orm"
+    },
+    {
+      "guid": "01a07f7b-b2dd-7292-b5ea-95aaa1bc6a17",
+      "kind": "texture",
+      "name": "Storm_rubber_base",
+      "sourceIndex": 5,
+      "sourceKey": "texture:Storm_rubber_base"
+    },
+    {
+      "guid": "01a07f7b-b2dd-7292-b5ea-95ab1aea8dc5",
+      "kind": "texture",
+      "name": "Storm_rubber_normal",
+      "sourceIndex": 6,
+      "sourceKey": "texture:Storm_rubber_normal"
+    },
+    {
+      "guid": "01a07f7b-b2dd-7292-b5ea-95ac401d287f",
+      "kind": "texture",
+      "name": "Storm_rubber_orm",
+      "sourceIndex": 7,
+      "sourceKey": "texture:Storm_rubber_orm"
+    },
+    {
+      "guid": "01a07f7b-b2dd-7292-b5ea-95adaa767ec5",
+      "kind": "texture",
+      "name": "Storm_paint_base",
+      "sourceIndex": 8,
+      "sourceKey": "texture:Storm_paint_base"
+    },
+    {
+      "guid": "01a07f7b-b2dd-7292-b5ea-95aedd6f2da2",
+      "kind": "texture",
+      "name": "Storm_paint_normal",
+      "sourceIndex": 9,
+      "sourceKey": "texture:Storm_paint_normal"
+    },
+    {
+      "guid": "01a07f7b-b2dd-7292-b5ea-95af50dd89d5",
+      "kind": "texture",
+      "name": "Storm_paint_orm",
+      "sourceIndex": 10,
+      "sourceKey": "texture:Storm_paint_orm"
+    },
+    {
+      "guid": "01a07f7b-b2dd-7292-b5ea-95b05f6a1799",
+      "kind": "texture",
+      "name": "Storm_skin_base",
+      "sourceIndex": 11,
+      "sourceKey": "texture:Storm_skin_base"
+    },
+    {
+      "guid": "01a07f7b-b2dd-7292-b5ea-95b10c8e13c7",
+      "kind": "texture",
+      "name": "Storm_skin_normal",
+      "sourceIndex": 12,
+      "sourceKey": "texture:Storm_skin_normal"
+    },
+    {
+      "guid": "01a07f7b-b2dd-7292-b5ea-95b24aa6778f",
+      "kind": "texture",
+      "name": "Storm_skin_orm",
+      "sourceIndex": 13,
+      "sourceKey": "texture:Storm_skin_orm"
+    },
+    {
+      "guid": "01a07f7b-b2dd-7292-b5ea-95b3f288b331",
+      "kind": "texture",
+      "name": "Storm_leather_base",
+      "sourceIndex": 14,
+      "sourceKey": "texture:Storm_leather_base"
+    },
+    {
+      "guid": "01a07f7b-b2dd-7292-b5ea-95b49da081aa",
+      "kind": "texture",
+      "name": "Storm_leather_normal",
+      "sourceIndex": 15,
+      "sourceKey": "texture:Storm_leather_normal"
+    },
+    {
+      "guid": "01a07f7b-b2dd-7292-b5ea-95b5978fd0f4",
+      "kind": "texture",
+      "name": "Storm_leather_orm",
+      "sourceIndex": 16,
+      "sourceKey": "texture:Storm_leather_orm"
+    },
+    {
+      "guid": "01a07f02-af54-7eab-aa95-5cf1a1d707bd",
+      "kind": "sampler",
+      "sourceIndex": 0,
+      "sourceKey": "sampler"
+    }
+  ]
+}

@@ -11,7 +11,7 @@
 // Union of what the current consumers need:
 //   hero-preview.race.test.ts / monsters.load-visuals.test.ts / fx/sprite.test.ts
 //
-// CAVEAT: subpath specifiers like '@forgeax/engine-pack/guid' do NOT reliably
+// CAVEAT: subpath specifiers like '@forgeax/engine/pack/guid' do NOT reliably
 // intercept when mocked from this shared module (the consumer's import then
 // binds the REAL module — observed: AssetGuid.parse returning 16-byte form).
 // Mock such subpath imports LOCALLY in the consuming test file.
@@ -59,9 +59,9 @@ export const AssetGuid = {
 
 export const unwrapHandle = (h: unknown) => h;
 
-mock.module('@forgeax/engine-animation', () => ({ AnimationPlayer, AnimationTargetId, bindAnimationTargets }));
+mock.module('@forgeax/engine/animation', () => ({ AnimationPlayer, AnimationTargetId, bindAnimationTargets }));
 
-mock.module('@forgeax/engine-render', () => ({
+mock.module('@forgeax/engine/render', () => ({
   Camera,
   DirectionalLight,
   Materials,
@@ -72,20 +72,20 @@ mock.module('@forgeax/engine-render', () => ({
   perspective,
 }));
 
-mock.module('@forgeax/engine-scene', () => ({ ChildOf, Name, Transform }));
+mock.module('@forgeax/engine/scene', () => ({ ChildOf, Name, Transform }));
 
-mock.module('@forgeax/engine-skinning', () => ({ Skin }));
+mock.module('@forgeax/engine/skinning', () => ({ Skin }));
 
-mock.module('@forgeax/engine-runtime', () => ({ quat }));
+mock.module('@forgeax/engine/runtime', () => ({ quat }));
 
-mock.module('@forgeax/engine-pack/guid', () => ({ AssetGuid }));
+mock.module('@forgeax/engine/pack/guid', () => ({ AssetGuid }));
 
-mock.module('@forgeax/engine-assets-runtime', () => ({
+mock.module('@forgeax/engine/assets-runtime', () => ({
   HANDLE_CUBE,
   HANDLE_SPHERE,
   HANDLE_QUAD,
 }));
-// NOTE: no mock.module for '@forgeax/engine-types' — the real module must
+// NOTE: no mock.module for '@forgeax/engine/types' — the real module must
 // flow through (engine-ecs / engine-pack dist import err/ok/toShared/... from
 // it; a hand-rolled mock broke module linking with "export 'err' not found").
 // The real unwrapHandle is a runtime passthrough, identical to the old mock.

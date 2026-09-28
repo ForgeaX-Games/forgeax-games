@@ -3,3 +3,14 @@ assets/*.hdr.*.bin
 assets/*.hdr.*.bin.dims.json
 assets/**/*.hdr.*.bin
 assets/**/*.hdr.*.bin.dims.json
+
+# SDK generated caches and build outputs.
+.forgeax/
+.forgeax-debug/
+dist/
+release/
+artifacts/
+# Local browser evidence is linked from migration reports, not shipped assets.
+output/playwright/
+# Standalone builds need a reproducible default launch configuration.
+!play-config.json

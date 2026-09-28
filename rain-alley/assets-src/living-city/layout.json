@@ -1,0 +1,811 @@
+{
+  "heightOverrides": {
+    "01": 6.4,
+    "02": 10.9,
+    "03": 6.8,
+    "04": 11.6,
+    "06": 7.4,
+    "07": 8.1,
+    "08": 6.2,
+    "09": 7.0,
+    "11": 8.3,
+    "12": 6.6,
+    "13": 7.2,
+    "14": 5.6,
+    "15": 9.1,
+    "17": 7.1,
+    "18": 5.3,
+    "19": 10.8,
+    "20": 6.0
+  },
+  "heights": [
+    {
+      "name": "BLD_Block_01_ivory_pawn_house",
+      "old": 9.399999618530273,
+      "height": 6.4
+    },
+    {
+      "name": "BLD_Block_02_enclosed_balconies",
+      "old": 10.199999809265137,
+      "height": 10.9
+    },
+    {
+      "name": "BLD_Block_03_ochre_shop_house",
+      "old": 8.800000190734863,
+      "height": 6.8
+    },
+    {
+      "name": "BLD_Block_04_scalloped_veranda",
+      "old": 10.5,
+      "height": 11.6
+    },
+    {
+      "name": "BLD_Block_06_ivory_pawn_house",
+      "old": 9.800000190734863,
+      "height": 7.4
+    },
+    {
+      "name": "BLD_Block_07_brick_service_house",
+      "old": 10.399999618530273,
+      "height": 8.1
+    },
+    {
+      "name": "BLD_Block_08_ochre_shop_house",
+      "old": 8.899999618530273,
+      "height": 6.2
+    },
+    {
+      "name": "BLD_Block_09_ivory_pawn_house",
+      "old": 9.600000381469727,
+      "height": 7.0
+    },
+    {
+      "name": "BLD_Block_11_enclosed_balconies",
+      "old": 10.600000381469727,
+      "height": 8.3
+    },
+    {
+      "name": "BLD_Block_12_corner_tile_bands",
+      "old": 9.199999809265137,
+      "height": 6.6
+    },
+    {
+      "name": "BLD_Block_13_ochre_shop_house",
+      "old": 9.800000190734863,
+      "height": 7.2
+    },
+    {
+      "name": "BLD_Block_14_brick_service_house",
+      "old": 9.800000190734863,
+      "height": 5.6
+    },
+    {
+      "name": "BLD_Block_15_enclosed_balconies",
+      "old": 10.5,
+      "height": 9.1
+    },
+    {
+      "name": "BLD_Block_17_ivory_pawn_house",
+      "old": 9.600000381469727,
+      "height": 7.1
+    },
+    {
+      "name": "BLD_Block_18_brick_service_house",
+      "old": 8.600000381469727,
+      "height": 5.3
+    },
+    {
+      "name": "BLD_Block_19_brick_service_house",
+      "old": 9.399999618530273,
+      "height": 10.8
+    },
+    {
+      "name": "BLD_Block_20_ivory_pawn_house",
+      "old": 8.600000381469727,
+      "height": 6.0
+    }
+  ],
+  "colliders": [
+    {
+      "name": "LC_APPROACH_1.4",
+      "center": [
+        2.25,
+        0.09,
+        -1.4
+      ],
+      "size": [
+        1.5,
+        0.18,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_APPROACH_1.7",
+      "center": [
+        2.25,
+        0.175,
+        -1.7
+      ],
+      "size": [
+        1.5,
+        0.35,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_APPROACH_18.3",
+      "center": [
+        2.25,
+        0.175,
+        -18.3
+      ],
+      "size": [
+        1.5,
+        0.35,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_APPROACH_18.6",
+      "center": [
+        2.25,
+        0.09,
+        -18.6
+      ],
+      "size": [
+        1.5,
+        0.18,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_0",
+      "center": [
+        2.25,
+        0.425,
+        -2.15
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_1",
+      "center": [
+        2.25,
+        0.575,
+        -2.45
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_2",
+      "center": [
+        2.25,
+        0.725,
+        -2.75
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_3",
+      "center": [
+        2.25,
+        0.875,
+        -3.05
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_4",
+      "center": [
+        2.25,
+        1.0250000000000001,
+        -3.3499999999999996
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_5",
+      "center": [
+        2.25,
+        1.175,
+        -3.65
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_6",
+      "center": [
+        2.25,
+        1.325,
+        -3.95
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_7",
+      "center": [
+        2.25,
+        1.4749999999999999,
+        -4.25
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_8",
+      "center": [
+        2.25,
+        1.6249999999999998,
+        -4.55
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_9",
+      "center": [
+        2.25,
+        1.7750000000000001,
+        -4.85
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_10",
+      "center": [
+        2.25,
+        1.925,
+        -5.15
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_11",
+      "center": [
+        2.25,
+        2.0749999999999997,
+        -5.449999999999999
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_12",
+      "center": [
+        2.25,
+        2.2249999999999996,
+        -5.75
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_13",
+      "center": [
+        2.25,
+        2.375,
+        -6.05
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_14",
+      "center": [
+        2.25,
+        2.525,
+        -6.35
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_15",
+      "center": [
+        2.25,
+        2.675,
+        -6.6499999999999995
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_16",
+      "center": [
+        2.25,
+        2.8249999999999997,
+        -6.95
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_17",
+      "center": [
+        2.25,
+        2.9749999999999996,
+        -7.25
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_18",
+      "center": [
+        2.25,
+        3.125,
+        -7.55
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_0_19",
+      "center": [
+        2.25,
+        3.275,
+        -7.85
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_0",
+      "center": [
+        2.25,
+        3.275,
+        -12.15
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_1",
+      "center": [
+        2.25,
+        3.125,
+        -12.45
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_2",
+      "center": [
+        2.25,
+        2.975,
+        -12.75
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_3",
+      "center": [
+        2.25,
+        2.825,
+        -13.05
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_4",
+      "center": [
+        2.25,
+        2.675,
+        -13.35
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_5",
+      "center": [
+        2.25,
+        2.525,
+        -13.65
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_6",
+      "center": [
+        2.25,
+        2.375,
+        -13.95
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_7",
+      "center": [
+        2.25,
+        2.2249999999999996,
+        -14.25
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_8",
+      "center": [
+        2.25,
+        2.075,
+        -14.55
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_9",
+      "center": [
+        2.25,
+        1.925,
+        -14.85
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_10",
+      "center": [
+        2.25,
+        1.7750000000000001,
+        -15.15
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_11",
+      "center": [
+        2.25,
+        1.6250000000000002,
+        -15.45
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_12",
+      "center": [
+        2.25,
+        1.4750000000000003,
+        -15.75
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_13",
+      "center": [
+        2.25,
+        1.3250000000000002,
+        -16.05
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_14",
+      "center": [
+        2.25,
+        1.175,
+        -16.35
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_15",
+      "center": [
+        2.25,
+        1.0250000000000001,
+        -16.65
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_16",
+      "center": [
+        2.25,
+        0.8750000000000002,
+        -16.95
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_17",
+      "center": [
+        2.25,
+        0.7250000000000003,
+        -17.25
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_18",
+      "center": [
+        2.25,
+        0.5750000000000004,
+        -17.55
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_STEP_1_19",
+      "center": [
+        2.25,
+        0.425,
+        -17.85
+      ],
+      "size": [
+        1.5,
+        0.15,
+        0.3
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_GALLERY",
+      "center": [
+        2.25,
+        3.26,
+        -10
+      ],
+      "size": [
+        1.5,
+        0.18,
+        4
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_RAIL_A",
+      "center": [
+        1.48,
+        3.85,
+        -8.55
+      ],
+      "size": [
+        0.08,
+        1,
+        1.1
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_RAIL_B",
+      "center": [
+        1.48,
+        3.85,
+        -11.5
+      ],
+      "size": [
+        0.08,
+        1,
+        1
+      ],
+      "blocksSight": true
+    },
+    {
+      "name": "LC_RAIL_OUT",
+      "center": [
+        3.02,
+        3.85,
+        -10
+      ],
+      "size": [
+        0.08,
+        1,
+        4
+      ],
+      "blocksSight": true
+    }
+  ],
+  "gallery": {
+    "entry": [
+      2.25,
+      0.9,
+      -1.6
+    ],
+    "top": [
+      2.25,
+      4.2,
+      -10
+    ],
+    "exit": [
+      2.25,
+      0.9,
+      -18.5
+    ]
+  },
+  "ladder": {
+    "bottom": [
+      1.0,
+      0.9,
+      -10
+    ],
+    "top": [
+      2.25,
+      4.2,
+      -10
+    ]
+  }
+}

@@ -1,9 +1,9 @@
 import {
   createPrimitiveMesh,
   type PrimitiveMeshKind,
-} from '@forgeax/engine-geometry';
-import type { World } from '@forgeax/engine-ecs';
-import type { Handle } from '@forgeax/engine-types';
+} from '@forgeax/engine/geometry';
+import type { World } from '@forgeax/engine/ecs';
+import type { Handle } from '@forgeax/engine/types';
 
 type MeshHandle = Handle<'MeshAsset', 'shared'>;
 

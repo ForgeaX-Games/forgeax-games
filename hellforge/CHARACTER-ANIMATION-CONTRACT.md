@@ -1,3 +1,7 @@
+<!-- context-audit:2026-09-10 -->
+> 文档核对：2026-09-10。按源码使用的参考文档；文中的验收结果仅适用于其记录的版本和日期。
+> 接手先读 [当前状态与入口](CURRENT.md)；[整理前原文](docs/archive/pre-management/CHARACTER-ANIMATION-CONTRACT.md) 保留来源与原始内容。
+
 # Hellforge 角色动作交付契约(7-clip)
 
 > 你新生成一个主角时,按这份交付。Hellforge 的主角用

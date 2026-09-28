@@ -1,6 +1,11 @@
 #define_import_path hellforge_source::move_click
 
+#pragma variant_axis STORAGE_BUFFER_AVAILABLE
+#pragma variant_axis COVERAGE_ONLY
+
 #import forgeax_view::common::{view, meshes}
+#import forgeax_scene_temporal::{packSceneTemporalV1WithValidity}
+#import forgeax_material::parameters::{material}
 
 // move-click.wgsl — Hellforge move-command cue.
 // Four inward forged-iron chevrons with ember / magma glow (matches HUD gold+crimson).
@@ -11,13 +16,6 @@
 //   metallic  (f32)  — TIME in seconds
 //   roughness (f32)  — INTENSITY / fade
 
-struct MoveClickUniforms {
-  baseColor : vec4<f32>,
-  time      : f32,
-  intensity : f32,
-};
-
-@group(1) @binding(0) var<uniform> u : MoveClickUniforms;
 
 struct VsIn {
   @location(0) pos    : vec3<f32>,
@@ -27,13 +25,23 @@ struct VsIn {
 struct VsOut {
   @builtin(position) clip : vec4<f32>,
   @location(0) localXZ    : vec2<f32>,
+  @location(2) currentClip : vec4<f32>,
+  @location(3) previousClip : vec4<f32>,
+  @location(4) @interpolate(flat) motionValid : f32,
 };
 
-@vertex
-fn vs_main(in : VsIn, @builtin(instance_index) idx : u32) -> VsOut {
+fn fxVertex(in : VsIn, idx : u32) -> VsOut {
   let world = meshes[idx].worldFromLocal * vec4<f32>(in.pos, 1.0);
   var out : VsOut;
   out.clip = view.worldViewProj * world;
+  out.currentClip = view.temporalCurrentViewProj * world;
+#if STORAGE_BUFFER_AVAILABLE == true
+  out.previousClip = view.temporalPreviousViewProj * meshes[idx].previousWorldFromLocal * vec4<f32>(in.pos, 1.0);
+  out.motionValid = meshes[idx].temporal.y;
+#else
+  out.previousClip = out.currentClip;
+  out.motionValid = 0.0;
+#endif
   out.localXZ = in.pos.xz;
   return out;
 }
@@ -68,8 +76,7 @@ fn chevronPointingRight(p: vec2<f32>) -> f32 {
   return max(max(max(upper, lower), tip), spine);
 }
 
-@fragment
-fn fs_main(in : VsOut) -> @location(0) vec4<f32> {
+fn shadeFx(in : VsOut) -> vec4<f32> {
   let p = in.localXZ;
   let r = length(p);
   if (r > 0.48) { return vec4<f32>(0.0); }
@@ -85,19 +92,48 @@ fn fs_main(in : VsOut) -> @location(0) vec4<f32> {
   // Magma / ember: deep crimson core → hot orange → gold highlight.
   let cell = floor(p * 28.0);
   let crack = hash21(cell);
-  let emberFlow = 0.55 + 0.45 * sin(u.time * 5.5 + crack * 6.28 + r * 10.0);
+  let emberFlow = 0.55 + 0.45 * sin(material.metallic * 5.5 + crack * 6.28 + r * 10.0);
   let hot = smoothstep(0.35, 0.95, mask) * emberFlow;
   let cool = mask * (1.0 - hot * 0.35);
 
   let cDeep  = vec3<f32>(0.35, 0.04, 0.01);   // cooled slag
   let cLava  = vec3<f32>(0.95, 0.22, 0.04);   // magma
   let cGold  = vec3<f32>(1.0, 0.72, 0.22);    // HUD gold spark
-  let tint = u.baseColor.rgb;
+  let tint = material.baseColor.rgb;
   var rgb = mix(cDeep, cLava * tint, cool);
   rgb = mix(rgb, cGold, hot * 0.55);
 
   // Soft pulse — forge glow, not neon strobe.
-  let pulse = 0.88 + 0.12 * sin(u.time * 3.6);
-  let amp = min(mask * pulse * u.intensity, 0.88);
+  let pulse = 0.88 + 0.12 * sin(material.metallic * 3.6);
+  let amp = min(mask * pulse * material.roughness, 0.88);
   return vec4<f32>(rgb * (0.55 + amp * 0.7), amp * 0.8);
+}
+
+// Both passes use identical geometry and animated alpha. Fully reactive FX
+// reject stale flipbook/noise history while retaining genuine object/camera motion.
+@vertex
+fn vs_main(in : VsIn, @builtin(instance_index) idx : u32) -> VsOut {
+  return fxVertex(in, idx);
+}
+
+@vertex
+fn vs_temporal(in : VsIn, @builtin(instance_index) idx : u32) -> VsOut {
+  return fxVertex(in, idx);
+}
+
+@fragment
+fn fs_main(in : VsOut) -> @location(0) vec4<f32> {
+  return shadeFx(in);
+}
+
+@fragment
+fn fs_temporal(in : VsOut) -> @location(0) vec4<f32> {
+  if (shadeFx(in).a <= 0.0) { discard; }
+#ifdef COVERAGE_ONLY
+  return vec4<f32>(1.0);
+#else
+  return packSceneTemporalV1WithValidity(
+    in.currentClip, in.previousClip, view.temporalProjection, 1.0, in.motionValid >= 0.5,
+  );
+#endif
 }

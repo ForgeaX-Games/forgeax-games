@@ -3,12 +3,12 @@
 // checkerboard into RGB). Panel/slot plates remain alpha WebP.
 // Raw 2K masters live under assets/ui/hud/{t1,t2,t3}/ (local only).
 
-const HUD_ART_BASE = new URL('../assets/ui/hud/ship/', import.meta.url).href.replace(/\/?$/, '/');
+import { gameAssetUrl } from './asset-urls';
 /** Bump when ship cutouts change so browsers drop stale opaque WebP/PNG. */
 const HUD_ART_REV = 'v7';
 
 export function hudArtUrl(file: string): string {
-  return `${HUD_ART_BASE}${file}?${HUD_ART_REV}`;
+  return `${gameAssetUrl('assets/ui/hud/ship/' + file)}?${HUD_ART_REV}`;
 }
 
 export const HudArt = {

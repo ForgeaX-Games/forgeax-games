@@ -1,3 +1,7 @@
+<!-- context-audit:2026-09-10 -->
+> 文档核对：2026-09-10。设计/规划参考；不作为当前实现或验收完成的证明。
+> 接手先读 [当前状态与入口](../CURRENT.md)；[整理前原文](../docs/archive/pre-management/scripts/PLAN-scene-assets-integration.md) 保留来源与原始内容。
+
 # hellforge 场景资产接入 PLAN(阶段 2/3)
 
 > 2026-07-04 调研产出。阶段 1(生成 25 GLB)进行中;本文档记录阶段 2/3 的

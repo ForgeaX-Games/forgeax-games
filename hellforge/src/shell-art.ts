@@ -2,12 +2,12 @@
 // SSOT checklist: docs/handoff/2026-08-02-hellforge-shell-ui-art-asset-checklist.md
 // Files live under assets/ui/shell/; bump SHELL_ART_REV when cutouts change.
 
-const SHELL_ART_BASE = new URL('../assets/ui/shell/', import.meta.url).href.replace(/\/?$/, '/');
+import { gameAssetUrl } from './asset-urls';
 /** Bump when shell plates change so browsers drop stale WebP. */
 export const SHELL_ART_REV = 'v2';
 
 export function shellArtUrl(file: string): string {
-  return `${SHELL_ART_BASE}${file}?${SHELL_ART_REV}`;
+  return `${gameAssetUrl('assets/ui/shell/' + file)}?${SHELL_ART_REV}`;
 }
 
 export const ShellArt = {

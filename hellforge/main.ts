@@ -29,7 +29,7 @@
 
 import {
   AnimationPlayer,
-} from '@forgeax/engine-animation';
+} from '@forgeax/engine/animation';
 import {
   Camera,
   DirectionalLight,
@@ -43,29 +43,31 @@ import {
   SKYBOX_MODE_CUBEMAP,
   SpotLight,
   perspective,
-} from '@forgeax/engine-render';
+} from '@forgeax/engine/render';
 import {
   Name,
   Transform,
-} from '@forgeax/engine-scene';
+} from '@forgeax/engine/scene';
 import { armSkinnedAnimationPlayer, collectRootJointTargetIds } from './src/bind-skinned-animation';
 import {
   quat,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine/runtime';
 import {
   type MaterialAsset,
-} from '@forgeax/engine-types';
-import { AssetGuid } from '@forgeax/engine-pack/guid';
+} from '@forgeax/engine/types';
+import { AssetGuid } from '@forgeax/engine/pack/guid';
 import {
   ENTITY_NULL_RAW,
   Time,
   Update,
   type EntityHandle,
   type World,
-} from '@forgeax/engine-ecs';
-import type { BootstrapContext } from '@forgeax/engine-app';
-import type { AnimationClip, EquirectAsset, Handle, MeshAsset, SceneAsset } from '@forgeax/engine-types';
+} from '@forgeax/engine/ecs';
+import type { HellforgeHost as BootstrapContext } from './src/game-host';
+import { requireBrowserCanvas, requireGameRenderer } from './src/game-host';
+import type { AnimationClip, EquirectAsset, Handle, MeshAsset, SceneAsset } from '@forgeax/engine/types';
 import { primitiveMesh } from './src/primitive-mesh';
+import { gameAssetUrl } from './src/asset-urls';
 
 import {
   createPlayerFromCombatStats,
@@ -77,6 +79,7 @@ import {
 import { deriveCombatStats, type CombatStats } from './src/combat-stats';
 import { resolveIncomingDamage } from './src/damage';
 import { FxSystem } from './src/fx';
+import { loadFxMaterials } from './src/fx/material-library';
 import {
   COMBAT_EFFECT_DEFS,
   combatBeat,
@@ -151,6 +154,7 @@ import { LootSystem } from './src/loot';
 import { installHud, type SkillSlotState, type TargetViewModel } from './src/hud';
 import { installCharacterPanel } from './src/character-panel';
 import { Dungeon, DUNGEON_ORIGIN, denMountainRingOrigin } from './src/dungeon';
+import { installBakedInstances } from './src/baked-instances';
 import { CELL, CELLS } from './src/dungeon-layout';
 import {
   branchCurseDamageMul,
@@ -192,6 +196,7 @@ import {
   ambientForArea,
   areaLightSeating,
   campMoonSpotPosition,
+  directionalIntensityForArea,
   denPointSeatPositions,
   denSpotSeatPositions,
   exposureMulForArea,
@@ -270,7 +275,6 @@ import {
   installBgm,
   type BgmHandle,
 } from './src/bgm';
-import { ensureShadowCasters } from './src/ensure-shadow-casters';
 import { contactRadiusForScale, installContactShadows } from './src/contact-shadow';
 import {
   ARPG_DISTANCE_MAX,
@@ -372,15 +376,12 @@ const CAMP_SCENE_GUID = '2748fc78-a386-4b9b-b7d5-cd771eaf6a71';
 
 function standalonePackIndexUrl(): string {
   if (typeof location === 'undefined') return './pack-index.json';
-  const href = location.href;
-  const base = /\/$|\.html(?:[?#]|$)/i.test(href) ? href : `${href}/`;
+  const page = new URL(location.href);
+  page.search = '';
+  page.hash = '';
+  const href = page.href;
+  const base = /\/$|\.html$/i.test(href) ? href : `${href}/`;
   return new URL('pack-index.json', base).href;
-}
-
-function gameAssetUrl(relativePath: string): string {
-  const url = new URL(relativePath, import.meta.url);
-  url.pathname = url.pathname.replace('/assets/assets/', '/assets/');
-  return url.href;
 }
 
 function formatAssetError(error: unknown): string {
@@ -397,7 +398,6 @@ function formatAssetError(error: unknown): string {
 type SkyCtx = {
   world: World;
   assets?: BootstrapContext['assets'];
-  app?: import('@forgeax/engine-app').App;
 };
 
 type EquirectHandle = Handle<'EquirectAsset', 'shared'>;
@@ -455,10 +455,12 @@ if (typeof document !== 'undefined') {
 }
 
 export async function bootstrap(world: World, ctx?: BootstrapContext) {
+  const { assets } = ctx ?? {};
+  const renderer = requireGameRenderer(ctx?.renderer);
+  const canvas = requireBrowserCanvas(ctx?.canvas);
   const perfSession = beginLoadingPerfSession();
   attachLoadingPerfToHf();
   markLoading('hf:bootstrap-start');
-  const { assets, app } = ctx ?? {};
   // Host-controlled UI mount + cleanup sink (■ Stop teardown). UI must attach
   // to uiMount (not document.body); non-DOM side effects register via onCleanup.
   const uiMount: HTMLElement = ctx?.uiRoot ?? (typeof document !== 'undefined' ? document.body : (undefined as never));
@@ -476,9 +478,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
   // Clone URP + pre-tonemap hellforge::atmosphere. Must run before first frame
   // so Title + gameplay share the same graded HDR path. Forbidden: config.postEffects.
   let atmosphereApi: HellforgeAtmosphereApi | null = null;
-  if (app) {
+  {
     const bootAtmo = loadRenderSettings();
-    const installed = installHellforgePipeline(app as never, world, {
+    const installed = installHellforgePipeline({ renderer }, world, {
       vignette: bootAtmo.vignette,
       haze: bootAtmo.haze,
       atmoTemp: bootAtmo.atmoTemp,
@@ -487,10 +489,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       atmosphereApi = installed;
       onCleanup(() => atmosphereApi?.dispose());
       console.log(
-        '[hellforge] pipeline: shadow* → skybox → main → hellforge-fx → bloom* → atmosphere → tonemap → fxaa',
+        '[hellforge] SDK Standard: shadows → scene + transparent FX → depth fog → HDR bloom → output → AA → vignette',
       );
-    } else {
-      console.warn('[hellforge] atmosphere pipeline install failed:', installed.error);
     }
   }
 
@@ -516,13 +516,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     disposeFatal = installFatalOverlay(uiMount, title, detail);
   };
 
-  // Host skips camp when forge.json has no defaultScene. Hellforge preloads
-  // via ensureCampSceneLoaded after the click-gate; initializeRuntime
-  // instantiates once. ctx.defaultSceneRoot is reused only when the host tree
-  // is the encampment (NpcVeyraAnchor / matching GUID) — a den pack injected
-  // as Play defaultScene must not be treated as camp.
-  let campRoot = ctx?.defaultSceneRoot;
-  let campScene = ctx?.defaultScene;
+  // 0.2.1 GameHost does not inject a default scene. Hellforge preloads via
+  // ensureCampSceneLoaded after the click-gate; initializeRuntime instantiates
+  // it once so camp ownership stays explicit and independent of Play config.
+  let campRoot: EntityHandle | undefined;
+  let campScene: SceneAsset | undefined;
   const campLoader = createCampSceneLoader<SceneAsset, EntityHandle>({
     assets,
     world: {
@@ -533,25 +531,21 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     campSceneGuid: CAMP_SCENE_GUID,
     standalonePackIndexUrl,
     mark: (name) => markLoading(name),
-    preloaded: { scene: ctx?.defaultScene, root: ctx?.defaultSceneRoot },
   });
   onCleanup(() => campLoader.dispose());
   const assetPreload = assets
     ? createAssetPreloader({
         loader: {
           parseGuid: (guid) => AssetGuid.parse(guid),
-          loadByGuid: (guid) => assets.loadByGuid(guid),
+          loadByGuid: (guid) => assets.loadByGuid(guid as import('@forgeax/engine/types').AssetGuid),
         },
       })
     : null;
   onCleanup(() => assetPreload?.dispose());
 
   // ── canvas ────────────────────────────────────────────────────────────
-  const canvas = document.querySelector<HTMLCanvasElement>('#app')!;
   const dpr = window.devicePixelRatio || 1;
   let renderScale = loadRenderSettings().renderScale;
-  let fpsCap = loadRenderSettings().fpsCap;
-  let fpsAccum = 0;
   const sizeCanvas = () => {
     const scale = Math.max(0.25, renderScale);
     canvas.width = Math.max(1, Math.floor(canvas.clientWidth * dpr * scale));
@@ -562,19 +556,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
   const applyDisplaySettings = (s: RenderSettings): void => {
     renderScale = s.renderScale;
-    fpsCap = s.fpsCap;
     sizeCanvas();
     aspect = canvas.width / canvas.height;
-  };
-
-  /** Skip a frame when under the FPS cap (0 = unlimited). */
-  const allowUpdateFrame = (dt: number): boolean => {
-    if (fpsCap <= 0) return true;
-    fpsAccum += dt;
-    const minDt = 1 / fpsCap;
-    if (fpsAccum < minDt) return false;
-    fpsAccum %= minDt;
-    return true;
   };
 
   // BootCamera before any camp await so Host rAF cannot hit render-system-no-camera.
@@ -769,15 +752,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       if (root !== undefined && sceneAsset?.entities) {
         const inst = world.get(root, SceneInstance);
         if (inst.ok) {
-          const mapping = inst.value.mapping as ArrayLike<number>;
-          for (const e of sceneAsset.entities) {
-            const name = (e.components as { Name?: { value?: string } } | undefined)?.Name?.value;
+          const namedEntities = Array.from(world.query({ with: [Name] }).unwrap(), (row) => row.entity);
+          for (const entity of namedEntities) {
+            const name = world.get(entity, Name).unwrap().value;
             if (name !== 'EditAmbient' && name !== 'EditSun') continue;
-            const localId = (e as { localId?: number }).localId;
-            if (typeof localId !== 'number') continue;
-            const raw = mapping[localId];
-            if (raw === undefined || raw === 0) continue;
-            world.despawn(raw as EntityHandle);
+            world.despawn(entity);
           }
         }
       }
@@ -792,7 +771,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     let skyboxSpawned = false;
     let skyPollAccum = 0;
     let skyPollStopped = false;
-    void installHdrSky({ world, assets, app }).then((s) => { sky = s; skyLightDirty = true; });
+    void installHdrSky({ world, assets }).then((s) => { sky = s; skyLightDirty = true; });
 
     // ── 3. witch GLB — via gltfImporter sub-assets ────────────────────────
     type ClipHandle = Handle<'AnimationClip', 'shared'>;
@@ -847,6 +826,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const instRes = assets.instantiate<SceneAsset>(sceneHandle, world, playerRig);
       if (!instRes.ok) throw new Error('witch instantiate: ' + ((instRes.error as { code?: string }).code ?? '?'));
       witchRoot = instRes.value as EntityHandle;
+      if (stopped) return;
       // Same normalization monsters get, and it has to run after instantiate:
       // clip channels address joints by opaque targetId, so the root is only
       // identifiable through the scene. gen3d motions bake a rig scale onto Hips
@@ -950,6 +930,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         const instRes = assets.instantiate<SceneAsset>(sceneHandle, world, veyraRig);
         if (!instRes.ok) throw new Error('Veyra instantiate failed: ' + ((instRes.error as { code?: string }).code ?? '?'));
         const veyraRoot = instRes.value as EntityHandle;
+        if (stopped) return;
         const veyraArmed = armSkinnedAnimationPlayer(world, veyraRoot, { clips: [idleClip] });
         if (veyraArmed === null) {
           console.warn('[hellforge] Veyra skinned anim arm failed — static mesh');
@@ -987,10 +968,13 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       [-2.5, 1.75, -9], [2.5, 1.75, -9],
     ] as const;
     await upgradeFxSheetsFromPacks(
-      gameAssetUrl('./assets/vfx/packs/kenney-particle-pack'),
+      (file) => gameAssetUrl('./assets/vfx/packs/kenney-particle-pack/' + file),
     );
     if (stopped) return;
-    const fx = new FxSystem(world, app);
+    if (!assets) throw new Error('Hellforge requires the SDK AssetRegistry');
+    const fxMaterials = await loadFxMaterials(assets);
+    if (stopped) return;
+    const fx = new FxSystem(world, fxMaterials);
     fx.setCampfire(0, 0.9, 0);      // pack's CampfireGlow sits at (0, 0.7, 0)
     // PR8 ambient fire — camp torch glows (gate / huts / back row, positions
     // from rogue-encampment.pack.json Torch*_Glow entities).
@@ -1049,7 +1033,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // ── PCG dungeon (熔渣深窟) ─────────────────────────────────────────────
     // Layout (walkability/spawns) regenerates from the fixed seed; the static
     // geometry comes from the EDITABLE baked scene pack (see src/dungeon.ts).
-    const dungeon = new Dungeon(world);
+    const dungeon = new Dungeon(world, undefined, () => {
+      onCleanup(installBakedInstances(world));
+    });
     const degraded: string[] = [];
     // PR11 T4: den GEOMETRY (slagdeep-hollow + boss-antechamber packs, ~the
     // largest single download) is LAZY — ensureDenLoaded() (below) instantiates
@@ -1079,9 +1065,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       });
     }
     onCleanup(() => resetWildTerrainCache());
-    // Second pass: any late-resolved prop materials from terrain installs.
-    // (Den-pack props get their own pass inside ensureDenLoaded — T4.)
-    ensureShadowCasters(world);
     if (stopped) return;
 
     // Authored 2D nav blockers (never sampled from render meshes per frame).
@@ -1148,6 +1131,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     // Combined walkability: dungeon A* grid + authored camp/wild blockers.
     const walkableAt = (x: number, z: number): boolean => navigation.walkable([x, z], 0.35);
+    const projectileWalkableAt = (x: number, z: number): boolean => navigation.walkable([x, z], 0.1);
     /** PR2a Space dodge — code-driven phases (see src/dodge.ts). Declared
      *  before MonsterManager so onPlayerHit can close over the binding. */
     let dodgeState: DodgeState = createDodgeState();
@@ -1656,38 +1640,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       { component: PointLight, data: { color: [1.0, 0.78, 0.62], intensity: 6.2, range: 4.2 } },
     ).unwrap();
 
-    // Camp/den glTF props historically had Forward-only materials — inject
-    // ShadowCaster so moonlight CSM actually receives depth from static meshes.
-    {
-      const n = ensureShadowCasters(world);
-      if (n > 0) console.log(`[hellforge] ShadowCaster injected on ${n} material(s)`);
-    }
-
-    // Hero shadow proxy (ShadowCaster-only). Skinned GLB can't use
-    // default-shadow-caster (18F vs 12F) — ARPG practice: tight invisible
-    // capsule/box for directional CSM, not a painted foot blob.
-    const shadowProxyMat = world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
-      kind: 'material',
-      passes: [
-        {
-          name: 'ShadowCaster',
-          program: { module: 'forgeax::default-shadow-caster' },
-          renderState: { tags: { LightMode: 'ShadowCaster' }, queue: 2000 },
-        },
-      ],
-      values: {},
-    });
-    const shadowProxy = world.spawn(
-      {
-        component: Transform,
-        data: {
-          pos: [0, 0.9, 5],
-          scale: [0.42 * playerScale, 1.55 * playerScale, 0.32 * playerScale],
-        },
-      },
-      { component: MeshFilter, data: { assetHandle: primitiveMesh(world, 'cube') } },
-      { component: MeshRenderer, data: { materials: [shadowProxyMat] } },
-    ).unwrap();
+    // SDK Standard materials own native rigid and skinned shadow passes.
+    // Do not mutate cooked passes or add a second box-shaped character shadow.
 
     // Player soft contact disc (kit already wired for monsters above).
     const playerContactR = contactRadiusForScale(playerScale);
@@ -1866,7 +1820,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // BLOOD_MOON_SUN_DIR). Den stays ember shaft.
     // Den key light must stay angled (not near-vertical): overhead sun collapses
     // the hero CSM into a tiny under-foot patch that reads as "no shadow".
-    // Intensities are pre-`sunMul` (0.55), so camp lands at 3.2 and den at 3.4.
+    // Base intensities are pre-`sunMul` (0.55); camp gets a local directional
+    // key lift in applyAreaLighting so wild/den keep their existing balance.
     // The old 1.35/1.85 put the key at ~0.74/1.02, which only ever registered on
     // surfaces the campfire and den braziers were already lighting: step outside
     // a fixture's range and characters went to black silhouettes. Ambient cannot
@@ -2019,7 +1974,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       world.set(sun, DirectionalLight, {
         ...look,
         ...sunTint,
-        intensity: look.intensity * lightSettings.sunMul,
+        intensity: directionalIntensityForArea(a, look.intensity, lightSettings.sunMul),
         castShadow: true,
         cascadeCount: 1,
         mapSize: 2048,
@@ -2089,6 +2044,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         snapshot: () => perfProbe.snapshot(),
         reset: () => perfProbe.reset(),
       },
+      renderer: { inspect: () => renderer.inspect(), state: () => renderer.state() },
       campFade: {
         blockerIds: fadeEntries.map((e) => e.blockerId),
         entityCounts: Object.fromEntries(
@@ -2191,7 +2147,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     ((window as unknown as { __hf: Record<string, unknown> }).__hf).world = world;
 
     // ── ambient particles (ember / ash / snow; zero lights) ────────────────
-    const ambientFx = new AmbientFx(world, app);
+    const ambientFx = new AmbientFx(world);
     onCleanup(() => ambientFx.dispose());
     onParticlesHook = (s) => ambientFx.configure(s.particleDensity, s.particleStyle);
     // Apply persisted particle knobs now that AmbientFx exists (install ran earlier).
@@ -2300,7 +2256,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     };
 
     // ── casting — SkillCaster + CharacterDomain hotbar (shared mana/cd/ranks) ─
-    const finishCast = (id: ActiveSkillId, aim: { x: number; z: number }, res: CastResult): void => {
+    const finishCast = (id: ActiveSkillId, aim: { x: number; z: number }, res: CastResult, reportFailure = true): void => {
       if (res === 'ok') {
         faceX = aim.x; faceZ = aim.z;
         if (id !== 'blink') playOnce('attack', ATTACK_SPEED, 0.7);
@@ -2311,6 +2267,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
             : 'blink',
         );
         refreshSkillBar();
+      } else if (!reportFailure) {
+        // Pursuit retries every frame. Expected cooldown / mana waits must not
+        // flood the combat readout; explicit RMB casts still explain failure.
+        return;
       } else if (res === 'mana') {
         const s = worldToScreen(state.px, 2.0, state.pz);
         if (s) hud.floatText('法力不足', s.x, s.y, {
@@ -2331,7 +2291,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       }
     };
 
-    const tryCastSkillId = (id: ActiveSkillId, aimOverride?: { x: number; z: number }): CastResult => {
+    const tryCastSkillId = (id: ActiveSkillId, aimOverride?: { x: number; z: number }, reportFailure = true): CastResult => {
       if (player.dead || camMode !== 'arpg') return 'dead';
       // L3: no cast during dodge buildup/movement (recover cancel window ok).
       if (!dodgeAllowsSkillOrMove(dodgeState)) {
@@ -2354,7 +2314,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       const res = skillCaster.cast(id, [aim.x, aim.z], groundXZ ? { groundXZ } : undefined);
       // L3 roll-cancel: successful cast during late recover aborts + arms CD.
       if (res === 'ok') rollCancel();
-      finishCast(id, aim, res);
+      finishCast(id, aim, res, reportFailure);
       return res;
     };
 
@@ -2505,8 +2465,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         for (const s of dungeon.monsterSpawns) {
           if (monsters.spawn(s.kind, s.x, s.z, 'den')) denTotal++;
         }
-        // 4. shadow-caster pass for the newly instantiated den entities (T4).
-        ensureShadowCasters(world);
         denReady = true;
         if (denDegraded.length > 0) {
           hud.banner(`部分资产降级：${denDegraded.join('、')}`, '#ffb070', 5000);
@@ -2572,6 +2530,9 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     // sequence so it can run AFTER the lazy den load completes.
     let denTransitioning = false;
     const doDenTeleport = (): void => {
+      // A portal consumes the old click target/path; it must not steer the
+      // player back toward wilderness coordinates after the camera snaps.
+      clearMoveIntent();
       const transition = resolveAreaTransition('slagdeep-hollow', 'den-entry', {
         characterId: character.snapshot().identity.id,
         den: { entry: dungeon.entry, exitPad: DEN_EXIT },
@@ -2864,6 +2825,10 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
 
     /** Belt potion hotkeys (Digit5/6) — domain consumes, runtime heals. */
     const usePotion = (kind: 'life' | 'mana'): void => {
+      if (player.dead) {
+        hud.banner('请先按 R 复活', '#ff6a6a', 900);
+        return;
+      }
       const current = kind === 'life' ? player.hp : player.mana;
       const max = kind === 'life' ? player.maxHp : player.maxMana;
       const res = character.dispatch({ op: 'use-potion', kind, current, max });
@@ -2955,7 +2920,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         if (!m) return 'failed';
         const dx = m.x - state.px, dz = m.z - state.pz;
         const len = Math.hypot(dx, dz) || 1;
-        const res = tryCastSkillId(LMB_PURSUIT_SKILL, { x: dx / len, z: dz / len });
+        const res = tryCastSkillId(LMB_PURSUIT_SKILL, { x: dx / len, z: dz / len }, false);
         if (res === 'ok') return 'ok';
         if (res === 'cooldown' || res === 'mana') return 'failed';
         return 'failed';
@@ -3405,10 +3370,12 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           });
         }
         const encounterResetters: CombatTransientResetters = {
+          movement: { clear: () => { clearMoveIntent(); clearHeldKeys(); } },
           encounters: {
-            clear: () => { monsters.clearAll(); },
+            clear: (areaId) => {
+              monsters.clearZone(areaId === 'slagdeep-hollow' ? 'den' : 'wild');
+            },
             reset: (areaId, seed) => {
-              monsters.clearAll();
               if (areaId === 'slagdeep-hollow') {
                 denTotal = 0;
                 resetRoomEventState(roomEvents);
@@ -3586,11 +3553,11 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
     world.addSystem(Update, { name: 'hellforge-runtime-update', queries: [], fn: () => {
       const dt = world.getResource(Time).delta;
       perfProbe.recordFrame(dt);
-      perfProbe.observeFoldedDraws(readFoldedDraws(app));
+      perfProbe.observeFoldedDraws(readFoldedDraws(ctx));
       perfProbe.observePools({
         ...fx.debugCounts(),
       });
-      if (!allowUpdateFrame(dt)) return;
+      // SDK owns frame pacing. Never drop simulation time to imitate a render cap.
 
       if (inGame) {
         noteMapDiscovery();
@@ -3627,8 +3594,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           skyPollAccum += dt;
           if (skyPollAccum >= 0.25) {
             skyPollAccum = 0;
-            const store = (app as unknown as { renderer?: { store?: { getCubemapStatus?: (h: EquirectHandle) => string | undefined } } })?.renderer?.store;
-            const status = store?.getCubemapStatus?.(sky.equirect);
+            const environment = renderer.inspect().environment;
+            const status = environment?.active?.source === 'image' ? 'ready' : environment?.status;
             if (status === 'ready') {
               sky.ibl = true;
               skyLightDirty = true;
@@ -3639,13 +3606,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
             } else if (status === 'failed') {
               skyPollStopped = true;
               console.info('[hellforge] equirect projection failed — solid ambient + SKY_CLEAR');
-            } else if (status === undefined && store?.getCubemapStatus === undefined) {
-              sky.ibl = true;
-              skyLightDirty = true;
-              world.spawn({ component: SkyboxBackground, data: { equirect: sky.equirect, mode: SKYBOX_MODE_CUBEMAP } });
-              skyboxSpawned = true;
-              skyPollStopped = true;
-              console.info('[hellforge] getCubemapStatus unreachable — spawned SkyboxBackground immediately');
             }
           }
         }
@@ -3913,10 +3873,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       }
       world.set(playerLight, Transform, { pos: [state.px, 2.4, state.pz + 1.6] });
       ambientFx.tick(dt, state.px, state.pz);
-      world.set(shadowProxy, Transform, {
-        pos: [state.px, 0.9, state.pz],
-        scale: [0.42 * playerScale, 1.55 * playerScale, 0.32 * playerScale],
-      });
       contactShadows.move(playerContact, state.px, state.pz, playerContactR);
       // ── lighting director tick ──
       // Sky upgrade resolved after boot → re-tint once for the current area.
@@ -3943,8 +3899,8 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
         skyPollAccum += dt;
         if (skyPollAccum >= 0.25) {
           skyPollAccum = 0;
-          const store = (app as unknown as { renderer?: { store?: { getCubemapStatus?: (h: EquirectHandle) => string | undefined } } })?.renderer?.store;
-          const status = store?.getCubemapStatus?.(sky.equirect);
+          const environment = renderer.inspect().environment;
+          const status = environment?.active?.source === 'image' ? 'ready' : environment?.status;
           if (status === 'ready') {
             sky.ibl = true;
             skyLightDirty = true;
@@ -3955,14 +3911,6 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           } else if (status === 'failed') {
             skyPollStopped = true;
             console.info('[hellforge] equirect projection failed — solid ambient + SKY_CLEAR');
-          } else if (status === undefined && store?.getCubemapStatus === undefined) {
-            // Host path cannot query status → spawn immediately and accept flash risk (R2).
-            sky.ibl = true;
-            skyLightDirty = true;
-            world.spawn({ component: SkyboxBackground, data: { equirect: sky.equirect, mode: SKYBOX_MODE_CUBEMAP } });
-            skyboxSpawned = true;
-            skyPollStopped = true;
-            console.info('[hellforge] getCubemapStatus unreachable — spawned SkyboxBackground immediately');
           }
         }
       }
@@ -3975,7 +3923,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       // (Boss entrance/defeat + Hero Shot). Camp beats keep the world running.
       // skills.tick still runs so finisher damage at 0.4 s stays independent.
       if (!shouldFreezeAi(activeWorldPolicy())) {
-        monsters.tick(dt, state.px, state.pz, playerSafe, walkableAt);
+        monsters.tick(dt, state.px, state.pz, playerSafe, walkableAt, projectileWalkableAt);
       }
       // Finisher telegraph: live preview while selected; commit freezes via SkillSystem.
       if (camMode === 'arpg' && !player.dead) {
@@ -3988,7 +3936,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           skills.clearFinisherPreview();
         }
       }
-      skills.tick(dt, monsters);
+      skills.tick(dt, monsters, projectileWalkableAt);
       tickWildSpawner(dt);
 
       // loot pickups — disabled in showcase (Spec §6.2)
@@ -4016,6 +3964,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
           }
         } else if (area === 'den' && dExit < 1.5) {
           portalArmed = false;
+          clearMoveIntent();
           // Leave den — drop vault curse mul / dismiss card (once-fire state stays).
           roomEvents.curseActive = false;
           disposeVaultCard?.();
@@ -4074,7 +4023,7 @@ export async function bootstrap(world: World, ctx?: BootstrapContext) {
       }
 
       // ── quest objectives (ready only; rewards via Veyra turn-in) ──
-      if (area === 'den' && questStatus() === 'active' && denTotal > 0) {
+      if (area === 'den' && denReady && questStatus() === 'active' && denTotal > 0) {
         if (denMinionAliveCount() === 0) {
           combatRun.dispatch({ op: 'mark-objective', id: 'den-minions-cleared' });
         }

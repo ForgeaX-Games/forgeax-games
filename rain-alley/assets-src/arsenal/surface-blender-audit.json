@@ -1,0 +1,15 @@
+{
+  "geometryBefore": "f562000b9458fd7b32fbc8dc2dafb4ec24ee7c48e673ec2b88444726135e7db1",
+  "geometryAfter": "f562000b9458fd7b32fbc8dc2dafb4ec24ee7c48e673ec2b88444726135e7db1",
+  "changedMaterials": [
+    "RA_BluedSteel",
+    "RA_WornEdges",
+    "RA_Brass",
+    "RA_Walnut",
+    "RA_Leather",
+    "RA_MouldedRubber",
+    "RA_SightPaint",
+    "RA_Skin",
+    "RA_FadedOlive"
+  ]
+}

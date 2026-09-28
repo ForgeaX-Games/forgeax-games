@@ -2,6 +2,8 @@ import { describe, expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { AssetGuid } from '@forgeax/engine/pack/source';
+import gamePack from '../assets/game.pack';
 import {
   CAMP_PRELOAD_ANCHOR_NAME,
   CAMP_SCENE_MAX_ATTEMPTS,
@@ -150,6 +152,24 @@ describe('ensureCampSceneLoaded / instantiate', () => {
     expect(assets.instantiates[0]).toMatchObject({ world });
   });
 
+  test('SDK default root catalog is rebound before loading under the public subpath', async () => {
+    const assets = makeAssets({ load: async () => {
+      expect(assets.packIndexUrl).toBe('https://forgeax.github.io/games/hellforge/pack-index.json');
+      return { ok: true, value: { id: 'scene' } };
+    } });
+    assets.packIndexUrl = '/pack-index.json';
+    const loader = createCampSceneLoader<Scene, Root>({
+      assets,
+      world: { allocSharedRef: (_k, v) => v },
+      instantiateWorld: {},
+      parseGuid,
+      campSceneGuid: 'camp',
+      standalonePackIndexUrl: () => 'https://forgeax.github.io/games/hellforge/pack-index.json',
+    });
+    await loader.ensureCampSceneLoaded();
+    expect(assets.loads).toHaveLength(1);
+  });
+
   test('already-absolute pack-index is not rebound', async () => {
     const assets = makeAssets();
     assets.packIndexUrl = '/games/hellforge/pack-index.json';
@@ -234,13 +254,16 @@ describe('ensureCampSceneLoaded / instantiate', () => {
     expect(assets.instantiates).toHaveLength(0);
   });
 
-  test('Stage 2 forge.json has no defaultScene', () => {
+  test('schema-v3 forge.json selects the Pack-derived engine root', () => {
     const forgePath = join(dirname(fileURLToPath(import.meta.url)), '..', 'forge.json');
     const forge = JSON.parse(readFileSync(forgePath, 'utf8')) as Record<string, unknown>;
     expect('defaultScene' in forge).toBe(false);
     expect(forge.id).toBe('hellforge');
-    expect(forge.entry).toBe('main.ts');
-    expect(forge.schemaVersion).toBe('1.0.0');
+    expect('plugins' in forge).toBe(false);
+    expect(forge.schemaVersion).toBe('3.0.0');
+    expect(forge.roots).toEqual({
+      engine: AssetGuid.format(AssetGuid.derive(gamePack.packageId, 'plugin/engine')),
+    });
   });
 });
 
@@ -253,9 +276,11 @@ describe('hostPreloadIsCamp / packIndexNeedsAbsoluteRebind', () => {
     expect(hostPreloadIsCamp({ campSceneGuid: 'camp', scene: { id: 'den' } })).toBe(false);
   });
 
-  test('only relative pack-index URLs need rebind', () => {
+  test('only default root or relative pack-index URLs need rebind', () => {
     expect(packIndexNeedsAbsoluteRebind('./pack-index.json')).toBe(true);
     expect(packIndexNeedsAbsoluteRebind('pack-index.json')).toBe(true);
+    expect(packIndexNeedsAbsoluteRebind('/pack-index.json')).toBe(true);
+    expect(packIndexNeedsAbsoluteRebind('/custom-catalog/pack-index.json')).toBe(false);
     expect(packIndexNeedsAbsoluteRebind('/games/hellforge/pack-index.json')).toBe(false);
     expect(packIndexNeedsAbsoluteRebind('https://cdn.example/pack-index.json')).toBe(false);
     expect(packIndexNeedsAbsoluteRebind(undefined)).toBe(false);

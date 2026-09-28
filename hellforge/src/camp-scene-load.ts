@@ -57,8 +57,8 @@ export const CAMP_PRELOAD_ANCHOR_NAME = 'NpcVeyraAnchor';
 export function sceneHasNamedEntity(scene: unknown, name: string): boolean {
   if (scene === null || typeof scene !== 'object') return false;
   const entities = (scene as { entities?: unknown }).entities;
-  if (!Array.isArray(entities)) return false;
-  return entities.some((entity) => {
+  if (entities === null || typeof entities !== 'object') return false;
+  return Object.values(entities).some((entity) => {
     if (entity === null || typeof entity !== 'object') return false;
     const value = (entity as { components?: { Name?: { value?: unknown } } }).components?.Name?.value;
     return value === name;
@@ -78,13 +78,13 @@ export function hostPreloadIsCamp(opts: {
 }
 
 /**
- * Rebind relative pack-index URLs only. Do not equality-match the relative
- * catalog filename — website `build-games.mjs` rewrites that literal in every
- * JS file, which would disable the detector after bake.
+ * Rebind the SDK's default root catalog and legacy relative catalogs to this
+ * game's page. Preserve explicit subpath/CDN catalogs owned by another host.
  */
 export function packIndexNeedsAbsoluteRebind(url: string | undefined): boolean {
   if (typeof url !== 'string' || url.length === 0) return false;
   if (/^[a-z][a-z0-9+.-]*:/i.test(url)) return false;
+  if (url === '/pack-index.json') return true;
   if (url.startsWith('/')) return false;
   return url.includes('pack-index');
 }

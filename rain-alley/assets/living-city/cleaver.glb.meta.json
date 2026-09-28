@@ -1,0 +1,152 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "gear__BODY.001"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "cleaver.glb",
+  "sourceOverrideDescriptors": [
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:gear__BODY.001"
+    }
+  ],
+  "sourceOverrides": {
+    "mesh:gear__BODY.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a0812c-1368-7cdc-88c5-7d8ae9e50979",
+          "slotName": "LC_iron",
+          "sourceKey": "material:LC_iron"
+        },
+        {
+          "defaultMaterialGuid": "01a0812c-1368-7cdc-88c5-7d8b677d75c7",
+          "slotName": "LC_fur",
+          "sourceKey": "material:LC_fur"
+        }
+      ]
+    }
+  },
+  "subAssets": [
+    {
+      "guid": "01a0812c-1368-7cdc-88c5-7d899f9357d4",
+      "kind": "mesh",
+      "name": "gear__BODY.001",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:gear__BODY.001"
+    },
+    {
+      "guid": "01a0812c-1368-7cdc-88c5-7d8ae9e50979",
+      "kind": "material",
+      "name": "LC_iron",
+      "sourceIndex": 0,
+      "sourceKey": "material:LC_iron"
+    },
+    {
+      "guid": "01a0812c-1368-7cdc-88c5-7d8b677d75c7",
+      "kind": "material",
+      "name": "LC_fur",
+      "sourceIndex": 1,
+      "sourceKey": "material:LC_fur"
+    },
+    {
+      "guid": "01a0812c-1368-7cdc-88c5-7d8c56c4aab1",
+      "kind": "scene",
+      "name": "Scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:Scene"
+    },
+    {
+      "guid": "01a0812c-1368-7cdc-88c5-7d8d85df50ba",
+      "kind": "texture",
+      "name": "iron-normal",
+      "sourceIndex": 0,
+      "sourceKey": "texture:iron-normal"
+    },
+    {
+      "guid": "01a0812c-1368-7cdc-88c5-7d8e7dd81ac6",
+      "kind": "texture",
+      "name": "iron-base",
+      "sourceIndex": 1,
+      "sourceKey": "texture:iron-base"
+    },
+    {
+      "guid": "01a0812c-1368-7cdc-88c5-7d8f7d2ec38f",
+      "kind": "texture",
+      "name": "iron-orm",
+      "sourceIndex": 2,
+      "sourceKey": "texture:iron-orm"
+    },
+    {
+      "guid": "01a0812c-1368-7cdc-88c5-7d90d601ce5b",
+      "kind": "texture",
+      "name": "fur-normal",
+      "sourceIndex": 3,
+      "sourceKey": "texture:fur-normal"
+    },
+    {
+      "guid": "01a0812c-1368-7cdc-88c5-7d91d8bc7d67",
+      "kind": "texture",
+      "name": "fur-base",
+      "sourceIndex": 4,
+      "sourceKey": "texture:fur-base"
+    },
+    {
+      "guid": "01a0812c-1368-7cdc-88c5-7d925681a257",
+      "kind": "texture",
+      "name": "fur-orm",
+      "sourceIndex": 5,
+      "sourceKey": "texture:fur-orm"
+    },
+    {
+      "guid": "01a0812c-1368-7cdc-88c5-7d93574926a2",
+      "kind": "sampler",
+      "sourceIndex": 0,
+      "sourceKey": "sampler"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "geometryAndTransformsBefore": "4e11b52e8dec2b0afe85702e5e319469734a5f02c330b9dfa0afafc04c304290",
+  "geometryAndTransformsAfter": "4e11b52e8dec2b0afe85702e5e319469734a5f02c330b9dfa0afafc04c304290",
+  "changedMaterials": [
+    "PlasterIvory",
+    "AgedConcreteTrim",
+    "BrickBrown",
+    "PaintBlue",
+    "PaintOchre",
+    "PlasticBlue",
+    "PlasticRed",
+    "WetPaving",
+    "WetAsphalt",
+    "BoothVinyl",
+    "OpaqueWindowGlass",
+    "CeramicIvory",
+    "BottleGreen",
+    "BottleAmber",
+    "DarkRecess",
+    "FluorescentWarmWhite",
+    "NeonCyan",
+    "NeonWarmRed"
+  ],
+  "source": "assets-src/district/rain-alley-district.blend",
+  "output": "assets-src/weather/rain-alley-district-rain.blend"
+}

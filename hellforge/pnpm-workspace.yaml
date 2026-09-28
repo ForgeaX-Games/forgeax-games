@@ -1,0 +1,19 @@
+packages: []
+
+allowBuilds:
+  '@forgeax/engine-codec': true
+  '@forgeax/engine-fbx': true
+  '@forgeax/engine-wgpu-wasm': true
+  esbuild: true
+  webgpu: true
+  sharp: true
+
+minimumReleaseAgeExclude:
+  - '@forgeax/*'
+
+enableGlobalVirtualStore: false
+
+patchedDependencies:
+  '@forgeax/engine-app@0.2.1': patches/@forgeax__engine-app@0.2.1.patch
+  '@forgeax/engine-devkit@0.2.1': patches/@forgeax__engine-devkit@0.2.1.patch
+  '@forgeax/engine-render@0.2.1': patches/@forgeax__engine-render@0.2.1.patch

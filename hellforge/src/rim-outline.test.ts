@@ -10,10 +10,10 @@
 // ({ program: { module }, values }). The LEGACY shape branch
 // ({ shader, paramValues }) is the same idiom as fx.ts:278-302 and is
 // covered there; it is not reachable under bun without re-mocking
-// @forgeax/engine-render, which the shared-mock rule forbids.
+// @forgeax/engine/render, which the shared-mock rule forbids.
 
 import { describe, expect, mock, spyOn, test } from 'bun:test';
-import type { EntityHandle } from '@forgeax/engine-ecs';
+import type { EntityHandle } from '@forgeax/engine/ecs';
 
 import '../tools/engine-test-mocks';
 

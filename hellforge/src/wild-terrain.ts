@@ -6,21 +6,22 @@ import {
   Materials,
   MeshFilter,
   MeshRenderer,
-} from '@forgeax/engine-render';
+} from '@forgeax/engine/render';
 import {
   Transform,
-} from '@forgeax/engine-scene';
+} from '@forgeax/engine/scene';
 import {
   quat,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine/runtime';
 import {
   type MaterialAsset,
-} from '@forgeax/engine-types';
-import type { BootstrapContext } from '@forgeax/engine-app';
-import { AssetGuid } from '@forgeax/engine-pack/guid';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
-import type { Handle, MeshAsset } from '@forgeax/engine-types';
+} from '@forgeax/engine/types';
+import type { GameHost as BootstrapContext } from '@forgeax/engine/app';
+import { AssetGuid } from '@forgeax/engine/pack/guid';
+import type { EntityHandle, World } from '@forgeax/engine/ecs';
+import type { Handle, MeshAsset } from '@forgeax/engine/types';
 import { primitiveMesh } from './primitive-mesh';
+import { clearTerrainFootprint, transformedTerrainFootprint } from './terrain-clearance';
 
 type AssetRegistry = BootstrapContext['assets'];
 
@@ -73,6 +74,7 @@ export type InstallWildTerrainOpts = {
 type PeakBank = {
   mesh: Handle<'MeshAsset', 'shared'>;
   mat: Handle<'MaterialAsset', 'shared'>;
+  bounds: ArrayLike<number>;
 };
 
 /** Shared across camp + den installs in one boot (meshes loaded once). */
@@ -119,9 +121,14 @@ async function ensurePeakBank(
       console.warn(`[hellforge] wild-terrain: failed to load ${v.name}`);
       continue;
     }
+    if (!payload.aabb || payload.aabb.length !== 6 || !payload.aabb.every(Number.isFinite)) {
+      console.warn(`[hellforge] wild-terrain: ${v.name} is missing valid mesh bounds`);
+      continue;
+    }
     bank.push({
       mesh: world.allocSharedRef<'MeshAsset', MeshAsset>('MeshAsset', payload),
       mat: slagMat,
+      bounds: payload.aabb,
     });
   }
   if (bank.length === 0) {
@@ -191,13 +198,17 @@ export async function installWildTerrain(
     variant: PeakBank,
   ): EntityHandle => {
     const leanHeading = yaw + Math.PI / 2;
+    const rotation = mountainQuat(yaw, lean, leanHeading);
+    const scale: [number, number, number] = [base, height, base * (0.75 + rng() * 0.55)];
+    const footprint = transformedTerrainFootprint(variant.bounds, rotation, scale);
+    const [safeX, safeZ] = clearTerrainFootprint([x, z], [origin.x, origin.z], half, footprint);
     return world.spawn(
       {
         component: Transform,
         data: {
-          pos: [x, 0, z],
-          quat: mountainQuat(yaw, lean, leanHeading),
-          scale: [base, height, base * (0.75 + rng() * 0.55)],
+          pos: [safeX, 0, safeZ],
+          quat: rotation,
+          scale,
         },
       },
       { component: MeshFilter, data: { assetHandle: variant.mesh } },
@@ -205,8 +216,8 @@ export async function installWildTerrain(
     ).unwrap() as EntityHandle;
   };
 
-  // Keep peaks outside the playable floor. Den corners sit at ~half*√2 —
-  // start mid ring past that so cones don't punch through rooms.
+  // Seed the visual rings; spawnPeak then clears the complete rotated mesh
+  // bounds, not just its centre, from the floor and orbit camera envelope.
   const midInner = half * 1.45 + 4;
   const midCount = 22;
   for (let i = 0; i < midCount; i++) {

@@ -1,0 +1,266 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "crow__BODY",
+        "crow__WING_L",
+        "crow__WING_R"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "crow.glb",
+  "sourceOverrideDescriptors": [
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:crow__BODY"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:crow__WING_L"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:crow__WING_R"
+    }
+  ],
+  "sourceOverrides": {
+    "mesh:crow__BODY": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a0812c-138b-76dc-b1b3-7fee1982e35d",
+          "slotName": "LC_feather",
+          "sourceKey": "material:LC_feather"
+        },
+        {
+          "defaultMaterialGuid": "01a0812c-138b-76dc-b1b3-7fef305120b4",
+          "slotName": "LC_iron",
+          "sourceKey": "material:LC_iron"
+        }
+      ]
+    },
+    "mesh:crow__WING_L": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a0812c-138b-76dc-b1b3-7fee1982e35d",
+          "slotName": "LC_feather",
+          "sourceKey": "material:LC_feather"
+        }
+      ]
+    },
+    "mesh:crow__WING_R": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a0812c-138b-76dc-b1b3-7fee1982e35d",
+          "slotName": "LC_feather",
+          "sourceKey": "material:LC_feather"
+        }
+      ]
+    }
+  },
+  "subAssets": [
+    {
+      "guid": "01a0812c-138b-76dc-b1b3-7fe8596f43e3",
+      "kind": "mesh",
+      "name": "crow__BODY",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:crow__BODY"
+    },
+    {
+      "guid": "01a0812c-138b-76dc-b1b3-7fea4642cdb6",
+      "kind": "mesh",
+      "name": "crow__WING_L",
+      "sourceIndex": 1,
+      "sourceKey": "mesh:crow__WING_L"
+    },
+    {
+      "guid": "01a0812c-138b-76dc-b1b3-7feb521db8e4",
+      "kind": "mesh",
+      "name": "crow__WING_R",
+      "sourceIndex": 2,
+      "sourceKey": "mesh:crow__WING_R"
+    },
+    {
+      "guid": "01a0812c-138b-76dc-b1b3-7fee1982e35d",
+      "kind": "material",
+      "name": "LC_feather",
+      "sourceIndex": 0,
+      "sourceKey": "material:LC_feather"
+    },
+    {
+      "guid": "01a0812c-138b-76dc-b1b3-7fef305120b4",
+      "kind": "material",
+      "name": "LC_iron",
+      "sourceIndex": 1,
+      "sourceKey": "material:LC_iron"
+    },
+    {
+      "guid": "01a0812c-138b-76dc-b1b3-7ff0f9f16aa8",
+      "kind": "scene",
+      "name": "Scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:Scene"
+    },
+    {
+      "guid": "01a0812c-138b-76dc-b1b3-7ff1cf4996f0",
+      "kind": "texture",
+      "name": "feather-normal",
+      "sourceIndex": 0,
+      "sourceKey": "texture:feather-normal"
+    },
+    {
+      "guid": "01a0812c-138b-76dc-b1b3-7ff2319d860a",
+      "kind": "texture",
+      "name": "feather-base",
+      "sourceIndex": 1,
+      "sourceKey": "texture:feather-base"
+    },
+    {
+      "guid": "01a0812c-138b-76dc-b1b3-7ff3b3ce745e",
+      "kind": "texture",
+      "name": "feather-orm",
+      "sourceIndex": 2,
+      "sourceKey": "texture:feather-orm"
+    },
+    {
+      "guid": "01a0812c-138b-76dc-b1b3-7ff438f5dcd4",
+      "kind": "texture",
+      "name": "iron-normal",
+      "sourceIndex": 3,
+      "sourceKey": "texture:iron-normal"
+    },
+    {
+      "guid": "01a0812c-138b-76dc-b1b3-7ff53a313288",
+      "kind": "texture",
+      "name": "iron-base",
+      "sourceIndex": 4,
+      "sourceKey": "texture:iron-base"
+    },
+    {
+      "guid": "01a0812c-138b-76dc-b1b3-7ff67d9edeb0",
+      "kind": "texture",
+      "name": "iron-orm",
+      "sourceIndex": 5,
+      "sourceKey": "texture:iron-orm"
+    },
+    {
+      "guid": "01a0812c-138b-76dc-b1b3-7ff7d0d3dcc9",
+      "kind": "sampler",
+      "sourceIndex": 0,
+      "sourceKey": "sampler"
+    }
+  ]
+}

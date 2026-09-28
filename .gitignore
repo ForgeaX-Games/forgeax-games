@@ -12,6 +12,9 @@ node_modules
 # runtime chat/session state, auto-created under each game dir by Studio
 sessions/
 
+# Studio runtime/DDC cache for Rain Alley; source assets live under rain-alley/assets.
+rain-alley/.forgeax/
+
 # Playwright CLI test artifacts (console/snapshot logs), not source
 .playwright-cli/
 

@@ -1,0 +1,96 @@
+diff --git a/dist/cli.mjs b/dist/cli.mjs
+index 8531aaadfc9c24380452e7321ef812bc26bc7743..d9945c2bb651bfca998a1ed51a4fc6b3bfcf1ddc 100755
+--- a/dist/cli.mjs
++++ b/dist/cli.mjs
+@@ -2442,7 +2442,7 @@ function executionBootstrapSource(facts, generated, bootstrapRoot) {
+   );
+   const workerGameHostPlugin = bootstrapRoot === "resource-bootstrap" ? "" : ", workerGameHostPlugin";
+   return `import { audioPlugin } from '@forgeax/engine/audio';
+-import type { GameHost } from '@forgeax/engine/app';
++import { gameHostPlugin, type GameHost } from '@forgeax/engine/app';
+ import { skinningPlugin } from '@forgeax/engine/skinning';
+ import type { Plugin } from '@forgeax/engine/plugin';
+ import type { SceneAsset } from '@forgeax/engine/types';
+@@ -2520,7 +2520,8 @@ const workerGameHostPlugin: Plugin = {
+       ...(defaultSceneRoot === undefined ? {} : { defaultSceneRoot }),
+       setPointerLockAllowed: (allowed) => ctx.executionBootstrapHost.setPointerLockAllowed(allowed),
+     } satisfies GameHost;
+-    ctx.provide('gameHost', host);
++    // Publish an ACTIVE provider before awaiting plugins that inject gameHost.
++    await ctx.plugin(gameHostPlugin(host));
+     await (ctx as unknown as { readonly workerProjectPlugins: () => Promise<void> })
+       .workerProjectPlugins();
+   },
+@@ -3868,7 +3869,7 @@ function htmlSource(title, startupScreen = true) {
+       #forgeax-loading-status { margin: 0; color: rgb(230 235 245 / 72%); }
+       #forgeax-loading-slow, #forgeax-loading-reload { display: none; }
+       #forgeax-loading-reload, #forgeax-fatal-reload { border: 1px solid rgb(230 235 245 / 35%); border-radius: 5px; padding: 7px 14px; background: transparent; color: inherit; cursor: pointer; font: inherit; }
+-      #forgeax-fatal { position: absolute; inset: 0; z-index: 2147483647; display: none; place-items: center; padding: 24px; box-sizing: border-box; background: #0b0d10; color: #e6e6e6; font: 15px/1.6 system-ui, sans-serif; text-align: center; }
++      #forgeax-fatal { position: fixed; inset: 0; z-index: 2147483647; display: none; place-items: center; padding: 24px; box-sizing: border-box; background: #0b0d10; color: #e6e6e6; font: 15px/1.6 system-ui, sans-serif; text-align: center; }
+       #forgeax-fatal-content { display: grid; gap: 12px; width: min(680px, 100%); text-align: left; }
+       #forgeax-fatal-message { margin: 0; font-size: 18px; }
+       #forgeax-fatal-details { max-height: 45vh; overflow: auto; white-space: pre-wrap; }
+@@ -3887,6 +3888,7 @@ function htmlSource(title, startupScreen = true) {
+         <button id="forgeax-loading-reload" type="button">Reload</button>
+       </div>
+     </div>
++    </div>
+     <div id="forgeax-fatal" role="alert">
+       <div id="forgeax-fatal-content">
+         <p id="forgeax-fatal-message">Unable to start the game.</p>
+@@ -3894,7 +3896,6 @@ function htmlSource(title, startupScreen = true) {
+         <button id="forgeax-fatal-reload" type="button">Reload</button>
+       </div>
+     </div>
+-    </div>
+     <noscript>JavaScript is required to start this game. Please enable JavaScript and reload.</noscript>
+     <script>
+       (() => {
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 0c737132241bf799e9393fd45fa3a54f0d8c5d35..2b487899858cffc2b8077315e519e079f1701114 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -2203,7 +2203,7 @@ function executionBootstrapSource(facts, generated, bootstrapRoot) {
+   );
+   const workerGameHostPlugin = bootstrapRoot === "resource-bootstrap" ? "" : ", workerGameHostPlugin";
+   return `import { audioPlugin } from '@forgeax/engine/audio';
+-import type { GameHost } from '@forgeax/engine/app';
++import { gameHostPlugin, type GameHost } from '@forgeax/engine/app';
+ import { skinningPlugin } from '@forgeax/engine/skinning';
+ import type { Plugin } from '@forgeax/engine/plugin';
+ import type { SceneAsset } from '@forgeax/engine/types';
+@@ -2281,7 +2281,8 @@ const workerGameHostPlugin: Plugin = {
+       ...(defaultSceneRoot === undefined ? {} : { defaultSceneRoot }),
+       setPointerLockAllowed: (allowed) => ctx.executionBootstrapHost.setPointerLockAllowed(allowed),
+     } satisfies GameHost;
+-    ctx.provide('gameHost', host);
++    // Publish an ACTIVE provider before awaiting plugins that inject gameHost.
++    await ctx.plugin(gameHostPlugin(host));
+     await (ctx as unknown as { readonly workerProjectPlugins: () => Promise<void> })
+       .workerProjectPlugins();
+   },
+@@ -3629,7 +3630,7 @@ function htmlSource(title, startupScreen = true) {
+       #forgeax-loading-status { margin: 0; color: rgb(230 235 245 / 72%); }
+       #forgeax-loading-slow, #forgeax-loading-reload { display: none; }
+       #forgeax-loading-reload, #forgeax-fatal-reload { border: 1px solid rgb(230 235 245 / 35%); border-radius: 5px; padding: 7px 14px; background: transparent; color: inherit; cursor: pointer; font: inherit; }
+-      #forgeax-fatal { position: absolute; inset: 0; z-index: 2147483647; display: none; place-items: center; padding: 24px; box-sizing: border-box; background: #0b0d10; color: #e6e6e6; font: 15px/1.6 system-ui, sans-serif; text-align: center; }
++      #forgeax-fatal { position: fixed; inset: 0; z-index: 2147483647; display: none; place-items: center; padding: 24px; box-sizing: border-box; background: #0b0d10; color: #e6e6e6; font: 15px/1.6 system-ui, sans-serif; text-align: center; }
+       #forgeax-fatal-content { display: grid; gap: 12px; width: min(680px, 100%); text-align: left; }
+       #forgeax-fatal-message { margin: 0; font-size: 18px; }
+       #forgeax-fatal-details { max-height: 45vh; overflow: auto; white-space: pre-wrap; }
+@@ -3648,6 +3649,7 @@ function htmlSource(title, startupScreen = true) {
+         <button id="forgeax-loading-reload" type="button">Reload</button>
+       </div>
+     </div>
++    </div>
+     <div id="forgeax-fatal" role="alert">
+       <div id="forgeax-fatal-content">
+         <p id="forgeax-fatal-message">Unable to start the game.</p>
+@@ -3655,7 +3657,6 @@ function htmlSource(title, startupScreen = true) {
+         <button id="forgeax-fatal-reload" type="button">Reload</button>
+       </div>
+     </div>
+-    </div>
+     <noscript>JavaScript is required to start this game. Please enable JavaScript and reload.</noscript>
+     <script>
+       (() => {

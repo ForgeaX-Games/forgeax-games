@@ -1,0 +1,20 @@
+{
+  "kind": "external-asset-package",
+  "importer": "image",
+  "schemaVersion": "1.0.0",
+  "source": "kowloon-storm.png",
+  "importSettings": {
+    "colorSpace": "srgb",
+    "compressionMode": "none",
+    "mipmap": "auto",
+    "addressMode": "repeat",
+    "filterMode": "linear"
+  },
+  "subAssets": [
+    {
+      "guid": "b8420c05-f652-4623-bc27-c3d7d1aee946",
+      "sourceIndex": 0,
+      "kind": "texture"
+    }
+  ]
+}

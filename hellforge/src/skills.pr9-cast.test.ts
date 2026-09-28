@@ -18,6 +18,7 @@ function stubWorld() {
     spawn: () => ({ ok: true as const, value: next++ }),
     despawn: () => {},
     set: () => {},
+    internSharedRef: (_k: string, v: unknown) => v ?? {},
     allocSharedRef: (_k: string, v: unknown) => v ?? {},
   };
 }
@@ -190,6 +191,18 @@ describe('PR9 castResolved happy-path / gates', () => {
     const p = player(100);
     expect(sys.castResolved('discharge', 0, 0, 1, 0, p, 4, ranks, resolved)).toBe('ok');
     expect(sys.activeCount()).toBe(7);
+  });
+
+  test('player projectile terminates at a wall instead of damaging a monster behind it', () => {
+    const { sys } = makeSystem();
+    const m = fakeMonster({ x: 4, z: 0 });
+    const monsters = stubMonsters([m]);
+    const ranks = { 'magma-bolt': 1 };
+    const resolved = resolveSkill('magma-bolt', { skillRanks: ranks });
+    expect(sys.castResolved('magma', 0, 0, 1, 0, player(), 1, ranks, resolved)).toBe('ok');
+    for (let i = 0; i < 20; i++) sys.tick(0.05, monsters, x => x < 2 || x > 2.3);
+    expect(m.hp).toBe(100);
+    expect(sys.activeCount()).toBe(0);
   });
 
   test('PBAOE damages nearby monsters on next tick', () => {

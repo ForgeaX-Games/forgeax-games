@@ -10,18 +10,19 @@
 // ShadowCaster — the decal must not cast onto itself).
 
 import {
+  Materials,
   MeshFilter,
   MeshRenderer,
-} from '@forgeax/engine-render';
+} from '@forgeax/engine/render';
 import {
   Transform,
-} from '@forgeax/engine-scene';
+} from '@forgeax/engine/scene';
 import {
   quat,
-} from '@forgeax/engine-runtime';
-import { unwrapHandle } from '@forgeax/engine-types';
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
-import type { Handle, MaterialAsset, TextureAsset } from '@forgeax/engine-types';
+} from '@forgeax/engine/runtime';
+import { unwrapHandle } from '@forgeax/engine/types';
+import type { EntityHandle, World } from '@forgeax/engine/ecs';
+import type { Handle, MaterialAsset, TextureAsset } from '@forgeax/engine/types';
 import { primitiveMesh } from './primitive-mesh';
 
 export type ContactShadowKit = {
@@ -74,38 +75,23 @@ const straightAlphaBlend = {
 
 export function installContactShadows(world: World): ContactShadowKit {
   const data = buildSoftShadowRgba(ATLAS);
-  const mipLevelCount = Math.floor(Math.log2(ATLAS)) + 1;
   const tex = world.allocSharedRef<'TextureAsset', TextureAsset>('TextureAsset', {
     kind: 'texture',
-    width: ATLAS,
-    height: ATLAS,
+    shape: { viewDimension: '2d', extent: { width: ATLAS, height: ATLAS } },
     format: 'rgba8unorm',
-    data,
+    data: new Uint8Array(data.buffer, data.byteOffset, data.byteLength),
     colorSpace: 'linear',
-    mipmap: true,
-    mipLevelCount,
+    mips: { kind: 'generate' },
   });
 
-  const mat = world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', {
-    kind: 'material',
-    passes: [
-      {
-        name: 'Forward',
-        program: { module: 'forgeax::default-unlit' },
-        renderState: {
-          tags: { LightMode: 'Forward' },
-          queue: 3000,
-          blend: straightAlphaBlend,
-          depthWriteEnabled: false,
-        },
-      },
-    ],
-    values: {
-      // Texture carries the soft alpha; tint keeps RGB black.
-      baseColor: [0.02, 0.015, 0.01, 0.9],
+  const mat = world.allocSharedRef<'MaterialAsset', MaterialAsset>('MaterialAsset', Materials.unlit(
+    [0.02, 0.015, 0.01, 0.9], {
+      castShadow: false,
+      queue: 3000,
+      renderState: { blend: straightAlphaBlend, depthWriteEnabled: false },
       baseColorTexture: unwrapHandle(tex),
     },
-  });
+  ));
 
   const flatQ = quat.create();
   quat.fromAxisAngle(flatQ, [1, 0, 0], -Math.PI / 2);

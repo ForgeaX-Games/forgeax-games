@@ -1,3 +1,7 @@
+<!-- context-audit:2026-09-10 -->
+> 文档核对：2026-09-10。设计/规划参考；不作为当前实现或验收完成的证明。
+> 接手先读 [当前状态与入口](CURRENT.md)；[整理前原文](docs/archive/pre-management/SHELL-AND-UI-PORT-SPEC.md) 保留来源与原始内容。
+
 # SHELL-AND-UI-PORT-SPEC — 从 aidiablo 移植「游戏外壳 + UI 系统」
 
 > **这份文档是什么**:把参考项目 **aidiablo**(一个 Three.js/WebGL 的 D2-like 联机 ARPG)里已经打磨成型的 **启动界面 / 角色选择 / 游戏内 UI(HUD)** 的**设计与数据契约**,转写成 hellforge(ForgeaX ECS + WebGPU 引擎)可执行的移植规格。

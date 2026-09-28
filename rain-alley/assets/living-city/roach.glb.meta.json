@@ -1,0 +1,119 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "roach__BODY"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "roach.glb",
+  "sourceOverrideDescriptors": [
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:roach__BODY"
+    }
+  ],
+  "sourceOverrides": {
+    "mesh:roach__BODY": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a0812c-1449-7230-90c5-a541f989e97e",
+          "slotName": "LC_roach",
+          "sourceKey": "material:LC_roach"
+        }
+      ]
+    }
+  },
+  "subAssets": [
+    {
+      "guid": "01a0812c-1449-7230-90c5-a538e77b1ccc",
+      "kind": "mesh",
+      "name": "roach__BODY",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:roach__BODY"
+    },
+    {
+      "guid": "01a0812c-1449-7230-90c5-a541f989e97e",
+      "kind": "material",
+      "name": "LC_roach",
+      "sourceIndex": 0,
+      "sourceKey": "material:LC_roach"
+    },
+    {
+      "guid": "01a0812c-1449-7230-90c5-a5426b27df37",
+      "kind": "scene",
+      "name": "Scene",
+      "sourceIndex": 0,
+      "sourceKey": "scene:Scene"
+    },
+    {
+      "guid": "01a0812c-1449-7230-90c5-a543c366ed60",
+      "kind": "texture",
+      "name": "roach-normal",
+      "sourceIndex": 0,
+      "sourceKey": "texture:roach-normal"
+    },
+    {
+      "guid": "01a0812c-1449-7230-90c5-a5447d8a0383",
+      "kind": "texture",
+      "name": "roach-base",
+      "sourceIndex": 1,
+      "sourceKey": "texture:roach-base"
+    },
+    {
+      "guid": "01a0812c-1449-7230-90c5-a545204fc707",
+      "kind": "texture",
+      "name": "roach-orm",
+      "sourceIndex": 2,
+      "sourceKey": "texture:roach-orm"
+    },
+    {
+      "guid": "01a0812c-1449-7230-90c5-a546ea116fb5",
+      "kind": "sampler",
+      "sourceIndex": 0,
+      "sourceKey": "sampler"
+    }
+  ]
+}

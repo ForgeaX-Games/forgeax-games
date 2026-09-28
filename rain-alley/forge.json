@@ -1,0 +1,9 @@
+{
+  "id": "rain-alley",
+  "name": "雨夜不回头",
+  "schemaVersion": "1.0.0",
+  "entry": "fps-main.ts",
+  "physics": "3d",
+  "pointerLock": true,
+  "defaultScene": "226d8c75-4301-45d0-a8e4-7f62f552313d"
+}

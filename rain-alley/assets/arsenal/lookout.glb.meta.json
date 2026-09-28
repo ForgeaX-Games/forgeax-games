@@ -1,0 +1,562 @@
+{
+  "importSettings": {
+    "defaultSceneIndex": 0,
+    "diagnostics": {
+      "matrixTrsCoexistNodes": [],
+      "nodeNames": [
+        "lookout__FOREARM_L",
+        "lookout__ARM_L",
+        "lookout__FOREARM_R",
+        "lookout__ARM_R",
+        "lookout__BODY",
+        "lookout__HEAD",
+        "lookout__LEG_L",
+        "lookout__LEG_R",
+        "lookout__TORSO",
+        "lookout"
+      ],
+      "unsupportedExtensions": []
+    }
+  },
+  "importer": "gltf",
+  "kind": "external-asset-package",
+  "schemaVersion": 1,
+  "source": "lookout.glb",
+  "sourceOverrideDescriptors": [
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Cylinder.001"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Cylinder"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Cylinder.003"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Cylinder.002"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Cube"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Neck"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Trouser leg"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Trouser leg.001"
+    },
+    {
+      "payloadSchema": {
+        "additionalProperties": true,
+        "properties": {
+          "materialSlotDefaultOverrides": {
+            "additionalProperties": {
+              "nullable": true,
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "materialSlots": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "defaultMaterialGuid": {
+                  "type": "string"
+                },
+                "slotName": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sourceKey": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slotName"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "semantic": "mesh-material-slot-defaults",
+      "sourceKey": "mesh:Tailored jacket"
+    }
+  ],
+  "sourceOverrides": {
+    "mesh:Cube": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f19-bbc6-7759-bf66-aff2be10ffab",
+          "slotName": "RA_CharacterCloth",
+          "sourceKey": "material:RA_CharacterCloth"
+        }
+      ]
+    },
+    "mesh:Cylinder": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f19-bbc6-7759-bf66-aff2be10ffab",
+          "slotName": "RA_CharacterCloth",
+          "sourceKey": "material:RA_CharacterCloth"
+        }
+      ]
+    },
+    "mesh:Cylinder.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f19-bbc6-7759-bf66-aff2be10ffab",
+          "slotName": "RA_CharacterCloth",
+          "sourceKey": "material:RA_CharacterCloth"
+        }
+      ]
+    },
+    "mesh:Cylinder.002": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f19-bbc6-7759-bf66-aff2be10ffab",
+          "slotName": "RA_CharacterCloth",
+          "sourceKey": "material:RA_CharacterCloth"
+        }
+      ]
+    },
+    "mesh:Cylinder.003": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f19-bbc6-7759-bf66-aff2be10ffab",
+          "slotName": "RA_CharacterCloth",
+          "sourceKey": "material:RA_CharacterCloth"
+        }
+      ]
+    },
+    "mesh:Neck": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f19-bbc6-7759-bf66-aff2be10ffab",
+          "slotName": "RA_CharacterCloth",
+          "sourceKey": "material:RA_CharacterCloth"
+        }
+      ]
+    },
+    "mesh:Tailored jacket": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f19-bbc6-7759-bf66-aff2be10ffab",
+          "slotName": "RA_CharacterCloth",
+          "sourceKey": "material:RA_CharacterCloth"
+        }
+      ]
+    },
+    "mesh:Trouser leg": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f19-bbc6-7759-bf66-aff2be10ffab",
+          "slotName": "RA_CharacterCloth",
+          "sourceKey": "material:RA_CharacterCloth"
+        }
+      ]
+    },
+    "mesh:Trouser leg.001": {
+      "materialSlots": [
+        {
+          "defaultMaterialGuid": "01a07f19-bbc6-7759-bf66-aff2be10ffab",
+          "slotName": "RA_CharacterCloth",
+          "sourceKey": "material:RA_CharacterCloth"
+        }
+      ]
+    }
+  },
+  "subAssets": [
+    {
+      "guid": "01a07f19-bbc6-7759-bf66-afe931059be1",
+      "kind": "mesh",
+      "name": "Cylinder.001",
+      "sourceIndex": 0,
+      "sourceKey": "mesh:Cylinder.001"
+    },
+    {
+      "guid": "01a07f19-bbc6-7759-bf66-afea0faf283d",
+      "kind": "mesh",
+      "name": "Cylinder",
+      "sourceIndex": 1,
+      "sourceKey": "mesh:Cylinder"
+    },
+    {
+      "guid": "01a07f19-bbc6-7759-bf66-afeb801280b8",
+      "kind": "mesh",
+      "name": "Cylinder.003",
+      "sourceIndex": 2,
+      "sourceKey": "mesh:Cylinder.003"
+    },
+    {
+      "guid": "01a07f19-bbc6-7759-bf66-afecc5707b3b",
+      "kind": "mesh",
+      "name": "Cylinder.002",
+      "sourceIndex": 3,
+      "sourceKey": "mesh:Cylinder.002"
+    },
+    {
+      "guid": "01a07f19-bbc6-7759-bf66-afed71b66ed0",
+      "kind": "mesh",
+      "name": "Cube",
+      "sourceIndex": 4,
+      "sourceKey": "mesh:Cube"
+    },
+    {
+      "guid": "01a07f19-bbc6-7759-bf66-afee51ba4e93",
+      "kind": "mesh",
+      "name": "Neck",
+      "sourceIndex": 5,
+      "sourceKey": "mesh:Neck"
+    },
+    {
+      "guid": "01a07f19-bbc6-7759-bf66-afef80dadedf",
+      "kind": "mesh",
+      "name": "Trouser leg",
+      "sourceIndex": 6,
+      "sourceKey": "mesh:Trouser leg"
+    },
+    {
+      "guid": "01a07f19-bbc6-7759-bf66-aff0b975494b",
+      "kind": "mesh",
+      "name": "Trouser leg.001",
+      "sourceIndex": 7,
+      "sourceKey": "mesh:Trouser leg.001"
+    },
+    {
+      "guid": "01a07f19-bbc6-7759-bf66-aff12634ed44",
+      "kind": "mesh",
+      "name": "Tailored jacket",
+      "sourceIndex": 8,
+      "sourceKey": "mesh:Tailored jacket"
+    },
+    {
+      "guid": "01a07f19-bbc6-7759-bf66-aff2be10ffab",
+      "kind": "material",
+      "name": "RA_CharacterCloth",
+      "sourceIndex": 0,
+      "sourceKey": "material:RA_CharacterCloth"
+    },
+    {
+      "guid": "01a07f19-bbc6-7759-bf66-aff33521f9f5",
+      "kind": "scene",
+      "name": "RainAlleyCharacters_20260908_v2",
+      "sourceIndex": 0,
+      "sourceKey": "scene:RainAlleyCharacters_20260908_v2"
+    },
+    {
+      "guid": "01a07f20-6769-76dd-a56c-580be268d3ff",
+      "kind": "texture",
+      "name": "RA_CharacterPalette",
+      "sourceIndex": 0,
+      "sourceKey": "texture:RA_CharacterPalette"
+    },
+    {
+      "guid": "01a07f20-6769-76dd-a56c-580cc3e5488d",
+      "kind": "sampler",
+      "sourceIndex": 0,
+      "sourceKey": "sampler"
+    }
+  ]
+}

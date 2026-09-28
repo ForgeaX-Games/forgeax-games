@@ -12,18 +12,18 @@ import {
   PointLight,
   SceneInstance,
   perspective,
-} from '@forgeax/engine-render';
+} from '@forgeax/engine/render';
 import {
   Transform,
-} from '@forgeax/engine-scene';
+} from '@forgeax/engine/scene';
 import {
   quat,
-} from '@forgeax/engine-runtime';
-import { AssetGuid } from '@forgeax/engine-pack/guid';
-import { ENTITY_NULL_RAW, type EntityHandle, type World } from '@forgeax/engine-ecs';
+} from '@forgeax/engine/runtime';
+import { AssetGuid } from '@forgeax/engine/pack/guid';
+import { ENTITY_NULL_RAW, type EntityHandle, type World } from '@forgeax/engine/ecs';
 import { armSkinnedAnimationPlayer } from './bind-skinned-animation';
-import type { AnimationClip, Handle, MaterialAsset, MeshAsset, SceneAsset } from '@forgeax/engine-types';
-import type { BootstrapContext } from '@forgeax/engine-app';
+import type { AnimationClip, Handle, MaterialAsset, MeshAsset, SceneAsset } from '@forgeax/engine/types';
+import type { GameHost as BootstrapContext } from '@forgeax/engine/app';
 import { primitiveMesh } from './primitive-mesh';
 
 import { getHeroDef, type HeroDef } from './heroes';

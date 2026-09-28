@@ -13,26 +13,26 @@
 
 import {
   AnimationPlayer,
-} from '@forgeax/engine-animation';
+} from '@forgeax/engine/animation';
 import {
   ChildOf,
   Transform,
-} from '@forgeax/engine-scene';
+} from '@forgeax/engine/scene';
 import {
   Materials,
   MeshFilter,
   MeshRenderer,
   SceneInstance,
-} from '@forgeax/engine-render';
+} from '@forgeax/engine/render';
 import {
   quat,
-} from '@forgeax/engine-runtime';
+} from '@forgeax/engine/runtime';
 import {
   type MaterialAsset,
-} from '@forgeax/engine-types';
-import { AssetGuid } from '@forgeax/engine-pack/guid';
-import { ENTITY_NULL_RAW, type EntityHandle, type World } from '@forgeax/engine-ecs';
-import type { AnimationClip, Handle, SceneAsset } from '@forgeax/engine-types';
+} from '@forgeax/engine/types';
+import { AssetGuid } from '@forgeax/engine/pack/guid';
+import { ENTITY_NULL_RAW, type EntityHandle, type World } from '@forgeax/engine/ecs';
+import type { AnimationClip, Handle, SceneAsset } from '@forgeax/engine/types';
 import { primitiveMesh } from './primitive-mesh';
 import { normalizeClipRoot } from './anim-root';
 import { armSkinnedAnimationPlayer, collectRootJointTargetIds } from './bind-skinned-animation';
@@ -40,6 +40,7 @@ import type { BodyVfx, FlightStyle, FxSystem, NovaTelegraphVfx } from './fx';
 import { combatBeat } from './fx/defs';
 import type { ContactShadowKit } from './contact-shadow';
 import { createEnemyRings, type EnemyRingHandle, type EnemyRings } from './enemy-rings';
+import { firstCombatBlock, type CombatWalkable } from './combat-occlusion';
 
 type MatHandle = Handle<'MaterialAsset', 'shared'>;
 
@@ -370,6 +371,7 @@ interface GlbBank {
 /** Dead GLB monster playing its death clip; despawned when the clock runs out. */
 interface Corpse {
   entities: EntityHandle[];
+  zone: 'wild' | 'den';
   until: number;             // wall-clock s
 }
 
@@ -825,6 +827,7 @@ export class MonsterManager {
       this.setClip(m, 'death', false, 1);
       this.corpses.push({
         entities: [m.e, ...m.instEntities],
+        zone: m.zone,
         until: this.now + death.dur + 0.5,   // brief hold on the last frame
       });
       const i = this.monsters.indexOf(m);
@@ -890,6 +893,7 @@ export class MonsterManager {
   tick(
     dt: number, playerX: number, playerZ: number, playerSafe: boolean,
     walkable: (x: number, z: number) => boolean,
+    projectileWalkable: CombatWalkable = walkable,
   ): void {
     this.now += dt;
 
@@ -989,6 +993,7 @@ export class MonsterManager {
       // ── contact-frame strike resolution ──
       if (m.strikeAt > 0 && this.now >= m.strikeAt) {
         m.strikeAt = 0;
+        const strikeClear = !playerSafe && firstCombatBlock(m.x, m.z, playerX, playerZ, projectileWalkable) === null;
         if (m.slam !== null) {
           // Boss AoE slam: drop the telegraph and test the player against the
           // MARKED ground (not the boss's reach) — sidestep the ring, no hit.
@@ -996,14 +1001,14 @@ export class MonsterManager {
           m.slam = null;
           this.fx.releaseNovaTelegraph(slam.vfx);
           const sdx = playerX - slam.x, sdz = playerZ - slam.z;
-          if (!playerSafe && sdx * sdx + sdz * sdz <= slam.radius * slam.radius) {
+          if (strikeClear && sdx * sdx + sdz * sdz <= slam.radius * slam.radius) {
             this.events.onPlayerHit(def.damage, m.kind);
             this.fx.burst(playerX, 0.9, playerZ, 'blood', 4, 2.2);
           }
           this.fx.novaShockRing(slam.x, slam.z, slam.radius);
           this.fx.novaScorch(slam.x, slam.z, slam.radius);
           this.fx.burst(slam.x, 0.6, slam.z, 'fire', 10, 3.2);
-        } else if (m.strikeRanged && def.ranged) {
+        } else if (m.strikeRanged && def.ranged && strikeClear) {
           // Loose at the player's CURRENT position — bosses fire a 3-bolt fan.
           const base = Math.atan2(dz, dx);
           const offs = def.isBoss ? [-BOSS_FAN_ANGLE, 0, BOSS_FAN_ANGLE] : [0];
@@ -1015,7 +1020,7 @@ export class MonsterManager {
             // left him mobile (see `busy` above).
             m.clipUntil = Math.min(m.clipUntil, performance.now() + 300);
           }
-        } else if (!playerSafe && dist <= def.attackRange + 0.55) {
+        } else if (!m.strikeRanged && strikeClear && dist <= def.attackRange + 0.55) {
           // Melee connects only if the player is STILL in reach — dodged
           // swings whiff (no damage, no blood).
           this.events.onPlayerHit(def.damage, m.kind);
@@ -1052,7 +1057,8 @@ export class MonsterManager {
         // Melee swing: start the wind-up NOW, land the hit at the clip's
         // contact frame (~45% in) — resolved above on a later tick.
         // A pending strike (boss mid-volley-wind-up) is never overwritten.
-        if (dist <= def.attackRange && m.attackCd <= 0 && m.strikeAt <= 0) {
+        if (dist <= def.attackRange && m.attackCd <= 0 && m.strikeAt <= 0
+          && firstCombatBlock(m.x, m.z, playerX, playerZ, projectileWalkable) === null) {
           m.attackCd = def.attackCooldown;
           const clip = this.glb.get(m.kind)?.clips.get('attack');
           if (def.isBoss) {
@@ -1075,7 +1081,8 @@ export class MonsterManager {
           this.events.onAttack?.(m);
         }
         // Ranged: same wind-up treatment (bolt looses at ~40% of the cast).
-        if (wantRanged && m.rangedCd <= 0 && m.strikeAt <= 0 && def.ranged) {
+        if (wantRanged && m.rangedCd <= 0 && m.strikeAt <= 0 && def.ranged
+          && firstCombatBlock(m.x, m.z, playerX, playerZ, projectileWalkable) === null) {
           m.rangedCd = def.ranged.cooldown;
           const clip = this.glb.get(m.kind)?.clips.get('attack');
           const windup = clip ? (clip.dur / 1.2) * 0.4 : 0.2;
@@ -1158,8 +1165,15 @@ export class MonsterManager {
     for (let i = this.bolts.length - 1; i >= 0; i--) {
       const b = this.bolts[i]!;
       b.age += dt;
-      b.x += b.dx * b.speed * dt;
-      b.z += b.dz * b.speed * dt;
+      const nextX = b.x + b.dx * b.speed * dt, nextZ = b.z + b.dz * b.speed * dt;
+      const wall = firstCombatBlock(b.x, b.z, nextX, nextZ, projectileWalkable);
+      if (wall) {
+        this.fx.burst(wall[0], b.y, wall[1], 'fire', 4, 1.6);
+        this.fx.releaseFlightBody(b.vfx);
+        this.bolts.splice(i, 1);
+        continue;
+      }
+      b.x = nextX; b.z = nextZ;
       const dx = playerX - b.x, dz = playerZ - b.z;
       const hit = dx * dx + dz * dz < 0.55 * 0.55;
       if (hit && !playerSafe) {
@@ -1198,7 +1212,7 @@ export class MonsterManager {
   /** Wall-clock the manager runs on (skills use it for slow timing). */
   clock(): number { return this.now; }
 
-  /** Despawn every living monster (combat-run reset). */
+  /** Despawn all areas for world teardown; failed runs should use clearZone. */
   clearAll(): void {
     while (this.monsters.length > 0) {
       this.despawn(this.monsters[this.monsters.length - 1]!);
@@ -1207,6 +1221,21 @@ export class MonsterManager {
       for (const e of c.entities) this.world.despawn(e);
     }
     this.corpses.length = 0;
+    this.clearEnemyAttacks();
+  }
+
+  /** Reset one encounter area without deleting an already-prefetched dungeon. */
+  clearZone(zone: 'wild' | 'den'): void {
+    for (let i = this.monsters.length - 1; i >= 0; i--) {
+      const monster = this.monsters[i]!;
+      if (monster.zone === zone) this.despawn(monster);
+    }
+    for (let i = this.corpses.length - 1; i >= 0; i--) {
+      const corpse = this.corpses[i]!;
+      if (corpse.zone !== zone) continue;
+      for (const entity of corpse.entities) this.world.despawn(entity);
+      this.corpses.splice(i, 1);
+    }
     this.clearEnemyAttacks();
   }
 

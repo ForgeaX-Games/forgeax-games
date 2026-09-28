@@ -4,15 +4,19 @@
 export type PerfProbeSnapshot = {
   /** Sample count currently in the ring. */
   samples: number;
+  /** Full recording duration and count; ring quantiles may cover less if wrapped. */
+  recordedSeconds: number;
+  recordedFrames: number;
+  windowSeconds: number;
   /** Median rAF frame time in milliseconds. */
   medianMs: number | null;
   /** 95th-percentile rAF frame time in milliseconds. */
   p95Ms: number | null;
   /** Mean rAF frame time in milliseconds. */
   meanMs: number | null;
-  /** Peak `render.instancing.foldedDraws` observed since last reset (or null). */
+  /** Peak explicitly supplied folded-draw sample since last reset (or null). */
   foldedDrawsPeak: number | null;
-  /** Last foldedDraws sample (or null if unread). */
+  /** Last explicitly supplied folded-draw sample (or null if unavailable). */
   foldedDrawsLast: number | null;
   /** Game-owned transient / VFX pool high-water marks since last reset. */
   pools: Record<string, number>;
@@ -21,7 +25,7 @@ export type PerfProbeSnapshot = {
 export type PerfProbe = {
   /** Record one frame duration in seconds (rAF / Time.delta). */
   recordFrame(dtSec: number): void;
-  /** Observe engine `render.instancing.foldedDraws` if available. */
+  /** Record an explicitly supplied folded-draw sample; the SDK .38 reader supplies none. */
   observeFoldedDraws(value: number | null | undefined): void;
   /** Observe named pool / transient counts (keeps high-water marks). */
   observePools(counts: Record<string, number>): void;
@@ -36,10 +40,12 @@ function percentileSorted(sorted: number[], p: number): number | null {
   return sorted[idx]!;
 }
 
-export function createPerfProbe(capacity = 600): PerfProbe {
+export function createPerfProbe(capacity = 12000): PerfProbe {
   const ring = new Float64Array(Math.max(1, capacity));
   let write = 0;
   let count = 0;
+  let recordedSeconds = 0;
+  let recordedFrames = 0;
   let foldedDrawsPeak: number | null = null;
   let foldedDrawsLast: number | null = null;
   const poolHigh: Record<string, number> = {};
@@ -48,6 +54,8 @@ export function createPerfProbe(capacity = 600): PerfProbe {
     recordFrame(dtSec) {
       if (!Number.isFinite(dtSec) || dtSec <= 0) return;
       const ms = dtSec * 1000;
+      recordedSeconds += dtSec;
+      recordedFrames += 1;
       ring[write] = ms;
       write = (write + 1) % ring.length;
       if (count < ring.length) count += 1;
@@ -82,6 +90,9 @@ export function createPerfProbe(capacity = 600): PerfProbe {
           : (values[values.length / 2 - 1]! + values[values.length / 2]!) / 2;
       return {
         samples: values.length,
+        recordedSeconds,
+        recordedFrames,
+        windowSeconds: values.reduce((sum, ms) => sum + ms, 0) / 1000,
         medianMs: mid,
         p95Ms: percentileSorted(values, 0.95),
         meanMs,
@@ -93,6 +104,8 @@ export function createPerfProbe(capacity = 600): PerfProbe {
     reset() {
       write = 0;
       count = 0;
+      recordedSeconds = 0;
+      recordedFrames = 0;
       foldedDrawsPeak = null;
       foldedDrawsLast = null;
       for (const k of Object.keys(poolHigh)) delete poolHigh[k];
@@ -100,16 +113,16 @@ export function createPerfProbe(capacity = 600): PerfProbe {
   };
 }
 
-/** Read `render.instancing.foldedDraws` from a Play `app.renderer` if present. */
-export function readFoldedDraws(app: unknown): number | null {
-  try {
-    const metrics = (app as {
-      renderer?: { metrics?: { snapshot?: () => Record<string, number> } };
-    } | null)?.renderer?.metrics;
-    const snap = metrics?.snapshot?.();
-    const v = snap?.['render.instancing.foldedDraws'];
-    return typeof v === 'number' && Number.isFinite(v) ? v : null;
-  } catch {
-    return null;
-  }
+/**
+ * Read the SDK folded-draw metric when the public host contract exposes it.
+ *
+ * SDK .38 keeps `render.instancing.foldedDraws` in private owner metrics and
+ * exposes no corresponding `Renderer.inspect()` field.  Do not read private
+ * fields or walk `instanceCollections` here: neither is the metric's stated
+ * semantics, and this function is called from the frame loop.  Keep the
+ * compatibility seam, but report the metric as unavailable until the SDK
+ * publishes a bounded public field for it.
+ */
+export function readFoldedDraws(_app: unknown): number | null {
+  return null;
 }

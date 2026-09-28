@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import {
   AREA_EXPOSURE_MUL,
   CAMP_AMBIENT,
+  CAMP_DIRECTIONAL_MUL,
   CAMP_MOON_LIGHT_DIR,
   CAMP_MOON_SPOT,
   DEN_AMBIENT,
@@ -15,6 +16,8 @@ import {
   campMoonSpotPosition,
   denPointSeatPositions,
   denSpotSeatPositions,
+  directionalIntensityForArea,
+  directionalMulForArea,
   exposureMulForArea,
   pickNearestFireSeats,
   seatOrPark,
@@ -71,6 +74,17 @@ describe('camp dusk + wild outdoor (PR2c T3 / L2)', () => {
     expect(AREA_EXPOSURE_MUL.den).toBe(1.0);
     expect(exposureMulForArea('wild')).toBeGreaterThan(exposureMulForArea('camp'));
     expect(exposureMulForArea('camp')).toBeGreaterThan(exposureMulForArea('den'));
+  });
+
+  test('camp directional key lift does not leak into den or wild', () => {
+    expect(CAMP_DIRECTIONAL_MUL).toBe(1.75);
+    expect(directionalMulForArea('camp')).toBe(CAMP_DIRECTIONAL_MUL);
+    expect(directionalMulForArea('den')).toBe(1);
+    expect(directionalMulForArea('wild')).toBe(1);
+    expect(directionalIntensityForArea('camp', 5.8, 0.55)).toBeCloseTo(5.5825, 4);
+    expect(directionalIntensityForArea('wild', 5.8, 0.55)).toBeCloseTo(3.19, 4);
+    expect(directionalIntensityForArea('den', 6.2, 0.55)).toBeCloseTo(3.41, 4);
+    expect(directionalIntensityForArea('camp', 5.8, 0)).toBe(0);
   });
 });
 

@@ -1,12 +1,19 @@
+<!-- context-audit:2026-09-10 -->
+> 文档核对：2026-09-10。按源码使用的参考文档；文中的验收结果仅适用于其记录的版本和日期。
+> 接手先读 [当前状态与入口](CURRENT.md)；[整理前原文](docs/archive/pre-management/README.md) 保留来源与原始内容。
+
 # ForgeaX: Hellforge
 
 An original dark-fantasy action RPG sample on the forgeax engine. The dying
 embers of a great Hellforge corrupt the land. UI layout is D2R-*inspired*
 (visual language only — no Blizzard assets or owned world terms).
 
-## Play 启动前提
+## 旧 Studio checkout 的启动前提（2026-08-13 记录）
 
-Until engine [#2078](https://github.com/ForgeaX-Games/forgeax-engine/issues/2078) lands, **Node heap must be ≥ 16GB** or Play cook OOMs and the camp never loads.
+**当前分支是独立 SDK 0.1.38 Web 发布候选，尚未发布。** 请按 [CURRENT.md](CURRENT.md) 执行 `pnpm install --frozen-lockfile` → `pnpm build` → `pnpm preview --port 18738`，访问 `/games/hellforge/`；后续升级与发布按 [持续迭代手册](docs/sdk-migration/CONTINUATION-RUNBOOK.md)。
+下述 Studio 段落仅作历史记录，不是本迁移副本的启动方式，也不授权修改 Studio pin。
+
+历史 1K cook 记录要求 Node heap ≥ 16GB。是否仍适用于新 pin 必须重新测试；本次没有核验远端 #2078 状态，不能把旧要求推广为所有 Engine 的永久前提。实际 Studio 加载的是旧游戏副本，先核对 [CURRENT.md](CURRENT.md)。
 
 ```bash
 # in forgeax-studio/.env (gitignored — do not commit)
@@ -71,7 +78,7 @@ acceptance and licensed audio remain open human gates** — see Open gates.
 
 ## Open gates
 
-1. **Browser acceptance pending human** — this request skipped interactive
+1. **Browser acceptance pending human** — the recorded milestone did not complete interactive
    playtesting. Do not invent screenshots or claim SPEC §15 walkthroughs.
 2. **Audio provenance M5.3–5.4 blocked**
    - No licensed OGG (or equivalent) production SFX pack is checked in.
@@ -83,7 +90,7 @@ acceptance and licensed audio remain open human gates** — see Open gates.
 ## Verify (static)
 
 ```bash
-cd packages/games
+cd /Users/you/dev/game-workspace/checkouts/hellforge-games
 bun test hellforge/src
 bun hellforge/scripts/validate-scene-pack.ts hellforge/assets/scenes/rogue-encampment.pack.json
 bun hellforge/scripts/validate-blocker-prop-consistency.ts

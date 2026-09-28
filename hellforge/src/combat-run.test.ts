@@ -115,10 +115,12 @@ describe('resetCombatRun', () => {
     const runtime = mockRuntime({ hp: 1, mana: 2, dead: true });
 
     const resetLog: string[] = [];
+    let clearedArea: string | null = null;
     let lastReset: { areaId: string; seed: number } | null = null;
     const resetters: CombatTransientResetters = {
+      movement: { clear: () => { resetLog.push('movement.clear'); } },
       encounters: {
-        clear: () => { resetLog.push('enc.clear'); },
+        clear: (areaId) => { clearedArea = areaId; resetLog.push('enc.clear'); },
         reset: (areaId, s) => {
           resetLog.push('enc.reset');
           lastReset = { areaId, seed: s };
@@ -138,6 +140,7 @@ describe('resetCombatRun', () => {
       runtime,
       resetters,
       returnToCamp: () => {
+        expect(resetLog[0]).toBe('movement.clear');
         camped = true;
         return { areaId: 'cinderwatch', entryId: 'camp-center', playerPos: [0, 5] };
       },
@@ -156,9 +159,10 @@ describe('resetCombatRun', () => {
     expect(runtime.hp).toBe(runtime.maxHp);
     expect(runtime.mana).toBe(runtime.maxMana);
     expect(camped).toBe(true);
+    expect(clearedArea).toBe('slagdeep-hollow');
     expect(lastReset).toEqual({ areaId: 'slagdeep-hollow', seed });
     expect(resetLog).toEqual([
-      'enc.clear', 'attacks.clear', 'skills.clear', 'loot.clear', 'fx.clear', 'enc.reset',
+      'movement.clear', 'enc.clear', 'attacks.clear', 'skills.clear', 'loot.clear', 'fx.clear', 'enc.reset',
     ]);
   });
 
@@ -182,6 +186,7 @@ describe('resetCombatRun', () => {
       run,
       runtime: mockRuntime(),
       resetters: {
+        movement: { clear: () => {} },
         encounters: { clear: () => {}, reset: () => {} },
         enemyAttacks: { clear: () => {} },
         playerSkills: { clearProjectilesAndCooldowns: () => {} },

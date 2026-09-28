@@ -21,10 +21,10 @@ import { Ui } from './ui-theme';
  * concatenating sidesteps the transform and works for every depth. (The
  * trailing slash is forced: the Vite-rewritten directory URL drops it.)
  */
-const ICON_BASE = new URL('../assets/ui/icons/', import.meta.url).href.replace(/\/?$/, '/');
+import { gameAssetUrl } from './asset-urls';
 
 export function uiIconUrl(rel: string): string {
-  return ICON_BASE + rel;
+  return gameAssetUrl('assets/ui/icons/' + rel);
 }
 
 const SLOT_ICON_FILE: Record<ItemSlot, string> = {

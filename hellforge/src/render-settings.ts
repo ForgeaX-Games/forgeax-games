@@ -9,10 +9,10 @@
  * range rows, immediate apply, F10 toggle.
  */
 
-import type { EntityHandle, World } from '@forgeax/engine-ecs';
+import type { EntityHandle, World } from '@forgeax/engine/ecs';
 import {
   ANTIALIAS_FXAA,
-  ANTIALIAS_MSAA,
+  ANTIALIAS_TAA,
   ANTIALIAS_NONE,
   BLOOM_DISABLED,
   BLOOM_ENABLED,
@@ -24,7 +24,7 @@ import {
   TONEMAP_LINEAR,
   TONEMAP_NEUTRAL,
   TONEMAP_REINHARD_EXTENDED,
-} from '@forgeax/engine-render';
+} from '@forgeax/engine/render';
 import { FONT_UI } from './ui-theme';
 import {
   ATMOSPHERE_CSS_OVERLAYS_ENABLED,
@@ -46,7 +46,7 @@ export type InstallRenderSettingsArgs = {
   onLighting: (s: RenderSettings) => void;
   /** Called whenever particleDensity/style change. */
   onParticles: (s: RenderSettings) => void;
-  /** Called whenever renderScale / fpsCap change. */
+  /** Called whenever renderScale changes. Frame pacing belongs to the SDK. */
   onDisplay?: (s: RenderSettings) => void;
   /** Called whenever bgmVolume / sfxVolume change. */
   onAudio?: (s: RenderSettings) => void;
@@ -148,8 +148,10 @@ function sanitize(partial: Partial<RenderSettings>): RenderSettings {
   const s = { ...DEFAULTS, ...partial };
   const scales = [0.5, 0.75, 1, 1.25, 1.5];
   if (!scales.includes(s.renderScale)) s.renderScale = DEFAULTS.renderScale;
-  const caps = [0, 30, 60, 120];
-  if (!caps.includes(s.fpsCap)) s.fpsCap = DEFAULTS.fpsCap;
+  // Legacy cap throttled gameplay, not rendering. Retain only its storage shape.
+  s.fpsCap = 0;
+  // Native depth fog / SSAO need single-sample depth; retire legacy MSAA.
+  if (!['none', 'fxaa', 'taa'].includes(s.antialias)) s.antialias = 'taa';
   s.bgmVolume = clamp(Number.isFinite(s.bgmVolume) ? s.bgmVolume : DEFAULTS.bgmVolume, 0, 1);
   s.sfxVolume = clamp(Number.isFinite(s.sfxVolume) ? s.sfxVolume : DEFAULTS.sfxVolume, 0, 1);
   return s;
@@ -222,8 +224,8 @@ function antialiasConst(mode: RenderSettings['antialias']): number {
       return ANTIALIAS_NONE;
     case 'fxaa':
       return ANTIALIAS_FXAA;
-    case 'msaa':
-      return ANTIALIAS_MSAA;
+    case 'taa':
+      return ANTIALIAS_TAA;
   }
 }
 
@@ -362,15 +364,6 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
         { value: '1.5', label: '150%' },
       ],
     } },
-    { row: {
-      kind: 'select', key: 'fpsCap', label: '帧速率', group: 'display',
-      options: [
-        { value: '0', label: '不限制' },
-        { value: '30', label: '30 FPS' },
-        { value: '60', label: '60 FPS' },
-        { value: '120', label: '120 FPS' },
-      ],
-    } },
     { sec: '后处理', row: {
       kind: 'select', key: 'tonemap', label: 'Tonemap', group: 'camera',
       options: [
@@ -389,7 +382,7 @@ export function installRenderSettings(args: InstallRenderSettingsArgs): RenderSe
       options: [
         { value: 'none', label: 'None' },
         { value: 'fxaa', label: 'FXAA' },
-        { value: 'msaa', label: 'MSAA' },
+        { value: 'taa', label: 'TAA（时域）' },
       ],
     } },
     { row: { kind: 'check', key: 'bloom', label: 'Bloom', group: 'camera' } },

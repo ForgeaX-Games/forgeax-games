@@ -51,13 +51,13 @@ const PACK_UPGRADES: ReadonlyArray<{
  * a per-sheet failure warns and leaves the procedural fallback in place, so
  * a missing pack file can never stall boot.
  */
-export async function upgradeFxSheetsFromPacks(packBaseUrl: string): Promise<void> {
+export async function upgradeFxSheetsFromPacks(packBaseUrl: string | ((file: string) => string)): Promise<void> {
   await Promise.all(PACK_UPGRADES.map(async (u) => {
     try {
       const spec = spriteSheetById(u.id);
       if (!spec) throw new Error(`unknown sheet id "${u.id}"`);
       const sheet = await loadPngSheet(
-        u.files.map((f) => `${packBaseUrl}/${f}`),
+        u.files.map((f) => typeof packBaseUrl === 'function' ? packBaseUrl(f) : `${packBaseUrl}/${f}`),
         { cols: spec.cols, rows: spec.rows, frames: spec.frames },
       );
       if (!upgradeSheetFromPng(u.id, sheet)) {

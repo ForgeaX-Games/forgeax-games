@@ -13,7 +13,7 @@ describe('createPerfProbe', () => {
     expect(snap.meanMs).toBeCloseTo(14.5, 5);
   });
 
-  test('tracks foldedDraws and pool high-water marks; reset clears', () => {
+  test('tracks explicitly supplied folded-draw samples and pool high-water marks; reset clears', () => {
     const probe = createPerfProbe(8);
     probe.observeFoldedDraws(3);
     probe.observeFoldedDraws(7);
@@ -31,13 +31,55 @@ describe('createPerfProbe', () => {
     expect(snap.pools).toEqual({});
   });
 
-  test('ignores non-finite dt and unread metrics', () => {
+  test('reports the .38 folded-draw metric as unavailable without probing renderer state', () => {
     const probe = createPerfProbe(4);
     probe.recordFrame(0);
     probe.recordFrame(Number.NaN);
     probe.observeFoldedDraws(undefined);
     expect(probe.snapshot().samples).toBe(0);
+
+    let inspectCalls = 0;
+    let metricCalls = 0;
+    const app = {
+      renderer: {
+        inspect: () => {
+          inspectCalls += 1;
+          return { instanceCollections: [{ count: 9 }] };
+        },
+        metrics: {
+          snapshot: () => {
+            metricCalls += 1;
+            return { 'render.instancing.foldedDraws': 9 };
+          },
+        },
+      },
+    };
+
     expect(readFoldedDraws(null)).toBeNull();
-    expect(readFoldedDraws({ renderer: { metrics: { snapshot: () => ({ 'render.instancing.foldedDraws': 9 }) } } })).toBe(9);
+    expect(readFoldedDraws(app)).toBeNull();
+    expect(inspectCalls).toBe(0);
+    expect(metricCalls).toBe(0);
+  });
+
+  test('reports full duration separately from a wrapped sampling window', () => {
+    const probe = createPerfProbe(2);
+    probe.recordFrame(0.01);
+    probe.recordFrame(0.02);
+    probe.recordFrame(0.03);
+    const snapshot = probe.snapshot();
+    expect(snapshot.recordedFrames).toBe(3);
+    expect(snapshot.recordedSeconds).toBeCloseTo(0.06);
+    expect(snapshot.windowSeconds).toBeCloseTo(0.05);
+    expect(snapshot.samples).toBe(2);
+    probe.reset();
+    expect(probe.snapshot().recordedSeconds).toBe(0);
+    expect(probe.snapshot().recordedFrames).toBe(0);
+  });
+
+  test('default probe retains one minute at 144 Hz', () => {
+    const probe = createPerfProbe();
+    for (let i = 0; i < 8640; i++) probe.recordFrame(1 / 144);
+    expect(probe.snapshot().samples).toBe(8640);
+    expect(probe.snapshot().windowSeconds).toBeCloseTo(60);
   });
 });

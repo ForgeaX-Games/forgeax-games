@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Rain Alley browser performance harness</title>
+<style>body{margin:0;background:#111;color:#ddd;font:14px monospace}iframe{display:block;border:0;width:1280px;height:720px}pre{white-space:pre-wrap}</style>
+<iframe src="/preview/" title="ForgeaX default game"></iframe>
+<pre id="status">Waiting for bootstrap and reflection capture. Do not attach CDP during this comparison.</pre>
+<script type="module">
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+try {
+  const iframe=document.querySelector('iframe');
+  if(new URLSearchParams(location.search).get('variant')==='original')iframe.src='/preview/?perfScene=original&perfMaterials=authored&enemyLod=off';
+  iframe.style.width=`${1280/devicePixelRatio}px`;
+  iframe.style.height=`${720/devicePixelRatio}px`;
+  while(!iframe.contentWindow.__rainFps)await sleep(500);
+  const w=iframe.contentWindow;
+  while(w.__forgeax.renderer.inspect().reflectionProbes.filteredStepsCompleted<90)await sleep(1000);
+  const canvas=w.document.querySelector('canvas');
+  await sleep(1000);
+  if(canvas.width!==1280||canvas.height!==720)throw new Error(`Expected 720p, got ${canvas.width}x${canvas.height}`);
+  const result=await w.eval(`(async()=>{
+    const m=await import('/preview/host-games/rain-alley/scripts/performance-smoke.mjs');
+    const steady=await m.measurePerformance({label:'chrome-no-explicit-cdp'});
+    const route=await(await import('/preview/host-games/rain-alley/scripts/performance-route.mjs')).measureRoute('chrome-no-explicit-cdp-route');
+    return {steady,route,userAgent:navigator.userAgent,gameUrl:location.href};
+  })()`);
+  window.performanceResult=result;
+  document.querySelector('#status').textContent=JSON.stringify({steady:result.steady.renderFps,route:result.route.renderFps,canvas:result.steady.canvas},null,2);
+  if(new URLSearchParams(location.search).has('record')) {
+    const iab=await fetch('/preview/host-games/rain-alley/docs/fps/evidence/performance/candidate-final.json').then(r=>r.json());
+    await fetch('http://127.0.0.1:18999/candidate-final.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({iab,chromeHarness:result})});
+  }
+} catch(e) {document.querySelector('#status').textContent=e.stack;}
+</script>

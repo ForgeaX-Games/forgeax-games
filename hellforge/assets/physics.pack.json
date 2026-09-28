@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "3.0.0",
+  "packageId": "8ec2070b-3f8e-4586-9d49-15554b1f5476",
+  "assets": {
+    "plugin/physics": {
+      "kind": "plugin",
+      "payload": {
+        "module": {
+          "specifier": "@forgeax/engine/physics/rapier3d"
+        }
+      }
+    }
+  }
+}

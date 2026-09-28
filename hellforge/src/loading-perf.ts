@@ -106,7 +106,9 @@ function clearTimeline(): void {
 
 function createSession(): LoadingPerfSession {
   const generation = nextGeneration++;
-  const probe = createPerfProbe(600);
+  // Retain a full 60-second sample even on high-refresh displays, not just
+  // the last ~10 seconds of a nominal minute-long acceptance run.
+  const probe = createPerfProbe();
   const marks = new Map<HfLoadingMarkName, number>();
   const measures = new Map<string, LoadingPerfMeasureEntry>();
   let ended = false;
